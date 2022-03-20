@@ -1,6 +1,7 @@
 #include <SDL.h>
 #include "wl_def.h"
 #include "id_vl.h"
+#include "sdl_wrap.h"
 
 #if SDL_MAJOR_VERSION == 2
 void Present(SDL_Surface *screen)

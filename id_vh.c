@@ -1,5 +1,4 @@
 #include "wl_def.h"
-#include "sdl_wrap.h"
 
 
 pictabletype	*pictable;
