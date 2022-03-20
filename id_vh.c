@@ -78,7 +78,7 @@ void VH_UpdateScreen (SDL_Surface *surface)
 #if SDL_MAJOR_VERSION == 1
 	SDL_Flip (screen);
 #else
-    Present(screen);
+    //Present(screen);
 #endif
 }
 
@@ -303,7 +303,7 @@ boolean FizzleFade (SDL_Surface *source, int x1, int y1,
 #if SDL_MAJOR_VERSION == 1
 	        SDL_Flip (screen);
 #else
-            Present(screen);
+            //Present(screen);
 #endif
         }
         else
