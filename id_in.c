@@ -411,10 +411,17 @@ static void processEvent(SDL_Event *event)
             if(event->key.keysym.sym==SDLK_SCROLLLOCK || event->key.keysym.sym==SDLK_F12)
             {
                 GrabInput = !GrabInput;
-#if SDL_MAJOR_VERSION == 1
-                SDL_WM_GrabInput(GrabInput ? SDL_GRAB_ON : SDL_GRAB_OFF);
+//#if SDL_MAJOR_VERSION == 1
+//                SDL_WM_GrabInput(GrabInput ? SDL_GRAB_ON : SDL_GRAB_OFF);
+//#else
+//                SDL_SetRelativeMouseMode(GrabInput ? SDL_TRUE : SDL_FALSE);
+//#endif
+#if SDL_MAJOR_VERSION == 2
+                //TODO: add a function that grabs keyboard and mouse
+                SDL_SetWindowKeyboardGrab(window, SDL_TRUE);
+                SDL_SetWindowMouseGrab(window, SDL_TRUE);
 #else
-                SDL_SetRelativeMouseMode(GrabInput ? SDL_TRUE : SDL_FALSE);
+                SDL_SetRelativeMouseMode(SDL_TRUE);
 #endif
                 return;
             }
@@ -840,7 +847,11 @@ bool IN_IsInputGrabbed()
 
 void IN_CenterMouse()
 {
-#if SDL_MAJOR_VERSION == 1
-    SDL_WarpMouse(screenWidth / 2, screenHeight / 2);
+//#if SDL_MAJOR_VERSION == 1
+//    SDL_WarpMouse(screenWidth / 2, screenHeight / 2);
+//#endif
+
+#if SDL_MAJOR_VERSION == 2
+    SDL_WarpMouseGlobal(screenWidth / 2, screenHeight / 2);
 #endif
 }

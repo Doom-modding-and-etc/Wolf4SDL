@@ -34,7 +34,7 @@ int      screenBits = 16;
 #else
 boolean usedoublebuffering = true;
 unsigned screenWidth = 640;
-unsigned screenHeight = 400;
+unsigned screenHeight = 480;
 int      screenBits = -1;      // use "best" color depth according to libSDL
 #endif
 
@@ -129,6 +129,7 @@ void VL_SetVGAPlaneMode (void)
     const char* title = "Wolfenstein 3D";
 #endif
 
+//TODO: 
 #if SDL_MAJOR_VERSION == 1
     SDL_WM_SetCaption(title, NULL);
 
@@ -283,10 +284,17 @@ void VL_FillPalette (int red, int green, int blue)
 
 void VL_SetColor	(int color, int red, int green, int blue)
 {
-    SDL_Color col = { (Uint8) red, (Uint8) green, (Uint8) blue };
+    SDL_Color col = 
+    { 
+        (Uint8) red, 
+        (Uint8) green, 
+        (Uint8) blue 
+    };
+    
     curpal[color] = col;
 
     if(screenBits == 8)
+/*
 #if SDL_MAJOR_VERSION == 1
         SDL_SetPalette(screen, SDL_PHYSPAL, &col, color, 1);
     else
@@ -307,6 +315,30 @@ void VL_SetColor	(int color, int red, int green, int blue)
         SDL_RenderPresent(renderer);
         SDL_DestroyTexture(texture);
 #endif
+*/ 
+#if SDL_MAJOR_VERSION == 2
+     //SDL_SetPalette(screen, SDL_PHYSPAL, &col, color, 1);
+      SDL_SetPaletteColors(screen->format->palette, &col, color, 1);
+    else
+    {
+    //SDL_SetPalette(screenBuffer, SDL_LOGPAL, &col, color, 1);
+    SDL_SetPaletteColors(screenBuffer->format->palette, &col, color, 1);
+    SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
+
+    SDL_RenderPresent(renderer);
+#else
+        SDL_SetPaletteColors(screen->format->palette, &col, color, 1);
+    else
+    {
+    SDL_SetPaletteColors(screenBuffer->format->palette, &col, color, 1);
+    SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
+
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, screenBuffer);
+    SDL_RenderCopy(renderer, texture, NULL, NULL);
+    SDL_RenderPresent(renderer);
+    SDL_DestroyTexture(texture);
+#endif
+
     }
 }
 
