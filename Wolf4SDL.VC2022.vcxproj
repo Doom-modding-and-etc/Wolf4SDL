@@ -157,7 +157,6 @@
     <ClInclude Include="id_vh.h" />
     <ClInclude Include="id_vl.h" />
     <ClInclude Include="mame\fmopl.h" />
-    <ClInclude Include="sdl2_wrapper.h" />
     <ClInclude Include="version.h" />
     <ClInclude Include="win\resource.h" />
     <ClInclude Include="wl_atmos.h" />

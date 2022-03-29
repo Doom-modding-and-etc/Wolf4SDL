@@ -195,7 +195,8 @@ TODOs:
 
  - Center non-ingame screens for resolutions being a multiple of 320x240
  - Add support for any graphic resolution >= 320x200
-
+ - Remove screenBits since SDL2 doesn´t support 
+ - Continue porting the SDL2
 
 Known bugs:
 -----------

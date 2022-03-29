@@ -18,8 +18,12 @@
 //
 
 #include "wl_def.h"
-#if SDL_MAJOR_VERSION == 1
-#include "SDL_keysym.h"
+//#if SDL_MAJOR_VERSION == 1
+//#include <SDL_keysym.h>
+//#endif
+
+#if SDL_MAJOR_VERSION == 2
+#include <SDL_keyboard.h>
 #endif
 /*
 =============================================================================
@@ -553,11 +557,18 @@ IN_Startup(void)
     if(fullscreen || forcegrabmouse)
     {
         GrabInput = true;
-#if SDL_MAJOR_VERSION == 1
-        SDL_WM_GrabInput(SDL_GRAB_ON);
+//#if SDL_MAJOR_VERSION == 1
+//        SDL_WM_GrabInput(SDL_GRAB_ON);
+//#else
+ //       SDL_SetRelativeMouseMode(SDL_TRUE);
+//#endif
+
+#if SDL_MAJOR_VERSION == 2
+        SDL_GetWindowGrab(window);
 #else
-        SDL_SetRelativeMouseMode(SDL_TRUE);
+        SDL_SetWindowMouseGrab(window, SDL_TRUE);
 #endif
+    
     }
 
     // I didn't find a way to ask libSDL whether a mouse is present, yet...

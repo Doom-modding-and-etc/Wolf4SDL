@@ -226,9 +226,6 @@
     <ClInclude Include="win\resource.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
-    <ClInclude Include="sdl2_wrapper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="win\Wolf4SDL.rc">
