@@ -1,6 +1,6 @@
 Wolf4SDL by Moritz "Ripper" Kroll (http://www.chaos-software.de.vu - OFFLINE)
 Original Wolfenstein 3D by id Software (http://www.idsoftware.com)
-Modifications to r262 by Andy_Nonymous and others
+Modifications to r262 by Andy_Nonymous, Wolf3s and others
 (http://diehardwolfers.areyep.com/viewtopic.php?t=6693)
 =============================================================================
 
@@ -105,10 +105,16 @@ according data files version as the differences are hardcoded into the binary!
 On Windows SDL.dll and SDL_mixer.dll must also be copied into this directory.
 
 SDL 1.2.15 Runtimes can be acquired at: 
-https://www.libsdl.org/download-1.2.php and download "SDL-1.2.15-win32.zip"
+https://www.libsdl.org/download-1.2.php and download "SDL-1.2.15-win32.zip"(deprecated)
 
 SDL_mixer 1.2.12 Runtimes can be acquired at:
-https://www.libsdl.org/projects/SDL_mixer/release-1.2.html and download "SDL_mixer-1.2.12-win32.zip"
+https://www.libsdl.org/projects/SDL_mixer/release-1.2.html and download "SDL_mixer-1.2.12-win32.zip"(deprecated)
+
+SDL2 2.0.20 Runtimes can be acquired at:
+https://www.libsdl.org/download-2.0.php and download "SDL_mixer-2.0.20-win32.zip"
+
+SDL_mixer 2.0.4 Runtimes can be acquired at:
+https://www.libsdl.org/projects/SDL_mixer/ and download "SDL_mixer-2.0.4-win32.zip"
 
 ! ATTENTION ! Do NOT download the x64 version of SDL or SDL_mixer. x86 binairies are required.
 
@@ -195,7 +201,7 @@ TODOs:
 
  - Center non-ingame screens for resolutions being a multiple of 320x240
  - Add support for any graphic resolution >= 320x200
- - Remove screenBits since SDL2 doesn´t support 
+ - Remove screenBits since SDL2 doesnÂ´t support 
  - Continue porting the SDL2
 
 Known bugs:
@@ -209,7 +215,6 @@ Troubleshooting:
 
  - If your frame rate is low, consider using the original screen resolution
    (--res 320 200) or lowering the sound quality (--samplerate 22050)
-
 
 Credits:
 --------
