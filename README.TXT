@@ -1,6 +1,6 @@
 Wolf4SDL by Moritz "Ripper" Kroll (http://www.chaos-software.de.vu - OFFLINE)
 Original Wolfenstein 3D by id Software (http://www.idsoftware.com)
-Modifications to r262 by Andy_Nonymous, Wolf3s and others
+Modifications to r262 by Andy_Nonymous and others
 (http://diehardwolfers.areyep.com/viewtopic.php?t=6693)
 =============================================================================
 
@@ -204,6 +204,8 @@ TODOs:
  - Add support for any graphic resolution >= 320x200
  - Remove screenBits since SDL2 doesn´t support 
  - Continue porting the SDL2
+ - Add nintendo switch support
+ - Add Sony´s Playstation 2 support
 
 Known bugs:
 -----------
