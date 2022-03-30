@@ -171,6 +171,7 @@ The current version of the source code is available on GitHub at:
 The following ways of compiling the source code are supported:
  - Makefile (for Linux, BSD variants and MinGW/MSYS)
  - Visual C++ 2019 (Wolf4SDL.VC2019.sln and Wolf4SDL.VC2019.vcproj) (see README-VC.txt)
+ - Visual C++ (Wolf4SDL.VC2022.sln and Wolf4SDL.vcproj) (sde README-VC.txt)
  - Visual C++ 2008 (Wolf4SDL.VC9.sln and Wolf4SDL.VC9.vcproj)
  - Visual C++ 2005 (Wolf4SDL.sln and Wolf4SDL.vcproj)
  - Visual C++ 6 (Wolf4SDL.dsw and Wolf4SDL.dsp)

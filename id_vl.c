@@ -128,8 +128,7 @@ void VL_SetVGAPlaneMode (void)
 #else
     const char* title = "Wolfenstein 3D";
 #endif
-
-//TODO: 
+ 
 #if SDL_MAJOR_VERSION == 1
     SDL_WM_SetCaption(title, NULL);
 
@@ -201,6 +200,88 @@ void VL_SetVGAPlaneMode (void)
         SDL_TEXTUREACCESS_STREAMING,
         screenWidth, screenHeight);
 #endif
+
+
+//Wolf3s: some sdl1 code works but maybe i should rewrite some of them 
+//NOTE: Test this when i back home
+#if SDL_MAJOR_VERSION == 2
+
+ SDL_RendererInfo info;
+
+ //screen = SDL_SetVideoMode(screenWidth, screenHeight, screenBits, (usedoublebuffering ? SDL_HWSURFACE | SDL_DOUBLEBUF : 0) | (screenBits == 8 ? SDL_HWPALETTE : 0) | (fullscreen ? SDL_FULLSCREEN : 0));
+
+
+ //todo:
+ if(screenBits)
+ {
+   SDL_GetRendererInfo(renderer, info);
+   //screenBits = vidInfo->vfmt->BitsPerPixel;
+ }
+ 
+   window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth,screenHeight, );
+
+   if(window == NULL)
+   {
+      printf("unable to initialize window: %i", SDL_GetError());
+   }
+
+   screen = SDL_GetWindowSurface(window);
+
+   if(screen == NULL)
+   {
+     printf("unable to initalize screen: %i", SDL_GetError());
+
+   }
+
+   if(screen->flags & SDL_DOUBLEBUF)
+   {
+      usedoublebuffering = false;
+   }
+
+   SDL_ShowCursor(SDL_DISABLE);
+
+   SDL_SetPalleteColors(screen, gamepal, 0, 256); 
+   memcpy(curpal, gamepal, sizeof(SDL_Color) * 256);
+
+   screenBuffer = SDL_CreateRGBSurface(SDL_SWSURFACE, screenWidth, screenHeight, 8, 0, 0, 0, 0);
+  if(screenBuffer == NULL) 
+  { 
+     printf("Unable to create screen buffer surface: %s\n", SDL_GetError()); exit(1); 
+  }
+  SDL_SetPallleteColors(screenBuffer, gamepal, 0, 256);
+
+#else
+
+    window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight,
+        (fullscreen ? SDL_WINDOW_FULLSCREEN : 0) | SDL_WINDOW_OPENGL);
+ 
+   SDL_PixelFormatEnumToMasks (SDL_PIXELFORMAT_ARGB8888,&screenBits,&r,&g,&b,&a);
+   
+   screen = SDL_CreateRGBSurface(0,screenWidth,screenHeight,screenBits,r,g,b,a); 
+   
+   if(!screen) 
+   { 
+       printf("Unable to set %ix%ix%i video mode: %s\n", screenWidth, screenHeight, screenBits, SDL_GetError()); exit(1); 
+   }
+   
+   renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC); 
+   SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND); 
+   SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0"); SDL_ShowCursor(SDL_DISABLE); 
+   SDL_SetPaletteColors(screen->format->palette, gamepal, 0, 256); 
+   memcpy(curpal, gamepal, sizeof(SDL_Color) * 256); 
+   screenBuffer = SDL_CreateRGBSurface(0, screenWidth, screenHeight, 8, 0, 0, 0, 0);
+  
+   if(!screenBuffer)
+    {
+        printf("Unable to create screen buffer surface: %s\n", SDL_GetError());
+        exit(1);
+    }
+    
+    SDL_SetPaletteColors(screenBuffer->format->palette, gamepal, 0, 256);
+    
+    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, screenWidth, screenHeight
+
+#endif //SDL_MAJOR_VERSION == 2
 
     screenPitch = screen->pitch;
     bufferPitch = screenBuffer->pitch;
