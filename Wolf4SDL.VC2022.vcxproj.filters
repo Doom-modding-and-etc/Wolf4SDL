@@ -25,6 +25,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
+    <Filter Include="Header Files\ps2">
+      <UniqueIdentifier>{d83abe9b-2af9-4ec7-b8fe-34034adf092f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="id_ca.c">
@@ -225,6 +228,9 @@
     </ClInclude>
     <ClInclude Include="win\resource.h">
       <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ps2\ps2_main.h">
+      <Filter>Header Files\ps2</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

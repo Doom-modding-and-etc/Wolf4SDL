@@ -139,7 +139,7 @@ void VL_SetVGAPlaneMode (void)
 #else
     const char* title = "Wolfenstein 3D";
 #endif
-/*
+
 #if SDL_MAJOR_VERSION == 1
     SDL_WM_SetCaption(title, NULL);
 
@@ -174,8 +174,9 @@ void VL_SetVGAPlaneMode (void)
         exit(1);
     }
     SDL_SetColors(screenBuffer, gamepal, 0, 256);
-*/
-
+#endif
+ 
+#if SDL_MAJOR_VERSION == 2
     window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight,
         (fullscreen ? SDL_WINDOW_FULLSCREEN : 0) | SDL_WINDOW_OPENGL);
 
@@ -211,7 +212,7 @@ void VL_SetVGAPlaneMode (void)
         SDL_PIXELFORMAT_ARGB8888,
         SDL_TEXTUREACCESS_STREAMING,
         screenWidth, screenHeight);
-
+#endif
     screenPitch = screen->pitch;
     bufferPitch = screenBuffer->pitch;
 
@@ -304,7 +305,7 @@ void VL_SetColor	(int color, int red, int green, int blue)
     curpal[color] = col;
 
     if(screenBits == 8)
-/*
+
 #if SDL_MAJOR_VERSION == 1
         SDL_SetPalette(screen, SDL_PHYSPAL, &col, color, 1);
     else
@@ -313,21 +314,21 @@ void VL_SetColor	(int color, int red, int green, int blue)
         SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
 
 	    SDL_Flip (screen);
-#else
-*/        
-	SDL_SetPaletteColors(screen->format->palette, &col, color, 1);
+#endif
+
+#if SDL_MAJOR_VERSION == 2
+    SDL_SetPaletteColors(screen->format->palette, &col, color, 1);
     else
     {
         SDL_SetPaletteColors(screenBuffer->format->palette, &col, color, 1);
         SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
 
-        SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, screenBuffer);
+        SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, screenBuffer);
         SDL_RenderCopy(renderer, texture, NULL, NULL);
         SDL_RenderPresent(renderer);
         SDL_DestroyTexture(texture);
     }
 #endif
- 
 }
 
 
@@ -366,7 +367,7 @@ void VL_SetPalette(SDL_Color* palette, bool forceupdate)
     memcpy(curpal, palette, sizeof(SDL_Color) * 256);
 
     if (screenBits == 8)
-/*
+
 #if SDL_MAJOR_VERSION == 1
         SDL_SetPalette(screen, SDL_PHYSPAL, palette, 0, 256);
     else
@@ -379,11 +380,10 @@ void VL_SetPalette(SDL_Color* palette, bool forceupdate)
             SDL_Flip(screen);
         }
     }
-#else
+#endif
 
-endif
-*/
-      SDL_SetPaletteColors(screen->format->palette, palette, 0, 256);
+#if SDL_MAJOR_VERSION == 2
+    SDL_SetPaletteColors(screen->format->palette, palette, 0, 256);
     else
     {
         SDL_SetPaletteColors(screenBuffer->format->palette, palette, 0, 256);
@@ -391,9 +391,13 @@ endif
         {
             SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
 
-            //Present(screen);
+            SDL_UpdateTexture(texture, NULL, screen->pixels, screenWidth * sizeof(Uint32));
+            SDL_RenderClear(renderer);
+            SDL_RenderCopy(renderer, texture, NULL, NULL);
+            SDL_RenderPresent(renderer);
         }
     }
+#endif
 }
 
 

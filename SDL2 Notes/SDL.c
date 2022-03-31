@@ -1,5 +1,5 @@
-*
 //Wolf3s: Rewritten SDL1 code
+#include <SDL.h>
 #if SDL_MAJOR_VERSION == 2
     window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight, SDL_WINDOW_SHOWN);
     
@@ -76,9 +76,7 @@ texture = SDL_CreateTexture(renderer,
     screenWidth, screenHeight);
 
 #endif //SDL_MAJOR_VERSION == 2
-*/
 
-* WIP
 #if SDL_MAJOR_VERSION == 2
      //SDL_SetPalette(screen, SDL_PHYSPAL, &col, color, 1);
       SDL_SetPaletteColors(palette, &col, 1, 0);
@@ -130,5 +128,19 @@ texture = SDL_CreateTexture(renderer,
         }
     }
 */
-
+#if SDL_MAJOR_VERSION == 1
+                SDL_WM_GrabInput(GrabInput ? SDL_GRAB_ON : SDL_GRAB_OFF);
+#elif SDL_MAJOR_VERSION == 2
+                SDL_SetRelativeMouseMode(GrabInput ? SDL_TRUE : SDL_FALSE);
+#endif
+//#if SDL_MAJOR_VERSION == 1
+//        SDL_WM_GrabInput(SDL_GRAB_ON);
+//#elif SDL_MAJOR_VERSION == 2
+ //       SDL_SetRelativeMouseMode(SDL_TRUE);
+//#endif
+#if SDL_MAJOR_VERSION == 2
+        SDL_GetWindowGrab(window);
+#else
+        SDL_SetWindowMouseGrab(window, SDL_TRUE);
+#endif
 */

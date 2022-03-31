@@ -74,16 +74,15 @@ void VW_MeasurePropString (const char *string, word *width, word *height)
 void VH_UpdateScreen (SDL_Surface *surface)
 {
 	SDL_BlitSurface (surface,NULL,screen,NULL);
-//#if SDL_MAJOR_VERSION == 1
-	//SDL_Flip (screen);
-//#else
-    //Present(screen);
-//#endif
+#if SDL_MAJOR_VERSION == 1
+	SDL_Flip (screen);
+#endif
 
 #ifdef SDL_MAJOR_VERSION == 2
-    SDL_RenderPresent(renderer);
-#else
+    SDL_UpdateTexture(texture, NULL, screen->pixels, screenWidth * sizeof(Uint32));
     SDL_RenderClear(renderer);
+    SDL_RenderCopy(renderer, texture, NULL, NULL);
+    SDL_RenderPresent(renderer);
 #endif
 }
 
@@ -305,16 +304,15 @@ boolean FizzleFade (SDL_Surface *source, int x1, int y1,
             if(usedoublebuffering) first = 0;
 
             VL_UnlockSurface(screen);
-//#if SDL_MAJOR_VERSION == 1
-//	        SDL_Flip (screen);
-//#else
-            //Present(screen);
-//#endif
+#if SDL_MAJOR_VERSION == 1
+	        SDL_Flip (screen);
+#endif
 
-#ifdef SDL_MAJOR_VERSION == 2
-        SDL_RenderPresent(renderer);
-#else
-        SDL_RenderClear(renderer);
+#if SDL_MAJOR_VERSION == 2
+            SDL_UpdateTexture(texture, NULL, screen->pixels, screenWidth * sizeof(Uint32));
+            SDL_RenderClear(renderer);
+            SDL_RenderCopy(renderer, texture, NULL, NULL);
+            SDL_RenderPresent(renderer);
 #endif
 
         }
