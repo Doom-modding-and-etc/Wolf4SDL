@@ -139,7 +139,7 @@ void VL_SetVGAPlaneMode (void)
 #else
     const char* title = "Wolfenstein 3D";
 #endif
-
+/*
 #if SDL_MAJOR_VERSION == 1
     SDL_WM_SetCaption(title, NULL);
 
@@ -174,7 +174,8 @@ void VL_SetVGAPlaneMode (void)
         exit(1);
     }
     SDL_SetColors(screenBuffer, gamepal, 0, 256);
-#else
+*/
+
     window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight,
         (fullscreen ? SDL_WINDOW_FULLSCREEN : 0) | SDL_WINDOW_OPENGL);
 
@@ -210,87 +211,7 @@ void VL_SetVGAPlaneMode (void)
         SDL_PIXELFORMAT_ARGB8888,
         SDL_TEXTUREACCESS_STREAMING,
         screenWidth, screenHeight);
-#endif
 
-/*
-//Wolf3s: Rewritten SDL1 code
-#if SDL_MAJOR_VERSION == 2
-    window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight, SDL_WINDOW_SHOWN);
-    
-    screenBits = SDL_GetRendererInfo(renderer, info);
-
-    if (screenBits)
-    {
-        SDL_SetSurfacePalette(screen, palette);
-        info->name;
-    }
-
-    if (window == NULL)
-    {
-        printf("Unable to set %ix%ix video mode: %s\n", screenWidth, screenHeight, SDL_GetError());
-    }
-
-    SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
-    
-    if ((screen->flags & SDL_GL_DOUBLEBUFFER) != SDL_GL_DOUBLEBUFFER)
-    {
-        usedoublebuffering = false;
-    }
-    
-    SDL_ShowCursor(SDL_DISABLE);
-    
-    SDL_SetPaletteColors(palette, gamepal, 0, 256);
-    
-    screenBuffer = SDL_CreateRGBSurface(SDL_SWSURFACE, screenWidth,
-        screenHeight, screenBits, 0, 0, 0, 0);
-    
-    if (!screenBuffer)
-    {
-        printf("Unable to create screen buffer surface: %s\n", SDL_GetError());
-        exit(1);
-    }
-
-    SDL_SetColorKey(screenBuffer, NULL, gamepal);
-#else
-
-window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight,
-    (fullscreen ? SDL_WINDOW_FULLSCREEN : 0) | SDL_WINDOW_OPENGL);
-
-SDL_PixelFormatEnumToMasks(SDL_PIXELFORMAT_ARGB8888, &screenBits, &r, &g, &b, &a);
-
-screen = SDL_CreateRGBSurface(0, screenWidth, screenHeight, screenBits, r, g, b, a);
-
-if (!screen)
-{
-    printf("Unable to set %ix%ix%i video mode: %s\n", screenWidth, screenHeight, screenBits, SDL_GetError());
-    exit(1);
-}
-
-renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
-
-SDL_ShowCursor(SDL_DISABLE);
-
-SDL_SetPaletteColors(screen->format->palette, gamepal, 0, 256);
-memcpy(curpal, gamepal, sizeof(SDL_Color) * 256);
-
-screenBuffer = SDL_CreateRGBSurface(0, screenWidth,
-    screenHeight, 8, 0, 0, 0, 0);
-if (!screenBuffer)
-{
-    printf("Unable to create screen buffer surface: %s\n", SDL_GetError());
-    exit(1);
-}
-SDL_SetPaletteColors(screenBuffer->format->palette, gamepal, 0, 256);
-
-texture = SDL_CreateTexture(renderer,
-    SDL_PIXELFORMAT_ARGB8888,
-    SDL_TEXTUREACCESS_STREAMING,
-    screenWidth, screenHeight);
-
-#endif //SDL_MAJOR_VERSION == 2
-*/
     screenPitch = screen->pitch;
     bufferPitch = screenBuffer->pitch;
 
@@ -383,6 +304,7 @@ void VL_SetColor	(int color, int red, int green, int blue)
     curpal[color] = col;
 
     if(screenBits == 8)
+/*
 #if SDL_MAJOR_VERSION == 1
         SDL_SetPalette(screen, SDL_PHYSPAL, &col, color, 1);
     else
@@ -392,7 +314,8 @@ void VL_SetColor	(int color, int red, int green, int blue)
 
 	    SDL_Flip (screen);
 #else
-        SDL_SetPaletteColors(screen->format->palette, &col, color, 1);
+*/        
+	SDL_SetPaletteColors(screen->format->palette, &col, color, 1);
     else
     {
         SDL_SetPaletteColors(screenBuffer->format->palette, &col, color, 1);
@@ -406,31 +329,7 @@ void VL_SetColor	(int color, int red, int green, int blue)
 #endif
  
 }
-/* WIP
-#if SDL_MAJOR_VERSION == 2
-     //SDL_SetPalette(screen, SDL_PHYSPAL, &col, color, 1);
-      SDL_SetPaletteColors(palette, &col, 1, 0);
-    else
-    {
-    //SDL_SetPalette(screenBuffer, SDL_LOGPAL, &col, color, 1);
-    SDL_SetPaletteColors(palette, &col, 1, 0);
-    SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
 
-    SDL_RenderPresent(renderer);
-#else
-        SDL_SetPaletteColors(palette, &col, 1, 0);
-    else
-    {
-    SDL_SetPaletteColors(palette, &col, 1, 0);
-    SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
-
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, screenBuffer);
-    SDL_RenderCopy(renderer, texture, NULL, NULL);
-    SDL_RenderPresent(renderer);
-    SDL_DestroyTexture(texture);
-    }
-#endif
-*/
 
 
 
@@ -467,6 +366,7 @@ void VL_SetPalette(SDL_Color* palette, bool forceupdate)
     memcpy(curpal, palette, sizeof(SDL_Color) * 256);
 
     if (screenBits == 8)
+/*
 #if SDL_MAJOR_VERSION == 1
         SDL_SetPalette(screen, SDL_PHYSPAL, palette, 0, 256);
     else
@@ -480,7 +380,10 @@ void VL_SetPalette(SDL_Color* palette, bool forceupdate)
         }
     }
 #else
-        SDL_SetPaletteColors(screen->format->palette, palette, 0, 256);
+
+endif
+*/
+      SDL_SetPaletteColors(screen->format->palette, palette, 0, 256);
     else
     {
         SDL_SetPaletteColors(screenBuffer->format->palette, palette, 0, 256);
@@ -489,38 +392,9 @@ void VL_SetPalette(SDL_Color* palette, bool forceupdate)
             SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
 
             //Present(screen);
-#endif
         }
     }
 }
-
-/*WIP
-#if SDL_MAJOR_VERSION == 2
-        SDL_SetPaletteColors(wpalette, palette, 0, 256);
-    else
-    {
-        SDL_SetPaletteColors(wpalette, palette, 0, 256);
-        if (forceupdate)
-        {
-            SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
-
-            SDL_RenderCopy(renderer, texture, NULL, NULL);
-
-            SDL_RenderPresent(renderer);
-#else
-        SDL_SetPaletteColors(wpalette, palette, 0, 256);
-    else
-    {
-        SDL_SetPaletteColors(wpalette, palette, 0, 256);
-
-        if (forceupdate)
-        {
-            SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
-            SDL_RenderCopy(renderer, texture, NULL, NULL);
-#endif //SDL_MAJOR_VERSION == 2
-        }
-    }
-*/
 
 
 //===========================================================================
@@ -972,3 +846,7 @@ void VL_ScreenToScreen (SDL_Surface *source, SDL_Surface *dest)
 {
     SDL_BlitSurface(source, NULL, dest, NULL);
 }
+
+
+
+

@@ -413,9 +413,10 @@ static void processEvent(SDL_Event *event)
                 GrabInput = !GrabInput;
 //#if SDL_MAJOR_VERSION == 1
 //                SDL_WM_GrabInput(GrabInput ? SDL_GRAB_ON : SDL_GRAB_OFF);
-//#else
+//#elif SDL_MAJOR_VERSION == 2
 //                SDL_SetRelativeMouseMode(GrabInput ? SDL_TRUE : SDL_FALSE);
 //#endif
+
 #if SDL_MAJOR_VERSION == 2
                 //TODO: add a function that grabs keyboard and mouse
                 SDL_SetWindowKeyboardGrab(window, SDL_TRUE);
@@ -566,7 +567,7 @@ IN_Startup(void)
         GrabInput = true;
 //#if SDL_MAJOR_VERSION == 1
 //        SDL_WM_GrabInput(SDL_GRAB_ON);
-//#else
+//#elif SDL_MAJOR_VERSION == 2
  //       SDL_SetRelativeMouseMode(SDL_TRUE);
 //#endif
 
