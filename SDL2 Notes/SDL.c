@@ -127,7 +127,6 @@ texture = SDL_CreateTexture(renderer,
 #endif //SDL_MAJOR_VERSION == 2
         }
     }
-*/
 #if SDL_MAJOR_VERSION == 1
                 SDL_WM_GrabInput(GrabInput ? SDL_GRAB_ON : SDL_GRAB_OFF);
 #elif SDL_MAJOR_VERSION == 2
@@ -143,4 +142,3 @@ texture = SDL_CreateTexture(renderer,
 #else
         SDL_SetWindowMouseGrab(window, SDL_TRUE);
 #endif
-*/
