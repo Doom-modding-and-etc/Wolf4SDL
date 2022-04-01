@@ -139,9 +139,9 @@ void PictureGrabber (void)
 
 void BasicOverhead (void)
 {
-    int       x,y;
-    int       zoom,temp;
-    int       offx,offy;
+    int x,y;
+    int zoom, temp;
+    int offx,offy;
     uintptr_t tile;
     int       color;
 

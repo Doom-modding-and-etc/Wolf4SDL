@@ -165,10 +165,20 @@ extern           int        JoyNumButtons;
 extern           boolean    forcegrabmouse;
 
 
-// Function prototypes
+//Function prototypes
+#if SDL_MAJOR_VERSION == 1
+
+#define	IN_KeyDown(code)	(Keyboard[(code)])
+#define	IN_ClearKey(code)	{Keyboard[code] = false;\
+							 if (code == LastScan) LastScan = sc_None;}
+#endif
+
+#if SDL_MAJOR_VERSION == 2
 #define	IN_KeyDown(code)	(Keyboard((code)))
-#define	IN_ClearKey(code)	{KeyboardSet(code, false);\
-							if (code == LastScan) LastScan = sc_None;}
+#define	IN_ClearKey(code)	{ KeyboardSet(code, false);\
+						      if (code == LastScan) LastScan = sc_None;}
+#endif
+
 
 // DEBUG - put names in prototypes
 extern	void		IN_Startup(void),IN_Shutdown(void);

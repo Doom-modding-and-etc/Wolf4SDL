@@ -391,10 +391,7 @@ void VL_SetPalette(SDL_Color* palette, bool forceupdate)
         {
             SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
 
-            SDL_UpdateTexture(texture, NULL, screen->pixels, screenWidth * sizeof(Uint32));
-            SDL_RenderClear(renderer);
-            SDL_RenderCopy(renderer, texture, NULL, NULL);
-            SDL_RenderPresent(renderer);
+            VH_RenderTextures(screen);
         }
     }
 #endif
