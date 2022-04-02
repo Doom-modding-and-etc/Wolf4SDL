@@ -202,7 +202,6 @@ TODOs:
  - Center non-ingame screens for resolutions being a multiple of 320x240
  - Add support for any graphic resolution >= 320x200
  - port again sdl1(90% Done) 
- - fix some bugs on vs2022 
  - Add nintendo switch support
  - Add Sony´s Playstation 2 support
 
