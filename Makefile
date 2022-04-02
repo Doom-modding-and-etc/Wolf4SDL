@@ -46,9 +46,12 @@ CXXFLAGS += $(CFLAGS)
 LDFLAGS += $(LDFLAGS_SDL)
 ifeq ($(SDL_MAJOR_VERSION),1)
 	LDFLAGS += -lSDL_mixer
-else
+endif
+
+ifeq ($(SDL_MAJOR_VERSION),2)
 	LDFLAGS += -lSDL2_mixer
 endif
+
 ifneq (,$(findstring MINGW,$(shell uname -s)))
 LDFLAGS += -static-libgcc
 endif
@@ -59,34 +62,10 @@ ifndef GPL
 else
     SRCS += dosbox/dbopl.cpp
 endif
-SRCS += sdl_wrap.c
-SRCS += id_ca.c
-SRCS += id_in.c
-SRCS += id_pm.c
-SRCS += id_sd.c
-SRCS += id_us.c
-SRCS += id_vh.c
-SRCS += id_vl.c
-SRCS += signon.c
-SRCS += wl_act1.c
-SRCS += wl_act2.c
-SRCS += wl_agent.c
-SRCS += wl_atmos.c
-SRCS += wl_cloudsky.c
-SRCS += wl_debug.c
-SRCS += wl_draw.c
-SRCS += wl_game.c
-SRCS += wl_inter.c
-SRCS += wl_main.c
-SRCS += wl_menu.c
-SRCS += wl_parallax.c
-SRCS += wl_plane.c
-SRCS += wl_play.c
-SRCS += wl_scale.c
-SRCS += wl_shade.c
-SRCS += wl_state.c
-SRCS += wl_text.c
-SRCS += wl_utils.c
+SRCS += id_ca.c id_in.c id_pm.c id_sd.c id_us.c id_vh.c id_vl.c signon.c wl_act1.c \
+wl_act2.c wl_agent.c wl_atmos.c wl_cloudsky.c wl_debug.c wl_draw.c wl_game.c wl_inter.c \
+wl_main.c wl_menu.c wl_parallax.c wl_plane.c wl_play.c wl_scale.c wl_shade.c wl_state.c \
+wl_text.c wl_utils.c
 
 DEPS = $(filter %.d, $(SRCS:.c=.d) $(SRCS:.cpp=.d))
 OBJS = $(filter %.o, $(SRCS:.c=.o) $(SRCS:.cpp=.o))
@@ -127,7 +106,7 @@ $(BINARY): $(OBJS)
 	$(Q)$(CXX) $(CXXFLAGS) -MM $< | sed 's#^$(@F:%.d=%.o):#$@ $(@:%.d=%.o):#' > $@
 
 clean distclean:
-	@echo '===> CLEAN'
+	@echo '===> CLEANING'
 	$(Q)rm -fr $(DEPS) $(OBJS) $(BINARY) $(BINARY).exe
 
 install: $(BINARY)

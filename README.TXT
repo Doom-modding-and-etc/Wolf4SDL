@@ -105,10 +105,10 @@ according data files version as the differences are hardcoded into the binary!
 On Windows SDL.dll and SDL_mixer.dll must also be copied into this directory.
 
 SDL 1.2.15 Runtimes can be acquired at: 
-https://www.libsdl.org/download-1.2.php and download "SDL-1.2.15-win32.zip"(deprecated)
+https://www.libsdl.org/download-1.2.php and download "SDL-1.2.15-win32.zip"
 
 SDL_mixer 1.2.12 Runtimes can be acquired at:
-https://www.libsdl.org/projects/SDL_mixer/release-1.2.html and download "SDL_mixer-1.2.12-win32.zip"(deprecated)
+https://www.libsdl.org/projects/SDL_mixer/release-1.2.html and download "SDL_mixer-1.2.12-win32.zip"
 
 SDL2 2.0.20 Runtimes can be acquired at:
 https://www.libsdl.org/download-2.0.php and download "SDL_mixer-2.0.20-win32.zip"
@@ -201,7 +201,7 @@ TODOs:
 ------
  - Center non-ingame screens for resolutions being a multiple of 320x240
  - Add support for any graphic resolution >= 320x200
- - port again sdl1 
+ - port again sdl1(90% Done) 
  - fix some bugs on vs2022 
  - Add nintendo switch support
  - Add Sony´s Playstation 2 support
