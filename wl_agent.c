@@ -161,7 +161,7 @@ void CheckWeaponChange (void)
 =======================
 */
 
-void ControlMovement (objtype *ob)
+void ControlMovement(objtype *ob)
 {
     int32_t oldx,oldy;
     int     angle;

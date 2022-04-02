@@ -134,10 +134,20 @@ void VL_SetVGAPlaneMode (void)
     int i;
     uint32_t a,r,g,b;
 
+#if SDL_MAJOR_VERSION == 1
+#ifdef SPEAR
+    SDL_WM_SetCaption("Spear of Destiny", NULL);
+#else
+    SDL_WM_SetCaption("Wolfenstein 3D", NULL);
+#endif
+#endif
+
+#if SDL_MAJOR_VERSION == 2
 #ifdef SPEAR
     const char* title = "Spear of Destiny";
 #else
     const char* title = "Wolfenstein 3D";
+#endif
 #endif
 
 #if SDL_MAJOR_VERSION == 1
@@ -293,7 +303,7 @@ void VL_FillPalette (int red, int green, int blue)
 =================
 */
 
-void VL_SetColor	(int color, int red, int green, int blue)
+void VL_SetColor(int color, int red, int green, int blue)
 {
     SDL_Color col = 
     { 
@@ -426,7 +436,7 @@ void VL_GetPalette (SDL_Color *palette)
 =================
 */
 
-void VL_FadeOut (int start, int end, int red, int green, int blue, int steps)
+void VL_FadeOut(int start, int end, int red, int green, int blue, int steps)
 {
 	int		    i,j,orig,delta;
 	SDL_Color   *origptr, *newptr;

@@ -1,6 +1,11 @@
 #ifndef __WL_DEF_H_
 #define __WL_DEF_H_
 
+#if SDL_MAJOR_VERSION == 1
+//SDL1:
+volatile boolean    Keyboard[SDLK_LAST];
+#endif
+
 // Defines which version shall be built and configures supported extra features
 #include "version.h"
 
@@ -1505,5 +1510,7 @@ void GP2X_ButtonUp (int button);
 #ifdef USE_PARALLAX
     void DrawParallax (void);
 #endif
+
+
 
 #endif

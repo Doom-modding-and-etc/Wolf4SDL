@@ -180,6 +180,7 @@ extern           boolean    forcegrabmouse;
 #endif
 
 
+
 // DEBUG - put names in prototypes
 extern	void		IN_Startup(void),IN_Shutdown(void);
 extern	void		IN_ClearKeysDown(void);
@@ -195,12 +196,13 @@ extern	ScanCode	IN_WaitForKey(void);
 extern	word		IN_GetJoyButtonsDB(word joy);
 extern	const char *IN_GetScanName(ScanCode);
 
-
+#if SDL_MAJOR_VERSION == 2
 boolean Keyboard(int key);
 
 void KeyboardSet(int key, boolean state);
 
 int KeyboardLookup(int key);
+#endif
 
 void    IN_WaitAndProcessEvents();
 void    IN_ProcessEvents();

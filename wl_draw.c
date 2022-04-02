@@ -1666,8 +1666,13 @@ void ThreeDRefresh (void)
 #endif
 
     DrawPlayerWeapon ();    // draw player's hands
+#if SDL_MAJOR_VERSION == 1
+    if (Keyboard[sc_Tab] && viewsize == 21 && gamestate.weapon != -1)
+#endif   
 
+#if SDL_MAJOR_VERSION == 2
     if(Keyboard(sc_Tab) && viewsize == 21 && gamestate.weapon != -1)
+#endif   
         ShowActStatus();
 
     VL_UnlockSurface(screenBuffer);

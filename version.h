@@ -5,8 +5,10 @@
 
 /* Defines used for different versions */
 
+//todo: Make compatible the SPEAR OF DESTINY
 //#define SPEAR
 //#define SPEARDEMO
+//#define WOLF3D
 //#define UPLOAD
 #define GOODTIMES
 #define CARMACIZED

@@ -290,8 +290,7 @@ int KeyboardLookup(int key)
 //		mouse driver
 //
 ///////////////////////////////////////////////////////////////////////////
-static int
-INL_GetMouseButtons(void)
+static int INL_GetMouseButtons(void)
 {
     int buttons = SDL_GetMouseState(NULL, NULL);
     int middlePressed = buttons & SDL_BUTTON(SDL_BUTTON_MIDDLE);
@@ -589,8 +588,7 @@ void IN_ProcessEvents()
 //	IN_Startup() - Starts up the Input Mgr
 //
 ///////////////////////////////////////////////////////////////////////////
-void
-IN_Startup(void)
+void IN_Startup(void)
 {
 	if (IN_Started)
 		return;
@@ -641,8 +639,7 @@ IN_Startup(void)
 //	IN_Shutdown() - Shuts down the Input Mgr
 //
 ///////////////////////////////////////////////////////////////////////////
-void
-IN_Shutdown(void)
+void IN_Shutdown(void)
 {
 	if (!IN_Started)
 		return;
@@ -681,8 +678,7 @@ IN_ClearKeysDown(void)
 //		player and fills in the control info struct
 //
 ///////////////////////////////////////////////////////////////////////////
-void
-IN_ReadControl(int player,ControlInfo *info)
+void IN_ReadControl(int player,ControlInfo *info)
 {
 	word		buttons;
 	int			dx,dy;
@@ -778,8 +774,7 @@ IN_ReadControl(int player,ControlInfo *info)
 //		returns the scan code
 //
 ///////////////////////////////////////////////////////////////////////////
-ScanCode
-IN_WaitForKey(void)
+ScanCode IN_WaitForKey(void)
 {
 	ScanCode	result;
 
@@ -795,8 +790,7 @@ IN_WaitForKey(void)
 //		returns the ASCII value
 //
 ///////////////////////////////////////////////////////////////////////////
-char
-IN_WaitForASCII(void)
+char IN_WaitForASCII(void)
 {
 	char		result;
 
@@ -881,7 +875,7 @@ boolean IN_CheckAck (void)
 }
 
 
-void IN_Ack (void)
+void IN_Ack(void)
 {
 	IN_StartAck ();
 

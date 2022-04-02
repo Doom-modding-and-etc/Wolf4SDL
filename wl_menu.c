@@ -466,8 +466,15 @@ US_ControlPanel (ScanCode scancode)
         //
         // EASTER EGG FOR SPEAR OF DESTINY!
         //
+#if SDL_MAJOR_VERSION == 1      
+        if (Keyboard[sc_I] && Keyboard[sc_D])
+        {
+#endif   
+
+#if SDL_MAJOR_VERSION == 2      
         if (Keyboard(sc_I) && Keyboard(sc_D))
         {
+#endif            
             VW_FadeOut ();
             StartCPMusic (XJAZNAZI_MUS);
             ClearMemory ();
@@ -482,7 +489,13 @@ US_ControlPanel (ScanCode scancode)
             VL_ConvertPalette(grsegs[IDGUYSPALETTE], pal, 256);
             VL_FadeIn (0, 255, pal, 30);
 
+#if SDL_MAJOR_VERSION == 1
+            while (Keyboard[sc_I] || Keyboard[sc_D])
+#endif
+
+#if SDL_MAJOR_VERSION == 2
             while (Keyboard(sc_I) || Keyboard(sc_D))
+#endif                
                 IN_WaitAndProcessEvents();
             IN_ClearKeysDown ();
             IN_Ack ();
@@ -1836,9 +1849,22 @@ MouseSensitivity (int blank)
                 break;
         }
 
+#if SDL_MAJOR_VERSION == 1
+        if (ci.button0 || Keyboard[sc_Space] || Keyboard[sc_Enter])
+#endif 
+
+#if SDL_MAJOR_VERSION == 2
         if (ci.button0 || Keyboard(sc_Space) || Keyboard(sc_Enter))
+#endif 
             exit = 1;
+
+#if SDL_MAJOR_VERSION == 1
+        else if (ci.button1 || Keyboard[sc_Escape])
+#endif
+
+#if SDL_MAJOR_VERSION == 2
         else if (ci.button1 || Keyboard(sc_Escape))
+#endif            
             exit = 2;
 
     }
@@ -2714,11 +2740,24 @@ CP_ChangeView (int blank)
                 TicDelay (10);
                 break;
         }
+#if SDL_MAJOR_VERSION == 1
+        if (ci.button0 || Keyboard[sc_Enter])
+#endif 
 
+#if SDL_MAJOR_VERSION == 2
         if (ci.button0 || Keyboard(sc_Enter))
+#endif            
             exit = 1;
+
+#if SDL_MAJOR_VERSION == 1        
+        else if (ci.button1 || Keyboard[sc_Escape])
+        {
+#endif  
+
+#if SDL_MAJOR_VERSION == 2        
         else if (ci.button1 || Keyboard(sc_Escape))
         {
+#endif            
             SD_PlaySound (ESCPRESSEDSND);
             MenuFadeOut ();
             if(screenHeight % 200 != 0)
@@ -3212,10 +3251,22 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
                 break;
         }
 
+#if SDL_MAJOR_VERSION == 1
+        if (ci.button0 || Keyboard[sc_Space] || Keyboard[sc_Enter])
+#endif 
+
+#if SDL_MAJOR_VERSION == 2
         if (ci.button0 || Keyboard(sc_Space) || Keyboard(sc_Enter))
+#endif            
             exit = 1;
 
+#if SDL_MAJOR_VERSION == 1
+        if (ci.button1 && !Keyboard[sc_Alt] || Keyboard[sc_Escape])
+#endif  
+
+#if SDL_MAJOR_VERSION == 2
         if (ci.button1 && !Keyboard(sc_Alt) || Keyboard(sc_Escape))
+#endif            
             exit = 2;
 
     }
@@ -3382,8 +3433,7 @@ DrawMenu (CP_iteminfo * item_i, CP_itemtype * items)
 // SET TEXT COLOR (HIGHLIGHT OR NO)
 //
 ////////////////////////////////////////////////////////////////////
-void
-SetTextColor (CP_itemtype * items, int hlight)
+void SetTextColor(CP_itemtype * items, int hlight)
 {
     if (hlight)
     {
@@ -3401,13 +3451,18 @@ SetTextColor (CP_itemtype * items, int hlight)
 // WAIT FOR CTRLKEY-UP OR BUTTON-UP
 //
 ////////////////////////////////////////////////////////////////////
-void
-WaitKeyUp (void)
+void WaitKeyUp(void)
 {
     ControlInfo ci;
     while (ReadAnyControl (&ci), ci.button0 |
            ci.button1 |
-           ci.button2 | ci.button3 | Keyboard(sc_Space) | Keyboard(sc_Enter) | Keyboard(sc_Escape))
+#if SDL_MAJOR_VERSION == 1
+        ci.button2 | ci.button3 | Keyboard[sc_Space] | Keyboard[sc_Enter] | Keyboard[sc_Escape])
+#endif
+
+#if SDL_MAJOR_VERSION == 2           
+        ci.button2 | ci.button3 | Keyboard(sc_Space) | Keyboard(sc_Enter) | Keyboard(sc_Escape))
+#endif    
     {
         IN_WaitAndProcessEvents();
     }
@@ -3420,8 +3475,7 @@ WaitKeyUp (void)
 //
 ////////////////////////////////////////////////////////////////////
 static int totalMousex = 0, totalMousey = 0;
-void
-ReadAnyControl (ControlInfo * ci)
+void ReadAnyControl(ControlInfo * ci)
 {
     int mouseactive = 0;
 
@@ -3430,13 +3484,15 @@ ReadAnyControl (ControlInfo * ci)
     if (mouseenabled && IN_IsInputGrabbed())
     {
         int mousex, mousey, buttons;
-//todo: Port this:
+
 #if SDL_MAJOR_VERSION == 1
       buttons = SDL_GetMouseState(&mousex, &mousey);
         mousex -= screenWidth / 2;
         mousey -= screenHeight / 2;
         IN_CenterMouse();
-#else
+#endif
+
+#if SDL_MAJOR_VERSION == 2
         buttons = SDL_GetRelativeMouseState(&mousex, &mousey);  
 #endif
 
@@ -3446,45 +3502,79 @@ ReadAnyControl (ControlInfo * ci)
         if(middlePressed) buttons |= 1 << 2;
         if(rightPressed) buttons |= 1 << 1;
 
+#if SDL_MAJOR_VERSION == 1
+        if (mousey - CENTERY < -SENSITIVE)
+#endif
+
+#if SDL_MAJOR_VERSION == 2
         totalMousex += mousex;
         totalMousey += mousey;
 
         if(totalMousey < -SENSITIVE)
-        {
+        {           
+#endif            
             ci->dir = dir_North;
             mouseactive = 1;
         }
+
+#if SDL_MAJOR_VERSION == 1
+        else if (mousey - CENTERY > SENSITIVE))
+        {
+#endif
+
+
+#if SDL_MAJOR_VERSION == 2
         else if(totalMousey > SENSITIVE)
         {
+#endif            
             ci->dir = dir_South;
             mouseactive = 1;
         }
+#if SDL_MAJOR_VERSION == 1
+        if (mousex - CENTERX < -SENSITIVE)
+#endif
 
+#if SDL_MAJOR_VERSION == 2
         if(totalMousex  < -SENSITIVE)
         {
+#endif            
             ci->dir = dir_West;
             mouseactive = 1;
         }
+#if SDL_MAJOR_VERSION == 1
+        else if (mousex - CENTERX > SENSITIVE)
+        {
+#endif
+
+#if SDL_MAJOR_VERSION == 2
         else if(totalMousex  > SENSITIVE)
         {
+#endif
             ci->dir = dir_East;
             mouseactive = 1;
         }
+#if SDL_MAJOR_VERSION == 1
+        if (mouseactive)
+            IN_CenterMouse();
+#endif
 
-        if(mouseactive) {
+#if SDL_MAJOR_VERSION == 2
+        if(mouseactive) 
+        {
             totalMousex = 0;
             totalMousey = 0;
         }
+#endif
 
-        if (buttons)
-        {
-            ci->button0 = buttons & 1;
-            ci->button1 = buttons & 2;
-            ci->button2 = buttons & 4;
-            ci->button3 = false;
-            mouseactive = 1;
-        }
-    }
+ if(buttons)
+ {
+    ci->button0 = buttons & 1;
+    ci->button1 = buttons & 2;
+    ci->button2 = buttons & 4;
+    ci->button3 = false;
+    mouseactive = 1;
+ }
+}
 
     if (joystickenabled && !mouseactive)
     {
@@ -3560,21 +3650,51 @@ Confirm (const char *string)
 
 #ifdef SPANISH
     }
+
+#if SDL_MAJOR_VERSION == 1    
+    while (!Keyboard[sc_S] && !Keyboard[sc_N] && !Keyboard[sc_Escape]);
+#endif
+
+#if SDL_MAJOR_VERSION == 2    
     while (!Keyboard(sc_S) && !Keyboard(sc_N) && !Keyboard(sc_Escape));
+#endif
+
 #else
     }
+#if SDL_MAJOR_VERSION == 1
+    while (!Keyboard[sc_Y] && !Keyboard[sc_N] && !Keyboard[sc_Escape] && !ci.button0 && !ci.button1);
+#endif
+
+#if SDL_MAJOR_VERSION == 2
     while (!Keyboard(sc_Y) && !Keyboard(sc_N) && !Keyboard(sc_Escape) && !ci.button0 && !ci.button1);
+#endif
 #endif
 
 #ifdef SPANISH
+
+#if SDL_MAJOR_VERSION == 1    
+    if (Keyboard[sc_S] || ci.button0)
+    {
+#endif
+
+#if SDL_MAJOR_VERSION == 2    
     if (Keyboard(sc_S) || ci.button0)
     {
+#endif        
         xit = 1;
         ShootSnd ();
     }
 #else
+
+#if SDL_MAJOR_VERSION == 1
+    if (Keyboard[sc_Y] || ci.button0)
+    {
+#endif
+
+#if SDL_MAJOR_VERSION == 2
     if (Keyboard(sc_Y) || ci.button0)
     {
+#endif
         xit = 1;
         ShootSnd ();
     }
@@ -3726,7 +3846,12 @@ IN_GetScanName (ScanCode scan)
         if (*s == scan)
             return (*p);*/
 
-        switch(scan) {
+#if SDL_MAJOR_VERSION == 1    
+    return(ScanNames[scan]);
+#endif
+
+#if SDL_MAJOR_VERSION == 2    
+     switch(scan) {
         case(SDLK_BACKSPACE):
             return "BkSp";
         case(SDLK_TAB):
@@ -3932,6 +4057,7 @@ IN_GetScanName (ScanCode scan)
         default:
             return "?";
     }
+#endif
 }
 
 

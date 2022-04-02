@@ -63,6 +63,7 @@ void VW_MeasurePropString (const char *string, word *width, word *height)
 	VWL_MeasureString(string,width,height,(fontstruct *)grsegs[STARTFONT+fontnumber]);
 }
 
+#if SDL_MAJOR_VERSION == 2
 //Wolf3s: This works similar to sdl_wrap.c
 void VH_RenderTextures(SDL_Surface* surface)
 {
@@ -71,6 +72,7 @@ void VH_RenderTextures(SDL_Surface* surface)
     SDL_RenderCopy(renderer, texture, NULL, NULL);
     SDL_RenderPresent(renderer);
 }
+#endif
 /*
 =============================================================================
 

@@ -218,11 +218,11 @@ statetype s_hboom3              = {false,SPR_HBOOM_3,6,NULL,NULL,NULL};
 
 #endif
 
-void    T_Schabb (objtype *ob);
-void    T_SchabbThrow (objtype *ob);
-void    T_Fake (objtype *ob);
-void    T_FakeFire (objtype *ob);
-void    T_Ghosts (objtype *ob);
+void T_Schabb (objtype *ob);
+void T_SchabbThrow (objtype *ob);
+void T_Fake (objtype *ob);
+void T_FakeFire (objtype *ob);
+void T_Ghosts (objtype *ob);
 
 void A_Slurpie (objtype *ob);
 void A_HitlerMorph (objtype *ob);
