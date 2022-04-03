@@ -44,8 +44,6 @@ unsigned screenHeight = 480;
 int  screenBits = 8;      // use "best" color depth according to libSDL
 #endif
 
-
-
 SDL_Surface *screen = NULL;
 unsigned screenPitch;
 
@@ -134,20 +132,11 @@ void VL_SetVGAPlaneMode (void)
     int i;
     uint32_t a,r,g,b;
 
-#if SDL_MAJOR_VERSION == 1
-#ifdef SPEAR
-    SDL_WM_SetCaption("Spear of Destiny", NULL);
-#else
-    SDL_WM_SetCaption("Wolfenstein 3D", NULL);
-#endif
-#endif
 
-#if SDL_MAJOR_VERSION == 2
 #ifdef SPEAR
-    const char* title = "Spear of Destiny";
+    const char* title = "Spear of Destiny"; 
 #else
     const char* title = "Wolfenstein 3D";
-#endif
 #endif
 
 #if SDL_MAJOR_VERSION == 1
@@ -337,8 +326,8 @@ void VL_SetColor(int color, int red, int green, int blue)
         SDL_RenderCopy(renderer, texture, NULL, NULL);
         SDL_RenderPresent(renderer);
         SDL_DestroyTexture(texture);
-    }
 #endif
+    }
 }
 
 

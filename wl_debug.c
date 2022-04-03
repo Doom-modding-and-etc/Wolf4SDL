@@ -7,7 +7,7 @@
 #endif
 
 #include "wl_def.h"
-#pragma hdrstop
+//#pragma hdrstop
 
 #ifdef USE_CLOUDSKY
 #include "wl_cloudsky.h"
@@ -771,7 +771,7 @@ again:
     }
 
 #if SDL_MAJOR_VERSION == 1
-    else if (Keyboard(sc_Q))        // Q = fast quit
+    else if (Keyboard[sc_Q])        // Q = fast quit
 #endif
 
 #if SDL_MAJOR_VERSION == 2

@@ -15,7 +15,7 @@
 #endif
 
 #include "wl_def.h"
-#pragma hdrstop
+//#pragma hdrstop
 
 extern int lastgamemusicoffset;
 
@@ -339,8 +339,10 @@ static byte *ExtScanNames[] =   // Names corresponding to ExtScanCodes
                                         };*/
 
 #else
-/*static const char* const ScanNames[SDLK_LAST] =
-    {
+
+#if SDL_MAJOR_VERSION == 1
+static const char* const ScanNames[SDLK_LAST] =
+{
         "?","?","?","?","?","?","?","?",                                //   0
         "BkSp","Tab","?","?","?","Return","?","?",                      //   8
         "?","?","?","Pause","?","?","?","?",                            //  16
@@ -382,8 +384,8 @@ static byte *ExtScanNames[] =   // Names corresponding to ExtScanCodes
         "Shift","RCtrl","Ctrl","RAlt","Alt","?","?","?",                // 304
         "?","?","?","?","PrtSc","?","?","?",                            // 312
         "?","?"                                                         // 320
-    };*/
-
+};
+#endif
 #endif
 
 ////////////////////////////////////////////////////////////////////
@@ -2965,16 +2967,14 @@ ClearMScreen (void)
 // Draw a window for a menu
 //
 ////////////////////////////////////////////////////////////////////
-void
-DrawWindow (int x, int y, int w, int h, int wcolor)
+void DrawWindow (int x, int y, int w, int h, int wcolor)
 {
     VWB_Bar (x, y, w, h, wcolor);
     DrawOutline (x, y, w, h, BORD2COLOR, DEACTIVE);
 }
 
 
-void
-DrawOutline (int x, int y, int w, int h, int color1, int color2)
+void DrawOutline (int x, int y, int w, int h, int color1, int color2)
 {
     VWB_Hlin (x, x + w, y, color2);
     VWB_Vlin (y, y + h, x, color2);
@@ -3518,7 +3518,7 @@ void ReadAnyControl(ControlInfo * ci)
         }
 
 #if SDL_MAJOR_VERSION == 1
-        else if (mousey - CENTERY > SENSITIVE))
+        else if(totalMousey - CENTERY > SENSITIVE)
         {
 #endif
 
@@ -3531,7 +3531,7 @@ void ReadAnyControl(ControlInfo * ci)
             mouseactive = 1;
         }
 #if SDL_MAJOR_VERSION == 1
-        if (mousex - CENTERX < -SENSITIVE)
+        if (totalMousex - CENTERX < -SENSITIVE)
 #endif
 
 #if SDL_MAJOR_VERSION == 2
@@ -3837,7 +3837,7 @@ FreeMusic (void)
 //
 ///////////////////////////////////////////////////////////////////////////
 const char *
-IN_GetScanName (ScanCode scan)
+IN_GetScanName(ScanCode scan)
 {
 /*    const char **p;
     ScanCode *s;

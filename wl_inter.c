@@ -1,7 +1,7 @@
 // WL_INTER.C
 
 #include "wl_def.h"
-#pragma hdrstop
+//#pragma hdrstop
 
 LRstruct LevelRatios[LRpack];
 int32_t lastBreathTime = 0;

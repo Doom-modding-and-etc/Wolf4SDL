@@ -1,11 +1,6 @@
 #ifndef __WL_DEF_H_
 #define __WL_DEF_H_
 
-#if SDL_MAJOR_VERSION == 1
-//SDL1:
-volatile boolean    Keyboard[SDLK_LAST];
-#endif
-
 // Defines which version shall be built and configures supported extra features
 #include "version.h"
 
@@ -74,6 +69,8 @@ enum
 
 typedef int8_t bool;
 #endif
+
+
 
 typedef uint8_t byte;
 typedef uint16_t word;
@@ -983,6 +980,11 @@ extern  char        demoname[13];
 extern  int32_t     spearx,speary;
 extern  unsigned    spearangle;
 extern  boolean     spearflag;
+#endif
+
+#if SDL_MAJOR_VERSION == 1
+    //SDL1:
+    volatile boolean Keyboard[SDLK_LAST];
 #endif
 
 void    SetupGameLevel (void);

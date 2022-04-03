@@ -1,7 +1,6 @@
 // WL_PLAY.C
 
 #include "wl_def.h"
-#pragma hdrstop
 
 #include "wl_cloudsky.h"
 #include "wl_shade.h"
@@ -262,7 +261,13 @@ void PollKeyboardButtons (void)
     int i;
 
     for (i = 0; i < NUMBUTTONS; i++)
+#if SDL_MAJOR_VERSION == 1
+        if (Keyboard[buttonscan[i])
+#endif
+
+#if SDL_MAJOR_VERSION == 2        
         if (Keyboard(buttonscan[i]))
+#endif            
             buttonstate[i] = true;
 }
 

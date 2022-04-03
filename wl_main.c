@@ -7,7 +7,7 @@
 #endif
 
 #include "wl_def.h"
-#pragma hdrstop
+//#pragma hdrstop
 #include "wl_atmos.h"
 #include <SDL_syswm.h>
 

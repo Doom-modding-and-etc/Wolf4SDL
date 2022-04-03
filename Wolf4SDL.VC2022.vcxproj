@@ -50,8 +50,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
-    <IncludePath>c:\SDL2 VS\include\SDL;$(IncludePath)</IncludePath>
-    <LibraryPath>c:\SDL2 VS\libs\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\SDL2 VS\include\SDL;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\SDL2 VS\libs\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

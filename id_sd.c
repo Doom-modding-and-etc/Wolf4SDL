@@ -112,8 +112,10 @@ static  int                     sqHackSeqLen;
 static  longword                sqHackTime;
 
 #ifdef USE_GPL
+using namespace DBOPL;
 
-DBOPL::Chip oplChip;
+//DBOPL::Chip oplChip;
+Chip oplChip;
 
 static inline bool YM3812Init(int numChips, int clock, int rate)
 {
@@ -121,12 +123,12 @@ static inline bool YM3812Init(int numChips, int clock, int rate)
 	return false;
 }
 
-static inline void YM3812Write(DBOPL::Chip &which, Bit32u reg, Bit8u val)
+static inline void YM3812Write(Chip &which, Bit32u reg, Bit8u val)
 {
 	which.WriteReg(reg, val);
 }
 
-static inline void YM3812UpdateOne(DBOPL::Chip &which, int16_t *stream, int length)
+static inline void YM3812UpdateOne(Chip &which, int16_t *stream, int length)
 {
 	Bit32s buffer[512 * 2];
 	int i;

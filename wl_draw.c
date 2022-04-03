@@ -1,7 +1,7 @@
 // WL_DRAW.C
 
 #include "wl_def.h"
-#pragma hdrstop
+//#pragma hdrstop
 
 #include "wl_cloudsky.h"
 #include "wl_atmos.h"
@@ -199,7 +199,7 @@ void TransformActor (objtype *ob)
 ========================
 */
 
-boolean TransformTile (int tx, int ty, short *dispx, short *dispheight)
+boolean TransformTile(int tx, int ty, short *dispx, short *dispheight)
 {
     fixed gx,gy,gxt,gyt,nx,ny;
 
@@ -256,7 +256,7 @@ boolean TransformTile (int tx, int ty, short *dispx, short *dispheight)
 ====================
 */
 
-int16_t CalcHeight (void)
+int16_t CalcHeight(void)
 {
     int16_t height;
     fixed   gx,gy,gxt,gyt,nx,ny;
@@ -305,7 +305,7 @@ int16_t CalcHeight (void)
 ===================
 */
 
-void ScalePost (void)
+void ScalePost(void)
 {
     int ywcount, yoffs, yw, yd, yendoffs;
     byte col;
@@ -424,7 +424,7 @@ void ScaleSkyPost (void)
 ====================
 */
 
-void HitVertWall (void)
+void HitVertWall(void)
 {
     int wallpic;
     int texture;
@@ -476,7 +476,7 @@ void HitVertWall (void)
 #endif
     }
 
-    ScalePost ();
+    ScalePost();
 }
 
 
@@ -491,7 +491,7 @@ void HitVertWall (void)
 ====================
 */
 
-void HitHorizWall (void)
+void HitHorizWall(void)
 {
     int wallpic;
     int texture;
@@ -542,7 +542,7 @@ void HitHorizWall (void)
 #endif
     }
 
-    ScalePost ();
+    ScalePost();
 }
 
 //==========================================================================
