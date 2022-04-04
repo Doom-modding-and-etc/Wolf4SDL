@@ -1240,7 +1240,8 @@ vertentry:
 
                             HitVertWall();
                         }
-                        else
+                        
+			else
                         {
                             yinttemp = yintercept + ((ystep * pwallposinv) >> 6);
 
@@ -1255,7 +1256,8 @@ vertentry:
                             HitVertWall();
                         }
                     }
-                    else
+                    
+		    else
                     {
                         if (pwalldir == di_north)
                             pwallposi = 64 - pwallpos;
@@ -1506,7 +1508,8 @@ horizentry:
                                 HitHorizWall();
                             }
                         }
-                        else
+                        
+			else
                         {
                             if (xinttile == pwallx && ytile == pwally)
                             {
@@ -1540,7 +1543,8 @@ horizentry:
                         }
                     }
                 }
-                else
+                
+		else
                 {
                     yintercept = (fixed)ytile << TILESHIFT;
 

@@ -96,111 +96,111 @@ SOURCE=.\mame\fmopl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\id_ca.cpp
+SOURCE=.\id_ca.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\id_in.cpp
+SOURCE=.\id_in.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\id_pm.cpp
+SOURCE=.\id_pm.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\id_sd.cpp
+SOURCE=.\id_sd.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\id_us_1.cpp
+SOURCE=.\id_us_1.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\id_vh.cpp
+SOURCE=.\id_vh.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\id_vl.cpp
+SOURCE=.\id_vl.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\sdl_winmain.cpp
+SOURCE=.\sdl_winmain.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\signon.cpp
+SOURCE=.\signon.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\wl_act1.cpp
+SOURCE=.\wl_act1.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\wl_act2.cpp
+SOURCE=.\wl_act2.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\wl_agent.cpp
+SOURCE=.\wl_agent.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\wl_atmos.cpp
+SOURCE=.\wl_atmos.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\wl_cloudsky.cpp
+SOURCE=.\wl_cloudsky.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\wl_debug.cpp
+SOURCE=.\wl_debug.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\wl_dir3dspr.cpp
+SOURCE=.\wl_dir3dspr.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\wl_draw.cpp
+SOURCE=.\wl_draw.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\wl_floorceiling.cpp
+SOURCE=.\wl_floorceiling.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\wl_game.cpp
+SOURCE=.\wl_game.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\wl_inter.cpp
+SOURCE=.\wl_inter.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\wl_main.cpp
+SOURCE=.\wl_main.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\wl_menu.cpp
+SOURCE=.\wl_menu.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\wl_parallax.cpp
+SOURCE=.\wl_parallax.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\wl_play.cpp
+SOURCE=.\wl_play.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\wl_shade.cpp
+SOURCE=.\wl_shade.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\wl_state.cpp
+SOURCE=.\wl_state.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\wl_text.cpp
+SOURCE=.\wl_text.c
 # End Source File
 # End Group
 # Begin Group "Header Files"

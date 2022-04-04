@@ -2,9 +2,6 @@ TARGET = 1ST_READ.BIN
 
 include $(KOS_BASE)/Makefile.rules
 
-#KOS_ROMDISK_DIR = romdisk
-
-#OBJS += romdisk.o
 OBJS += dc/dc_cd.o
 OBJS += dc/dc_main.o
 OBJS += dc/dc_maple.o

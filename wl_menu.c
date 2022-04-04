@@ -2696,8 +2696,7 @@ DrawCustKeys (int hilight)
 // CHANGE SCREEN VIEWING SIZE
 //
 ////////////////////////////////////////////////////////////////////
-int
-CP_ChangeView (int blank)
+int CP_ChangeView(int blank)
 {
     int exit = 0, oldview, newview;
     ControlInfo ci;
@@ -2789,8 +2788,7 @@ CP_ChangeView (int blank)
 //
 // DRAW THE CHANGEVIEW SCREEN
 //
-void
-DrawChangeView (int view)
+void DrawChangeView(int view)
 {
     int rescaledHeight = screenHeight / scaleFactor;
     if(view != 21) VWB_Bar (0, rescaledHeight - 40, 320, 40, bordercol);
@@ -2820,8 +2818,7 @@ DrawChangeView (int view)
 // QUIT THIS INFERNAL GAME!
 //
 ////////////////////////////////////////////////////////////////////
-int
-CP_Quit (int blank)
+int CP_Quit(int blank)
 {
 #ifdef JAPAN
     if (GetYorN (7, 11, C_QUITMSGPIC))
@@ -2852,8 +2849,7 @@ CP_Quit (int blank)
 // HANDLE INTRO SCREEN (SYSTEM CONFIG)
 //
 ////////////////////////////////////////////////////////////////////
-void
-IntroScreen (void)
+void IntroScreen(void)
 {
 #ifdef SPEAR
 
@@ -2951,8 +2947,7 @@ IntroScreen (void)
 // Clear Menu screens to dark red
 //
 ////////////////////////////////////////////////////////////////////
-void
-ClearMScreen (void)
+void ClearMScreen(void)
 {
 #ifndef SPEAR
     VWB_Bar (0, 0, 320, 200, BORDCOLOR);
@@ -2967,14 +2962,14 @@ ClearMScreen (void)
 // Draw a window for a menu
 //
 ////////////////////////////////////////////////////////////////////
-void DrawWindow (int x, int y, int w, int h, int wcolor)
+void DrawWindow(int x, int y, int w, int h, int wcolor)
 {
     VWB_Bar (x, y, w, h, wcolor);
     DrawOutline (x, y, w, h, BORD2COLOR, DEACTIVE);
 }
 
 
-void DrawOutline (int x, int y, int w, int h, int color1, int color2)
+void DrawOutline(int x, int y, int w, int h, int color1, int color2)
 {
     VWB_Hlin (x, x + w, y, color2);
     VWB_Vlin (y, y + h, x, color2);
@@ -2988,8 +2983,7 @@ void DrawOutline (int x, int y, int w, int h, int color1, int color2)
 // Setup Control Panel stuff - graphics, etc.
 //
 ////////////////////////////////////////////////////////////////////
-void
-SetupControlPanel (void)
+void SetupControlPanel (void)
 {
     //
     // CACHE SOUNDS
@@ -3060,8 +3054,7 @@ void SetupSaveGames()
 // Clean up all the Control Panel stuff
 //
 ////////////////////////////////////////////////////////////////////
-void
-CleanupControlPanel (void)
+void CleanupControlPanel (void)
 {
     fontnumber = 0;
 }
@@ -3072,8 +3065,7 @@ CleanupControlPanel (void)
 // Handle moving gun around a menu
 //
 ////////////////////////////////////////////////////////////////////
-int
-HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
+int HandleMenu(CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
 {
     char key;
     static int redrawitem = 1, lastitem = -1;
@@ -3132,7 +3124,8 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
                 routine (which);
             VW_UpdateScreen ();
         }
-        else SDL_Delay(5);
+        else 
+	  SDL_Delay(5);
 
         CheckPause ();
 
@@ -3322,8 +3315,7 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
 //
 // ERASE GUN & DE-HIGHLIGHT STRING
 //
-void
-EraseGun (CP_iteminfo * item_i, CP_itemtype * items, int x, int y, int which)
+void EraseGun (CP_iteminfo * item_i, CP_itemtype * items, int x, int y, int which)
 {
     VWB_Bar (x - 1, y, 25, 16, BKGDCOLOR);
     SetTextColor (items + which, 0);
@@ -3338,8 +3330,7 @@ EraseGun (CP_iteminfo * item_i, CP_itemtype * items, int x, int y, int which)
 //
 // DRAW HALF STEP OF GUN TO NEXT POSITION
 //
-void
-DrawHalfStep (int x, int y)
+void DrawHalfStep (int x, int y)
 {
     VWB_DrawPic (x, y, C_CURSOR1PIC);
     VW_UpdateScreen ();
@@ -3351,8 +3342,7 @@ DrawHalfStep (int x, int y)
 //
 // DRAW GUN AT NEW POSITION
 //
-void
-DrawGun (CP_iteminfo * item_i, CP_itemtype * items, int x, int *y, int which, int basey,
+void DrawGun (CP_iteminfo * item_i, CP_itemtype * items, int x, int *y, int which, int basey,
          void (*routine) (int w))
 {
     VWB_Bar (x - 1, *y, 25, 16, BKGDCOLOR);
@@ -3378,8 +3368,7 @@ DrawGun (CP_iteminfo * item_i, CP_itemtype * items, int x, int *y, int which, in
 // DELAY FOR AN AMOUNT OF TICS OR UNTIL CONTROLS ARE INACTIVE
 //
 ////////////////////////////////////////////////////////////////////
-void
-TicDelay (int count)
+void TicDelay(int count)
 {
     ControlInfo ci;
 
@@ -3398,8 +3387,7 @@ TicDelay (int count)
 // Draw a menu
 //
 ////////////////////////////////////////////////////////////////////
-void
-DrawMenu (CP_iteminfo * item_i, CP_itemtype * items)
+void DrawMenu(CP_iteminfo * item_i, CP_itemtype * items)
 {
     int i, which = item_i->curpos;
 
@@ -3461,7 +3449,7 @@ void WaitKeyUp(void)
 #endif
 
 #if SDL_MAJOR_VERSION == 2           
-        ci.button2 | ci.button3 | Keyboard(sc_Space) | Keyboard(sc_Enter) | Keyboard(sc_Escape))
+        ci.button2 | ci.button3 | Keyboard(sc_Space) | Keyboard(sc_Enter) | Keyboard(sc_Escape)
 #endif    
     {
         IN_WaitAndProcessEvents();
@@ -3474,9 +3462,10 @@ void WaitKeyUp(void)
 // READ KEYBOARD, JOYSTICK AND MOUSE FOR INPUT
 //
 ////////////////////////////////////////////////////////////////////
-static int totalMousex = 0, totalMousey = 0;
+
 void ReadAnyControl(ControlInfo * ci)
 {
+    static int totalMousex, totalMousey;
     int mouseactive = 0;
 
     IN_ReadControl (0, ci);
@@ -3486,7 +3475,7 @@ void ReadAnyControl(ControlInfo * ci)
         int mousex, mousey, buttons;
 
 #if SDL_MAJOR_VERSION == 1
-      buttons = SDL_GetMouseState(&mousex, &mousey);
+        buttons = SDL_GetMouseState(&mousex, &mousey);
         mousex -= screenWidth / 2;
         mousey -= screenHeight / 2;
         IN_CenterMouse();
@@ -3504,6 +3493,7 @@ void ReadAnyControl(ControlInfo * ci)
 
 #if SDL_MAJOR_VERSION == 1
         if (mousey - CENTERY < -SENSITIVE)
+	{
 #endif
 
 #if SDL_MAJOR_VERSION == 2
@@ -3518,7 +3508,7 @@ void ReadAnyControl(ControlInfo * ci)
         }
 
 #if SDL_MAJOR_VERSION == 1
-        else if(totalMousey - CENTERY > SENSITIVE)
+        else if(mousey - CENTERY > SENSITIVE)
         {
 #endif
 
@@ -3531,7 +3521,8 @@ void ReadAnyControl(ControlInfo * ci)
             mouseactive = 1;
         }
 #if SDL_MAJOR_VERSION == 1
-        if (totalMousex - CENTERX < -SENSITIVE)
+        if (mousex - CENTERX < -SENSITIVE)
+	{
 #endif
 
 #if SDL_MAJOR_VERSION == 2
@@ -3555,7 +3546,9 @@ void ReadAnyControl(ControlInfo * ci)
         }
 #if SDL_MAJOR_VERSION == 1
         if (mouseactive)
+	{
             IN_CenterMouse();
+	}
 #endif
 
 #if SDL_MAJOR_VERSION == 2
@@ -3608,8 +3601,7 @@ void ReadAnyControl(ControlInfo * ci)
 // DRAW DIALOG AND CONFIRM YES OR NO TO QUESTION
 //
 ////////////////////////////////////////////////////////////////////
-int
-Confirm (const char *string)
+int Confirm (const char *string)
 {
     int xit = 0, x, y, tick = 0, lastBlinkTime;
     int whichsnd[2] = { ESCPRESSEDSND, SHOOTSND };
@@ -3714,8 +3706,7 @@ Confirm (const char *string)
 // DRAW MESSAGE & GET Y OR N
 //
 ////////////////////////////////////////////////////////////////////
-int
-GetYorN (int x, int y, int pic)
+int GetYorN (int x, int y, int pic)
 {
     int xit = 0;
     soundnames whichsnd[2] = { ESCPRESSEDSND, SHOOTSND };
@@ -3768,8 +3759,7 @@ GetYorN (int x, int y, int pic)
 // PRINT A MESSAGE IN A WINDOW
 //
 ////////////////////////////////////////////////////////////////////
-void
-Message (const char *string)
+void Message (const char *string)
 {
     int h = 0, w = 0, mw = 0, i, len = (int) strlen(string);
     fontstruct *font;
@@ -3808,13 +3798,11 @@ Message (const char *string)
 // THIS MAY BE FIXED A LITTLE LATER...
 //
 ////////////////////////////////////////////////////////////////////
-static int lastmusic;
 
-int
-StartCPMusic (int song)
+int StartCPMusic (int song)
 {
     int lastoffs;
-
+    static int lastmusic;
     lastmusic = song;
     lastoffs = SD_MusicOff ();
     UNCACHEAUDIOCHUNK (STARTMUSIC + lastmusic);
@@ -3823,8 +3811,7 @@ StartCPMusic (int song)
     return lastoffs;
 }
 
-void
-FreeMusic (void)
+void FreeMusic (void)
 {
     UNCACHEAUDIOCHUNK (STARTMUSIC + lastmusic);
 }
@@ -3836,8 +3823,7 @@ FreeMusic (void)
 //              specified scan code
 //
 ///////////////////////////////////////////////////////////////////////////
-const char *
-IN_GetScanName(ScanCode scan)
+const char *IN_GetScanName(ScanCode scan)
 {
 /*    const char **p;
     ScanCode *s;
