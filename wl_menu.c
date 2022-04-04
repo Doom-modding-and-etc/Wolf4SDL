@@ -2059,9 +2059,7 @@ enum
 { FWRD, RIGHT, BKWD, LEFT };
 int moveorder[4] = { LEFT, RIGHT, FWRD, BKWD };
 
-void
-EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*PrintRtn) (int),
-               int type)
+void EnterCtrlData(int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*PrintRtn) (int), int type)
 {
     int j,z, exit, tick, redraw, which, x, picked, lastFlashTime;
     ControlInfo ci;
@@ -2620,8 +2618,7 @@ PrintCustJoy (int i)
     }
 }
 
-void
-DrawCustJoy (int hilight)
+void DrawCustJoy(int hilight)
 {
     int i, color;
 
@@ -2644,15 +2641,13 @@ DrawCustJoy (int hilight)
 }
 
 
-void
-PrintCustKeybd (int i)
+void PrintCustKeybd(int i)
 {
     PrintX = CST_START + CST_SPC * i;
     US_Print ((const char *) IN_GetScanName (buttonscan[order[i]]));
 }
 
-void
-DrawCustKeybd (int hilight)
+void DrawCustKeybd(int hilight)
 {
     int i, color;
 
@@ -3054,7 +3049,7 @@ void SetupSaveGames()
 // Clean up all the Control Panel stuff
 //
 ////////////////////////////////////////////////////////////////////
-void CleanupControlPanel (void)
+void CleanupControlPanel(void)
 {
     fontnumber = 0;
 }
@@ -3315,7 +3310,7 @@ int HandleMenu(CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w
 //
 // ERASE GUN & DE-HIGHLIGHT STRING
 //
-void EraseGun (CP_iteminfo * item_i, CP_itemtype * items, int x, int y, int which)
+void EraseGun(CP_iteminfo * item_i, CP_itemtype * items, int x, int y, int which)
 {
     VWB_Bar (x - 1, y, 25, 16, BKGDCOLOR);
     SetTextColor (items + which, 0);
@@ -3330,7 +3325,7 @@ void EraseGun (CP_iteminfo * item_i, CP_itemtype * items, int x, int y, int whic
 //
 // DRAW HALF STEP OF GUN TO NEXT POSITION
 //
-void DrawHalfStep (int x, int y)
+void DrawHalfStep(int x, int y)
 {
     VWB_DrawPic (x, y, C_CURSOR1PIC);
     VW_UpdateScreen ();
@@ -3342,7 +3337,7 @@ void DrawHalfStep (int x, int y)
 //
 // DRAW GUN AT NEW POSITION
 //
-void DrawGun (CP_iteminfo * item_i, CP_itemtype * items, int x, int *y, int which, int basey,
+void DrawGun(CP_iteminfo * item_i, CP_itemtype * items, int x, int *y, int which, int basey,
          void (*routine) (int w))
 {
     VWB_Bar (x - 1, *y, 25, 16, BKGDCOLOR);
@@ -3442,14 +3437,14 @@ void SetTextColor(CP_itemtype * items, int hlight)
 void WaitKeyUp(void)
 {
     ControlInfo ci;
-    while (ReadAnyControl (&ci), ci.button0 |
-           ci.button1 |
+    while (ReadAnyControl (&ci), ci.button0 | ci.button1 |
 #if SDL_MAJOR_VERSION == 1
-        ci.button2 | ci.button3 | Keyboard[sc_Space] | Keyboard[sc_Enter] | Keyboard[sc_Escape])
+           ci.button2 | ci.button3 | Keyboard[sc_Space] | Keyboard[sc_Enter] | Keyboard[sc_Escape])
+    { 
 #endif
 
 #if SDL_MAJOR_VERSION == 2           
-        ci.button2 | ci.button3 | Keyboard(sc_Space) | Keyboard(sc_Enter) | Keyboard(sc_Escape)
+    ci.button2 | ci.button3 | Keyboard(sc_Space) | Keyboard(sc_Enter) | Keyboard(sc_Escape))
 #endif    
     {
         IN_WaitAndProcessEvents();
@@ -3813,6 +3808,9 @@ int StartCPMusic (int song)
 
 void FreeMusic (void)
 {
+    int song;
+    static int lastmusic;
+    lastmusic = song;
     UNCACHEAUDIOCHUNK (STARTMUSIC + lastmusic);
 }
 

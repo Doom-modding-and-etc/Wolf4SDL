@@ -90,7 +90,7 @@ void VH_UpdateScreen(SDL_Surface *surface)
 	SDL_Flip (screen);
 #endif
 
-#ifdef SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 2
     VH_RenderTextures (screen);
 #endif
 

@@ -776,11 +776,11 @@ again:
 
 #if SDL_MAJOR_VERSION == 2
     else if (Keyboard(sc_Q))        // Q = fast quit
-        Quit (NULL);
 #endif
+    Quit(NULL);
 
 #if SDL_MAJOR_VERSION == 1
-    else if (Keyboard[sc_S])        // S = slow motion
+    else if(Keyboard[sc_S])        // S = slow motion
     {
 #endif
 
