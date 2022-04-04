@@ -143,6 +143,7 @@
     <None Include="wolfpal.inc">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="cpp.hint" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mame\fmopl.h">

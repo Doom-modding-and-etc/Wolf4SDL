@@ -262,7 +262,7 @@ void PollKeyboardButtons (void)
 
     for (i = 0; i < NUMBUTTONS; i++)
 #if SDL_MAJOR_VERSION == 1
-        if (Keyboard[buttonscan[i])
+        if (Keyboard[buttonscan[i]])
 #endif
 
 #if SDL_MAJOR_VERSION == 2        
@@ -326,13 +326,35 @@ void PollKeyboardMove (void)
 {
     int delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
 
+#if SDL_MAJOR_VERSION == 1
+    if (Keyboard[di_north])
+#endif  
+
+#if SDL_MAJOR_VERSION == 2
     if (Keyboard(dirscan[di_north]))
+#endif        
         controly -= delta;
+
+#if SDL_MAJOR_VERSION == 1    
+    if (Keyboard[di_south])
+#endif  
+
+#if SDL_MAJOR_VERSION == 2    
     if (Keyboard(dirscan[di_south]))
+#endif        
         controly += delta;
+
+#if SDL_MAJOR_VERSION == 2
     if (Keyboard(dirscan[di_west]))
+#endif        
         controlx -= delta;
+#if SDL_MAJOR_VERSION == 1
+    if (Keyboard[di_east])
+#endif  
+
+#if SDL_MAJOR_VERSION == 2
     if (Keyboard(dirscan[di_east]))
+#endif           
         controlx += delta;
 }
 
@@ -604,8 +626,15 @@ void CheckKeys (void)
     //
     // SECRET CHEAT CODE: 'MLI'
     //
+#if SDL_MAJOR_VERSION == 1
+    if (Keyboard[sc_M] && Keyboard[sc_L] && Keyboard[sc_I])
+    {
+#endif
+
+#if SDL_MAJOR_VERSION == 2
     if (Keyboard(sc_M) && Keyboard(sc_L) && Keyboard(sc_I))
     {
+#endif
         gamestate.health = 100;
         gamestate.ammo = 99;
         gamestate.keys = 3;
@@ -635,8 +664,16 @@ void CheckKeys (void)
     // OPEN UP DEBUG KEYS
     //
 #ifdef DEBUGKEYS
+
+#if SDL_MAJOR_VERSION == 1
+    if (Keyboard[sc_BackSpace] && Keyboard[sc_LShift] && Keyboard[sc_Alt] && param_debugmode)
+    {
+#endif 
+
+#if SDL_MAJOR_VERSION == 2
     if (Keyboard(sc_BackSpace) && Keyboard(sc_LShift) && Keyboard(sc_Alt) && param_debugmode)
     {
+#endif        
         ClearMemory ();
         ClearSplitVWB ();
 
@@ -652,8 +689,16 @@ void CheckKeys (void)
     //
     // TRYING THE KEEN CHEAT CODE!
     //
+
+#if SDL_MAJOR_VERSION == 1
+    if (Keyboard[sc_B] && Keyboard[sc_A] && Keyboard[sc_T])
+    {
+#endif
+
+#if SDL_MAJOR_VERSION == 2
     if (Keyboard(sc_B) && Keyboard(sc_A) && Keyboard(sc_T))
     {
+#endif
         ClearMemory ();
         ClearSplitVWB ();
 
@@ -735,8 +780,16 @@ void CheckKeys (void)
 // TAB-? debug keys
 //
 #ifdef DEBUGKEYS
+
+#if SDL_MAJOR_VERSION == 1
+    if (Keyboard[sc_Tab] && DebugOk)
+    {
+#endif 
+
+#if SDL_MAJOR_VERSION == 2
     if (Keyboard(sc_Tab) && DebugOk)
     {
+#endif     
         fontnumber = 0;
         SETFONTCOLOR (0, 15);
         if (DebugKeys () && viewsize < 20)

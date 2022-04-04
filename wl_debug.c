@@ -788,17 +788,17 @@ again:
     else if (Keyboard(sc_S))        // S = slow motion
     {
 #endif
-        CenterWindow(30,3);
-        PrintY+=6;
-        US_Print(" Slow Motion steps (default 14): ");
-        VW_UpdateScreen();
-        esc = !US_LineInput (px,py,str,NULL,true,2,0);
-        if (!esc)
-        {
-            level = atoi (str);
-            if (level>=0 && level<=50)
-                singlestep = level;
-        }
+     CenterWindow(30,3);
+     PrintY+=6;
+     US_Print(" Slow Motion steps (default 14): ");
+     VW_UpdateScreen();
+     esc = !US_LineInput (px,py,str,NULL,true,2,0);
+     if (!esc)
+     {
+       level = atoi (str);
+       if (level>=0 && level<=50)
+           singlestep = level;
+     }
         return 1;
     }
 

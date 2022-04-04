@@ -134,6 +134,7 @@
     <ClCompile Include="wl_utils.c" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="cpp.hint" />
     <None Include="sodpal.inc" />
     <None Include="wolfpal.inc" />
   </ItemGroup>
