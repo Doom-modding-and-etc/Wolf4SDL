@@ -1,6 +1,10 @@
 #ifndef __WL_DEF_H_
 #define __WL_DEF_H_
 
+#include <SDL.h>
+
+
+
 // Defines which version shall be built and configures supported extra features
 #include "version.h"
 
@@ -18,7 +22,6 @@
 #	include <string.h>
 #	include <stdarg.h>
 #endif
-#include <SDL.h>
 
 #if !defined O_BINARY
 #	define O_BINARY 0

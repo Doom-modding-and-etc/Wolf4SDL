@@ -91,7 +91,7 @@ void VH_UpdateScreen(SDL_Surface *surface)
 #endif
 
 #if SDL_MAJOR_VERSION == 2
-    VH_RenderTextures (screen);
+    VH_RenderTextures(screen);
 #endif
 
 }

@@ -41,7 +41,7 @@ unsigned screenBits = 8;
 boolean usedoublebuffering = true;
 unsigned screenWidth = 640;
 unsigned screenHeight = 480;
-int  screenBits = 8;      // use "best" color depth according to libSDL
+int screenBits = 8;      // use "best" color depth according to libSDL
 #endif
 
 SDL_Surface *screen = NULL;
@@ -207,9 +207,8 @@ void VL_SetVGAPlaneMode (void)
     }
     SDL_SetPaletteColors(screenBuffer->format->palette, gamepal, 0, 256);
 
-    texture = SDL_CreateTexture(renderer,
-        SDL_PIXELFORMAT_ARGB8888,
-        SDL_TEXTUREACCESS_STREAMING,
+    texture = SDL_CreateTexture(renderer, 
+        SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING,
         screenWidth, screenHeight);
 #endif
     screenPitch = screen->pitch;
@@ -303,20 +302,24 @@ void VL_SetColor(int color, int red, int green, int blue)
     
     curpal[color] = col;
 
-    if(screenBits == 8)
+    if (screenBits == 8)
+    {
 
 #if SDL_MAJOR_VERSION == 1
         SDL_SetPalette(screen, SDL_PHYSPAL, &col, color, 1);
+
     else
     {
         SDL_SetPalette(screenBuffer, SDL_LOGPAL, &col, color, 1);
         SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
 
-	    SDL_Flip (screen);
+        SDL_Flip(screen);
 #endif
 
 #if SDL_MAJOR_VERSION == 2
-    SDL_SetPaletteColors(screen->format->palette, &col, color, 1);
+        SDL_SetPaletteColors(screen->format->palette, &col, color, 1);
+    }
+    
     else
     {
         SDL_SetPaletteColors(screenBuffer->format->palette, &col, color, 1);

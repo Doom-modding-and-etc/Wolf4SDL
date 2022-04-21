@@ -28,6 +28,7 @@
 //
 
 #include "wl_def.h"
+//#if SDL_MAJOR_VERSION == 2
 #include <SDL_mixer.h>
 #if defined(GP2X_940)
 #include "gp2x/fmopl.h"
@@ -217,8 +218,7 @@ static void SDL_PCStopSound(void)
 //      SDL_ShutPC() - Turns off the pc speaker
 //
 ///////////////////////////////////////////////////////////////////////////
-static void
-SDL_ShutPC(void)
+static void SDL_ShutPC(void)
 {
         pcSound = 0;
 }

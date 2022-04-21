@@ -112,7 +112,9 @@ objtype dummyobj;
 //
 // LIST OF SONGS FOR EACH VERSION
 //
-int songs[] = {
+
+int songs[] = 
+{
 #ifndef SPEAR
     //
     // Episode One

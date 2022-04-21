@@ -9,6 +9,8 @@
 #include "wl_def.h"
 //#pragma hdrstop
 #include "wl_atmos.h"
+
+//#if SDL_MAJOR_VERSION == 2
 #include <SDL_syswm.h>
 
 /*

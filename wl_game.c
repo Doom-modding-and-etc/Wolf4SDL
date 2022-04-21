@@ -2,7 +2,9 @@
 
 #include <math.h>
 #include "wl_def.h"
+//#if SDL_MAJOR_VERSION == 2
 #include <SDL_mixer.h>
+
 //#pragma hdrstop
 
 #ifdef MYPROFILE

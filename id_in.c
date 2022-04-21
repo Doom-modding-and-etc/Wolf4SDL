@@ -22,9 +22,9 @@
 #include <SDL_keysym.h>
 #endif
 
-#if SDL_MAJOR_VERSION == 2
+//#if SDL_MAJOR_VERSION == 2
 #include <SDL_keyboard.h>
-#endif
+
 /*
 =============================================================================
 
