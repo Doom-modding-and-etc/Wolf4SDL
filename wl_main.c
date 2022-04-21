@@ -1169,12 +1169,7 @@ static void InitGame()
     boolean didjukebox=false;
 #endif
 
-    // initialize SDL
-
-#if SDL_MAJOR_VERSION == 1
-    putenv("SDL_VIDEODRIVER=directx");
-#endif   
-    
+    // initialize SDL    
     if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK) < 0)
     {
         printf("Unable to init SDL: %s\n", SDL_GetError());
@@ -1198,21 +1193,6 @@ static void InitGame()
 
     SignonScreen ();
 
-#if SDL_MAJOR_VERSION == 1
-    if (!fullscreen)
-    {
-        SDL_SysWMinfo wmInfo;
-        SDL_VERSION(&wmInfo.version);
-
-        if (SDL_GetWMInfo(&wmInfo) != -1)
-        {
-            HWND hwndSDL = wmInfo.window;
-            DWORD style = GetWindowLong(hwndSDL, GWL_STYLE) & ~WS_SYSMENU;
-            SetWindowLong(hwndSDL, GWL_STYLE, style);
-            SetWindowPos(hwndSDL, NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
-        }
-    }
-#endif
 
 	VW_UpdateScreen();
 
@@ -1258,15 +1238,11 @@ static void InitGame()
 
 #ifndef SPEARDEMO
 
-#if SDL_MAJOR_VERSION == 1
-    if (Keyboard[sc_M])
-    {
-#endif
 
-#if SDL_MAJOR_VERSION == 2
+//#if SDL_MAJOR_VERSION == 2
     if (Keyboard(sc_M))
     {
-#endif       
+//#endif       
         DoJukebox();
         didjukebox=true;
     }
@@ -1607,13 +1583,10 @@ static void DemoLoop()
 
 #ifdef DEBUGKEYS
 
-#if SDL_MAJOR_VERSION == 1
-        if (Keyboard[sc_Tab] && param_debugmode)
-#endif  
 
-#if SDL_MAJOR_VERSION == 2
+//#if SDL_MAJOR_VERSION == 2
         if (Keyboard(sc_Tab) && param_debugmode)
-#endif            
+//#endif            
             RecordDemo ();
         else
             US_ControlPanel (0);
@@ -1642,7 +1615,7 @@ void CheckParameters(int argc, char *argv[])
 {
     bool hasError = false, showHelp = false;
     bool sampleRateGiven = false, audioBufferGiven = false;
-    int i,defaultSampleRate = param_samplerate;
+    int i, defaultSampleRate = param_samplerate;
 
     for(i = 1; i < argc; i++)
     {

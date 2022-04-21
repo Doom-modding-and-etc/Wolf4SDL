@@ -1521,6 +1521,6 @@ void Handler::Init( Bitu rate ) {
 }*/
 
 
-};		//Namespace DBOPL
+};		//namespace DBOPL
 
 #endif  // ifdef USE_GPL

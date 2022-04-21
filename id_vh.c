@@ -87,7 +87,7 @@ void VH_UpdateScreen(SDL_Surface *surface)
 	SDL_BlitSurface (surface,NULL,screen,NULL);
 
 #if SDL_MAJOR_VERSION == 1
-	SDL_Flip (screen);
+	SDL_Flip(screen);
 #endif
 
 #if SDL_MAJOR_VERSION == 2

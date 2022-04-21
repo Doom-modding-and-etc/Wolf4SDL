@@ -189,6 +189,7 @@ static void cleanup_output(void)
 //#define console_main main
 //#endif
 
+#if SDL_MAJOR_VERSION == 2
 /* This is where execution begins [console apps] */
 int console_main(int argc, char *argv[])
 {
@@ -241,7 +242,7 @@ int console_main(int argc, char *argv[])
 	/* Hush little compiler, don't you cry... */
 	return 0;
 }
-
+#endif
 /* This is where execution begins [windowed apps] */
 #ifdef _WIN32_WCE
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, LPWSTR szCmdLine, int sw)
@@ -369,8 +370,9 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, LPSTR szCmdLine, int sw)
 	ParseCommandLine(cmdline, argv);
 
 	/* Run the main program (after a little SDL initialization) */
+#if SDL_MAJOR_VERSION == 2	
 	console_main(argc, argv);
-
+#endif
 	/* Hush little compiler, don't you cry... */
 	return 0;
 }

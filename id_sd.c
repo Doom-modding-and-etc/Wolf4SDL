@@ -437,17 +437,14 @@ void SD_PrepareSound(int which)
         newsamples[i] = GetSample((float)size * (float)i / (float)destsamples,
             origsamples, size);
     }
-#if SDL_MAJOR_VERSION == 1
-    SoundChunks[which] = Mix_LoadWAV_RW(SDL_RWFromMem(wavebuffer,
-        sizeof(headchunk) + sizeof(wavechunk) + destsamples * 2), 1);
-#endif
 
-#if SDL_MAJOR_VERSION == 2
+
+//#if SDL_MAJOR_VERSION == 2
     SDL_RWops* temp = SDL_RWFromMem(wavebuffer,
         sizeof(headchunk) + sizeof(wavechunk) + destsamples * 2);
 
     SoundChunks[which] = Mix_LoadWAV_RW(temp, 1);
-#endif
+//#endif
     free(wavebuffer);
 }
 

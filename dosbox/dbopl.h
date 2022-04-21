@@ -23,8 +23,6 @@
 #endif
 #include <SDL.h>
 
-//typedef uintptr_t	Bitu;
-//typedef intptr_t	Bits;
 typedef uint32_t	Bitu;
 typedef int32_t		Bits;
 typedef uint32_t	Bit32u;
@@ -272,4 +270,4 @@ struct Chip {
 };*/
 
 
-};		//Namespace
+};		//namespace DBOPL

@@ -788,7 +788,7 @@ void DrawScaleds (void)
     int      i,least,numvisable,height;
     byte     *visspot;
     tiletype *tilespot;
-    unsigned spotloc;
+    unsigned int spotloc;
 
     statobj_t *statptr;
     objtype   *obj;
@@ -1670,13 +1670,10 @@ void ThreeDRefresh (void)
 #endif
 
     DrawPlayerWeapon ();    // draw player's hands
-#if SDL_MAJOR_VERSION == 1
-    if (Keyboard[sc_Tab] && viewsize == 21 && gamestate.weapon != -1)
-#endif   
 
-#if SDL_MAJOR_VERSION == 2
+//#if SDL_MAJOR_VERSION == 2
     if(Keyboard(sc_Tab) && viewsize == 21 && gamestate.weapon != -1)
-#endif   
+//#endif   
         ShowActStatus();
 
     VL_UnlockSurface(screenBuffer);

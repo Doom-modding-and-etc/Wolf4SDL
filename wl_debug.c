@@ -447,15 +447,11 @@ int DebugKeys (void)
     int level;
 
 
-#if SDL_MAJOR_VERSION == 1
-    if (Keyboard[sc_B])             // B = border color
-    {
-#endif
 
-#if SDL_MAJOR_VERSION == 2
+//#if SDL_MAJOR_VERSION == 2
     if (Keyboard(sc_B))             // B = border color
     {
-#endif
+//#endif
         CenterWindow(20,3);
         PrintY+=6;
         US_Print(" Border color (0-56): ");
@@ -483,28 +479,21 @@ int DebugKeys (void)
         }
         return 1;
     }
-#if SDL_MAJOR_VERSION == 1
-    if (Keyboard[sc_C])             // C = count objects
-    {
-#endif
 
-#if SDL_MAJOR_VERSION == 2
+
+//#if SDL_MAJOR_VERSION == 2
     if (Keyboard(sc_C))             // C = count objects
     {
-#endif
+//#endif
         CountObjects();
         return 1;
     }
 
-#if SDL_MAJOR_VERSION == 1
-    if (Keyboard[sc_D])             // D = Darkone's FPS counter
-    {
-#endif
 
-#if SDL_MAJOR_VERSION == 2
+//#if SDL_MAJOR_VERSION == 2
     if (Keyboard(sc_D))             // D = Darkone's FPS counter
     {
-#endif       
+//#endif       
         CenterWindow (22,2);
         if (fpscounter)
             US_PrintCentered ("Darkone's FPS Counter OFF");
@@ -517,25 +506,17 @@ int DebugKeys (void)
     }
 
 
-#if SDL_MAJOR_VERSION == 1
-    if (Keyboard[sc_E])
-#endif
 
-#if SDL_MAJOR_VERSION == 2
+//#if SDL_MAJOR_VERSION == 2
     if (Keyboard(sc_E))             // E = quit level
-#endif
+//#endif
         playstate = ex_completed;
 
 
-#if SDL_MAJOR_VERSION == 1
-    if (Keyboard[sc_F])             // F = facing spot
-    {
-#endif
-
-#if SDL_MAJOR_VERSION == 2
+//#if SDL_MAJOR_VERSION == 2
     if (Keyboard(sc_F))             // F = facing spot
     {
-#endif      
+//#endif      
         char str[60];
         CenterWindow (14,6);
         US_Print ("x:");     US_PrintUnsigned (player->x);
@@ -559,15 +540,9 @@ int DebugKeys (void)
         return 1;
     }
 
-#if SDL_MAJOR_VERSION == 1
-    if (Keyboard[sc_G])             // G = god mode
-    {
-#endif
-
-#if SDL_MAJOR_VERSION == 2
     if (Keyboard(sc_G))             // G = god mode
     {
-#endif
+
         CenterWindow (12,2);
         if (godmode == 0)
             US_PrintCentered ("God mode ON");
@@ -585,29 +560,19 @@ int DebugKeys (void)
         return 1;
     }
 
-#if SDL_MAJOR_VERSION == 1
-    if (Keyboard[sc_H])             // H = hurt self
-    {
-#endif
 
-#if SDL_MAJOR_VERSION == 2
+
+//#if SDL_MAJOR_VERSION == 2
     if (Keyboard(sc_H))             // H = hurt self
     {
-#endif
         IN_ClearKeysDown ();
         TakeDamage (16,NULL);
     }
 
 
-#if SDL_MAJOR_VERSION == 1
-    else if (Keyboard[sc_I])        // I = item cheat
-    {
-#endif
 
-#if SDL_MAJOR_VERSION == 2
     else if (Keyboard(sc_I))        // I = item cheat
     {
-#endif
         CenterWindow (12,3);
         US_PrintCentered ("Free items!");
         VW_UpdateScreen();
@@ -624,15 +589,10 @@ int DebugKeys (void)
     }
 
 
-#if SDL_MAJOR_VERSION == 1
-    else if (Keyboard[sc_K])
-    {        // K = give keys
-#endif
 
-#if SDL_MAJOR_VERSION == 2
     else if (Keyboard(sc_K))        // K = give keys
     {
-#endif
+
         CenterWindow(16,3);
         PrintY+=6;
         US_Print("  Give Key (1-4): ");
@@ -647,15 +607,11 @@ int DebugKeys (void)
         return 1;
     }
 
-#if SDL_MAJOR_VERSION == 1
-    else if (Keyboard[sc_L])        // L = level ratios
-    {
-#endif
 
-#if SDL_MAJOR_VERSION == 2
+//#if SDL_MAJOR_VERSION == 2
     else if (Keyboard(sc_L))        // L = level ratios
     {
-#endif
+//#endif
         byte x,start,end=LRpack;
 
         if (end == 8)   // wolf3d
@@ -700,15 +656,12 @@ again:
     }
 
 #ifdef REVEALMAP
-#if SDL_MAJOR_VERSION == 1
-    else if (Keyboard[sc_M])        // M = Map reveal
-    {
-#endif
 
-#if SDL_MAJOR_VERSION == 2
+
+//#if SDL_MAJOR_VERSION == 2
     else if (Keyboard(sc_M))        // M = Map reveal
     {
-#endif
+//#endif
         mapreveal ^= true;
         CenterWindow (18,3);
         if (mapreveal)
@@ -721,15 +674,10 @@ again:
     }
 #endif
 
-#if SDL_MAJOR_VERSION == 1
-    else if (Keyboard[sc_N])        // N = no clip
-    {
-#endif
-
-#if SDL_MAJOR_VERSION == 2
+//#if SDL_MAJOR_VERSION == 2
     else if (Keyboard(sc_N))        // N = no clip
     {
-#endif
+//#endif
         noclip^=1;
         CenterWindow (18,3);
         if (noclip)
@@ -742,52 +690,35 @@ again:
     }
 #ifndef VIEWMAP
 
-#if SDL_MAJOR_VERSION == 1
-    else if (Keyboard[sc_O])        // O = basic overhead
-    {
-#endif
 
-#if SDL_MAJOR_VERSION == 2
+///#if SDL_MAJOR_VERSION == 2
     else if (Keyboard(sc_O))        // O = basic overhead
     {
-#endif
+//#endif
         BasicOverhead();
         return 1;
     }
 
 #endif
 
-#if SDL_MAJOR_VERSION == 1
-    else if (Keyboard[sc_P])         // P = Ripper's picture grabber
-    {
-#endif
-
-#if SDL_MAJOR_VERSION == 2
+//#if SDL_MAJOR_VERSION == 2
     else if(Keyboard(sc_P))         // P = Ripper's picture grabber
     {
-#endif
+//#endif
         PictureGrabber();
         return 1;
     }
 
-#if SDL_MAJOR_VERSION == 1
-    else if (Keyboard[sc_Q])        // Q = fast quit
-#endif
-
-#if SDL_MAJOR_VERSION == 2
+//#if SDL_MAJOR_VERSION == 2
     else if (Keyboard(sc_Q))        // Q = fast quit
-#endif
+//#endif
     Quit(NULL);
 
-#if SDL_MAJOR_VERSION == 1
-    else if(Keyboard[sc_S])        // S = slow motion
-    {
-#endif
 
-#if SDL_MAJOR_VERSION == 2
+//#if SDL_MAJOR_VERSION == 2
     else if (Keyboard(sc_S))        // S = slow motion
     {
-#endif
+//#endif
      CenterWindow(30,3);
      PrintY+=6;
      US_Print(" Slow Motion steps (default 14): ");
@@ -802,28 +733,19 @@ again:
         return 1;
     }
 
-#if SDL_MAJOR_VERSION == 1
-    else if (Keyboard[sc_T])        // T = shape test
-    {
-#endif
-
-#if SDL_MAJOR_VERSION == 2
+//#if SDL_MAJOR_VERSION == 2
     else if (Keyboard(sc_T))        // T = shape test
     {
-#endif
+//#endif
         ShapeTest ();
         return 1;
     }
 
-#if SDL_MAJOR_VERSION == 1
-    else if (Keyboard[sc_V])        // V = extra VBLs
-    {
-#endif
 
-#if SDL_MAJOR_VERSION == 2
+//#if SDL_MAJOR_VERSION == 2
     else if (Keyboard(sc_V))        // V = extra VBLs
     {
-#endif
+//#endif
         CenterWindow(30,3);
         PrintY+=6;
         US_Print("  Add how many extra VBLs(0-8): ");
@@ -838,15 +760,10 @@ again:
         return 1;
     }
 
-#if SDL_MAJOR_VERSION == 1
-    else if (Keyboard[sc_W])        // W = warp to level
-    {
-#endif
-
-#if SDL_MAJOR_VERSION == 2
+//#if SDL_MAJOR_VERSION == 2
     else if (Keyboard(sc_W))        // W = warp to level
     {
-#endif
+//#endif
         CenterWindow(26,3);
         PrintY+=6;
 #ifndef SPEAR
@@ -872,15 +789,10 @@ again:
         return 1;
     }
 
-#if SDL_MAJOR_VERSION == 1
-    else if (Keyboard[sc_X])        // X = item cheat
-    {
-#endif
-
-#if SDL_MAJOR_VERSION == 2
+//#if SDL_MAJOR_VERSION == 2
     else if (Keyboard(sc_X))        // X = item cheat
     {
-#endif
+//#endif
         CenterWindow (12,3);
         US_PrintCentered ("Extra stuff!");
         VW_UpdateScreen();
@@ -889,21 +801,15 @@ again:
         return 1;
 #endif
 
-
     }
 }
 
 #ifdef USE_CLOUDSKY
 
-#if SDL_MAJOR_VERSION == 1
-    else if (Keyboard[sc_Z] && curSky)
-    {
-#endif
-
-#if SDL_MAJOR_VERSION == 2
+//#if SDL_MAJOR_VERSION == 2
     else if(Keyboard(sc_Z) && curSky)
     {
-#endif
+//#endif
         char defstr[15];
 
         CenterWindow(34,4);
@@ -1163,13 +1069,11 @@ void OverheadRefresh (void)
                 //
                 if (tile < BIT_DOOR && tile != BIT_WALL)
                 {
-#if SDL_MAJOR_VERSION == 1
-                    if (DebugOk && Keyboard[sc_P] && MAPSPOT(x, y, 1) == PUSHABLETILE)
-#endif
 
-#if SDL_MAJOR_VERSION == 2
+
+//#if SDL_MAJOR_VERSION == 2
                     if (DebugOk && Keyboard(sc_P) && MAPSPOT(x,y,1) == PUSHABLETILE)
-#endif
+//#endif
                         DrawMapFloor(sx, sy, COL_SECRET);
 
                     else
@@ -1310,13 +1214,9 @@ void ViewMap (void)
 
         OverheadRefresh ();
 
-#if SDL_MAJOR_VERSION == 1
-    } while (!Keyboard[sc_Escape]);
-#endif
-
-#if SDL_MAJOR_VERSION == 2
+//#if SDL_MAJOR_VERSION == 2
     } while (!Keyboard(sc_Escape));
-#endif
+//#endif
     IN_ClearKeysDown ();
 
     if (viewsize != 21)

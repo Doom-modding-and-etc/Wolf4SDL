@@ -982,10 +982,6 @@ extern  unsigned    spearangle;
 extern  boolean     spearflag;
 #endif
 
-#if SDL_MAJOR_VERSION == 1
-    //SDL1:
-    volatile boolean Keyboard[SDLK_LAST];
-#endif
 
 void    SetupGameLevel (void);
 void    GameLoop (void);

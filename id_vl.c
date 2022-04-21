@@ -368,7 +368,7 @@ void VL_SetPalette(SDL_Color* palette, bool forceupdate)
     if (screenBits == 8)
 
 #if SDL_MAJOR_VERSION == 1
-        SDL_SetPalette(screen, SDL_PHYSPAL, palette, 0, 256);
+    SDL_SetPalette(screen, SDL_PHYSPAL, palette, 0, 256);
     else
     {
         SDL_SetPalette(screenBuffer, SDL_LOGPAL, palette, 0, 256);

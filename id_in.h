@@ -28,6 +28,7 @@
 #define SDLK_NUMLOCKCLEAR SDLK_NUMLOCK
 #define SDLK_SCROLLLOCK	SDLK_SCROLLOCK
 #define SDL_Keymod SDLMod
+#define UNKNOWN_KEY SDLK_UNKNOWN
 #endif
 
 #define KEYCOUNT 129
@@ -165,19 +166,12 @@ extern           int        JoyNumButtons;
 extern           boolean    forcegrabmouse;
 
 
-//Function prototypes
-#if SDL_MAJOR_VERSION == 1
 
-#define	IN_KeyDown(code)	(Keyboard[(code)])
-#define	IN_ClearKey(code)	{Keyboard[code] = false;\
-							 if (code == LastScan) LastScan = sc_None;}
-#endif
-
-#if SDL_MAJOR_VERSION == 2
+//#if SDL_MAJOR_VERSION == 2
 #define	IN_KeyDown(code)	(Keyboard((code)))
 #define	IN_ClearKey(code)	{ KeyboardSet(code, false);\
 						      if (code == LastScan) LastScan = sc_None;}
-#endif
+//#endif
 
 
 
@@ -196,13 +190,12 @@ extern	ScanCode	IN_WaitForKey(void);
 extern	word		IN_GetJoyButtonsDB(word joy);
 extern	const char *IN_GetScanName(ScanCode);
 
-#if SDL_MAJOR_VERSION == 2
+
 boolean Keyboard(int key);
 
 void KeyboardSet(int key, boolean state);
 
 int KeyboardLookup(int key);
-#endif
 
 void    IN_WaitAndProcessEvents();
 void    IN_ProcessEvents();
