@@ -1,62 +1,49 @@
 CONFIG ?= config.default
 -include $(CONFIG)
 
-
-BINARY    ?= wolf4sdl
-PREFIX    ?= /usr/local
+BINARY ?= wolf4sdl
+PREFIX ?= /usr/local
 MANPREFIX ?= $(PREFIX)
 
-INSTALL         ?= install
+INSTALL ?= install
 INSTALL_PROGRAM ?= $(INSTALL) -m 555 -s
-INSTALL_MAN     ?= $(INSTALL) -m 444
-INSTALL_DATA    ?= $(INSTALL) -m 444
+INSTALL_MAN ?= $(INSTALL) -m 444
+INSTALL_DATA ?= $(INSTALL) -m 444
 
 ifeq ($(SDL_MAJOR_VERSION),1)
-	SDL_CONFIG  ?= sdl-config
+SDL_CONFIG  ?= sdl-config
 else
-	SDL_CONFIG  ?= sdl2-config
+SDL_CONFIG  ?= sdl2-config
 endif
-CFLAGS_SDL  ?= $(shell $(SDL_CONFIG) --cflags)
+CFLAGS_SDL ?= $(shell $(SDL_CONFIG) --cflags)
 LDFLAGS_SDL ?= $(shell $(SDL_CONFIG) --libs)
 
 
 CFLAGS += $(CFLAGS_SDL)
 
-#CFLAGS += -Wall
-#CFLAGS += -W
-CFLAGS += -g
-CFLAGS += -Wpointer-arith
-CFLAGS += -Wreturn-type
-CFLAGS += -Wwrite-strings
-CFLAGS += -Wcast-align
+CFLAGS += -Wall -W -g -Wpointer-arith -Wreturn-type -Wwrite-strings -Wcast-align -std=gnu99 \
+-Werror-implicit-function-declaration -Wimplicit-int -Wsequence-point
+
 
 ifdef GPL
     CFLAGS += -DUSE_GPL
 endif
 
-
-CCFLAGS += $(CFLAGS)
-CCFLAGS += -std=gnu99
-CCFLAGS += -Werror-implicit-function-declaration
-CCFLAGS += -Wimplicit-int
-CCFLAGS += -Wsequence-point
-
 CXXFLAGS += $(CFLAGS)
 
 LDFLAGS += $(LDFLAGS_SDL)
 ifeq ($(SDL_MAJOR_VERSION),1)
-	LDFLAGS += -lSDL_mixer
+LDFLAGS += -lSDL_mixer
 endif
 
 ifeq ($(SDL_MAJOR_VERSION),2)
-	LDFLAGS += -lSDL2_mixer
+LDFLAGS += -lSDL2_mixer
 endif
 
 ifneq (,$(findstring MINGW,$(shell uname -s)))
 LDFLAGS += -static-libgcc
 endif
 
-SRCS :=
 ifndef GPL
     SRCS += mame/fmopl.c
 else
@@ -70,7 +57,6 @@ wl_text.c wl_utils.c
 DEPS = $(filter %.d, $(SRCS:.c=.d) $(SRCS:.cpp=.d))
 OBJS = $(filter %.o, $(SRCS:.c=.o) $(SRCS:.cpp=.o))
 
-.SUFFIXES:
 .SUFFIXES: .c .cpp .d .o
 
 Q ?= @
@@ -87,11 +73,11 @@ endif
 
 $(BINARY): $(OBJS)
 	@echo '===> LD $@'
-	$(Q)$(CXX) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $@
+	$(Q)$(CC) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $@
 
 .c.o:
-	@echo '===> CC $<'
-	$(Q)$(CC) $(CCFLAGS) -c $< -o $@
+	@echo '===> C $<'
+	$(Q)$(CC) $(CFLAGS) -c $< -o $@
 
 .cpp.o:
 	@echo '===> CXX $<'
@@ -99,7 +85,7 @@ $(BINARY): $(OBJS)
 
 .c.d:
 	@echo '===> DEP $<'
-	$(Q)$(CC) $(CCFLAGS) -MM $< | sed 's#^$(@F:%.d=%.o):#$@ $(@:%.d=%.o):#' > $@
+	$(Q)$(CC) $(CFLAGS) -MM $< | sed 's#^$(@F:%.d=%.o):#$@ $(@:%.d=%.o):#' > $@
 
 .cpp.d:
 	@echo '===> DEP $<'

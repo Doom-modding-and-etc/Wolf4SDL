@@ -1,7 +1,6 @@
 // WL_DRAW.C
 
 #include "wl_def.h"
-//#pragma hdrstop
 
 #include "wl_cloudsky.h"
 #include "wl_atmos.h"

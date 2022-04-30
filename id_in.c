@@ -20,11 +20,9 @@
 #include "wl_def.h"
 #if SDL_MAJOR_VERSION == 1
 #include <SDL_keysym.h>
-#endif
-
-//#if SDL_MAJOR_VERSION == 2
+#elif SDL_MAJOR_VERSION == 2
 #include <SDL_keyboard.h>
-
+#endif
 /*
 =============================================================================
 
@@ -51,7 +49,8 @@ volatile char		LastASCII;
 volatile ScanCode	LastScan;
 
 //KeyboardDef	KbdDefs = {0x1d,0x38,0x47,0x48,0x49,0x4b,0x4d,0x4f,0x50,0x51};
-static KeyboardDef KbdDefs = {
+static KeyboardDef KbdDefs = 
+{
     sc_Control,             // button0
     sc_Alt,                 // button1
     sc_Home,                // upleft
@@ -124,7 +123,6 @@ static	Direction	DirTable[] =		// Quick lookup for total direction
     dir_SouthWest,	dir_South,	dir_SouthEast
 };
 
-//#if SDL_MAJOR_VERSION == 2
 boolean Keyboard(int key)
 {
     int keyIndex = KeyboardLookup(key);
@@ -316,6 +314,7 @@ void IN_GetJoyDelta(int *dx,int *dy)
     int y = 0;
 #else
     int x = SDL_JoystickGetAxis(Joystick, 0) >> 8;
+    //1 here?
     int y = SDL_JoystickGetAxis(Joystick, 1) >> 8;
 #endif
 
@@ -381,14 +380,13 @@ void IN_GetJoyFineDelta(int *dx, int *dy)
 
 int IN_JoyButtons()
 {
-    int i;
 
     if(!Joystick) return 0;
 
     SDL_JoystickUpdate();
 
     int res = 0;
-    for(i = 0; i < JoyNumButtons && i < 32; i++)
+    for( int i = 0; i < JoyNumButtons && i < 32; i++ )
         res |= SDL_JoystickGetButton(Joystick, i) << i;
     return res;
 }
@@ -416,9 +414,7 @@ static void processEvent(SDL_Event *event)
 
 #if SDL_MAJOR_VERSION == 1
                 SDL_WM_GrabInput(GrabInput ? SDL_GRAB_ON : SDL_GRAB_OFF);                
-#endif
-
-#if SDL_MAJOR_VERSION == 2
+#elif SDL_MAJOR_VERSION == 2
             SDL_SetRelativeMouseMode(GrabInput ? SDL_TRUE : SDL_FALSE);
 #endif
             return;
@@ -445,18 +441,16 @@ static void processEvent(SDL_Event *event)
                 {
                     switch(LastScan)
                     {         
-                   
-//#if SDL_MAJOR_VERSION == 2
                      case SDLK_KP_2: LastScan = SDLK_DOWN; break;
                      case SDLK_KP_4: LastScan = SDLK_LEFT; break;
                      case SDLK_KP_6: LastScan = SDLK_RIGHT; break;
                      case SDLK_KP_8: LastScan = SDLK_UP; break;
-//#endif                    
                     }
                 }
             }
 
-            int sym = LastScan;
+            int sym;  
+            sym = LastScan;
             if(sym >= 'a' && sym <= 'z')
                 sym -= 32;  // convert to uppercase
 
@@ -471,11 +465,10 @@ static void processEvent(SDL_Event *event)
                     LastASCII = ASCIINames[sym];
             }
          
-
-//#if SDL_MAJOR_VERSION == 2
-            int intLastScan = LastScan;
+            int intLastScan;
+            intLastScan = LastScan;
             KeyboardSet(intLastScan, 1);
-//#endif
+
             if(LastScan == SDLK_PAUSE)
                 Paused = true;
             break;
@@ -494,20 +487,14 @@ static void processEvent(SDL_Event *event)
                 {
                     switch(key)
                     {
-
-//#if SDL_MAJOR_VERSION == 2
                         case SDLK_KP_2: key = SDLK_DOWN; break;
                         case SDLK_KP_4: key = SDLK_LEFT; break;
                         case SDLK_KP_6: key = SDLK_RIGHT; break;
-                        case SDLK_KP_8: key = SDLK_UP; break;
-//#endif                    
+                        case SDLK_KP_8: key = SDLK_UP; break;                    
                     }
                 }
             }
-
-//#if SDL_MAJOR_VERSION == 2
             KeyboardSet(key, 0);
-//#endif
         }
 
 #if defined(GP2X)
@@ -576,9 +563,7 @@ void IN_Startup(void)
         GrabInput = true;
     #if SDL_MAJOR_VERSION == 1
             SDL_WM_GrabInput(SDL_GRAB_ON);
-    #endif
-    
-    #if SDL_MAJOR_VERSION == 2      
+    #elif SDL_MAJOR_VERSION == 2      
       SDL_SetRelativeMouseMode(SDL_TRUE);
     #endif
     }
@@ -616,8 +601,7 @@ void IN_Shutdown(void)
 //	IN_ClearKeysDown() - Clears the keyboard array
 //
 ///////////////////////////////////////////////////////////////////////////
-void
-IN_ClearKeysDown(void)
+void IN_ClearKeysDown(void)
 {
 	LastScan = sc_None;
 	LastASCII = key_None;
@@ -823,7 +807,7 @@ void IN_Ack(void)
 ///////////////////////////////////////////////////////////////////////////
 boolean IN_UserInput(longword delay)
 {
-	longword	lasttime;
+	longword lasttime;
 
 	lasttime = GetTimeCount();
 	IN_StartAck ();
@@ -863,9 +847,7 @@ void IN_CenterMouse()
 {
 #if SDL_MAJOR_VERSION == 1
     SDL_WarpMouse(screenWidth / 2, screenHeight / 2);
-#endif
-
-#if SDL_MAJOR_VERSION == 2
+#elif SDL_MAJOR_VERSION == 2
     SDL_WarpMouseGlobal(screenWidth / 2, screenHeight / 2);
 #endif
 }

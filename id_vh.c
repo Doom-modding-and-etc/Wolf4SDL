@@ -51,14 +51,14 @@ void VWB_DrawPropString(const char* string)
 }
 
 
-void VWL_MeasureString (const char *string, word *width, word *height, fontstruct *font)
+void VWL_MeasureString(const char *string, word *width, word *height, fontstruct *font)
 {
 	*height = font->height;
 	for (*width = 0;*string;string++)
 		*width += font->width[*((byte *)string)];	// proportional width
 }
 
-void VW_MeasurePropString (const char *string, word *width, word *height)
+void VW_MeasurePropString(const char *string, word *width, word *height)
 {
 	VWL_MeasureString(string,width,height,(fontstruct *)grsegs[STARTFONT+fontnumber]);
 }
@@ -88,9 +88,7 @@ void VH_UpdateScreen(SDL_Surface *surface)
 
 #if SDL_MAJOR_VERSION == 1
 	SDL_Flip(screen);
-#endif
-
-#if SDL_MAJOR_VERSION == 2
+#elif SDL_MAJOR_VERSION == 2
     VH_RenderTextures(screen);
 #endif
 
@@ -101,7 +99,7 @@ void VWB_DrawTile8 (int x, int y, int tile)
 	VL_MemToScreen (grsegs[STARTTILE8]+tile*64,8,8,x,y);
 }
 
-void VWB_DrawPic (int x, int y, int chunknum)
+void VWB_DrawPic(int x, int y, int chunknum)
 {
 	int	picnum = chunknum - STARTPICS;
 	unsigned width,height;
@@ -114,7 +112,7 @@ void VWB_DrawPic (int x, int y, int chunknum)
 	VL_MemToScreen (grsegs[chunknum],width,height,x,y);
 }
 
-void VWB_DrawPicScaledCoord (int scx, int scy, int chunknum)
+void VWB_DrawPicScaledCoord(int scx, int scy, int chunknum)
 {
 	int	picnum = chunknum - STARTPICS;
 	unsigned width,height;
@@ -126,12 +124,12 @@ void VWB_DrawPicScaledCoord (int scx, int scy, int chunknum)
 }
 
 
-void VWB_Bar (int x, int y, int width, int height, int color)
+void VWB_Bar(int x, int y, int width, int height, int color)
 {
 	VW_Bar (x,y,width,height,color);
 }
 
-void VWB_Plot (int x, int y, int color)
+void VWB_Plot(int x, int y, int color)
 {
     if(scaleFactor == 1)
         VW_Plot(x,y,color);
@@ -139,7 +137,7 @@ void VWB_Plot (int x, int y, int color)
         VW_Bar(x, y, 1, 1, color);
 }
 
-void VWB_Hlin (int x1, int x2, int y, int color)
+void VWB_Hlin(int x1, int x2, int y, int color)
 {
     if(scaleFactor == 1)
     	VW_Hlin(x1,x2,y,color);
@@ -147,7 +145,7 @@ void VWB_Hlin (int x1, int x2, int y, int color)
         VW_Bar(x1, y, x2-x1+1, 1, color);
 }
 
-void VWB_Vlin (int y1, int y2, int x, int color)
+void VWB_Vlin(int y1, int y2, int x, int color)
 {
     if(scaleFactor == 1)
 		VW_Vlin(y1,y2,x,color);

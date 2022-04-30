@@ -47,7 +47,6 @@
 
 #pragma pack(1)
 
-//#include "dosbox.h"
 #include "dbopl.h"
 
 
@@ -55,7 +54,8 @@
 #define PI 3.14159265358979323846
 #endif
 
-namespace DBOPL {
+namespace DBOPL 
+{
 
 #define OPLRATE		((double)(14318180.0 / 288.0))
 #define TREMOLO_TABLE 52

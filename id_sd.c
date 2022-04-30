@@ -28,7 +28,6 @@
 //
 
 #include "wl_def.h"
-//#if SDL_MAJOR_VERSION == 2
 #include <SDL_mixer.h>
 #if defined(GP2X_940)
 #include "gp2x/fmopl.h"
@@ -115,7 +114,6 @@ static  longword                sqHackTime;
 #ifdef USE_GPL
 using namespace DBOPL;
 
-//DBOPL::Chip oplChip;
 Chip oplChip;
 
 static inline bool YM3812Init(int numChips, int clock, int rate)
@@ -401,7 +399,7 @@ Sint16 GetSample(float csample, byte *samples, int size)
 
 void SD_PrepareSound(int which)
 {
-    int i;
+    //int i;
 
     if(DigiList == NULL)
         Quit("SD_PrepareSound(%i): DigiList not initialized!\n", which);
@@ -413,7 +411,7 @@ void SD_PrepareSound(int which)
     if(origsamples + size >= PM_GetPageEnd())
         Quit("SD_PrepareSound(%i): Sound reaches out of page file!\n", which);
 
-    int destsamples = (int) ((float) size * (float) param_samplerate
+    longword destsamples = (int) ((float) size * (float) param_samplerate
         / (float) ORIGSAMPLERATE);
 
     byte *wavebuffer = SafeMalloc(sizeof(headchunk) + sizeof(wavechunk)
@@ -432,19 +430,17 @@ void SD_PrepareSound(int which)
         + sizeof(wavechunk));
     float cursample = 0.F;
     float samplestep = (float) ORIGSAMPLERATE / (float) param_samplerate;
-    for(i=0; i<destsamples; i++, cursample+=samplestep)
+    for(int i=0; i<destsamples; cursample+=samplestep, i++)
     {
         newsamples[i] = GetSample((float)size * (float)i / (float)destsamples,
             origsamples, size);
     }
 
 
-//#if SDL_MAJOR_VERSION == 2
     SDL_RWops* temp = SDL_RWFromMem(wavebuffer,
         sizeof(headchunk) + sizeof(wavechunk) + destsamples * 2);
 
     SoundChunks[which] = Mix_LoadWAV_RW(temp, 1);
-//#endif
     free(wavebuffer);
 }
 

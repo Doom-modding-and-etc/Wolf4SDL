@@ -25,7 +25,6 @@ loaded into the data segment
 #endif
 
 #include "wl_def.h"
-#pragma hdrstop
 
 #define THREEBYTEGRSTARTS
 
@@ -135,8 +134,12 @@ static int32_t GRFILEPOS(const size_t idx)
 void CAL_GetGrChunkLength (int chunk)
 {
     lseek(grhandle,GRFILEPOS(chunk),SEEK_SET);
-    read(grhandle,&chunkexplen,sizeof(chunkexplen));
-    chunkcomplen = GRFILEPOS(chunk+1)-GRFILEPOS(chunk)-4;
+
+    if (read(grhandle, &chunkexplen, sizeof(chunkexplen)))
+    {
+        chunkcomplen = GRFILEPOS(chunk + 1) - GRFILEPOS(chunk) - 4;
+    }
+    
 }
 
 
@@ -153,6 +156,7 @@ void CAL_GetGrChunkLength (int chunk)
 boolean CA_WriteFile (const char *filename, void *ptr, int32_t length)
 {
     const int handle = open(filename, O_CREAT | O_WRONLY | O_BINARY, 0644);
+    
     if (handle == -1)
         return false;
 
@@ -177,11 +181,12 @@ boolean CA_WriteFile (const char *filename, void *ptr, int32_t length)
 ==========================
 */
 
-boolean CA_LoadFile (const char *filename, void **ptr)
+boolean CA_LoadFile(const char *filename, void **ptr)
 {
     int32_t size;
 
-    const int handle = open(filename, O_RDONLY | O_BINARY);
+    int handle;
+    handle = open(filename, O_RDONLY | O_BINARY);
     if (handle == -1)
         return false;
 
@@ -194,7 +199,6 @@ boolean CA_LoadFile (const char *filename, void **ptr)
         close (handle);
         return false;
     }
-    close (handle);
     return true;
 }
 
@@ -264,14 +268,16 @@ static void CAL_HuffExpand(byte *source, byte *dest, int32_t length, huffnode *h
 ======================
 */
 
-#define NEARTAG 0xa7
-#define FARTAG  0xa8
 
-void CAL_CarmackExpand (byte *source, word *dest, int length)
+
+void CAL_CarmackExpand(byte *source, word *dest, int length)
 {
     word ch,chhigh,count,offset;
     byte *inptr;
     word *copyptr, *outptr;
+
+    #define NEARTAG 0xa7
+    #define FARTAG  0xa8
 
     length/=2;
 
@@ -338,10 +344,10 @@ void CAL_CarmackExpand (byte *source, word *dest, int length)
 ======================
 */
 
-int32_t CA_RLEWCompress (word *source, int32_t length, word *dest, word rlewtag)
+int32_t CA_RLEWCompress(word *source, int32_t length, word *dest, word rlewtag)
 {
     word value,count;
-    unsigned i;
+    unsigned int i;
     word *start,*end;
 
     start = dest;
@@ -393,7 +399,7 @@ int32_t CA_RLEWCompress (word *source, int32_t length, word *dest, word rlewtag)
 ======================
 */
 
-void CA_RLEWexpand (word *source, word *dest, int32_t length, word rlewtag)
+void CA_RLEWexpand(word *source, word *dest, int32_t length, word rlewtag)
 {
     word value,count,i;
     word *end=dest+length/2;
@@ -446,30 +452,37 @@ void CAL_SetupGrFile (void)
     char fname[13];
     int handle;
     byte *compseg;
-
-//
-// load ???dict.ext (huffman dictionary for graphics files)
-//
-
+    
+    long headersize;
+    //
+    // load ???dict.ext (huffman dictionary for graphics files)
+    //
+    
     strcpy(fname,gdictname);
     strcat(fname,graphext);
 
     handle = open(fname, O_RDONLY | O_BINARY);
     if (handle == -1)
+    {
         CA_CannotOpen(fname);
+    }
 
-    read(handle, grhuffman, sizeof(grhuffman));
-    close(handle);
-
+    if (read(handle, grhuffman, sizeof(grhuffman)))
+    {
+        close(handle);
+    }
+    
     // load the data offsets from ???head.ext
     strcpy(fname,gheadname);
     strcat(fname,graphext);
 
     handle = open(fname, O_RDONLY | O_BINARY);
     if (handle == -1)
+    {
         CA_CannotOpen(fname);
+    }
 
-    long headersize = lseek(handle, 0, SEEK_END);
+    headersize = lseek(handle, 0, SEEK_END);
     lseek(handle, 0, SEEK_SET);
 
 	int expectedsize = lengthof(grstarts);
@@ -482,12 +495,16 @@ void CAL_SetupGrFile (void)
             fname, headersize / 3, expectedsize);
 
     byte data[lengthof(grstarts) * 3];
-    read(handle, data, sizeof(data));
-    close(handle);
+    
+    if(read(handle, data, sizeof(data)))
+    {
+        close(handle);
+    }
+    
 
     const byte* d = data;
-    int32_t* i;
-    for (i = grstarts; i != endof(grstarts); ++i)
+
+    for (int32_t* i = grstarts; i != endof(grstarts); ++i)
     {
         const int32_t val = d[0] | d[1] << 8 | d[2] << 16;
         *i = (val == 0x00FFFFFF ? -1 : val);
@@ -502,8 +519,9 @@ void CAL_SetupGrFile (void)
 
     grhandle = open(fname, O_RDONLY | O_BINARY);
     if (grhandle == -1)
+    {
         CA_CannotOpen(fname);
-
+    }
 
 //
 // load the pic and sprite headers into the arrays in the data segment
@@ -511,13 +529,13 @@ void CAL_SetupGrFile (void)
     pictable = SafeMalloc(NUMPICS * sizeof(*pictable));
     CAL_GetGrChunkLength(STRUCTPIC);                // position file pointer
     compseg = SafeMalloc(chunkcomplen);
-    read (grhandle,compseg,chunkcomplen);
-    CAL_HuffExpand(compseg, (byte*)pictable, NUMPICS * sizeof(*pictable), grhuffman);
-    free(compseg);
-
-    CA_CacheGrChunks ();
-
-    close (grhandle);
+    if (read(grhandle, compseg, chunkcomplen)) 
+    {
+        CAL_HuffExpand(compseg, (byte*)pictable, NUMPICS * sizeof(*pictable), grhuffman);
+        free(compseg);
+        CA_CacheGrChunks();
+        close(grhandle);
+    }
 }
 
 //==========================================================================
@@ -546,13 +564,16 @@ void CAL_SetupMapFile (void)
 
     handle = open(fname, O_RDONLY | O_BINARY);
     if (handle == -1)
+    {
         CA_CannotOpen(fname);
+    }
 
     tinf = SafeMalloc(sizeof(*tinf));
 
-    read(handle, tinf, sizeof(*tinf));
-    close(handle);
-
+    if(read(handle, tinf, sizeof(*tinf)))
+    {
+        close(handle);
+    }
 //
 // open the data file
 //
@@ -575,7 +596,7 @@ void CAL_SetupMapFile (void)
 //
 // load all map header
 //
-    for (i=0;i<NUMMAPS;i++)
+    for (i=0; i<NUMMAPS; i++)
     {
         pos = tinf->headeroffsets[i];
         if (pos<0)                          // $FFFFFFFF start is a sparse map
@@ -584,14 +605,16 @@ void CAL_SetupMapFile (void)
         mapheaderseg[i] = SafeMalloc(sizeof(*mapheaderseg[i]));
 
         lseek(maphandle,pos,SEEK_SET);
-        read (maphandle,mapheaderseg[i],sizeof(*mapheaderseg[i]));
+        read(maphandle,mapheaderseg[i],sizeof(*mapheaderseg[i]));
     }
 
 //
 // allocate space for 3 64*64 planes
 //
-    for (i=0;i<MAPPLANES;i++)
+    for (i = 0; i < MAPPLANES; i++)
+    {
         mapsegs[i] = SafeMalloc(MAPAREA * sizeof(*mapsegs[i]));
+    }
 }
 
 
@@ -672,7 +695,8 @@ void CA_Startup (void)
 
 void CA_Shutdown (void)
 {
-    int i,start;
+    int i;
+    int start;
 
     if (maphandle != -1)
         close(maphandle);
@@ -740,8 +764,12 @@ int32_t CA_CacheAudioChunk (int chunk)
     audiosegs[chunk] = SafeMalloc(size);
 
     lseek(audiohandle,pos,SEEK_SET);
-    read(audiohandle,audiosegs[chunk],size);
-
+    if (read(audiohandle, audiosegs[chunk], size) < 0) 
+    {
+        free(audiosegs[chunk]);
+        audiosegs[chunk] = NULL;
+        return 0;
+    }
     return size;
 }
 
@@ -788,11 +816,11 @@ void CA_CacheAdlibSoundChunk (int chunk)
     sound->inst.unused[2] = *ptr++;
     sound->block = *ptr++;
 
-    read(audiohandle, sound->data, size - ORIG_ADLIBSOUND_SIZE + 1);  // + 1 because of byte data[1]
-
-    audiosegs[chunk]=(byte *) sound;
-
-    free (bufferseg);
+    if (read(audiohandle, sound->data, size - ORIG_ADLIBSOUND_SIZE + 1)) // + 1 because of byte data[1]
+    {
+        audiosegs[chunk] = (byte*)sound;
+        free(bufferseg);
+    }
 }
 
 //===========================================================================
@@ -870,7 +898,9 @@ cachein:
 
 void CAL_ExpandGrChunk (int chunk, int32_t *source)
 {
-    int32_t    expanded;
+    int32_t expanded;
+
+
 
     if (chunk >= STARTTILE8 && chunk < STARTEXTERNS)
     {
@@ -894,6 +924,7 @@ void CAL_ExpandGrChunk (int chunk, int32_t *source)
         else
             expanded = MASKBLOCK*16;
     }
+    
     else
     {
         //
@@ -921,16 +952,19 @@ void CAL_ExpandGrChunk (int chunk, int32_t *source)
 
 void CAL_DeplaneGrChunk (int chunk)
 {
-    int     i;
     int16_t width,height;
+    int16_t bits = 8;
 
     if (chunk == STARTTILE8)
     {
-        width = height = 8;
+        width = height = bits;
 
-        for (i = 0; i < NUMTILE8; i++)
-            VL_DePlaneVGA (grsegs[chunk] + (i * (width * height)),width,height);
+        for (int i = 0; i < NUMTILE8; i++)
+        {
+            VL_DePlaneVGA(grsegs[chunk] + (i * (width * height)), width, height);
+        }
     }
+    
     else
     {
         width = pictable[chunk - STARTPICS].width;
