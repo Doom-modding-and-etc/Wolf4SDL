@@ -399,7 +399,7 @@ Sint16 GetSample(float csample, byte *samples, int size)
 
 void SD_PrepareSound(int which)
 {
-    int i;
+    //int i;
 
     if(DigiList == NULL)
         Quit("SD_PrepareSound(%i): DigiList not initialized!\n", which);
@@ -430,19 +430,17 @@ void SD_PrepareSound(int which)
         + sizeof(wavechunk));
     float cursample = 0.F;
     float samplestep = (float) ORIGSAMPLERATE / (float) param_samplerate;
-    for(i=0; i<destsamples; i++, cursample+=samplestep)
+    for(int i=0; i<destsamples; cursample+=samplestep, i++)
     {
         newsamples[i] = GetSample((float)size * (float)i / (float)destsamples,
             origsamples, size);
     }
 
 
-//#if SDL_MAJOR_VERSION == 2
     SDL_RWops* temp = SDL_RWFromMem(wavebuffer,
         sizeof(headchunk) + sizeof(wavechunk) + destsamples * 2);
 
     SoundChunks[which] = Mix_LoadWAV_RW(temp, 1);
-//#endif
     free(wavebuffer);
 }
 

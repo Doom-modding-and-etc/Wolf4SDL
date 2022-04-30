@@ -156,6 +156,7 @@ void CAL_GetGrChunkLength (int chunk)
 boolean CA_WriteFile (const char *filename, void *ptr, int32_t length)
 {
     const int handle = open(filename, O_CREAT | O_WRONLY | O_BINARY, 0644);
+    
     if (handle == -1)
         return false;
 
@@ -180,11 +181,12 @@ boolean CA_WriteFile (const char *filename, void *ptr, int32_t length)
 ==========================
 */
 
-boolean CA_LoadFile (const char *filename, void **ptr)
+boolean CA_LoadFile(const char *filename, void **ptr)
 {
     int32_t size;
 
-    const int handle = open(filename, O_RDONLY | O_BINARY);
+    int handle;
+    handle = open(filename, O_RDONLY | O_BINARY);
     if (handle == -1)
         return false;
 
@@ -197,7 +199,6 @@ boolean CA_LoadFile (const char *filename, void **ptr)
         close (handle);
         return false;
     }
-    close (handle);
     return true;
 }
 
@@ -267,14 +268,16 @@ static void CAL_HuffExpand(byte *source, byte *dest, int32_t length, huffnode *h
 ======================
 */
 
-#define NEARTAG 0xa7
-#define FARTAG  0xa8
 
-void CAL_CarmackExpand (byte *source, word *dest, int length)
+
+void CAL_CarmackExpand(byte *source, word *dest, int length)
 {
     word ch,chhigh,count,offset;
     byte *inptr;
     word *copyptr, *outptr;
+
+    #define NEARTAG 0xa7
+    #define FARTAG  0xa8
 
     length/=2;
 
@@ -341,10 +344,10 @@ void CAL_CarmackExpand (byte *source, word *dest, int length)
 ======================
 */
 
-int32_t CA_RLEWCompress (word *source, int32_t length, word *dest, word rlewtag)
+int32_t CA_RLEWCompress(word *source, int32_t length, word *dest, word rlewtag)
 {
     word value,count;
-    unsigned i;
+    unsigned int i;
     word *start,*end;
 
     start = dest;
@@ -396,7 +399,7 @@ int32_t CA_RLEWCompress (word *source, int32_t length, word *dest, word rlewtag)
 ======================
 */
 
-void CA_RLEWexpand (word *source, word *dest, int32_t length, word rlewtag)
+void CA_RLEWexpand(word *source, word *dest, int32_t length, word rlewtag)
 {
     word value,count,i;
     word *end=dest+length/2;
@@ -449,9 +452,12 @@ void CAL_SetupGrFile (void)
     char fname[13];
     int handle;
     byte *compseg;
-//
-// load ???dict.ext (huffman dictionary for graphics files)
-//
+    
+    long headersize;
+    //
+    // load ???dict.ext (huffman dictionary for graphics files)
+    //
+    
     strcpy(fname,gdictname);
     strcat(fname,graphext);
 
@@ -476,7 +482,7 @@ void CAL_SetupGrFile (void)
         CA_CannotOpen(fname);
     }
 
-    long headersize = lseek(handle, 0, SEEK_END);
+    headersize = lseek(handle, 0, SEEK_END);
     lseek(handle, 0, SEEK_SET);
 
 	int expectedsize = lengthof(grstarts);
@@ -892,7 +898,7 @@ cachein:
 
 void CAL_ExpandGrChunk (int chunk, int32_t *source)
 {
-    int32_t    expanded;
+    int32_t expanded;
 
 
     if (chunk >= STARTTILE8 && chunk < STARTEXTERNS)
@@ -917,6 +923,7 @@ void CAL_ExpandGrChunk (int chunk, int32_t *source)
         else
             expanded = MASKBLOCK*16;
     }
+    
     else
     {
         //
@@ -945,10 +952,11 @@ void CAL_ExpandGrChunk (int chunk, int32_t *source)
 void CAL_DeplaneGrChunk (int chunk)
 {
     int16_t width,height;
+    int16_t bits = 8;
 
     if (chunk == STARTTILE8)
     {
-        width = height = 8;
+        width = height = bits;
 
         for (int i = 0; i < NUMTILE8; i++)
         {

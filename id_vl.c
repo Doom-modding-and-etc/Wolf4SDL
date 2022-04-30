@@ -37,8 +37,8 @@ unsigned screenHeight = 480;
 unsigned screenBits = 8;
 #else
 boolean usedoublebuffering = true;
-unsigned screenWidth = 640;
-unsigned screenHeight = 480;
+unsigned int screenWidth = 640;
+unsigned int screenHeight = 480;
 int screenBits = 8;      // use "best" color depth according to libSDL
 #endif
 
@@ -177,7 +177,7 @@ void VL_SetVGAPlaneMode (void)
     window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight,
         (fullscreen ? SDL_WINDOW_FULLSCREEN : 0) | SDL_WINDOW_OPENGL);
 
-    SDL_PixelFormatEnumToMasks (SDL_PIXELFORMAT_ARGB8888,&screenBits,&r,&g,&b,&a);
+    SDL_PixelFormatEnumToMasks(SDL_PIXELFORMAT_ARGB8888, &screenBits, &r,&g,&b,&a);
 
     screen = SDL_CreateRGBSurface(0,screenWidth,screenHeight,screenBits,r,g,b,a);
 
@@ -299,22 +299,24 @@ void VL_SetColor(int color, int red, int green, int blue)
     };
     
     curpal[color] = col;
-
-    if (screenBits == 8)
-    {
-
 #if SDL_MAJOR_VERSION == 1
+    if (screenBits)
+    {
         SDL_SetPalette(screen, SDL_PHYSPAL, &col, color, 1);
-
+    }
+    
     else
     {
         SDL_SetPalette(screenBuffer, SDL_LOGPAL, &col, color, 1);
         SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
 
         SDL_Flip(screen);
-#endif
 
-#if SDL_MAJOR_VERSION == 2
+      
+    }
+#elif SDL_MAJOR_VERSION == 2   
+    if (screenBits)
+    {
         SDL_SetPaletteColors(screen->format->palette, &col, color, 1);
     }
     
@@ -327,8 +329,8 @@ void VL_SetColor(int color, int red, int green, int blue)
         SDL_RenderCopy(renderer, texture, NULL, NULL);
         SDL_RenderPresent(renderer);
         SDL_DestroyTexture(texture);
-#endif
     }
+#endif
 }
 
 
@@ -344,7 +346,7 @@ void VL_SetColor(int color, int red, int green, int blue)
 =================
 */
 
-void VL_GetColor	(int color, int *red, int *green, int *blue)
+void VL_GetColor(int color, int *red, int *green, int *blue)
 {
     SDL_Color *col = &curpal[color];
     *red = col->r;
@@ -428,7 +430,7 @@ void VL_GetPalette (SDL_Color *palette)
 
 void VL_FadeOut(int start, int end, int red, int green, int blue, int steps)
 {
-	int		    i,j,orig,delta;
+	int j,orig,delta;
 	SDL_Color   *origptr, *newptr;
 
     red = red * 255 / 63;
@@ -442,7 +444,7 @@ void VL_FadeOut(int start, int end, int red, int green, int blue, int steps)
 //
 // fade through intermediate frames
 //
-	for (i=0;i<steps;i++)
+	for (int i=0; i<steps; i++)
 	{
 		origptr = &palette1[start];
 		newptr = &palette2[start];
@@ -484,7 +486,7 @@ void VL_FadeOut(int start, int end, int red, int green, int blue, int steps)
 
 void VL_FadeIn (int start, int end, SDL_Color *palette, int steps)
 {
-	int i,j,delta;
+	int j,delta;
 
 	VL_WaitVBL(1);
 	VL_GetPalette(palette1);
@@ -493,7 +495,7 @@ void VL_FadeIn (int start, int end, SDL_Color *palette, int steps)
 //
 // fade through intermediate frames
 //
-	for (i=0;i<steps;i++)
+	for (int i=0; i<steps; i++)
 	{
 		for (j=start;j<=end;j++)
 		{
