@@ -2,8 +2,6 @@
 
 #include <string.h>
 #include "wl_def.h"
-#pragma hdrstop
-
 // Uncomment the following line, if you get destination out of bounds
 // assertion errors and want to ignore them during debugging
 //#define IGNORE_BAD_DEST
@@ -44,16 +42,16 @@ unsigned screenHeight = 480;
 int screenBits = 8;      // use "best" color depth according to libSDL
 #endif
 
-SDL_Surface *screen = NULL;
+SDL_Surface *screen;
 unsigned screenPitch;
 
-SDL_Surface *screenBuffer = NULL;
+SDL_Surface *screenBuffer;
 unsigned bufferPitch;
 
 #if SDL_MAJOR_VERSION == 2
-SDL_Window *window = NULL;
-SDL_Renderer *renderer = NULL;
-SDL_Texture *texture = NULL;
+SDL_Window *window;
+SDL_Renderer *renderer;
+SDL_Texture *texture;
 //Wolf3s:
 SDL_RendererInfo* info;
 #endif
@@ -154,7 +152,7 @@ void VL_SetVGAPlaneMode (void)
         | (fullscreen ? SDL_FULLSCREEN : 0));
     if(!screen)
     {
-        printf("Unable to set %ix%ix%i video mode: %s\n", screenWidth,
+        printf("Unable to set %ux%ux%i video mode: %s\n", screenWidth,
             screenHeight, screenBits, SDL_GetError());
         exit(1);
     }
@@ -185,7 +183,7 @@ void VL_SetVGAPlaneMode (void)
 
     if(!screen)
     {
-        printf("Unable to set %ix%ix%i video mode: %s\n", screenWidth, screenHeight, screenBits, SDL_GetError());
+        printf("Unable to set %ux%ux%i video mode: %s\n", screenWidth, screenHeight, screenBits, SDL_GetError());
         exit(1);
     }
 

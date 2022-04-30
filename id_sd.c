@@ -28,7 +28,6 @@
 //
 
 #include "wl_def.h"
-//#if SDL_MAJOR_VERSION == 2
 #include <SDL_mixer.h>
 #if defined(GP2X_940)
 #include "gp2x/fmopl.h"
@@ -115,7 +114,6 @@ static  longword                sqHackTime;
 #ifdef USE_GPL
 using namespace DBOPL;
 
-//DBOPL::Chip oplChip;
 Chip oplChip;
 
 static inline bool YM3812Init(int numChips, int clock, int rate)
@@ -413,7 +411,7 @@ void SD_PrepareSound(int which)
     if(origsamples + size >= PM_GetPageEnd())
         Quit("SD_PrepareSound(%i): Sound reaches out of page file!\n", which);
 
-    int destsamples = (int) ((float) size * (float) param_samplerate
+    longword destsamples = (int) ((float) size * (float) param_samplerate
         / (float) ORIGSAMPLERATE);
 
     byte *wavebuffer = SafeMalloc(sizeof(headchunk) + sizeof(wavechunk)

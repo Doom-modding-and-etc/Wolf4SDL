@@ -33,7 +33,6 @@ typedef uint8_t		Bit8u;
 typedef int8_t		Bit8s;
 
 //#include "adlib.h"
-//#include "dosbox.h"
 
 //Use 8 handlers based on a small logatirmic wavetabe and an exponential table for volume
 #define WAVE_HANDLER	10
@@ -45,7 +44,8 @@ typedef int8_t		Bit8s;
 //Select the type of wave generator routine
 #define DBOPL_WAVE WAVE_TABLEMUL
 
-namespace DBOPL {
+namespace DBOPL 
+{
 
 struct Chip;
 struct Operator;
