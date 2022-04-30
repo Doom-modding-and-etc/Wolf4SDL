@@ -20,11 +20,9 @@
 #include "wl_def.h"
 #if SDL_MAJOR_VERSION == 1
 #include <SDL_keysym.h>
-#endif
-
-//#if SDL_MAJOR_VERSION == 2
+#elif SDL_MAJOR_VERSION == 2
 #include <SDL_keyboard.h>
-
+#endif
 /*
 =============================================================================
 
@@ -124,7 +122,6 @@ static	Direction	DirTable[] =		// Quick lookup for total direction
     dir_SouthWest,	dir_South,	dir_SouthEast
 };
 
-//#if SDL_MAJOR_VERSION == 2
 boolean Keyboard(int key)
 {
     int keyIndex = KeyboardLookup(key);

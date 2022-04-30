@@ -1,37 +1,8 @@
 TARGET = 1ST_READ.BIN
 
-include $(KOS_BASE)/Makefile.rules
-
-OBJS += dc/dc_cd.o
-OBJS += dc/dc_main.o
-OBJS += dc/dc_maple.o
-OBJS += dc/dc_video.o
-OBJS += dc/dc_vmu.o
-OBJS += mame/fmopl.o
-OBJS += id_ca.o
-OBJS += id_in.o
-OBJS += id_pm.o
-OBJS += id_sd.o
-OBJS += id_us_1.o
-OBJS += id_vh.o
-OBJS += id_vl.o
-OBJS += signon.o
-OBJS += wl_act1.o
-OBJS += wl_act2.o
-OBJS += wl_agent.o
-OBJS += wl_atmos.o
-OBJS += wl_cloudsky.o
-OBJS += wl_debug.o
-OBJS += wl_draw.o
-OBJS += wl_floorceiling.o
-OBJS += wl_game.o
-OBJS += wl_inter.o
-OBJS += wl_main.o
-OBJS += wl_menu.o
-OBJS += wl_parallax.o
-OBJS += wl_play.o
-OBJS += wl_state.o
-OBJS += wl_text.o
+DC_OBJS += dc/dc_cd.o dc/dc_main.o dc/dc_maple.o dc/dc_video.o dc/dc_vmu.o mame/fmopl.o id_ca.o id_in.o id_pm.o id_sd.o \
+id_us_1.o id_vh.o id_vl.o signon.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o \
+wl_floorceiling.o wl_game.o wl_inter.o wl_main.o wl_menu.o wl_parallax.o wl_play.o wl_state.o wl_text.o
 
 KOS_CFLAGS += -I${KOS_BASE}/../kos-ports/include/SDL
 
@@ -45,7 +16,7 @@ rm-elf:
 
 Wolf4SDL.elf: $(OBJS)
 	$(KOS_CC) $(KOS_CFLAGS) $(KOS_LDFLAGS) -o Wolf4SDL.elf $(KOS_START) \
-		$(OBJS) -lSDL_mixer -lSDL -lm -lz $(OBJEXTRA) $(KOS_LIBS)
+		$(DC_OBJS) -lSDL_mixer -lSDL -lm -lz $(OBJEXTRA) $(KOS_LIBS)
 
 Wolf4SDL.bin: Wolf4SDL.elf
 	kos-objcopy -O binary -R .stack Wolf4SDL.elf Wolf4SDL.bin
@@ -74,3 +45,5 @@ debug: Wolf4SDL.elf
 
 reset:
 	$(DCTOOL_IP) -r -t 192.168.1.137
+
+include $(KOS_BASE)/Makefile.rules

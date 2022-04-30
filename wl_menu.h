@@ -229,10 +229,11 @@ enum menuitems
 //
 // WL_INTER
 //
-typedef struct {
-                int kill,secret,treasure;
-                int32_t time;
-                } LRstruct;
+typedef struct 
+{
+  int kill,secret,treasure;
+  int32_t time;
+} LRstruct;
 
 extern LRstruct LevelRatios[];
 
