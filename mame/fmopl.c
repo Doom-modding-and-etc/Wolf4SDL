@@ -78,7 +78,7 @@ Revision History:
 
 #include "../version.h"
 
-#ifndef USE_GPL
+//#ifndef USE_GPL
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -286,7 +286,7 @@ typedef struct fm_opl_f {
 	UINT32	eg_cnt;					/* global envelope generator counter	*/
 	UINT32	eg_timer;				/* global envelope generator counter works at frequency = chipclock/72 */
 	UINT32	eg_timer_add;			/* step of eg_timer						*/
-	UINT32	eg_timer_overflow;		/* envelope generator timer overlfows every 1 sample (on real chip) */
+	UINT32	eg_timer_overflow;		/* envelope generator timer overlfows every 1 sample (on real chip) */)
 
 	UINT8	rhythm;					/* Rhythm mode					*/
 
@@ -2598,4 +2598,4 @@ void Y8950SetKeyboardHandler(int which,OPL_PORTHANDLER_W KeyboardHandler_w,OPL_P
 
 #endif
 
-#endif  // ifndef USE_GPL
+//#endif  // ifndef USE_GPL
