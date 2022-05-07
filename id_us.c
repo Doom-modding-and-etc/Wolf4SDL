@@ -27,31 +27,32 @@
 #endif
 
 //	Global variables
-		word PrintX, PrintY, WindowX, WindowY, WindowW, WindowH;
+word PrintX, PrintY, WindowX, WindowY, WindowW, WindowH;
 
 //	Internal variables
-#define	ConfigVersion	1
+//#define	ConfigVersion	1
 
-static	boolean		US_Started;
 
-		void		(*USL_MeasureString)(const char *,word *,word *) = VW_MeasurePropString;
-		void		(*USL_DrawString)(const char *) = VWB_DrawPropString;
+void (*USL_MeasureString)(const char *,word *,word *) = VW_MeasurePropString;
+void (*USL_DrawString)(const char *) = VWB_DrawPropString;
 
-		SaveGame	Games[MaxSaveGames];
-		HighScore	Scores[MaxScores] =
-					{
-						{"id software-'92",10000,1},
-						{"Adrian Carmack",10000,1},
-						{"John Carmack",10000,1},
-						{"Kevin Cloud",10000,1},
-						{"Tom Hall",10000,1},
-						{"John Romero",10000,1},
-						{"Jay Wilbur",10000,1},
-					};
+SaveGame Games[MaxSaveGames];
+HighScore Scores[MaxScores] =
+{
+  {"id software-'92", 10000, 1},
+  {"Adrian Carmack", 10000, 1},
+  {"John Carmack", 10000, 1},
+  {"Kevin Cloud", 10000, 1},
+  {"Tom Hall", 10000,1},
+  {"John Romero", 10000,1},
+  {"Jay Wilbur", 10000,1},
+  //{"André Guilherme", 10000,1}, //Easter egg
+};
 
-int rndindex = 0;
 
-static byte rndtable[] = {
+
+static byte rndtable[] = 
+{
       0,   8, 109, 220, 222, 241, 149, 107,  75, 248, 254, 140,  16,  66,
 	 74,  21, 211,  47,  80, 242, 154,  27, 205, 128, 161,  89,  77,  36,
 	 95, 110,  85,  48, 212, 140, 211, 249,  22,  79, 200,  50,  28, 188,
@@ -81,6 +82,7 @@ static byte rndtable[] = {
 //	US_Startup() - Starts the User Mgr
 //
 ///////////////////////////////////////////////////////////////////////////
+static boolean US_Started;
 void US_Startup()
 {
 	if (US_Started)
@@ -115,7 +117,7 @@ void US_Shutdown(void)
 //
 ///////////////////////////////////////////////////////////////////////////
 void US_SetPrintRoutines(void (*measure)(const char *,word *,word *), 
-	void (*print)(const char *))
+void (*print)(const char *))
 {
 	USL_MeasureString = measure;
 	USL_DrawString = print;
@@ -133,7 +135,7 @@ void US_Print(const char *sorg)
 	char *sstart = strdup(sorg);
 	char *s = sstart;
 	char *se;
-	word w,h;
+	word w, h;
 
 	while (*s)
 	{
@@ -194,8 +196,7 @@ void US_PrintSigned(int32_t n)
 ///////////////////////////////////////////////////////////////////////////
 void USL_PrintInCenter(const char *s,Rect r)
 {
-	word	w,h,
-			rw,rh;
+	word w, h, rw, rh;
 
 	USL_MeasureString(s,&w,&h);
 	rw = r.lr.x - r.ul.x;
@@ -213,7 +214,7 @@ void USL_PrintInCenter(const char *s,Rect r)
 ///////////////////////////////////////////////////////////////////////////
 void US_PrintCentered(const char *s)
 {
-	Rect	r;
+	Rect r;
 
 	r.ul.x = WindowX;
 	r.ul.y = WindowY;
@@ -231,7 +232,7 @@ void US_PrintCentered(const char *s)
 ///////////////////////////////////////////////////////////////////////////
 void US_CPrintLine(const char *s)
 {
-	word	w,h;
+	word w, h;
 
 	USL_MeasureString(s,&w,&h);
 
@@ -251,7 +252,7 @@ void US_CPrintLine(const char *s)
 ///////////////////////////////////////////////////////////////////////////
 void US_CPrint(const char *sorg)
 {
-	char	c;
+	char  c;
 	char *sstart = strdup(sorg);
 	char *s = sstart;
 	char *se;
@@ -333,8 +334,7 @@ void US_ClearWindow(void)
 ///////////////////////////////////////////////////////////////////////////
 void US_DrawWindow(word x,word y,word w,word h)
 {
-	word	i,
-			sx,sy,sw,sh;
+	word i, sx, sy, sw, sh;
 
 	WindowX = x * 8;
 	WindowY = y * 8;
@@ -464,22 +464,18 @@ char USL_RotateChar(char ch, int dir)
 //		returned
 //
 ///////////////////////////////////////////////////////////////////////////
-boolean US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
-				int maxchars,int maxwidth)
+boolean US_LineInput(int x, int y, char *buf, const char *def, boolean escok, 
+int maxchars, int maxwidth)
 {
-	boolean		redraw,
-				cursorvis,cursormoved,
-				done,result, checkkey;
-	ScanCode	sc;
-	char		c;
-	char		s[MaxString],olds[MaxString];
-	int         cursor,len;
-	word		i,
-				w,h,
-				temp;
-	longword	curtime, lasttime, lastdirtime, lastbuttontime, lastdirmovetime;
+	boolean	redraw, cursorvis, cursormoved, done, result, checkkey;
+	ScanCode sc;
+	char c;
+	char s[MaxString],olds[MaxString];
+	int cursor, len;
+	word w,h, i, temp;
+	longword curtime, lasttime, lastdirtime, lastbuttontime, lastdirmovetime;
 	ControlInfo ci;
-	Direction   lastdir = dir_None;
+	Direction lastdir = dir_None;
 
 	if (def)
 		strcpy(s,def);
@@ -686,7 +682,7 @@ boolean US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 				if(isprint(c) && (len < MaxString - 1) && ((!maxchars) || (len < maxchars))
 					&& ((!maxwidth) || (w < maxwidth)))
 				{
-					for (i = len + 1;i > cursor;i--)
+					for (i = len + 1; i > cursor; i--)
 						s[i] = s[i - 1];
 					s[cursor++] = c;
 					redraw = true;
@@ -752,9 +748,11 @@ boolean US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 //      current time
 //
 ///////////////////////////////////////////////////////////////////////////
+
+int rndindex = 0;
 void US_InitRndT(int randomize)
 {
-    if(randomize)
+	if(randomize)
         rndindex = (SDL_GetTicks() >> 4) & 0xff;
     else
         rndindex = 0;
@@ -767,6 +765,6 @@ void US_InitRndT(int randomize)
 ///////////////////////////////////////////////////////////////////////////
 int US_RndT()
 {
-    rndindex = (rndindex+1)&0xff;
+	rndindex = (rndindex+1)&0xff;
     return rndtable[rndindex];
 }

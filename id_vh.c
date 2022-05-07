@@ -96,7 +96,7 @@ void VH_UpdateScreen(SDL_Surface *surface)
 
 void VWB_DrawTile8 (int x, int y, int tile)
 {
-	VL_MemToScreen (grsegs[STARTTILE8]+tile*64,8,8,x,y);
+	VL_MemToScreen(grsegs[STARTTILE8]+tile*64,8,8,x,y);
 }
 
 void VWB_DrawPic(int x, int y, int chunknum)
@@ -109,7 +109,7 @@ void VWB_DrawPic(int x, int y, int chunknum)
 	width = pictable[picnum].width;
 	height = pictable[picnum].height;
 
-	VL_MemToScreen (grsegs[chunknum],width,height,x,y);
+	VL_MemToScreen(grsegs[chunknum],width,height,x,y);
 }
 
 void VWB_DrawPicScaledCoord(int scx, int scy, int chunknum)
@@ -120,13 +120,13 @@ void VWB_DrawPicScaledCoord(int scx, int scy, int chunknum)
 	width = pictable[picnum].width;
 	height = pictable[picnum].height;
 
-    VL_MemToScreenScaledCoord (grsegs[chunknum],width,height,scx,scy);
+    VL_MemToScreenScaledCoord(grsegs[chunknum],width,height,scx,scy);
 }
 
 
 void VWB_Bar(int x, int y, int width, int height, int color)
 {
-	VW_Bar (x,y,width,height,color);
+	VW_Bar(x,y,width,height,color);
 }
 
 void VWB_Plot(int x, int y, int color)

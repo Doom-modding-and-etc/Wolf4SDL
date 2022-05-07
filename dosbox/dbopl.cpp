@@ -37,8 +37,6 @@
 #include "../version.h"
 
 #ifdef USE_GPL
-
-#define INLINE inline
 #define GCC_UNLIKELY(x) x
 
 #include <math.h>
@@ -47,7 +45,7 @@
 
 #pragma pack(1)
 
-#include "dbopl.h"
+#include "dbopl.hpp"
 
 
 #ifndef PI
@@ -382,7 +380,7 @@ void Operator::UpdateRates( const Chip* chip ) {
 	UpdateRelease( chip );
 }
 
-INLINE Bit32s Operator::RateForward( Bit32u add ) {
+inline Bit32s Operator::RateForward( Bit32u add ) {
 	rateIndex += add;
 	Bit32s ret = rateIndex >> RATE_SH;
 	rateIndex = rateIndex & RATE_MASK;
@@ -448,12 +446,12 @@ static const VolumeHandler VolumeHandlerTable[5] = {
 	&Operator::TemplateVolume< Operator::ATTACK >
 };
 
-INLINE Bitu Operator::ForwardVolume() {
+inline Bitu Operator::ForwardVolume() {
 	return currentLevel + (this->*volHandler)();
 }
 
 
-INLINE Bitu Operator::ForwardWave() {
+inline Bitu Operator::ForwardWave() {
 	waveIndex += waveCurrent;
 	return waveIndex >> WAVE_SH;
 }
@@ -530,12 +528,12 @@ void Operator::WriteE0( const Chip* chip, Bit8u val ) {
 #endif
 }
 
-INLINE void Operator::SetState( Bit8u s ) {
+inline void Operator::SetState( Bit8u s ) {
 	state = s;
 	volHandler = VolumeHandlerTable[ s ];
 }
 
-INLINE bool Operator::Silent() const {
+inline bool Operator::Silent() const {
 	if ( !ENV_SILENT( totalLevel + volume ) )
 		return false;
 	if ( !(rateZero & ( 1 << state ) ) )
@@ -543,7 +541,7 @@ INLINE bool Operator::Silent() const {
 	return true;
 }
 
-INLINE void Operator::Prepare( const Chip* chip )  {
+inline void Operator::Prepare( const Chip* chip )  {
 	currentLevel = totalLevel + (chip->tremoloValue & tremoloMask);
 	waveCurrent = waveAdd;
 	if ( vibStrength >> chip->vibratoShift ) {
@@ -579,7 +577,7 @@ void Operator::KeyOff( Bit8u mask ) {
 	}
 }
 
-INLINE Bits Operator::GetWave( Bitu index, Bitu vol ) {
+inline Bits Operator::GetWave( Bitu index, Bitu vol ) {
 #if ( DBOPL_WAVE == WAVE_HANDLER )
 	return waveHandler( index, vol << ( 3 - ENV_EXTRA ) );
 #elif ( DBOPL_WAVE == WAVE_TABLEMUL )
@@ -596,7 +594,7 @@ INLINE Bits Operator::GetWave( Bitu index, Bitu vol ) {
 #endif
 }
 
-Bits INLINE Operator::GetSample( Bits modulation ) {
+Bits inline Operator::GetSample( Bits modulation ) {
 	Bitu vol = ForwardVolume();
 	if ( ENV_SILENT( vol ) ) {
 		//Simply forward the wave
@@ -799,7 +797,7 @@ void Channel::ResetC0( const Chip* chip ) {
 };
 
 template< bool opl3Mode>
-INLINE void Channel::GeneratePercussion( Chip* chip, Bit32s* output ) {
+inline void Channel::GeneratePercussion( Chip* chip, Bit32s* output ) {
 	Channel* chan = this;
 
 	//BassDrum
@@ -993,7 +991,7 @@ Chip::Chip() {
 	opl3Active = 0;
 }
 
-INLINE Bit32u Chip::ForwardNoise() {
+inline Bit32u Chip::ForwardNoise() {
 	noiseCounter += noiseAdd;
 	Bitu count = noiseCounter >> LFO_SH;
 	noiseCounter &= WAVE_MASK;
@@ -1005,7 +1003,7 @@ INLINE Bit32u Chip::ForwardNoise() {
 	return noiseValue;
 }
 
-INLINE Bit32u Chip::ForwardLFO( Bit32u samples ) {
+inline Bit32u Chip::ForwardLFO( Bit32u samples ) {
 	//Current vibrato value, runs 4x slower than tremolo
 	vibratoSign = ( VibratoTable[ vibratoIndex >> 2] ) >> 7;
 	vibratoShift = ( VibratoTable[ vibratoIndex >> 2] & 7) + vibratoStrength;
@@ -1523,4 +1521,4 @@ void Handler::Init( Bitu rate ) {
 
 };		//namespace DBOPL
 
-#endif  // ifdef USE_GPL
+#endif // USE_GPL

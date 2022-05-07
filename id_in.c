@@ -66,7 +66,6 @@ static KeyboardDef KbdDefs =
 static SDL_Joystick *Joystick;
 int JoyNumButtons;
 static int JoyNumHats;
-
 static bool GrabInput = false;
 
 /*
@@ -76,7 +75,7 @@ static bool GrabInput = false;
 
 =============================================================================
 */
-byte        ASCIINames[] =		// Unshifted ASCII for scan codes       // TODO: keypad
+byte ASCIINames[] =		// Unshifted ASCII for scan codes       // TODO: keypad
 {
 //	 0   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F
 	0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,8  ,9  ,0  ,0  ,0  ,13 ,0  ,0  ,	// 0
@@ -114,9 +113,9 @@ byte SpecialNames[] =	// ASCII for 0xe0 prefixed codes
 };
 
 
-static	boolean		IN_Started;
+static boolean IN_Started;
 
-static	Direction	DirTable[] =		// Quick lookup for total direction
+static Direction DirTable[] =		// Quick lookup for total direction
 {
     dir_NorthWest,	dir_North,	dir_NorthEast,
     dir_West,		dir_None,	dir_East,
@@ -422,11 +421,9 @@ static void processEvent(SDL_Event *event)
 
             LastScan = event->key.keysym.sym;
 
-//#if SDL_MAJOR_VERSION == 2
             SDL_Keymod mod = SDL_GetModState();
             if(Keyboard(sc_Alt))
             {
-//#endif
                 if(LastScan==SDLK_F4)
                     Quit(NULL);
             }

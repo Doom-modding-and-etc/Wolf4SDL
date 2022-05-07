@@ -17,13 +17,13 @@
 boolean fullscreen = true;
 #if defined(_arch_dreamcast)
 boolean usedoublebuffering = false;
-unsigned screenWidth = 320;
-unsigned screenHeight = 200;
+unsigned int screenWidth = 320;
+unsigned int screenHeight = 200;
 int      screenBits = 8;
 #elif defined(GP2X)
 boolean usedoublebuffering = true;
-unsigned screenWidth = 320;
-unsigned screenHeight = 240;
+unsigned int screenWidth = 320;
+unsigned int screenHeight = 240;
 #if defined(GP2X_940)
 int      screenBits = 8;
 #else
@@ -32,9 +32,9 @@ int      screenBits = 16;
 //WIP:
 #elif defined(PS2)
 boolean usedoublebuffering = true;
-unsigned screenWidth = 640;
-unsigned screenHeight = 480;
-unsigned screenBits = 8;
+unsigned int screenWidth = 640;
+unsigned int screenHeight = 448;
+unsigned int screenBits = 8;
 #else
 boolean usedoublebuffering = true;
 unsigned int screenWidth = 640;
@@ -52,7 +52,6 @@ unsigned bufferPitch;
 SDL_Window *window;
 SDL_Renderer *renderer;
 SDL_Texture *texture;
-//Wolf3s:
 SDL_RendererInfo* info;
 #endif
 
@@ -171,11 +170,9 @@ void VL_SetVGAPlaneMode (void)
         exit(1);
     }
     SDL_SetColors(screenBuffer, gamepal, 0, 256);
-#endif
- 
-#if SDL_MAJOR_VERSION == 2
+#elif SDL_MAJOR_VERSION == 2
     window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight,
-        (fullscreen ? SDL_WINDOW_FULLSCREEN : 0) | SDL_WINDOW_OPENGL);
+        (fullscreen ? SDL_WINDOW_FULLSCREEN : SDL_TRUE | SDL_WINDOW_OPENGL));
 
     SDL_PixelFormatEnumToMasks(SDL_PIXELFORMAT_ARGB8888, &screenBits, &r,&g,&b,&a);
 
@@ -196,18 +193,19 @@ void VL_SetVGAPlaneMode (void)
     SDL_SetPaletteColors(screen->format->palette, gamepal, 0, 256);
     memcpy(curpal, gamepal, sizeof(SDL_Color) * 256);
     
-    screenBuffer = SDL_CreateRGBSurface(0, screenWidth,
-        screenHeight, 8, 0, 0, 0, 0);
+    screenBuffer = SDL_CreateRGBSurface(0, screenWidth, screenHeight, 
+    8, 0, 0, 0, 0);
+    
     if(!screenBuffer)
     {
         printf("Unable to create screen buffer surface: %s\n", SDL_GetError());
         exit(1);
     }
+    
     SDL_SetPaletteColors(screenBuffer->format->palette, gamepal, 0, 256);
 
-    texture = SDL_CreateTexture(renderer, 
-        SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING,
-        screenWidth, screenHeight);
+    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, 
+        SDL_TEXTUREACCESS_STREAMING, screenWidth, screenHeight);
 #endif
     screenPitch = screen->pitch;
     bufferPitch = screenBuffer->pitch;
@@ -246,9 +244,8 @@ void VL_SetVGAPlaneMode (void)
 
 void VL_ConvertPalette(byte *srcpal, SDL_Color *destpal, int numColors)
 {
-    int i;
 
-    for(i=0; i<numColors; i++)
+    for(int i=0; i<numColors; i++)
     {
         destpal[i].r = *srcpal++ * 255 / 63;
         destpal[i].g = *srcpal++ * 255 / 63;
@@ -266,10 +263,10 @@ void VL_ConvertPalette(byte *srcpal, SDL_Color *destpal, int numColors)
 
 void VL_FillPalette (int red, int green, int blue)
 {
-    int i;
+    //int i;
     SDL_Color pal[256];
 
-    for(i=0; i<256; i++)
+    for(int i=0; i<256; i++)
     {
         pal[i].r = red;
         pal[i].g = green;

@@ -105,6 +105,8 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -125,6 +127,8 @@
     </Link>
     <ClCompile>
       <PreprocessorDefinitions>_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;WINDOWS_IGNORE_PACKING_MISMATCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>Default</LanguageStandard_C>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -133,6 +137,8 @@
     </Link>
     <ClCompile>
       <PreprocessorDefinitions>_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;WINDOWS_IGNORE_PACKING_MISMATCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -183,7 +189,7 @@
     <ClInclude Include="dc\dc_main.h" />
     <ClInclude Include="dc\dc_vmu.h" />
     <ClInclude Include="dc_vmu.h" />
-    <ClInclude Include="dosbox\dbopl.h" />
+    <ClInclude Include="dosbox\dbopl.hpp" />
     <ClInclude Include="foreign.h" />
     <ClInclude Include="f_spear.h" />
     <ClInclude Include="gfxv_apo.h" />
