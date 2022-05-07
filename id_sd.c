@@ -31,12 +31,10 @@
 #include <SDL_mixer.h>
 #if defined(GP2X_940)
 #include "gp2x/fmopl.h"
-#else
-#ifdef USE_GPL
+#elif USE_GPL
 #include "dosbox/dbopl.h"
 #else
 #include "mame/fmopl.h"
-#endif
 #endif
 
 #define ORIGSAMPLERATE 7042

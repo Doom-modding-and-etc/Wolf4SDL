@@ -5,7 +5,6 @@
 word ChunksInFile;
 word PMSpriteStart;
 word PMSoundStart;
-
 bool PMSoundInfoPagePadded = false;
 
 word *pageLengths;
@@ -29,12 +28,13 @@ void PM_Startup (void)
     byte     *page;
     uint32_t *pageOffsets;
     uint32_t pagesize;
-    int32_t  filesize,datasize;
-    FILE     *file;
-    char     fname[13] = "vswap.";
+    int32_t filesize, datasize;
+    FILE *file;
+    char fname[13] = "vswap.";
+ 
+
 
     strcat (fname,extension);
-
     file = fopen(fname,"rb");
 
     if (!file)

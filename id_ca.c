@@ -38,7 +38,7 @@ loaded into the data segment
 
 typedef struct
 {
-    word bit0,bit1;       // 0-255 is a character, > is a pointer to a node
+    word bit0, bit1;       // 0-255 is a character, > is a pointer to a node
 } huffnode;
 
 
@@ -60,10 +60,10 @@ typedef struct
 =============================================================================
 */
 
-word    *mapsegs[MAPPLANES];
+word *mapsegs[MAPPLANES];
 maptype *mapheaderseg[NUMMAPS];
-byte    *audiosegs[NUMSNDCHUNKS];
-byte    *grsegs[NUMCHUNKS];
+byte *audiosegs[NUMSNDCHUNKS];
+byte *grsegs[NUMCHUNKS];
 
 mapfiletype *tinf;
 
@@ -88,7 +88,7 @@ static const char afilename[] = "audiot.";
 
 void CA_CannotOpen(const char *string);
 
-static int32_t  grstarts[NUMCHUNKS + 1];
+static int32_t grstarts[NUMCHUNKS + 1];
 static int32_t* audiostarts; // array of offsets in audio / audiot
 
 #ifdef GRHEADERLINKED
@@ -380,7 +380,7 @@ int32_t CA_RLEWCompress(word *source, int32_t length, word *dest, word rlewtag)
             //
             // send word without compressing
             //
-            for (i=1;i<=count;i++)
+            for (i=1; i<=count; i++)
                 *dest++ = value;
         }
 
@@ -401,7 +401,7 @@ int32_t CA_RLEWCompress(word *source, int32_t length, word *dest, word rlewtag)
 
 void CA_RLEWexpand(word *source, word *dest, int32_t length, word rlewtag)
 {
-    word value,count,i;
+    word value, i, count;
     word *end=dest+length/2;
 
 //
@@ -422,7 +422,7 @@ void CA_RLEWexpand(word *source, word *dest, int32_t length, word rlewtag)
             //
             count = *source++;
             value = *source++;
-            for (i=1;i<=count;i++)
+            for (i=1; i<=count; i++)
                 *dest++ = value;
         }
     } while (dest<end);

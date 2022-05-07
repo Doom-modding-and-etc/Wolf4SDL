@@ -149,7 +149,7 @@
     <ClInclude Include="mame\fmopl.h">
       <Filter>Source Files\mame</Filter>
     </ClInclude>
-    <ClInclude Include="dosbox\dbopl.h">
+    <ClInclude Include="dosbox\dbopl.hpp">
       <Filter>Source Files\dosbox</Filter>
     </ClInclude>
     <ClInclude Include="audiosod.h">

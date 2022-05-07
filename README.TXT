@@ -169,17 +169,19 @@ The current version of the source code is available on GitHub at:
    https://github.com/AryanWolf3D/Wolf4SDL
 
 The following ways of compiling the source code are supported:
- - Makefile (for Linux, BSD variants and MinGW/MSYS)
+ - Makefile (for Linux, BSD variants, MinGW/MSYS and dreamcast see README-dc.txt for more details)
  - Visual C++ 2019 (Wolf4SDL.VC2019.sln and Wolf4SDL.VC2019.vcproj) (see README-VC.txt)
- - Visual C++ (Wolf4SDL.VC2022.sln and Wolf4SDL.vcproj) (sde README-VC.txt)
+ - Visual C++ (Wolf4SDL.VC2022.sln and Wolf4SDL.vcproj) (see README-VC.txt)
+ - Special compiling for Dreamcast (see README-dc.txt)
+ - Special compiling for GP2X (see README-GP2X.txt)
+
+- Deprecated:
  - Visual C++ 2008 (Wolf4SDL.VC9.sln and Wolf4SDL.VC9.vcproj)
  - Visual C++ 2005 (Wolf4SDL.sln and Wolf4SDL.vcproj)
  - Visual C++ 6 (Wolf4SDL.dsw and Wolf4SDL.dsp)
  - Code::Blocks 8.02 (Wolf4SDL.cbp)
  - Dev-C++ 5.0 Beta 9.2 (4.9.9.2) (Wolf4SDL.dev) (see README-devcpp.txt)
  - Xcode (for Mac OS X, macosx/Wolf4SDL.xcodeproj/project.pbxproj)
- - Special compiling for Dreamcast (see README-dc.txt)
- - Special compiling for GP2X (see README-GP2X.txt)
 
 To compile the source code you need the development libraries of
  - SDL (https://www.libsdl.org/download-1.2.php) and
@@ -201,8 +203,8 @@ TODOs:
 ------
  - Center non-ingame screens for resolutions being a multiple of 320x240
  - Add support for any graphic resolution >= 320x200
- - port again sdl1
- - Add nintendo switch support
+ - fix sdl1
+ - Add the nintendo switch port 
  - Add Sony´s Playstation 2 support
 
 Known bugs:
@@ -237,7 +239,6 @@ Credits:
 
 Licenses:
 ---------
-
  - The original source code of Wolfenstein 3D:
      At your choice:
      - license-id.txt or
@@ -246,3 +247,4 @@ Licenses:
      At your choice:
      - license-mame.txt (fmopl.cpp)
      - license-gpl.txt (dbopl.cpp, USE_GPL define in version.h or set GPL=1 for Makefile)
+

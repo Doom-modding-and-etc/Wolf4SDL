@@ -261,13 +261,4 @@ struct Chip {
 	Chip();
 };
 
-/*struct Handler : public Adlib::Handler {
-	DBOPL::Chip chip;
-	virtual Bit32u WriteAddr( Bit32u port, Bit8u val );
-	virtual void WriteReg( Bit32u addr, Bit8u val );
-	virtual void Generate( MixerChannel* chan, Bitu samples );
-	virtual void Init( Bitu rate );
-};*/
-
-
-};		//namespace DBOPL
+}; //namespace DBOPL

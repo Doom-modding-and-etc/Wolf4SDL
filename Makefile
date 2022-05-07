@@ -52,7 +52,7 @@ wl_main.c wl_menu.c wl_parallax.c wl_plane.c wl_play.c wl_scale.c wl_shade.c wl_
 wl_text.c wl_utils.c mame/fmopl.c 
 
 DEPS = $(filter %.d, $(SRCS:.c=.d) $(SRCS:.cpp=.d))
-OBJS = $(filter %.o, $(SRCS:.c=.o) $(SRCS:.cpp=.o)l)
+OBJS = $(filter %.o, $(SRCS:.c=.o) $(SRCS:.cpp=.o))
 
 .SUFFIXES: .c .cpp .d .o
 
@@ -77,7 +77,7 @@ $(BINARY): $(OBJS)
 	$(Q)$(CC) $(CFLAGS) -c $< -o $@
 
 .cpp.o:
-	@echo '===> CXX $<'
+	@echo '===> CPP $<'
 	$(Q)$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .c.d:
