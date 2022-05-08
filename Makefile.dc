@@ -6,15 +6,7 @@ wl_floorceiling.o wl_game.o wl_inter.o wl_main.o wl_menu.o wl_parallax.o wl_play
 
 KOS_CFLAGS += -I${KOS_BASE}/../kos-ports/include/SDL
 
-all: rm-elf $(TARGET)
-
-clean:
-	-rm -f Wolf4SDL.bin Wolf4SDL.elf $(OBJS)
-
-rm-elf:
-	-rm -f $(TARGET) Wolf4SDL.bin Wolf4SDL.elf
-
-Wolf4SDL.elf: $(OBJS)
+Wolf4SDL.elf: $(DC_OBJS)
 	$(KOS_CC) $(KOS_CFLAGS) $(KOS_LDFLAGS) -o Wolf4SDL.elf $(KOS_START) \
 		$(DC_OBJS) -lSDL_mixer -lSDL -lm -lz $(OBJEXTRA) $(KOS_LIBS)
 
@@ -23,6 +15,14 @@ Wolf4SDL.bin: Wolf4SDL.elf
 
 1ST_READ.BIN: Wolf4SDL.bin
 	$(SCRAMBLE) Wolf4SDL.bin make-cd/1ST_READ.BIN
+
+all: $(TARGET) Wolf4SDL.elf Wolf4SDL.bin 1ST_READ.BIN
+
+clean:
+	-rm -f Wolf4SDL.bin Wolf4SDL.elf $(OBJS)
+
+rm-elf:
+	-rm -f $(TARGET) Wolf4SDL.bin Wolf4SDL.elf
 
 ##############################################################################
 #dc-tool IP commands for BBA\LAN owners.
