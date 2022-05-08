@@ -3744,12 +3744,7 @@ const char *IN_GetScanName(ScanCode scan)
     for (s = ExtScanCodes, p = ExtScanNames; *s; p++, s++)
         if (*s == scan)
             return (*p);*/
-
-#if SDL_MAJOR_VERSION == 1    
-    return(ScanNames[scan]);
-#endif
-
-#if SDL_MAJOR_VERSION == 2    
+   
      switch(scan) {
         case(SDLK_BACKSPACE):
             return "BkSp";
@@ -3956,7 +3951,6 @@ const char *IN_GetScanName(ScanCode scan)
         default:
             return "?";
     }
-#endif
 }
 
 

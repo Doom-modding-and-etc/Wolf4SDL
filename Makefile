@@ -3,7 +3,6 @@ CONFIG ?= config.default
 
 BINARY ?= Wolf4SDL
 PREFIX ?= /usr/local
-MANPREFIX ?= $(PREFIX)
 
 INSTALL ?= install
 INSTALL_PROGRAM ?= $(INSTALL) -m 555 -s
@@ -18,18 +17,17 @@ endif
 CFLAGS_SDL ?= $(shell $(SDL_CONFIG) --cflags)
 LDFLAGS_SDL ?= $(shell $(SDL_CONFIG) --libs)
 
-CFLAGS += $(CFLAGS_SDL)
-
 CFLAGS += -Wall -W -g -Wpointer-arith -Wreturn-type -Wwrite-strings -Wcast-align -std=gnu99 \
--Werror-implicit-function-declaration -Wimplicit-int -Wsequence-point
+-Werror-implicit-function-declaration -Wimplicit-int -Wsequence-point $(CFLAGS_SDL)
 
 ifdef GPL
 CFLAGS += -DUSE_GPL
 endif
 
-CXXFLAGS += $(CFLAGS)
+CXXFLAGS += -Wall -std=c++2a
 
-LDFLAGS += $(LDFLAGS_SDL)
+LDFLAGS += $(LDFLAGS_SDL) -lm
+
 ifeq ($(SDL_MAJOR_VERSION),1)
 LDFLAGS += -lSDL_mixer
 endif
@@ -46,10 +44,10 @@ ifndef GPL
     SRCS += dosbox/dbopl.cpp
 endif
 
-SRCS += id_ca.c id_in.c id_pm.c id_sd.c id_us.c id_vh.c id_vl.c signon.c wl_act1.c \
+SRCS += mame/fmopl.c id_ca.c id_in.c id_pm.c id_sd.c id_us.c id_vh.c id_vl.c signon.c wl_act1.c \
 wl_act2.c wl_agent.c wl_atmos.c wl_cloudsky.c wl_debug.c wl_draw.c wl_game.c wl_inter.c \
 wl_main.c wl_menu.c wl_parallax.c wl_plane.c wl_play.c wl_scale.c wl_shade.c wl_state.c \
-wl_text.c wl_utils.c mame/fmopl.c 
+wl_text.c wl_utils.c 
 
 DEPS = $(filter %.d, $(SRCS:.c=.d) $(SRCS:.cpp=.d))
 OBJS = $(filter %.o, $(SRCS:.c=.o) $(SRCS:.cpp=.o))
@@ -89,10 +87,10 @@ $(BINARY): $(OBJS)
 	$(Q)$(CXX) $(CXXFLAGS) -MM $< | sed 's#^$(@F:%.d=%.o):#$@ $(@:%.d=%.o):#' > $@
 
 clean distclean:
-	@echo '===> CLEANING'
+	@echo '===> CLEANING...'
 	$(Q)rm -fr $(DEPS) $(OBJS) $(BINARY) $(BINARY).exe
 
 install: $(BINARY)
-	@echo '===> INSTALL'
+	@echo '===> INSTALLING...'
 	$(Q)$(INSTALL) -d $(PREFIX)/bin
 	$(Q)$(INSTALL_PROGRAM) $(BINARY) $(PREFIX)/bin

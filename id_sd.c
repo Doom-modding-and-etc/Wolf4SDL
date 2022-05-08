@@ -397,7 +397,6 @@ Sint16 GetSample(float csample, byte *samples, int size)
 
 void SD_PrepareSound(int which)
 {
-    //int i;
 
     if(DigiList == NULL)
         Quit("SD_PrepareSound(%i): DigiList not initialized!\n", which);
@@ -431,7 +430,7 @@ void SD_PrepareSound(int which)
     for(int i=0; i<destsamples; cursample+=samplestep, i++)
     {
         newsamples[i] = GetSample((float)size * (float)i / (float)destsamples,
-            origsamples, size);
+        origsamples, size);
     }
 
 
