@@ -3,7 +3,6 @@ CONFIG ?= config.default
 
 BINARY ?= Wolf4SDL
 PREFIX ?= /usr/local
-MANPREFIX ?= $(PREFIX)
 
 INSTALL ?= install
 INSTALL_PROGRAM ?= $(INSTALL) -m 555 -s
@@ -18,18 +17,17 @@ endif
 CFLAGS_SDL ?= $(shell $(SDL_CONFIG) --cflags)
 LDFLAGS_SDL ?= $(shell $(SDL_CONFIG) --libs)
 
-CFLAGS += $(CFLAGS_SDL)
-
 CFLAGS += -Wall -W -g -Wpointer-arith -Wreturn-type -Wwrite-strings -Wcast-align -std=gnu99 \
--Werror-implicit-function-declaration -Wimplicit-int -Wsequence-point
+-Werror-implicit-function-declaration -Wimplicit-int -Wsequence-point $(CFLAGS_SDL)
 
 ifdef GPL
 CFLAGS += -DUSE_GPL
 endif
 
-CXXFLAGS += $(CFLAGS)
+CXXFLAGS += -Wall -std=c++2a
 
-LDFLAGS += $(LDFLAGS_SDL)
+LDFLAGS += $(LDFLAGS_SDL) -lm
+
 ifeq ($(SDL_MAJOR_VERSION),1)
 LDFLAGS += -lSDL_mixer
 endif
@@ -89,10 +87,10 @@ $(BINARY): $(OBJS)
 	$(Q)$(CXX) $(CXXFLAGS) -MM $< | sed 's#^$(@F:%.d=%.o):#$@ $(@:%.d=%.o):#' > $@
 
 clean distclean:
-	@echo '===> CLEANING'
+	@echo '===> CLEANING...'
 	$(Q)rm -fr $(DEPS) $(OBJS) $(BINARY) $(BINARY).exe
 
 install: $(BINARY)
-	@echo '===> INSTALL'
+	@echo '===> INSTALLING...'
 	$(Q)$(INSTALL) -d $(PREFIX)/bin
 	$(Q)$(INSTALL_PROGRAM) $(BINARY) $(PREFIX)/bin
