@@ -447,10 +447,8 @@ int DebugKeys (void)
 
 
 
-//#if SDL_MAJOR_VERSION == 2
     if (Keyboard(sc_B))             // B = border color
     {
-//#endif
         CenterWindow(20,3);
         PrintY+=6;
         US_Print(" Border color (0-56): ");

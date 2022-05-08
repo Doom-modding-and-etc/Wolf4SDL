@@ -32,7 +32,6 @@
 #endif
 
 #define KEYCOUNT 129
-#if SDL_MAJOR_VERSION == 2
 typedef	int		ScanCode;
 #define	sc_None			0
 #define	sc_Bad			0xff
@@ -112,7 +111,7 @@ typedef	int		ScanCode;
 #define	sc_Z			SDLK_z
 
 #define	key_None		0
-#endif
+
 
 typedef	enum		{
 						demo_Off,demo_Record,demo_Playback,demo_PlayDone

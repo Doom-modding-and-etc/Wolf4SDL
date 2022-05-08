@@ -298,10 +298,7 @@ void VL_SetColor(int color, int red, int green, int blue)
     curpal[color] = col;
 #if SDL_MAJOR_VERSION == 1
     if (screenBits)
-    {
-        SDL_SetPalette(screen, SDL_PHYSPAL, &col, color, 1);
-    }
-    
+    SDL_SetPalette(screen, SDL_PHYSPAL, &col, color, 1);
     else
     {
         SDL_SetPalette(screenBuffer, SDL_LOGPAL, &col, color, 1);
@@ -313,10 +310,7 @@ void VL_SetColor(int color, int red, int green, int blue)
     }
 #elif SDL_MAJOR_VERSION == 2   
     if (screenBits)
-    {
-        SDL_SetPaletteColors(screen->format->palette, &col, color, 1);
-    }
-    
+    SDL_SetPaletteColors(screen->format->palette, &col, color, 1); 
     else
     {
         SDL_SetPaletteColors(screenBuffer->format->palette, &col, color, 1);
@@ -366,7 +360,6 @@ void VL_SetPalette(SDL_Color* palette, bool forceupdate)
     memcpy(curpal, palette, sizeof(SDL_Color) * 256);
 
     if (screenBits == 8)
-
 #if SDL_MAJOR_VERSION == 1
     SDL_SetPalette(screen, SDL_PHYSPAL, palette, 0, 256);
     else

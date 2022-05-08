@@ -31,9 +31,8 @@
 =============================================================================
 */
 
-#if SDL_MAJOR_VERSION == 2
     #define UNKNOWN_KEY SDLK_UNKNOWN
-#endif
+//#endif
 
 //
 // configuration variables
@@ -412,7 +411,7 @@ static void processEvent(SDL_Event *event)
                 GrabInput = !GrabInput;
 
 #if SDL_MAJOR_VERSION == 1
-                SDL_WM_GrabInput(GrabInput ? SDL_GRAB_ON : SDL_GRAB_OFF);                
+            SDL_WM_GrabInput(GrabInput ? SDL_GRAB_ON : SDL_GRAB_OFF);                
 #elif SDL_MAJOR_VERSION == 2
             SDL_SetRelativeMouseMode(GrabInput ? SDL_TRUE : SDL_FALSE);
 #endif
@@ -602,10 +601,7 @@ void IN_ClearKeysDown(void)
 {
 	LastScan = sc_None;
 	LastASCII = key_None;
-
-//#if SDL_MAJOR_VERSION == 2    
     memset ((void *) KeyboardState,0,sizeof(KeyboardState));
-//#endif
 
 }
 
