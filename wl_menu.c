@@ -3041,7 +3041,7 @@ int HandleMenu(CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w
     char key;
     static int redrawitem = 1, lastitem = -1;
     int i, x, y, basey, exit, which, shape;
-    int32_t lastBlinkTime, timer;
+    s32 lastBlinkTime, timer;
     ControlInfo ci;
 
 
@@ -3077,7 +3077,7 @@ int HandleMenu(CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w
         //
         // CHANGE GUN SHAPE
         //
-        if ((int32_t)GetTimeCount () - lastBlinkTime > timer)
+        if ((s32)GetTimeCount () - lastBlinkTime > timer)
         {
             lastBlinkTime = GetTimeCount ();
             if (shape == C_CURSOR1PIC)
@@ -3335,13 +3335,13 @@ void TicDelay(int count)
 {
     ControlInfo ci;
 
-    int32_t startTime = GetTimeCount ();
+    s32 startTime = GetTimeCount ();
     do
     {
         SDL_Delay(5);
         ReadAnyControl (&ci);
     }
-    while ((int32_t) GetTimeCount () - startTime < count && ci.dir != dir_None);
+    while((s32) GetTimeCount () - startTime < count && ci.dir != dir_None);
 }
 
 
@@ -3675,8 +3675,8 @@ void Message (const char *string)
     fontstruct *font;
 
     fontnumber = 1;
-    font = (fontstruct *) grsegs[STARTFONT + fontnumber];
-    h = font->height;
+    void* p = grsegs[STARTFONT + fontnumber];
+    font = (fontstruct*)p;
     for (i = 0; i < len; i++)
     {
         if (string[i] == '\n')

@@ -50,11 +50,11 @@ void DrawParallax(void)
     int     x,y;
     byte    *dest,*skysource;
     word    texture;
-    int16_t angle;
-    int16_t skypage,curskypage;
-    int16_t lastskypage;
-    int16_t xtex;
-    int16_t toppix;
+    s16 angle;
+    s16 skypage,curskypage;
+    s16 lastskypage;
+    s16 xtex;
+    s16 toppix;
 
     skypage = GetParallaxStartTexture();
     skypage += USE_PARALLAX - 1;

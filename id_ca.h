@@ -12,7 +12,7 @@
 
 typedef struct
 {
-    int32_t planestart[MAPPLANES];
+    s32 planestart[MAPPLANES];
     word    planelength[MAPPLANES];
     word    width,height;
     char    name[16];
@@ -32,16 +32,16 @@ extern  char  audioext[5];
 //===========================================================================
 
 boolean CA_LoadFile (const char *filename, void **ptr);
-boolean CA_WriteFile (const char *filename, void *ptr, int32_t length);
+boolean CA_WriteFile (const char *filename, void *ptr, s32 length);
 
-int32_t CA_RLEWCompress (word *source, int32_t length, word *dest, word rlewtag);
+s32 CA_RLEWCompress (word *source, s32 length, word *dest, word rlewtag);
 
-void CA_RLEWexpand (word *source, word *dest, int32_t length, word rlewtag);
+void CA_RLEWexpand (word *source, word *dest, s32 length, word rlewtag);
 
 void CA_Startup (void);
 void CA_Shutdown (void);
 
-int32_t CA_CacheAudioChunk (int chunk);
+s32 CA_CacheAudioChunk (int chunk);
 void CA_LoadAllSounds (void);
 
 void CA_CacheGrChunks (void);

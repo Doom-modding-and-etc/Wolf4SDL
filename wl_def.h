@@ -2,7 +2,7 @@
 #define __WL_DEF_H_
 
 #include <SDL.h>
-
+#include <stdbool.h>
 
 
 // Defines which version shall be built and configures supported extra features
@@ -23,9 +23,9 @@
 #	include <stdarg.h>
 #endif
 
-#if !defined O_BINARY
-#	define O_BINARY 0
-#endif
+//#if !defined O_BINARY
+//#	define O_BINARY 0
+//#endif
 
 #pragma pack(1)
 
@@ -63,23 +63,22 @@
     #include "f_spear.h"
 #endif
 
-#ifndef __cplusplus
-enum
-{
-    false,
-    true,
-};
+typedef int8_t s8;
+typedef int16_t s16;
+typedef int32_t s32;
+typedef int64_t s64;
 
-typedef int8_t bool;
-#endif
+typedef uint8_t u8;
+typedef uint16_t u16;
+typedef uint32_t u32;
+typedef uint64_t u64;
 
+typedef u8 byte;
+typedef u16 word;
+typedef s32 fixed;
+typedef u32 longword;
 
-
-typedef uint8_t byte;
-typedef uint16_t word;
-typedef int32_t fixed;
-typedef uint32_t longword;
-typedef int8_t boolean;
+typedef bool boolean;
 
 typedef struct
 {
@@ -761,7 +760,7 @@ typedef struct statstruct
     byte      tilex,tiley;
     short     shapenum;           // if shapenum == -1 the obj has been removed
     byte      *visspot;
-    uint32_t  flags;
+    u32 flags;
     byte      itemnumber;
 } statobj_t;
 
@@ -800,9 +799,9 @@ typedef struct objstruct
     classtype   obclass;
     statetype   *state;
 
-    uint32_t    flags;              // FL_SHOOTABLE, etc
+    u32    flags;              // FL_SHOOTABLE, etc
 
-    int32_t     distance;           // if negative, wait for that door to open
+    s32     distance;           // if negative, wait for that door to open
     dirtype     dir;
 
     fixed       x,y;
@@ -815,7 +814,7 @@ typedef struct objstruct
 
     short       angle;
     short       hitpoints;
-    int32_t     speed;
+    s32     speed;
 
     short       temp1,temp2,hidden;
     struct objstruct *next,*prev;
@@ -849,6 +848,7 @@ enum
 
 typedef enum
 {
+    wp_none = -1,
     wp_knife,
     wp_pistol,
     wp_machinegun,
@@ -876,7 +876,7 @@ typedef struct
 {
     short       difficulty;
     short       mapon;
-    int32_t     oldscore,score,nextextra;
+    s32     oldscore,score,nextextra;
     short       lives;
     short       health;
     short       ammo;
@@ -888,8 +888,8 @@ typedef struct
 
     short       episode,secretcount,treasurecount,killcount,
                 secrettotal,treasuretotal,killtotal;
-    int32_t     TimeCount;
-    int32_t     killx,killy;
+    s32     TimeCount;
+    s32     killx,killy;
     boolean     victoryflag;            // set during victory animations
 } gametype;
 
@@ -937,7 +937,7 @@ extern  int      mouseadjustment;
 //
 // derived constants
 //
-extern  int32_t  heightnumerator;
+extern  s32  heightnumerator;
 extern  fixed    scale;
 
 //
@@ -980,8 +980,8 @@ extern  byte        bordercol;
 extern  char        demoname[13];
 
 #ifdef SPEAR
-extern  int32_t     spearx,speary;
-extern  unsigned    spearangle;
+extern  s32     spearx,speary;
+extern  u32    spearangle;
 extern  boolean     spearflag;
 #endif
 
@@ -1068,7 +1068,7 @@ extern  int         controlx,controly;              // range from -100 to 100
 extern  boolean     buttonstate[NUMBUTTONS];
 
 extern  boolean     demorecord,demoplayback;
-extern  int8_t      *demoptr, *lastdemoptr;
+extern  s8 *demoptr, *lastdemoptr;
 extern  void        *demobuffer;
 
 
@@ -1099,7 +1099,7 @@ void    StartBonusFlash (void);
 void IntroScreen (void);
 void PG13 (void);
 void DrawHighScores (void);
-void CheckHighScore (int32_t score, word other);
+void CheckHighScore (s32 score, word other);
 void Victory (void);
 void LevelCompleted (void);
 void ClearSplitVWB (void);
@@ -1129,8 +1129,8 @@ void ViewMap (void);
 
 extern  byte    *vbuf;
 
-extern  int32_t lasttimecount;
-extern  int32_t frameon;
+extern  s32 lasttimecount;
+extern  s32 frameon;
 extern  boolean fizzlein,fpscounter;
 
 #if defined(USE_FLOORCEILINGTEX) || defined(USE_CLOUDSKY)
@@ -1142,7 +1142,7 @@ extern  int16_t *wallheight;
 // math tables
 //
 extern  short   *pixelangle;
-extern  int32_t finetangent[FINEANGLES/4];
+extern  s32 finetangent[FINEANGLES/4];
 extern  fixed   sintable[ANGLES+ANGLES/4];
 extern  fixed   *costable;
 
@@ -1226,7 +1226,7 @@ boolean CheckSight (objtype *ob);
 //
 // player state info
 //
-extern  int32_t  thrustspeed;
+extern  s32  thrustspeed;
 extern  word     plux,pluy;         // player coordinates scaled to unsigned
 extern  objtype  *LastAttacker;
 

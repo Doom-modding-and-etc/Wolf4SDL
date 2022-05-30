@@ -19,7 +19,7 @@ typedef struct
 {
     short      picnum;
     wl_stat_t  type;
-    uint32_t   specialFlags;    // they are ORed to the statobj_t flags
+    u32   specialFlags;    // they are ORed to the statobj_t flags
 } statinfo_t;
 
 statinfo_t statinfo[] =
@@ -632,7 +632,7 @@ void DoorClosing(int door)
 {
     unsigned area1,area2;
     word *map;
-    int32_t position;
+    s32 position;
     int tilex,tiley;
 
     tilex = doorobjlist[door].tilex;

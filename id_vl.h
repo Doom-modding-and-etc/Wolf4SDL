@@ -22,15 +22,15 @@ extern SDL_Texture *texture;
 #endif
 
 extern  boolean  fullscreen, usedoublebuffering;
-extern  unsigned screenWidth, screenHeight, screenPitch, bufferPitch;
+extern  u32 screenWidth, screenHeight, screenPitch, bufferPitch;
 //todo:
 extern  int      screenBits;
 extern  int      scaleFactor;
 
 extern	boolean  screenfaded;
-extern	unsigned bordercolor;
+extern	u32 bordercolor;
 
-extern  uint32_t *ylookup;
+extern  u32 *ylookup;
 
 extern SDL_Color gamepal[256];
 
@@ -62,7 +62,7 @@ void VL_UnlockSurface(SDL_Surface *surface);
 
 byte VL_GetPixel        (int x, int y);
 void VL_Plot            (int x, int y, int color);
-void VL_Hlin            (unsigned x, unsigned y, unsigned width, int color);
+void VL_Hlin            (u32 x, u32 y, u32 width, int color);
 void VL_Vlin            (int x, int y, int height, int color);
 void VL_BarScaledCoord  (int scx, int scy, int scwidth, int scheight, int color);
 void VL_Bar             (int x, int y, int width, int height, int color);

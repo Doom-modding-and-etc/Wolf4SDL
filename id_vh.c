@@ -16,12 +16,13 @@ void VWB_DrawPropString(const char* string)
 	byte	    *source, *dest;
 	byte	    ch;
 	int i;
-	unsigned sx, sy;
+	u32 sx, sy;
 
 	dest = VL_LockSurface(screenBuffer);
 	if(dest == NULL) return;
 
-	font = (fontstruct *) grsegs[STARTFONT+fontnumber];
+    void* p = grsegs[STARTFONT + fontnumber];
+    font = (fontstruct*)p;
 	height = font->height;
 	dest += scaleFactor * (ylookup[py] + px);
 
@@ -60,7 +61,8 @@ void VWL_MeasureString(const char *string, word *width, word *height, fontstruct
 
 void VW_MeasurePropString(const char *string, word *width, word *height)
 {
-	VWL_MeasureString(string,width,height,(fontstruct *)grsegs[STARTFONT+fontnumber]);
+    void* p = grsegs[STARTFONT + fontnumber];
+    VWL_MeasureString(string, width, height, (fontstruct*)p);
 }
 
 #if SDL_MAJOR_VERSION == 2
@@ -102,7 +104,7 @@ void VWB_DrawTile8 (int x, int y, int tile)
 void VWB_DrawPic(int x, int y, int chunknum)
 {
 	int	picnum = chunknum - STARTPICS;
-	unsigned width,height;
+    u32 width,height;
 
 	x &= ~7;
 
@@ -192,8 +194,8 @@ static const uint32_t rndmasks[] = {
     0x01200000,     // 25   25,22      (this is enough for 8191x4095)
 };
 
-static unsigned int rndbits_y;
-static unsigned int rndmask;
+static u32 rndbits_y;
+static u32 rndmask;
 
 extern SDL_Color curpal[256];
 
@@ -201,7 +203,7 @@ extern SDL_Color curpal[256];
 static int log2_ceil(uint32_t x)
 {
     int n = 0;
-    uint32_t v = 1;
+    u32 v = 1;
     while(v < x)
     {
         n++;
@@ -225,10 +227,10 @@ void VH_Startup()
 }
 
 boolean FizzleFade (SDL_Surface *source, int x1, int y1,
-    unsigned width, unsigned height, unsigned frames, boolean abortable)
+    u32 width, u32 height, u32 frames, boolean abortable)
 {
-    unsigned x, y, p, frame, pixperframe;
-    int32_t  rndval, lastrndval;
+    u32 x, y, p, frame, pixperframe;
+    s32 rndval, lastrndval;
     int      i,first = 1;
 
     lastrndval = 0;
@@ -314,9 +316,7 @@ boolean FizzleFade (SDL_Surface *source, int x1, int y1,
             VL_UnlockSurface(screen);
 #if SDL_MAJOR_VERSION == 1
 	        SDL_Flip(screen);
-#endif
-
-#if SDL_MAJOR_VERSION == 2
+#elif SDL_MAJOR_VERSION == 2
             VH_RenderTextures(screen);
 #endif
 

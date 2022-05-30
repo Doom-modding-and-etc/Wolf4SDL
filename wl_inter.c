@@ -3,7 +3,7 @@
 #include "wl_def.h"
 
 LRstruct LevelRatios[LRpack];
-int32_t lastBreathTime = 0;
+s32 lastBreathTime = 0;
 
 void Write (int x, int y, const char *string);
 
@@ -111,7 +111,7 @@ void
 Victory (void)
 {
 #ifndef SPEARDEMO
-    int32_t sec;
+    s32 sec;
     int i, min, kr, sr, tr, x;
     char tempstr[8];
 
@@ -377,7 +377,7 @@ BJ_Breathe (void)
 
     SDL_Delay(5);
 
-    if ((int32_t) GetTimeCount () - lastBreathTime > max)
+    if ((s32) GetTimeCount () - lastBreathTime > max)
     {
         which ^= 1;
         VWB_DrawPic (0, 16, pics[which]);
@@ -416,7 +416,7 @@ LevelCompleted (void)
 
     int x, i, min, sec, ratio, kr, sr, tr;
     char tempstr[10];
-    int32_t bonus, timeleft = 0;
+    s32 bonus, timeleft = 0;
     times parTimes[] = {
 #ifndef SPEAR
         //
@@ -637,7 +637,7 @@ LevelCompleted (void)
         {
             for (i = 0; i <= timeleft; i++)
             {
-                ltoa ((int32_t) i * PAR_AMOUNT, tempstr, 10);
+                ltoa ((s32) i * PAR_AMOUNT, tempstr, 10);
                 x = 36 - (int) strlen(tempstr) * 2;
                 Write (x, 7, tempstr);
                 if (!(i % (PAR_AMOUNT / 10)))
@@ -801,7 +801,7 @@ done:   itoa (kr, tempstr, 10);
         x = RATIOXX - (int) strlen(tempstr) * 2;
         Write (x, 18, tempstr);
 
-        bonus = (int32_t) timeleft *PAR_AMOUNT +
+        bonus = (s32) timeleft *PAR_AMOUNT +
             (PERCENT100AMT * (kr >= 100)) +
             (PERCENT100AMT * (sr >= 100)) + (PERCENT100AMT * (tr >= 100));
 
@@ -920,7 +920,7 @@ PreloadUpdate (unsigned current, unsigned total)
 
     VWB_BarScaledCoord (WindowX + scaleFactor * 5, WindowY + WindowH - scaleFactor * 3,
         w, scaleFactor * 2, BLACK);
-    w = ((int32_t) w * current) / total;
+    w = ((s32) w * current) / total;
     if (w)
     {
         VWB_BarScaledCoord (WindowX + scaleFactor * 5, WindowY + WindowH - scaleFactor * 3,
@@ -1128,7 +1128,7 @@ DrawHighScores (void)
 */
 
 void
-CheckHighScore (int32_t score, word other)
+CheckHighScore (s32 score, word other)
 {
     word i, j;
     int n;
@@ -1416,7 +1416,7 @@ CopyProtection (void)
 #define TYPEBOX_BKGD    0x9c
 #define PRINTCOLOR      HIGHLIGHT
 
-    unsigned i;
+    u32 i;
     int match, whichboss, bossnum, attempt, whichline;
     int enemypicked[4] = { 0, 0, 0, 0 };
     int bosses[4] = { BOSSPIC1PIC, BOSSPIC2PIC, BOSSPIC3PIC, BOSSPIC4PIC };

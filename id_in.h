@@ -7,6 +7,7 @@
 
 #ifndef	__ID_IN_H_
 #define	__ID_IN_H_
+//#include "wl_def.h"
 
 #ifdef	__DEBUG__
 #define	__DEBUG_InputMgr__
@@ -28,10 +29,10 @@
 #define SDLK_NUMLOCKCLEAR SDLK_NUMLOCK
 #define SDLK_SCROLLLOCK	SDLK_SCROLLOCK
 #define SDL_Keymod SDLMod
-#define UNKNOWN_KEY SDLK_UNKNOWN
 #endif
 
 #define KEYCOUNT 129
+
 typedef	int		ScanCode;
 #define	sc_None			0
 #define	sc_Bad			0xff
@@ -113,65 +114,89 @@ typedef	int		ScanCode;
 #define	key_None		0
 
 
-typedef	enum		{
-						demo_Off,demo_Record,demo_Playback,demo_PlayDone
-					} Demo;
-typedef	enum		{
-						ctrl_Keyboard,
-						ctrl_Keyboard1 = ctrl_Keyboard,ctrl_Keyboard2,
-						ctrl_Joystick,
-						ctrl_Joystick1 = ctrl_Joystick,ctrl_Joystick2,
-						ctrl_Mouse
-					} ControlType;
-typedef	enum		{
-						motion_Left = -1,motion_Up = -1,
-						motion_None = 0,
-						motion_Right = 1,motion_Down = 1
-					} Motion;
-typedef	enum		{
-						dir_North,dir_NorthEast,
-						dir_East,dir_SouthEast,
-						dir_South,dir_SouthWest,
-						dir_West,dir_NorthWest,
-						dir_None
-					} Direction;
-typedef	struct		{
-						boolean		button0,button1,button2,button3;
-						short		x,y;
-						Motion		xaxis,yaxis;
-						Direction	dir;
-					} CursorInfo;
+typedef	enum
+{
+	demo_Off,
+	demo_Record,
+	demo_Playback,
+	demo_PlayDone
+} Demo;
+
+typedef	enum
+{
+	ctrl_Keyboard,
+	ctrl_Keyboard1 = ctrl_Keyboard,
+	ctrl_Keyboard2,
+	ctrl_Joystick,
+	ctrl_Joystick1 = ctrl_Joystick,
+	ctrl_Joystick2,
+	ctrl_Mouse
+} ControlType;
+
+typedef	enum
+{
+	motion_Left = -1,
+	motion_Up = -1,
+	motion_None = 0,
+	motion_Right = 1,
+	motion_Down = 1
+} Motion;
+
+typedef	enum
+{
+	dir_North,
+	dir_NorthEast,
+	dir_East,
+	dir_SouthEast,
+	dir_South,
+	dir_SouthWest,
+	dir_West,
+	dir_NorthWest,
+	dir_None
+} Direction;
+
+typedef	struct
+{
+	boolean	button0,button1,button2,button3;
+	short x, y;
+	Motion xaxis, yaxis;
+	Direction dir;
+} CursorInfo;
+
 typedef	CursorInfo	ControlInfo;
-typedef	struct		{
-						ScanCode	button0,button1,
-									upleft,		up,		upright,
-									left,				right,
-									downleft,	down,	downright;
-					} KeyboardDef;
-typedef	struct		{
-						word		joyMinX,joyMinY,
-									threshMinX,threshMinY,
-									threshMaxX,threshMaxY,
-									joyMaxX,joyMaxY,
-									joyMultXL,joyMultYL,
-									joyMultXH,joyMultYH;
-					} JoystickDef;
-// Global variables
+
+typedef	struct
+{
+	ScanCode button0, button1,
+	upleft,	up, upright,
+	left, right,
+	downleft, down,	downright;
+} KeyboardDef;
+
+typedef	struct
+{
+	word joyMinX, joyMinY;
+	word threshMinX, threshMinY;
+	word threshMaxX, threshMaxY;
+	word joyMaxX, joyMaxY;
+	word joyMultXL, joyMultYL;
+	word joyMultXH, joyMultYH;
+} JoystickDef;
+
+//Global variables
 extern volatile boolean KeyboardState[129];
-extern           boolean    MousePresent;
-extern  volatile boolean    Paused;
-extern  volatile char       LastASCII;
-extern  volatile ScanCode   LastScan;
-extern           int        JoyNumButtons;
-extern           boolean    forcegrabmouse;
+extern boolean MousePresent;
+extern volatile boolean Paused;
+extern volatile char LastASCII;
+extern volatile ScanCode LastScan;
+extern int JoyNumButtons;
+extern boolean forcegrabmouse;
 
 
 
-//#if SDL_MAJOR_VERSION == 2
 #define	IN_KeyDown(code)	(Keyboard((code)))
 #define	IN_ClearKey(code)	{ KeyboardSet(code, false);\
 						      if (code == LastScan) LastScan = sc_None;}
-//#endif
 
 
 

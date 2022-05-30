@@ -31,8 +31,9 @@
 #include <SDL_mixer.h>
 #if defined(GP2X_940)
 #include "gp2x/fmopl.h"
-#elif USE_GPL
-#include "dosbox/dbopl.h"
+#endif
+#if defined USE_GPL
+    #include "dosbox/dbopl.hpp"
 #else
 #include "mame/fmopl.h"
 #endif
@@ -109,8 +110,8 @@ static  int                     sqHackLen;
 static  int                     sqHackSeqLen;
 static  longword                sqHackTime;
 
-#ifdef USE_GPL
-using namespace DBOPL;
+#if USE_GPL
+using namespace DBOPL
 
 Chip oplChip;
 
@@ -167,14 +168,13 @@ static inline void YM3812UpdateOne(Chip &which, int16_t *stream, int length)
 		}
 	}
 }
-
 #else
 
 static const int oplChip = 0;
 
 #endif
 
-void Delay(int32_t wolfticks)
+void Delay(s32 wolfticks)
 {
     if (wolfticks > 0)
         SDL_Delay ((wolfticks * 100) / 7);
@@ -228,6 +228,8 @@ static void SDL_PCMixCallback(void *udata, Uint8 *stream, int len)
     static int current_freq = 0;
     static int phase_offset = 0;
 
+    void* streamp = stream;
+
     Sint16 *leftptr;
     Sint16 *rightptr;
     Sint16 this_value;
@@ -239,8 +241,8 @@ static void SDL_PCMixCallback(void *udata, Uint8 *stream, int len)
 
     nsamples = len / 4;
 
-    leftptr = (Sint16 *) stream;
-    rightptr = ((Sint16 *) stream) + 1;
+    leftptr = (Sint16 *) streamp;
+    rightptr = ((Sint16 *) streamp) + 1;
 
     // Fill the output buffer
 
@@ -389,7 +391,7 @@ Sint16 GetSample(float csample, byte *samples, int size)
     if(cursample+1 < size) s2 = (float) (samples[cursample+1] - 128);
 
     float val = s0*sf*(sf-1)/2 - s1*(sf*sf-1) + s2*(sf+1)*sf/2;
-    int32_t intval = (int32_t) (val * 256);
+    s32 intval = (s32) (val * 256);
     if(intval < -32768) intval = -32768;
     else if(intval > 32767) intval = 32767;
     return (Sint16) intval;
@@ -807,7 +809,7 @@ void SDL_IMFMusicPlayer(void *udata, Uint8 *stream, int len)
 {
     int stereolen = len>>1;
     int sampleslen = stereolen>>1;
-    int16_t *stream16 = (int16_t *) (void *) stream;    // expect correct alignment
+    s16 *stream16 = (s16 *) (void *) stream;    // expect correct alignment
 
     while(1)
     {
@@ -992,10 +994,11 @@ boolean SD_PlaySound(soundnames sound)
     ispos = nextsoundpos;
     nextsoundpos = false;
 
-    if (sound == -1 || (DigiMode == sds_Off && SoundMode == sdm_Off))
+    if (sound == (soundnames) -1 || (DigiMode == sds_Off && SoundMode == sdm_Off))
         return 0;
 
-    s = (SoundCommon *) SoundTable[sound];
+    void* p = SoundTable[sound];
+    s = (SoundCommon*)p;
 
     if ((SoundMode != sdm_Off) && !s)
             Quit("SD_PlaySound() - Uncached sound");
@@ -1165,7 +1168,7 @@ void SD_StartMusic(int chunk)
 
     if (MusicMode == smm_AdLib)
     {
-        int32_t chunkLen = CA_CacheAudioChunk(chunk);
+        s32 chunkLen = CA_CacheAudioChunk(chunk);
         sqHack = (word *)(void *) audiosegs[chunk];     // alignment is correct
         if(*sqHack == 0) sqHackLen = sqHackSeqLen = chunkLen;
         else sqHackLen = sqHackSeqLen = *sqHack++;

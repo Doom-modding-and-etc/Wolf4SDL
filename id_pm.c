@@ -26,9 +26,9 @@ void PM_Startup (void)
     int      i;
     int      padding;
     byte     *page;
-    uint32_t *pageOffsets;
-    uint32_t pagesize;
-    int32_t filesize, datasize;
+    u32 *pageOffsets;
+    u32 pagesize;
+    s32 filesize, datasize;
     FILE *file;
     char fname[13] = "vswap.";
  
@@ -190,12 +190,12 @@ void PM_Shutdown (void)
 ==================
 */
 
-uint32_t PM_GetPageSize (int page)
+u32 PM_GetPageSize (int page)
 {
     if (page < 0 || page >= ChunksInFile)
         Quit ("PM_GetPageSize: Invalid page request: %i",page);
 
-    return (uint32_t)(PMPages[page + 1] - PMPages[page]);
+    return (u32)(PMPages[page + 1] - PMPages[page]);
 }
 
 

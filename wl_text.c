@@ -52,10 +52,10 @@ TEXT FORMATTING COMMANDS
 static int pagenum;
 static int numpages;
 
-static unsigned leftmargin[TEXTROWS];
-static unsigned rightmargin[TEXTROWS];
+static u32 leftmargin[TEXTROWS];
+static u32 rightmargin[TEXTROWS];
 static char*    text;
-static unsigned rowon;
+static u32 rowon;
 
 static int     picx;
 static int     picy;

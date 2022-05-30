@@ -90,8 +90,8 @@ void SpawnNewObj (unsigned tilex, unsigned tiley, statetype *state)
 
     newobj->tilex = (short) tilex;
     newobj->tiley = (short) tiley;
-    newobj->x = ((int32_t)tilex<<TILESHIFT)+TILEGLOBAL/2;
-    newobj->y = ((int32_t)tiley<<TILESHIFT)+TILEGLOBAL/2;
+    newobj->x = ((s32)tilex<<TILESHIFT)+TILEGLOBAL/2;
+    newobj->y = ((s32)tiley<<TILESHIFT)+TILEGLOBAL/2;
     newobj->dir = nodir;
 
     actorat[tilex][tiley] = newobj;
@@ -386,7 +386,7 @@ boolean TryWalk (objtype *ob)
 void SelectDodgeDir (objtype *ob)
 {
     int         deltax,deltay,i;
-    unsigned    absdx,absdy;
+    u32   absdx,absdy;
     dirtype     dirtry[5];
     dirtype     turnaround,tdir;
 
@@ -685,7 +685,7 @@ void SelectRunDir (objtype *ob)
 
 void MoveObj (objtype *ob, int32_t move)
 {
-    int32_t    deltax,deltay;
+    s32    deltax,deltay;
 
     switch (ob->dir)
     {
@@ -1075,9 +1075,9 @@ boolean CheckLine (objtype *ob)
     int         x,y;
     int         xdist,ydist,xstep,ystep;
     int         partial,delta;
-    int32_t     ltemp;
+    s32     ltemp;
     int         xfrac,yfrac,deltafrac;
-    unsigned    value,intercept;
+    u32    value,intercept;
 
     x1 = ob->x >> UNSIGNEDSHIFT;            // 1/256 tile precision
     y1 = ob->y >> UNSIGNEDSHIFT;
@@ -1106,14 +1106,14 @@ boolean CheckLine (objtype *ob)
 
         deltafrac = abs(x2-x1);
         delta = y2-y1;
-        ltemp = ((int32_t)delta<<8)/deltafrac;
+        ltemp = ((s32)delta<<8)/deltafrac;
         if (ltemp > 0x7fffl)
             ystep = 0x7fff;
         else if (ltemp < -0x7fffl)
             ystep = -0x7fff;
         else
             ystep = ltemp;
-        yfrac = y1 + (((int32_t)ystep*partial) >>8);
+        yfrac = y1 + (((s32)ystep*partial) >>8);
 
         x = xt1+xstep;
         xt2 += xstep;
@@ -1122,7 +1122,7 @@ boolean CheckLine (objtype *ob)
             y = yfrac>>8;
             yfrac += ystep;
 
-            value = (unsigned)tilemap[x][y];
+            value = (u32) tilemap[x][y];
             x += xstep;
 
             if (!value)
@@ -1160,14 +1160,14 @@ boolean CheckLine (objtype *ob)
 
         deltafrac = abs(y2-y1);
         delta = x2-x1;
-        ltemp = ((int32_t)delta<<8)/deltafrac;
+        ltemp = ((s32)delta<<8)/deltafrac;
         if (ltemp > 0x7fffl)
             xstep = 0x7fff;
         else if (ltemp < -0x7fffl)
             xstep = -0x7fff;
         else
             xstep = ltemp;
-        xfrac = x1 + (((int32_t)xstep*partial) >>8);
+        xfrac = x1 + (((s32)xstep*partial) >>8);
 
         y = yt1 + ystep;
         yt2 += ystep;
@@ -1176,7 +1176,7 @@ boolean CheckLine (objtype *ob)
             x = xfrac>>8;
             xfrac += xstep;
 
-            value = (unsigned)tilemap[x][y];
+            value = (u32)tilemap[x][y];
             y += ystep;
 
             if (!value)
@@ -1218,7 +1218,7 @@ boolean CheckLine (objtype *ob)
 
 boolean CheckSight (objtype *ob)
 {
-    int32_t deltax,deltay;
+    s32 deltax,deltay;
 
     //
     // don't bother tracing a line if the area isn't connected to the player's

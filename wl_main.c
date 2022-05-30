@@ -329,7 +329,7 @@ void NewGame (int difficulty,int episode)
 
 void DiskFlopAnim(int x,int y)
 {
-    static int8_t which=0;
+    static s8 which=0;
     if (!x && !y)
         return;
     VWB_DrawPic(x,y,C_DISKLOADING1PIC+which);
@@ -1054,8 +1054,8 @@ CP_itemtype MusicMenu[]=
 void DoJukebox(void)
 {
     int which,lastsong=-1;
-    unsigned start;
-    unsigned songs[]=
+    u32 start;
+    u32 songs[]=
         {
 #ifndef SPEAR
             GETTHEM_MUS,
@@ -1389,7 +1389,7 @@ void Quit (const char *errorStr, ...)
     if (!pictable)  // don't try to display the red box before it's loaded
     {
         ShutdownId();
-        if (error && *error)
+        if (*error) //error && error what?
         {
 #ifdef NOTYET
             SetTextCursor(0,0);
@@ -1402,7 +1402,7 @@ void Quit (const char *errorStr, ...)
         exit(1);
     }
 
-    if (!error || !*error)
+    if (!*error)
     {
 #ifdef NOTYET
         #ifndef JAPAN
@@ -1418,7 +1418,7 @@ void Quit (const char *errorStr, ...)
 
     ShutdownId ();
 
-    if (error && *error)
+    if (*error)
     {
 #ifdef NOTYET
         memcpy((byte *)0xb8000,screen+7,7*160);
@@ -1431,7 +1431,7 @@ void Quit (const char *errorStr, ...)
         exit(1);
     }
     else
-    if (!error || !(*error))
+    if (!*error)
     {
 #ifdef NOTYET
         #ifndef JAPAN

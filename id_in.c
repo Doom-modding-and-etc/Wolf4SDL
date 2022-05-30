@@ -31,8 +31,7 @@
 =============================================================================
 */
 
-    #define UNKNOWN_KEY SDLK_UNKNOWN
-//#endif
+#define UNKNOWN_KEY SDLK_UNKNOWN
 
 //
 // configuration variables
@@ -318,7 +317,7 @@ void IN_GetJoyDelta(int *dx,int *dy)
 
     if(param_joystickhat != -1)
     {
-        uint8_t hatState = SDL_JoystickGetHat(Joystick, param_joystickhat);
+        u8 hatState = SDL_JoystickGetHat(Joystick, param_joystickhat);
         if(hatState & SDL_HAT_RIGHT)
             x += 127;
         else if(hatState & SDL_HAT_LEFT)
@@ -445,7 +444,7 @@ static void processEvent(SDL_Event *event)
                 }
             }
 
-            int sym;  
+            u32 sym;  
             sym = LastScan;
             if(sym >= 'a' && sym <= 'z')
                 sym -= 32;  // convert to uppercase
@@ -558,7 +557,7 @@ void IN_Startup(void)
     {
         GrabInput = true;
     #if SDL_MAJOR_VERSION == 1
-            SDL_WM_GrabInput(SDL_GRAB_ON);
+      SDL_WM_GrabInput(SDL_GRAB_ON);
     #elif SDL_MAJOR_VERSION == 2      
       SDL_SetRelativeMouseMode(SDL_TRUE);
     #endif

@@ -21,6 +21,7 @@
 #elif !defined(_WIN32)
 #	include <stdint.h>
 #endif
+
 #include <SDL.h>
 
 typedef uint32_t	Bitu;

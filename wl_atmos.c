@@ -84,7 +84,7 @@ void DrawStarSky (void)
     point3d_t *pt;
     byte      *dest;
     byte      shade;
-    int16_t   stopx,starty,stopy;
+    s16   stopx,starty,stopy;
     fixed     x,y,z;
     fixed     xx,yy;
     
@@ -168,7 +168,7 @@ void DrawRain (void)
 {
 #if defined(USE_FLOORCEILINGTEX) && defined(FIXRAINSNOWLEAKS)
     byte      tilex,tiley;
-    int16_t   prestep;
+    s16   prestep;
     fixed     basedist,stepscale;
     fixed     xfrac,yfrac;
     fixed     xstep,ystep;
@@ -271,7 +271,7 @@ void DrawSnow (void)
 {
 #if defined(USE_FLOORCEILINGTEX) && defined(FIXRAINSNOWLEAKS)
     byte      tilex,tiley;
-    int16_t   prestep;
+    s16   prestep;
     fixed     basedist,stepscale;
     fixed     xfrac,yfrac;
     fixed     xstep,ystep;

@@ -19,7 +19,7 @@ extern byte **PMPages;
 
 void     PM_Startup (void);
 void     PM_Shutdown (void);
-uint32_t PM_GetPageSize (int page);
+u32 PM_GetPageSize (int page);
 byte     *PM_GetPage (int page);
 byte     *PM_GetPageEnd (void);
 

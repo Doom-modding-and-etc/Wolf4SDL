@@ -109,8 +109,8 @@ typedef struct
 
 typedef struct
 {
-    uint32_t startpage;
-    uint32_t length;
+    u32 startpage;
+    u32 length;
 } digiinfo;
 
 extern globalsoundpos channelSoundPos[];
@@ -130,7 +130,7 @@ extern  int             DigiChannel[];
 #define GetTimeCount()  ((SDL_GetTicks()*7)/100)
 
 // Function prototypes
-void            Delay (int32_t wolfticks);
+void            Delay (s32 wolfticks);
 
 extern  void    SD_Startup(void),
                 SD_Shutdown(void);

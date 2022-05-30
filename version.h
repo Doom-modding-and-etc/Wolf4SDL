@@ -8,7 +8,7 @@
 //todo: Make compatible the SPEAR OF DESTINY
 //#define SPEAR
 //#define SPEARDEMO
-//#define WOLF3D
+#define WOLF3D
 //#define UPLOAD
 #define GOODTIMES
 #define CARMACIZED
@@ -54,7 +54,7 @@
 #define PLAYDEMOLIKEORIGINAL  // When playing or recording demos, several bug fixes do not take
                               // effect to let the original demos work as in the original Wolf3D v1.4
                               // (actually better, as the second demo rarely worked)
-//#define USE_GPL             // Replaces the MAME OPL emulator by the DosBox one, which is under a GPL license
+//#define USE_GPL             // Replaces the MAME OPL emulator by the DosBox one, which is under a GPL license obs: don´t use :)
 
 #define ADDEDFIX              // Post-revision 262 fixes described in http://diehardwolfers.areyep.com/viewtopic.php?t=6693
 

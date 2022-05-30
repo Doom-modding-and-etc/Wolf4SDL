@@ -4,9 +4,10 @@
 #include "wl_def.h"
 #include "wl_shade.h"
 
-typedef struct {
-    uint8_t destRed, destGreen, destBlue;   // values between 0 and 255
-    uint8_t fogStrength;
+typedef struct 
+{
+    u8 destRed, destGreen, destBlue;   // values between 0 and 255
+    u8 fogStrength;
 } shadedef_t;
 
 shadedef_t shadeDefs[] = {

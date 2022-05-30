@@ -1031,8 +1031,8 @@ void OverheadRefresh (void)
 {
     int       x,y;
     byte      rotate[9] = {6,5,4,3,2,1,0,7,0};
-    int16_t   endx,endy;
-    int16_t   sx,sy,shapenum;
+    s16   endx,endy;
+    s16   sx,sy,shapenum;
     uintptr_t tile;
     statobj_t *statptr;
     objtype   *obj;

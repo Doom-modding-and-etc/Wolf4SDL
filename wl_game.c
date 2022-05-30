@@ -5,10 +5,11 @@
 #include <SDL_mixer.h>
 
 
-#ifdef MYPROFILE
-#include <TIME.H>
-#endif
+//#ifdef MYPROFILE
+//#include <TIME.H>
+//#endif
 
+//#include <time.h>
 
 /*
 =============================================================================
@@ -32,8 +33,8 @@ gametype        gamestate;
 byte            bordercol=VIEWCOLOR;        // color of the Change View/Ingame border
 
 #ifdef SPEAR
-int32_t         spearx,speary;
-unsigned        spearangle;
+s32         spearx,speary;
+u32        spearangle;
 boolean         spearflag;
 #endif
 
@@ -223,7 +224,7 @@ void UpdateSoundLoc(void)
 
 static void ScanInfoPlane(void)
 {
-    unsigned x,y;
+    u32 x,y;
     int      tile;
     word     *start;
 
@@ -907,7 +908,7 @@ void DrawPlayBorder (void)
             statusborderw+px*8, px*STATUSLINES, bordercol);
     }
 
-    if((unsigned) viewheight == screenHeight) return;
+    if((u32) viewheight == screenHeight) return;
 
     VWB_BarScaledCoord (0,0,screenWidth,screenHeight-px*STATUSLINES,bordercol);
 
@@ -997,7 +998,7 @@ char    demoname[13] = "DEMO?.";
 void StartDemoRecord (int levelnumber)
 {
     demobuffer = SafeMalloc(MAXDEMOSIZE);
-    demoptr = (int8_t *) demobuffer;
+    demoptr = (s8 *) demobuffer;
     lastdemoptr = demoptr+MAXDEMOSIZE;
 
     *demoptr = levelnumber;
@@ -1016,15 +1017,15 @@ void StartDemoRecord (int levelnumber)
 
 void FinishDemoRecord (void)
 {
-    int32_t    length,level;
+    s32    length,level;
 
     demorecord = false;
 
-    length = (int32_t) (demoptr - (int8_t *)demobuffer);
+    length = (s32) (demoptr - (s8 *)demobuffer);
 
-    demoptr = ((int8_t *)demobuffer)+1;
-    demoptr[0] = (int8_t) length;
-    demoptr[1] = (int8_t) (length >> 8);
+    demoptr = ((s8 *)demobuffer)+1;
+    demoptr[0] = (s8) length;
+    demoptr[1] = (s8) (length >> 8);
     demoptr[2] = 0;
 
     VW_FadeIn();
@@ -1153,7 +1154,7 @@ void PlayDemo (int demonumber)
     int dems[1]={T_DEMO0};
 #endif
 
-    demoptr = (int8_t *) grsegs[dems[demonumber]];
+    demoptr = (s8 *) grsegs[dems[demonumber]];
 #else
     demoname[4] = '0'+demonumber;
     CA_LoadFile (demoname,&demobuffer);
@@ -1163,7 +1164,7 @@ void PlayDemo (int demonumber)
     NewGame (1,0);
     gamestate.mapon = *demoptr++;
     gamestate.difficulty = gd_hard;
-    length = READWORD((uint8_t *)demoptr);
+    length = READWORD((u8 *)demoptr);
     // TODO: Seems like the original demo format supports 16 MB demos
     //       But T_DEM00 and T_DEM01 of Wolf have a 0xd8 as third length size...
     demoptr += 3;
@@ -1207,7 +1208,7 @@ void PlayDemo (int demonumber)
 void Died (void)
 {
     float   fangle;
-    int32_t dx,dy;
+    s32 dx,dy;
     int     iangle,curangle,clockwise,counter,change;
 
     if (screenfaded)

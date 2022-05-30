@@ -48,7 +48,7 @@ bool     mapseen[MAPSIZE][MAPSIZE];
 // replacing refresh manager
 //
 word     mapwidth,mapheight;
-unsigned tics;
+u32 tics;
 
 //
 // control info
@@ -74,7 +74,7 @@ int viewsize;
 boolean buttonheld[NUMBUTTONS];
 
 boolean demorecord, demoplayback;
-int8_t *demoptr, *lastdemoptr;
+s8 *demoptr, *lastdemoptr;
 void   *demobuffer;
 
 //
@@ -262,7 +262,7 @@ void PollKeyboardButtons (void)
 {
     int i;
 
-    for (i = 0; i < NUMBUTTONS; i++)
+    for(i = 0; i < NUMBUTTONS; i++)
 
 //#if SDL_MAJOR_VERSION == 2        
         if (Keyboard(buttonscan[i]))
@@ -325,24 +325,13 @@ void PollKeyboardMove (void)
 {
     int delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
 
-//#if SDL_MAJOR_VERSION == 2
     if (Keyboard(dirscan[di_north]))
-//#endif        
-        controly -= delta; 
-
-//#if SDL_MAJOR_VERSION == 2    
+        controly -= delta;
     if (Keyboard(dirscan[di_south]))
-//#endif        
         controly += delta;
-
-//#if SDL_MAJOR_VERSION == 2
     if (Keyboard(dirscan[di_west]))
-//#endif        
         controlx -= delta;
-
-//#if SDL_MAJOR_VERSION == 2
     if (Keyboard(dirscan[di_east]))
-//#endif           
         controlx += delta;
 }
 
@@ -429,9 +418,9 @@ void PollControls (void)
     if (demoplayback || demorecord)   // demo recording and playback needs to be constant
     {
         // wait up to DEMOTICS Wolf tics
-        uint32_t curtime = SDL_GetTicks();
+        u32 curtime = SDL_GetTicks();
         lasttimecount += DEMOTICS;
-        int32_t timediff = (lasttimecount * 100) / 7 - curtime;
+        s32 timediff = (lasttimecount * 100) / 7 - curtime;
         if(timediff > 0)
             SDL_Delay(timediff);
 
@@ -828,11 +817,10 @@ int objcount;
 void InitActorList (void)
 {
     int i;
-
 //
 // init the actor lists
 //
-    for (i = 0; i < MAXACTORS; i++)
+    for(i = 0; i < MAXACTORS; i++)
     {
         objlist[i].prev = &objlist[i + 1];
         objlist[i].next = NULL;

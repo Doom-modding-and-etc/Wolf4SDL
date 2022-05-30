@@ -30,7 +30,7 @@
 //
 // player state info
 //
-int32_t         thrustspeed;
+s32         thrustspeed;
 
 word            plux,pluy;          // player coordinates scaled to unsigned
 
@@ -162,7 +162,7 @@ void CheckWeaponChange (void)
 
 void ControlMovement(objtype *ob)
 {
-    int32_t oldx,oldy;
+    s32 oldx,oldy;
     int     angle;
     int     angleunits;
 
@@ -372,12 +372,12 @@ void UpdateFace (void)
 
 static void LatchNumber (int x, int y, unsigned width, int32_t number)
 {
-    unsigned length,c;
+    u32 length,c;
     char    str[20];
 
     ltoa (number,str,10);
 
-    length = (unsigned) strlen (str);
+    length = (u32) strlen (str);
 
     while (length<width)
     {
@@ -1016,7 +1016,7 @@ static fixed FixedByFracOrig(fixed a, fixed b)
 
 void Thrust (int angle, int32_t speed)
 {
-    int32_t xmove,ymove;
+    s32 xmove,ymove;
 
     //
     // ZERO FUNNY COUNTER IF MOVED!

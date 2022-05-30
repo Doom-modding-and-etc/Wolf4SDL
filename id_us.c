@@ -37,6 +37,7 @@ void (*USL_MeasureString)(const char *,word *,word *) = VW_MeasurePropString;
 void (*USL_DrawString)(const char *) = VWB_DrawPropString;
 
 SaveGame Games[MaxSaveGames];
+
 HighScore Scores[MaxScores] =
 {
   {"id software-'92", 10000, 1},
@@ -46,10 +47,7 @@ HighScore Scores[MaxScores] =
   {"Tom Hall", 10000,1},
   {"John Romero", 10000,1},
   {"Jay Wilbur", 10000,1},
-  //{"André Guilherme", 10000,1}, //Easter egg
 };
-
-
 
 static byte rndtable[] = 
 {
@@ -182,7 +180,7 @@ void US_PrintUnsigned(longword n)
 //	US_PrintSigned() - Prints a signed long
 //
 ///////////////////////////////////////////////////////////////////////////
-void US_PrintSigned(int32_t n)
+void US_PrintSigned(s32 n)
 {
 	char	buffer[32];
 

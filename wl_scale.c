@@ -36,8 +36,8 @@ void ScaleLine (int16_t x, int16_t toppix, fixed fracstep, byte *linesrc, byte *
 {
     byte    *src,*dest;
     byte    col;
-    int16_t start,end,top;
-    int16_t startpix,endpix;
+    s16 start,end,top;
+    s16 startpix,endpix;
     fixed   frac;
 
     for (end = READWORD(linecmds) >> 1; end; end = READWORD(linecmds) >> 1)
@@ -106,8 +106,8 @@ void ScaleShape (int xcenter, int shapenum, int height, uint32_t flags)
     compshape_t *shape;
     byte        *linesrc,*linecmds;
     byte        *curshades;
-    int16_t     scale,toppix;
-    int16_t     x1,x2,actx;
+    s16     scale,toppix;
+    s16     x1,x2,actx;
     fixed       frac,fracstep;
 
     scale = height >> 3;        // low three bits are fractional
@@ -187,8 +187,8 @@ void SimpleScaleShape (int xcenter, int shapenum, int height)
     int         i;
     compshape_t *shape;
     byte        *linesrc,*linecmds;
-    int16_t     scale,toppix;
-    int16_t     x1,x2,actx;
+    s16     scale,toppix;
+    s16     x1,x2,actx;
     fixed       frac,fracstep;
 
     scale = height >> 1;
@@ -245,9 +245,9 @@ void Scale3DShape (int x1, int x2, int shapenum, uint32_t flags, fixed ny1, fixe
     compshape_t *shape;
     byte        *linesrc,*linecmds;
     byte        *curshades;
-    int16_t     scale1,toppix;
-    int16_t     dx,len,slinex;
-    int16_t     xpos[TEXTURESIZE + 1];
+    s16     scale1,toppix;
+    s16     dx,len,slinex;
+    s16     xpos[TEXTURESIZE + 1];
     fixed       height,dheight,height1,height2;
     fixed       fracstep;
     fixed       dxx,dzz;

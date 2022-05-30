@@ -48,7 +48,7 @@ typedef struct
 #if MAPPLANES >= 4
     word numplanes;       // unused, but WDC needs 2 bytes here for internal usage
 #endif
-    int32_t headeroffsets[NUMMAPS];
+    s32 headeroffsets[NUMMAPS];
 } mapfiletype;
 
 
@@ -82,14 +82,14 @@ static const char gheadname[] = "vgahead.";
 static const char gfilename[] = "vgagraph.";
 static const char gdictname[] = "vgadict.";
 static const char mheadname[] = "maphead.";
-static const char mfilename[] = "maptemp.";
+//static const char mfilename[] = "maptemp.";
 static const char aheadname[] = "audiohed.";
 static const char afilename[] = "audiot.";
 
 void CA_CannotOpen(const char *string);
 
-static int32_t grstarts[NUMCHUNKS + 1];
-static int32_t* audiostarts; // array of offsets in audio / audiot
+static s32 grstarts[NUMCHUNKS + 1];
+static s32* audiostarts; // array of offsets in audio / audiot
 
 #ifdef GRHEADERLINKED
 huffnode *grhuffman;
@@ -101,7 +101,7 @@ int    grhandle = -1;               // handle to EGAGRAPH
 int    maphandle = -1;              // handle to MAPTEMP / GAMEMAPS
 int    audiohandle = -1;            // handle to AUDIOT / AUDIO
 
-int32_t   chunkcomplen,chunkexplen;
+s32   chunkcomplen,chunkexplen;
 
 SDMode oldsoundmode;
 
@@ -153,7 +153,7 @@ void CAL_GetGrChunkLength (int chunk)
 ==========================
 */
 
-boolean CA_WriteFile (const char *filename, void *ptr, int32_t length)
+boolean CA_WriteFile (const char *filename, void *ptr, s32 length)
 {
     const int handle = open(filename, O_CREAT | O_WRONLY | O_BINARY, 0644);
     
@@ -183,7 +183,7 @@ boolean CA_WriteFile (const char *filename, void *ptr, int32_t length)
 
 boolean CA_LoadFile(const char *filename, void **ptr)
 {
-    int32_t size;
+    s32 size;
 
     int handle;
     handle = open(filename, O_RDONLY | O_BINARY);
@@ -344,10 +344,10 @@ void CAL_CarmackExpand(byte *source, word *dest, int length)
 ======================
 */
 
-int32_t CA_RLEWCompress(word *source, int32_t length, word *dest, word rlewtag)
+s32 CA_RLEWCompress(word *source, s32 length, word *dest, word rlewtag)
 {
     word value,count;
-    unsigned int i;
+    u32 i;
     word *start,*end;
 
     start = dest;
@@ -386,7 +386,7 @@ int32_t CA_RLEWCompress(word *source, int32_t length, word *dest, word rlewtag)
 
     } while (source<end);
 
-    return (int32_t)(2*(dest-start));
+    return (s32)(2*(dest-start));
 }
 
 
@@ -399,7 +399,7 @@ int32_t CA_RLEWCompress(word *source, int32_t length, word *dest, word rlewtag)
 ======================
 */
 
-void CA_RLEWexpand(word *source, word *dest, int32_t length, word rlewtag)
+void CA_RLEWexpand(word *source, word *dest, s32 length, word rlewtag)
 {
     word value, i, count;
     word *end=dest+length/2;
@@ -504,9 +504,9 @@ void CAL_SetupGrFile (void)
 
     const byte* d = data;
 
-    for (int32_t* i = grstarts; i != endof(grstarts); ++i)
+    for (s32* i = grstarts; i != endof(grstarts); ++i)
     {
-        const int32_t val = d[0] | d[1] << 8 | d[2] << 16;
+        const s32 val = d[0] | d[1] << 8 | d[2] << 16;
         *i = (val == 0x00FFFFFF ? -1 : val);
         d += 3;
     }
@@ -553,7 +553,7 @@ void CAL_SetupMapFile (void)
 {
     int     i;
     int handle;
-    int32_t pos;
+    s32 pos;
     char fname[13];
 
 //
@@ -585,7 +585,7 @@ void CAL_SetupMapFile (void)
     if (maphandle == -1)
         CA_CannotOpen(fname);
 #else
-    strcpy(fname,mfilename);
+    strcpy(fname, "maptemp.");
     strcat(fname,extension);
 
     maphandle = open(fname, O_RDONLY | O_BINARY);
@@ -642,7 +642,7 @@ void CAL_SetupAudioFile (void)
     void* ptr;
     if (!CA_LoadFile(fname, &ptr))
         CA_CannotOpen(fname);
-    audiostarts = (int32_t*)ptr;
+    audiostarts = (s32*)ptr;
 
 //
 // open the data file
@@ -753,10 +753,10 @@ void CA_Shutdown (void)
 ======================
 */
 
-int32_t CA_CacheAudioChunk (int chunk)
+s32 CA_CacheAudioChunk (int chunk)
 {
-    int32_t pos = audiostarts[chunk];
-    int32_t size = audiostarts[chunk+1]-pos;
+    s32 pos = audiostarts[chunk];
+    s32 size = audiostarts[chunk+1]-pos;
 
     if (audiosegs[chunk])
         return size;                        // already in memory
@@ -777,8 +777,8 @@ void CA_CacheAdlibSoundChunk (int chunk)
 {
     byte    *bufferseg;
     byte    *ptr;
-    int32_t pos = audiostarts[chunk];
-    int32_t size = audiostarts[chunk+1]-pos;
+    s32 pos = audiostarts[chunk];
+    s32 size = audiostarts[chunk+1]-pos;
 
     if (audiosegs[chunk])
         return;                        // already in memory
@@ -788,9 +788,13 @@ void CA_CacheAdlibSoundChunk (int chunk)
     bufferseg = SafeMalloc(ORIG_ADLIBSOUND_SIZE - 1);
     ptr = bufferseg;
 
-    read(audiohandle, ptr, ORIG_ADLIBSOUND_SIZE - 1);   // without data[1]
+    if (read(audiohandle, bufferseg, ORIG_ADLIBSOUND_SIZE - 1) < 0) // without data[1]
+    {
+        return;
+    }
 
-    AdLibSound *sound = SafeMalloc(size + sizeof(*sound) - ORIG_ADLIBSOUND_SIZE);
+    audiosegs[chunk] = (byte*)SafeMalloc(size + sizeof(AdLibSound) - ORIG_ADLIBSOUND_SIZE);
+    AdLibSound* sound = (AdLibSound*)audiosegs[chunk];
 
     sound->common.length = READLONGWORD(ptr);
     ptr += 4;
@@ -837,7 +841,7 @@ void CA_CacheAdlibSoundChunk (int chunk)
 
 void CA_LoadAllSounds (void)
 {
-    unsigned start,i;
+    u32 start, i;
 
     switch (oldsoundmode)
     {
@@ -898,9 +902,7 @@ cachein:
 
 void CAL_ExpandGrChunk (int chunk, int32_t *source)
 {
-    int32_t expanded;
-
-
+    s32 expanded;
 
     if (chunk >= STARTTILE8 && chunk < STARTEXTERNS)
     {
@@ -952,8 +954,8 @@ void CAL_ExpandGrChunk (int chunk, int32_t *source)
 
 void CAL_DeplaneGrChunk (int chunk)
 {
-    int16_t width,height;
-    int16_t bits = 8;
+    s16 width,height;
+    s16 bits = 8;
 
     if (chunk == STARTTILE8)
     {
@@ -987,9 +989,9 @@ void CAL_DeplaneGrChunk (int chunk)
 
 void CA_CacheGrChunks (void)
 {
-    int32_t pos,compressed;
-    int32_t *bufferseg;
-    int32_t *source;
+    s32 pos,compressed;
+    s32 *bufferseg;
+    s32 *source;
     int     chunk,next;
 
     for (chunk = STRUCTPIC + 1; chunk < NUMCHUNKS; chunk++)
@@ -1045,15 +1047,15 @@ void CA_CacheGrChunks (void)
 
 void CA_CacheMap (int mapnum)
 {
-    int32_t  pos,compressed;
+    s32  pos,compressed;
     int      plane;
     word     *dest;
-    unsigned size;
+    u32 size;
     word     *bufferseg;
     word     *source;
 #ifdef CARMACIZED
     word     *buffer2seg;
-    int32_t  expanded;
+    s32    expanded;
 #endif
 
     if (mapheaderseg[mapnum]->width != MAPSIZE || mapheaderseg[mapnum]->height != MAPSIZE)

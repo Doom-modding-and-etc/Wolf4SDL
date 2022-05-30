@@ -102,19 +102,22 @@
 //
 // TYPEDEFS
 //
-typedef struct {
-                short x,y,amount,curpos,indent;
-                } CP_iteminfo;
+typedef struct 
+{
+    short x,y,amount,curpos,indent;
+} CP_iteminfo;
 
-typedef struct {
-                short active;
-                char string[36];
-                int (* routine)(int temp1);
-                } CP_itemtype;
+typedef struct 
+{
+    short active;
+    char string[36];
+    int (* routine)(int temp1);
+} CP_itemtype;
 
-typedef struct {
-                short allowed[4];
-                } CustomCtrls;
+typedef struct 
+{
+   short allowed[4];
+} CustomCtrls;
 
 extern CP_itemtype MainMenu[];
 extern CP_iteminfo MainItems;
@@ -204,7 +207,13 @@ void CheckForEpisodes(void);
 void FreeMusic(void);
 
 
-enum {MOUSE,JOYSTICK,KEYBOARDBTNS,KEYBOARDMOVE};        // FOR INPUT TYPES
+enum 
+{
+    MOUSE,
+    JOYSTICK,
+    KEYBOARDBTNS,
+    KEYBOARDMOVE
+};        // FOR INPUT TYPES
 
 enum menuitems
 {
@@ -232,7 +241,7 @@ enum menuitems
 typedef struct 
 {
   int kill,secret,treasure;
-  int32_t time;
+  s32 time;
 } LRstruct;
 
 extern LRstruct LevelRatios[];
