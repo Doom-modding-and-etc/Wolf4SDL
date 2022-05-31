@@ -57,14 +57,14 @@ int     dirangle[9] = {0,ANGLES/8,2*ANGLES/8,3*ANGLES/8,4*ANGLES/8,
 // proejection variables
 //
 fixed    focallength;
-unsigned screenofs;
+u32 screenofs;
 int      viewscreenx, viewscreeny;
 int      viewwidth;
 int      viewheight;
 short    centerx,centery;
 int      shootdelta;           // pixels away from centerx a target can be
 fixed    scale;
-int32_t  heightnumerator;
+s32  heightnumerator;
 
 
 void    Quit (const char *error,...);
@@ -340,7 +340,7 @@ void DiskFlopAnim(int x,int y)
 
 int32_t DoChecksum(byte *source,unsigned size,int32_t checksum)
 {
-    unsigned i;
+    u32 i;
 
     for (i=0;i<size-1;i++)
     checksum += source[i]^source[i+1];
@@ -486,7 +486,7 @@ boolean LoadTheGame(FILE *file,int x,int y)
     int i,j;
     int actnum = 0;
     word laststatobjnum;
-    int32_t checksum,oldchecksum;
+    s32 checksum,oldchecksum;
     objtype nullobj;
     statobj_t nullstat;
 
@@ -1664,7 +1664,7 @@ void CheckParameters(int argc, char *argv[])
             {
                 screenWidth = atoi(argv[++i]);
                 screenHeight = atoi(argv[++i]);
-                unsigned factor = screenWidth / 320;
+                u32 factor = screenWidth / 320;
                 if(screenWidth % 320 || screenHeight != 200 * factor && screenHeight != 240 * factor)
                     printf("Screen size must be a multiple of 320x200 or 320x240!\n"), hasError = true;
             }
@@ -1820,7 +1820,7 @@ void CheckParameters(int argc, char *argv[])
     {
         if(hasError) printf("\n");
         printf(
-            "Wolf4SDL v2.0\n"
+            "Wolf4SDL v2.1\n"
             "Ported by Chaos-Software, additions by the community\n"
             "Original Wolfenstein 3D by id Software\n\n"
             "Usage: Wolf4SDL [options]\n"
