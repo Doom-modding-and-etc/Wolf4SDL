@@ -1,3 +1,24 @@
+Wolf4SDL v2.1
+- Rework on boolean stuff
+- Change typedefs to more cleaner
+- rework makefiles 
+- Fix Scancode variable 
+- attempt to compile the Dreamcast version(WIP)
+- Fix some typos 
+- Refactor the code 
+- Remove GPL flag on fmpol.c
+- Support Clang stuff(fabian grafth code)
+- Clean up Makefiles 
+- Use longword(fabian grafth code)
+- Use ux for unsigned int 
+- Remove some pragmas 
+- Support Windows 64bits Version(WIP) 
+- Update Visual Studio 19 to 2022
+- merge some stuff from sdl_wrap.c into id_vh.c
+- Merge the stuff into c17
+and c++20 for dbopl.cpp 
+- Deprecate some builds(see the unsupported builds if you want to compile)
+
 Wolf4SDL v2.0
  - Added SDL2 support (thanks to zZeck)
  - TAB-T RESTORED! Yes!
