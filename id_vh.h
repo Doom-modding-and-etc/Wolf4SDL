@@ -68,9 +68,11 @@ void VWB_Vlin (int y1, int y2, int x, int color);
 
 void VH_UpdateScreen (SDL_Surface *surface);
 
+#if SDL_MAJOR_VERSION == 2
 //Wolf3s:
 void VH_RenderTextures(SDL_Surface* surface);
 #define VW_UpdateScreen()   VH_UpdateScreen (screenBuffer)
+#endif
 
 //
 // wolfenstein EGA compatability stuff
