@@ -102,19 +102,23 @@ files (e.g. *.WL6) into the same directory as the Wolf4SDL executable.
 Please make sure, that you use the correct version of the executable with the
 according data files version as the differences are hardcoded into the binary!
 
+SDL1.2:
 On Windows SDL.dll and SDL_mixer.dll must also be copied into this directory.
-
 SDL 1.2.15 Runtimes can be acquired at: 
 https://www.libsdl.org/download-1.2.php and download "SDL-1.2.15-win32.zip"
 
 SDL_mixer 1.2.12 Runtimes can be acquired at:
 https://www.libsdl.org/projects/SDL_mixer/release-1.2.html and download "SDL_mixer-1.2.12-win32.zip"
 
-SDL2 2.0.20 Runtimes can be acquired at:
-https://www.libsdl.org/download-2.0.php and download "SDL_mixer-2.0.20-win32.zip"
+SDL2:
+On Windows SDL2.dll and SDL2_mixer.dll must also be copied into this directory.
+
+SDL2 2.0.22 Runtimes can be acquired at:
+https://www.libsdl.org/download-2.0.php and download "SDL_mixer-2.0.22-win32.zip"
 
 SDL_mixer 2.0.4 Runtimes can be acquired at:
 https://www.libsdl.org/projects/SDL_mixer/ and download "SDL_mixer-2.0.4-win32.zip"
+
 
 ! ATTENTION ! Do NOT download the x64 version of SDL or SDL_mixer. x86 binairies are required.
 
@@ -166,26 +170,33 @@ Compiling from source code:
 ---------------------------
 
 The current version of the source code is available on GitHub at:
-   https://github.com/AryanWolf3D/Wolf4SDL
+   https://github.com/Doom-modding-and-etc/Wolf4SDL
 
 The following ways of compiling the source code are supported:
  - Makefile (for Linux, BSD variants, MinGW/MSYS and dreamcast see README-dc.txt for more details)
- - Visual C++ 2019 (Wolf4SDL.VC2019.sln and Wolf4SDL.VC2019.vcproj) (see README-VC.txt)
  - Visual C++ (Wolf4SDL.VC2022.sln and Wolf4SDL.vcproj) (see README-VC.txt)
  - Special compiling for Dreamcast (see README-dc.txt)
- - Special compiling for GP2X (see README-GP2X.txt)
-
+ - Xcode (for Mac OS X, macosx/Wolf4SDL.xcodeproj/project.pbxproj)
+ 
 - Deprecated:
  - Visual C++ 2008 (Wolf4SDL.VC9.sln and Wolf4SDL.VC9.vcproj)
  - Visual C++ 2005 (Wolf4SDL.sln and Wolf4SDL.vcproj)
  - Visual C++ 6 (Wolf4SDL.dsw and Wolf4SDL.dsp)
  - Code::Blocks 8.02 (Wolf4SDL.cbp)
  - Dev-C++ 5.0 Beta 9.2 (4.9.9.2) (Wolf4SDL.dev) (see README-devcpp.txt)
- - Xcode (for Mac OS X, macosx/Wolf4SDL.xcodeproj/project.pbxproj)
+ - Visual C++ 2019 (Wolf4SDL.VC2019.sln and Wolf4SDL.VC2019.vcproj) (see README-VC.txt)
+ - Special compiling for GP2X (see README-GP2X.txt)
 
 To compile the source code you need the development libraries of
+ 
  - SDL (https://www.libsdl.org/download-1.2.php) and
  - SDL_mixer (https://www.libsdl.org/projects/SDL_mixer/release-1.2.html)
+ 
+ or
+ 
+ - SDL2 (https://www.libsdl.org/) and
+ - SDL2_mixer (https://www.libsdl.org/projects/SDL_mixer/)
+ 
 and have to adjust the include and library paths in the projects accordingly.
 
 Please note, that there is no official SDL_mixer development pack for MinGW,
@@ -203,9 +214,11 @@ TODOs:
 ------
  - Center non-ingame screens for resolutions being a multiple of 320x240
  - Add support for any graphic resolution >= 320x200
- - fix sdl1
- - Add the nintendo switch port 
+ - Fix sdl1
+ - Add the Nintendo Switch port 
  - Add Sony´s Playstation 2 support
+ - Make more cleanups 
+ - Make compile for MacOS 
 
 Known bugs:
 -----------
