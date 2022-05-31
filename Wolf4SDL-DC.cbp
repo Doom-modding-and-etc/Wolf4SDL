@@ -32,7 +32,7 @@
 		<Unit filename="dc\dc_vmu.c" />
 		<Unit filename="dc\dc_vmu.h" />
 		<Unit filename="f_spear.h" />
-		<Unit filename="mame\fmopl.cpp" />
+		<Unit filename="mame\fmopl.c" />
 		<Unit filename="mame\fmopl.h" />
 		<Unit filename="foreign.h" />
 		<Unit filename="gfxv_apo.h" />
@@ -47,7 +47,6 @@
 		<Unit filename="id_sd.c" />
 		<Unit filename="id_sd.h" />
 		<Unit filename="id_us.h" />
-		<Unit filename="id_us_1.c" />
 		<Unit filename="id_vh.c" />
 		<Unit filename="id_vh.h" />
 		<Unit filename="id_vl.c" />
