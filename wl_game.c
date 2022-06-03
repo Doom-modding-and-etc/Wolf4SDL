@@ -80,6 +80,7 @@ void GameLoop (void);
 
 int leftchannel, rightchannel;
 #define ATABLEMAX 15
+
 byte righttable[ATABLEMAX][ATABLEMAX * 2] = {
 { 8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 6, 0, 0, 0, 0, 0, 1, 3, 5, 8, 8, 8, 8, 8, 8, 8, 8},
 { 8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 6, 4, 0, 0, 0, 0, 0, 2, 4, 6, 8, 8, 8, 8, 8, 8, 8, 8},
@@ -115,6 +116,9 @@ byte lefttable[ATABLEMAX][ATABLEMAX * 2] = {
 { 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8}
 };
 
+/*
+ 
+*/
 void
 SetSoundLoc(fixed gx,fixed gy)
 {

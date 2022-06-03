@@ -373,9 +373,9 @@ void SD_SetPosition(int channel, int leftpos, int rightpos)
     switch (DigiMode)
     {
         case sds_SoundBlaster:
-//            SDL_PositionSBP(leftpos,rightpos);
-            Mix_SetPanning(channel, ((15 - leftpos) << 4) + 15,
-                ((15 - rightpos) << 4) + 15);
+        Mix_SetPanning(channel, 255 - (leftpos * 28), 255 - (rightpos * 28));
+	//Mix_SetPanning(channel, ((15 - leftpos) << 4) + 15, ((15 - rightpos) << 4) + 15);
+	     
             break;
     }
 }
