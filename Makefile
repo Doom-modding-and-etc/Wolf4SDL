@@ -1,5 +1,7 @@
 CONFIG ?= config.default
 -include $(CONFIG)
+SDL_MAJOR_VERSION += 2
+
 
 BINARY ?= Wolf4SDL
 PREFIX ?= /usr/local
@@ -17,7 +19,7 @@ endif
 CFLAGS_SDL ?= $(shell $(SDL_CONFIG) --cflags)
 LDFLAGS_SDL ?= $(shell $(SDL_CONFIG) --libs)
 
-CFLAGS += -Wall -W -g -Wpointer-arith -Wreturn-type -Wwrite-strings -Wcast-align -std=gnu99 \
+CFLAGS += -O2 -Wall -W -g -Wpointer-arith -Wreturn-type -Wwrite-strings -Wcast-align -std=gnu99 \
 -Werror-implicit-function-declaration -Wimplicit-int -Wsequence-point $(CFLAGS_SDL)
 
 ifdef GPL

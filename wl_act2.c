@@ -282,14 +282,15 @@ boolean ProjectileTryMove (objtype *ob)
     //
     // check for solid walls
     //
-    for (y=yl;y<=yh;y++)
-        for (x=xl;x<=xh;x++)
+    for (y = yl; y <= yh; y++)
+    {
+        for (x = xl; x <= xh; x++)
         {
             check = actorat[x][y];
             if (check && !ISPOINTER(check))
                 return false;
         }
-
+    }
         return true;
 }
 

@@ -14,7 +14,8 @@
 //
 // Sound names & indexes
 //
-typedef enum {
+typedef enum 
+{
 	HITWALLSND,              // 0
 	MISSILEHITSND,           // 1
 	SELECTITEMSND,           // 2
@@ -110,7 +111,8 @@ typedef enum {
 //
 // Music names & indexes
 //
-typedef enum {
+typedef enum 
+{
 	XFUNKIE_MUS,             // 0
 	DUNGEON_MUS,             // 1
 	XDEATH_MUS,              // 2

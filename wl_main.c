@@ -52,6 +52,9 @@ extern byte signon[];
 char    str[80];
 int     dirangle[9] = {0,ANGLES/8,2*ANGLES/8,3*ANGLES/8,4*ANGLES/8,
                        5*ANGLES/8,6*ANGLES/8,7*ANGLES/8,ANGLES};
+#ifdef EXTRACONTROLS
+boolean     mousemoveenabled;
+#endif // EXTRACONTROLS
 
 //
 // proejection variables
@@ -73,7 +76,11 @@ boolean startgame;
 boolean loadedgame;
 int     mouseadjustment;
 
+#if SWITCH
+char configdir[256] = "/switch/wolf4sdl/";
+#else
 char    configdir[256] = "";
+#endif
 char    configname[13] = "config.";
 
 //
@@ -93,6 +100,10 @@ int     param_audiobuffer = 1024;
 int     param_joystickhat = -1;
 longword     param_samplerate = 11025;       // higher samplerates result in "out of memory"
 int     param_audiobuffer = 128;
+#elif defined(SWITCH)
+int     param_joystickhat = -1;
+longword     param_samplerate = 44100;
+int     param_audiobuffer = 2048 / 44100 / param_samplerate;
 #else
 int     param_joystickhat = -1;
 longword     param_samplerate = 44100;
@@ -157,6 +168,7 @@ void ReadConfig(void)
         read(file,&sds,sizeof(sds));
 
         read(file,&mouseenabled,sizeof(mouseenabled));
+#ifndef EXTRACONTROLS        
         read(file,&joystickenabled,sizeof(joystickenabled));
         boolean dummyJoypadEnabled;
         read(file,&dummyJoypadEnabled,sizeof(dummyJoypadEnabled));
@@ -164,14 +176,20 @@ void ReadConfig(void)
         read(file,&dummyJoystickProgressive,sizeof(dummyJoystickProgressive));
         int dummyJoystickPort = 0;
         read(file,&dummyJoystickPort,sizeof(dummyJoystickPort));
-
+#endif
         read(file,dirscan,sizeof(dirscan));
         read(file,buttonscan,sizeof(buttonscan));
         read(file,buttonmouse,sizeof(buttonmouse));
+#ifndef EXTRACONTROLS
         read(file,buttonjoy,sizeof(buttonjoy));
-
+#endif
         read(file,&viewsize,sizeof(viewsize));
         read(file,&mouseadjustment,sizeof(mouseadjustment));
+#ifdef EXTRACONTROLS
+        read(file, &mousemoveenabled, sizeof(mousemoveenabled));
+        boolean dummyMouseMoveEnabled;
+        read(file, &dummyMouseMoveEnabled, sizeof(dummyMouseMoveEnabled));
+#endif
 
         close(file);
 
@@ -187,11 +205,22 @@ void ReadConfig(void)
 
         // make sure values are correct
 
-        if(mouseenabled) mouseenabled=true;
-        if(joystickenabled) joystickenabled=true;
+        if(mouseenabled) 
+            mouseenabled=true;
+        if(joystickenabled) 
+            joystickenabled=true;
+#ifdef EXTRACONTROLS
+        if (mousemoveenabled) 
+            mousemoveenabled = true;
+#endif // EXTRACONTROLS
 
         if (!MousePresent)
+        {
             mouseenabled = false;
+#ifdef EXTRACONTROLS
+            mousemoveenabled = false;
+#endif
+        }
         if (!IN_JoyPresent())
             joystickenabled = false;
 
@@ -227,8 +256,12 @@ noconfig:
             sds = sds_Off;
 
         if (MousePresent)
+        {
             mouseenabled = true;
-
+#ifdef EXTRACONTROLS
+            mousemoveenabled = true;
+#endif
+        }
         if (IN_JoyPresent())
             joystickenabled = true;
 
@@ -274,6 +307,7 @@ void WriteConfig(void)
         write(file,&DigiMode,sizeof(DigiMode));
 
         write(file,&mouseenabled,sizeof(mouseenabled));
+#ifndef EXTRACONTROLS 
         write(file,&joystickenabled,sizeof(joystickenabled));
         boolean dummyJoypadEnabled = false;
         write(file,&dummyJoypadEnabled,sizeof(dummyJoypadEnabled));
@@ -281,14 +315,19 @@ void WriteConfig(void)
         write(file,&dummyJoystickProgressive,sizeof(dummyJoystickProgressive));
         int dummyJoystickPort = 0;
         write(file,&dummyJoystickPort,sizeof(dummyJoystickPort));
-
+#endif
         write(file,dirscan,sizeof(dirscan));
         write(file,buttonscan,sizeof(buttonscan));
         write(file,buttonmouse,sizeof(buttonmouse));
+#ifndef EXTRACONTROLS        
         write(file,buttonjoy,sizeof(buttonjoy));
-
+#endif
         write(file,&viewsize,sizeof(viewsize));
         write(file,&mouseadjustment,sizeof(mouseadjustment));
+#ifdef EXTRACONTROLS
+        write(file, &mousemoveenabled, sizeof(mousemoveenabled));
+#endif // EXTRACONTROLS
+
 
         close(file);
     }
@@ -1169,7 +1208,9 @@ static void InitGame()
 #ifndef SPEARDEMO
     boolean didjukebox=false;
 #endif
-
+#if SWITCH   
+    printf("GAME START");
+#endif    
     // initialize SDL    
     if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK) < 0)
     {
@@ -1177,6 +1218,10 @@ static void InitGame()
         exit(1);
     }
     atexit(SDL_Quit);
+#if SWITCH
+    printf("SDL2 Initialized");
+#endif
+
 
     int numJoysticks = SDL_NumJoysticks();
     if(param_joystickindex && (param_joystickindex < -1 || param_joystickindex >= numJoysticks))
@@ -1198,12 +1243,29 @@ static void InitGame()
 	VW_UpdateScreen();
 
     VH_Startup ();
+#if SWITCH 
+    printf("VH Started");
+#endif
     IN_Startup ();
+#if SWITCH
+    printf("IN Started");
+#endif
     PM_Startup ();
+#if SWITCH
+    printf("PM Started");
+#endif
     SD_Startup ();
+#if SWITCH
+    printf("SD Started");
+#endif
     CA_Startup ();
+#if SWITCH
+    printf("CA Started");
+#endif
     US_Startup ();
-
+#if SWITCH
+    printf("US Started");
+#endif
     // TODO: Will any memory checking be needed someday??
 #ifdef NOTYET
 #ifndef SPEAR
@@ -1373,6 +1435,9 @@ void NewViewSize (int width)
 
 void Quit (const char *errorStr, ...)
 {
+#if SWITCH
+    printf(errorStr);
+#endif
 #ifdef NOTYET
     byte *screen;
 #endif
@@ -1442,6 +1507,7 @@ void Quit (const char *errorStr, ...)
     }
 
     exit(0);
+
 }
 
 //===========================================================================
@@ -1477,6 +1543,9 @@ static void DemoLoop()
         gamestate.episode = 0;
         gamestate.mapon = param_tedlevel;
 #endif
+#if SWITCH
+        printf("BEFORE GAME LOOP\n");
+#endif       
         GameLoop();
         Quit (NULL);
     }
@@ -1886,13 +1955,21 @@ int main (int argc, char *argv[])
 #else
     CheckParameters(argc, argv);
 #endif
-
+#if SWITCH    
+    printf("CheckParameters() DONE\n");
+#endif    
     CheckForEpisodes();
-
+#if SWITCH    
+    printf("CheckForEpisodes() DONE\n");
+#endif    
     InitGame();
-
+#if SWITCH
+    printf("InitGame() DONE\n");
+#endif    
     DemoLoop();
-
+#if SWITCH    
+    printf("DemoLoop() DONE\n");
+#endif    
     Quit("Demo loop exited???");
     return 1;
 }

@@ -182,9 +182,13 @@ void US_PrintUnsigned(longword n)
 ///////////////////////////////////////////////////////////////////////////
 void US_PrintSigned(s32 n)
 {
-	char	buffer[32];
-
+	char buffer[32];
+#if SWITCH	
+	sprintf(buffer, "%lu", n);
+	US_Print(buffer);
+#else
 	US_Print(ltoa(n,buffer,10));
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////

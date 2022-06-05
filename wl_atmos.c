@@ -7,7 +7,7 @@
 #include "wl_def.h"
 
 #if defined(USE_RAIN) || defined(USE_SNOW)
-uint32_t rainpos;
+u32 rainpos;
 #endif
 
 typedef struct

@@ -30,8 +30,11 @@ void PM_Startup (void)
     u32 pagesize;
     s32 filesize, datasize;
     FILE *file;
+#if SWITCH    
+    char fname[13 + sizeof(DATADIR)] = DATADIR "vswap.";
+#else   
     char fname[13] = "vswap.";
- 
+#endif 
 
 
     strcat (fname,extension);

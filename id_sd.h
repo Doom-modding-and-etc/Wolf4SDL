@@ -25,7 +25,9 @@ typedef enum
 
 typedef enum
 {
-    sds_Off,sds_PC,sds_SoundBlaster
+    sds_Off,
+    sds_PC,
+    sds_SoundBlaster
 } SDSMode;
 
 typedef struct

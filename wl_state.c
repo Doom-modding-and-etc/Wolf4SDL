@@ -42,7 +42,7 @@ void    SpawnNewObj (unsigned tilex, unsigned tiley, statetype *state);
 void    NewState (objtype *ob, statetype *state);
 
 boolean TryWalk (objtype *ob);
-void    MoveObj (objtype *ob, int32_t move);
+void    MoveObj (objtype *ob, s32 move);
 
 void    KillActor (objtype *ob);
 void    DamageActor (objtype *ob, unsigned damage);
@@ -683,7 +683,7 @@ void SelectRunDir (objtype *ob)
 =================
 */
 
-void MoveObj (objtype *ob, int32_t move)
+void MoveObj (objtype *ob, s32 move)
 {
     s32    deltax,deltay;
 

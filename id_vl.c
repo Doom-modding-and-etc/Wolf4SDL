@@ -55,7 +55,7 @@ SDL_Texture *texture;
 SDL_RendererInfo* info;
 #endif
 
-int      scaleFactor;
+int scaleFactor;
 
 boolean	 screenfaded;
 u32 bordercolor;
@@ -303,10 +303,7 @@ void VL_SetColor(int color, int red, int green, int blue)
     {
         SDL_SetPalette(screenBuffer, SDL_LOGPAL, &col, color, 1);
         SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
-
         SDL_Flip(screen);
-
-      
     }
 #elif SDL_MAJOR_VERSION == 2   
     if (screenBits)
@@ -315,7 +312,6 @@ void VL_SetColor(int color, int red, int green, int blue)
     {
         SDL_SetPaletteColors(screenBuffer->format->palette, &col, color, 1);
         SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
-
         SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, screenBuffer);
         SDL_RenderCopy(renderer, texture, NULL, NULL);
         SDL_RenderPresent(renderer);

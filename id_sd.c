@@ -373,9 +373,7 @@ void SD_SetPosition(int channel, int leftpos, int rightpos)
     switch (DigiMode)
     {
         case sds_SoundBlaster:
-        Mix_SetPanning(channel, 255 - (leftpos * 28), 255 - (rightpos * 28));
-	//Mix_SetPanning(channel, ((15 - leftpos) << 4) + 15, ((15 - rightpos) << 4) + 15);
-	     
+        Mix_SetPanning(channel, 120 - (leftpos * 28), 120 - (rightpos * 28));	     
             break;
     }
 }
@@ -668,7 +666,7 @@ static boolean SDL_DetectAdLib(void)
         alOut(i, 0);
 
     alOut(1, 0x20);             // Set WSE=1
-//    alOut(8, 0);                // Set CSM=0 & SEL=0
+//  alOut(8, 0);                // Set CSM=0 & SEL=0
 
     return true;
 }
@@ -888,7 +886,7 @@ void SDL_IMFMusicPlayer(void *udata, Uint8 *stream, int len)
 ///////////////////////////////////////////////////////////////////////////
 void SD_Startup(void)
 {
-    int     i;
+    int i;
 
     if (SD_Started)
         return;

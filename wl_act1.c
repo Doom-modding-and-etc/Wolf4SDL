@@ -563,9 +563,9 @@ void DoorOpen(int door)
 
 void DoorOpening(int door)
 {
-    unsigned area1,area2;
+    u32 area1,area2;
     word *map;
-    int32_t position;
+    s32 position;
 
     position = doorposition[door];
     if (!position)
@@ -630,7 +630,7 @@ void DoorOpening(int door)
 
 void DoorClosing(int door)
 {
-    unsigned area1,area2;
+    u32 area1,area2;
     word *map;
     s32 position;
     int tilex,tiley;

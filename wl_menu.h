@@ -183,6 +183,13 @@ void PrintCustJoy(int i);
 void PrintCustKeybd(int i);
 void PrintCustKeys(int i);
 
+
+void DefineKeyExtra(void);
+//#ifdef EXTRACONTROLS
+void DrawCustExtra(int hilight);
+void PrintCustExtra(int i);
+//#endif // EXTRACONTROLS
+
 void PrintLSEntry(int w,int color);
 void TrackWhichGame(int w);
 void DrawNewGameDiff(int w);
@@ -206,14 +213,16 @@ void CheckForEpisodes(void);
 
 void FreeMusic(void);
 
-
-enum 
+enum
 {
     MOUSE,
     JOYSTICK,
     KEYBOARDBTNS,
-    KEYBOARDMOVE
+    KEYBOARDMOVE,
+// EXTRACONTROLS
+    KEYBOARDEXTRA
 };        // FOR INPUT TYPES
+
 
 enum menuitems
 {
@@ -234,6 +243,9 @@ enum menuitems
         backtodemo,
         quit
 };
+
+
+
 
 //
 // WL_INTER

@@ -8,7 +8,8 @@
 #ifndef __GFXV_JAP_H_
 #define __GFXV_JAP_H_
 
-typedef enum {
+typedef enum 
+{
     // Lump Start
     H_HELP1PIC = 3,              // 3
     H_HELP2PIC,                  // 4

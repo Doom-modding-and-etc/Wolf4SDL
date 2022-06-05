@@ -19,6 +19,8 @@ loaded into the data segment
     #include <io.h>
 #elif defined _arch_dreamcast
     #include <unistd.h>
+#elif defined SWITCH
+	#include <sys/_iovec.h>
 #else
     #include <sys/uio.h>
     #include <unistd.h>
@@ -78,6 +80,17 @@ mapfiletype *tinf;
 char extension[5]; // Need a string, not constant to change cache files
 char graphext[5];
 char audioext[5];
+
+#ifdef SWITCH
+static const char gheadname[] = DATADIR "vgahead.";
+static const char gfilename[] = DATADIR "vgagraph.";
+static const char gdictname[] = DATADIR "vgadict.";
+static const char mheadname[] = DATADIR "maphead.";
+static const char mfilename[] = DATADIR "maptemp.";
+static const char mfilecama[] = DATADIR "gamemaps.";
+static const char aheadname[] = DATADIR "audiohed.";
+static const char afilename[] = DATADIR "audiot.";
+#else
 static const char gheadname[] = "vgahead.";
 static const char gfilename[] = "vgagraph.";
 static const char gdictname[] = "vgadict.";
@@ -85,7 +98,7 @@ static const char mheadname[] = "maphead.";
 //static const char mfilename[] = "maptemp.";
 static const char aheadname[] = "audiohed.";
 static const char afilename[] = "audiot.";
-
+#endif
 void CA_CannotOpen(const char *string);
 
 static s32 grstarts[NUMCHUNKS + 1];
@@ -449,7 +462,11 @@ void CA_RLEWexpand(word *source, word *dest, s32 length, word rlewtag)
 
 void CAL_SetupGrFile (void)
 {
+#if SWITCH
+    char fname[13 + sizeof(DATADIR)];
+#else    
     char fname[13];
+#endif   
     int handle;
     byte *compseg;
     
@@ -551,11 +568,17 @@ void CAL_SetupGrFile (void)
 
 void CAL_SetupMapFile (void)
 {
+#if SWITCH    
+    printf("CA_SetupMapFile_Start\n");
+#endif   
     int     i;
     int handle;
     s32 pos;
+#if SWITCH
+    char fname[13 + sizeof(DATADIR)];
+#else
     char fname[13];
-
+#endif
 //
 // load maphead.ext (offsets and tileinfo for map file)
 //
@@ -578,7 +601,11 @@ void CAL_SetupMapFile (void)
 // open the data file
 //
 #ifdef CARMACIZED
+#if SWITCH
+    strcpy(fname, mfilecama);
+#else    
     strcpy(fname, "gamemaps.");
+#endif    
     strcat(fname, extension);
 
     maphandle = open(fname, O_RDONLY | O_BINARY);
@@ -631,8 +658,11 @@ void CAL_SetupMapFile (void)
 
 void CAL_SetupAudioFile (void)
 {
+#if SWITCH
+    char fname[13 + sizeof(DATADIR)];
+#else    
     char fname[13];
-
+#endif
 //
 // load audiohed.ext (offsets for audio file)
 //
@@ -675,9 +705,21 @@ void CA_Startup (void)
     profilehandle = open("PROFILE.TXT", O_CREAT | O_WRONLY | O_TEXT);
 #endif
 
+#if SWITCH
+    printf("CA_INIT\n");
+#endif   
     CAL_SetupMapFile ();
+#if SWITCH    
+    printf("CAL_SetupMapFile ();\n");
+#endif    
     CAL_SetupGrFile ();
+#if SWITCH    
+    printf("CAL_SetupGrFile ();\n");
+#endif    
     CAL_SetupAudioFile ();
+#if SWITCH
+    printf("CAL_SetupAudioFile ();\n");
+#endif
 }
 
 //==========================================================================

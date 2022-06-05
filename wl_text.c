@@ -413,8 +413,8 @@ void HandleWord (void)
 
 void PageLayout (boolean shownumber)
 {
-    int     i,oldfontcolor;
-    char    ch;
+    int i, oldfontcolor;
+    char ch;
 
     oldfontcolor = fontcolor;
 
@@ -615,7 +615,7 @@ void ShowArticle (char *article)
 #endif
     };
 #endif
-    unsigned    oldfontnumber;
+    u32    oldfontnumber;
     boolean     newpage,firstpage;
     ControlInfo ci;
 

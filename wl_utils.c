@@ -12,7 +12,7 @@
 ===================
 */
 
-void *safe_malloc (size_t size, const char *fname, uint32_t line)
+void *safe_malloc (size_t size, const char *fname, u32 line)
 {
     void *ptr;
 

@@ -1,9 +1,9 @@
 // ID_VL.H
-
 #ifndef __ID_VL_H_
 #define __ID_VL_H_
 
 // wolf compatability
+
 
 void Quit (const char *error,...);
 

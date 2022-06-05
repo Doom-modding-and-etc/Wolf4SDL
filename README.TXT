@@ -110,6 +110,8 @@ https://www.libsdl.org/download-1.2.php and download "SDL-1.2.15-win32.zip"
 SDL_mixer 1.2.12 Runtimes can be acquired at:
 https://www.libsdl.org/projects/SDL_mixer/release-1.2.html and download "SDL_mixer-1.2.12-win32.zip"
 
+or
+
 SDL2:
 On Windows SDL2.dll and SDL2_mixer.dll must also be copied into this directory.
 
@@ -215,7 +217,7 @@ TODOs:
  - Center non-ingame screens for resolutions being a multiple of 320x240
  - Add support for any graphic resolution >= 320x200
  - Fix sdl1
- - Add the Nintendo Switch port 
+ - Add the Nintendo Switch port(WIP) 
  - Add Sony´s Playstation 2 support
  - Make more cleanups 
  - Make compile for MacOS 
@@ -234,12 +236,12 @@ Troubleshooting:
 
 Credits:
 --------
-
  - Special thanks to id Software! Without the source code we would still have
    to pelt Wolfenstein 3D with hex editors and disassemblers ;D
  - Special thanks to the DOSBox team for providing a GPL'ed OPL2/3 emulator!
  - Special thanks to the MAME developer team for providing the source code
    of the OPL2 emulator!
+ - Speacial thanks to aryan3d for upgrade this source port
  - Many thanks to "Der Tron" for hosting the svn repository, making Wolf4SDL
    FreeBSD compatible, testing, bugfixing and cleaning up the code!
  - Thanks to Chris Chokan for his improvements on Wolf4GW (base of Wolf4SDL)
@@ -248,8 +250,12 @@ Credits:
  - Thanks to Chris Ballinger for the Mac OS X support
  - Thanks to Xilinx, Inc. for providing a list of maximum-length LFSR counters
    used for higher resolutions of fizzle fade
-
-
+ - Thanks to Terraformer9x and Nexion for the advice and help for the Mixer sound problem
+ - Thanks to fabian for the patches on the code 
+ - Thanks to keeganatorr for the Nintendo Switch support
+ - Thanks to Zombieskittles for add on a separte repo the WASD Key support
+ 
+ 
 Licenses:
 ---------
  - The original source code of Wolfenstein 3D:

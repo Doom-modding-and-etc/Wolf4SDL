@@ -1,9 +1,10 @@
 #ifndef __WL_DEF_H_
 #define __WL_DEF_H_
 
-#include <SDL.h>
 #include <stdbool.h>
 
+
+#include <SDL.h>
 
 // Defines which version shall be built and configures supported extra features
 #include "version.h"
@@ -22,10 +23,6 @@
 #	include <string.h>
 #	include <stdarg.h>
 #endif
-
-//#if !defined O_BINARY
-//#	define O_BINARY 0
-//#endif
 
 #pragma pack(1)
 
@@ -62,6 +59,7 @@
     #include "gfxv_sod.h"
     #include "f_spear.h"
 #endif
+
 
 typedef int8_t s8;
 typedef int16_t s16;
@@ -831,12 +829,18 @@ enum
     bt_readypistol,
     bt_readymachinegun,
     bt_readychaingun,
+#ifdef EXTRACONTROLS
+    bt_strafeleft,
+    bt_straferight,
+#endif
     bt_nextweapon,
     bt_prevweapon,
     bt_esc,
     bt_pause,
+#ifndef EXTRACONTROLS
     bt_strafeleft,
     bt_straferight,
+#endif
     bt_moveforward,
     bt_movebackward,
     bt_turnleft,
@@ -949,8 +953,13 @@ extern  int      param_difficulty;
 extern  int      param_tedlevel;
 extern  int      param_joystickindex;
 extern  int      param_joystickhat;
+#if SWITCH
+extern  longword param_samplerate;
+extern  int param_audiobuffer;
+#else
 extern  longword param_samplerate;
 extern  int      param_audiobuffer;
+#endif
 extern  int      param_mission;
 extern  boolean  param_goodtimes;
 extern  boolean  param_ignorenumchunks;
@@ -1023,7 +1032,7 @@ void    UpdateSoundLoc (void);
 #define JOYSCALE    2
 
 #ifdef SPEAR
-extern  int32_t     funnyticount;           // FOR FUNNY BJ FACE
+extern  s32     funnyticount;           // FOR FUNNY BJ FACE
 #endif
 
 extern  exit_t      playstate;
@@ -1047,15 +1056,25 @@ extern  int         extravbls;
 extern  word        mapwidth,mapheight;
 extern  unsigned    tics;
 extern  int         lastgamemusicoffset;
+#ifdef EXTRACONTROLS
+extern  int         controlstrafe;
+#endif
 
 //
 // control info
 //
 extern  boolean     mouseenabled,joystickenabled;
+#ifdef EXTRACONTROLS
+extern  boolean     mousemoveenabled;
+#endif
 extern  int         dirscan[4];
 extern  int         buttonscan[NUMBUTTONS];
 extern  int         buttonmouse[4];
 extern  int         buttonjoy[32];
+
+#ifdef EXTRACONTROLS
+extern  int         extrascan[4];
+#endif
 
 extern  boolean     buttonheld[NUMBUTTONS];
 
@@ -1241,7 +1260,7 @@ void    GetBonus (statobj_t *check);
 void    GiveWeapon (int weapon);
 void    GiveAmmo (int ammo);
 void    GiveKey (int key);
-void    StatusDrawFace (unsigned picnum);
+void    StatusDrawFace (u32 picnum);
 void    DrawFace (void);
 void    DrawHealth (void);
 void    HealSelf (int points);
@@ -1447,8 +1466,10 @@ void GP2X_ButtonUp (int button);
     #define strcasecmp stricmp
     #define strncasecmp strnicmp
     #define snprintf _snprintf
+#elif defined SWITCH
+	#include <stdlib.h>
 #else
-    static inline char* itoa(int value, char* string, int radix)
+	static inline char* itoa(int value, char* string, int radix)
     {
 	    sprintf(string, "%d", value);
 	    return string;

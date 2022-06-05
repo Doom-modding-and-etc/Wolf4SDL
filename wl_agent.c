@@ -50,8 +50,27 @@ objtype        *LastAttacker;
 void    T_Player (objtype *ob);
 void    T_Attack (objtype *ob);
 
-statetype   s_player = {false,0,0,(statefunc) T_Player,NULL,NULL};
-statetype   s_attack = {false,0,0,(statefunc) T_Attack,NULL,NULL};
+statetype   s_player = 
+{
+    false,
+    0,
+    0,
+    (statefunc) 
+    T_Player,
+    NULL,
+    NULL
+};
+
+statetype   s_attack = 
+{
+    false,
+    0,
+    0,
+    (statefunc) 
+    T_Attack,
+    NULL,
+    NULL
+};
 
 struct atkinf
 {
@@ -79,7 +98,7 @@ void SelectItem (void);
 boolean TryMove (objtype *ob);
 void T_Player (objtype *ob);
 
-void ClipMove (objtype *ob, int32_t xmove, int32_t ymove);
+void ClipMove(objtype *ob, s32 xmove, s32 ymove);
 
 /*
 =============================================================================
@@ -162,7 +181,7 @@ void CheckWeaponChange (void)
 
 void ControlMovement(objtype *ob)
 {
-    s32 oldx,oldy;
+    s32 oldx, oldy;
     int     angle;
     int     angleunits;
 
@@ -276,7 +295,7 @@ void StatusDrawPic (unsigned x, unsigned y, unsigned picnum)
         screenHeight-scaleFactor*(STATUSLINES-y),picnum);
 }
 
-void StatusDrawFace(unsigned picnum)
+void StatusDrawFace(u32 picnum)
 {
     StatusDrawPic(17, 4, picnum);
 
@@ -932,9 +951,9 @@ boolean TryMove (objtype *ob)
 ===================
 */
 
-void ClipMove (objtype *ob, int32_t xmove, int32_t ymove)
+void ClipMove(objtype *ob, s32 xmove, s32 ymove)
 {
-    int32_t    basex,basey;
+    s32 basex, basey;
 
     basex = ob->x;
     basey = ob->y;
@@ -1008,7 +1027,7 @@ static fixed FixedByFracOrig(fixed a, fixed b)
         a = -a;
         sign = !sign;
     }
-    fixed res = (fixed)(((int64_t) a * b) >> 16);
+    fixed res = (fixed)(((s64) a * b) >> 16);
     if(sign)
         res = -res;
     return res;
@@ -1190,8 +1209,8 @@ void SpawnPlayer (int tilex, int tiley, int dir)
     player->tilex = tilex;
     player->tiley = tiley;
     player->areanumber = MAPSPOT(tilex,tiley,0) - AREATILE;
-    player->x = ((int32_t)tilex<<TILESHIFT)+TILEGLOBAL/2;
-    player->y = ((int32_t)tiley<<TILESHIFT)+TILEGLOBAL/2;
+    player->x = ((s32)tilex<<TILESHIFT)+TILEGLOBAL/2;
+    player->y = ((s32)tiley<<TILESHIFT)+TILEGLOBAL/2;
     player->state = &s_player;
     player->angle = (1-dir)*90;
     if (player->angle<0)
@@ -1218,7 +1237,7 @@ void SpawnPlayer (int tilex, int tiley, int dir)
 void    KnifeAttack (objtype *ob)
 {
     objtype *check,*closest;
-    int32_t  dist;
+    s32  dist;
 
     SD_PlaySound (ATKKNIFESND);
     // actually fire
@@ -1254,7 +1273,7 @@ void    GunAttack (objtype *ob)
     objtype *check,*closest,*oldclosest;
     int      damage;
     int      dx,dy,dist;
-    int32_t  viewdist;
+    s32      viewdist;
 
     switch (gamestate.weapon)
     {
@@ -1335,7 +1354,7 @@ void    GunAttack (objtype *ob)
 
 void VictorySpin (void)
 {
-    int32_t    desty;
+    s32    desty;
 
     if (player->angle > 270)
     {
@@ -1350,7 +1369,7 @@ void VictorySpin (void)
             player->angle = 270;
     }
 
-    desty = (((int32_t)player->tiley-5)<<TILESHIFT)-0x3000;
+    desty = (((s32)player->tiley-5)<<TILESHIFT)-0x3000;
 
     if (player->y > desty)
     {

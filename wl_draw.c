@@ -787,7 +787,7 @@ void DrawScaleds (void)
     int      i,least,numvisable,height;
     byte     *visspot;
     tiletype *tilespot;
-    unsigned int spotloc;
+    u32 spotloc;
 
     statobj_t *statptr;
     objtype   *obj;
