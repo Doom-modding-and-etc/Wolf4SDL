@@ -1,13 +1,7 @@
 #ifndef __WL_DEF_H_
 #define __WL_DEF_H_
 
-#include <stdbool.h>
 
-#if !defined O_BINARY
-#	define O_BINARY 0
-#endif
-
-#include <SDL.h>
 
 // Defines which version shall be built and configures supported extra features
 #include "version.h"
@@ -18,6 +12,8 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
+#include <SDL.h>
 #if defined(_arch_dreamcast)
 #	include <string.h>
 #	include "dc/dc_main.h"
@@ -63,6 +59,9 @@
     #include "f_spear.h"
 #endif
 
+#if !defined O_BINARY
+#define O_BINARY 0
+#endif
 
 typedef int8_t s8;
 typedef int16_t s16;
@@ -150,9 +149,9 @@ void Quit (const char *errorStr, ...);
 #define MAXWALLTILES    64          // max number of wall tiles
 
 #if WALLSHIFT >= 7
-typedef uint16_t tiletype;
+typedef u16 tiletype;
 #else
-typedef uint8_t tiletype;
+typedef u8 tiletype;
 #endif
 
 //
@@ -1075,9 +1074,6 @@ extern  int         buttonscan[NUMBUTTONS];
 extern  int         buttonmouse[4];
 extern  int         buttonjoy[32];
 
-#ifdef EXTRACONTROLS
-extern  int         extrascan[4];
-#endif
 
 extern  boolean     buttonheld[NUMBUTTONS];
 
@@ -1156,9 +1152,9 @@ extern  s32 frameon;
 extern  boolean fizzlein,fpscounter;
 
 #if defined(USE_FLOORCEILINGTEX) || defined(USE_CLOUDSKY)
-extern  int16_t *spanstart;
+extern  s16 *spanstart;
 #endif
-extern  int16_t *wallheight;
+extern  s16 *wallheight;
 
 //
 // math tables

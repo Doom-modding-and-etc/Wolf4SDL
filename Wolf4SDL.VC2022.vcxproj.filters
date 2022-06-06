@@ -143,7 +143,6 @@
     <None Include="wolfpal.inc">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="cpp.hint" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mame\fmopl.h">
@@ -237,7 +236,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Changes.txt" />
     <Text Include="README.txt" />
   </ItemGroup>
   <ItemGroup>

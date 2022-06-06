@@ -219,9 +219,8 @@ TODOs:
  - Fix sdl1
  - Add the Nintendo Switch port(WIP) 
  - Add Sony´s Playstation 2 support
- - Make more cleanups 
- - Make compile for MacOS 
-
+ - Make more cleanups  
+ 
 Known bugs:
 -----------
 

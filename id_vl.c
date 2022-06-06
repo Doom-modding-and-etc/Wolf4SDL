@@ -263,7 +263,6 @@ void VL_ConvertPalette(byte *srcpal, SDL_Color *destpal, int numColors)
 
 void VL_FillPalette (int red, int green, int blue)
 {
-    //int i;
     SDL_Color pal[256];
 
     for(int i=0; i<256; i++)

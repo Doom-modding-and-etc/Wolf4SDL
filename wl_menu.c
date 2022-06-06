@@ -121,17 +121,13 @@ CP_itemtype SndMenu[] = {
 
 #ifdef JAPAN
 enum { CTL_MOUSEENABLE, CTL_JOYENABLE, CTL_JOY2BUTTONUNKNOWN, CTL_GAMEPADUNKONWN, CTL_MOUSESENS, CTL_CUSTOMIZE };
-#else
-enum 
-{ 
-    CTL_MOUSEENABLE, 
-    CTL_MOUSESENS, 
-//EXTRACONTROLS
-    CTL_MOUSEMOVEENABLE, 
-    CTL_JOYENABLE, 
-    CTL_CUSTOMIZE
-};
 #endif
+
+#ifndef EXTRACONTROLS
+enum { CTL_MOUSEENABLE, CTL_MOUSESENS, CTL_JOYENABLE, CTL_CUSTOMIZE };
+#else
+enum { CTL_MOUSEENABLE, CTL_MOUSESENS, CTL_MOUSEMOVEENABLE, CTL_CUSTOMIZE };
+#endif // EXTRACONTROLS
 
 CP_itemtype CtlMenu[] = {
 #ifdef JAPAN
@@ -144,10 +140,10 @@ CP_itemtype CtlMenu[] = {
 #else
     {0, STR_MOUSEEN, 0},
     {0, STR_SENS, MouseSensitivity},
- #ifndef EXTRACONTROLS
-    {0, "Mouse Movement", 0},
-#else
+#ifndef EXTRACONTROLS
     {0, STR_JOYEN, 0},
+#else
+    {0, "Mouse Movement", 0},
 #endif
     {1, STR_CUSTOM, CustomControls}
 #endif
@@ -241,20 +237,21 @@ CP_itemtype LSMenu[] = {
     {1, "", 0}
 };
 
-CP_itemtype CusMenu[] = {
+CP_itemtype CusMenu[] = 
+{
     {1, "", 0},
     {0, "", 0},
     {0, "", 0},
     {1, "", 0},
     {0, "", 0},
 #ifndef EXTRACONTROLS
-    {1, "", 0},
     {0, "", 0},
+    {1, "", 0},
     {0, "", 0},
     {1, "", 0}
 #else
-    {0, "", 0},
     {1, "", 0},
+    {0, "", 0},
     {0, "", 0},
     {1, "", 0}
 #endif
@@ -1728,39 +1725,40 @@ CP_Control (int blank)
 
     do
     {
-        which = HandleMenu (&CtlItems, CtlMenu, NULL);
+        which = HandleMenu(&CtlItems, CtlMenu, NULL);
         switch (which)
         {
-            case CTL_MOUSEENABLE:
-                mouseenabled ^= 1;
-                if(IN_IsInputGrabbed())
-                    IN_CenterMouse();
-                DrawCtlScreen ();
-                CusItems.curpos = -1;
-                ShootSnd ();
-                break;
+        case CTL_MOUSEENABLE:
+            mouseenabled ^= 1;
+            if (IN_IsInputGrabbed())
+                IN_CenterMouse();
+            DrawCtlScreen();
+            CusItems.curpos = -1;
+            ShootSnd();
+            break;
 
-#ifdef EXTRACONTROLS
-            case CTL_MOUSEMOVEENABLE:
-                mousemoveenabled ^= 1;
-                DrawCtlScreen();
-                CusItems.curpos = -1;
-                ShootSnd();
-                break;
+#ifndef EXTRACONTROLS
+        case CTL_JOYENABLE:
+            joystickenabled ^= 1;
+            DrawCtlScreen();
+            CusItems.curpos = -1;
+            ShootSnd();
+            break;
 #else
-            case CTL_JOYENABLE:
-                joystickenabled ^= 1;
-                DrawCtlScreen();
-                CusItems.curpos = -1;
-                ShootSnd();
-                break;
+        case CTL_MOUSEMOVEENABLE:
+            mousemoveenabled ^= 1;
+            DrawCtlScreen();
+            CusItems.curpos = -1;
+            ShootSnd();
+            break;
 #endif
-            case CTL_MOUSESENS:
-            case CTL_CUSTOMIZE:
-                DrawCtlScreen ();
-                MenuFadeIn ();
-                WaitKeyUp ();
-                break;
+
+        case CTL_MOUSESENS:
+        case CTL_CUSTOMIZE:
+            DrawCtlScreen();
+            MenuFadeIn();
+            WaitKeyUp();
+            break;
         }
     }
     while (which >= 0);
@@ -1988,9 +1986,20 @@ DrawCtlScreen (void)
 //
 ////////////////////////////////////////////////////////////////////
 enum
-{ FIRE, STRAFE, RUN, OPEN };
+{ 
+    FIRE, 
+    STRAFE, 
+    RUN, 
+    OPEN 
+};
 char mbarray[4][3] = { "b0", "b1", "b2", "b3" };
-s8 order[4] = { RUN, OPEN, FIRE, STRAFE };
+s8 order[4] = 
+{ 
+    RUN, 
+    OPEN, 
+    FIRE, 
+    STRAFE 
+};
 
 #ifdef EXTRACONTROLS
 enum { STRAFELEFT, STRAFERIGHT, NEXTWEAP, PREVWEAP };
@@ -2008,37 +2017,35 @@ CustomControls (int blank)
         which = HandleMenu (&CusItems, &CusMenu[0], FixupCustom);
         switch (which)
         {
-            case 0:
-                DefineMouseBtns ();
-                DrawCustMouse (1);
-                break;
-#ifdef EXTRACONTROLS
-            case 3:
-                DefineJoyBtns();
-                DrawCustJoy(0);
-                break;
-            case 6:
-#else
-            case 3:
-#endif
-
+        case 0:
+            DefineMouseBtns();
+            DrawCustMouse(1);
+            break;
 #ifndef EXTRACONTROLS
-            case 8:
+        case 3:
+            DefineJoyBtns();
+            DrawCustJoy(0);
+            break;
+        case 6:
 #else
-            case 5:
+        case 3:
 #endif
-                DefineKeyBtns ();
-                DrawCustKeybd (0);
-                break;
+            DefineKeyBtns();
+            DrawCustKeybd(0);
+            break;
+#ifndef EXTRACONTROLS
+        case 8:
+#else
+        case 5:
+#endif
+            DefineKeyMove();
+            DrawCustKeys(0);
+            break;
 #ifdef EXTRACONTROLS
-            case 8:
-                DefineKeyExtra();
-                DrawCustExtra(0);
-                break;
-#else            
-                DefineKeyMove ();
-                DrawCustKeys (0);
-                break;
+        case 8:
+            DefineKeyExtra();
+            DrawCustExtra(0);
+            break;
 #endif
         }
     }
@@ -2067,10 +2074,10 @@ DefineMouseBtns (void)
 // DEFINE THE JOYSTICK BUTTONS
 //
 void
-DefineJoyBtns (void)
+DefineJoyBtns(void)
 {
     CustomCtrls joyallowed = { 1, 1, 1, 1 };
-    EnterCtrlData (5, &joyallowed, DrawCustJoy, PrintCustJoy, JOYSTICK);
+    EnterCtrlData(5, &joyallowed, DrawCustJoy, PrintCustJoy, JOYSTICK);
 }
 #endif
 
@@ -2079,16 +2086,15 @@ DefineJoyBtns (void)
 // DEFINE THE KEYBOARD BUTTONS
 //
 void
-DefineKeyBtns (void)
+DefineKeyBtns(void)
 {
     CustomCtrls keyallowed = { 1, 1, 1, 1 };
 #ifndef EXTRACONTROLS
-    EnterCtrlData(5, &keyallowed, DrawCustKeybd, PrintCustKeybd, KEYBOARDBTNS);
-#else
     EnterCtrlData(8, &keyallowed, DrawCustKeybd, PrintCustKeybd, KEYBOARDBTNS);
+#else
+    EnterCtrlData(5, &keyallowed, DrawCustKeybd, PrintCustKeybd, KEYBOARDBTNS);
 #endif
 }
-
 
 ////////////////////////
 //
@@ -2105,15 +2111,18 @@ DefineKeyMove (void)
 #endif
 }
 
-/* BAD MERGED
-#ifndef EXTRACONTROLS
-void DefineKeyExtra(void)
+#ifdef EXTRACONTROLS
+////////////////////////
+//
+// DEFINE THE KEYBOARD BUTTONS
+//
+void
+DefineKeyExtra(void)
 {
     CustomCtrls keyallowed = { 1, 1, 1, 1 };
     EnterCtrlData(10, &keyallowed, DrawCustExtra, PrintCustExtra, KEYBOARDEXTRA);
 }
 #endif // EXTRACONTROLS
-*/
 
 ////////////////////////
 //
@@ -2177,21 +2186,21 @@ void EnterCtrlData(int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*
         // CHANGE BUTTON VALUE?
         //
 #ifndef EXTRACONTROLS
-        if ((type != KEYBOARDBTNS && type != KEYBOARDMOVE && type != KEYBOARDEXTRA) && (ci.button0 | ci.button1 | ci.button2 | ci.button3) ||
-            ((type == KEYBOARDBTNS || type == KEYBOARDMOVE || type == KEYBOARDEXTRA) && LastScan == sc_Enter))
-#else
         if ((type != KEYBOARDBTNS && type != KEYBOARDMOVE) && (ci.button0 | ci.button1 | ci.button2 | ci.button3) ||
             ((type == KEYBOARDBTNS || type == KEYBOARDMOVE) && LastScan == sc_Enter))
+#else
+        if ((type != KEYBOARDBTNS && type != KEYBOARDMOVE && type != KEYBOARDEXTRA) && (ci.button0 | ci.button1 | ci.button2 | ci.button3) ||
+            ((type == KEYBOARDBTNS || type == KEYBOARDMOVE || type == KEYBOARDEXTRA) && LastScan == sc_Enter))
 #endif
         {
             lastFlashTime = GetTimeCount();
             tick = picked = 0;
             SETFONTCOLOR (0, TEXTCOLOR);
 
-#ifndef EXTRACONTROLS  
-            if (type == KEYBOARDBTNS || type == KEYBOARDMOVE || type == KEYBOARDEXTRA)
-#else       
+#ifndef EXTRACONTROLS
             if (type == KEYBOARDBTNS || type == KEYBOARDMOVE)
+#else
+            if (type == KEYBOARDBTNS || type == KEYBOARDMOVE || type == KEYBOARDEXTRA)
 #endif
                 IN_ClearKeysDown ();
 
@@ -2267,7 +2276,7 @@ void EnterCtrlData(int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*
 
                         if (result)
                         {
-                            for (z = 0; z < 4; z++)
+                            for (int z = 0; z < 4; z++)
                             {
                                 if (order[which] == buttonjoy[z])
                                 {
@@ -2275,10 +2284,9 @@ void EnterCtrlData(int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*
                                     break;
                                 }
                             }
-
                             buttonjoy[result - 1] = order[which];
                             picked = 1;
-                            SD_PlaySound (SHOOTDOORSND);
+                            SD_PlaySound(SHOOTDOORSND);
                         }
                         break;
 #endif
@@ -2311,7 +2319,7 @@ void EnterCtrlData(int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*
                             IN_ClearKeysDown();
                         }
                         break;
-#endif
+#endif // EXTRACONTROLS
                 }
 
                 //
@@ -2419,16 +2427,15 @@ FixupCustom (int w)
             DrawCustKeybd (1);
             break;
 #ifndef EXTRACONTROLS
-        case 5:
-#else
         case 8:
+#else
+        case 5:
 #endif
+            DrawCustKeys(1);
+            break;
 #ifdef EXTRACONTROLS
             DrawCustExtra(1);
-            break;
-#else            
-            DrawCustKeys (1);
-            break;
+            break;       
 #endif
     }
 
@@ -2454,7 +2461,7 @@ FixupCustom (int w)
                     break;
 #ifndef EXTRACONTROLS
                 case 3:
-                    DrawCustJoy (0);
+                    DrawCustJoy(0);
                     break;
                 case 6:
 #else
@@ -2593,7 +2600,6 @@ DrawCustomScreen (void)
     US_Print (STR_CFIRE);
     PrintX = CST_START + CST_SPC * 3;
     US_Print (STR_CSTRAFE "\n");
-#endif
     DrawWindow (5, PrintY - 1, 310, 13, BKGDCOLOR);
     DrawCustJoy (0);
     US_Print ("\n");
@@ -2662,6 +2668,7 @@ DrawCustomScreen (void)
     US_Print("\n");
 #endif
 #endif
+#endif
 
 #ifdef EXTRACONTROLS
     SETFONTCOLOR(READCOLOR, BKGDCOLOR);
@@ -2681,7 +2688,8 @@ DrawCustomScreen (void)
     US_Print("Next \n");
     DrawWindow(5, PrintY - 1, 310, 13, BKGDCOLOR);
     DrawCustExtra(0);
-#endif // EXTRACONTROLS
+#endif // EXTRACONTRO
+
     //
     // PICK STARTING POINT IN MENU
     //
@@ -2828,13 +2836,14 @@ DrawCustKeys (int hilight)
         PrintCustKeys (i);
 }
 
-/* BAD MERGED
-void PrintCustExtra(int i)
+#ifdef EXTRACONTROLS
+void
+PrintCustExtra(int i)
 {
     PrintX = CST_START + CST_SPC * i;
     US_Print((const char*)IN_GetScanName(buttonscan[extraorder[i] + 8]));
 }
-//#ifndef EXTRACONTROLS
+
 void DrawCustExtra(int hilight)
 {
     int i, color;
@@ -2849,8 +2858,8 @@ void DrawCustExtra(int hilight)
     for (i = 0; i < 4; i++)
         PrintCustExtra(i);
 }
-//#endif
-*/
+#endif // EXTRACONTROLS
+
 
 ////////////////////////////////////////////////////////////////////
 //

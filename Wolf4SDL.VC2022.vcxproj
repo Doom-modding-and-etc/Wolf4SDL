@@ -99,8 +99,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
-    <IncludePath>C:\SDL2 VS\include\SDL;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\SDL2 VS\libs\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\SDL2\include\SDL2;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\SDL2\libs\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
@@ -121,6 +121,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SDL|x64'">
     <IncludePath>C:\SDL2\include\SDL;$(IncludePath)</IncludePath>
     <LibraryPath>C:\SDL2\libs\x64;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>C:\SDL2\include\SDL2;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\SDL2\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -209,6 +213,11 @@
       <PreprocessorDefinitions>WINDOWS_IGNORE_PACKING_MISMATCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Link>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="dc\dc_cd.c" />
     <ClCompile Include="dc\dc_main.c" />
@@ -247,7 +256,6 @@
     <ClCompile Include="wl_utils.c" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="cpp.hint" />
     <None Include="sodpal.inc" />
     <None Include="wolfpal.inc" />
   </ItemGroup>
@@ -285,7 +293,6 @@
     <ResourceCompile Include="win\Wolf4SDL.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Changes.txt" />
     <Text Include="README.txt" />
   </ItemGroup>
   <ItemGroup>

@@ -62,20 +62,14 @@ int dirscan[4] =
     sc_LeftArrow 
 };
 #ifndef EXTRACONTROLS
-int extrascan[4] = 
-{ 
-    sc_A, 
-    sc_D, 
-    sc_6, 
-    sc_7 
-};
-
 int buttonscan[NUMBUTTONS] = 
 { 
     sc_Control, 
     sc_Alt, 
     sc_LShift, 
-    sc_Space, 
+    sc_Space,
+    sc_W,
+    sc_S,
     sc_1, 
     sc_2, 
     sc_3, 
@@ -98,6 +92,7 @@ int buttonscan[NUMBUTTONS] =
      sc_4 
 };
 #endif // EXTRACONTROLS
+
 int buttonmouse[4] = { bt_attack, bt_strafe, bt_use, bt_nobutton };
 int buttonjoy[32] = 
 {
