@@ -142,7 +142,6 @@ wl_shade.o: $(GLOBALDEPS) wl_shade.c wl_shade.h version.h
 wl_state.o: $(GLOBALDEPS) wl_state.c wl_def.h version.h foreign.h gfxv_sod.h audiosod.h f_spear.h id_pm.h id_sd.h id_in.h id_vl.h id_vh.h id_us.h id_ca.h wl_menu.h wl_utils.h 
 	$(C) -c wl_state.c -o wl_state.o $(INCS) $(DEFINES)
 
-##
 wl_text.o: $(GLOBALDEPS) wl_text.c wl_def.h
 	$(C) -c wl_text.c -o wl_text.o $(INCS) $(DEFINES)
 	

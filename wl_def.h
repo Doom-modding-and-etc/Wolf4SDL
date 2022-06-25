@@ -928,7 +928,7 @@ extern  char     configdir[256];
 extern  char     configname[13];
 
 extern  fixed    focallength;
-extern  unsigned screenofs;
+extern  u32 screenofs;
 extern  int      viewscreenx,viewscreeny;
 extern  int      viewwidth;
 extern  int      viewheight;
@@ -1056,7 +1056,7 @@ extern  boolean     singlestep,godmode,noclip,ammocheat,mapreveal;
 extern  int         extravbls;
 
 extern  word        mapwidth,mapheight;
-extern  unsigned    tics;
+extern  u32    tics;
 extern  int         lastgamemusicoffset;
 #ifdef EXTRACONTROLS
 extern  int         controlstrafe;
