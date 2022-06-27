@@ -21,7 +21,7 @@ LINKOBJ   = mame/fmopl.o id_ca.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vl.o
 LIBS      = -specs=$(DEVKITPRO)/libnx/switch.specs -g -march=armv8-a -mtune=cortex-a57 -mtp=soft -fPIE -fPIC -L$(DEVKITPRO)/libnx/lib -lnx -L$(DEVKITPRO)/portlibs/switch/lib -lSDL2 -lSDL2main -lSDL2_mixer 
 INCS      = -I$(DEVKITPRO)/portlibs/switch/include -I$(DEVKITPRO)/portlibs/switch/include/SDL2 -I$(DEVKITPRO)/libnx/include -Imame/ -I/
 BIN       = Wolf4SDL.elf
-#BUILD	  =	build
+BUILD	  =	build
 #BINDIR	  = release
 DEFINES   = -DSWITCH 
 CFLAGS    = $(INCS) $(DEFINES) SDL2 SDL2_mixer -march=armv8-a -mtune=cortex-a57 -mtp=soft -fPIE -O3 -O2 -Wall -W -g -Wpointer-arith -Wreturn-type -Wwrite-strings -Wcast-align -std=gnu99 -Werror-implicit-function-declaration -Wimplicit-int -Wsequence-point

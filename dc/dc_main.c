@@ -1,5 +1,5 @@
 //Wolf4SDL\DC
-//dc_main.cpp
+//dc_main.c
 //2009 - Cyle Terry
 
 #if defined(_arch_dreamcast)

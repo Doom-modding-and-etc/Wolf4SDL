@@ -1,7 +1,4 @@
-CONFIG ?= config.default
--include $(CONFIG)
 SDL_MAJOR_VERSION += 2
-
 
 BINARY ?= Wolf4SDL
 PREFIX ?= /usr/local
@@ -13,23 +10,20 @@ INSTALL_DATA ?= $(INSTALL) -m 444
 
 ifeq ($(SDL_MAJOR_VERSION),1)
 SDL_CONFIG ?= sdl-config
-else
+endif
+ifeq ($(SDL_MAJOR_VERSION),2)
 SDL_CONFIG ?= sdl2-config
 endif
-CFLAGS_SDL ?= $(shell $(SDL_CONFIG) --cflags)
-LDFLAGS_SDL ?= $(shell $(SDL_CONFIG) --libs)
 
+CFLAGS_SDL ?= $(shell $(SDL_CONFIG) --cflags)
+LDFLAGS_SDL ?= $(shell $(SDL_CONFIG) --libs
 CFLAGS += -O2 -Wall -W -g -Wpointer-arith -Wreturn-type -Wwrite-strings -Wcast-align -std=gnu99 \
 -Werror-implicit-function-declaration -Wimplicit-int -Wsequence-point $(CFLAGS_SDL)
-
 ifdef GPL
-CFLAGS += -DUSE_GPL
+CXXLAGS += -DUSE_GPL -Wall -std=c++2a
 endif
 
-CXXFLAGS += -Wall -std=c++2a
-
 LDFLAGS += $(LDFLAGS_SDL) -lm
-
 ifeq ($(SDL_MAJOR_VERSION),1)
 LDFLAGS += -lSDL_mixer
 endif
