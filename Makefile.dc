@@ -7,8 +7,8 @@ wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o \
 wl_inter.o wl_main.o wl_menu.o wl_parallax.o wl_play.o wl_state.o wl_text.o
 #todo: id_sd.o and wl_game.o: Probably need to port the SDL_mixer code to the kos standards or do my onwn port of SDL 
 
-KOS_CFLAGS += -I${KOS_BASE}/../kos-ports/include/SDL -Wparentheses -Wall -std=gnu99 -Darch_dreamcast
-
+KOS_CFLAGS += -I${KOS_BASE}/../kos-ports/include/SDL -Wparentheses -Wall -std=gnu99 
+# Broken port? -Darch_dreamcast
 Wolf4SDL.elf: $(DC_OBJS)
 	$(KOS_CC) $(KOS_CFLAGS) $(KOS_LDFLAGS) -o Wolf4SDL.elf $(KOS_START) \
 		$(DC_OBJS) -lSDL -lm -lz $(OBJEXTRA) $(KOS_LIBS)
