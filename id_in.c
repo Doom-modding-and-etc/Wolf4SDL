@@ -38,8 +38,11 @@
 //
 boolean MousePresent;
 boolean forcegrabmouse;
+#if SDL_MAJOR_VERSION == 1
+volatile boolean KeyboardPress[SDLK_LAST];
+#elif SDL_MAJOR_VERSION == 2
 volatile boolean KeyboardState[129];
-
+#endif
 
 // 	Global variables
 volatile boolean	Paused;
@@ -120,6 +123,7 @@ static Direction DirTable[] =		// Quick lookup for total direction
     dir_SouthWest,	dir_South,	dir_SouthEast
 };
 
+#if SDL_MAJOR_VERSION == 2
 boolean Keyboard(int key)
 {
     int keyIndex = KeyboardLookup(key);
@@ -271,7 +275,7 @@ int KeyboardLookup(int key)
         default : return UNKNOWN_KEY;
     }
 }
-//#endif
+#endif
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -419,8 +423,12 @@ static void processEvent(SDL_Event *event)
 
             LastScan = event->key.keysym.sym;
 
-            SDL_Keymod mod = SDL_GetModState();
+            SDL_Keymod mod = SDL_GetModState();            
+#if SDL_MAJOR_VERSION == 1            
+            if (KeyboardPress[sc_Alt])
+#elif SDL_MAJOR_VERSION == 2            
             if(Keyboard(sc_Alt))
+#endif            
             {
                 if(LastScan==SDLK_F4)
                     Quit(NULL);
@@ -459,11 +467,13 @@ static void processEvent(SDL_Event *event)
                 if(sym < lengthof(ASCIINames) && ASCIINames[sym])
                     LastASCII = ASCIINames[sym];
             }
-         
-            int intLastScan;
-            intLastScan = LastScan;
+#if SDL_MAJOR_VERSION == 1         
+            if (LastScan < SDLK_LAST)
+                KeyboardPress[LastScan] = 1;
+#elif SDL_MAJOR_VERSION == 2
+            int intLastScan = LastScan;
             KeyboardSet(intLastScan, 1);
-
+#endif
             if(LastScan == SDLK_PAUSE)
                 Paused = true;
             break;
@@ -489,7 +499,9 @@ static void processEvent(SDL_Event *event)
                     }
                 }
             }
+#if SDL_MAJOR_VERSION == 2            
             KeyboardSet(key, 0);
+#endif        
         }
 
 #if defined(GP2X)
@@ -600,8 +612,11 @@ void IN_ClearKeysDown(void)
 {
 	LastScan = sc_None;
 	LastASCII = key_None;
-    memset ((void *) KeyboardState,0,sizeof(KeyboardState));
-
+#if SDL_MAJOR_VERSION == 1
+    memset((void*)KeyboardPress, 0, sizeof(KeyboardPress[SDLK_LAST]));
+#elif SDL_MAJOR_VERSION == 2
+    memset((void*)KeyboardState, 0, sizeof(KeyboardState));
+#endif
 }
 
 
@@ -623,8 +638,38 @@ void IN_ReadControl(int player,ControlInfo *info)
 
 	IN_ProcessEvents();
 
+#if SDL_MAJOR_VERSION == 1
+    if (KeyboardPress[KbdDefs.upleft])
+        mx = motion_Left, my = motion_Up;
 
-//#if SDL_MAJOR_VERSION == 2
+    else if (KeyboardPress[KbdDefs.upright])
+        mx = motion_Right, my = motion_Up;
+
+    else if (KeyboardPress[KbdDefs.downleft])
+        mx = motion_Left, my = motion_Down;
+
+    else if (KeyboardPress[KbdDefs.downright])
+        mx = motion_Right, my = motion_Down;
+
+    if (KeyboardPress[KbdDefs.up])
+        my = motion_Up;
+
+    else if (KeyboardPress[KbdDefs.down])
+        my = motion_Down;
+
+    if (KeyboardPress[KbdDefs.left])
+        mx = motion_Left;
+
+    else if (KeyboardPress[KbdDefs.right])
+        mx = motion_Right;
+
+    if (KeyboardPress[KbdDefs.button0])
+        buttons += 1 << 0;
+
+    if (KeyboardPress[KbdDefs.button1])
+        buttons += 1 << 1;
+
+#elif SDL_MAJOR_VERSION == 2
     if (Keyboard(KbdDefs.upleft))
        mx = motion_Left,my = motion_Up;
 
@@ -654,7 +699,7 @@ void IN_ReadControl(int player,ControlInfo *info)
     
     if (Keyboard(KbdDefs.button1))
         buttons += 1 << 1;
-//#endif
+#endif
 	
     dx = mx * 127;
 	dy = my * 127;

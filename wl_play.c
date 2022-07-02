@@ -349,9 +349,11 @@ void PollKeyboardButtons (void)
 
     for(i = 0; i < NUMBUTTONS; i++)
 
-//#if SDL_MAJOR_VERSION == 2        
+#if SDL_MAJOR_VERSION == 1        
+        if (KeyboardPress[buttonscan[i]])
+#elif SDL_MAJOR_VERSION == 2        
         if (Keyboard(buttonscan[i]))
-//#endif            
+#endif            
             buttonstate[i] = true;
 }
 
@@ -407,7 +409,16 @@ void PollJoystickButtons (void)
 void PollKeyboardMove (void)
 {
     int delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
-
+#if SDL_MAJOR_VERSION == 1
+    if (KeyboardPress[dirscan[di_north]])
+        controly -= delta;
+    if (KeyboardPress[dirscan[di_south]])
+        controly += delta;
+    if (KeyboardPress[dirscan[di_west]])
+        controlx -= delta;
+    if (KeyboardPress[dirscan[di_east]])
+        controlx += delta;
+#elif SDL_MAJOR_VERSION == 2
     if (Keyboard(dirscan[di_north]))
         controly -= delta;
     if (Keyboard(dirscan[di_south]))
@@ -416,6 +427,7 @@ void PollKeyboardMove (void)
         controlx -= delta;
     if (Keyboard(dirscan[di_east]))
         controlx += delta;
+#endif
 }
 
 
@@ -694,11 +706,13 @@ void CheckKeys (void)
     //
     // SECRET CHEAT CODE: 'MLI'
     //
-
-//#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 1
+if (KeyboardPress[sc_M] && KeyboardPress[sc_L] && KeyboardPress[sc_I])
+#elif SDL_MAJOR_VERSION == 2
     if (Keyboard(sc_M) && Keyboard(sc_L) && Keyboard(sc_I))
+#endif    
     {
-//#endif
+
         gamestate.health = 100;
         gamestate.ammo = 99;
         gamestate.keys = 3;
@@ -729,10 +743,13 @@ void CheckKeys (void)
     //
 #ifdef DEBUGKEYS
 
-//#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 1
+    if (KeyboardPress[sc_BackSpace] && KeyboardPress[sc_LShift] && KeyboardPress[sc_Alt] && param_debugmode)
+#elif SDL_MAJOR_VERSION == 2
     if (Keyboard(sc_BackSpace) && Keyboard(sc_LShift) && Keyboard(sc_Alt) && param_debugmode)
+#endif     
     {
-//#endif        
+       
         ClearMemory ();
         ClearSplitVWB ();
 
@@ -749,10 +766,13 @@ void CheckKeys (void)
     // TRYING THE KEEN CHEAT CODE!
     //
 
-//#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 1
+    if (KeyboardPress[sc_B] && KeyboardPress[sc_A] && KeyboardPress[sc_T])
+#elif SDL_MAJOR_VERSION == 2
     if (Keyboard(sc_B) && Keyboard(sc_A) && Keyboard(sc_T))
+#endif    
     {
-//#endif
+
         ClearMemory ();
         ClearSplitVWB ();
 
@@ -834,11 +854,13 @@ void CheckKeys (void)
 // TAB-? debug keys
 //
 #ifdef DEBUGKEYS
-
-//#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 1
+    if (KeyboardPress[sc_Tab] && DebugOk)
+#elif SDL_MAJOR_VERSION == 2
     if (Keyboard(sc_Tab) && DebugOk)
+#endif    
     {
-//#endif     
+     
         fontnumber = 0;
         SETFONTCOLOR (0, 15);
         if (DebugKeys () && viewsize < 20)
@@ -855,7 +877,11 @@ void CheckKeys (void)
 #endif
 
 #ifdef VIEWMAP
+#if SDL_MAJOR_VERSION == 1
+    if (KeyboardPress[sc_O])
+#elif SDL_MAJOR_VERSION == 2
     if (Keyboard(sc_O))
+#endif    
     {
         ViewMap ();
 

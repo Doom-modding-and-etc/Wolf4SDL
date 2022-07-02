@@ -7,7 +7,7 @@
 
 #ifndef	__ID_IN_H_
 #define	__ID_IN_H_
-//#include "wl_def.h"
+#include "wl_def.h"
 
 #ifdef	__DEBUG__
 #define	__DEBUG_InputMgr__
@@ -302,7 +302,11 @@ typedef	struct
 } JoystickDef;
 
 //Global variables
+#if SDL_MAJOR_VERSION == 1
+extern volatile boolean KeyboardPress[];
+#elif SDL_MAJOR_VERSION == 2
 extern volatile boolean KeyboardState[129];
+#endif
 extern boolean MousePresent;
 extern volatile boolean Paused;
 extern volatile char LastASCII;
@@ -310,13 +314,24 @@ extern volatile ScanCode LastScan;
 extern int JoyNumButtons;
 extern boolean forcegrabmouse;
 
-
-
+#if SDL_MAJOR_VERSION == 1
+// Function prototypes
+#define	IN_KeyDown(code)	(KeyboardPress[(code)])
+#define	IN_ClearKey(code)	{KeyboardPress[code] = false;\
+							if (code == LastScan) LastScan = sc_None;}
+#elif SDL_MAJOR_VERSION == 2
 #define	IN_KeyDown(code)	(Keyboard((code)))
 #define	IN_ClearKey(code)	{ KeyboardSet(code, false);\
 						      if (code == LastScan) LastScan = sc_None;}
+#endif
 
+#if SDL_MAJOR_VERSION == 2
+boolean Keyboard(int key);
 
+void KeyboardSet(int key, boolean state);
+
+int KeyboardLookup(int key);
+#endif
 
 // DEBUG - put names in prototypes
 extern	void		IN_Startup(void),IN_Shutdown(void);
@@ -332,13 +347,6 @@ extern	char		IN_WaitForASCII(void);
 extern	ScanCode	IN_WaitForKey(void);
 extern	word		IN_GetJoyButtonsDB(word joy);
 extern	const char *IN_GetScanName(ScanCode);
-
-
-boolean Keyboard(int key);
-
-void KeyboardSet(int key, boolean state);
-
-int KeyboardLookup(int key);
 
 void    IN_WaitAndProcessEvents();
 void    IN_ProcessEvents();

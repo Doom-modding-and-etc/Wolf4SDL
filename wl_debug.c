@@ -446,8 +446,11 @@ int DebugKeys (void)
     int level;
 
 
-
-    if (Keyboard(sc_B))             // B = border color
+#if SDL_MAJOR_VERSION == 1
+    if(KeyboardPress[sc_B])
+#elif SDL_MAJOR_VERSION == 2 
+    if (Keyboard(sc_B))             // B = border color 
+#endif    
     {
         CenterWindow(20,3);
         PrintY+=6;
@@ -476,21 +479,23 @@ int DebugKeys (void)
         }
         return 1;
     }
-
-
-//#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 1
+    if(KeyboardPress[sc_C])
+#elif SDL_MAJOR_VERSION == 2
     if (Keyboard(sc_C))             // C = count objects
+#endif    
     {
-//#endif
+
         CountObjects();
         return 1;
     }
-
-
-//#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 1
+    if(KeyboardPress[sc_D])
+#elif SDL_MAJOR_VERSION == 2
     if (Keyboard(sc_D))             // D = Darkone's FPS counter
+#endif    
     {
-//#endif       
+       
         CenterWindow (22,2);
         if (fpscounter)
             US_PrintCentered ("Darkone's FPS Counter OFF");
@@ -503,17 +508,20 @@ int DebugKeys (void)
     }
 
 
-
-//#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 1
+    if(KeyboardPress[sc_E])
+#elif SDL_MAJOR_VERSION == 2
     if (Keyboard(sc_E))             // E = quit level
-//#endif
+#endif
         playstate = ex_completed;
 
-
-//#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 1
+    if(KeyboardPress[sc_F])
+#elif SDL_MAJOR_VERSION == 2
     if (Keyboard(sc_F))             // F = facing spot
+#endif       
     {
-//#endif      
+   
         char str[60];
         CenterWindow (14,6);
         US_Print ("x:");     US_PrintUnsigned (player->x);
@@ -536,8 +544,11 @@ int DebugKeys (void)
         IN_Ack();
         return 1;
     }
-
+#if SDL_MAJOR_VERSION == 1
+    if(KeyboardPress[sc_G])
+#elif SDL_MAJOR_VERSION == 2
     if (Keyboard(sc_G))             // G = god mode
+#endif    
     {
 
         CenterWindow (12,2);
@@ -559,16 +570,20 @@ int DebugKeys (void)
 
 
 
-//#if SDL_MAJOR_VERSION == 2
-    if (Keyboard(sc_H))             // H = hurt self
+#if SDL_MAJOR_VERSION == 1
+    if(KeyboardPress[sc_H])
+#elif SDL_MAJOR_VERSION == 2
+    if(Keyboard(sc_H))             // H = hurt self
+#endif    
     {
         IN_ClearKeysDown ();
         TakeDamage (16,NULL);
     }
-
-
-
+#if SDL_MAJOR_VERSION == 1
+    if(KeyboardPress[sc_I])
+#elif SDL_MAJOR_VERSION == 2
     else if (Keyboard(sc_I))        // I = item cheat
+#endif    
     {
         CenterWindow (12,3);
         US_PrintCentered ("Free items!");
@@ -585,9 +600,11 @@ int DebugKeys (void)
         return 1;
     }
 
-
-
+#if SDL_MAJOR_VERSION == 1
+    else if(KeyboardPress[sc_K])
+#elif SDL_MAJOR_VERSION == 2
     else if (Keyboard(sc_K))        // K = give keys
+#endif    
     {
 
         CenterWindow(16,3);
@@ -604,11 +621,13 @@ int DebugKeys (void)
         return 1;
     }
 
-
-//#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 1
+    else if(KeyboardPress[sc_L])
+#elif SDL_MAJOR_VERSION == 2
     else if (Keyboard(sc_L))        // L = level ratios
+#endif    
     {
-//#endif
+
         byte x,start,end=LRpack;
 
         if (end == 8)   // wolf3d
@@ -653,12 +672,13 @@ again:
     }
 
 #ifdef REVEALMAP
-
-
-//#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 1
+    else if(KeyboardPress[sc_M])
+#elif SDL_MAJOR_VERSION == 2
     else if (Keyboard(sc_M))        // M = Map reveal
+#endif
     {
-//#endif
+
         mapreveal ^= true;
         CenterWindow (18,3);
         if (mapreveal)
@@ -671,10 +691,13 @@ again:
     }
 #endif
 
-//#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 1
+    else if(KeyboardPress[sc_N])
+#elif SDL_MAJOR_VERSION == 2
     else if (Keyboard(sc_N))        // N = no clip
+#endif   
     {
-//#endif
+
         noclip^=1;
         CenterWindow (18,3);
         if (noclip)
@@ -687,35 +710,43 @@ again:
     }
 #ifndef VIEWMAP
 
-
-///#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 1
+    else if(KeyboardPress[sc_O])
+#elif SDL_MAJOR_VERSION == 2
     else if (Keyboard(sc_O))        // O = basic overhead
+#endif    
     {
-//#endif
+
         BasicOverhead();
         return 1;
     }
 
 #endif
 
-//#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 1
+    else if(KeyboardPress[sc_Q])
+#elif SDL_MAJOR_VERSION == 2
     else if(Keyboard(sc_P))         // P = Ripper's picture grabber
+#endif
     {
-//#endif
+
         PictureGrabber();
         return 1;
     }
 
-//#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 1
+    else if(KeyboardPress[sc_Q])
+#elif SDL_MAJOR_VERSION == 2
     else if (Keyboard(sc_Q))        // Q = fast quit
-//#endif
+#endif
     Quit(NULL);
 
-
-//#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 1
+    else if(KeyboardPress[sc_S])
+#elif SDL_MAJOR_VERSION == 2
     else if (Keyboard(sc_S))        // S = slow motion
+#endif
     {
-//#endif
      CenterWindow(30,3);
      PrintY+=6;
      US_Print(" Slow Motion steps (default 14): ");
@@ -730,19 +761,24 @@ again:
         return 1;
     }
 
-//#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 1
+    else if(KeyboardPress[sc_T])
+#elif SDL_MAJOR_VERSION == 2
     else if (Keyboard(sc_T))        // T = shape test
+#endif
     {
-//#endif
+
         ShapeTest ();
         return 1;
     }
 
-
-//#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 1
+    else if(KeyboardPress[sc_V])
+#elif SDL_MAJOR_VERSION == 2
     else if (Keyboard(sc_V))        // V = extra VBLs
+#endif
     {
-//#endif
+
         CenterWindow(30,3);
         PrintY+=6;
         US_Print("  Add how many extra VBLs(0-8): ");
@@ -757,10 +793,13 @@ again:
         return 1;
     }
 
-//#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 1
+    else if(KeyboardPress[sc_W])
+#elif SDL_MAJOR_VERSION == 2
     else if (Keyboard(sc_W))        // W = warp to level
+#endif 
     {
-//#endif
+
         CenterWindow(26,3);
         PrintY+=6;
 #ifndef SPEAR
@@ -786,10 +825,13 @@ again:
         return 1;
     }
 
-//#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 1
+    else if(KeyboardPress[sc_X])
+#elif SDL_MAJOR_VERSION == 2
     else if (Keyboard(sc_X))        // X = item cheat
+#endif   
     {
-//#endif
+
         CenterWindow (12,3);
         US_PrintCentered ("Extra stuff!");
         VW_UpdateScreen();
@@ -804,10 +846,13 @@ again:
 
 #ifdef USE_CLOUDSKY
 
-//#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 1
+    else if(KeyboardPress[sc_Z] && curSky)
+#elif SDL_MAJOR_VERSION == 2
     else if(Keyboard(sc_Z) && curSky)
+#endif    
     {
-//#endif
+
         char defstr[15];
 
         CenterWindow(34,4);
@@ -1067,11 +1112,11 @@ void OverheadRefresh (void)
                 //
                 if (tile < BIT_DOOR && tile != BIT_WALL)
                 {
-
-
-//#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 1
+                    if (DebugOk && KeyboardPress[sc_P] && MAPSPOT(x, y, 1) == PUSHABLETILE)
+#elif SDL_MAJOR_VERSION == 2
                     if (DebugOk && Keyboard(sc_P) && MAPSPOT(x,y,1) == PUSHABLETILE)
-//#endif
+#endif
                         DrawMapFloor(sx, sy, COL_SECRET);
 
                     else
@@ -1212,9 +1257,11 @@ void ViewMap (void)
 
         OverheadRefresh ();
 
-//#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 1
+    } while (!Keyboard[sc_Escape]);
+#elif SDL_MAJOR_VERSION == 2
     } while (!Keyboard(sc_Escape));
-//#endif
+#endif
     IN_ClearKeysDown ();
 
     if (viewsize != 21)

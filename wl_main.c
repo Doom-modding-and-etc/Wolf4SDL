@@ -1308,11 +1308,13 @@ static void InitGame()
 
 #ifndef SPEARDEMO
 
-
-//#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 1
+    if(KeyboardPress[sc_M])
+#elif SDL_MAJOR_VERSION == 2
     if (Keyboard(sc_M))
+#endif    
     {
-//#endif       
+       
         DoJukebox();
         didjukebox=true;
     }
@@ -1660,10 +1662,11 @@ static void DemoLoop()
 
 #ifdef DEBUGKEYS
 
-
-//#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 1
+        if (KeyboardPress[sc_Tab] && param_debugmode)
+#elif SDL_MAJOR_VERSION == 2
         if (Keyboard(sc_Tab) && param_debugmode)
-//#endif            
+#endif            
             RecordDemo ();
         else
             US_ControlPanel (0);
