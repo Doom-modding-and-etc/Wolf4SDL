@@ -1409,7 +1409,7 @@ int32_t funnyticount;
 void PlayLoop (void)
 {
 #if SWITCH
-    HARD_DBG("PLAY LOOP START\n");
+     printf("PLAY LOOP START\n");
 #endif
 #if defined(USE_FEATUREFLAGS) && defined(USE_CLOUDSKY)
     if(GetFeatureFlags() & FF_CLOUDSKY)

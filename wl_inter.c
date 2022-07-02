@@ -637,7 +637,11 @@ LevelCompleted (void)
         {
             for (i = 0; i <= timeleft; i++)
             {
+#if SWITCH
+                utoa((s32)i * PAR_AMOUNT, tempstr, 10);
+#else                
                 ltoa ((s32) i * PAR_AMOUNT, tempstr, 10);
+#endif
                 x = 36 - (int) strlen(tempstr) * 2;
                 Write (x, 7, tempstr);
                 if (!(i % (PAR_AMOUNT / 10)))
@@ -685,7 +689,11 @@ LevelCompleted (void)
             VW_WaitVBL (VBLWAIT);
             SD_StopSound ();
             bonus += PERCENT100AMT;
-            ltoa (bonus, tempstr, 10);
+#if SWITCH             
+            utoa(bonus, tempstr, 10);
+#else 
+            ltoa(bonus, tempstr, 10);
+#endif
             x = (RATIOXX - 1) - (int) strlen(tempstr) * 2;
             Write (x, 7, tempstr);
             VW_UpdateScreen ();
@@ -727,7 +735,11 @@ LevelCompleted (void)
             VW_WaitVBL (VBLWAIT);
             SD_StopSound ();
             bonus += PERCENT100AMT;
-            ltoa (bonus, tempstr, 10);
+#if SWITCH             
+            utoa(bonus, tempstr, 10);
+#else 
+            ltoa(bonus, tempstr, 10);
+#endif
             x = (RATIOXX - 1) - (int) strlen(tempstr) * 2;
             Write (x, 7, tempstr);
             VW_UpdateScreen ();
@@ -767,7 +779,11 @@ LevelCompleted (void)
             VW_WaitVBL (VBLWAIT);
             SD_StopSound ();
             bonus += PERCENT100AMT;
-            ltoa (bonus, tempstr, 10);
+#if SWITCH             
+            utoa(bonus, tempstr, 10);
+#else 
+            ltoa(bonus, tempstr, 10);
+#endif
             x = (RATIOXX - 1) - (int) strlen(tempstr) * 2;
             Write (x, 7, tempstr);
             VW_UpdateScreen ();
@@ -806,7 +822,11 @@ done:   itoa (kr, tempstr, 10);
             (PERCENT100AMT * (sr >= 100)) + (PERCENT100AMT * (tr >= 100));
 
         GivePoints (bonus);
-        ltoa (bonus, tempstr, 10);
+#if SWITCH             
+        utoa(bonus, tempstr, 10);
+#else 
+        ltoa(bonus, tempstr, 10);
+#endif
         x = 36 - (int) strlen(tempstr) * 2;
         Write (x, 7, tempstr);
 
