@@ -664,9 +664,11 @@ int maxchars, int maxwidth)
 					cursormoved = true;
 					break;
 
-//#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 1
+				case SDLK_KP5:
+#elif SDL_MAJOR_VERSION == 2
 				case SDLK_KP_5: //0x4c:	// Keypad 5 // TODO: hmmm...
-//#endif				
+#endif				
 				case sc_UpArrow:
 				case sc_DownArrow:
 				case sc_PgUp:

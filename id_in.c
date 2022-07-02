@@ -33,6 +33,7 @@
 
 #define UNKNOWN_KEY SDLK_UNKNOWN
 
+
 //
 // configuration variables
 //
@@ -138,7 +139,7 @@ void KeyboardSet(int key, boolean state)
         KeyboardState[keyIndex] = state;
     }
 }
-
+#endif
 int KeyboardLookup(int key)
 {
     switch(key)
@@ -259,6 +260,18 @@ int KeyboardLookup(int key)
 	    case SDLK_MENU		: return 113;
 	    case SDLK_POWER		: return 114;
 	    case SDLK_UNDO		: return 115;
+#if SDL_MAJOR_VERSION == 1        
+        case SDLK_KP0: return 116;
+        case SDLK_KP1: return 117;
+        case SDLK_KP2: return 118;
+        case SDLK_KP3: return 119;
+        case SDLK_KP4: return 120;
+        case SDLK_KP5: return 121;
+        case SDLK_KP6: return 122;
+        case SDLK_KP7: return 123;
+        case SDLK_KP8: return 124;
+        case SDLK_KP9: return 125;
+#elif SDL_MAJOR_VERSION == 2        
         case SDLK_KP_0		: return 116;
 	    case SDLK_KP_1		: return 117;
 	    case SDLK_KP_2		: return 118;
@@ -269,13 +282,21 @@ int KeyboardLookup(int key)
 	    case SDLK_KP_7		: return 123;
 	    case SDLK_KP_8		: return 124;
 	    case SDLK_KP_9		: return 125;
+#endif
+#if SDL_MAJOR_VERSION == 1
+        case SDLK_PRINT: return 126;
+        case SDLK_NUMLOCK: return 127;
+        case SDLK_SCROLLOCK: return 128;
+        default: return UNKNOWN_KEY;
+#elif SDL_MAJOR_VERSION == 2
         case SDLK_PRINTSCREEN		: return 126;
         case SDLK_NUMLOCKCLEAR		: return 127;
         case SDLK_SCROLLLOCK		: return 128;
         default : return UNKNOWN_KEY;
+#endif 
     }
 }
-#endif
+
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -408,7 +429,11 @@ static void processEvent(SDL_Event *event)
         // check for keypresses
         case SDL_KEYDOWN:
         {
-            if(event->key.keysym.sym==SDLK_SCROLLLOCK || event->key.keysym.sym==SDLK_F12)
+#if SDL_MAJOR_VERSION == 1            
+            if(event->key.keysym.sym == SDLK_SCROLLOCK || event->key.keysym.sym==SDLK_F12)
+#elif SDL_MAJOR_VERSION == 2
+            if (event->key.keysym.sym == SDLK_SCROLLLOCK || event->key.keysym.sym == SDLK_F12)
+#endif
             {
            
                 GrabInput = !GrabInput;
@@ -422,11 +447,11 @@ static void processEvent(SDL_Event *event)
             }
 
             LastScan = event->key.keysym.sym;
-
-            SDL_Keymod mod = SDL_GetModState();            
-#if SDL_MAJOR_VERSION == 1            
+#if SDL_MAJOR_VERSION == 1 
+            SDLMod mod = SDL_GetModState();
             if (KeyboardPress[sc_Alt])
-#elif SDL_MAJOR_VERSION == 2            
+#elif SDL_MAJOR_VERSION == 2     
+            SDL_Keymod mod = SDL_GetModState();
             if(Keyboard(sc_Alt))
 #endif            
             {
@@ -444,10 +469,17 @@ static void processEvent(SDL_Event *event)
                 {
                     switch(LastScan)
                     {         
-                     case SDLK_KP_2: LastScan = SDLK_DOWN; break;
-                     case SDLK_KP_4: LastScan = SDLK_LEFT; break;
-                     case SDLK_KP_6: LastScan = SDLK_RIGHT; break;
-                     case SDLK_KP_8: LastScan = SDLK_UP; break;
+#if SDL_MAJOR_VERSION == 1                     
+                        case SDLK_KP2: LastScan = SDLK_DOWN; break;
+                        case SDLK_KP4: LastScan = SDLK_LEFT; break;
+                        case SDLK_KP6: LastScan = SDLK_RIGHT; break;
+                        case SDLK_KP8: LastScan = SDLK_UP; break;
+#elif SDL_MAJOR_VERSION == 2                     
+                        case SDLK_KP_2: LastScan = SDLK_DOWN; break;
+                        case SDLK_KP_4: LastScan = SDLK_LEFT; break;
+                        case SDLK_KP_6: LastScan = SDLK_RIGHT; break;
+                        case SDLK_KP_8: LastScan = SDLK_UP; break;
+#endif                    
                     }
                 }
             }
@@ -471,8 +503,7 @@ static void processEvent(SDL_Event *event)
             if (LastScan < SDLK_LAST)
                 KeyboardPress[LastScan] = 1;
 #elif SDL_MAJOR_VERSION == 2
-            int intLastScan = LastScan;
-            KeyboardSet(intLastScan, 1);
+            KeyboardSet(LastScan, true);
 #endif
             if(LastScan == SDLK_PAUSE)
                 Paused = true;
@@ -492,15 +523,22 @@ static void processEvent(SDL_Event *event)
                 {
                     switch(key)
                     {
+#if SDL_MAJOR_VERSION == 1                        
+                        case SDLK_KP2: key = SDLK_DOWN; break;
+                        case SDLK_KP4: key = SDLK_LEFT; break;
+                        case SDLK_KP6: key = SDLK_RIGHT; break;
+                        case SDLK_KP8: key = SDLK_UP; break;
+#elif SDL_MAJOR_VERSION == 2        
                         case SDLK_KP_2: key = SDLK_DOWN; break;
                         case SDLK_KP_4: key = SDLK_LEFT; break;
                         case SDLK_KP_6: key = SDLK_RIGHT; break;
                         case SDLK_KP_8: key = SDLK_UP; break;                    
+#endif                    
                     }
                 }
             }
 #if SDL_MAJOR_VERSION == 2            
-            KeyboardSet(key, 0);
+            KeyboardSet(key, false);
 #endif        
         }
 

@@ -3942,14 +3942,10 @@ void Message (const char *string)
 //
 ////////////////////////////////////////////////////////////////////
 
-int StartCPMusic (int song)
+int StartCPMusic(int song)
 {
-    int lastoffs;
-    static int lastmusic;
-    lastmusic = song;
-    lastoffs = SD_MusicOff ();
-    UNCACHEAUDIOCHUNK (STARTMUSIC + lastmusic);
-
+    int lastoffs = SD_MusicOff ();
+    UNCACHEAUDIOCHUNK(STARTMUSIC + song);
     SD_StartMusic(STARTMUSIC + song);
     return lastoffs;
 }
@@ -3974,7 +3970,8 @@ const char *IN_GetScanName(ScanCode scan)
 
     for (s = ExtScanCodes, p = ExtScanNames; *s; p++, s++)
         if (*s == scan)
-            return (*p);*/
+            return (*p);
+            */
 #if SDL_MAJOR_VERSION == 1
     return (ScanNames[scan]);
 #elif SDL_MAJOR_VERSION == 2     
