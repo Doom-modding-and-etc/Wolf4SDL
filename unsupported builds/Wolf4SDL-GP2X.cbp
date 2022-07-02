@@ -38,6 +38,7 @@
 		<Unit filename="id_pm.c" />
 		<Unit filename="id_sd.c" />
 		<Unit filename="id_sd.h" />
+                <Unit filename="id_us.c" />
 		<Unit filename="id_us.h" />
 		<Unit filename="id_vh.c" />
 		<Unit filename="id_vh.h" />
