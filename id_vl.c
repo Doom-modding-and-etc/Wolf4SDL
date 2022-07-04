@@ -171,6 +171,8 @@ void VL_SetVGAPlaneMode (void)
         exit(1);
     }
     SDL_SetColors(screenBuffer, gamepal, 0, 256);
+    //Flippin the screen :)
+SDL_Flip(screen);
 #elif SDL_MAJOR_VERSION == 2
     window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight,
         (fullscreen ? SDL_WINDOW_FULLSCREEN : 0 | SDL_WINDOW_OPENGL));
