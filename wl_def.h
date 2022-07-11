@@ -1,8 +1,6 @@
 #ifndef __WL_DEF_H_
 #define __WL_DEF_H_
 
-
-
 // Defines which version shall be built and configures supported extra features
 #include "version.h"
 
@@ -97,9 +95,11 @@ void Quit (const char *errorStr, ...);
 #include "id_in.h"
 #include "id_vl.h"
 #include "id_vh.h"
+#ifdef CRT
+#include "id_crt.h"
+#endif
 #include "id_us.h"
 #include "id_ca.h"
-
 #include "wl_menu.h"
 #include "wl_utils.h"
 
@@ -1461,11 +1461,11 @@ void GP2X_ButtonUp (int button);
 
 #define ISPOINTER(x) ((((uintptr_t)(x)) & ~0xffff) != 0)
 
-#ifdef _WIN32
+#if _WIN32
     #define strcasecmp stricmp
     #define strncasecmp strnicmp
     #define snprintf _snprintf
-#elif defined SWITCH
+#elif SWITCH
 	#include <stdlib.h>
 #else
 	static inline char* itoa(int value, char* string, int radix)

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM64">
@@ -159,7 +159,7 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_mixer.lib;SDL2_net.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>F:\SDL-1.2.12\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -219,6 +219,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="id_crt.c" />
     <ClCompile Include="dc\dc_cd.c" />
     <ClCompile Include="dc\dc_main.c" />
     <ClCompile Include="dc\dc_maple.c" />
@@ -262,6 +263,7 @@
   <ItemGroup>
     <ClInclude Include="audiosod.h" />
     <ClInclude Include="audiowl6.h" />
+    <ClInclude Include="id_crt.h" />
     <ClInclude Include="dc\dc_main.h" />
     <ClInclude Include="dc\dc_vmu.h" />
     <ClInclude Include="dosbox\dbopl.hpp" />

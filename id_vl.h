@@ -3,7 +3,7 @@
 #define __ID_VL_H_
 
 // wolf compatability
-
+#include "wl_def.h"
 
 void Quit (const char *error,...);
 
@@ -42,6 +42,11 @@ extern SDL_Color gamepal[256];
 
 #define VL_WaitVBL(a)        SDL_Delay((a)*8)
 #define VL_ClearScreen(c)    SDL_FillRect(screenBuffer,NULL,(c))
+#ifdef CRT
+#if SDL_MAJOR_VERSION == 1
+#define SDL_Flip(x) CRT_Init(x)
+#endif
+#endif
 
 void VL_DePlaneVGA (byte *source, int width, int height);
 void VL_SetVGAPlaneMode (void);

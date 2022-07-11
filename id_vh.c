@@ -72,7 +72,7 @@ void VH_RenderTextures(SDL_Surface* surface)
     SDL_UpdateTexture(texture, NULL, screen->pixels, screenWidth * sizeof(Uint32));
     SDL_RenderClear(renderer);
     SDL_RenderCopy(renderer, texture, NULL, NULL);
-    SDL_RenderPresent(renderer);
+    SDL_RenderPresent(renderer);  
 }
 #endif
 
@@ -87,7 +87,6 @@ void VH_RenderTextures(SDL_Surface* surface)
 void VH_UpdateScreen(SDL_Surface *surface)
 {
 	SDL_BlitSurface (surface,NULL,screen,NULL);
-
 #if SDL_MAJOR_VERSION == 1
 	SDL_Flip(screen);
 #elif SDL_MAJOR_VERSION == 2

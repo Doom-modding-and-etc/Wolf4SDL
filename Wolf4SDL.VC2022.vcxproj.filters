@@ -135,6 +135,9 @@
     <ClCompile Include="mame\fmopl.c">
       <Filter>Source Files\mame</Filter>
     </ClCompile>
+    <ClCompile Include="id_crt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="sodpal.inc">
@@ -228,6 +231,9 @@
     </ClInclude>
     <ClInclude Include="ps2\ps2_main.h">
       <Filter>Header Files\ps2</Filter>
+    </ClInclude>
+    <ClInclude Include="id_crt.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

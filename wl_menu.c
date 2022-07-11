@@ -1881,7 +1881,6 @@ MouseSensitivity (int blank)
             exit = 1;
 #if SDL_MAJOR_VERSION == 1
         else if (ci.button1 || KeyboardPress[sc_Escape])
- 
 #elif SDL_MAJOR_VERSION == 2
         else if (ci.button1 || Keyboard(sc_Escape))
 #endif            
@@ -3861,32 +3860,54 @@ int GetYorN (int x, int y, int pic)
     {
         IN_WaitAndProcessEvents();
     }
-    //todo
 #ifdef SPANISH
+#if SDL_MAJOR_VERSION == 1    
+    while (!KeyboardPress[sc_S] && !KeyboardPress[sc_N] && !KeyboardPress[sc_Escape]);
+#elif SDL_MAJOR_VERSION == 2
     while (!Keyboard(sc_S) && !Keyboard(sc_N) && !Keyboard(sc_Escape));
+#endif
 #else
+#if SDL_MAJOR_VERSION == 1    
+    while (!KeyboardPress[sc_Y] && !Keyboard[sc_N] && !Keyboard[sc_Escape]);
+#elif SDL_MAJOR_VERSION == 2
     while (!Keyboard(sc_Y) && !Keyboard(sc_N) && !Keyboard(sc_Escape));
+#endif
 #endif
 
 #ifdef SPANISH
+#if SDL_MAJOR_VERSION == 1    
+    if (KeyboardPress[sc_S])
+#elif SDL_MAJOR_VERSION == 2
     if (Keyboard(sc_S))
+#endif
     {
         xit = 1;
         ShootSnd ();
     }
 
-    while (Keyboard(sc_S) || Keyboard(sc_N) || Keyboard(sc_Escape))
+#if SDL_MAJOR_VERSION == 1    
+    while (!KeyboardPress[sc_S] && !KeyboardPress[sc_N] && !KeyboardPress[sc_Escape])
+#elif SDL_MAJOR_VERSION == 2
+    while (!Keyboard(sc_S) && !Keyboard(sc_N) && !Keyboard(sc_Escape))
+#endif
         IN_WaitAndProcessEvents();
-
 #else
 
+#if SDL_MAJOR_VERSION == 1
+    if (KeyboardPress[sc_Y])
+#elif SDL_MAJOR_VERSION == 2
     if (Keyboard(sc_Y))
+#endif
     {
         xit = 1;
         ShootSnd ();
     }
 
-    while (Keyboard(sc_Y) || Keyboard(sc_N) || Keyboard(sc_Escape))
+#if SDL_MAJOR_VERSION == 1    
+    while (!KeyboardPress[sc_Y] && !Keyboard[sc_N] && !Keyboard[sc_Escape])
+#elif SDL_MAJOR_VERSION == 2
+    while (!Keyboard(sc_Y) && !Keyboard(sc_N) && !Keyboard(sc_Escape))
+#endif
         IN_WaitAndProcessEvents();
 #endif
 
@@ -3976,7 +3997,6 @@ const char *IN_GetScanName(ScanCode scan)
     return (ScanNames[scan]);
 #elif SDL_MAJOR_VERSION == 2     
     switch(scan) 
-    
     {
         case(SDLK_BACKSPACE):
             return "BkSp";
@@ -4224,8 +4244,6 @@ void
 DrawMenuGun (CP_iteminfo * iteminfo)
 {
     int x, y;
-
-
     x = iteminfo->x;
     y = iteminfo->y + iteminfo->curpos * 13 - 2;
     VWB_DrawPic (x, y, C_CURSOR1PIC);

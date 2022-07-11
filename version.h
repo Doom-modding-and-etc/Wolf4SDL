@@ -47,7 +47,7 @@
 //#define FIXRAINSNOWLEAKS    // Enables leaking ceilings fix (by Adam Biser, only needed if maps with rain/snow and ceilings exist)
 //#define VIEWMAP             // Enables the overhead map
 //#define REVEALMAP           // Enables showing only the areas of the overhead map that have been seen
-//#define EXTRACONTROLS // switches out Joystick controls for WASD and mouse movement toggles(DONE but with some bugs)
+
 
 #define DEBUGKEYS             // Comment this out to compile without the Tab debug keys
 #define ARTSEXTERN
@@ -56,9 +56,9 @@
                               // effect to let the original demos work as in the original Wolf3D v1.4
                               // (actually better, as the second demo rarely worked)
 //#define USE_GPL             // Replaces the MAME OPL emulator by the DosBox one, which is under a GPL license obs: don´t use :)
-
+//#define EXTRACONTROLS // switches out Joystick controls for WASD and mouse movement toggles(DONE but with some bugs)
 #define ADDEDFIX              // Post-revision 262 fixes described in http://diehardwolfers.areyep.com/viewtopic.php?t=6693
-
+//#define CRT // Makes the screen fixed in 4:3
 #define FIXCALCROTATE         // Apply a modified version of Ginyu's fix to make CalcRotate more accurate at high resolutions
 
 //#define BANDEDHOLOWALLS     // Use the old DOS-style "banded" wall drawing behaviour when inside walls

@@ -853,9 +853,8 @@ void SetupWalls (void)
 
 void SignonScreen (void)                        // VGA version
 {
-    VL_SetVGAPlaneMode ();
-
-    VL_MemToScreen (signon,320,200,0,0);
+    VL_SetVGAPlaneMode();
+    VL_MemToScreen(signon,320,200,0,0);
 }
 
 

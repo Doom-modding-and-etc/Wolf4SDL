@@ -2,6 +2,9 @@
 
 #include <string.h>
 #include "wl_def.h"
+#ifdef CRT
+#include "id_crt.h"
+#endif
 // Uncomment the following line, if you get destination out of bounds
 // assertion errors and want to ignore them during debugging
 //#define IGNORE_BAD_DEST
@@ -137,6 +140,12 @@ void VL_SetVGAPlaneMode (void)
 #endif
 
 #if SDL_MAJOR_VERSION == 1
+    
+#ifdef CRT    
+    //Fab's and André CRT Hack
+    screenWidth = 640;
+    screenHeight = 480;
+#endif    
     SDL_WM_SetCaption(title, NULL);
 
     if (screenBits == -1)
@@ -147,22 +156,31 @@ void VL_SetVGAPlaneMode (void)
 
     screen = SDL_SetVideoMode(screenWidth, screenHeight, screenBits,
         (usedoublebuffering ? SDL_HWSURFACE | SDL_DOUBLEBUF : 0)
-        | (screenBits == 8 ? SDL_HWPALETTE : 0)
-        | (fullscreen ? SDL_FULLSCREEN : 0));
+#ifdef CRT
+        | (fullscreen ? SDL_FULLSCREEN : 0) | SDL_OPENGL | SDL_OPENGLBLIT);
+#else
+        | (screenBits == 8 ? SDL_HWPALETTE : 0));
+#endif
 
     if(!screen)
     {
         printf("Unable to set %ix%ix%i video mode: %s\n", screenWidth,
             screenHeight, screenBits, SDL_GetError());
         exit(1);
-    }
+    } 
     if ((screen->flags & SDL_DOUBLEBUF) != SDL_DOUBLEBUF)
         usedoublebuffering = false;
     SDL_ShowCursor(SDL_DISABLE);
-
     SDL_SetColors(screen, gamepal, 0, 256);
     memcpy(curpal, gamepal, sizeof(SDL_Color) * 256);
 
+#ifdef CRT  
+    //Fab's and André´s CRT Hack
+    CRT_Init(screenWidth);
+    //Fab's and André´s CRT Hack
+    screenWidth = 320;
+    screenHeight = 200;
+#endif
     screenBuffer = SDL_CreateRGBSurface(SDL_GetVideoSurface(), screenWidth,
         screenHeight, 8, 0, 0, 0, 0);
     if (!screenBuffer)
@@ -172,7 +190,7 @@ void VL_SetVGAPlaneMode (void)
     }
     SDL_SetColors(screenBuffer, gamepal, 0, 256);
     //Flippin the screen :)
-SDL_Flip(screen);
+    SDL_Flip(screen);
 #elif SDL_MAJOR_VERSION == 2
     window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight,
         (fullscreen ? SDL_WINDOW_FULLSCREEN : 0 | SDL_WINDOW_OPENGL));
@@ -190,7 +208,6 @@ SDL_Flip(screen);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
-
     SDL_ShowCursor(SDL_DISABLE);
 
     SDL_SetPaletteColors(screen->format->palette, gamepal, 0, 256);
@@ -208,7 +225,7 @@ SDL_Flip(screen);
     SDL_SetPaletteColors(screenBuffer->format->palette, gamepal, 0, 256);
 
     texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, 
-        SDL_TEXTUREACCESS_STREAMING, screenWidth, screenHeight);
+    SDL_TEXTUREACCESS_STREAMING, screenWidth, screenHeight);
 #endif
     screenPitch = screen->pitch;
     bufferPitch = screenBuffer->pitch;
@@ -316,7 +333,11 @@ void VL_SetColor(int color, int red, int green, int blue)
 
         SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, screenBuffer);
         SDL_RenderCopy(renderer, texture, NULL, NULL);
-        SDL_RenderPresent(renderer);
+        SDL_RenderPresent(renderer);        
+#ifdef CRT        
+        CRT_Init(screenWidth);
+        CRT_DAC();
+#endif        
         SDL_DestroyTexture(texture);
 #endif
     }
@@ -376,7 +397,6 @@ void VL_SetPalette(SDL_Color* palette, bool forceupdate)
         if (forceupdate)
         {
             SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
-
             VH_RenderTextures(screen);
 #endif
         }

@@ -176,39 +176,39 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\id_ca.cpp"
+				RelativePath=".\id_ca.c"
 				>
 			</File>
 			<File
-				RelativePath=".\id_in.cpp"
+				RelativePath=".\id_in.c"
 				>
 			</File>
 			<File
-				RelativePath=".\id_pm.cpp"
+				RelativePath=".\id_pm.c"
 				>
 			</File>
 			<File
-				RelativePath=".\id_sd.cpp"
+				RelativePath=".\id_sd.c"
 				>
 			</File>
 			<File
-				RelativePath=".\id_us_1.cpp"
+				RelativePath=".\id_us.c"
 				>
 			</File>
 			<File
-				RelativePath=".\id_vh.cpp"
+				RelativePath=".\id_vh.c"
 				>
 			</File>
 			<File
-				RelativePath=".\id_vl.cpp"
+				RelativePath=".\id_vl.c"
 				>
 			</File>
 			<File
-				RelativePath=".\sdl_winmain.cpp"
+				RelativePath=".\sdl_winmain.c"
 				>
 			</File>
 			<File
-				RelativePath=".\signon.cpp"
+				RelativePath=".\signon.c"
 				>
 			</File>
 			<File
@@ -216,75 +216,75 @@
 				>
 			</File>
 			<File
-				RelativePath=".\wl_act1.cpp"
+				RelativePath=".\wl_act1.c"
 				>
 			</File>
 			<File
-				RelativePath=".\wl_act2.cpp"
+				RelativePath=".\wl_act2.c"
 				>
 			</File>
 			<File
-				RelativePath=".\wl_agent.cpp"
+				RelativePath=".\wl_agent.c"
 				>
 			</File>
 			<File
-				RelativePath=".\wl_atmos.cpp"
+				RelativePath=".\wl_atmos.c"
 				>
 			</File>
 			<File
-				RelativePath=".\wl_cloudsky.cpp"
+				RelativePath=".\wl_cloudsky.c"
 				>
 			</File>
 			<File
-				RelativePath=".\wl_debug.cpp"
+				RelativePath=".\wl_debug.c"
 				>
 			</File>
 			<File
-				RelativePath=".\wl_dir3dspr.cpp"
+				RelativePath=".\wl_dir3dspr.c"
 				>
 			</File>
 			<File
-				RelativePath=".\wl_draw.cpp"
+				RelativePath=".\wl_draw.c"
 				>
 			</File>
 			<File
-				RelativePath=".\wl_floorceiling.cpp"
+				RelativePath=".\wl_floorceiling.c"
 				>
 			</File>
 			<File
-				RelativePath=".\wl_game.cpp"
+				RelativePath=".\wl_game.c"
 				>
 			</File>
 			<File
-				RelativePath=".\wl_inter.cpp"
+				RelativePath=".\wl_inter.c"
 				>
 			</File>
 			<File
-				RelativePath=".\wl_main.cpp"
+				RelativePath=".\wl_main.c"
 				>
 			</File>
 			<File
-				RelativePath=".\wl_menu.cpp"
+				RelativePath=".\wl_menu.c"
 				>
 			</File>
 			<File
-				RelativePath=".\wl_parallax.cpp"
+				RelativePath=".\wl_parallax.c"
 				>
 			</File>
 			<File
-				RelativePath=".\wl_play.cpp"
+				RelativePath=".\wl_play.c"
 				>
 			</File>
 			<File
-				RelativePath=".\wl_shade.cpp"
+				RelativePath=".\wl_shade.c"
 				>
 			</File>
 			<File
-				RelativePath=".\wl_state.cpp"
+				RelativePath=".\wl_state.c"
 				>
 			</File>
 			<File
-				RelativePath=".\wl_text.cpp"
+				RelativePath=".\wl_text.c"
 				>
 			</File>
 			<File
@@ -295,23 +295,23 @@
 				Name="dc"
 				>
 				<File
-					RelativePath=".\dc\dc_cd.cpp"
+					RelativePath=".\dc\dc_cd.c"
 					>
 				</File>
 				<File
-					RelativePath=".\dc\dc_main.cpp"
+					RelativePath=".\dc\dc_main.c"
 					>
 				</File>
 				<File
-					RelativePath=".\dc\dc_maple.cpp"
+					RelativePath=".\dc\dc_maple.c"
 					>
 				</File>
 				<File
-					RelativePath=".\dc\dc_video.cpp"
+					RelativePath=".\dc\dc_video.c"
 					>
 				</File>
 				<File
-					RelativePath=".\dc\dc_vmu.cpp"
+					RelativePath=".\dc\dc_vmu.c"
 					>
 				</File>
 			</Filter>
@@ -319,7 +319,7 @@
 				Name="mame"
 				>
 				<File
-					RelativePath=".\mame\fmopl.cpp"
+					RelativePath=".\mame\fmopl.c"
 					>
 				</File>
 				<File
@@ -335,7 +335,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\dosbox\dbopl.h"
+					RelativePath=".\dosbox\dbopl.hpp"
 					>
 				</File>
 			</Filter>
