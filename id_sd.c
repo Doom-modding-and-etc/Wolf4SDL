@@ -1046,10 +1046,8 @@ boolean SD_PlaySound(soundnames sound)
             SDL_PCPlaySound((PCSound *)s);
             break;
         case sdm_AdLib:
-#ifdef ADDEDFIX // 2
-            curAlSound = alSound = 0;                // Tricob
+            curAlSound = alSound = 0;                //ADDEDFIX: Tricob
             alOut(alFreqH, 0);
-#endif
             SDL_ALPlaySound((AdLibSound *)s);
             break;
     }
@@ -1186,20 +1184,19 @@ void SD_ContinueMusic(int chunk, int startoffs)
     if (MusicMode == smm_AdLib)
     {
         int32_t chunkLen = CA_CacheAudioChunk(chunk);
-        sqHack = (word *)(void *) audiosegs[chunk];     // alignment is correct
-        if(*sqHack == 0) sqHackLen = sqHackSeqLen = chunkLen;
+        sqHack = (word*)(void*)audiosegs[chunk];     // alignment is correct
+        if (*sqHack == 0) sqHackLen = sqHackSeqLen = chunkLen;
         else sqHackLen = sqHackSeqLen = *sqHack++;
         sqHackPtr = sqHack;
 
-        if(startoffs >= sqHackLen)
+        if (startoffs >= sqHackLen)
         {
-#ifdef ADDEDFIX // 7                     // Andy, improved by Chris Chokan
-            startoffs = 0;
-#else
-            Quit("SD_StartMusic: Illegal startoffs provided!");
-#endif
+            startoffs = 0; //ADDEDFIX: Andy, improved by Chris Chokan
         }
-
+        else
+        {
+            Quit("SD_StartMusic: Illegal startoffs provided!");
+        }
         // fast forward to correct position
         // (needed to reconstruct the instruments)
 

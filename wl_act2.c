@@ -2889,10 +2889,10 @@ void A_HitlerMorph (objtype *ob)
 
     newobj->obclass = realhitlerobj;
     newobj->hitpoints = hitpoints[gamestate.difficulty];
-#ifdef ADDEDFIX // 29
-    if (!loadedgame)               // Count real hitler for correct kill ratios 
+
+    if (!loadedgame)               // ADDEDFIX Count real hitler for correct kill ratios 
         gamestate.killtotal++; 
-#endif
+
 }
 
 
