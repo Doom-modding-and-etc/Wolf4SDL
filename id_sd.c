@@ -634,10 +634,8 @@ static void SDL_ShutAL(void)
 ///////////////////////////////////////////////////////////////////////////
 static void SDL_CleanAL(void)
 {
-    int     i;
-
     alOut(alEffects,0);
-    for (i = 1; i < 0xf5; i++)
+    for (int i = 1; i < 0xf5; i++)
         alOut(i, 0);
 }
 
@@ -660,9 +658,8 @@ static void SDL_StartAL(void)
 ///////////////////////////////////////////////////////////////////////////
 static boolean SDL_DetectAdLib(void)
 {
-    int i;
 
-    for (i = 1; i <= 0xf5; i++)       // Zero all the registers
+    for (int i = 1; i <= 0xf5; i++)       // Zero all the registers
         alOut(i, 0);
 
     alOut(1, 0x20);             // Set WSE=1
@@ -1183,7 +1180,7 @@ void SD_ContinueMusic(int chunk, int startoffs)
 
     if (MusicMode == smm_AdLib)
     {
-        int32_t chunkLen = CA_CacheAudioChunk(chunk);
+        s32 chunkLen = CA_CacheAudioChunk(chunk);
         sqHack = (word*)(void*)audiosegs[chunk];     // alignment is correct
         if (*sqHack == 0) sqHackLen = sqHackSeqLen = chunkLen;
         else sqHackLen = sqHackSeqLen = *sqHack++;
@@ -1193,10 +1190,12 @@ void SD_ContinueMusic(int chunk, int startoffs)
         {
             startoffs = 0; //ADDEDFIX: Andy, improved by Chris Chokan
         }
+/*
         else
         {
             Quit("SD_StartMusic: Illegal startoffs provided!");
         }
+*/
         // fast forward to correct position
         // (needed to reconstruct the instruments)
 

@@ -14,10 +14,10 @@ APP_DESCRIPTION := Cross Plataform Source Port Of Wolfenstein 3d for Nintendo Sw
 APP_AUTHOR := Wolf3s, keeganatorr, Aryan, Mortriz Ripper and The other contribuitors
 APP_VERSION := 2.1
 ICON := icon/wolf4sdl.png
-#WINDRES   = windres.exe
+WINDRES   = windres.exe
 OBJ       = mame/fmopl.o id_ca.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vl.o signon.o wl_act1.o wl_act2.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
 LINKOBJ   = mame/fmopl.o id_ca.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vl.o signon.o wl_act1.o wl_act2.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
-LIBS      = -specs=$(DEVKITPRO)/libnx/switch.specs -L$(DEVKITPRO)/libnx/lib -L$(DEVKITPRO)/portlibs/switch/lib -lSDL2 -lSDL2main -lSDL2_mixer -lmpg123 -lmodplug -lvorbisidec -logg -lopusfile -lopus `sdl2-config --libs` -lm -lnx -lEGL
+LIBS     = -specs=$(DEVKITPRO)/libnx/switch.specs -L$(DEVKITPRO)/libnx/lib -L$(DEVKITPRO)/portlibs/switch/lib -lSDL2 -lSDL2main -lSDL2_mixer -lmpg123 -lmodplug -lvorbisidec -logg -lopusfile -lopus `sdl2-config --libs` -lm -lnx -lEGL
 INCS      = -I$(DEVKITPRO)/portlibs/switch/include -I$(DEVKITPRO)/portlibs/switch/include/SDL2 -I$(DEVKITPRO)/libnx/include -Imame/
 BIN       = Wolf4SDL.elf
 #BUILD	  =	build

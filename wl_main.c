@@ -1218,7 +1218,12 @@ static void InitGame()
     printf("GAME START");
 #endif    
     // initialize SDL    
-    if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK) < 0)
+    if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK 
+#if SDL_MAJOR_VERSION == 1    
+    ) < 0 )
+#elif SDL_MAJOR_VERSION == 2
+    | SDL_INIT_GAMECONTROLLER) < 0)
+#endif    
     {
         printf("Unable to init SDL: %s\n", SDL_GetError());
         exit(1);

@@ -229,9 +229,6 @@
     <ClInclude Include="win\resource.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
-    <ClInclude Include="ps2\ps2_main.h">
-      <Filter>Header Files\ps2</Filter>
-    </ClInclude>
     <ClInclude Include="id_crt.h">
       <Filter>Header Files</Filter>
     </ClInclude>

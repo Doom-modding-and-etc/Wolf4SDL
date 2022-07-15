@@ -1,6 +1,8 @@
 #ifndef __FOREIGN_H_
 #define __FOREIGN_H_
 
+#include ".\wl_def.h"
+
 #define QUITSUR	    "Are you sure you want\n"\
 		            "to quit this great game?"
 

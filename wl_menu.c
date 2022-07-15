@@ -145,7 +145,8 @@ CP_itemtype CtlMenu[] = {
 #else
     {0, "Mouse Movement", 0},
 #endif
-    {1, STR_CUSTOM, CustomControls}
+    {1, STR_CUSTOM, CustomControls},
+    //{1, STR_GAME_CONTROL, NULL}
 #endif
 };
 
@@ -2028,7 +2029,7 @@ CustomControls (int blank)
             DefineMouseBtns();
             DrawCustMouse(1);
             break;
-#ifndef EXTRACONTROLS
+#ifdef EXTRACONTROLS
         case 3:
             DefineJoyBtns();
             DrawCustJoy(0);
@@ -2080,11 +2081,12 @@ DefineMouseBtns (void)
 //
 // DEFINE THE JOYSTICK BUTTONS
 //
-void
-DefineJoyBtns(void)
+void DefineJoyBtns(void)
 {
     CustomCtrls joyallowed = { 1, 1, 1, 1 };
+#ifdef EXTRACONTROLS    
     EnterCtrlData(5, &joyallowed, DrawCustJoy, PrintCustJoy, JOYSTICK);
+#endif
 }
 #endif
 
@@ -2423,7 +2425,7 @@ FixupCustom (int w)
         case 0:
             DrawCustMouse (1);
             break;
-#ifndef EXTRACONTROLS
+#ifdef EXTRACONTROLS
         case 3:
             DrawCustJoy(1);
             break;
@@ -2466,7 +2468,7 @@ FixupCustom (int w)
                 case 0:
                     DrawCustMouse (0);
                     break;
-#ifndef EXTRACONTROLS
+#ifdef EXTRACONTROLS
                 case 3:
                     DrawCustJoy(0);
                     break;
@@ -2608,7 +2610,9 @@ DrawCustomScreen (void)
     PrintX = CST_START + CST_SPC * 3;
     US_Print (STR_CSTRAFE "\n");
     DrawWindow (5, PrintY - 1, 310, 13, BKGDCOLOR);
+#ifdef EXTRACONTROLS    
     DrawCustJoy (0);
+#endif
     US_Print ("\n");
 #endif
 
@@ -2731,7 +2735,7 @@ PrintCustMouse (int i)
 void
 DrawCustMouse (int hilight)
 {
-    int i, color;
+    int color;
 
 
     color = TEXTCOLOR;
@@ -2748,16 +2752,14 @@ DrawCustMouse (int hilight)
         CusMenu[0].active = 1;
 
     PrintY = CST_Y + 13 * 2;
-    for (i = 0; i < 4; i++)
+    for(int i = 0; i < 4; i++)
         PrintCustMouse (i);
 }
-#ifndef EXTRACONTROLS
-void
-PrintCustJoy (int i)
+#ifdef EXTRACONTROLS
+void PrintCustJoy (int i)
 {
-    int j;
 
-    for (j = 0; j < 4; j++)
+    for (int j = 0; j < 4; j++)
     {
         if (order[i] == buttonjoy[j])
         {
@@ -2770,7 +2772,7 @@ PrintCustJoy (int i)
 
 void DrawCustJoy(int hilight)
 {
-    int i, color;
+    int color;
 
     color = TEXTCOLOR;
     if (hilight)
@@ -2786,7 +2788,7 @@ void DrawCustJoy(int hilight)
         CusMenu[3].active = 1;
 
     PrintY = CST_Y + 13 * 5;
-    for (i = 0; i < 4; i++)
+    for (int i = 0; i < 4; i++)
         PrintCustJoy (i);
 }
 #endif
@@ -2853,7 +2855,7 @@ PrintCustExtra(int i)
 
 void DrawCustExtra(int hilight)
 {
-    int i, color;
+    int color;
 
 
     color = TEXTCOLOR;
@@ -2862,7 +2864,7 @@ void DrawCustExtra(int hilight)
     SETFONTCOLOR(color, BKGDCOLOR);
 
     PrintY = CST_Y + 13 * 10;
-    for (i = 0; i < 4; i++)
+    for (int i = 0; i < 4; i++)
         PrintCustExtra(i);
 }
 #endif // EXTRACONTROLS

@@ -175,20 +175,23 @@ void DrawCtlScreen(void);
 void DrawCustomScreen(void);
 void DrawLSAction(int which);
 void DrawCustMouse(int hilight);
+#ifdef EXTRACONTROLS
 void DrawCustJoy(int hilight);
+#endif
 void DrawCustKeybd(int hilight);
 void DrawCustKeys(int hilight);
 void PrintCustMouse(int i);
+#ifdef EXTRACONTROLS
 void PrintCustJoy(int i);
+#endif
 void PrintCustKeybd(int i);
 void PrintCustKeys(int i);
 
-
+#ifdef EXTRACONTROLS
 void DefineKeyExtra(void);
-//#ifdef EXTRACONTROLS
 void DrawCustExtra(int hilight);
 void PrintCustExtra(int i);
-//#endif // EXTRACONTROLS
+#endif // EXTRACONTROLS
 
 void PrintLSEntry(int w,int color);
 void TrackWhichGame(int w);

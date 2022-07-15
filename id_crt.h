@@ -1,6 +1,3 @@
-#ifndef id_crt_h
-#define id_crt_h
-
 // File: id_crt.h
 // Project: Wolf4SDL
 // Author: André Guilherme 
@@ -12,6 +9,8 @@
 // Note: This file is heavly modified on: 
 // https://github.com/fabiensanglard/Chocolate-Wolfenstein-3D/blob/master/crt.h
 
+#ifndef id_crt_h
+#define id_crt_h
 
 #include <SDL.h>
 extern SDL_Color curpal[256];

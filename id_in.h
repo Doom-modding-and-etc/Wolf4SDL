@@ -131,6 +131,36 @@ typedef	int		ScanCode;
 #define	sc_Y			SDLK_y
 #define	sc_Z			SDLK_z
 #define	key_None		0
+
+#define bt_None SDL_CONTROLLER_BUTTON_INVALID
+#define bt_A SDL_CONTROLLER_BUTTON_A
+#define bt_B SDL_CONTROLLER_BUTTON_B
+#define bt_X SDL_CONTROLLER_BUTTON_X
+#define bt_Y SDL_CONTROLLER_BUTTON_Y
+#define bt_Back SDL_CONTROLLER_BUTTON_BACK
+#define bt_Guide SDL_CONTROLLER_BUTTON_GUIDE
+#define bt_Start SDL_CONTROLLER_BUTTON_START
+#define bt_LeftStick SDL_CONTROLLER_BUTTON_LEFTSTICK
+#define bt_RightStick SDL_CONTROLLER_BUTTON_RIGHTSTICK
+#define bt_LeftShoulder SDL_CONTROLLER_BUTTON_LEFTSHOULDER
+#define bt_RightShoulder SDL_CONTROLLER_BUTTON_RIGHTSHOULDER
+#define bt_DpadUp SDL_CONTROLLER_BUTTON_DPAD_UP
+#define bt_DpadDown SDL_CONTROLLER_BUTTON_DPAD_DOWN
+#define bt_DpadLeft SDL_CONTROLLER_BUTTON_DPAD_LEFT
+#define bt_DpadRight SDL_CONTROLLER_BUTTON_DPAD_RIGHT
+#define bt_touchpad SDL_CONTROLLER_BUTTON_TOUCHPAD
+#define bt_Max SDL_CONTROLLER_BUTTON_MAX
+
+//Axis stuff
+#define gc_axis_invalid SDL_CONTROLLER_AXIS_INVALID
+#define gc_axis_leftx SDL_CONTROLLER_AXIS_LEFTX
+#define gc_axis_lefty SDL_CONTROLLER_AXIS_LEFTY
+#define gc_axis_rightx SDL_CONTROLLER_AXIS_RIGHTX
+#define gc_axis_righty SDL_CONTROLLER_AXIS_RIGHTY
+#define gc_trigger_left SDL_CONTROLLER_AXIS_TRIGGERLEFT
+#define gc_trigger_right SDL_CONTROLLER_AXIS_TRIGGERRIGHT
+#define gc_axis_max SDL_CONTROLLER_AXIS_MAX
+
 #else
 #define KEYCOUNT 129
 typedef	int		ScanCode;
@@ -170,8 +200,8 @@ typedef	int		ScanCode;
 #define	sc_F11			SDLK_F11
 #define	sc_F12			SDLK_F12
 
-#define sc_ScrollLock		SDLK_SCROLLOCK
-#define sc_PrintScreen		SDLK_PRINT
+#define sc_ScrollLock		SDLK_SCROLLLOCK
+#define sc_PrintScreen		SDLK_PRINTSCREEN
 
 #define	sc_1			SDLK_1
 #define	sc_2			SDLK_2
@@ -212,7 +242,48 @@ typedef	int		ScanCode;
 #define	sc_Z			SDLK_z
 
 #define	key_None		0
+#define key_unknown SDLK_UNKNOWN
+
+#define bt_None SDL_CONTROLLER_BUTTON_INVALID
+#define bt_A SDL_CONTROLLER_BUTTON_A
+#define bt_B SDL_CONTROLLER_BUTTON_B
+#define bt_X SDL_CONTROLLER_BUTTON_X
+#define bt_Y SDL_CONTROLLER_BUTTON_Y
+#define bt_Back SDL_CONTROLLER_BUTTON_BACK
+#define bt_Guide SDL_CONTROLLER_BUTTON_GUIDE
+#define bt_Start SDL_CONTROLLER_BUTTON_START
+#define bt_LeftStick SDL_CONTROLLER_BUTTON_LEFTSTICK
+#define bt_RightStick SDL_CONTROLLER_BUTTON_RIGHTSTICK
+#define bt_LeftShoulder SDL_CONTROLLER_BUTTON_LEFTSHOULDER
+#define bt_RightShoulder SDL_CONTROLLER_BUTTON_RIGHTSHOULDER
+#define bt_DpadUp SDL_CONTROLLER_BUTTON_DPAD_UP
+#define bt_DpadDown SDL_CONTROLLER_BUTTON_DPAD_DOWN
+#define bt_DpadLeft SDL_CONTROLLER_BUTTON_DPAD_LEFT
+#define bt_DpadRight SDL_CONTROLLER_BUTTON_DPAD_RIGHT
+#define bt_touchpad SDL_CONTROLLER_BUTTON_TOUCHPAD
+#define bt_Max SDL_CONTROLLER_BUTTON_MAX
+
+//Axis stuff
+#define gc_axis_invalid SDL_CONTROLLER_AXIS_INVALID
+#define gc_axis_leftx SDL_CONTROLLER_AXIS_LEFTX
+#define gc_axis_lefty SDL_CONTROLLER_AXIS_LEFTY
+#define gc_axis_rightx SDL_CONTROLLER_AXIS_RIGHTX
+#define gc_axis_righty SDL_CONTROLLER_AXIS_RIGHTY
+#define gc_trigger_left SDL_CONTROLLER_AXIS_TRIGGERLEFT
+#define gc_trigger_right SDL_CONTROLLER_AXIS_TRIGGERRIGHT
+#define gc_axis_max SDL_CONTROLLER_AXIS_MAX
+
+
+
+
 #endif
+#if SDL_MAJOR_VERSION == 2
+extern boolean GameControllerButtons[bt_Max];
+extern int GameControllerLeftStick[2];
+extern int GameControllerRightStick[2];
+extern SDL_GameController* GameController;
+#endif
+
 
 typedef	enum
 {
@@ -263,7 +334,7 @@ typedef	struct
 	Direction dir;
 } CursorInfo;
 
-typedef	CursorInfo	ControlInfo;
+typedef	CursorInfo ControlInfo;
 
 typedef	struct
 {
@@ -285,7 +356,7 @@ typedef	struct
 
 //Global variables
 #if SDL_MAJOR_VERSION == 1
-extern volatile boolean KeyboardPress[];
+extern volatile boolean KeyboardPress[SDLK_LAST];
 #elif SDL_MAJOR_VERSION == 2
 extern volatile boolean KeyboardState[129];
 #endif
@@ -311,9 +382,9 @@ extern boolean forcegrabmouse;
 boolean Keyboard(int key);
 
 void KeyboardSet(int key, boolean state);
-
-int KeyboardLookup(int key);
 #endif
+int KeyboardLookup(int key);
+
 
 // DEBUG - put names in prototypes
 extern	void		IN_Startup(void),IN_Shutdown(void);

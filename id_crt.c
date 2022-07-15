@@ -1,5 +1,3 @@
-#ifndef id_crt_c
-#define id_crt_c
 // File: id_crt.c
 // Project: Wolf4SDL
 // Author: André Guilherme
@@ -11,6 +9,9 @@
 // https://github.com/fabiensanglard/Chocolate-Wolfenstein-3D/blob/master/crt.h
 // Credits fot the following pepole: Fabien sanglard and zZeck
 // and the original file creation date: 2014-08-26.
+
+#ifndef id_crt_c
+#define id_crt_c
 
 #include "id_crt.h"
 #include "id_vl.h"
@@ -26,6 +27,7 @@ void CRT_Init(int _width)
     width = _width;
     height = _width * 3.0 / 4.0;
 
+//WIP:
 #if SDL_MAJOR_VERSION == 1  
 /*
     //Alloc the OpenGL texture where the screen will be uploaded each frame.
@@ -71,6 +73,7 @@ void CRT_Init(int _width)
 
 void CRT_DAC(void) 
 {
+ //WIP:
 #if SDL_MAJOR_VERSION == 1
     // Grab the screen framebuffer from SDL
     SDL_Surface* screen = screenBuffer;

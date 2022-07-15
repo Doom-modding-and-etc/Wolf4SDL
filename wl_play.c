@@ -92,8 +92,41 @@ int buttonscan[NUMBUTTONS] =
      sc_4 
 };
 #endif // EXTRACONTROLS
+#if SDL_MAJOR_VERSION == 2
+int buttongamecontroller[bt_Max] = 
+{ 
+    bt_use,      
+    bt_prevweapon, 
+    bt_nobutton, 
+    bt_nextweapon, 
+    bt_pause,    
+    bt_nobutton,
+    bt_esc,      
+    bt_nobutton,   
+    bt_nobutton, 
+    bt_run,        
+    bt_attack,   
+    bt_nobutton,
+    bt_nobutton, 
+    bt_nobutton,   
+    bt_nobutton, 
+    bt_nobutton,   
+    bt_nobutton, 
+    bt_nobutton,
+    bt_nobutton, 
+    bt_nobutton,   
+    bt_nobutton 
+};
+#endif
 
-int buttonmouse[4] = { bt_attack, bt_strafe, bt_use, bt_nobutton };
+int buttonmouse[4] = 
+{
+    bt_attack, 
+    bt_strafe, 
+    bt_use, 
+    bt_nobutton 
+};
+
 int buttonjoy[32] = 
 {
 
@@ -165,7 +198,9 @@ int controlx, controly;         // range from -100 to 100 per tic
 #ifdef EXTRACONTROLS
 int controlstrafe;
 #endif // EXTRACONTROLS
-
+#if SDL_MAJOR_VERSION == 2
+int gamecontrolstrafe;
+#endif
 boolean buttonstate[NUMBUTTONS];
 
 int lastgamemusicoffset = 0;
@@ -398,6 +433,27 @@ void PollJoystickButtons (void)
 }
 #endif
 
+#if SDL_MAJOR_VERSION == 2
+/*
+===================
+=
+= PollGameControllerButtons
+=
+===================
+*/
+void PollGameControllerButtons(void)
+{
+    for(int i = 0; i < bt_Max; i++)
+    {
+        if (GameControllerButtons[i])
+        {
+            if (buttongamecontroller[i] != -1)
+                buttonstate[buttongamecontroller[i]] = true;
+        }
+    }
+}
+#endif
+
 /*
 ===================
 =
@@ -492,6 +548,37 @@ void PollJoystickMove (void)
         controly -= delta;
 }
 #endif
+
+#if SDL_MAJOR_VERSION == 2
+/*
+===================
+=
+= PollGameControllerMove
+=
+===================
+*/
+void PollGameControllerMove(void)
+{
+    int delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
+
+
+        if (GameControllerRightStick[0] > 64)
+            controlx += delta;
+        else if (GameControllerRightStick[0] < -64)
+            controlx -= delta;
+
+        if (GameControllerLeftStick[1] > 120)
+            controly += delta;
+        else if (GameControllerLeftStick[1] < -64)
+            controly -= delta;
+
+        if (GameControllerLeftStick[0] > 64)
+            gamecontrolstrafe += delta;
+        else if (GameControllerLeftStick[0] < -64)
+            gamecontrolstrafe -= delta;
+
+}
+#endif
 /*
 ===================
 =
@@ -536,6 +623,9 @@ void PollControls (void)
 
     controlx = 0;
     controly = 0;
+#if SDL_MAJOR_VERSION == 2
+    gamecontrolstrafe = 0;
+#endif
     memcpy (buttonheld, buttonstate, sizeof (buttonstate));
     memset (buttonstate, 0, sizeof (buttonstate));
 
@@ -568,7 +658,9 @@ void PollControls (void)
 // get button states
 //
     PollKeyboardButtons ();
-
+#if SDL_MAJOR_VERSION == 2
+    PollGameControllerButtons();
+#endif
     if (mouseenabled && IN_IsInputGrabbed())
         PollMouseButtons ();
 #ifndef EXTRACONTROLS
@@ -578,14 +670,16 @@ void PollControls (void)
 //
 // get movements
 //
-    PollKeyboardMove ();
-
+    PollKeyboardMove();
+#if SDL_MAJOR_VERSION == 2
+    PollGameControllerMove();
+#endif
 
     if (mouseenabled && IN_IsInputGrabbed())
-        PollMouseMove ();
+        PollMouseMove();
 #ifndef EXTRACONTROLS
     if (joystickenabled)
-        PollJoystickMove ();
+        PollJoystickMove();
 #endif
 //
 // bound movement to a maximum
@@ -599,8 +693,17 @@ void PollControls (void)
 
     if (controly > max)
         controly = max;
+    
     else if (controly < min)
         controly = min;
+
+#if SDL_MAJOR_VERSION == 2
+    if (gamecontrolstrafe > max)
+        gamecontrolstrafe = max;
+
+    else if (gamecontrolstrafe < min)
+        gamecontrolstrafe = min;
+#endif
 
     if (demorecord)
     {

@@ -61,6 +61,10 @@
 #define O_BINARY 0
 #endif
 
+#ifdef PS2
+//include dir for the types definitions
+#include <tamtypes.h>
+#else
 typedef int8_t s8;
 typedef int16_t s16;
 typedef int32_t s32;
@@ -75,7 +79,7 @@ typedef u8 byte;
 typedef u16 word;
 typedef s32 fixed;
 typedef u32 longword;
-
+#endif
 typedef bool boolean;
 
 typedef struct
@@ -617,14 +621,16 @@ enum
 =============================================================================
 */
 
-typedef enum {
+typedef enum 
+{
     di_north,
     di_east,
     di_south,
     di_west
 } controldir_t;
 
-typedef enum {
+typedef enum 
+{
     dr_normal,
     dr_lock1,
     dr_lock2,
@@ -633,14 +639,16 @@ typedef enum {
     dr_elevator
 } door_t;
 
-typedef enum {
+typedef enum 
+{
     ac_badobject = -1,
     ac_no,
     ac_yes,
     ac_allways
 } activetype;
 
-typedef enum {
+typedef enum 
+{
     nothing,
     playerobj,
     inertobj,
@@ -673,7 +681,8 @@ typedef enum {
     sparkobj
 } classtype;
 
-typedef enum {
+typedef enum 
+{
     none,
     block,
     bo_gibs,
@@ -697,7 +706,8 @@ typedef enum {
     bo_spear
 } wl_stat_t;
 
-typedef enum {
+typedef enum 
+{
     east,
     northeast,
     north,
@@ -710,7 +720,8 @@ typedef enum {
 } dirtype;
 
 
-typedef enum {
+typedef enum 
+{
     en_guard,
     en_officer,
     en_ss,
@@ -773,7 +784,10 @@ typedef struct statstruct
 
 typedef enum
 {
-    dr_open,dr_closed,dr_opening,dr_closing
+    dr_open,
+    dr_closed,
+    dr_opening,
+    dr_closing
 } doortype;
 
 typedef struct doorstruct
@@ -859,7 +873,6 @@ typedef enum
     wp_pistol,
     wp_machinegun,
     wp_chaingun,
-
     NUMWEAPONS
 } weapontype;
 
@@ -1059,7 +1072,12 @@ extern  word        mapwidth,mapheight;
 extern  u32    tics;
 extern  int         lastgamemusicoffset;
 #ifdef EXTRACONTROLS
-extern  int         controlstrafe;
+extern  int controlstrafe;
+#endif
+
+
+#if SDL_MAJOR_VERSION == 2
+extern int gamecontrolstrafe;
 #endif
 
 //
@@ -1531,7 +1549,5 @@ void GP2X_ButtonUp (int button);
 #ifdef USE_PARALLAX
     void DrawParallax (void);
 #endif
-
-
 
 #endif

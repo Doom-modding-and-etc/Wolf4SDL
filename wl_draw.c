@@ -258,7 +258,7 @@ boolean TransformTile(int tx, int ty, short *dispx, short *dispheight)
 int16_t CalcHeight(void)
 {
     s16 height;
-    fixed   gx,gy,gxt,gyt,nx,ny;
+    fixed   gx,gy,gxt,gyt,nx;
 
 //
 // translate point to view centered coordinates
@@ -787,7 +787,7 @@ void DrawScaleds (void)
     int      i,least,numvisable,height;
     byte     *visspot;
     tiletype *tilespot;
-    u32 spotloc;
+    //u32 spotloc;
 
     statobj_t *statptr;
     objtype   *obj;
