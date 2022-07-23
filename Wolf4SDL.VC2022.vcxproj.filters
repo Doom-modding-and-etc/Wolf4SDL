@@ -5,34 +5,19 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Source Files\dc">
-      <UniqueIdentifier>{1f7b2715-b3a7-4de2-a518-008137eb906a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\mame">
       <UniqueIdentifier>{df99e693-62e7-40a9-bc0a-efd1cd9c313e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\dosbox">
-      <UniqueIdentifier>{df9259be-62ae-4d45-ab8a-1ebd326f84ef}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Header Files\dc">
-      <UniqueIdentifier>{9744f3aa-f886-4e5e-986e-701972fcfd5a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
-    <Filter Include="Header Files\ps2">
-      <UniqueIdentifier>{d83abe9b-2af9-4ec7-b8fe-34034adf092f}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="id_ca.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="id_in.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -114,28 +99,13 @@
     <ClCompile Include="wl_utils.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dc\dc_cd.c">
-      <Filter>Source Files\dc</Filter>
-    </ClCompile>
-    <ClCompile Include="dc\dc_main.c">
-      <Filter>Source Files\dc</Filter>
-    </ClCompile>
-    <ClCompile Include="dc\dc_maple.c">
-      <Filter>Source Files\dc</Filter>
-    </ClCompile>
-    <ClCompile Include="dc\dc_video.c">
-      <Filter>Source Files\dc</Filter>
-    </ClCompile>
-    <ClCompile Include="dc\dc_vmu.c">
-      <Filter>Source Files\dc</Filter>
-    </ClCompile>
-    <ClCompile Include="dosbox\dbopl.cpp">
-      <Filter>Source Files\dosbox</Filter>
-    </ClCompile>
     <ClCompile Include="mame\fmopl.c">
       <Filter>Source Files\mame</Filter>
     </ClCompile>
     <ClCompile Include="id_crt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="id_ca.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -148,12 +118,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="mame\fmopl.h">
-      <Filter>Source Files\mame</Filter>
-    </ClInclude>
-    <ClInclude Include="dosbox\dbopl.hpp">
-      <Filter>Source Files\dosbox</Filter>
-    </ClInclude>
     <ClInclude Include="audiosod.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -220,17 +184,14 @@
     <ClInclude Include="wl_shade.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dc\dc_main.h">
-      <Filter>Header Files\dc</Filter>
-    </ClInclude>
-    <ClInclude Include="dc\dc_vmu.h">
-      <Filter>Header Files\dc</Filter>
-    </ClInclude>
     <ClInclude Include="win\resource.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
     <ClInclude Include="id_crt.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mame\fmopl.h">
+      <Filter>Source Files\mame</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

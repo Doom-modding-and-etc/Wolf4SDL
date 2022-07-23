@@ -26,8 +26,7 @@ typedef int BOOL;
 
 #if (OPL_SAMPLE_BITS==16)
 typedef INT16 OPLSAMPLE;
-#endif
-#if (OPL_SAMPLE_BITS==8)
+#elif (OPL_SAMPLE_BITS==8)
 typedef INT8 OPLSAMPLE;
 #endif
 

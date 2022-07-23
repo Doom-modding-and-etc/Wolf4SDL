@@ -5,16 +5,7 @@
 #ifndef __DC_MAIN_H_
 #define __DC_MAIN_H_
 
-/*
-typedef uint8 uint8_t;
-typedef uint16 uint16_t;
-typedef uint32 uint32_t;
-typedef int8 int8_t;
-typedef int16 int16_t;
-typedef int32 int32_t;
-typedef int64 int64_t;
-typedef ptr_t uintptr_t;
-*/
+
 //dc_cd.c
 int DC_CheckDrive();
 

@@ -220,12 +220,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="id_crt.c" />
-    <ClCompile Include="dc\dc_cd.c" />
-    <ClCompile Include="dc\dc_main.c" />
-    <ClCompile Include="dc\dc_maple.c" />
-    <ClCompile Include="dc\dc_video.c" />
-    <ClCompile Include="dc\dc_vmu.c" />
-    <ClCompile Include="dosbox\dbopl.cpp" />
     <ClCompile Include="id_ca.c" />
     <ClCompile Include="id_in.c" />
     <ClCompile Include="id_pm.c" />
@@ -264,9 +258,6 @@
     <ClInclude Include="audiosod.h" />
     <ClInclude Include="audiowl6.h" />
     <ClInclude Include="id_crt.h" />
-    <ClInclude Include="dc\dc_main.h" />
-    <ClInclude Include="dc\dc_vmu.h" />
-    <ClInclude Include="dosbox\dbopl.hpp" />
     <ClInclude Include="foreign.h" />
     <ClInclude Include="f_spear.h" />
     <ClInclude Include="gfxv_apo.h" />

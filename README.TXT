@@ -220,7 +220,7 @@ TODOs:
  - Add the Nintendo Switch port(WIP) 
  - Add Sony´s Playstation 2 support
  - Make more cleanups  
- 
+ - Add latest fmopl sound
 Known bugs:
 -----------
 
