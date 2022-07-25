@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+
 #include <SDL.h>
 #if defined(_arch_dreamcast)
 #	include <string.h>
@@ -64,6 +65,10 @@
 #ifdef PS2
 //include dir for the types definitions
 #include <tamtypes.h>
+typedef u8 byte;
+typedef u16 word;
+typedef s32 fixed;
+typedef u32 longword;
 #else
 typedef int8_t s8;
 typedef int16_t s16;
@@ -80,6 +85,7 @@ typedef u16 word;
 typedef s32 fixed;
 typedef u32 longword;
 #endif
+
 typedef bool boolean;
 
 typedef struct
@@ -1060,7 +1066,7 @@ extern  objtype     objlist[MAXACTORS];
 extern  objtype     *newobj,*player,*objfreelist,*killerobj;
 
 extern  tiletype    tilemap[MAPSIZE][MAPSIZE];      // wall values only
-extern  bool        spotvis[MAPSIZE][MAPSIZE];
+extern  boolean        spotvis[MAPSIZE][MAPSIZE];
 extern  objtype     *actorat[MAPSIZE][MAPSIZE];
 #ifdef REVEALMAP
 extern  bool        mapseen[MAPSIZE][MAPSIZE];
@@ -1272,6 +1278,7 @@ extern  int      facecount,facetimes;
 void    Thrust (int angle, int32_t speed);
 void    SpawnPlayer (int tilex, int tiley, int dir);
 void    TakeDamage (int points, objtype *attacker);
+void    GivePoints(int32_t points);
 void    GivePoints (int32_t points);
 void    GetBonus (statobj_t *check);
 void    GiveWeapon (int weapon);

@@ -615,7 +615,7 @@ int DebugKeys (void)
         if (!esc)
         {
             level = atoi (str);
-            if (level>0 && level<5)
+            if (level > 0 && level < 5)
                 GiveKey(level-1);
         }
         return 1;

@@ -374,7 +374,7 @@ void VL_GetColor(int color, int *red, int *green, int *blue)
 =================
 */
 
-void VL_SetPalette(SDL_Color* palette, bool forceupdate)
+void VL_SetPalette(SDL_Color* palette, boolean forceupdate)
 {
     memcpy(curpal, palette, sizeof(SDL_Color) * 256);
 

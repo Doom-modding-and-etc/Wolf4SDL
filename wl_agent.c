@@ -432,8 +432,11 @@ static void LatchNumber (int x, int y, unsigned width, int32_t number)
     u32 length,c;
     char    str[20];
 
+#ifdef SWITCH
+    utoa(number, str, 10);
+#else
     ltoa (number,str,10);
-
+#endif
     length = (u32) strlen (str);
 
     while (length<width)

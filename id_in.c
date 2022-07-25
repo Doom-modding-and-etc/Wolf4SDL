@@ -74,7 +74,7 @@ int GameControllerLeftStick[2];
 int GameControllerRightStick[2];
 SDL_GameController* GameController;
 #endif
-static bool GrabInput = false;
+static boolean GrabInput = false;
 
 /*
 =============================================================================
@@ -585,7 +585,7 @@ static void processEvent(SDL_Event *event)
         case SDL_CONTROLLERBUTTONUP:
             if (GameController)
             {
-                GameControllerButtons[event->cbutton.button] = (bool)event->cbutton.state == SDL_PRESSED;
+                GameControllerButtons[event->cbutton.button] = (boolean)event->cbutton.state == SDL_PRESSED;
             }
             break;
         case SDL_CONTROLLERAXISMOTION:
@@ -908,7 +908,7 @@ void IN_StartAck(void)
 // get initial state of everything
 //
 	IN_ClearKeysDown();
-    memset(GameControllerButtons, 0, sizeof(bool));
+    memset(GameControllerButtons, 0, sizeof(boolean));
 	memset(btnstate, 0, sizeof(btnstate));
 
 	int buttons = IN_JoyButtons() << 4;
@@ -1027,7 +1027,7 @@ int IN_MouseButtons (void)
 		return 0;
 }
 
-bool IN_IsInputGrabbed()
+boolean IN_IsInputGrabbed()
 {
     return GrabInput;
 }

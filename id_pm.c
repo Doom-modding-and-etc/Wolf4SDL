@@ -5,7 +5,7 @@
 word ChunksInFile;
 word PMSpriteStart;
 word PMSoundStart;
-bool PMSoundInfoPagePadded = false;
+boolean PMSoundInfoPagePadded = false;
 
 word *pageLengths;
 

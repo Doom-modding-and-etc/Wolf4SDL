@@ -807,8 +807,9 @@ void DrawScaleds (void)
 
         if (TransformTile (statptr->tilex,statptr->tiley,
             &visptr->viewx,&visptr->viewheight) && statptr->flags & FL_BONUS)
-        {
+        {  
             GetBonus (statptr);
+          
             if(statptr->shapenum == -1)
                 continue;                                           // object has been taken
         }
@@ -1017,7 +1018,7 @@ void WallRefresh (void)
     longword  xpartial,ypartial;
     doorobj_t *door;
     int       pwallposnorm,pwallposinv,pwallposi;           // holds modified pwallpos
-    bool      passdoor;
+    boolean      passdoor;
 
     for (pixx = 0; pixx < viewwidth; pixx++)
     {

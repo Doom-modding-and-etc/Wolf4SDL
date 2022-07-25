@@ -27,7 +27,6 @@
 */
 
 
-
 /*
 =============================================================================
 
@@ -364,7 +363,6 @@ void T_Projectile (objtype *ob)
             damage = (US_RndT() >>3);
             break;
         }
-
         TakeDamage (damage,ob);
         ob->state = NULL;               // mark for removal
         return;
@@ -1368,6 +1366,7 @@ void T_UShoot (objtype *ob)
     dist = dx>dy ? dx : dy;
     if (dist <= 1)
         TakeDamage (10,ob);
+
 }
 
 
@@ -3511,6 +3510,7 @@ void T_Shoot (objtype *ob)
                 damage = US_RndT()>>4;
 
             TakeDamage (damage,ob);
+
         }
     }
 

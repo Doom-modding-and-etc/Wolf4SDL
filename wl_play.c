@@ -38,10 +38,10 @@ boolean singlestep,godmode,noclip,ammocheat,mapreveal;
 int     extravbls;
 
 tiletype tilemap[MAPSIZE][MAPSIZE]; // wall values only
-bool     spotvis[MAPSIZE][MAPSIZE];
+boolean     spotvis[MAPSIZE][MAPSIZE];
 objtype *actorat[MAPSIZE][MAPSIZE];
 #ifdef REVEALMAP
-bool     mapseen[MAPSIZE][MAPSIZE];
+boolean     mapseen[MAPSIZE][MAPSIZE];
 #endif
 
 //

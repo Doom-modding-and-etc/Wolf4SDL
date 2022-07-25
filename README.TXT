@@ -211,16 +211,14 @@ according search paths in your project.
 IMPORTANT: Do not forget to take care of version.h!
    By default it compiles for "Wolfenstein 3D v1.4 full GT/ID/Activision"!
 
-
 TODOs:
 ------
  - Center non-ingame screens for resolutions being a multiple of 320x240
  - Add support for any graphic resolution >= 320x200
  - Fix sdl1
- - Add the Nintendo Switch port(WIP) 
- - Add Sony´s Playstation 2 support
- - Make more cleanups  
+ - Add Sony´s Playstation 2 support(WIP) 
  - Add latest fmopl sound
+ 
 Known bugs:
 -----------
 

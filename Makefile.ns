@@ -15,14 +15,13 @@ APP_AUTHOR := Wolf3s, keeganatorr, Aryan, Mortriz Ripper and The other contribui
 APP_VERSION := 2.1
 ICON := icon/wolf4sdl.png
 WINDRES   = windres.exe
-OBJ       = mame/fmopl.o id_ca.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vl.o signon.o wl_act1.o wl_act2.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
-LINKOBJ   = mame/fmopl.o id_ca.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vl.o signon.o wl_act1.o wl_act2.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
-LIBS     = -specs=$(DEVKITPRO)/libnx/switch.specs -L$(DEVKITPRO)/libnx/lib -L$(DEVKITPRO)/portlibs/switch/lib -lSDL2 -lSDL2main -lSDL2_mixer -lmpg123 -lmodplug -lvorbisidec -logg -lopusfile -lopus `sdl2-config --libs` -lm -lnx -lEGL
-INCS      = -I$(DEVKITPRO)/portlibs/switch/include -I$(DEVKITPRO)/portlibs/switch/include/SDL2 -I$(DEVKITPRO)/libnx/include -Imame/
+OBJ       = mame/fmopl.o id_ca.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vl.o signon.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
+LINKOBJ   = mame/fmopl.o id_ca.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vl.o signon.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
+LIBS     = -specs=$(DEVKITPRO)/libnx/switch.specs -L$(DEVKITPRO)/libnx/lib -L$(DEVKITPRO)/portlibs/switch/lib -lSDL2 -lSDL2main -lSDL2_mixer -lmpg123 -lmodplug -lvorbisidec -logg -lopusfile -lopus `sdl2-config --libs` -lm -lnx -lEGL -lstdc++
+INCS      = -I$(DEVKITPRO)/portlibs/switch/include -I$(DEVKITPRO)/portlibs/switch/include/SDL2 -I$(DEVKITPRO)/libnx/include 
 BIN       = Wolf4SDL.elf
-#BUILD	  =	build
-#BINDIR	  = release
-DEFINES   = -DSWITCH -DSDL_MAJOR_VERSION
+BUILD	  =	build
+DEFINES   = -DSWITCH 
 CFLAGS    = $(INCS) $(DEFINES) SDL2 SDL2_mixer -march=armv8-a -mtune=cortex-a57 -mtp=soft -fPIE -fPIC -O3 -O2 -Wall -W -g -Wpointer-arith -Wreturn-type -Wwrite-strings -Wcast-align -std=gnu99 -Werror-implicit-function-declaration -Wimplicit-int -Wsequence-point
 RM        = rm -f
 LINK      = aarch64-none-elf-gcc 
@@ -96,11 +95,17 @@ signon.o: $(GLOBALDEPS) signon.c wl_def.h
 wl_act1.o: $(GLOBALDEPS) wl_act1.c wl_def.h
 	$(C) -c wl_act1.c -o wl_act1.o $(INCS) $(DEFINES) 
 
-wl_act2.o: $(GLOBALDEPS) wl_act2.c wl_def.h version.h foreign.h gfxv_sod.h audiosod.h f_spear.h
+wl_act2.o: $(GLOBALDEPS) wl_act2.c wl_def.h version.h
 	$(C) -c wl_act2.c -o wl_act2.o $(INCS) $(DEFINES)
 
 wl_atmos.o: $(GLOBALDEPS) wl_atmos.c wl_atmos.h wl_def.h version.h foreign.h gfxv_sod.h audiosod.h f_spear.h
 	$(C) -c wl_atmos.c -o wl_atmos.o $(INCS) $(DEFINES)	
+
+wl_agent.o: $(GLOBALDEPS) wl_agent.c wl_def.h
+	$(C) -c wl_agent.c -o wl_agent.o $(INCS) $(DEFINES) 
+	
+wl_atmos.o: $(GLOBALDEPS) wl_atmos.c wl_def.h
+	$(C) -c wl_atmos.c -o wl_atmos.o $(INCS) $(DEFINES) 	
 
 wl_cloudsky.o: $(GLOBALDEPS) wl_cloudsky.c wl_def.h version.h foreign.h gfxv_sod.h audiosod.h f_spear.h id_pm.h id_sd.h id_in.h id_vl.h id_vh.h id_us.h id_ca.h wl_menu.h wl_utils.h wl_cloudsky.h
 	$(C) -c wl_cloudsky.c -o wl_cloudsky.o $(INCS) $(DEFINES)
@@ -120,7 +125,7 @@ wl_inter.o: $(GLOBALDEPS) wl_inter.c wl_def.h version.h foreign.h gfxv_sod.h aud
 wl_main.o: $(GLOBALDEPS) wl_main.c wl_def.h version.h foreign.h gfxv_sod.h audiosod.h f_spear.h id_pm.h id_sd.h id_in.h id_vl.h id_vh.h id_us.h id_ca.h wl_menu.h wl_utils.h 
 	$(C) -c wl_main.c -o wl_main.o $(INCS) $(DEFINES)	
 	
-wl_menu.o: $(GLOBALDEPS) wl_menu.c wl_def.h version.h foreign.h gfxv_sod.h audiosod.h f_spear.h id_pm.h id_sd.h id_in.h id_vl.h id_vh.h id_us.h id_ca.h wl_menu.h wl_utils.h  wl_menu.h
+wl_menu.o: $(GLOBALDEPS) wl_menu.c wl_def.h wl_menu.h wl_utils.h 
 	$(C) -c wl_menu.c -o wl_menu.o $(INCS) $(DEFINES)	
 
 wl_parallax.o: $(GLOBALDEPS) wl_parallax.c wl_def.h version.h

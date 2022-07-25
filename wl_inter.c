@@ -820,8 +820,9 @@ done:   itoa (kr, tempstr, 10);
         bonus = (s32) timeleft *PAR_AMOUNT +
             (PERCENT100AMT * (kr >= 100)) +
             (PERCENT100AMT * (sr >= 100)) + (PERCENT100AMT * (tr >= 100));
+        
+        GivePoints(bonus);
 
-        GivePoints (bonus);
 #if SWITCH             
         utoa(bonus, tempstr, 10);
 #else 
@@ -962,7 +963,9 @@ PreloadUpdate (unsigned current, unsigned total)
 void
 PreloadGraphics (void)
 {
-    DrawLevel ();
+
+    DrawLevel();
+
     ClearSplitVWB ();           // set up for double buffering in split screen
 
     VWB_BarScaledCoord (0, 0, screenWidth, screenHeight - scaleFactor * (STATUSLINES - 1), bordercol);

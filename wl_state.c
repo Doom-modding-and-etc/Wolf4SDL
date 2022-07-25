@@ -389,7 +389,7 @@ void SelectDodgeDir (objtype *ob)
     u32   absdx,absdy;
     dirtype     dirtry[5];
     dirtype     turnaround,tdir;
-
+ 
     if (ob->flags & FL_FIRSTATTACK)
     {
         //
@@ -869,12 +869,12 @@ void KillActor (objtype *ob)
 
         case mutantobj:
             GivePoints (700);
-            NewState (ob,&s_mutdie1);
+            NewState (ob,&s_mutdie1);     
             PlaceItemType (bo_clip2,tilex,tiley);
             break;
 
         case ssobj:
-            GivePoints (500);
+            GivePoints (500);           
             NewState (ob,&s_ssdie1);
             if (gamestate.bestweapon < wp_machinegun)
                 PlaceItemType (bo_machinegun,tilex,tiley);
@@ -883,8 +883,8 @@ void KillActor (objtype *ob)
             break;
 
         case dogobj:
-            GivePoints (200);
-            NewState (ob,&s_dogdie1);
+            GivePoints(200);
+            NewState (ob,&s_dogdie1);        
             break;
 
 #ifndef SPEAR
@@ -939,38 +939,39 @@ void KillActor (objtype *ob)
         case spectreobj:
             if (ob->flags&FL_BONUS)
             {
-                GivePoints (200);       // Get points once for each
+                GivePoints (200);       // Get points once for each   
                 ob->flags &= ~FL_BONUS;
             }
             NewState (ob,&s_spectredie1);
             break;
 
-        case angelobj:
+        case angelobj:       
             GivePoints (5000);
-            NewState (ob,&s_angeldie1);
+            NewState(ob, &s_angeldie1);          
             break;
 
         case transobj:
             GivePoints (5000);
-            NewState (ob,&s_transdie0);
+            NewState(ob, &s_transdie0);
             PlaceItemType (bo_key1,tilex,tiley);
             break;
 
         case uberobj:
-            GivePoints (5000);
-            NewState (ob,&s_uberdie0);
+            GivePoints(5000);
+            NewState(ob, &s_uberdie0);
+
             PlaceItemType (bo_key1,tilex,tiley);
             break;
 
         case willobj:
-            GivePoints (5000);
-            NewState (ob,&s_willdie1);
+            GivePoints(5000);
+            NewState(ob, &s_willdie1);
             PlaceItemType (bo_key1,tilex,tiley);
             break;
 
         case deathobj:
-            GivePoints (5000);
-            NewState (ob,&s_deathdie1);
+            GivePoints(5000);
+            NewState(ob, &s_deathdie1);    
             PlaceItemType (bo_key1,tilex,tiley);
             break;
 #endif

@@ -12,7 +12,7 @@ extern word ChunksInFile;
 extern word PMSpriteStart;
 extern word PMSoundStart;
 
-extern bool PMSoundInfoPagePadded;
+extern boolean PMSoundInfoPagePadded;
 
 extern word *pageLengths;
 extern byte **PMPages;

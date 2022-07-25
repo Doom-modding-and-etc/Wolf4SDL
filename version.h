@@ -56,7 +56,6 @@
                               // effect to let the original demos work as in the original Wolf3D v1.4
                               // (actually better, as the second demo rarely worked)
 //#define EXTRACONTROLS // switches out Joystick controls for WASD and mouse movement toggles(DONE but with some bugs)
-//#define ADDEDFIX              // Post-revision 262 fixes described in http://diehardwolfers.areyep.com/viewtopic.php?t=6693
 //#define CRT // Makes the screen fixed in 4:3
 #define FIXCALCROTATE         // Apply a modified version of Ginyu's fix to make CalcRotate more accurate at high resolutions
 

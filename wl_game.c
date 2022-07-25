@@ -974,6 +974,7 @@ void ShowActStatus()
     VL_MemToScreenScaledCoord2(source, width, height, 9, 4, destx, desty, width - 18, height - 7);
 
     ingame = false;
+
     DrawFace ();
     DrawHealth ();
     DrawLives ();
@@ -1376,7 +1377,8 @@ restartgame:
     {
         if (!loadedgame)
             gamestate.score = gamestate.oldscore;
-        if(!died || viewsize != 21) DrawScore();
+        if(!died || viewsize != 21) 
+            DrawScore();
 
         startgame = false;
         if (!loadedgame)
@@ -1389,6 +1391,7 @@ restartgame:
             DrawKeys ();
         }
 #endif
+
 
         DrawLevel ();                        // ADDEDFIX 5 -  Chris Chokan
 

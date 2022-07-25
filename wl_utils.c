@@ -2,6 +2,10 @@
 
 #include "wl_utils.h"
 
+
+#ifdef SWITCH
+
+#else
 /*
 ===================
 =
@@ -23,7 +27,7 @@ void *safe_malloc (size_t size, const char *fname, u32 line)
 
     return ptr;
 }
-
+#endif
 
 fixed FixedMul (fixed a, fixed b)
 {

@@ -1697,8 +1697,8 @@ static void DemoLoop()
 
 void CheckParameters(int argc, char *argv[])
 {
-    bool hasError = false, showHelp = false;
-    bool sampleRateGiven = false, audioBufferGiven = false;
+    boolean hasError = false, showHelp = false;
+    boolean sampleRateGiven = false, audioBufferGiven = false;
     int i, defaultSampleRate = param_samplerate;
 
     for(i = 1; i < argc; i++)
