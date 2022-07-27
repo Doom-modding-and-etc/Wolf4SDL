@@ -136,10 +136,10 @@ CP_itemtype SndMenu[] = {
 enum { CTL_MOUSEENABLE, CTL_JOYENABLE, CTL_JOY2BUTTONUNKNOWN, CTL_GAMEPADUNKONWN, CTL_MOUSESENS, CTL_CUSTOMIZE };
 #endif
 
-#ifndef EXTRACONTROLS
-enum { CTL_MOUSEENABLE, CTL_MOUSESENS, CTL_JOYENABLE, CTL_CUSTOMIZE };
-#else
+#ifdef EXTRACONTROLS
 enum { CTL_MOUSEENABLE, CTL_MOUSESENS, CTL_MOUSEMOVEENABLE, CTL_CUSTOMIZE };
+#else
+enum { CTL_MOUSEENABLE, CTL_MOUSESENS, CTL_JOYENABLE, CTL_CUSTOMIZE }; 
 #endif // EXTRACONTROLS
 
 CP_itemtype CtlMenu[] = {
@@ -153,10 +153,10 @@ CP_itemtype CtlMenu[] = {
 #else
     {0, STR_MOUSEEN, 0},
     {0, STR_SENS, MouseSensitivity},
-#ifndef EXTRACONTROLS
-    {0, STR_JOYEN, 0},
-#else
+#ifdef EXTRACONTROLS
     {0, "Mouse Movement", 0},
+#else
+    {0, STR_JOYEN, 0},
 #endif
     {1, STR_CUSTOM, CustomControls},
     //{1, STR_GAME_CONTROL, NULL}
@@ -258,14 +258,14 @@ CP_itemtype CusMenu[] =
     {0, "", 0},
     {1, "", 0},
     {0, "", 0},
-#ifndef EXTRACONTROLS
-    {0, "", 0},
+#ifdef EXTRACONTROLS
     {1, "", 0},
+    {0, "", 0},
     {0, "", 0},
     {1, "", 0}
 #else
-    {1, "", 0},
     {0, "", 0},
+    {1, "", 0},
     {0, "", 0},
     {1, "", 0}
 #endif
@@ -2070,16 +2070,16 @@ CP_Control (int blank)
             ShootSnd();
             break;
 
-#ifndef EXTRACONTROLS
-        case CTL_JOYENABLE:
-            joystickenabled ^= 1;
+#ifdef EXTRACONTROLS
+        case CTL_MOUSEMOVEENABLE:
+            mousemoveenabled ^= 1;
             DrawCtlScreen();
             CusItems.curpos = -1;
             ShootSnd();
             break;
 #else
-        case CTL_MOUSEMOVEENABLE:
-            mousemoveenabled ^= 1;
+        case CTL_JOYENABLE:
+            joystickenabled ^= 1;
             DrawCtlScreen();
             CusItems.curpos = -1;
             ShootSnd();
@@ -2255,8 +2255,10 @@ DrawCtlScreen (void)
     WindowW = 320;
     SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
 
-#ifndef EXTRACONTROLS
     if (IN_JoyPresent())
+#ifdef EXTRACONTROLS
+        CtlMenu[CTL_MOUSEMOVEENABLE].active = 1;
+#else
         CtlMenu[CTL_JOYENABLE].active = 1;
 #endif
     if (MousePresent)
@@ -2350,7 +2352,7 @@ CustomControls (int blank)
     DrawCustomScreen ();
     do
     {
-        which = HandleMenu (&CusItems, &CusMenu[0], FixupCustom);
+        which = HandleMenu(&CusItems, &CusMenu[0], FixupCustom);
         switch (which)
         {
         case 0:
@@ -2362,28 +2364,25 @@ CustomControls (int blank)
             DefineJoyBtns();
             DrawCustJoy(0);
             break;
+#else            
         case 6:
-#else
-        case 3:
-#endif
             DefineKeyBtns();
             DrawCustKeybd(0);
             break;
-#ifndef EXTRACONTROLS
-        case 8:
-#else
-        case 5:
 #endif
-            DefineKeyMove();
-            DrawCustKeys(0);
-            break;
 #ifdef EXTRACONTROLS
         case 8:
             DefineKeyExtra();
             DrawCustExtra(0);
             break;
+#else
+        case 8:
+            DefineKeyMove();
+            DrawCustKeys(0);
+            break;
 #endif
         }
+    
     }
     while (which >= 0);
 
@@ -2404,7 +2403,6 @@ DefineMouseBtns (void)
     EnterCtrlData (2, &mouseallowed, DrawCustMouse, PrintCustMouse, MOUSE);
 }
 
-#ifndef EXTRACONTROLS
 ////////////////////////
 //
 // DEFINE THE JOYSTICK BUTTONS
@@ -2416,7 +2414,6 @@ void DefineJoyBtns(void)
     EnterCtrlData(5, &joyallowed, DrawCustJoy, PrintCustJoy, JOYSTICK);
 #endif
 }
-#endif
 
 ////////////////////////
 //
@@ -2522,22 +2519,22 @@ void EnterCtrlData(int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*
         //
         // CHANGE BUTTON VALUE?
         //
-#ifndef EXTRACONTROLS
-        if ((type != KEYBOARDBTNS && type != KEYBOARDMOVE) && (ci.button0 | ci.button1 | ci.button2 | ci.button3) ||
-            ((type == KEYBOARDBTNS || type == KEYBOARDMOVE) && LastScan == sc_Enter))
-#else
+#ifdef EXTRACONTROLS
         if ((type != KEYBOARDBTNS && type != KEYBOARDMOVE && type != KEYBOARDEXTRA) && (ci.button0 | ci.button1 | ci.button2 | ci.button3) ||
             ((type == KEYBOARDBTNS || type == KEYBOARDMOVE || type == KEYBOARDEXTRA) && LastScan == sc_Enter))
+#else
+        if ((type != KEYBOARDBTNS && type != KEYBOARDMOVE) && (ci.button0 | ci.button1 | ci.button2 | ci.button3) ||
+            ((type == KEYBOARDBTNS || type == KEYBOARDMOVE) && LastScan == sc_Enter))
 #endif
         {
             lastFlashTime = GetTimeCount();
             tick = picked = 0;
             SETFONTCOLOR (0, TEXTCOLOR);
 
-#ifndef EXTRACONTROLS
-            if (type == KEYBOARDBTNS || type == KEYBOARDMOVE)
-#else
+#ifdef EXTRACONTROLS
             if (type == KEYBOARDBTNS || type == KEYBOARDMOVE || type == KEYBOARDEXTRA)
+#else
+            if (type == KEYBOARDBTNS || type == KEYBOARDMOVE)
 #endif
                 IN_ClearKeysDown ();
 
@@ -2600,7 +2597,7 @@ void EnterCtrlData(int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*
                             SD_PlaySound (SHOOTDOORSND);
                         }
                         break;
-#ifndef EXTRACONTROLS
+#ifdef EXTRACONTROLS
                     case JOYSTICK:
                         if (ci.button0)
                             result = 1;
@@ -2757,22 +2754,20 @@ FixupCustom (int w)
         case 3:
             DrawCustJoy(1);
             break;
-        case 6:
 #else
         case 3:
-#endif
-            DrawCustKeybd (1);
+            DrawCustKeybd(1);
             break;
-#ifndef EXTRACONTROLS
-        case 8:
-#else
-        case 5:
 #endif
+
+#ifdef EXTRACONTROLS
+        case 6:
+            DrawCustExtra(1);
+            break;
+#else
+        case 6:
             DrawCustKeys(1);
             break;
-#ifdef EXTRACONTROLS
-            DrawCustExtra(1);
-            break;       
 #endif
     }
 
@@ -2800,23 +2795,22 @@ FixupCustom (int w)
                 case 3:
                     DrawCustJoy(0);
                     break;
-                case 6:
 #else
                 case 3:
-#endif
-                    DrawCustKeybd (0);
+                    DrawCustKeybd(0);
                     break;
-#ifndef EXTRACONTROLS
-                case 8:
-#else
-                case 5:
 #endif
-                    DrawCustKeys (0);
+
 #ifdef EXTRACONTROLS
-                case 8:
+                case 6:
                     DrawCustExtra(0);
                     break;
-#endif // EXTRACONTROLS
+#else
+                case 6:
+                    DrawCustKeys(0);
+                    break;
+#endif
+
 
             }
     }
@@ -2833,8 +2827,6 @@ void
 DrawCustomScreen (void)
 {
     int i;
-
-
 #ifdef JAPAN
     VWB_DrawPic (0,0,S_CUSTOMPIC);
     fontnumber = 1;
@@ -2897,12 +2889,9 @@ DrawCustomScreen (void)
     PrintX = CST_START + CST_SPC * 3;
     US_Print (STR_CSTRAFE "\n");
 #endif
-
     DrawWindow (5, PrintY - 1, 310, 13, BKGDCOLOR);
     DrawCustMouse (0);
     US_Print ("\n");
-
-#ifndef EXTRACONTROLS
     //
     // JOYSTICK/PAD
     //
@@ -2917,7 +2906,6 @@ DrawCustomScreen (void)
 #ifdef SPEAR
     VWB_DrawPic (112, 120, C_KEYBOARDPIC);
 #endif
-
     SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
 #ifdef SPANISH
     PrintX = CST_START - 16;
@@ -2953,7 +2941,7 @@ DrawCustomScreen (void)
 #else
     PrintY += 13;
 #endif
-    SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
+    SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
 #ifdef SPANISH
     PrintX = CST_START - 16;
     US_Print (STR_CRUN);
@@ -2976,7 +2964,6 @@ DrawCustomScreen (void)
     DrawWindow (5, PrintY - 1, 310, 13, BKGDCOLOR);
     DrawCustKeybd (0);
     US_Print ("\n");
-
 
     //
     // KEYBOARD MOVE KEYS
@@ -3003,19 +2990,14 @@ DrawCustomScreen (void)
 #endif
     DrawWindow (5, PrintY - 1, 310, 13, BKGDCOLOR);
     DrawCustKeys (0);
-#ifdef EXTRACONTROLS
     US_Print("\n");
 #endif
-#endif
-#endif
-
 #ifdef EXTRACONTROLS
     SETFONTCOLOR(READCOLOR, BKGDCOLOR);
     PrintX = CST_START;
     US_Print("Strafe Keys");
     PrintX = CST_START + CST_SPC * 2;
     US_Print("Weap Switch \n");
-
     SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
     PrintX = CST_START;
     US_Print("Left");
@@ -3027,7 +3009,7 @@ DrawCustomScreen (void)
     US_Print("Next \n");
     DrawWindow(5, PrintY - 1, 310, 13, BKGDCOLOR);
     DrawCustExtra(0);
-#endif // EXTRACONTRO
+#endif // EXTRACONTROLS
 
     //
     // PICK STARTING POINT IN MENU
@@ -3137,7 +3119,7 @@ void DrawCustKeybd(int hilight)
         color = HIGHLIGHT;
     SETFONTCOLOR (color, BKGDCOLOR);
 
-#ifndef EXTRACONTROLS
+#ifdef EXTRACONTROLS
     PrintY = CST_Y + 13 * 5;
 #else
     PrintY = CST_Y + 13 * 8;
@@ -3164,7 +3146,7 @@ DrawCustKeys (int hilight)
         color = HIGHLIGHT;
     SETFONTCOLOR (color, BKGDCOLOR);
 
-#ifndef EXTRACONTROLS
+#ifdef EXTRACONTROLS
     PrintY = CST_Y + 13 * 7;
 #else
     PrintY = CST_Y + 13 * 10;
@@ -3184,8 +3166,6 @@ PrintCustExtra(int i)
 void DrawCustExtra(int hilight)
 {
     int color;
-
-
     color = TEXTCOLOR;
     if (hilight)
         color = HIGHLIGHT;

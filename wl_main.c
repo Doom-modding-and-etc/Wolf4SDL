@@ -171,7 +171,7 @@ void ReadConfig(void)
         read(file,&sds,sizeof(sds));
 
         read(file,&mouseenabled,sizeof(mouseenabled));
-#ifndef EXTRACONTROLS // EXTRACONTROLS
+#ifdef EXTRACONTROLS // EXTRACONTROLS
         read(file, &joystickenabled, sizeof(joystickenabled));
         boolean dummyJoypadEnabled;
         read(file, &dummyJoypadEnabled, sizeof(dummyJoypadEnabled));
@@ -183,7 +183,7 @@ void ReadConfig(void)
         read(file,dirscan,sizeof(dirscan));
         read(file,buttonscan,sizeof(buttonscan));
         read(file,buttonmouse,sizeof(buttonmouse));
-#ifndef EXTRACONTROLS
+#ifdef EXTRACONTROLS
         read(file,buttonjoy,sizeof(buttonjoy));
 #endif
         read(file,&viewsize,sizeof(viewsize));
@@ -334,7 +334,7 @@ void WriteConfig(void)
         write(file,&DigiMode,sizeof(DigiMode));
 
         write(file,&mouseenabled,sizeof(mouseenabled));
-#ifndef EXTRACONTROLS
+#ifdef EXTRACONTROLS
         write(file, &joystickenabled, sizeof(joystickenabled));
         boolean dummyJoypadEnabled = false;
         write(file, &dummyJoypadEnabled, sizeof(dummyJoypadEnabled));
@@ -346,7 +346,7 @@ void WriteConfig(void)
         write(file,dirscan,sizeof(dirscan));
         write(file,buttonscan,sizeof(buttonscan));
         write(file,buttonmouse,sizeof(buttonmouse));
-#ifndef EXTRACONTROLS
+#ifdef EXTRACONTROLS
         write(file, buttonjoy, sizeof(buttonjoy));
 #endif
         write(file,&viewsize,sizeof(viewsize));

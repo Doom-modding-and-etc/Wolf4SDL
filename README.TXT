@@ -222,8 +222,8 @@ TODOs:
 Known bugs:
 -----------
 
- - None! ;D
-
+ - When Pressing W it changes the weapon instead using of 0
+ - Unmergeble stuff from WASD Support
 
 Troubleshooting:
 ----------------

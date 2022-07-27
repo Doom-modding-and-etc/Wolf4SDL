@@ -21,9 +21,10 @@ IF YOU FIND ANY, PLEASE TELL ME SO I CAN FIX THEM!
 */
 
 // Initialization stuff
-#include "id_vieasm.h"    
-#include "asmcref.h"// Duh.
+#include "id_vieasm.h"
 #ifdef VIEASM
+#include "asmcref.h"// Duh.
+
 const char* ASM_Verstring = "v0.9.1 Beta";  // Version string
 
 Uint8 sndvol, musvol;                       // Volumes for sound

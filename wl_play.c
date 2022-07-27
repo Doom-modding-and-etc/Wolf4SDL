@@ -61,7 +61,7 @@ int dirscan[4] =
     sc_DownArrow, 
     sc_LeftArrow 
 };
-#ifndef EXTRACONTROLS
+#ifdef EXTRACONTROLS
 int buttonscan[NUMBUTTONS] = 
 { 
     sc_Control, 
@@ -412,7 +412,7 @@ void PollMouseButtons (void)
     if (buttons & 4)
         buttonstate[buttonmouse[2]] = true;
 }
-#ifndef EXTRACONTROLS
+#ifdef EXTRACONTROLS
 /*
 ===================
 =
@@ -521,7 +521,7 @@ void PollMouseMove (void)
 #endif
 }
 
-#ifndef EXTRACONTROLS
+#ifdef EXTRACONTROLS
 /*
 ===================
 =
@@ -663,7 +663,7 @@ void PollControls (void)
 #endif
     if (mouseenabled && IN_IsInputGrabbed())
         PollMouseButtons ();
-#ifndef EXTRACONTROLS
+#ifdef EXTRACONTROLS
     if (joystickenabled)
         PollJoystickButtons ();
 #endif
@@ -677,7 +677,7 @@ void PollControls (void)
 
     if (mouseenabled && IN_IsInputGrabbed())
         PollMouseMove();
-#ifndef EXTRACONTROLS
+#ifdef EXTRACONTROLS
     if (joystickenabled)
         PollJoystickMove();
 #endif

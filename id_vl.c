@@ -41,7 +41,7 @@ int screenBits = 8;
 #else
 boolean usedoublebuffering = true;
 u32 screenWidth = 640;
-u32 screenHeight = 480;
+u32 screenHeight = 405;
 int screenBits = 8;      // use "best" color depth according to libSDL
 #endif
 
