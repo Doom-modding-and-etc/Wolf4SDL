@@ -4,7 +4,7 @@ DC_OBJS += dc/dc_cd.o dc/dc_main.o dc/dc_maple.o dc/dc_video.o dc/dc_vmu.o \
 mame/fmopl.o id_ca.o id_in.o id_pm.o  \
 id_us.o id_vh.o id_vl.o signon.o wl_act1.o wl_act2.o \
 wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o \
-wl_inter.o wl_main.o wl_menu.o wl_parallax.o wl_play.o wl_state.o wl_text.o
+wl_inter.o wl_main.o wl_menu.o wl_parallax.o wl_play.o wl_state.o wl_text.o wl_utils.o 
 #todo: id_sd.o and wl_game.o: Probably need to port the SDL_mixer code to the kos standards or do my onwn port of SDL 
 
 KOS_CFLAGS += -I${KOS_BASE}/../kos-ports/include/SDL -Wparentheses -Wall -std=gnu99 

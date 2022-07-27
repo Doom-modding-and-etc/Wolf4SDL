@@ -1,0 +1,417 @@
+Installing the Vodka-Induced Entertainment Advanced Sound Manager v0.9 in Wolf4SDL
+
+You can download the base Wolf4SDL v1.6 engine with this installed from here:
+
+	http://www.mediafire.com/download.php?wyzmh3gx3zz
+
+Otherwise, follow these steps. It may take a while, but it will be worth it. :)
+
+1. Remove the following files from your project:
+	
+	FMOPL.CPP
+	FMOPL.H
+	ID_SD.CPP
+	ID_SD.H
+
+2. Copy the following files to your project directory and add them to your project:
+
+	VIEASM.CPP
+	VIEASM.H
+	ASMCOMP.CPP
+	ASMCOMP.H
+	ASMCREF.H
+
+3. Open WL_DEF.H and replace the line:
+
+	'#include "id_sd.h"'
+
+	with: 
+
+	'#include "asmcomp.h"'
+
+	and add the line:
+
+	'extern bool allowwindow;'
+
+	to anywhere in the file.
+
+4. Open ID_CA.CPP and remove:
+	a. The lines 'byte *audiosegs[NUMSNDCHUNKS];',
+
+		     'char audioext[5];',
+
+		     'static const char aheadname[] = "audiohed.";',
+
+		     'static const char aheadname[] = "audiohed.";',
+
+		     'static int32_t* audiostarts;',
+
+		     'int audiohandle = -1;',
+
+		     'SDMode oldsoundmode;'
+
+	b. The entire CAL_SetupAudioFile function 
+
+	c. The line 'CAL_SetupAudioFile ();' from the CA_Startup function
+
+	d. The lines 'if(audiohandle != -1)' and 'close(audiohandle);' in the CA_Shutdown function
+
+	e. Everything in the CA_Shutdown function below and including the line 'switch(oldsoundmode)'
+
+	f. The entire CA_CacheAudioChunk, CA_CacheAdlibSoundChunk and CA_LoadAllSounds functions
+
+5. Open ID_CA.H and remove the lines:
+
+	'#define UNCACHEAUDIOCHUNK(chunk) ...',
+
+	'extern  byte *audiosegs[NUMSNDCHUNKS];',
+
+	'extern  char  audioext[5];'
+
+6. Open WL_ACT2.CPP and remove the lines 'if (DigiMode != sds_Off)', the 'else' and the line below that in the following functions:
+
+	SpawnSchabbs
+
+	SpawnGift
+
+	SpawnFat
+
+	SpawnFakeHitler
+
+	SpawnHitler
+
+7. Open WL_MAIN.CPP and:
+
+	In the Quit function, above the line:
+
+		'exit(0);'
+
+	Add the line:
+
+		'allowwindow = false;'
+
+	Below the line:
+
+		'extern byte signon[];'
+
+	Add the line:
+
+		'boolean nosound;'
+
+	In the ReadConfig function, remove the lines:
+
+		'SDSMode sds;',
+
+		'read(file,&sds,sizeof(sds));',
+
+		'if ((sds == sds_SoundBlaster && !SoundBlasterPresent))',
+
+		'sds = sds_Off',
+
+		'SD_SetDigiDevice (sds);'
+
+		And the blocks:
+		'if ((sd == sdm_AdLib || sm == smm_AdLib) && !AdLibPresent
+                     && !SoundBlasterPresent)
+		         {
+		             sd = sdm_PC;
+		             sm = smm_Off;
+		         }',
+
+	        'if (SoundBlasterPresent)
+                     sds = sds_SoundBlaster;
+	         else
+                     sds = sds_Off;',
+
+		And:
+
+		'if (SoundBlasterPresent || AdLibPresent)
+	         {
+         	    sd = sdm_AdLib;
+	             sm = smm_AdLib;
+	         }
+	         else
+	         {
+	             sd = sdm_PC;
+	             sm = smm_Off;
+	         }',
+
+	And then, below the line 'noconfig', add the lines:
+
+		'sd = sdm_AdLib;' and
+		'sm = smm_AdLib;'
+
+	In the WriteConfig function, remove the line:
+
+	        'write(file,&DigiMode,sizeof(DigiMode));'
+
+	Then remove everything from the line
+
+		 'static int wolfdigimap[]'
+
+	To the '#endif' before the InitGame function.
+
+	In the InitGame function, remove the blocks:
+
+	'#ifndef SPEARDEMO
+	     boolean didjukebox=false;
+	 #endif',
+
+	'//
+ 	 // HOLDING DOWN 'M' KEY?
+	 //
+	 #ifndef SPEARDEMO
+	     if (Keyboard[sc_M])
+	     {
+	         DoJukebox();
+	         didjukebox=true;
+	     }
+	     else
+	 #endif',
+
+	'#ifndef SPEARDEMO
+	     if(!didjukebox)
+	 #endif'
+
+	And the line:
+
+	'InitDigiMap ();'
+
+	In the CheckParameters function, after the line:
+
+	'showHelp = true;'
+
+	Add the block:
+
+	'else IFARG("--nosound")
+	     nosound = true;'
+
+	And under the line:
+
+        '" --windowed             Starts the game in a window\n"'
+
+	Add the line:
+
+	'" --nosound		  Turns off sound\n"'
+
+8. Open AUDIOWL6.H and AUDIOSOD.H and change the value of STARTMUSIC, STARTADLIBSOUNDS and STARTDIGISOUNDS to 0, then add the line
+
+	'#define NUMMUSICS LASTMUSIC' at the bottom of the file.
+
+9. Open WL_DEBUG.CPP and in the ShapeTest function, change the line:
+
+	'SD_PlayDigitized(sound,8,8);'
+
+	To:
+
+	'SD_PlayDigitized(sound,8,8,false);
+
+Although this is "#if 0"'d out, most compilers will still complain about the number of arguments to SD_PlayDigitized.
+
+10. Open WL_GAME.CPP and in the UpdateSoundLoc function, change the line:
+
+	'for(int i = 0; i < MIX_CHANNELS; i++)'
+
+	To:
+
+	'for(int i = 0; i < ASM_CurChannels(); i++)'
+
+11. Open WL_MENU.CPP and:
+	In the CP_Sound function, remove the blocks:
+
+		'case 1:
+                 if (SoundMode != sdm_PC)
+                 {
+                     SD_WaitSoundDone ();
+                     SD_SetSoundMode (sdm_PC);
+                     CA_LoadAllSounds ();
+                     DrawSoundMenu ();
+                     ShootSnd ();
+                 }
+                 break;',
+
+	And:
+
+		'    //
+                     // DIGITIZED SOUND
+ 	             //
+         	 case 5:
+                     if (DigiMode != sds_Off)
+                     {
+                         SD_SetDigiDevice (sds_Off);
+                         DrawSoundMenu ();
+                     }
+                     break;
+                 case 6:
+                     if (DigiMode != sds_SoundSource)
+                     {
+                         SD_SetDigiDevice (sds_SoundSource);
+                         DrawSoundMenu ();
+                         ShootSnd ();
+                     }*/
+                 break;
+                 case 7:
+                     if (DigiMode != sds_SoundBlaster)
+                     {
+                         SD_SetDigiDevice (sds_SoundBlaster);
+                         DrawSoundMenu ();
+                         ShootSnd ();
+                     }
+                     break;',
+
+	Replace the whole DrawSoundMenu function with this (just copy and paste it):
+
+void
+DrawSoundMenu (void)
+{
+    int i, on;
+
+
+#ifdef JAPAN
+    CA_CacheScreen (S_SOUNDPIC);
+#else
+    //
+    // DRAW SOUND MENU
+    //
+    ClearMScreen ();
+    VWB_DrawPic (112, 184, C_MOUSELBACKPIC);
+
+    DrawWindow (SM_X - 8, SM_Y1 - 3, SM_W, SM_H1, BKGDCOLOR);
+    DrawWindow (SM_X - 8, SM_Y2 - 3, SM_W, SM_H2, BKGDCOLOR);
+    DrawWindow (SM_X - 8, SM_Y3 - 3, SM_W, SM_H3, BKGDCOLOR);
+#endif
+
+    // Digitised sound mode is now defunct, so don't offer it or PC sound
+    SndMenu[1].active =
+    SndMenu[5].active =
+    SndMenu[6].active =
+    SndMenu[7].active = 0;
+
+    DrawMenu (&SndItems, &SndMenu[0]);
+#ifndef JAPAN
+    VWB_DrawPic (100, SM_Y1 - 20, C_FXTITLEPIC);
+    VWB_DrawPic (100, SM_Y2 - 20, C_DIGITITLEPIC);
+    VWB_DrawPic (100, SM_Y3 - 20, C_MUSICTITLEPIC);
+#endif
+
+    for (i = 0; i < SndItems.amount; i++)
+#ifdef JAPAN
+        if (i != 3 && i != 4 && i != 8 && i != 9)
+#else
+        if (SndMenu[i].string[0])
+#endif
+        {
+            //
+            // DRAW SELECTED/NOT SELECTED GRAPHIC BUTTONS
+            //
+            on = 0;
+            switch (i)
+            {
+                    //
+                    // SOUND EFFECTS
+                    //
+                case 0:
+                    if (SoundMode == sdm_Off)
+                        on = 1;
+                    break;
+                case 2:
+                    if (SoundMode == sdm_AdLib)
+                        on = 1;
+                    break;
+
+                    //
+                    // DIGITIZED SOUND
+                    //
+                case 5:
+                        on = 1;
+                    break;
+                    //
+                    // MUSIC
+                    //
+                case 10:
+                    if (MusicMode == smm_Off)
+                        on = 1;
+                    break;
+                case 11:
+                    if (MusicMode == smm_AdLib)
+                        on = 1;
+                    break;
+            }
+
+            if (on)
+                VWB_DrawPic (SM_X + 24, SM_Y1 + i * 13 + 2, C_SELECTEDPIC);
+            else
+                VWB_DrawPic (SM_X + 24, SM_Y1 + i * 13 + 2, C_NOTSELECTEDPIC);
+        }
+
+    DrawMenuGun (&SndItems);
+    VW_UpdateScreen ();
+}
+
+	Then go to the IntroScreen function and remove the lines:
+
+	'if (AdLibPresent && !SoundBlasterPresent)',
+	'if (SoundBlasterPresent)'
+
+	Go to the CheckForEpisodes function and remove the lines:
+
+	'strcpy (audioext, "sdm");',
+	'strcpy (audioext, extension);'
+
+	Go to StartCPMusic and remove the line:
+
+	'UNCACHEAUDIOCHUNK (STARTMUSIC + lastmusic);'
+
+	From both StartCPMusic and FreeMusic.
+
+12. Open up SDL_WINMAIN.CPP and above the line:
+
+	'#if defined(_WIN32_WCE) && _WIN32_WCE < 300'
+
+	add the line:
+
+	'bool allowwindow = true;'
+
+	Finally, change this section of the cleanup_output section:
+
+            if(readbytes != 0)
+            {
+                buf[readbytes] = 0;     // cut after last byte (<=16383)
+                MessageBox(NULL, buf, "Wolf4SDL", MB_OK);
+            }
+            else
+                remove(stdoutPath);     // remove empty file
+
+	To this:
+
+	    if (allowwindow)	        
+	    {
+		if(readbytes != 0)
+        	{
+                    buf[readbytes] = 0;     // cut after last byte (<=16383)
+	            MessageBox(NULL, buf, "Wolf4SDL", MB_OK);
+        	}
+	        else
+        	    remove(stdoutPath);     // remove empty file
+	    }
+
+
+
+To compile properly, you may have to rebuild the whole project rather than compiling the changed files.
+
+Now that this is set up, unless you are using the standard AUDIOWL6.H, you will need to change the tables in ASMCREF.H. These are the external file names for the sounds. The sound's position in the table reflects its position in the soundnames table in your AUDIOxxx.H file. In addition to this, there is a variable for the directory that the sounds and music are stored in. Please note that when using a backslash in either a sound filename or the directory name, you must use '\\' instead of a simple backslash.
+
+Unfortunately, due to the inability of SDL_mixer to do some things, and due to the inability of my engine to tell whether a particular sound is playing (maybe next version?), some of the SD_ functions will no longer work as they did before.
+
+SD_ContinueMusic - will now just start it again. The offs parameter does nothing.
+SD_WaitSoundDone - does nothing at all.
+SD_SoundPlaying - always returns zero.
+SD_PrepareSound - does nothing at all.
+
+I have also added two new functions for adding looping sounds -
+
+int SD_AmbientSound(void) - signals that the next sound played will be ambient. Returns an index number that needs to be used to stop the ambient sound. The index number could be stored in the objtype structure for easy access.
+
+void SD_StopAmbient(int ambindex) - stops an ambient sound with index number ambindex.
+
+Implementing these is up to you, but I wouldn't imagine it would be too hard.

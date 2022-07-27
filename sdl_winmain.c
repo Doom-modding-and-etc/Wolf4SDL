@@ -32,6 +32,8 @@
 #include <SDL.h>
 #include <SDL_main.h>
 
+#include "wl_def.h"
+
 #ifdef main
 # ifndef _WIN32_WCE_EMULATION
 #  undef main
@@ -56,7 +58,11 @@
 /* seems to be undefined in Win CE although in online help */
 #define isspace(a) (((CHAR)a == ' ') || ((CHAR)a == '\t'))
 #endif /* _WIN32_WCE < 300 */
+#ifdef VIEASM
+boolean allowwindow = true;
+#else
 
+#endif
 /* Parse a command line buffer into arguments */
 static int ParseCommandLine(char *cmdline, char **argv)
 {
@@ -170,7 +176,18 @@ static void cleanup_output(void)
             char buf[16384];
             size_t readbytes = fread(buf, 1, 16383, file);
             fclose(file);
-
+#ifdef VIEASM
+			if (allowwindow)
+			{
+				if (readbytes != 0)
+				{
+					buf[readbytes] = 0;     // cut after last byte (<=16383)
+					MessageBox(NULL, buf, "Wolf4SDL", MB_OK);
+				}
+				else
+					remove(stdoutPath);     // remove empty file
+			}
+#else
             if(readbytes != 0)
             {
                 buf[readbytes] = 0;     // cut after last byte (<=16383)
@@ -178,6 +195,7 @@ static void cleanup_output(void)
             }
             else
                 remove(stderrPath);     // remove empty file
+#endif
 		}
 	}
 #endif

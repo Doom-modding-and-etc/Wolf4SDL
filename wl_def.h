@@ -101,7 +101,11 @@ typedef struct
 void Quit (const char *errorStr, ...);
 
 #include "id_pm.h"
+#ifdef VIEASM
+#include "id_vieasm.h"
+#else
 #include "id_sd.h"
+#endif
 #include "id_in.h"
 #include "id_vl.h"
 #include "id_vh.h"
@@ -957,8 +961,13 @@ extern  int      shootdelta;
 extern  int      dirangle[9];
 
 extern  boolean  startgame,loadedgame;
-extern  int      mouseadjustment;
+#ifdef  VIEASM
+extern byte soundvol, musicvol;
+extern boolean reversestereo;
 
+extern boolean allowwindow;
+#endif
+extern  int      mouseadjustment;
 //
 // derived constants
 //

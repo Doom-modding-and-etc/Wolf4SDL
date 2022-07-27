@@ -58,7 +58,7 @@
 //#define EXTRACONTROLS // switches out Joystick controls for WASD and mouse movement toggles(DONE but with some bugs)
 //#define CRT // Makes the screen fixed in 4:3
 #define FIXCALCROTATE         // Apply a modified version of Ginyu's fix to make CalcRotate more accurate at high resolutions
-
+//#define VIEASM //Activates: VODKA-INDUCED ENTERTAINMENT ADVANCED SOUND MANAGER v0.9.1(Warning: only works with .wav placed in sounds/).
 //#define BANDEDHOLOWALLS     // Use the old DOS-style "banded" wall drawing behaviour when inside walls
 
 #if SWITCH

@@ -16,6 +16,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
+    <Filter Include="Source Files\vieasm">
+      <UniqueIdentifier>{2f97d140-9ace-431d-b0fb-69f7219c5fff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="id_in.c">
@@ -108,6 +111,9 @@
     <ClCompile Include="id_ca.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="id_vieasm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="sodpal.inc">
@@ -192,6 +198,12 @@
     </ClInclude>
     <ClInclude Include="mame\fmopl.h">
       <Filter>Source Files\mame</Filter>
+    </ClInclude>
+    <ClInclude Include="id_vieasm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vieasm\asmcref.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

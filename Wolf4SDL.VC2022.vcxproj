@@ -205,6 +205,7 @@
     <ClCompile Include="id_sd.c" />
     <ClCompile Include="id_us.c" />
     <ClCompile Include="id_vh.c" />
+    <ClCompile Include="id_vieasm.c" />
     <ClCompile Include="id_vl.c" />
     <ClCompile Include="mame\fmopl.c" />
     <ClCompile Include="sdl_winmain.c" />
@@ -250,9 +251,11 @@
     <ClInclude Include="id_sd.h" />
     <ClInclude Include="id_us.h" />
     <ClInclude Include="id_vh.h" />
+    <ClInclude Include="id_vieasm.h" />
     <ClInclude Include="id_vl.h" />
     <ClInclude Include="mame\fmopl.h" />
     <ClInclude Include="version.h" />
+    <ClInclude Include="vieasm\asmcref.h" />
     <ClInclude Include="win\resource.h" />
     <ClInclude Include="wl_atmos.h" />
     <ClInclude Include="wl_cloudsky.h" />

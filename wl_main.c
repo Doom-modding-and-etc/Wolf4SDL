@@ -75,7 +75,10 @@ void    Quit (const char *error,...);
 boolean startgame;
 boolean loadedgame;
 int     mouseadjustment;
-
+#ifdef VIEASM
+byte    soundvol, musicvol;
+boolean reversestereo;
+#endif
 #if SWITCH
 char configdir[256] = "/switch/wolf4sdl/";
 #else
@@ -185,6 +188,11 @@ void ReadConfig(void)
 #endif
         read(file,&viewsize,sizeof(viewsize));
         read(file,&mouseadjustment,sizeof(mouseadjustment));
+#ifdef VIEASM
+        read(file, &soundvol, sizeof(soundvol));
+        read(file, &musicvol, sizeof(musicvol));
+        read(file, &reversestereo, sizeof(reversestereo));
+#endif
 #ifdef EXTRACONTROLS
         read(file, &mousemoveenabled, sizeof(mousemoveenabled));
         boolean dummyMouseMoveEnabled;
@@ -236,7 +244,10 @@ void ReadConfig(void)
 
         if(viewsize<4) viewsize=4;
         else if(viewsize>21) viewsize=21;
-
+#ifdef VIEASM
+        if (soundvol > 100) soundvol = 100;
+        if (musicvol > 100) musicvol = 100;
+#endif
         MainMenu[6].active=1;
         MainItems.curpos=0;
     }
@@ -274,10 +285,19 @@ noconfig:
 
         viewsize = 19;                          // start with a good size
         mouseadjustment=5;
+#ifdef VIEASM
+        soundvol = 100;
+        musicvol = 100;
+        reversestereo = false;
+#endif
     }
 
     SD_SetMusicMode (sm);
     SD_SetSoundMode (sd);
+#ifdef VIEASM
+    SD_ChangeVolume((byte)(soundvol * 1.28), (byte)(musicvol * 1.28));
+    SD_Reverse(reversestereo);
+#endif    
     SD_SetDigiDevice (sds);
 }
 
@@ -331,6 +351,11 @@ void WriteConfig(void)
 #endif
         write(file,&viewsize,sizeof(viewsize));
         write(file,&mouseadjustment,sizeof(mouseadjustment));
+#ifdef VIEASM
+        write(file, &soundvol, sizeof(soundvol));
+        write(file, &musicvol, sizeof(musicvol));
+        write(file, &reversestereo, sizeof(reversestereo));
+#endif
 #ifdef EXTRACONTROLS
         write(file, &mousemoveenabled, sizeof(mousemoveenabled));
 #endif // EXTRACONTROLS
@@ -1040,8 +1065,9 @@ static int wolfdigimap[] =
 #endif
         LASTSOUND
     };
+#ifdef VIEASM
 
-
+#else
 void InitDigiMap (void)
 {
     int *map;
@@ -1053,7 +1079,7 @@ void InitDigiMap (void)
         SD_PrepareSound(map[1]);
     }
 }
-
+#endif
 #ifndef SPEAR
 CP_iteminfo MusicItems={CTL_X,CTL_Y,6,0,32};
 CP_itemtype MusicMenu[]=
@@ -1299,8 +1325,11 @@ static void InitGame()
 //
 // build some tables
 //
-    InitDigiMap ();
+#ifdef VIEASM    
 
+#else
+    InitDigiMap ();
+#endif
     ReadConfig ();
 
     SetupSaveGames();
