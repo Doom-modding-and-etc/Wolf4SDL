@@ -132,7 +132,7 @@
       <AdditionalIncludeDirectories>F:\SDL-1.2.12\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;WINDOWS_IGNORE_PACKING_MISMATCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
@@ -161,7 +161,7 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>SDL.lib;SDLmain.lib;SDL_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL.lib;SDLmain.lib;SDL_mixer.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>F:\SDL-1.2.12\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -235,6 +235,7 @@
     <None Include="wolfpal.inc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="asmcref.h" />
     <ClInclude Include="audiosod.h" />
     <ClInclude Include="audiowl6.h" />
     <ClInclude Include="id_crt.h" />
@@ -255,7 +256,6 @@
     <ClInclude Include="id_vl.h" />
     <ClInclude Include="mame\fmopl.h" />
     <ClInclude Include="version.h" />
-    <ClInclude Include="vieasm\asmcref.h" />
     <ClInclude Include="win\resource.h" />
     <ClInclude Include="wl_atmos.h" />
     <ClInclude Include="wl_cloudsky.h" />

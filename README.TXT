@@ -12,7 +12,6 @@ while taking advantage of some improvements mentioned in the list below.
 
 Main features:
 --------------
-
  - Cross-platform:
       Supported operating systems are at least:
        - Windows 98, Windows ME, Windows 2000, Windows XP, Windows Vista
@@ -22,7 +21,8 @@ Main features:
        - Mac OS X (x86)
        - KallistiOS (used for Dreamcast)
       Only little endian platforms like x86, ARM and SH-4 are currently supported.
-
+	   - Nintendo Switch
+	   
  - AdLib sounds and music:
       This port includes the OPL2 emulator from MAME, so you can not only
       hear the AdLib sounds but also music without any AdLib-compatible
@@ -44,6 +44,10 @@ Main features:
       Wolf4SDL can be played completely without a keyboard. At least two
       buttons are required (shoot/YES and open door/NO), but five or more
       are recommended (run, strafe, ESC).
+	  
+  - Toggle Screen Feature:
+    Wolf4SDL can toggle into fullscreen if you press ALT+ENTER
+	
 
 Additional features:
 --------------------
@@ -213,17 +217,13 @@ IMPORTANT: Do not forget to take care of version.h!
 
 TODOs:
 ------
- - Center non-ingame screens for resolutions being a multiple of 320x240
- - Add support for any graphic resolution >= 320x200
+ - Add support for any graphic resolution >= 320x200(40%)
  - Fix sdl1
  - Add Sony´s Playstation 2 support(WIP) 
  - Add latest fmopl sound
  
 Known bugs:
 -----------
-
- - When Pressing W it changes the weapon instead using of 0
- - Unmergeble stuff from WASD Support
 
 Troubleshooting:
 ----------------

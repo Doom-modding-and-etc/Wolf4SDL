@@ -115,7 +115,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;F:\SDL-1.2.12\include&quot;"
+				AdditionalIncludeDirectories="C:\SDL\include\SDL"
 				PreprocessorDefinitions="_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="0"
 				WarningLevel="3"
@@ -133,8 +133,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="SDL.lib SDL_mixer.lib"
-				AdditionalLibraryDirectories="&quot;F:\SDL-1.2.12\lib&quot;"
+				AdditionalDependencies="SDL.lib SDLmain.lib SDL_mixer.lib"
+				AdditionalLibraryDirectories="C:\SDL\lib\x86"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -180,6 +180,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\id_crt.c"
+				>
+			</File>
+			<File
 				RelativePath=".\id_in.c"
 				>
 			</File>
@@ -200,6 +204,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\id_vieasm.c"
+				>
+			</File>
+			<File
 				RelativePath=".\id_vl.c"
 				>
 			</File>
@@ -209,10 +217,6 @@
 			</File>
 			<File
 				RelativePath=".\signon.c"
-				>
-			</File>
-			<File
-				RelativePath=".\sodpal.inc"
 				>
 			</File>
 			<File
@@ -240,15 +244,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\wl_dir3dspr.c"
-				>
-			</File>
-			<File
 				RelativePath=".\wl_draw.c"
-				>
-			</File>
-			<File
-				RelativePath=".\wl_floorceiling.c"
 				>
 			</File>
 			<File
@@ -272,7 +268,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\wl_plane.c"
+				>
+			</File>
+			<File
 				RelativePath=".\wl_play.c"
+				>
+			</File>
+			<File
+				RelativePath=".\wl_scale.c"
 				>
 			</File>
 			<File
@@ -288,33 +292,13 @@
 				>
 			</File>
 			<File
+				RelativePath=".\wl_utils.c"
+				>
+			</File>
+			<File
 				RelativePath=".\wolfpal.inc"
 				>
 			</File>
-			<Filter
-				Name="dc"
-				>
-				<File
-					RelativePath=".\dc\dc_cd.c"
-					>
-				</File>
-				<File
-					RelativePath=".\dc\dc_main.c"
-					>
-				</File>
-				<File
-					RelativePath=".\dc\dc_maple.c"
-					>
-				</File>
-				<File
-					RelativePath=".\dc\dc_video.c"
-					>
-				</File>
-				<File
-					RelativePath=".\dc\dc_vmu.c"
-					>
-				</File>
-			</Filter>
 			<Filter
 				Name="mame"
 				>
@@ -327,18 +311,6 @@
 					>
 				</File>
 			</Filter>
-			<Filter
-				Name="dosbox"
-				>
-				<File
-					RelativePath=".\dosbox\dbopl.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\dosbox\dbopl.hpp"
-					>
-				</File>
-			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -346,15 +318,15 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\asmcref.h"
+				>
+			</File>
+			<File
 				RelativePath=".\audiosod.h"
 				>
 			</File>
 			<File
 				RelativePath=".\audiowl6.h"
-				>
-			</File>
-			<File
-				RelativePath=".\dc_vmu.h"
 				>
 			</File>
 			<File
@@ -390,6 +362,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\id_crt.h"
+				>
+			</File>
+			<File
 				RelativePath=".\id_in.h"
 				>
 			</File>
@@ -407,6 +383,10 @@
 			</File>
 			<File
 				RelativePath=".\id_vh.h"
+				>
+			</File>
+			<File
+				RelativePath=".\id_vieasm.h"
 				>
 			</File>
 			<File
@@ -437,18 +417,10 @@
 				RelativePath=".\wl_shade.h"
 				>
 			</File>
-			<Filter
-				Name="dc"
+			<File
+				RelativePath=".\wl_utils.h"
 				>
-				<File
-					RelativePath=".\dc\dc_main.h"
-					>
-				</File>
-				<File
-					RelativePath=".\dc\dc_vmu.h"
-					>
-				</File>
-			</Filter>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"

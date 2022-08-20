@@ -19,10 +19,16 @@ loaded into the data segment
     #include <io.h>
 #elif defined _arch_dreamcast
     #include <unistd.h>
-#elif defined SWITCH
+#elif defined(SWITCH)
 	#include <sys/_iovec.h>
+#elif defined(N3DS) 
+struct iovec 
+{
+     void *iov_base;     
+     size_t iov_len;    
+};
 #else
-    #include <sys/uio.h>
+    //#include <sys/uio.h>
     #include <unistd.h>
 #endif
 
@@ -90,7 +96,7 @@ char graphext[5];
 char audioext[5];
 #endif
 
-#ifdef SWITCH
+#if defined (SWITCH) || defined (N3DS)
 static const char gheadname[] = DATADIR "vgahead.";
 static const char gfilename[] = DATADIR "vgagraph.";
 static const char gdictname[] = DATADIR "vgadict.";
@@ -489,7 +495,7 @@ void CA_RLEWexpand(word *source, word *dest, s32 length, word rlewtag)
 
 void CAL_SetupGrFile (void)
 {
-#if SWITCH
+#if defined(SWITCH) || defined (N3DS)
     char fname[13 + sizeof(DATADIR)];
 #else    
     char fname[13];
@@ -595,13 +601,13 @@ void CAL_SetupGrFile (void)
 
 void CAL_SetupMapFile (void)
 {
-#if SWITCH    
+#if defined SWITCH && defined N3DS  
     printf("CA_SetupMapFile_Start\n");
 #endif   
     int     i;
     int handle;
     s32 pos;
-#if SWITCH
+#if defined SWITCH && defined N3DS
     char fname[13 + sizeof(DATADIR)];
 #else
     char fname[13];
@@ -628,7 +634,7 @@ void CAL_SetupMapFile (void)
 // open the data file
 //
 #ifdef CARMACIZED
-#if SWITCH
+#if defined SWITCH && defined N3DS
     strcpy(fname, mfilecama);
 #else    
     strcpy(fname, "gamemaps.");
@@ -687,7 +693,7 @@ void CAL_SetupMapFile (void)
 
 void CAL_SetupAudioFile (void)
 {
-#if SWITCH
+#if defined SWITCH && defined N3DS
     char fname[13 + sizeof(DATADIR)];
 #else    
     char fname[13];
@@ -734,15 +740,15 @@ void CA_Startup (void)
     profilehandle = open("PROFILE.TXT", O_CREAT | O_WRONLY | O_TEXT);
 #endif
 
-#if SWITCH
+#if defined SWITCH && defined N3DS
     printf("CA_INIT\n");
 #endif   
     CAL_SetupMapFile ();
-#if SWITCH    
+#if defined SWITCH && defined N3DS   
     printf("CAL_SetupMapFile ();\n");
 #endif    
     CAL_SetupGrFile ();
-#if SWITCH    
+#if defined SWITCH && defined N3DS    
     printf("CAL_SetupGrFile ();\n");
 #endif    
 #ifdef VIEASM
@@ -750,7 +756,7 @@ void CA_Startup (void)
 #else
     CAL_SetupAudioFile ();
 #endif
-#if SWITCH
+#if defined SWITCH && defined N3DS
     printf("CAL_SetupAudioFile ();\n");
 #endif
 }

@@ -22,9 +22,11 @@ extern SDL_Texture *texture;
 #endif
 
 extern  boolean  fullscreen, usedoublebuffering;
-extern  u32 screenWidth, screenHeight, screenPitch, bufferPitch;
-//todo:
-extern  int      screenBits;
+#if N3DS
+extern  int screenWidth, screenHeight, screenBits, screenPitch, bufferPitch;
+#else
+extern  u32 screenWidth, screenHeight, screenBits, screenPitch, bufferPitch;   
+#endif
 extern  int      scaleFactor;
 
 extern	boolean  screenfaded;
@@ -43,9 +45,7 @@ extern SDL_Color gamepal[256];
 #define VL_WaitVBL(a)        SDL_Delay((a)*8)
 #define VL_ClearScreen(c)    SDL_FillRect(screenBuffer,NULL,(c))
 #ifdef CRT
-#if SDL_MAJOR_VERSION == 1
 #define SDL_Flip(x) CRT_Init(x)
-#endif
 #endif
 
 void VL_DePlaneVGA (byte *source, int width, int height);

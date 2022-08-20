@@ -2,7 +2,6 @@
 VODKA-INDUCED ENTERTAINMENT ADVANCED SOUND MANAGER v0.9.1 - HEADER FILE
 BY GERARD 'ALUMIUN' WATSON
 */
-
 #ifndef ID_VIEASM_H_
 #define ID_VIEASM_H_
 #include "wl_def.h"
@@ -130,12 +129,8 @@ inline void Delay(int wolfticks)
 #define SD_GetVolume(snd, mus) ASM_ReturnVolume(snd, mus)
 #define SD_Reverse(reverse) ASM_ReverseStereo(reverse)
 
-
-
 // These enums are now treated differently. Because there are no seperate devices,
 // any value other than sxm_Off will turn the device on, and SDSMode is no longer used.
-
-
 typedef enum
 {
     sdm_Off,
@@ -167,7 +162,7 @@ extern globalsoundpos channelSoundPos[];
 extern  SDMode          SoundMode;
 extern  SMMode          MusicMode;
 extern  SDSMode         DigiMode;
-extern boolean  nosound;
+extern  boolean  		nosound;
 
 extern  boolean         AdLibPresent, SoundBlasterPresent, SBProPresent, SoundPositioned;
 // Functions
@@ -197,5 +192,5 @@ extern  void    CA_LoadAllSounds(void);
 extern  int     SD_AmbientSound(void);
 extern  void    SD_StopAmbient(int ambindex);
 
-#endif  // _ASMCOMP_H_
-#endif
+#endif 
+#endif // _ID_VIEASM_H_

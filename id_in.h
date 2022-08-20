@@ -13,7 +13,24 @@
 #define	__DEBUG_InputMgr__
 #endif
 
-#if SWITCH
+#if defined(SWITCH) || defined (N3DS)
+#if SDL_MAJOR_VERSION == 1
+#define SDLK_SCROLLLOCK SDLK_SCROLLOCK
+#define SDLK_KP_0 SDLK_KP0
+#define SDLK_KP_1 SDLK_KP1
+#define SDLK_KP_2 SDLK_KP2
+#define SDLK_KP_3 SDLK_KP3
+#define SDLK_KP_4 SDLK_KP4
+#define SDLK_KP_5 SDLK_KP5
+#define SDLK_KP_6 SDLK_KP6
+#define SDLK_KP_7 SDLK_KP7
+#define SDLK_KP_8 SDLK_KP8
+#define SDLK_KP_9 SDLK_KP9
+#define SDLK_PRINTSCREEN SDLK_PRINT
+#define SDLK_NUMLOCKCLEAR SDLK_NUMLOCK
+#define SDLK_SCROLLLOCK	SDLK_SCROLLOCK
+#define SDL_Keymod SDLMod
+#endif
 typedef	int		ScanCode;
 #define	sc_None			0
 #define	sc_Bad			0xff
@@ -54,7 +71,6 @@ typedef	int		ScanCode;
 #define sc_ScrollLock		SDLK_SCROLLOCK
 #define sc_PrintScreen		SDLK_PRINT
 
-/*
 #define	sc_1			SDLK_q
 #define	sc_2			SDLK_q
 #define	sc_3			SDLK_q
@@ -92,7 +108,7 @@ typedef	int		ScanCode;
 #define	sc_X			SDLK_q
 #define	sc_Y			SDLK_q
 #define	sc_Z			SDLK_q
-*/
+
 #define	sc_1			SDLK_1
 #define	sc_2			SDLK_2
 #define	sc_3			SDLK_3
@@ -132,6 +148,7 @@ typedef	int		ScanCode;
 #define	sc_Z			SDLK_z
 #define	key_None		0
 
+#if SDL_MAJOR_VERSION == 2
 #define bt_None SDL_CONTROLLER_BUTTON_INVALID
 #define bt_A SDL_CONTROLLER_BUTTON_A
 #define bt_B SDL_CONTROLLER_BUTTON_B
@@ -160,8 +177,26 @@ typedef	int		ScanCode;
 #define gc_trigger_left SDL_CONTROLLER_AXIS_TRIGGERLEFT
 #define gc_trigger_right SDL_CONTROLLER_AXIS_TRIGGERRIGHT
 #define gc_axis_max SDL_CONTROLLER_AXIS_MAX
-
+#endif
 #else
+#if SDL_MAJOR_VERSION == 1
+#define SDLK_SCROLLLOCK SDLK_SCROLLOCK
+#define SDLK_KP_0 SDLK_KP0
+#define SDLK_KP_1 SDLK_KP1
+#define SDLK_KP_2 SDLK_KP2
+#define SDLK_KP_3 SDLK_KP3
+#define SDLK_KP_4 SDLK_KP4
+#define SDLK_KP_5 SDLK_KP5
+#define SDLK_KP_6 SDLK_KP6
+#define SDLK_KP_7 SDLK_KP7
+#define SDLK_KP_8 SDLK_KP8
+#define SDLK_KP_9 SDLK_KP9
+#define SDLK_PRINTSCREEN SDLK_PRINT
+#define SDLK_NUMLOCKCLEAR SDLK_NUMLOCK
+#define SDLK_SCROLLLOCK	SDLK_SCROLLOCK
+#define SDL_Keymod SDLMod
+#define SDL_Keysym SDL_keysym
+#endif
 #define KEYCOUNT 129
 typedef	int		ScanCode;
 #define	sc_None			0
@@ -272,10 +307,6 @@ typedef	int		ScanCode;
 #define gc_trigger_left SDL_CONTROLLER_AXIS_TRIGGERLEFT
 #define gc_trigger_right SDL_CONTROLLER_AXIS_TRIGGERRIGHT
 #define gc_axis_max SDL_CONTROLLER_AXIS_MAX
-
-
-
-
 #endif
 #if SDL_MAJOR_VERSION == 2
 extern boolean GameControllerButtons[bt_Max];
@@ -367,22 +398,13 @@ extern volatile ScanCode LastScan;
 extern int JoyNumButtons;
 extern boolean forcegrabmouse;
 
-#if SDL_MAJOR_VERSION == 1
-// Function prototypes
-#define	IN_KeyDown(code)	(KeyboardPress[(code)])
-#define	IN_ClearKey(code)	{KeyboardPress[code] = false;\
-							if (code == LastScan) LastScan = sc_None;}
-#elif SDL_MAJOR_VERSION == 2
 #define	IN_KeyDown(code)	(Keyboard((code)))
 #define	IN_ClearKey(code)	{ KeyboardSet(code, false);\
 						      if (code == LastScan) LastScan = sc_None;}
-#endif
 
-#if SDL_MAJOR_VERSION == 2
+
 boolean Keyboard(int key);
-
 void KeyboardSet(int key, boolean state);
-#endif
 int KeyboardLookup(int key);
 
 

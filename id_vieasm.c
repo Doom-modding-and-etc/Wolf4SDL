@@ -1,14 +1,18 @@
 /*
 VODKA-INDUCED ENTERTAINMENT ADVANCED SOUND MANAGER v0.9.1
 BY GERARD 'ALUMIUN' WATSON
+MODIFICATION By: Wolf3s
 
-Provides high quality sound and music using SDL_MIXER
-Built on SDL_MIXER 1.2.5
+
+Provides high quality sound and music using SDL_MIXER AND SDL2_MIXER 2.6.1
+Built on SDL_MIXER 1.2.5 and SDL2_MIXER 2.6.1
 Supports all formats supported by SDL_mixer.
 For more details, please see the SDL_mixer manual.
 
 Changes
 -------
+v0.9.2  - Mix Everything In One Header File and Source File 
+		- Port to SDL2 Mixer
 
 v0.9.1  - Fixed the reverse stereo channel bug
         - Made ASM_ChangeVolume a lot faster and clipped the volume levels
@@ -32,13 +36,25 @@ int origchannels, maxchannels, lastchan;    // Channel variables
 bool chanused[ASM_ABSMAXCHANNELS];          // Is channel used?
 static Mix_Music* music = 0, * switchto = 0; // Music references
 int fadetime;                               // Milliseconds to fade in\out
-bool deviceopen = false;                    // Is device open?
-bool switching = false;                     // Is switching music tracks?
-bool reversemode = false;                   // Reverse stereomode
+boolean deviceopen = false;                    // Is device open?
+boolean switching = false;                     // Is switching music tracks?
+boolean reversemode = false;                   // Reverse stereomode
+boolean nosound;
+
+SDMode      	SoundMode;
+SMMode          MusicMode;
+SDSMode         DigiMode;
+static  int     LeftPosition;
+static  int     RightPosition;
+static  boolean    ambience;
+
+sample ASM_Audiosegs[NUMSOUNDS];
+int ambientsnds[NUMAMBIENTS];
+boolean         AdLibPresent, SoundBlasterPresent, SBProPresent, SoundPositioned;
+globalsoundpos channelSoundPos[ASM_ABSMAXCHANNELS];
 
 // ASM_IsOpen
 // Returns true if the device is open, false otherwise
-
 bool ASM_IsOpen(void)
 {
     return (deviceopen) ? true : false;
@@ -523,25 +539,8 @@ int ASM_CurChannels(void)
     return lastchan;
 }
 
-
-
-boolean  nosound;
-
-SDMode          SoundMode;
-SMMode          MusicMode;
-SDSMode         DigiMode;
-static  int     LeftPosition;
-static  int     RightPosition;
-static  boolean    ambience;
-
-sample ASM_Audiosegs[NUMSOUNDS];
-int ambientsnds[NUMAMBIENTS];
-boolean         AdLibPresent, SoundBlasterPresent, SBProPresent, SoundPositioned;
-globalsoundpos channelSoundPos[ASM_ABSMAXCHANNELS];
-
 // SD_MusIsOn
 // Returns true if music is on, false otherwise
-
 boolean SD_MusIsOn(void)
 {
     return (MusicMode == smm_AdLib) ? true : false;

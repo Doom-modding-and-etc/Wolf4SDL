@@ -1364,7 +1364,7 @@ void Died (void)
 void GameLoop (void)
 {
     boolean died;
-#if SWITCH    
+#if defined(SWITCH) || defined (N3DS)
     printf("START GAME\n");
 #endif
 #ifdef MYPROFILE

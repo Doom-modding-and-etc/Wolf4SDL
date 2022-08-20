@@ -16,7 +16,7 @@ SDL_CONFIG ?= sdl2-config
 endif
 
 CFLAGS_SDL ?= $(shell $(SDL_CONFIG) --cflags)
-LDFLAGS_SDL ?= $(shell $(SDL_CONFIG) --libs
+LDFLAGS_SDL ?= $(shell $(SDL_CONFIG) --libs)
 CFLAGS += -O2 -Wall -W -g -Wpointer-arith -Wreturn-type -Wwrite-strings -Wcast-align -std=gnu99 \
 -Werror-implicit-function-declaration -Wimplicit-int -Wsequence-point $(CFLAGS_SDL)
 
@@ -61,7 +61,7 @@ $(BINARY): $(OBJS)
 
 .c.o:
 	@echo '===> C $<'
-	$(Q)$(CC) $(CFLAGS) -c $< -o $@
+	$(Q) $(CC) $(CFLAGS) -c $< -o $@
 
 .c.d:
 	@echo '===> DEP $<'

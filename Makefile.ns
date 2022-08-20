@@ -1,4 +1,4 @@
-# Taken from: https://github.com/lantus/cannonball-nx
+#Taken from: https://github.com/lantus/cannonball-nx
 .PHONY: all clean 
 
 ifeq ($(strip $(DEVKITPRO)),)
@@ -15,26 +15,28 @@ APP_AUTHOR := Wolf3s, keeganatorr, Aryan, Mortriz Ripper and The other contribui
 APP_VERSION := 2.1
 ICON := icon/wolf4sdl.png
 WINDRES   = windres.exe
-OBJ       = mame/fmopl.o id_ca.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vieasm.o id_vl.o signon.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
-LINKOBJ   = mame/fmopl.o id_ca.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vieasm.o id_vl.o signon.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
-LIBS     = -specs=$(DEVKITPRO)/libnx/switch.specs -L$(DEVKITPRO)/libnx/lib -L$(DEVKITPRO)/portlibs/switch/lib -lSDL2 -lSDL2main -lSDL2_mixer -lmpg123 -lmodplug -lvorbisidec -logg -lopusfile -lopus `sdl2-config --libs` -lm -lnx -lEGL -lstdc++
+OBJ       = mame/fmopl.o id_ca.o id_crt.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vieasm.o id_vl.o signon.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
+LINKOBJ   = mame/fmopl.o id_ca.o id_crt.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vieasm.o id_vl.o signon.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
+LIBDIR    = -specs=$(DEVKITPRO)/libnx/switch.specs -L$(DEVKITPRO)/libnx/lib -L$(DEVKITPRO)/portlibs/switch/lib
+LIBS      = $(LIBDIR) -lSDL2 -lSDL2main -lSDL2_mixer -lmpg123 -lmodplug -lvorbisidec -logg -lopusfile -lopus `sdl2-config --libs` -lm -lnx -lEGL -lstdc++
 INCS      = -I$(DEVKITPRO)/portlibs/switch/include -I$(DEVKITPRO)/portlibs/switch/include/SDL2 -I$(DEVKITPRO)/libnx/include 
 BIN       = Wolf4SDL.elf
 BUILD	  =	build
-DEFINES   = -DSWITCH 
-CFLAGS    = $(INCS) $(DEFINES) SDL2 SDL2_mixer -march=armv8-a -mtune=cortex-a57 -mtp=soft -fPIE -fPIC -O3 -O2 -Wall -W -g -Wpointer-arith -Wreturn-type -Wwrite-strings -Wcast-align -std=gnu99 -Werror-implicit-function-declaration -Wimplicit-int -Wsequence-point
+ARCH 	  = -march=armv8-a -mtune=cortex-a57 -mtp=soft -fPIE -fPIC -O3 -O2
+DEFINES   = -DSWITCH
+CFLAGS    = $(INCS) $(DEFINES) $(ARCH) -Wall -W -g -Wpointer-arith -Wreturn-type -Wwrite-strings -Wcast-align -std=gnu99 -Wimplicit-int -Wsequence-point -Wswitch
 RM        = rm -f
-LINK      = aarch64-none-elf-gcc 
-C		  = aarch64-none-elf-gcc
-OUTPUT    = Wolf4SDL
+LINK      = aarch64-none-elf-gcc-11.2.0
+C		  = aarch64-none-elf-gcc-11.2.0
+OUTPUT    = $(APP_TITLE)
 
 ifeq ($(strip $(ICON)),)
-	icons := $(wildcard *.jpg)
+	icons := $(wildcard *.png)
 	ifneq (,$(findstring $(TARGET).jpg,$(icons)))
-		export APP_ICON := $(TOPDIR)/$(TARGET).jpg
+		export APP_ICON := $(TOPDIR)/$(TARGET).png
 	else
 		ifneq (,$(findstring icon.jpg,$(icons)))
-			export APP_ICON := $(TOPDIR)/icon.jpg
+			export APP_ICON := $(TOPDIR)/icon.png
 		endif
 	endif
 else
@@ -59,104 +61,99 @@ endif
 
 all: $(BIN) 
 
-clean: 
-	$(RM) $(OBJ) $(BIN)
-
 $(BIN): $(OBJ)
 	$(LINK) $(LINKOBJ) -o "Wolf4SDL.elf" $(LIBS)
 
 mame/fmopl.o: $(GLOBALDEPS) mame/fmopl.c mame/fmopl.h
-	$(C) -c mame/fmopl.c -o mame/fmopl.o $(INCS) $(DEFINES)	
+	$(C) -c mame/fmopl.c -o mame/fmopl.o $(CFLAGS)
 
-id_ca.o: $(GLOBALDEPS) id_ca.c id_ca.h wl_def.h version.h
-	$(C) -c id_ca.c -o id_ca.o $(INCS) $(DEFINES)	
+id_ca.o: $(GLOBALDEPS) id_ca.c wl_def.h 
+	$(C) -c id_ca.c -o id_ca.o $(CFLAGS)	
+
+id_crt.o: $(GLOBALDEPS) id_crt.c version.h id_crt.h 
+	$(C) -c id_crt.c -o id_crt.o $(CFLAGS)	
 
 id_in.o: $(GLOBALDEPS) id_in.c wl_def.h
-	$(C) -c id_in.c -o id_in.o $(INCS) $(DEFINES) 	
+	$(C) -c id_in.c -o id_in.o $(CFLAGS)	
 
 id_pm.o: $(GLOBALDEPS) id_pm.c wl_def.h
-	$(C) -c id_pm.c -o id_pm.o $(INCS) $(DEFINES)	 
+	$(C) -c id_pm.c -o id_pm.o $(CFLAGS)	 
 
 id_sd.o: $(GLOBALDEPS) id_sd.c wl_def.h
-	$(C) -c id_sd.c -o id_sd.o $(INCS) $(DEFINES) 	
+	$(C) -c id_sd.c -o id_sd.o $(CFLAGS) 	
 
-id_us.o: $(GLOBALDEPS) id_us.c wl_def.h id_us.h
-	$(C) -c id_us.c -o id_us.o $(INCS) $(DEFINES) 	
+id_us.o: $(GLOBALDEPS) id_us.c wl_def.h 
+	$(C) -c id_us.c -o id_us.o $(CFLAGS)	
 
-id_vh.o: $(GLOBALDEPS) id_vh.c wl_def.h id_vh.h
-	$(C) -c id_vh.c -o id_vh.o $(INCS) $(DEFINES) 
+id_vh.o: $(GLOBALDEPS) id_vh.c wl_def.h
+	$(C) -c id_vh.c -o id_vh.o $(CFLAGS)
 	
 id_vieasm.o: $(GLOBALDEPS) id_vieasm.c wl_def.h id_vieasm.h
-	$(C) -c id_vieasm.c -o id_vieasm.o $(INCS) $(DEFINES) 	
+	$(C) -c id_vieasm.c -o id_vieasm.o $(CFLAGS) 	
 	
-id_vl.o: $(GLOBALDEPS) id_vl.c wl_def.h id_vl.h
-	$(C) -c id_vl.c -o id_vl.o $(INCS) $(DEFINES) 	
+id_vl.o: $(GLOBALDEPS) id_vl.c wl_def.h 
+	$(C) -c id_vl.c -o id_vl.o $(CFLAGS)	
 		
 signon.o: $(GLOBALDEPS) signon.c wl_def.h
-	$(C) -c signon.c -o signon.o $(INCS) $(DEFINES) 
+	$(C) -c signon.c -o signon.o $(CFLAGS) 
 	
 wl_act1.o: $(GLOBALDEPS) wl_act1.c wl_def.h
-	$(C) -c wl_act1.c -o wl_act1.o $(INCS) $(DEFINES) 
+	$(C) -c wl_act1.c -o wl_act1.o $(CFLAGS)
 
-wl_act2.o: $(GLOBALDEPS) wl_act2.c wl_def.h version.h
-	$(C) -c wl_act2.c -o wl_act2.o $(INCS) $(DEFINES)
+wl_act2.o: $(GLOBALDEPS) wl_act2.c wl_def.h
+	$(C) -c wl_act2.c -o wl_act2.o $(CFLAGS)
 
-wl_atmos.o: $(GLOBALDEPS) wl_atmos.c wl_atmos.h wl_def.h version.h foreign.h gfxv_sod.h audiosod.h f_spear.h
-	$(C) -c wl_atmos.c -o wl_atmos.o $(INCS) $(DEFINES)	
+wl_atmos.o: $(GLOBALDEPS) wl_atmos.c wl_def.h
+	$(C) -c wl_atmos.c -o wl_atmos.o $(CFLAGS)
 
 wl_agent.o: $(GLOBALDEPS) wl_agent.c wl_def.h
-	$(C) -c wl_agent.c -o wl_agent.o $(INCS) $(DEFINES) 
+	$(C) -c wl_agent.c -o wl_agent.o $(CFLAGS)
 	
-wl_atmos.o: $(GLOBALDEPS) wl_atmos.c wl_def.h
-	$(C) -c wl_atmos.c -o wl_atmos.o $(INCS) $(DEFINES) 	
+wl_cloudsky.o: $(GLOBALDEPS) wl_cloudsky.c wl_def.h 
+	$(C) -c wl_cloudsky.c -o wl_cloudsky.o $(CFLAGS)
 
-wl_cloudsky.o: $(GLOBALDEPS) wl_cloudsky.c wl_def.h version.h foreign.h gfxv_sod.h audiosod.h f_spear.h id_pm.h id_sd.h id_in.h id_vl.h id_vh.h id_us.h id_ca.h wl_menu.h wl_utils.h wl_cloudsky.h
-	$(C) -c wl_cloudsky.c -o wl_cloudsky.o $(INCS) $(DEFINES)
-
-wl_debug.o: $(GLOBALDEPS) wl_debug.c wl_def.h version.h foreign.h gfxv_sod.h audiosod.h f_spear.h id_pm.h id_sd.h id_in.h id_vl.h id_vh.h id_us.h id_ca.h wl_menu.h wl_utils.h 
-	$(C) -c wl_debug.c -o wl_debug.o $(INCS) $(DEFINES)
+wl_debug.o: $(GLOBALDEPS) wl_debug.c wl_def.h  
+	$(C) -c wl_debug.c -o wl_debug.o $(CFLAGS)
 	
 wl_draw.o: $(GLOBALDEPS) wl_draw.c wl_def.h 
-	$(C) -c wl_draw.c -o wl_draw.o $(INCS) $(DEFINES)
+	$(C) -c wl_draw.c -o wl_draw.o $(CFLAGS)
 	
-wl_game.o: $(GLOBALDEPS) wl_game.c wl_def.h version.h foreign.h gfxv_sod.h audiosod.h f_spear.h id_pm.h id_sd.h id_in.h id_vl.h id_vh.h id_us.h id_ca.h wl_menu.h wl_utils.h 
-	$(C) -c wl_game.c -o wl_game.o $(INCS) $(DEFINES)
+wl_game.o: $(GLOBALDEPS) wl_game.c wl_def.h 
+	$(C) -c wl_game.c -o wl_game.o $(CFLAGS)
 
-wl_inter.o: $(GLOBALDEPS) wl_inter.c wl_def.h version.h foreign.h gfxv_sod.h audiosod.h f_spear.h id_pm.h id_sd.h id_in.h id_vl.h id_vh.h id_us.h id_ca.h wl_menu.h wl_utils.h 
-	$(C) -c wl_inter.c -o wl_inter.o $(INCS) $(DEFINES)	
+wl_inter.o: $(GLOBALDEPS) wl_inter.c wl_def.h 
+	$(C) -c wl_inter.c -o wl_inter.o $(CFLAGS)	
 	
-wl_main.o: $(GLOBALDEPS) wl_main.c wl_def.h version.h foreign.h gfxv_sod.h audiosod.h f_spear.h id_pm.h id_sd.h id_in.h id_vl.h id_vh.h id_us.h id_ca.h wl_menu.h wl_utils.h 
-	$(C) -c wl_main.c -o wl_main.o $(INCS) $(DEFINES)	
+wl_main.o: $(GLOBALDEPS) wl_main.c wl_def.h 
+	$(C) -c wl_main.c -o wl_main.o $(CFLAGS)	
 	
-wl_menu.o: $(GLOBALDEPS) wl_menu.c wl_def.h wl_menu.h wl_utils.h 
-	$(C) -c wl_menu.c -o wl_menu.o $(INCS) $(DEFINES)	
+wl_menu.o: $(GLOBALDEPS) wl_menu.c wl_def.h 
+	$(C) -c wl_menu.c -o wl_menu.o $(CFLAGS)	
 
-wl_parallax.o: $(GLOBALDEPS) wl_parallax.c wl_def.h version.h
-	$(C) -c wl_parallax.c -o wl_parallax.o $(INCS) $(DEFINES)
+wl_parallax.o: $(GLOBALDEPS) wl_parallax.c wl_def.h 
+	$(C) -c wl_parallax.c -o wl_parallax.o $(CFLAGS)
 
-wl_plane.o: $(GLOBALDEPS) wl_plane.c wl_def.h version.h wl_shade.h
-	$(C) -c wl_plane.c -o wl_plane.o $(INCS) $(DEFINES)
+wl_plane.o: $(GLOBALDEPS) wl_plane.c wl_def.h 
+	$(C) -c wl_plane.c -o wl_plane.o $(CFLAGS)
 
-wl_play.o: $(GLOBALDEPS) wl_play.c wl_def.h version.h foreign.h gfxv_sod.h audiosod.h f_spear.h id_pm.h id_sd.h id_in.h id_vl.h id_vh.h id_us.h id_ca.h wl_menu.h wl_utils.h  wl_cloudsky.h wl_shade.h
-	$(C) -c wl_play.c -o wl_play.o $(INCS) $(DEFINES)
+wl_play.o: $(GLOBALDEPS) wl_play.c wl_def.h 
+	$(C) -c wl_play.c -o wl_play.o $(CFLAGS)
 
-wl_scale.o: $(GLOBALDEPS) wl_scale.c wl_def.h wl_shade.h
-	$(C) -c wl_scale.c -o wl_scale.o $(INCS) $(DEFINES)
+wl_scale.o: $(GLOBALDEPS) wl_scale.c wl_def.h 
+	$(C) -c wl_scale.c -o wl_scale.o $(CFLAGS)
 
-wl_shade.o: $(GLOBALDEPS) wl_shade.c wl_shade.h version.h
-	$(C) -c wl_shade.c -o wl_shade.o $(INCS) $(DEFINES)
+wl_shade.o: $(GLOBALDEPS) wl_shade.c wl_def.h
+	$(C) -c wl_shade.c -o wl_shade.o $(CFLAGS)
 
-wl_state.o: $(GLOBALDEPS) wl_state.c wl_def.h version.h foreign.h gfxv_sod.h audiosod.h f_spear.h id_pm.h id_sd.h id_in.h id_vl.h id_vh.h id_us.h id_ca.h wl_menu.h wl_utils.h 
-	$(C) -c wl_state.c -o wl_state.o $(INCS) $(DEFINES)
+wl_state.o: $(GLOBALDEPS) wl_state.c wl_def.h 
+	$(C) -c wl_state.c -o wl_state.o $(CFLAGS)
 
 wl_text.o: $(GLOBALDEPS) wl_text.c wl_def.h
-	$(C) -c wl_text.c -o wl_text.o $(INCS) $(DEFINES)
+	$(C) -c wl_text.c -o wl_text.o $(CFLAGS)
 	
-wl_utils.o: $(GLOBALDEPS) wl_utils.c wl_def.h wl_utils.h
-	$(C) -c wl_utils.c -o wl_utils.o $(INCS) $(DEFINES)
+wl_utils.o: $(GLOBALDEPS) wl_utils.c wl_def.h 
+	$(C) -c wl_utils.c -o wl_utils.o $(CFLAGS)
 
-
-	
 #---------------------------------------------------------------------------------
 # main targets
 #---------------------------------------------------------------------------------
@@ -175,5 +172,8 @@ endif
 $(OUTPUT).elf	:	$(OFILES)
 
 $(OFILES_SRC)	: $(HFILES_BIN)
-	
+
+clean: 
+	$(RM) $(OBJ) $(BIN)
+
 # end of Makefile ...

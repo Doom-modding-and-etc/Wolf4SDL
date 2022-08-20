@@ -30,7 +30,7 @@ void PM_Startup (void)
     u32 pagesize;
     s32 filesize, datasize;
     FILE *file;
-#if SWITCH    
+#if defined(SWITCH) || defined (N3DS) //|| defined (PS2)
     char fname[13 + sizeof(DATADIR)] = DATADIR "vswap.";
 #else   
     char fname[13] = "vswap.";

@@ -530,8 +530,11 @@ LevelCompleted (void)
     };
 
     ClearSplitVWB ();           // set up for double buffering in split screen
+#if N3DS    
+    VWB_Bar(0, 0, 400, screenHeight / scaleFactor - STATUSLINES + 1, VIEWCOLOR);
+#else
     VWB_Bar (0, 0, 320, screenHeight / scaleFactor - STATUSLINES + 1, VIEWCOLOR);
-
+#endif
     if (bordercol != VIEWCOLOR)
         DrawStatusBorder (VIEWCOLOR);
 
@@ -637,7 +640,7 @@ LevelCompleted (void)
         {
             for (i = 0; i <= timeleft; i++)
             {
-#if SWITCH
+#if defined (SWITCH) || defined (N3DS)
                 utoa((s32)i * PAR_AMOUNT, tempstr, 10);
 #else                
                 ltoa ((s32) i * PAR_AMOUNT, tempstr, 10);
@@ -689,7 +692,7 @@ LevelCompleted (void)
             VW_WaitVBL (VBLWAIT);
             SD_StopSound ();
             bonus += PERCENT100AMT;
-#if SWITCH             
+#if defined (SWITCH) || defined (N3DS)      
             utoa(bonus, tempstr, 10);
 #else 
             ltoa(bonus, tempstr, 10);
@@ -735,7 +738,7 @@ LevelCompleted (void)
             VW_WaitVBL (VBLWAIT);
             SD_StopSound ();
             bonus += PERCENT100AMT;
-#if SWITCH             
+#if defined (SWITCH) || defined (N3DS)            
             utoa(bonus, tempstr, 10);
 #else 
             ltoa(bonus, tempstr, 10);
@@ -779,7 +782,7 @@ LevelCompleted (void)
             VW_WaitVBL (VBLWAIT);
             SD_StopSound ();
             bonus += PERCENT100AMT;
-#if SWITCH             
+#if defined (SWITCH) || defined (N3DS)       
             utoa(bonus, tempstr, 10);
 #else 
             ltoa(bonus, tempstr, 10);
@@ -823,7 +826,7 @@ done:   itoa (kr, tempstr, 10);
         
         GivePoints(bonus);
 
-#if SWITCH             
+#if defined (SWITCH) || defined (N3DS)            
         utoa(bonus, tempstr, 10);
 #else 
         ltoa(bonus, tempstr, 10);

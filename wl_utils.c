@@ -3,7 +3,7 @@
 #include "wl_utils.h"
 
 
-#ifdef SWITCH
+#if defined(SWITCH) || defined (N3DS)
 
 #else
 /*

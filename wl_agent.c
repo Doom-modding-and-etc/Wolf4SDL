@@ -281,29 +281,26 @@ void ControlMovement(objtype *ob)
     // forward/backwards move
     //
     if (controly < 0)
-    {
-#if SDL_MAJOR_VERSION == 1
-        Thrust (ob->angle,-controly*MOVESCALE); // move forwards
-#elif SDL_MAJOR_VERSION == 2        
+    {      
         s32 speed = -controly * MOVESCALE;
+#if SDL_MAJOR_VERSION == 2
         if (gamecontrolstrafe != 0)
             speed = (speed * 70) / 100; // correct faster diagonal movement
+#endif        
         Thrust(ob->angle, speed);       // move forwards
-#endif
     }
     else if (controly > 0)
     {
         angle = ob->angle + ANGLES/2;
         if (angle >= ANGLES)
             angle -= ANGLES;
-#if SDL_MAJOR_VERSION == 1
-        Thrust (angle,controly*BACKMOVESCALE);          // move backwards
-#elif SDL_MAJOR_VERSION == 2
-        s32 speed = -controly * MOVESCALE;
+
+        s32 speed = controly * BACKMOVESCALE;
+#if SDL_MAJOR_VERSION == 2
         if (gamecontrolstrafe != 0)
             speed = (speed * 70) / 100; // correct faster diagonal movement
+#endif        
         Thrust(angle, speed);       // move backwards
-#endif
     }
 
     if (gamestate.victoryflag)              // watching the BJ actor
@@ -431,8 +428,7 @@ static void LatchNumber (int x, int y, unsigned width, int32_t number)
 {
     u32 length,c;
     char    str[20];
-
-#ifdef SWITCH
+#if defined(SWITCH) || defined (N3DS)
     utoa(number, str, 10);
 #else
     ltoa (number,str,10);

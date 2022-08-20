@@ -92,11 +92,11 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=.\mame\fmopl.c
+SOURCE=.\id_ca.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\id_ca.c
+SOURCE=.\id_crt.c
 # End Source File
 # Begin Source File
 
@@ -117,6 +117,10 @@ SOURCE=.\id_us.c
 # Begin Source File
 
 SOURCE=.\id_vh.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\id_vieasm.c
 # End Source File
 # Begin Source File
 
@@ -156,15 +160,7 @@ SOURCE=.\wl_debug.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\wl_dir3dspr.c
-# End Source File
-# Begin Source File
-
 SOURCE=.\wl_draw.c
-# End Source File
-# Begin Source File
-
-SOURCE=.\wl_floorceiling.c
 # End Source File
 # Begin Source File
 
@@ -188,7 +184,15 @@ SOURCE=.\wl_parallax.c
 # End Source File
 # Begin Source File
 
+SOURCE=.\wl_plane.c
+# End Source File
+# Begin Source File
+
 SOURCE=.\wl_play.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\wl_scale.c
 # End Source File
 # Begin Source File
 
@@ -202,10 +206,18 @@ SOURCE=.\wl_state.c
 
 SOURCE=.\wl_text.c
 # End Source File
+# Begin Source File
+
+SOURCE=.\wl_utils.c
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
+# Begin Source File
+
+SOURCE=.\asmcref.h
+# End Source File
 # Begin Source File
 
 SOURCE=.\audiosod.h
@@ -216,15 +228,7 @@ SOURCE=.\audiowl6.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\dc_vmu.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\f_spear.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\mame\fmopl.h
 # End Source File
 # Begin Source File
 
@@ -236,6 +240,10 @@ SOURCE=.\gfxv_apo.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\gfxv_jap.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\gfxv_sod.h
 # End Source File
 # Begin Source File
@@ -244,7 +252,15 @@ SOURCE=.\gfxv_wl6.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\gp2x.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\id_ca.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\id_crt.h
 # End Source File
 # Begin Source File
 
@@ -265,6 +281,10 @@ SOURCE=.\id_us.h
 # Begin Source File
 
 SOURCE=.\id_vh.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\id_vieasm.h
 # End Source File
 # Begin Source File
 
@@ -293,6 +313,10 @@ SOURCE=.\wl_menu.h
 # Begin Source File
 
 SOURCE=.\wl_shade.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\wl_utils.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"

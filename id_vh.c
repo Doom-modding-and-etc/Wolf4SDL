@@ -66,7 +66,6 @@ void VW_MeasurePropString(const char *string, word *width, word *height)
 }
 
 #if SDL_MAJOR_VERSION == 2
-//Wolf3s: This works similar to sdl_wrap.c
 void VH_RenderTextures(SDL_Surface* surface)
 {
     SDL_UpdateTexture(texture, NULL, screen->pixels, screenWidth * sizeof(Uint32));
@@ -87,12 +86,12 @@ void VH_RenderTextures(SDL_Surface* surface)
 void VH_UpdateScreen(SDL_Surface *surface)
 {
 	SDL_BlitSurface (surface,NULL,screen,NULL);
+
 #if SDL_MAJOR_VERSION == 1
-	SDL_Flip(screen);
+    SDL_Flip(screen);
 #elif SDL_MAJOR_VERSION == 2
     VH_RenderTextures(screen);
 #endif
-
 }
 
 void VWB_DrawTile8 (int x, int y, int tile)
@@ -313,13 +312,9 @@ boolean FizzleFade (SDL_Surface *source, int x1, int y1,
             if(usedoublebuffering) first = 0;
 
             VL_UnlockSurface(screen);
-#if SDL_MAJOR_VERSION == 1
-	        SDL_Flip(screen);
-#elif SDL_MAJOR_VERSION == 2
-            VH_RenderTextures(screen);
-#endif
-
+            VH_UpdateScreen(screen);
         }
+
         else
         {
             // No surface, so only enhance rndval
@@ -341,6 +336,6 @@ boolean FizzleFade (SDL_Surface *source, int x1, int y1,
 finished:
     VL_UnlockSurface(source);
     VL_UnlockSurface(screen);
-    VH_UpdateScreen (source);
+    VH_UpdateScreen(source);
     return false;
 }

@@ -17,7 +17,6 @@
 #define assert_ret(x) assert(x)
 #endif
 
-boolean fullscreen = true;
 #if defined(_arch_dreamcast)
 boolean usedoublebuffering = false;
 u32 screenWidth = 320;
@@ -38,24 +37,34 @@ boolean usedoublebuffering = true;
 u32 screenWidth = 640;
 u32 screenHeight = 448;
 int screenBits = 8;
+#elif defined(N3DS)
+boolean fullscreen = true;
+boolean usedoublebuffering = true;
+int screenWidth = 400;
+int screenHeight = 240;
+int screenBits = 32;      // use "best" color depth according to libSDL  // ADDEDFIX 0
 #else
+boolean fullscreen = true;
 boolean usedoublebuffering = true;
 u32 screenWidth = 640;
 u32 screenHeight = 405;
-int screenBits = 8;      // use "best" color depth according to libSDL
+u32 screenBits = 8;      // use "best" color depth according to libSDL
 #endif
 
-SDL_Surface *screen;
+
+SDL_Surface *screen = NULL;
+SDL_Surface* screenBuffer = NULL;
+#if N3DS
+int screenPitch;
+int bufferPitch;
+#else
 u32 screenPitch;
-
-SDL_Surface *screenBuffer;
 u32 bufferPitch;
-
+#endif
 #if SDL_MAJOR_VERSION == 2
 SDL_Window *window;
 SDL_Renderer *renderer;
 SDL_Texture *texture;
-SDL_RendererInfo* info;
 #endif
 
 int scaleFactor;
@@ -140,12 +149,11 @@ void VL_SetVGAPlaneMode (void)
 #endif
 
 #if SDL_MAJOR_VERSION == 1
-    
-#ifdef CRT    
-    //Fab's and André CRT Hack
-    screenWidth = 640;
-    screenHeight = 480;
-#endif    
+#ifdef CRT
+    //Fab's CRT Hack
+    //Adjust height so the screen is 4:3 aspect ratio
+    screenHeight = screenWidth * 3.0 / 4.0;
+#endif  
     SDL_WM_SetCaption(title, NULL);
 
     if (screenBits == -1)
@@ -154,12 +162,17 @@ void VL_SetVGAPlaneMode (void)
         screenBits = vidInfo->vfmt->BitsPerPixel;
     }
 
-    screen = SDL_SetVideoMode(screenWidth, screenHeight, screenBits,
-        (usedoublebuffering ? SDL_HWSURFACE | SDL_DOUBLEBUF : 0)
+#if N3DS
+    screen = SDL_SetVideoMode(screenWidth, screenHeight, 32, SDL_TOPSCR | SDL_CONSOLEBOTTOM | SDL_DOUBLEBUF);
+#else
+    screen = SDL_SetVideoMode(screenWidth, screenHeight, screenBits, 
+        (usedoublebuffering ? SDL_HWSURFACE | SDL_DOUBLEBUF : 0) | (screenBits == 8 ? SDL_HWPALETTE : 0)
+
 #ifdef CRT
         | (fullscreen ? SDL_FULLSCREEN : 0) | SDL_OPENGL | SDL_OPENGLBLIT);
-#else
-        | (screenBits == 8 ? SDL_HWPALETTE : 0));
+#else       
+        | (fullscreen ? SDL_FULLSCREEN : 0));
+#endif
 #endif
 
     if(!screen)
@@ -175,13 +188,10 @@ void VL_SetVGAPlaneMode (void)
     memcpy(curpal, gamepal, sizeof(SDL_Color) * 256);
 
 #ifdef CRT  
-    //Fab's and André´s CRT Hack
+    //Fab's and AndrÃ©Â´s CRT Hack
     CRT_Init(screenWidth);
-    //Fab's and André´s CRT Hack
-    screenWidth = 320;
-    screenHeight = 200;
-#endif
-    screenBuffer = SDL_CreateRGBSurface(SDL_GetVideoSurface(), screenWidth,
+#endif 
+    screenBuffer = SDL_CreateRGBSurface(SDL_SWSURFACE, screenWidth,
         screenHeight, 8, 0, 0, 0, 0);
     if (!screenBuffer)
     {
@@ -189,11 +199,14 @@ void VL_SetVGAPlaneMode (void)
         exit(1);
     }
     SDL_SetColors(screenBuffer, gamepal, 0, 256);
-    //Flippin the screen :)
-    SDL_Flip(screen);
 #elif SDL_MAJOR_VERSION == 2
+#ifdef CRT
+    //Fab's CRT Hack:
+    //Adjust height so the screen is 4:3 aspect ratio
+    screenHeight = screenWidth * 3.0 / 4.0;
+#endif    
     window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight,
-        (fullscreen ? SDL_WINDOW_FULLSCREEN : 0 | SDL_WINDOW_OPENGL));
+    (fullscreen ? SDL_WINDOW_FULLSCREEN : 0 | SDL_WINDOW_OPENGL));
 
     SDL_PixelFormatEnumToMasks(SDL_PIXELFORMAT_ARGB8888, &screenBits, &r,&g,&b,&a);
 
@@ -212,7 +225,12 @@ void VL_SetVGAPlaneMode (void)
 
     SDL_SetPaletteColors(screen->format->palette, gamepal, 0, 256);
     memcpy(curpal, gamepal, sizeof(SDL_Color) * 256);
-    
+
+#ifdef CRT  
+    //Fab's and AndrÃ©Â´s CRT Hack
+    SDL_Flip(screen);
+#endif
+
     screenBuffer = SDL_CreateRGBSurface(0, screenWidth, screenHeight, 
     8, 0, 0, 0, 0);
     
@@ -267,9 +285,16 @@ void VL_ConvertPalette(byte *srcpal, SDL_Color *destpal, int numColors)
 
     for(int i=0; i<numColors; i++)
     {
+#if N3DS
+        destpal[i].r = *srcpal++;
+        destpal[i].g = *srcpal++;
+        destpal[i].b = *srcpal++;
+#else
         destpal[i].r = *srcpal++ * 255 / 63;
         destpal[i].g = *srcpal++ * 255 / 63;
         destpal[i].b = *srcpal++ * 255 / 63;
+#endif
+
     }
 }
 
@@ -321,25 +346,29 @@ void VL_SetColor(int color, int red, int green, int blue)
     else
     {
         SDL_SetPalette(screenBuffer, SDL_LOGPAL, &col, color, 1);
-        SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
-
+        
+#ifdef CRT        
         SDL_Flip(screen);
+        CRT_DAC();
+#else
+        VH_UpdateScreen(screen);
+#endif
 #elif SDL_MAJOR_VERSION == 2
     SDL_SetPaletteColors(screen->format->palette, &col, color, 1);
     else
     {
         SDL_SetPaletteColors(screenBuffer->format->palette, &col, color, 1);
-        SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
-
+       
         SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, screenBuffer);
-        SDL_RenderCopy(renderer, texture, NULL, NULL);
-        SDL_RenderPresent(renderer);        
+               
 #ifdef CRT        
-        CRT_Init(screenWidth);
+        SDL_Flip(screen);
         CRT_DAC();
-#endif        
-        SDL_DestroyTexture(texture);
+#else
+        VH_UpdateScreen(screen);
 #endif
+#endif
+
     }
 }
 
@@ -384,21 +413,17 @@ void VL_SetPalette(SDL_Color* palette, boolean forceupdate)
     else
     {
         SDL_SetPalette(screenBuffer, SDL_LOGPAL, palette, 0, 256);
-        if (forceupdate)
-        {
-            SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
-
-            SDL_Flip(screen);
 #elif SDL_MAJOR_VERSION == 2
         SDL_SetPaletteColors(screen->format->palette, palette, 0, 256);
     else
     {
         SDL_SetPaletteColors(screenBuffer->format->palette, palette, 0, 256);
+#endif
+        
         if (forceupdate)
         {
-            SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
-            VH_RenderTextures(screen);
-#endif
+            VL_ScreenToScreen(screenBuffer, screen);
+            VH_UpdateScreen(screen);
         }
     }
 }

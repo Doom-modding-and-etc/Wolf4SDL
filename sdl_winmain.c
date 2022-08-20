@@ -243,14 +243,7 @@ int console_main(int argc, char *argv[])
 	}
 	atexit(cleanup_output);
 	atexit(cleanup);
-#if SDL_MAJOR_VERSION == 1
-	/* Sam:
-	   We still need to pass in the application handle so that
-	   DirectInput will initialize properly when SDL_RegisterApp()
-	   is called later in the video initialization.
-	 */
-	SDL_SetModuleHandle(GetModuleHandle(NULL));
-#endif
+
 	/* Run the application main() code */
 	status = SDL_main(argc, argv);
 
@@ -287,6 +280,15 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, LPSTR szCmdLine, int sw)
 	char path[MAX_PATH];
 #endif
 	FILE *newfp;
+#endif
+
+#if SDL_MAJOR_VERSION == 1
+	/* Sam:
+	   We still need to pass in the application handle so that
+	   DirectInput will initialize properly when SDL_RegisterApp()
+	   is called later in the video initialization.
+	 */
+	SDL_SetModuleHandle(GetModuleHandle(NULL));
 #endif
 
 	/* Start up DDHELP.EXE before opening any files, so DDHELP doesn't

@@ -7,9 +7,7 @@
 
 /*
 =============================================================================
-
                                                  LOCAL CONSTANTS
-
 =============================================================================
 */
 
@@ -17,9 +15,7 @@
 
 /*
 =============================================================================
-
                                                  GLOBAL VARIABLES
-
 =============================================================================
 */
 
@@ -27,19 +23,19 @@ boolean madenoise;              // true when shooting or screaming
 
 exit_t playstate;
 
-static musicnames lastmusicchunk = (musicnames) 0;
+static musicnames lastmusicchunk = (musicnames)0;
 
 int     DebugOk;
 
 objtype objlist[MAXACTORS];
-objtype *newobj, *obj, *player, *lastobj, *objfreelist, *killerobj;
+objtype* newobj, * obj, * player, * lastobj, * objfreelist, * killerobj;
 
-boolean singlestep,godmode,noclip,ammocheat,mapreveal;
+boolean singlestep, godmode, noclip, ammocheat, mapreveal;
 int     extravbls;
 
 tiletype tilemap[MAPSIZE][MAPSIZE]; // wall values only
 boolean     spotvis[MAPSIZE][MAPSIZE];
-objtype *actorat[MAPSIZE][MAPSIZE];
+objtype* actorat[MAPSIZE][MAPSIZE];
 #ifdef REVEALMAP
 boolean     mapseen[MAPSIZE][MAPSIZE];
 #endif
@@ -54,132 +50,132 @@ u32 tics;
 // control info
 //
 boolean mouseenabled, joystickenabled;
-int dirscan[4] = 
-{ 
-    sc_UpArrow, 
-    sc_RightArrow, 
-    sc_DownArrow, 
-    sc_LeftArrow 
+int dirscan[4] =
+{
+    sc_UpArrow,
+    sc_RightArrow,
+    sc_DownArrow,
+    sc_LeftArrow
 };
-#ifdef EXTRACONTROLS
-int buttonscan[NUMBUTTONS] = 
-{ 
-    sc_Control, 
-    sc_Alt, 
-    sc_LShift, 
+#ifndef EXTRACONTROLS
+int buttonscan[NUMBUTTONS] =
+{
+    sc_Control,
+    sc_Alt,
+    sc_LShift,
     sc_Space,
     sc_W,
     sc_S,
-    sc_1, 
-    sc_2, 
-    sc_3, 
-    sc_4, 
-    sc_A, 
-    sc_D, 
-    sc_6, 
-    sc_7 
+    sc_1,
+    sc_2,
+    sc_3,
+    sc_4,
+    sc_A,
+    sc_D,
+    sc_6,
+    sc_7
 };
 #else
-int buttonscan[NUMBUTTONS] = 
-{ 
-     sc_Control, 
+int buttonscan[NUMBUTTONS] =
+{
+     sc_Control,
      sc_Alt,
-     sc_LShift, 
-     sc_Space, 
-     sc_1, 
-     sc_2, 
-     sc_3, 
-     sc_4 
+     sc_LShift,
+     sc_Space,
+     sc_1,
+     sc_2,
+     sc_3,
+     sc_4
 };
 #endif // EXTRACONTROLS
 #if SDL_MAJOR_VERSION == 2
-int buttongamecontroller[bt_Max] = 
-{ 
-    bt_use,      
-    bt_prevweapon, 
-    bt_nobutton, 
-    bt_nextweapon, 
-    bt_pause,    
+int buttongamecontroller[bt_Max] =
+{
+    bt_use,
+    bt_prevweapon,
     bt_nobutton,
-    bt_esc,      
-    bt_nobutton,   
-    bt_nobutton, 
-    bt_run,        
-    bt_attack,   
+    bt_nextweapon,
+    bt_pause,
     bt_nobutton,
-    bt_nobutton, 
-    bt_nobutton,   
-    bt_nobutton, 
-    bt_nobutton,   
-    bt_nobutton, 
+    bt_esc,
     bt_nobutton,
-    bt_nobutton, 
-    bt_nobutton,   
-    bt_nobutton 
+    bt_nobutton,
+    bt_run,
+    bt_attack,
+    bt_nobutton,
+    bt_nobutton,
+    bt_nobutton,
+    bt_nobutton,
+    bt_nobutton,
+    bt_nobutton,
+    bt_nobutton,
+    bt_nobutton,
+    bt_nobutton,
+    bt_nobutton
 };
 #endif
 
-int buttonmouse[4] = 
+int buttonmouse[4] =
 {
-    bt_attack, 
-    bt_strafe, 
-    bt_use, 
-    bt_nobutton 
+    bt_attack,
+    bt_strafe,
+    bt_use,
+    bt_nobutton
 };
 
-int buttonjoy[32] = 
+int buttonjoy[32] =
 {
 
 #ifdef _arch_dreamcast
     bt_attack,
-    bt_strafe, 
-    bt_use, 
-    bt_run, 
-    bt_esc, 
-    bt_prevweapon, 
-    bt_nobutton, 
+    bt_strafe,
+    bt_use,
+    bt_run,
+    bt_esc,
+    bt_prevweapon,
+    bt_nobutton,
     bt_nextweapon,
-    bt_pause, 
-    bt_strafeleft, 
-    bt_straferight, 
-    bt_nobutton, 
-    bt_nobutton, 
-    bt_nobutton, 
-    bt_nobutton, 
+    bt_pause,
+    bt_strafeleft,
+    bt_straferight,
+    bt_nobutton,
+    bt_nobutton,
+    bt_nobutton,
+    bt_nobutton,
     bt_nobutton,
 #else
-    bt_attack, 
-    bt_strafe, 
-    bt_use, 
-    bt_run, 
-    bt_strafeleft, 
-    bt_straferight, 
-    bt_esc, 
+    bt_attack,
+    bt_strafe,
+    bt_use,
+    bt_run,
+    bt_strafeleft,
+    bt_straferight,
+    bt_esc,
     bt_pause,
     bt_nextweapon,
     bt_prevweapon,
-    bt_nobutton, 
-    bt_nobutton, 
-    bt_nobutton, 
-    bt_nobutton, 
-    bt_nobutton, 
+    bt_nobutton,
+    bt_nobutton,
+    bt_nobutton,
+    bt_nobutton,
+    bt_nobutton,
     bt_nobutton,
 #endif
-    bt_nobutton, 
-    bt_nobutton, 
-    bt_nobutton, 
-    bt_nobutton, 
-    bt_nobutton, 
-    bt_nobutton, 
-    bt_nobutton, 
     bt_nobutton,
-    bt_nobutton, 
-    bt_nobutton, 
     bt_nobutton,
-    bt_nobutton, 
-    bt_nobutton, 
     bt_nobutton,
-    bt_nobutton, 
+    bt_nobutton,
+    bt_nobutton,
+    bt_nobutton,
+    bt_nobutton,
+    bt_nobutton,
+    bt_nobutton,
+    bt_nobutton,
+    bt_nobutton,
+    bt_nobutton,
+    bt_nobutton,
+    bt_nobutton,
+    bt_nobutton,
     bt_nobutton
 };
 
@@ -188,8 +184,8 @@ int viewsize;
 boolean buttonheld[NUMBUTTONS];
 
 boolean demorecord, demoplayback;
-s8 *demoptr, *lastdemoptr;
-void   *demobuffer;
+s8* demoptr, * lastdemoptr;
+void* demobuffer;
 
 //
 // current user input
@@ -209,20 +205,18 @@ int lastgamemusicoffset = 0;
 //===========================================================================
 
 
-void CenterWindow (word w, word h);
-void InitObjList (void);
-void RemoveObj (objtype * gone);
-void PollControls (void);
-int StopMusic (void);
-void StartMusic (void);
-void ContinueMusic (int offs);
-void PlayLoop (void);
+void CenterWindow(word w, word h);
+void InitObjList(void);
+void RemoveObj(objtype* gone);
+void PollControls(void);
+int StopMusic(void);
+void StartMusic(void);
+void ContinueMusic(int offs);
+void PlayLoop(void);
 
 /*
 =============================================================================
-
                                                  LOCAL VARIABLES
-
 =============================================================================
 */
 
@@ -233,7 +227,7 @@ objtype dummyobj;
 // LIST OF SONGS FOR EACH VERSION
 //
 
-int songs[] = 
+int songs[] =
 {
 #ifndef SPEAR
     //
@@ -364,9 +358,7 @@ int songs[] =
 
 /*
 =============================================================================
-
                                USER CONTROL
-
 =============================================================================
 */
 
@@ -378,17 +370,13 @@ int songs[] =
 ===================
 */
 
-void PollKeyboardButtons (void)
+void PollKeyboardButtons(void)
 {
     int i;
 
-    for(i = 0; i < NUMBUTTONS; i++)
-
-#if SDL_MAJOR_VERSION == 1        
-        if (KeyboardPress[buttonscan[i]])
-#elif SDL_MAJOR_VERSION == 2        
+    for (i = 0; i < NUMBUTTONS; i++)     
         if (Keyboard(buttonscan[i]))
-#endif            
+            
             buttonstate[i] = true;
 }
 
@@ -401,9 +389,9 @@ void PollKeyboardButtons (void)
 ===================
 */
 
-void PollMouseButtons (void)
+void PollMouseButtons(void)
 {
-    int buttons = IN_MouseButtons ();
+    int buttons = IN_MouseButtons();
 
     if (buttons & 1)
         buttonstate[buttonmouse[0]] = true;
@@ -412,7 +400,7 @@ void PollMouseButtons (void)
     if (buttons & 4)
         buttonstate[buttonmouse[2]] = true;
 }
-#ifdef EXTRACONTROLS
+#ifndef EXTRACONTROLS
 /*
 ===================
 =
@@ -421,13 +409,13 @@ void PollMouseButtons (void)
 ===================
 */
 
-void PollJoystickButtons (void)
+void PollJoystickButtons(void)
 {
-    int i,val,buttons = IN_JoyButtons();
+    int i, val, buttons = IN_JoyButtons();
 
-    for(i = 0, val = 1; i < JoyNumButtons; i++, val <<= 1)
+    for (i = 0, val = 1; i < JoyNumButtons; i++, val <<= 1)
     {
-        if(buttons & val)
+        if (buttons & val)
             buttonstate[buttonjoy[i]] = true;
     }
 }
@@ -443,7 +431,7 @@ void PollJoystickButtons (void)
 */
 void PollGameControllerButtons(void)
 {
-    for(int i = 0; i < bt_Max; i++)
+    for (int i = 0; i < bt_Max; i++)
     {
         if (GameControllerButtons[i])
         {
@@ -462,19 +450,9 @@ void PollGameControllerButtons(void)
 ===================
 */
 
-void PollKeyboardMove (void)
+void PollKeyboardMove(void)
 {
     int delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
-#if SDL_MAJOR_VERSION == 1
-    if (KeyboardPress[dirscan[di_north]])
-        controly -= delta;
-    if (KeyboardPress[dirscan[di_south]])
-        controly += delta;
-    if (KeyboardPress[dirscan[di_west]])
-        controlx -= delta;
-    if (KeyboardPress[dirscan[di_east]])
-        controlx += delta;
-#elif SDL_MAJOR_VERSION == 2
     if (Keyboard(dirscan[di_north]))
         controly -= delta;
     if (Keyboard(dirscan[di_south]))
@@ -483,7 +461,6 @@ void PollKeyboardMove (void)
         controlx -= delta;
     if (Keyboard(dirscan[di_east]))
         controlx += delta;
-#endif
 }
 
 
@@ -495,13 +472,13 @@ void PollKeyboardMove (void)
 ===================
 */
 
-void PollMouseMove (void)
+void PollMouseMove(void)
 {
     int mousexmove, mouseymove;
 
 #if SDL_MAJOR_VERSION == 1
     SDL_GetMouseState(&mousexmove, &mouseymove);
-    if(IN_IsInputGrabbed())
+    if (IN_IsInputGrabbed())
         IN_CenterMouse();
 
     mousexmove -= screenWidth / 2;
@@ -521,7 +498,7 @@ void PollMouseMove (void)
 #endif
 }
 
-#ifdef EXTRACONTROLS
+
 /*
 ===================
 =
@@ -530,24 +507,24 @@ void PollMouseMove (void)
 ===================
 */
 
-void PollJoystickMove (void)
+void PollJoystickMove(void)
 {
     int joyx, joyy;
 
-    IN_GetJoyDelta (&joyx, &joyy);
+    IN_GetJoyDelta(&joyx, &joyy);
 
     int delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
 
     if (joyx > 64 || buttonstate[bt_turnright])
         controlx += delta;
-    else if (joyx < -64  || buttonstate[bt_turnleft])
+    else if (joyx < -64 || buttonstate[bt_turnleft])
         controlx -= delta;
     if (joyy > 64 || buttonstate[bt_movebackward])
         controly += delta;
     else if (joyy < -64 || buttonstate[bt_moveforward])
         controly -= delta;
 }
-#endif
+
 
 #if SDL_MAJOR_VERSION == 2
 /*
@@ -562,20 +539,20 @@ void PollGameControllerMove(void)
     int delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
 
 
-        if (GameControllerRightStick[0] > 64)
-            controlx += delta;
-        else if (GameControllerRightStick[0] < -64)
-            controlx -= delta;
+    if (GameControllerRightStick[0] > 64)
+        controlx += delta;
+    else if (GameControllerRightStick[0] < -64)
+        controlx -= delta;
 
-        if (GameControllerLeftStick[1] > 120)
-            controly += delta;
-        else if (GameControllerLeftStick[1] < -64)
-            controly -= delta;
+    if (GameControllerLeftStick[1] > 120)
+        controly += delta;
+    else if (GameControllerLeftStick[1] < -64)
+        controly -= delta;
 
-        if (GameControllerLeftStick[0] > 64)
-            gamecontrolstrafe += delta;
-        else if (GameControllerLeftStick[0] < -64)
-            gamecontrolstrafe -= delta;
+    if (GameControllerLeftStick[0] > 64)
+        gamecontrolstrafe += delta;
+    else if (GameControllerLeftStick[0] < -64)
+        gamecontrolstrafe -= delta;
 
 }
 #endif
@@ -594,40 +571,40 @@ void PollGameControllerMove(void)
 ===================
 */
 
-void PollControls (void)
+void PollControls(void)
 {
     int max, min, i;
     byte buttonbits;
 
     IN_ProcessEvents();
 
-//
-// get timing info for last frame
-//
+    //
+    // get timing info for last frame
+    //
     if (demoplayback || demorecord)   // demo recording and playback needs to be constant
     {
         // wait up to DEMOTICS Wolf tics
         u32 curtime = SDL_GetTicks();
         lasttimecount += DEMOTICS;
         s32 timediff = (lasttimecount * 100) / 7 - curtime;
-        if(timediff > 0)
+        if (timediff > 0)
             SDL_Delay(timediff);
 
-        if(timediff < -2 * DEMOTICS)       // more than 2-times DEMOTICS behind?
+        if (timediff < -2 * DEMOTICS)       // more than 2-times DEMOTICS behind?
             lasttimecount = (curtime * 7) / 100;    // yes, set to current timecount
 
         tics = DEMOTICS;
     }
     else
-        CalcTics ();
+        CalcTics();
 
     controlx = 0;
     controly = 0;
 #if SDL_MAJOR_VERSION == 2
     gamecontrolstrafe = 0;
 #endif
-    memcpy (buttonheld, buttonstate, sizeof (buttonstate));
-    memset (buttonstate, 0, sizeof (buttonstate));
+    memcpy(buttonheld, buttonstate, sizeof(buttonstate));
+    memset(buttonstate, 0, sizeof(buttonstate));
 
     if (demoplayback)
     {
@@ -647,29 +624,27 @@ void PollControls (void)
         if (demoptr == lastdemoptr)
             playstate = ex_completed;   // demo is done
 
-        controlx *= (int) tics;
-        controly *= (int) tics;
+        controlx *= (int)tics;
+        controly *= (int)tics;
 
         return;
     }
 
 
-//
-// get button states
-//
-    PollKeyboardButtons ();
+    //
+    // get button states
+    //
+    PollKeyboardButtons();
 #if SDL_MAJOR_VERSION == 2
     PollGameControllerButtons();
 #endif
     if (mouseenabled && IN_IsInputGrabbed())
-        PollMouseButtons ();
-#ifdef EXTRACONTROLS
+        PollMouseButtons();
     if (joystickenabled)
-        PollJoystickButtons ();
-#endif
-//
-// get movements
-//
+        PollJoystickButtons();
+    //
+    // get movements
+    //
     PollKeyboardMove();
 #if SDL_MAJOR_VERSION == 2
     PollGameControllerMove();
@@ -677,13 +652,13 @@ void PollControls (void)
 
     if (mouseenabled && IN_IsInputGrabbed())
         PollMouseMove();
-#ifdef EXTRACONTROLS
+#ifndef EXTRACONTROLS
     if (joystickenabled)
         PollJoystickMove();
 #endif
-//
-// bound movement to a maximum
-//
+    //
+    // bound movement to a maximum
+    //
     max = 100 * tics;
     min = -max;
     if (controlx > max)
@@ -693,7 +668,7 @@ void PollControls (void)
 
     if (controly > max)
         controly = max;
-    
+
     else if (controly < min)
         controly = min;
 
@@ -710,8 +685,8 @@ void PollControls (void)
         //
         // save info out to demo buffer
         //
-        controlx /= (int) tics;
-        controly /= (int) tics;
+        controlx /= (int)tics;
+        controly /= (int)tics;
 
         buttonbits = 0;
 
@@ -731,8 +706,8 @@ void PollControls (void)
             playstate = ex_completed;
         else
         {
-            controlx *= (int) tics;
-            controly *= (int) tics;
+            controlx *= (int)tics;
+            controly *= (int)tics;
         }
     }
 }
@@ -752,9 +727,9 @@ void PollControls (void)
 #define MAXX    320
 #define MAXY    160
 
-void CenterWindow (word w, word h)
+void CenterWindow(word w, word h)
 {
-    US_DrawWindow (((MAXX / 8) - w) / 2, ((MAXY / 8) - h) / 2, w, h);
+    US_DrawWindow(((MAXX / 8) - w) / 2, ((MAXY / 8) - h) / 2, w, h);
 }
 
 //===========================================================================
@@ -768,7 +743,7 @@ void CenterWindow (word w, word h)
 =====================
 */
 
-void CheckKeys (void)
+void CheckKeys(void)
 {
     ScanCode scan;
 
@@ -788,19 +763,19 @@ void CheckKeys (void)
         WindowH = 160;
         if (godmode)
         {
-            Message ("God mode OFF");
-            SD_PlaySound (NOBONUSSND);
+            Message("God mode OFF");
+            SD_PlaySound(NOBONUSSND);
         }
         else
         {
-            Message ("God mode ON");
-            SD_PlaySound (ENDBONUS2SND);
+            Message("God mode ON");
+            SD_PlaySound(ENDBONUS2SND);
         }
 
-        IN_Ack ();
+        IN_Ack();
         godmode ^= 1;
-        DrawPlayBorderSides ();
-        IN_ClearKeysDown ();
+        DrawPlayBorderSides();
+        IN_ClearKeysDown();
         return;
     }
 #endif
@@ -809,11 +784,7 @@ void CheckKeys (void)
     //
     // SECRET CHEAT CODE: 'MLI'
     //
-#if SDL_MAJOR_VERSION == 1
-if (KeyboardPress[sc_M] && KeyboardPress[sc_L] && KeyboardPress[sc_I])
-#elif SDL_MAJOR_VERSION == 2
-    if (Keyboard(sc_M) && Keyboard(sc_L) && Keyboard(sc_I))
-#endif    
+    if (Keyboard(sc_M) && Keyboard(sc_L) && Keyboard(sc_I))   
     {
 
         gamestate.health = 100;
@@ -821,46 +792,41 @@ if (KeyboardPress[sc_M] && KeyboardPress[sc_L] && KeyboardPress[sc_I])
         gamestate.keys = 3;
         gamestate.score = 0;
         gamestate.TimeCount += 42000L;
-        GiveWeapon (wp_chaingun);
-        DrawWeapon ();
-        DrawHealth ();
-        DrawKeys ();
-        DrawAmmo ();
-        DrawScore ();
+        GiveWeapon(wp_chaingun);
+        DrawWeapon();
+        DrawHealth();
+        DrawKeys();
+        DrawAmmo();
+        DrawScore();
 
-        ClearMemory ();
-        ClearSplitVWB ();
+        ClearMemory();
+        ClearSplitVWB();
 
-        Message (STR_CHEATER1 "\n"
-                 STR_CHEATER2 "\n\n" STR_CHEATER3 "\n" STR_CHEATER4 "\n" STR_CHEATER5);
+        Message(STR_CHEATER1 "\n"
+            STR_CHEATER2 "\n\n" STR_CHEATER3 "\n" STR_CHEATER4 "\n" STR_CHEATER5);
 
-        IN_ClearKeysDown ();
-        IN_Ack ();
+        IN_ClearKeysDown();
+        IN_Ack();
 
         if (viewsize < 17)
-            DrawPlayBorder ();
+            DrawPlayBorder();
     }
 
     //
     // OPEN UP DEBUG KEYS
     //
 #ifdef DEBUGKEYS
-
-#if SDL_MAJOR_VERSION == 1
-    if (KeyboardPress[sc_BackSpace] && KeyboardPress[sc_LShift] && KeyboardPress[sc_Alt] && param_debugmode)
-#elif SDL_MAJOR_VERSION == 2
-    if (Keyboard(sc_BackSpace) && Keyboard(sc_LShift) && Keyboard(sc_Alt) && param_debugmode)
-#endif     
+    if (Keyboard(sc_BackSpace) && Keyboard(sc_LShift) && Keyboard(sc_Alt) && param_debugmode)     
     {
-       
-        ClearMemory ();
-        ClearSplitVWB ();
 
-        Message ("Debugging keys are\nnow available!");
-        IN_ClearKeysDown ();
-        IN_Ack ();
+        ClearMemory();
+        ClearSplitVWB();
 
-        DrawPlayBorderSides ();
+        Message("Debugging keys are\nnow available!");
+        IN_ClearKeysDown();
+        IN_Ack();
+
+        DrawPlayBorderSides();
         DebugOk = 1;
     }
 #endif
@@ -869,37 +835,33 @@ if (KeyboardPress[sc_M] && KeyboardPress[sc_L] && KeyboardPress[sc_I])
     // TRYING THE KEEN CHEAT CODE!
     //
 
-#if SDL_MAJOR_VERSION == 1
-    if (KeyboardPress[sc_B] && KeyboardPress[sc_A] && KeyboardPress[sc_T])
-#elif SDL_MAJOR_VERSION == 2
-    if (Keyboard(sc_B) && Keyboard(sc_A) && Keyboard(sc_T))
-#endif    
+    if (Keyboard(sc_B) && Keyboard(sc_A) && Keyboard(sc_T))  
     {
 
-        ClearMemory ();
-        ClearSplitVWB ();
+        ClearMemory();
+        ClearSplitVWB();
 
-        Message ("Commander Keen is also\n"
-                 "available from Apogee, but\n"
-                 "then, you already know\n" "that - right, Cheatmeister?!");
+        Message("Commander Keen is also\n"
+            "available from Apogee, but\n"
+            "then, you already know\n" "that - right, Cheatmeister?!");
 
-        IN_ClearKeysDown ();
-        IN_Ack ();
+        IN_ClearKeysDown();
+        IN_Ack();
 
         if (viewsize < 18)
-            DrawPlayBorder ();
+            DrawPlayBorder();
     }
 
-//
-// pause key weirdness can't be checked as a scan code
-//
-    if(buttonstate[bt_pause]) Paused = true;
-    if(Paused)
+    //
+    // pause key weirdness can't be checked as a scan code
+    //
+    if (buttonstate[bt_pause]) Paused = true;
+    if (Paused)
     {
         int lastoffs = StopMusic();
-        VWB_DrawPic (16 * 8, 80 - 2 * 8, PAUSEDPIC);
+        VWB_DrawPic(16 * 8, 80 - 2 * 8, PAUSEDPIC);
         VW_UpdateScreen();
-        IN_Ack ();
+        IN_Ack();
         Paused = false;
         ContinueMusic(lastoffs);
         if (MousePresent && IN_IsInputGrabbed())
@@ -908,43 +870,43 @@ if (KeyboardPress[sc_M] && KeyboardPress[sc_L] && KeyboardPress[sc_I])
         return;
     }
 
-//
-// F1-F7/ESC to enter control panel
-//
+    //
+    // F1-F7/ESC to enter control panel
+    //
     if (
 #ifndef DEBCHECK
-           scan == sc_F10 ||
+        scan == sc_F10 ||
 #endif
-           scan == sc_F9 || scan == sc_F7 || scan == sc_F8)     // pop up quit dialog
+        scan == sc_F9 || scan == sc_F7 || scan == sc_F8)     // pop up quit dialog
     {
         short oldmapon = gamestate.mapon;
         short oldepisode = gamestate.episode;
-        ClearMemory ();
-        ClearSplitVWB ();
-        US_ControlPanel (scan);
+        ClearMemory();
+        ClearSplitVWB();
+        US_ControlPanel(scan);
 
-        DrawPlayBorderSides ();
+        DrawPlayBorderSides();
 
-        SETFONTCOLOR (0, 15);
-        IN_ClearKeysDown ();
+        SETFONTCOLOR(0, 15);
+        IN_ClearKeysDown();
         return;
     }
 
     if ((scan >= sc_F1 && scan <= sc_F9) || scan == sc_Escape || buttonstate[bt_esc])
     {
-        int lastoffs = StopMusic ();
-        ClearMemory ();
-        VW_FadeOut ();
-
-        US_ControlPanel (buttonstate[bt_esc] ? sc_Escape : scan);
-
-        SETFONTCOLOR (0, 15);
-        IN_ClearKeysDown ();
+        int lastoffs = StopMusic();
+        ClearMemory();
         VW_FadeOut();
-        if(viewsize != 21)
-            DrawPlayScreen ();
+
+        US_ControlPanel(buttonstate[bt_esc] ? sc_Escape : scan);
+
+        SETFONTCOLOR(0, 15);
+        IN_ClearKeysDown();
+        VW_FadeOut();
+        if (viewsize != 21)
+            DrawPlayScreen();
         if (!startgame && !loadedgame)
-            ContinueMusic (lastoffs);
+            ContinueMusic(lastoffs);
         if (loadedgame)
             playstate = ex_abort;
         lasttimecount = GetTimeCount();
@@ -953,22 +915,18 @@ if (KeyboardPress[sc_M] && KeyboardPress[sc_L] && KeyboardPress[sc_I])
         return;
     }
 
-//
-// TAB-? debug keys
-//
+    //
+    // TAB-? debug keys
+    //
 #ifdef DEBUGKEYS
-#if SDL_MAJOR_VERSION == 1
-    if (KeyboardPress[sc_Tab] && DebugOk)
-#elif SDL_MAJOR_VERSION == 2
-    if (Keyboard(sc_Tab) && DebugOk)
-#endif    
+    if (Keyboard(sc_Tab) && DebugOk)    
     {
-     
+
         fontnumber = 0;
-        SETFONTCOLOR (0, 15);
-        if (DebugKeys () && viewsize < 20)
+        SETFONTCOLOR(0, 15);
+        if (DebugKeys() && viewsize < 20)
         {
-            DrawPlayBorder ();       // dont let the blue borders flash
+            DrawPlayBorder();       // dont let the blue borders flash
 
             if (MousePresent && IN_IsInputGrabbed())
                 IN_CenterMouse();     // Clear accumulated mouse movement
@@ -980,13 +938,9 @@ if (KeyboardPress[sc_M] && KeyboardPress[sc_L] && KeyboardPress[sc_I])
 #endif
 
 #ifdef VIEWMAP
-#if SDL_MAJOR_VERSION == 1
-    if (KeyboardPress[sc_O])
-#elif SDL_MAJOR_VERSION == 2
-    if (Keyboard(sc_O))
-#endif    
+    if (Keyboard(sc_O))   
     {
-        ViewMap ();
+        ViewMap();
 
         if (MousePresent && IN_IsInputGrabbed())
             IN_CenterMouse();     // Clear accumulated mouse movement
@@ -1001,11 +955,8 @@ if (KeyboardPress[sc_M] && KeyboardPress[sc_L] && KeyboardPress[sc_I])
 
 /*
 #############################################################################
-
                                   The objlist data structure
-
 #############################################################################
-
 objlist containt structures for every actor currently playing.  The structure
 is accessed as a linked list starting at *player, ending when ob->next ==
 NULL.  GetNewObj inserts a new object at the end of the list, meaning that
@@ -1014,9 +965,7 @@ same frame.  RemoveObj unlinks the given object and returns it to the free
 list, but does not damage the objects ->next pointer, so if the current object
 removes itself, a linked list following loop can still safely get to the
 next element.
-
 <backwardly linked free list>
-
 #############################################################################
 */
 
@@ -1034,13 +983,13 @@ next element.
 
 int objcount;
 
-void InitActorList (void)
+void InitActorList(void)
 {
     int i;
-//
-// init the actor lists
-//
-    for(i = 0; i < MAXACTORS; i++)
+    //
+    // init the actor lists
+    //
+    for (i = 0; i < MAXACTORS; i++)
     {
         objlist[i].prev = &objlist[i + 1];
         objlist[i].next = NULL;
@@ -1053,10 +1002,10 @@ void InitActorList (void)
 
     objcount = 0;
 
-//
-// give the player the first free spots
-//
-    GetNewActor ();
+    //
+    // give the player the first free spots
+    //
+    GetNewActor();
     player = newobj;
 
 }
@@ -1077,14 +1026,14 @@ void InitActorList (void)
 =========================
 */
 
-void GetNewActor (void)
+void GetNewActor(void)
 {
     if (!objfreelist)
-        Quit ("GetNewActor: No free spots in objlist!");
+        Quit("GetNewActor: No free spots in objlist!");
 
     newobj = objfreelist;
     objfreelist = newobj->prev;
-    memset (newobj, 0, sizeof (*newobj));
+    memset(newobj, 0, sizeof(*newobj));
 
     if (lastobj)
         lastobj->next = newobj;
@@ -1109,29 +1058,29 @@ void GetNewActor (void)
 =========================
 */
 
-void RemoveObj (objtype * gone)
+void RemoveObj(objtype* gone)
 {
     if (gone == player)
-        Quit ("RemoveObj: Tried to remove the player!");
+        Quit("RemoveObj: Tried to remove the player!");
 
     gone->state = NULL;
 
-//
-// fix the next object's back link
-//
+    //
+    // fix the next object's back link
+    //
     if (gone == lastobj)
-        lastobj = (objtype *) gone->prev;
+        lastobj = (objtype*)gone->prev;
     else
         gone->next->prev = gone->prev;
 
-//
-// fix the previous object's forward link
-//
+    //
+    // fix the previous object's forward link
+    //
     gone->prev->next = gone->next;
 
-//
-// add it back in to the free list
-//
+    //
+    // add it back in to the free list
+    //
     gone->prev = objfreelist;
     objfreelist = gone;
 
@@ -1140,9 +1089,7 @@ void RemoveObj (objtype * gone)
 
 /*
 =============================================================================
-
                                                 MUSIC STUFF
-
 =============================================================================
 */
 
@@ -1154,11 +1101,11 @@ void RemoveObj (objtype * gone)
 =
 =================
 */
-int StopMusic (void)
+int StopMusic(void)
 {
-    int lastoffs = SD_MusicOff ();
+    int lastoffs = SD_MusicOff();
 
-    UNCACHEAUDIOCHUNK (STARTMUSIC + lastmusicchunk);
+    UNCACHEAUDIOCHUNK(STARTMUSIC + lastmusicchunk);
 
     return lastoffs;
 }
@@ -1174,25 +1121,23 @@ int StopMusic (void)
 =================
 */
 
-void StartMusic ()
+void StartMusic()
 {
-    SD_MusicOff ();
-    lastmusicchunk = (musicnames) songs[gamestate.mapon + gamestate.episode * 10];
+    SD_MusicOff();
+    lastmusicchunk = (musicnames)songs[gamestate.mapon + gamestate.episode * 10];
     SD_StartMusic(STARTMUSIC + lastmusicchunk);
 }
 
-void ContinueMusic (int offs)
+void ContinueMusic(int offs)
 {
-    SD_MusicOff ();
-    lastmusicchunk = (musicnames) songs[gamestate.mapon + gamestate.episode * 10];
+    SD_MusicOff();
+    lastmusicchunk = (musicnames)songs[gamestate.mapon + gamestate.episode * 10];
     SD_ContinueMusic(STARTMUSIC + lastmusicchunk, offs);
 }
 
 /*
 =============================================================================
-
                                         PALETTE SHIFTING STUFF
-
 =============================================================================
 */
 
@@ -1218,15 +1163,15 @@ boolean palshifted;
 =====================
 */
 
-void InitRedShifts (void)
+void InitRedShifts(void)
 {
-    SDL_Color *workptr, *baseptr;
+    SDL_Color* workptr, * baseptr;
     int i, j, delta;
 
 
-//
-// fade through intermediate frames
-//
+    //
+    // fade through intermediate frames
+    //
     for (i = 1; i <= NUMREDSHIFTS; i++)
     {
         workptr = redshifts[i - 1];
@@ -1256,7 +1201,7 @@ void InitRedShifts (void)
             workptr->r = baseptr->r + delta * i / WHITESTEPS;
             delta = 248 - baseptr->g;
             workptr->g = baseptr->g + delta * i / WHITESTEPS;
-            delta = 0-baseptr->b;
+            delta = 0 - baseptr->b;
             workptr->b = baseptr->b + delta * i / WHITESTEPS;
             baseptr++;
             workptr++;
@@ -1273,7 +1218,7 @@ void InitRedShifts (void)
 =====================
 */
 
-void ClearPaletteShifts (void)
+void ClearPaletteShifts(void)
 {
     bonuscount = damagecount = 0;
     palshifted = false;
@@ -1288,7 +1233,7 @@ void ClearPaletteShifts (void)
 =====================
 */
 
-void StartBonusFlash (void)
+void StartBonusFlash(void)
 {
     bonuscount = NUMWHITESHIFTS * WHITETICS;    // white shift palette
 }
@@ -1302,7 +1247,7 @@ void StartBonusFlash (void)
 =====================
 */
 
-void StartDamageFlash (int damage)
+void StartDamageFlash(int damage)
 {
     damagecount += damage;
 }
@@ -1316,7 +1261,7 @@ void StartDamageFlash (int damage)
 =====================
 */
 
-void UpdatePaletteShifts (void)
+void UpdatePaletteShifts(void)
 {
     int red, white;
 
@@ -1348,17 +1293,17 @@ void UpdatePaletteShifts (void)
 
     if (red)
     {
-        VL_SetPalette (redshifts[red - 1], false);
+        VL_SetPalette(redshifts[red - 1], false);
         palshifted = true;
     }
     else if (white)
     {
-        VL_SetPalette (whiteshifts[white - 1], false);
+        VL_SetPalette(whiteshifts[white - 1], false);
         palshifted = true;
     }
     else if (palshifted)
     {
-        VL_SetPalette (gamepal, false);        // back to normal
+        VL_SetPalette(gamepal, false);        // back to normal
         palshifted = false;
     }
 }
@@ -1374,21 +1319,19 @@ void UpdatePaletteShifts (void)
 =====================
 */
 
-void FinishPaletteShifts (void)
+void FinishPaletteShifts(void)
 {
     if (palshifted)
     {
         palshifted = 0;
-        VL_SetPalette (gamepal, true);
+        VL_SetPalette(gamepal, true);
     }
 }
 
 
 /*
 =============================================================================
-
                                                 CORE PLAYLOOP
-
 =============================================================================
 */
 
@@ -1401,9 +1344,9 @@ void FinishPaletteShifts (void)
 =====================
 */
 
-void DoActor (objtype * ob)
+void DoActor(objtype* ob)
 {
-    void (*think) (objtype *);
+    void (*think) (objtype*);
 
     if (!ob->active && ob->areanumber < NUMAREAS && !areabyplayer[ob->areanumber])
         return;
@@ -1411,19 +1354,19 @@ void DoActor (objtype * ob)
     if (!(ob->flags & (FL_NONMARK | FL_NEVERMARK)))
         actorat[ob->tilex][ob->tiley] = NULL;
 
-//
-// non transitional object
-//
+    //
+    // non transitional object
+    //
 
     if (!ob->ticcount)
     {
-        think = (void (*)(objtype *)) ob->state->think;
+        think = (void (*)(objtype*)) ob->state->think;
         if (think)
         {
-            think (ob);
+            think(ob);
             if (!ob->state)
             {
-                RemoveObj (ob);
+                RemoveObj(ob);
                 return;
             }
         }
@@ -1438,19 +1381,19 @@ void DoActor (objtype * ob)
         return;
     }
 
-//
-// transitional object
-//
-    ob->ticcount -= (short) tics;
+    //
+    // transitional object
+    //
+    ob->ticcount -= (short)tics;
     while (ob->ticcount <= 0)
     {
-        think = (void (*)(objtype *)) ob->state->action;        // end of state action
+        think = (void (*)(objtype*)) ob->state->action;        // end of state action
         if (think)
         {
-            think (ob);
+            think(ob);
             if (!ob->state)
             {
-                RemoveObj (ob);
+                RemoveObj(ob);
                 return;
             }
         }
@@ -1459,7 +1402,7 @@ void DoActor (objtype * ob)
 
         if (!ob->state)
         {
-            RemoveObj (ob);
+            RemoveObj(ob);
             return;
         }
 
@@ -1476,13 +1419,13 @@ think:
     //
     // think
     //
-    think = (void (*)(objtype *)) ob->state->think;
+    think = (void (*)(objtype*)) ob->state->think;
     if (think)
     {
-        think (ob);
+        think(ob);
         if (!ob->state)
         {
-            RemoveObj (ob);
+            RemoveObj(ob);
             return;
         }
     }
@@ -1509,13 +1452,13 @@ think:
 int32_t funnyticount;
 
 
-void PlayLoop (void)
+void PlayLoop(void)
 {
-#if SWITCH
-     printf("PLAY LOOP START\n");
+#if defined (SWITCH) || defined (N3DS)
+    printf("PLAY LOOP START\n");
 #endif
 #if defined(USE_FEATUREFLAGS) && defined(USE_CLOUDSKY)
-    if(GetFeatureFlags() & FF_CLOUDSKY)
+    if (GetFeatureFlags() & FF_CLOUDSKY)
         InitSky();
 #endif
 
@@ -1529,35 +1472,35 @@ void PlayLoop (void)
     anglefrac = 0;
     facecount = 0;
     funnyticount = 0;
-    memset (buttonstate, 0, sizeof (buttonstate));
-    ClearPaletteShifts ();
+    memset(buttonstate, 0, sizeof(buttonstate));
+    ClearPaletteShifts();
 
     if (MousePresent && IN_IsInputGrabbed())
         IN_CenterMouse();         // Clear accumulated mouse movement
 
     if (demoplayback)
-        IN_StartAck ();
-#if SWITCH    
+        IN_StartAck();
+#if defined (SWITCH) || defined (N3DS)    
     printf("LOOP HERE\n");
 #endif    
     do
     {
-        PollControls ();
+        PollControls();
 
-//
-// actor thinking
-//
+        //
+        // actor thinking
+        //
         madenoise = false;
 
-        MoveDoors ();
-        MovePWalls ();
+        MoveDoors();
+        MovePWalls();
 
         for (obj = player; obj; obj = obj->next)
-            DoActor (obj);
+            DoActor(obj);
 
-        UpdatePaletteShifts ();
+        UpdatePaletteShifts();
 
-        ThreeDRefresh ();
+        ThreeDRefresh();
 
         //
         // MAKE FUNNY FACE IF BJ DOESN'T MOVE FOR AWHILE
@@ -1567,42 +1510,41 @@ void PlayLoop (void)
         if (funnyticount > 30l * 70)
         {
             funnyticount = 0;
-            if(viewsize != 21)
-                StatusDrawFace(BJWAITING1PIC + (US_RndT () & 1));
+            if (viewsize != 21)
+                StatusDrawFace(BJWAITING1PIC + (US_RndT() & 1));
             facecount = 0;
         }
 #endif
 
         gamestate.TimeCount += tics;
 
-        UpdateSoundLoc ();      // JAB
+        UpdateSoundLoc();      // JAB
         if (screenfaded)
-            VW_FadeIn ();
+            VW_FadeIn();
 
-        CheckKeys ();
+        CheckKeys();
 
-//
-// debug aids
-//
+        //
+        // debug aids
+        //
         if (singlestep)
         {
-            VW_WaitVBL (singlestep);
+            VW_WaitVBL(singlestep);
             lasttimecount = GetTimeCount();
         }
         if (extravbls)
-            VW_WaitVBL (extravbls);
+            VW_WaitVBL(extravbls);
 
         if (demoplayback)
         {
-            if (IN_CheckAck ())
+            if (IN_CheckAck())
             {
-                IN_ClearKeysDown ();
+                IN_ClearKeysDown();
                 playstate = ex_abort;
             }
         }
-    }
-    while (!playstate && !startgame);
+    } while (!playstate && !startgame);
 
     if (playstate != ex_died)
-        FinishPaletteShifts ();
+        FinishPaletteShifts();
 }

@@ -10,9 +10,18 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#ifdef OLD_BOOL
+
+#else
 #include <stdbool.h>
+#endif
+
 
 #include <SDL.h>
+#if N3DS
+#include <3ds.h>
+#endif
 #if defined(_arch_dreamcast)
 #	include <string.h>
 #	include "dc/dc_main.h"
@@ -86,7 +95,17 @@ typedef s32 fixed;
 typedef u32 longword;
 #endif
 
+#ifdef OLD_BOOL
+typedef enum
+{
+    false,
+    true
+} boolean;
+#elif defined (CRT)
+typedef unsigned char boolean;
+#else
 typedef bool boolean;
+#endif
 
 typedef struct
 {
@@ -846,8 +865,8 @@ typedef struct objstruct
 
 enum
 {
-    bt_nobutton=-1,
-    bt_attack=0,
+    bt_nobutton = -1,
+    bt_attack = 0,
     bt_strafe,
     bt_run,
     bt_use,
@@ -855,18 +874,12 @@ enum
     bt_readypistol,
     bt_readymachinegun,
     bt_readychaingun,
-#ifdef EXTRACONTROLS
-    bt_strafeleft,
-    bt_straferight,
-#endif
     bt_nextweapon,
     bt_prevweapon,
     bt_esc,
     bt_pause,
-#ifndef EXTRACONTROLS
     bt_strafeleft,
     bt_straferight,
-#endif
     bt_moveforward,
     bt_movebackward,
     bt_turnleft,
@@ -874,7 +887,6 @@ enum
 
     NUMBUTTONS
 };
-
 
 typedef enum
 {
@@ -983,13 +995,8 @@ extern  int      param_difficulty;
 extern  int      param_tedlevel;
 extern  int      param_joystickindex;
 extern  int      param_joystickhat;
-#if SWITCH
-extern  longword param_samplerate;
-extern  int param_audiobuffer;
-#else
 extern  longword param_samplerate;
 extern  int      param_audiobuffer;
-#endif
 extern  int      param_mission;
 extern  boolean  param_goodtimes;
 extern  boolean  param_ignorenumchunks;
@@ -1086,9 +1093,6 @@ extern  int         extravbls;
 extern  word        mapwidth,mapheight;
 extern  u32    tics;
 extern  int         lastgamemusicoffset;
-#ifdef EXTRACONTROLS
-extern  int controlstrafe;
-#endif
 
 
 #if SDL_MAJOR_VERSION == 2
@@ -1099,15 +1103,10 @@ extern int gamecontrolstrafe;
 // control info
 //
 extern  boolean     mouseenabled,joystickenabled;
-#ifdef EXTRACONTROLS
-extern  boolean     mousemoveenabled;
-#endif
 extern  int         dirscan[4];
 extern  int         buttonscan[NUMBUTTONS];
 extern  int         buttonmouse[4];
 extern  int         buttonjoy[32];
-
-
 extern  boolean     buttonheld[NUMBUTTONS];
 
 extern  int         viewsize;
@@ -1499,20 +1498,8 @@ void GP2X_ButtonUp (int button);
     #define strcasecmp stricmp
     #define strncasecmp strnicmp
     #define snprintf _snprintf
-#elif SWITCH
-	#include <stdlib.h>
-#else
-	static inline char* itoa(int value, char* string, int radix)
-    {
-	    sprintf(string, "%d", value);
-	    return string;
-    }
+#else    
 
-    static inline char* ltoa(long value, char* string, int radix)
-    {
-	    sprintf(string, "%ld", value);
-	    return string;
-    }
 #endif
 
 

@@ -43,9 +43,13 @@
 #endif
 
 #define SENSITIVE       60
+#if N3DS
+#define CENTERX         //((int) screenWidth / 2)
+#define CENTERY         //((int) screenHeight / 2)
+#else
 #define CENTERX         ((int) screenWidth / 2)
 #define CENTERY         ((int) screenHeight / 2)
-
+#endif
 #define MENU_X  76
 #define MENU_Y  55
 #define MENU_W  178
@@ -77,7 +81,11 @@
 #define SM_Y3   SM_Y2+5*13
 #define SM_H3   3*13-7
 #endif
+#if N3DS
+#define CTL_X   CENTERX - (160 - 24)
+#else
 #define CTL_X   24
+#endif
 #ifdef JAPAN
 #define CTL_Y   70
 #else
@@ -187,23 +195,13 @@ void DrawCtlScreen(void);
 void DrawCustomScreen(void);
 void DrawLSAction(int which);
 void DrawCustMouse(int hilight);
-#ifdef EXTRACONTROLS
 void DrawCustJoy(int hilight);
-#endif
 void DrawCustKeybd(int hilight);
 void DrawCustKeys(int hilight);
 void PrintCustMouse(int i);
-#ifdef EXTRACONTROLS
 void PrintCustJoy(int i);
-#endif
 void PrintCustKeybd(int i);
 void PrintCustKeys(int i);
-
-#ifdef EXTRACONTROLS
-void DefineKeyExtra(void);
-void DrawCustExtra(int hilight);
-void PrintCustExtra(int i);
-#endif // EXTRACONTROLS
 
 void PrintLSEntry(int w,int color);
 void TrackWhichGame(int w);
@@ -234,10 +232,7 @@ enum
     JOYSTICK,
     KEYBOARDBTNS,
     KEYBOARDMOVE,
-// EXTRACONTROLS
-    KEYBOARDEXTRA
-};        // FOR INPUT TYPES
-
+}; //FOR INPUT TYPES
 
 enum menuitems
 {

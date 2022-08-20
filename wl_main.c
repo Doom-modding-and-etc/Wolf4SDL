@@ -52,9 +52,6 @@ extern byte signon[];
 char    str[80];
 int     dirangle[9] = {0,ANGLES/8,2*ANGLES/8,3*ANGLES/8,4*ANGLES/8,
                        5*ANGLES/8,6*ANGLES/8,7*ANGLES/8,ANGLES};
-#ifdef EXTRACONTROLS
-boolean     mousemoveenabled;
-#endif // EXTRACONTROLS
 
 //
 // proejection variables
@@ -75,12 +72,15 @@ void    Quit (const char *error,...);
 boolean startgame;
 boolean loadedgame;
 int     mouseadjustment;
+boolean     mousemoveenabled;
 #ifdef VIEASM
 byte    soundvol, musicvol;
 boolean reversestereo;
 #endif
 #if SWITCH
 char configdir[256] = "/switch/wolf4sdl/";
+#elif N3DS
+char configdir[256] = "/3ds/wolf4sdl/wolf3d";
 #else
 char    configdir[256] = "";
 #endif
@@ -107,9 +107,13 @@ int     param_audiobuffer = 128;
 int     param_joystickhat = -1;
 longword     param_samplerate = 44100;
 int     param_audiobuffer = 2048 / 44100 / param_samplerate;
-#else
+#elif defined (N3DS)
 int     param_joystickhat = -1;
 longword     param_samplerate = 44100;
+int     param_audiobuffer = 0 / (44100 / param_samplerate);
+#else
+int     param_joystickhat = -1;
+longword     param_samplerate = 48000;
 int     param_audiobuffer = 2048;
 #endif
 
@@ -171,32 +175,18 @@ void ReadConfig(void)
         read(file,&sds,sizeof(sds));
 
         read(file,&mouseenabled,sizeof(mouseenabled));
-#ifdef EXTRACONTROLS // EXTRACONTROLS
-        read(file, &joystickenabled, sizeof(joystickenabled));
-        boolean dummyJoypadEnabled;
-        read(file, &dummyJoypadEnabled, sizeof(dummyJoypadEnabled));
-        boolean dummyJoystickProgressive;
-        read(file, &dummyJoystickProgressive, sizeof(dummyJoystickProgressive));
-        int dummyJoystickPort = 0;
-        read(file, &dummyJoystickPort, sizeof(dummyJoystickPort));
-#endif
         read(file,dirscan,sizeof(dirscan));
         read(file,buttonscan,sizeof(buttonscan));
         read(file,buttonmouse,sizeof(buttonmouse));
-#ifdef EXTRACONTROLS
-        read(file,buttonjoy,sizeof(buttonjoy));
-#endif
         read(file,&viewsize,sizeof(viewsize));
         read(file,&mouseadjustment,sizeof(mouseadjustment));
+        read(file, &mousemoveenabled, sizeof(mousemoveenabled));
+        boolean dummyMouseMoveEnabled;
+        read(file, &dummyMouseMoveEnabled, sizeof(dummyMouseMoveEnabled));
 #ifdef VIEASM
         read(file, &soundvol, sizeof(soundvol));
         read(file, &musicvol, sizeof(musicvol));
         read(file, &reversestereo, sizeof(reversestereo));
-#endif
-#ifdef EXTRACONTROLS
-        read(file, &mousemoveenabled, sizeof(mousemoveenabled));
-        boolean dummyMouseMoveEnabled;
-        read(file, &dummyMouseMoveEnabled, sizeof(dummyMouseMoveEnabled));
 #endif
 
         close(file);
@@ -222,19 +212,10 @@ void ReadConfig(void)
         {
             joystickenabled = true;
         }
-#ifdef EXTRACONTROLS
-        if (mousemoveenabled)
-        {
-            mousemoveenabled = true;
-        }
-#endif // EXTRACONTROLS
 
         if (!MousePresent)
         {
             mouseenabled = false;
-#ifdef EXTRACONTROLS
-            mousemoveenabled = false;
-#endif
         }
         if (!IN_JoyPresent())
             joystickenabled = false;
@@ -276,9 +257,7 @@ noconfig:
         if (MousePresent)
         {
             mouseenabled = true;
-#ifdef EXTRACONTROLS
-            mousemoveenabled = true;
-#endif
+
         }
         if (IN_JoyPresent())
             joystickenabled = true;
@@ -334,21 +313,9 @@ void WriteConfig(void)
         write(file,&DigiMode,sizeof(DigiMode));
 
         write(file,&mouseenabled,sizeof(mouseenabled));
-#ifdef EXTRACONTROLS
-        write(file, &joystickenabled, sizeof(joystickenabled));
-        boolean dummyJoypadEnabled = false;
-        write(file, &dummyJoypadEnabled, sizeof(dummyJoypadEnabled));
-        boolean dummyJoystickProgressive = false;
-        write(file, &dummyJoystickProgressive, sizeof(dummyJoystickProgressive));
-        int dummyJoystickPort = 0;
-        write(file, &dummyJoystickPort, sizeof(dummyJoystickPort));
-#endif
         write(file,dirscan,sizeof(dirscan));
         write(file,buttonscan,sizeof(buttonscan));
         write(file,buttonmouse,sizeof(buttonmouse));
-#ifdef EXTRACONTROLS
-        write(file, buttonjoy, sizeof(buttonjoy));
-#endif
         write(file,&viewsize,sizeof(viewsize));
         write(file,&mouseadjustment,sizeof(mouseadjustment));
 #ifdef VIEASM
@@ -356,9 +323,6 @@ void WriteConfig(void)
         write(file, &musicvol, sizeof(musicvol));
         write(file, &reversestereo, sizeof(reversestereo));
 #endif
-#ifdef EXTRACONTROLS
-        write(file, &mousemoveenabled, sizeof(mousemoveenabled));
-#endif // EXTRACONTROLS
 
 
         close(file);
@@ -1240,7 +1204,7 @@ static void InitGame()
 #ifndef SPEARDEMO
     boolean didjukebox=false;
 #endif
-#if SWITCH   
+#if defined (SWITCH) || defined (N3DS)  
     printf("GAME START");
 #endif    
     // initialize SDL    
@@ -1255,8 +1219,13 @@ static void InitGame()
         exit(1);
     }
     atexit(SDL_Quit);
-#if SWITCH
+
+#if defined (SWITCH) && defined (N3DS)
+#if SDL_MAJOR_VERSION == 1
+    printf("SDL1.2 Initialized");   
+#elif SDL_MAJOR_VERSION == 2
     printf("SDL2 Initialized");
+#endif
 #endif
 
 
@@ -1276,31 +1245,30 @@ static void InitGame()
 
     SignonScreen ();
 
-
 	VW_UpdateScreen();
 
     VH_Startup ();
-#if SWITCH 
+#if defined(SWITCH) || defined (N3DS)
     printf("VH Started");
 #endif
     IN_Startup ();
-#if SWITCH
+#if defined(SWITCH) || defined (N3DS)
     printf("IN Started");
 #endif
     PM_Startup ();
-#if SWITCH
+#if defined(SWITCH) || defined (N3DS)
     printf("PM Started");
 #endif
     SD_Startup ();
-#if SWITCH
+#if defined(SWITCH) || defined (N3DS)
     printf("SD Started");
 #endif
     CA_Startup ();
-#if SWITCH
+#if defined(SWITCH) || defined (N3DS)
     printf("CA Started");
 #endif
     US_Startup ();
-#if SWITCH
+#if defined(SWITCH) || defined (N3DS)
     printf("US Started");
 #endif
     // TODO: Will any memory checking be needed someday??
@@ -1340,12 +1308,7 @@ static void InitGame()
 	IN_ProcessEvents();
 
 #ifndef SPEARDEMO
-
-#if SDL_MAJOR_VERSION == 1
-    if(KeyboardPress[sc_M])
-#elif SDL_MAJOR_VERSION == 2
-    if (Keyboard(sc_M))
-#endif    
+    if (Keyboard(sc_M))    
     {
        
         DoJukebox();
@@ -1477,7 +1440,7 @@ void NewViewSize (int width)
 
 void Quit (const char *errorStr, ...)
 {
-#if SWITCH
+#if defined(SWITCH) || defined (N3DS)
     printf(errorStr);
 #endif
 #ifdef NOTYET
@@ -1585,10 +1548,14 @@ static void DemoLoop()
         gamestate.episode = 0;
         gamestate.mapon = param_tedlevel;
 #endif
-#if SWITCH
+#if defined(SWITCH) || defined (N3DS)
         printf("BEFORE GAME LOOP\n");
 #endif       
         GameLoop();
+#if N3DS
+        printf("SHOW TITLE\n");
+        VWB_Bar(0, 0, screenWidth, screenHeight, VIEWCOLOR);     // background
+#endif        
         Quit (NULL);
     }
 
@@ -1694,12 +1661,7 @@ static void DemoLoop()
         VW_FadeOut ();
 
 #ifdef DEBUGKEYS
-
-#if SDL_MAJOR_VERSION == 1
-        if (KeyboardPress[sc_Tab] && param_debugmode)
-#elif SDL_MAJOR_VERSION == 2
-        if (Keyboard(sc_Tab) && param_debugmode)
-#endif            
+        if (Keyboard(sc_Tab) && param_debugmode)          
             RecordDemo ();
         else
             US_ControlPanel (0);
@@ -1998,19 +1960,19 @@ int main (int argc, char *argv[])
 #else
     CheckParameters(argc, argv);
 #endif
-#if SWITCH    
+#if defined(SWITCH) || defined (N3DS)  
     printf("CheckParameters() DONE\n");
 #endif    
     CheckForEpisodes();
-#if SWITCH    
+#if defined(SWITCH) || defined (N3DS)  
     printf("CheckForEpisodes() DONE\n");
 #endif    
     InitGame();
-#if SWITCH
+#if defined(SWITCH) || defined (N3DS)
     printf("InitGame() DONE\n");
 #endif    
     DemoLoop();
-#if SWITCH    
+#if defined(SWITCH) || defined (N3DS)  
     printf("DemoLoop() DONE\n");
 #endif    
     Quit("Demo loop exited???");
