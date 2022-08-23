@@ -18,7 +18,7 @@ LIBS	:= $(LIBDIR) -lSDL_mixer -lSDL_image -lSDL -lmikmod -lmad -lvorbisidec -log
 INCS      = -I$(DEVKITPRO)/portlibs/3ds/include -I$(DEVKITPRO)/portlibs/3ds/include/SDL -I$(DEVKITPRO)/libctru/include  -I$(DEVKITPRO)/portlibs/3ds
 BIN       = Wolf4SDL.elf
 BUILD	  =	build
-DEFINES   = -DN3DS -D__3DS__
+DEFINES   = -DN3DS -D_N3DS -D__3DS__
 ARCH	:=	-march=armv6k -mtune=mpcore -mfloat-abi=hard -mtp=soft
 CFLAGS	:=	-Wno-narrowing -Ofast -mword-relocations \
 			-fomit-frame-pointer -ffunction-sections \

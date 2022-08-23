@@ -221,7 +221,7 @@ TODOs:
  - Fix sdl1
  - Add Sony´s Playstation 2 support(WIP) 
  - Add latest fmopl sound
- - Fix nintendo 3ds Makefile
+ - Fix nintendo 3ds Makefile and wl_def.h
  - Add some Documentation
  
 Known bugs:

@@ -1496,9 +1496,8 @@ void GP2X_ButtonUp (int button);
     #define strcasecmp stricmp
     #define strncasecmp strnicmp
     #define snprintf _snprintf
-#elif defined (SWITCH) && defined (N3DS)
-	#include <stdlib.h>
-#else   
+#elif SWITCH //|| defined (N3DS)
+#else	
     static inline char* ltoa(long value, char* string, int radix)
     {
 	    sprintf(string, "%ld", value);
@@ -1510,7 +1509,6 @@ void GP2X_ButtonUp (int button);
 	    return string;
     }
 #endif
-
 
 /*
 =============================================================================
