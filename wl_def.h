@@ -101,8 +101,6 @@ typedef enum
     false,
     true
 } boolean;
-#elif defined (CRT)
-typedef unsigned char boolean;
 #else
 typedef bool boolean;
 #endif
@@ -1498,8 +1496,19 @@ void GP2X_ButtonUp (int button);
     #define strcasecmp stricmp
     #define strncasecmp strnicmp
     #define snprintf _snprintf
-#else    
-
+#elif defined (SWITCH) && defined (N3DS)
+	#include <stdlib.h>
+#else   
+    static inline char* ltoa(long value, char* string, int radix)
+    {
+	    sprintf(string, "%ld", value);
+	    return string;
+    }
+    static inline char* itoa(int value, char* string, int radix)
+    {
+	    sprintf(string, "%d", value);
+	    return string;
+    }
 #endif
 
 

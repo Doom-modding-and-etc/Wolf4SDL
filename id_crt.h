@@ -16,11 +16,17 @@
 #ifdef CRT
 // Win32
 #if SDL_MAJOR_VERSION == 1
+#if defined (N3DS)
+
+#else
 #include <WTypes.h>
 #include <gl\GL.h>
 #if __linux__
 #include <GL/gl.h>
 #endif
+#endif
+#elif SDL_MAJOR_VERSION == 2
+
 #endif
 
 extern SDL_Color curpal[256];

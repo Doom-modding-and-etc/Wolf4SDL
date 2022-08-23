@@ -17,8 +17,8 @@ endif
 
 CFLAGS_SDL ?= $(shell $(SDL_CONFIG) --cflags)
 LDFLAGS_SDL ?= $(shell $(SDL_CONFIG) --libs)
-CFLAGS += -O2 -Wall -W -g -Wpointer-arith -Wreturn-type -Wwrite-strings -Wcast-align -std=gnu99 \
--Werror-implicit-function-declaration -Wimplicit-int -Wsequence-point $(CFLAGS_SDL)
+CFLAGS += -O2 -Wall -W -g -Wpointer-arith -Wreturn-type -Wwrite-strings -Wcast-align -std=gnu17 \
+-Wimplicit-int -Wsequence-point $(CFLAGS_SDL)
 
 LDFLAGS += $(LDFLAGS_SDL) -lm
 ifeq ($(SDL_MAJOR_VERSION),1)
@@ -33,7 +33,7 @@ ifneq (,$(findstring MINGW,$(shell uname -s)))
 LDFLAGS += -static-libgcc
 endif
 
-SRCS += mame/fmopl.c id_ca.c id_in.c id_pm.c id_sd.c id_us.c id_vh.c id_vieasm.c id_vl.c signon.c wl_act1.c \
+SRCS += mame/fmopl.c id_ca.c id_crt.o id_in.c id_pm.c id_sd.c id_us.c id_vh.c id_vieasm.c id_vl.c signon.c wl_act1.c \
 wl_act2.c wl_agent.c wl_atmos.c wl_cloudsky.c wl_debug.c wl_draw.c wl_game.c wl_inter.c \
 wl_main.c wl_menu.c wl_parallax.c wl_plane.c wl_play.c wl_scale.c wl_shade.c wl_state.c \
 wl_text.c wl_utils.c 

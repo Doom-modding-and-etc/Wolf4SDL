@@ -15,14 +15,16 @@ OBJ       = mame/fmopl.o id_ca.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_viea
 LINKOBJ   = mame/fmopl.o id_ca.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vieasm.o id_vl.o signon.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
 LIBDIR := -L$(DEVKITPRO)/libctru/lib -L$(DEVKITPRO)/portlibs/3ds/lib
 LIBS	:= $(LIBDIR) -lSDL_mixer -lSDL_image -lSDL -lmikmod -lmad -lvorbisidec -logg -lpng -ljpeg -lz -lcitro3d -lctru -lm
-INCS      = -I$(DEVKITPRO)/portlibs/3ds/include -I$(DEVKITPRO)/portlibs/3ds/include/SDL -I$(DEVKITPRO)/libctru/include 
+INCS      = -I$(DEVKITPRO)/portlibs/3ds/include -I$(DEVKITPRO)/portlibs/3ds/include/SDL -I$(DEVKITPRO)/libctru/include  -I$(DEVKITPRO)/portlibs/3ds
 BIN       = Wolf4SDL.elf
 BUILD	  =	build
 DEFINES   = -DN3DS -D__3DS__
 ARCH	:=	-march=armv6k -mtune=mpcore -mfloat-abi=hard -mtp=soft
 CFLAGS	:=	-Wno-narrowing -Ofast -mword-relocations \
 			-fomit-frame-pointer -ffunction-sections \
-			$(ARCH) $(INCS)
+			$(ARCH) $(INCS) -std=gnu99 -Wall
+ASFLAGS	:=	-g $(ARCH)
+LDFLAGS	=	-specs=3dsx.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)	
 RM        = rm -f
 LINK      = arm-none-eabi-gcc
 C		  = arm-none-eabi-gcc
@@ -60,7 +62,7 @@ clean:
 $(BIN): $(OBJ)
 	$(LINK) $(LINKOBJ) -o "Wolf4SDL.elf" $(LIBS)
 
-mame/fmopl.o: $(GLOBALDEPS) mame/fmopl.c mame/fmopl.h .\wl_def.h .\version.h
+mame/fmopl.o: $(GLOBALDEPS) mame/fmopl.c mame/fmopl.h 
 	$(C) -c mame/fmopl.c -o mame/fmopl.o $(CFLAGS)
 
 id_ca.o: $(GLOBALDEPS) id_ca.c wl_def.h 

@@ -221,6 +221,8 @@ TODOs:
  - Fix sdl1
  - Add Sony´s Playstation 2 support(WIP) 
  - Add latest fmopl sound
+ - Fix nintendo 3ds Makefile
+ - Add some Documentation
  
 Known bugs:
 -----------
@@ -248,10 +250,10 @@ Credits:
  - Thanks to Xilinx, Inc. for providing a list of maximum-length LFSR counters
    used for higher resolutions of fizzle fade
  - Thanks to Terraformer9x and Nexion for the advice and help for the Mixer sound problem
- - Thanks to fabian for the patches on the code 
+ - Thanks to Fabian greffrath for the patches on the code 
  - Thanks to keeganatorr for the Nintendo Switch support
  - Thanks to Zombieskittles for add on a separte repo the WASD Key support
- 
+ - Thanks to Fabian Sangalard for the awesoeme crt feature used on Chocolate Wolfenstein 3d. 
  
 Licenses:
 ---------
@@ -260,7 +262,4 @@ Licenses:
      - license-id.txt or
      - license-gpl.txt
  - The OPL2 emulator:
-     At your choice:
-     - license-mame.txt (fmopl.cpp)
-     - license-gpl.txt (dbopl.cpp, USE_GPL define in version.h or set GPL=1 for Makefile)
-
+     - license-mame.txt (fmopl.c)

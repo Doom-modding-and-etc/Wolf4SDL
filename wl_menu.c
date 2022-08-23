@@ -22,15 +22,13 @@ extern int lastgamemusicoffset;
 // PRIVATE PROTOTYPES
 //
 int  CP_ReadThis(int);
-#ifdef CRT
-#if SDL_MAJOR_VERSION == 1
 
-#elif SDL_MAJOR_VERSION == 2
-void SetTextColor(CP_itemtype* items, int hlight);
-#endif
+#ifdef CRT
+
 #else
-void SetTextColor(CP_itemtype* items, int hlight);
+extern void SetTextColor(CP_itemtype* items, int hlight);
 #endif
+
 #ifdef SPEAR
 #define STARTITEM       newgame
 
@@ -3691,10 +3689,8 @@ void DrawMenu(CP_iteminfo* item_i, CP_itemtype* items)
         US_Print("\n");
     }
 }
-
 #ifdef CRT
 #if SDL_MAJOR_VERSION == 1
-
 
 #elif SDL_MAJOR_VERSION == 2
 ////////////////////////////////////////////////////////////////////
@@ -3713,6 +3709,7 @@ void SetTextColor(CP_itemtype* items, int hlight)
         SETFONTCOLOR(color_norml[items->active], BKGDCOLOR);
     }
 }
+#endif
 #else
 ////////////////////////////////////////////////////////////////////
 //
@@ -3745,7 +3742,7 @@ void WaitKeyUp(void)
         IN_WaitAndProcessEvents();
     }
 }
-#endif
+
 
 ////////////////////////////////////////////////////////////////////
 //
