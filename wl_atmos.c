@@ -7,7 +7,7 @@
 #include "wl_def.h"
 
 #if defined(USE_RAIN) || defined(USE_SNOW)
-u32 rainpos;
+uint32_t rainpos;
 #endif
 
 typedef struct
@@ -84,7 +84,7 @@ void DrawStarSky (void)
     point3d_t *pt;
     byte      *dest;
     byte      shade;
-    s16   stopx,starty,stopy;
+    int16_t   stopx,starty,stopy;
     fixed     x,y,z;
     fixed     xx,yy;
     
@@ -168,7 +168,7 @@ void DrawRain (void)
 {
 #if defined(USE_FLOORCEILINGTEX) && defined(FIXRAINSNOWLEAKS)
     byte      tilex,tiley;
-    s16   prestep;
+    int16_t   prestep;
     fixed     basedist,stepscale;
     fixed     xfrac,yfrac;
     fixed     xstep,ystep;
@@ -271,7 +271,7 @@ void DrawSnow (void)
 {
 #if defined(USE_FLOORCEILINGTEX) && defined(FIXRAINSNOWLEAKS)
     byte      tilex,tiley;
-    s16   prestep;
+    int16_t   prestep;
     fixed     basedist,stepscale;
     fixed     xfrac,yfrac;
     fixed     xstep,ystep;

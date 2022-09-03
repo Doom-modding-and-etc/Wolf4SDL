@@ -16,6 +16,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
+    <Filter Include="Source Files\dosbox">
+      <UniqueIdentifier>{419f6066-74f0-4417-bc2e-87df8083433a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="id_in.c">
@@ -111,6 +114,12 @@
     <ClCompile Include="id_vieasm.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="dosbox\dbopl.cpp">
+      <Filter>Source Files\dosbox</Filter>
+    </ClCompile>
+    <ClCompile Include="dosbox\cdosbox.cpp">
+      <Filter>Source Files\dosbox</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="sodpal.inc">
@@ -201,6 +210,12 @@
     </ClInclude>
     <ClInclude Include="asmcref.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dosbox\dbopl.h">
+      <Filter>Source Files\dosbox</Filter>
+    </ClInclude>
+    <ClInclude Include="dosbox\cdosbox.h">
+      <Filter>Source Files\dosbox</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -19,13 +19,13 @@
 
 #if defined(_arch_dreamcast)
 boolean usedoublebuffering = false;
-u32 screenWidth = 320;
-u32 screenHeight = 200;
+unsigned screenWidth = 320;
+unsigned screenHeight = 200;
 int      screenBits = 8;
 #elif defined(GP2X)
 boolean usedoublebuffering = true;
-u32 screenWidth = 320;
-u32 screenHeight = 240;
+unsigned screenWidth = 320;
+unsigned screenHeight = 240;
 #if defined(GP2X_940)
 int      screenBits = 8;
 #else
@@ -44,13 +44,11 @@ int screenWidth = 400;
 int screenHeight = 240;
 int screenBits = 32;      // use "best" color depth according to libSDL  // ADDEDFIX 0
 #else
-boolean fullscreen = true;
 boolean usedoublebuffering = true;
 u32 screenWidth = 640;
 u32 screenHeight = 405;
 u32 screenBits = 8;      // use "best" color depth according to libSDL
 #endif
-
 
 SDL_Surface *screen = NULL;
 SDL_Surface* screenBuffer = NULL;
@@ -67,17 +65,16 @@ SDL_Renderer *renderer;
 SDL_Texture *texture;
 #endif
 
-int scaleFactor;
+int      scaleFactor;
 
 boolean	 screenfaded;
-u32 bordercolor;
+unsigned bordercolor;
 
-u32 *ylookup;
+uint32_t *ylookup;
 
 SDL_Color palette1[256], palette2[256];
 SDL_Color curpal[256];
 
-SDL_Palette* wpalette;
 
 #define CASSERT(x) extern int ASSERT_COMPILE[((x) != 0) * 2 - 1];
 #define RGB(r, g, b) {(r)*255/63, (g)*255/63, (b)*255/63, 0}
@@ -139,11 +136,10 @@ void VL_Shutdown (void)
 void VL_SetVGAPlaneMode (void)
 {
     int i;
-    u32 a,r,g,b;
-
+    uint32_t a,r,g,b;
 
 #ifdef SPEAR
-    const char* title = "Spear of Destiny"; 
+    const char* title = "Spear of Destiny";
 #else
     const char* title = "Wolfenstein 3D";
 #endif
@@ -158,14 +154,14 @@ void VL_SetVGAPlaneMode (void)
 
     if (screenBits == -1)
     {
-        const SDL_VideoInfo* vidInfo = SDL_GetVideoInfo();
+        const SDL_VideoInfo *vidInfo = SDL_GetVideoInfo();
         screenBits = vidInfo->vfmt->BitsPerPixel;
     }
 
 #if N3DS
     screen = SDL_SetVideoMode(screenWidth, screenHeight, 32, SDL_TOPSCR | SDL_CONSOLEBOTTOM | SDL_DOUBLEBUF);
 #else
-    screen = SDL_SetVideoMode(screenWidth, screenHeight, screenBits, 
+    screen = SDL_SetVideoMode(screenWidth, screenHeight, screenBits,
         (usedoublebuffering ? SDL_HWSURFACE | SDL_DOUBLEBUF : 0) | (screenBits == 8 ? SDL_HWPALETTE : 0)
 
 #ifdef CRT
@@ -177,23 +173,24 @@ void VL_SetVGAPlaneMode (void)
 
     if(!screen)
     {
-        printf("Unable to set %ix%ix%i video mode: %s\n", screenWidth,
+        printf("Unable to set %ux%ux%i video mode: %s\n", screenWidth,
             screenHeight, screenBits, SDL_GetError());
         exit(1);
-    } 
-    if ((screen->flags & SDL_DOUBLEBUF) != SDL_DOUBLEBUF)
+    }
+    if((screen->flags & SDL_DOUBLEBUF) != SDL_DOUBLEBUF)
         usedoublebuffering = false;
     SDL_ShowCursor(SDL_DISABLE);
+
     SDL_SetColors(screen, gamepal, 0, 256);
     memcpy(curpal, gamepal, sizeof(SDL_Color) * 256);
 
 #ifdef CRT  
-    //Fab's and André´s CRT Hack
-    CRT_Init(screenWidth);
+    //Fab's and Andr�s CRT Hack
+    CRT_Init(screen);
 #endif 
     screenBuffer = SDL_CreateRGBSurface(SDL_SWSURFACE, screenWidth,
         screenHeight, 8, 0, 0, 0, 0);
-    if (!screenBuffer)
+    if(!screenBuffer)
     {
         printf("Unable to create screen buffer surface: %s\n", SDL_GetError());
         exit(1);
@@ -208,7 +205,7 @@ void VL_SetVGAPlaneMode (void)
     window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight,
     (fullscreen ? SDL_WINDOW_FULLSCREEN : 0 | SDL_WINDOW_OPENGL));
 
-    SDL_PixelFormatEnumToMasks(SDL_PIXELFORMAT_ARGB8888, &screenBits, &r,&g,&b,&a);
+    SDL_PixelFormatEnumToMasks (SDL_PIXELFORMAT_ARGB8888,&screenBits,&r,&g,&b,&a);
 
     screen = SDL_CreateRGBSurface(0,screenWidth,screenHeight,screenBits,r,g,b,a);
 
@@ -221,14 +218,15 @@ void VL_SetVGAPlaneMode (void)
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
+
     SDL_ShowCursor(SDL_DISABLE);
 
     SDL_SetPaletteColors(screen->format->palette, gamepal, 0, 256);
     memcpy(curpal, gamepal, sizeof(SDL_Color) * 256);
-
+    
 #ifdef CRT  
-    //Fab's and André´s CRT Hack
-    SDL_Flip(screen);
+    //Fab's and Andr�s CRT Hack
+    CRT_Init(screen);
 #endif
 
     screenBuffer = SDL_CreateRGBSurface(0, screenWidth, screenHeight, 
@@ -239,12 +237,12 @@ void VL_SetVGAPlaneMode (void)
         printf("Unable to create screen buffer surface: %s\n", SDL_GetError());
         exit(1);
     }
-    
     SDL_SetPaletteColors(screenBuffer->format->palette, gamepal, 0, 256);
 
     texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, 
     SDL_TEXTUREACCESS_STREAMING, screenWidth, screenHeight);
 #endif
+
     screenPitch = screen->pitch;
     bufferPitch = screenBuffer->pitch;
 
@@ -282,8 +280,9 @@ void VL_SetVGAPlaneMode (void)
 
 void VL_ConvertPalette(byte *srcpal, SDL_Color *destpal, int numColors)
 {
+    int i;
 
-    for(int i=0; i<numColors; i++)
+    for(i=0; i<numColors; i++)
     {
 #if N3DS
         destpal[i].r = *srcpal++;
@@ -308,9 +307,10 @@ void VL_ConvertPalette(byte *srcpal, SDL_Color *destpal, int numColors)
 
 void VL_FillPalette (int red, int green, int blue)
 {
+    int i;
     SDL_Color pal[256];
 
-    for(int i=0; i<256; i++)
+    for(i=0; i<256; i++)
     {
         pal[i].r = red;
         pal[i].g = green;
@@ -330,7 +330,7 @@ void VL_FillPalette (int red, int green, int blue)
 =================
 */
 
-void VL_SetColor(int color, int red, int green, int blue)
+void VL_SetColor	(int color, int red, int green, int blue)
 {
     SDL_Color col = 
     { 
@@ -340,13 +340,14 @@ void VL_SetColor(int color, int red, int green, int blue)
     };
     
     curpal[color] = col;
-    if (screenBits == 8)
+
+    if(screenBits == 8)
 #if SDL_MAJOR_VERSION == 1
-    SDL_SetPalette(screen, SDL_PHYSPAL, &col, color, 1);
+        SDL_SetPalette(screen, SDL_PHYSPAL, &col, color, 1);
     else
     {
         SDL_SetPalette(screenBuffer, SDL_LOGPAL, &col, color, 1);
-        
+
 #ifdef CRT        
         SDL_Flip(screen);
         CRT_DAC();
@@ -354,21 +355,20 @@ void VL_SetColor(int color, int red, int green, int blue)
         VH_UpdateScreen(screen);
 #endif
 #elif SDL_MAJOR_VERSION == 2
-    SDL_SetPaletteColors(screen->format->palette, &col, color, 1);
+        SDL_SetPaletteColors(screen->format->palette, &col, color, 1);
     else
     {
         SDL_SetPaletteColors(screenBuffer->format->palette, &col, color, 1);
-       
+
         SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, screenBuffer);
                
 #ifdef CRT        
-        SDL_Flip(screen);
+        CRT_Init(screen);
         CRT_DAC();
 #else
         VH_UpdateScreen(screen);
 #endif
 #endif
-
     }
 }
 
@@ -385,7 +385,7 @@ void VL_SetColor(int color, int red, int green, int blue)
 =================
 */
 
-void VL_GetColor(int color, int *red, int *green, int *blue)
+void VL_GetColor	(int color, int *red, int *green, int *blue)
 {
     SDL_Color *col = &curpal[color];
     *red = col->r;
@@ -407,23 +407,28 @@ void VL_SetPalette(SDL_Color* palette, boolean forceupdate)
 {
     memcpy(curpal, palette, sizeof(SDL_Color) * 256);
 
-    if (screenBits == 8)
+    if(screenBits == 8)
 #if SDL_MAJOR_VERSION == 1
         SDL_SetPalette(screen, SDL_PHYSPAL, palette, 0, 256);
     else
     {
         SDL_SetPalette(screenBuffer, SDL_LOGPAL, palette, 0, 256);
-#elif SDL_MAJOR_VERSION == 2
+        if(forceupdate)
+        {
+            SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
+
+	        SDL_Flip (screen);
+#else
         SDL_SetPaletteColors(screen->format->palette, palette, 0, 256);
     else
     {
         SDL_SetPaletteColors(screenBuffer->format->palette, palette, 0, 256);
-#endif
-        
         if (forceupdate)
         {
-            VL_ScreenToScreen(screenBuffer, screen);
-            VH_UpdateScreen(screen);
+            SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
+
+            VH_RenderTextures(screen);
+#endif
         }
     }
 }
@@ -457,9 +462,9 @@ void VL_GetPalette (SDL_Color *palette)
 =================
 */
 
-void VL_FadeOut(int start, int end, int red, int green, int blue, int steps)
+void VL_FadeOut (int start, int end, int red, int green, int blue, int steps)
 {
-	int j,orig,delta;
+	int		    i,j,orig,delta;
 	SDL_Color   *origptr, *newptr;
 
     red = red * 255 / 63;
@@ -473,7 +478,7 @@ void VL_FadeOut(int start, int end, int red, int green, int blue, int steps)
 //
 // fade through intermediate frames
 //
-	for (int i=0; i<steps; i++)
+	for (i=0;i<steps;i++)
 	{
 		origptr = &palette1[start];
 		newptr = &palette2[start];
@@ -585,8 +590,8 @@ void VL_Plot (int x, int y, int color)
 {
     byte *dest;
 
-    assert(x >= 0 && (u32) x < screenWidth
-            && y >= 0 && (u32) y < screenHeight
+    assert(x >= 0 && (unsigned) x < screenWidth
+            && y >= 0 && (unsigned) y < screenHeight
             && "VL_Plot: Pixel out of bounds!");
 
     dest = VL_LockSurface(screenBuffer);
@@ -609,8 +614,8 @@ byte VL_GetPixel (int x, int y)
 {
     byte col;
 
-    assert_ret(x >= 0 && (u32) x < screenWidth
-            && y >= 0 && (u32) y < screenHeight
+    assert_ret(x >= 0 && (unsigned) x < screenWidth
+            && y >= 0 && (unsigned) y < screenHeight
             && "VL_GetPixel: Pixel out of bounds!");
 
     if (!VL_LockSurface(screenBuffer))
@@ -632,7 +637,7 @@ byte VL_GetPixel (int x, int y)
 =================
 */
 
-void VL_Hlin (u32 x, u32 y, u32 width, int color)
+void VL_Hlin (unsigned x, unsigned y, unsigned width, int color)
 {
     byte *dest;
 
@@ -661,8 +666,8 @@ void VL_Vlin (int x, int y, int height, int color)
 {
 	byte *dest;
 
-	assert(x >= 0 && (u32) x < screenWidth
-			&& y >= 0 && (u32) y + height <= screenHeight
+	assert(x >= 0 && (unsigned) x < screenWidth
+			&& y >= 0 && (unsigned) y + height <= screenHeight
 			&& "VL_Vlin: Destination rectangle out of bounds!");
 
 	dest = VL_LockSurface(screenBuffer);
@@ -697,8 +702,8 @@ void VL_BarScaledCoord (int scx, int scy, int scwidth, int scheight, int color)
 {
 	byte *dest;
 
-	assert(scx >= 0 && (u32) scx + scwidth <= screenWidth
-			&& scy >= 0 && (u32) scy + scheight <= screenHeight
+	assert(scx >= 0 && (unsigned) scx + scwidth <= screenWidth
+			&& scy >= 0 && (unsigned) scy + scheight <= screenHeight
 			&& "VL_BarScaledCoord: Destination rectangle out of bounds!");
 
 	dest = VL_LockSurface(screenBuffer);
@@ -793,7 +798,7 @@ void VL_MemToScreenScaledCoord (byte *source, int width, int height, int destx, 
 {
     byte *dest;
     int i, j, sci, scj;
-    u32 m, n;
+    unsigned m, n;
 
     assert(destx >= 0 && destx + width * scaleFactor <= screenWidth
             && desty >= 0 && desty + height * scaleFactor <= screenHeight
@@ -837,7 +842,7 @@ void VL_MemToScreenScaledCoord2 (byte *source, int origwidth, int origheight, in
 {
     byte *dest;
     int i, j, sci, scj;
-    u32 m, n;
+    unsigned m, n;
 
     assert(destx >= 0 && destx + width * scaleFactor <= screenWidth
             && desty >= 0 && desty + height * scaleFactor <= screenHeight
@@ -878,7 +883,3 @@ void VL_ScreenToScreen (SDL_Surface *source, SDL_Surface *dest)
 {
     SDL_BlitSurface(source, NULL, dest, NULL);
 }
-
-
-
-

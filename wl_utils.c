@@ -16,7 +16,7 @@
 ===================
 */
 
-void *safe_malloc (size_t size, const char *fname, u32 line)
+void *safe_malloc (size_t size, const char *fname, uint32_t line)
 {
     void *ptr;
 
@@ -29,14 +29,15 @@ void *safe_malloc (size_t size, const char *fname, u32 line)
 }
 #endif
 
+
 fixed FixedMul (fixed a, fixed b)
 {
-	return (fixed)(((s64)a * b + 0x8000) >> FRACBITS);
+	return (fixed)(((int64_t)a * b + 0x8000) >> FRACBITS);
 }
 
 fixed FixedDiv (fixed a, fixed b)
 {
-	s64 c = ((s64)a << FRACBITS) / (s64)b;
+	int64_t c = ((int64_t)a << FRACBITS) / (int64_t)b;
 
 	return (fixed)c;
 }

@@ -3,7 +3,7 @@
 #include "wl_def.h"
 
 LRstruct LevelRatios[LRpack];
-s32 lastBreathTime = 0;
+int32_t lastBreathTime = 0;
 
 void Write (int x, int y, const char *string);
 
@@ -111,7 +111,7 @@ void
 Victory (void)
 {
 #ifndef SPEARDEMO
-    s32 sec;
+    int32_t sec;
     int i, min, kr, sr, tr, x;
     char tempstr[8];
 
@@ -377,7 +377,7 @@ BJ_Breathe (void)
 
     SDL_Delay(5);
 
-    if ((s32) GetTimeCount () - lastBreathTime > max)
+    if ((int32_t) GetTimeCount () - lastBreathTime > max)
     {
         which ^= 1;
         VWB_DrawPic (0, 16, pics[which]);
@@ -416,7 +416,7 @@ LevelCompleted (void)
 
     int x, i, min, sec, ratio, kr, sr, tr;
     char tempstr[10];
-    s32 bonus, timeleft = 0;
+    int32_t bonus, timeleft = 0;
     times parTimes[] = {
 #ifndef SPEAR
         //
@@ -530,11 +530,8 @@ LevelCompleted (void)
     };
 
     ClearSplitVWB ();           // set up for double buffering in split screen
-#if N3DS    
-    VWB_Bar(0, 0, 400, screenHeight / scaleFactor - STATUSLINES + 1, VIEWCOLOR);
-#else
     VWB_Bar (0, 0, 320, screenHeight / scaleFactor - STATUSLINES + 1, VIEWCOLOR);
-#endif
+
     if (bordercol != VIEWCOLOR)
         DrawStatusBorder (VIEWCOLOR);
 
@@ -640,11 +637,7 @@ LevelCompleted (void)
         {
             for (i = 0; i <= timeleft; i++)
             {
-#if defined (SWITCH) || defined (N3DS)
-                utoa((s32)i * PAR_AMOUNT, tempstr, 10);
-#else                
-                ltoa ((s32) i * PAR_AMOUNT, tempstr, 10);
-#endif
+                ltoa ((int32_t) i * PAR_AMOUNT, tempstr, 10);
                 x = 36 - (int) strlen(tempstr) * 2;
                 Write (x, 7, tempstr);
                 if (!(i % (PAR_AMOUNT / 10)))
@@ -692,11 +685,7 @@ LevelCompleted (void)
             VW_WaitVBL (VBLWAIT);
             SD_StopSound ();
             bonus += PERCENT100AMT;
-#if defined (SWITCH) || defined (N3DS)      
-            utoa(bonus, tempstr, 10);
-#else 
-            ltoa(bonus, tempstr, 10);
-#endif
+            ltoa (bonus, tempstr, 10);
             x = (RATIOXX - 1) - (int) strlen(tempstr) * 2;
             Write (x, 7, tempstr);
             VW_UpdateScreen ();
@@ -738,11 +727,7 @@ LevelCompleted (void)
             VW_WaitVBL (VBLWAIT);
             SD_StopSound ();
             bonus += PERCENT100AMT;
-#if defined (SWITCH) || defined (N3DS)            
-            utoa(bonus, tempstr, 10);
-#else 
-            ltoa(bonus, tempstr, 10);
-#endif
+            ltoa (bonus, tempstr, 10);
             x = (RATIOXX - 1) - (int) strlen(tempstr) * 2;
             Write (x, 7, tempstr);
             VW_UpdateScreen ();
@@ -782,11 +767,7 @@ LevelCompleted (void)
             VW_WaitVBL (VBLWAIT);
             SD_StopSound ();
             bonus += PERCENT100AMT;
-#if defined (SWITCH) || defined (N3DS)       
-            utoa(bonus, tempstr, 10);
-#else 
-            ltoa(bonus, tempstr, 10);
-#endif
+            ltoa (bonus, tempstr, 10);
             x = (RATIOXX - 1) - (int) strlen(tempstr) * 2;
             Write (x, 7, tempstr);
             VW_UpdateScreen ();
@@ -820,17 +801,12 @@ done:   itoa (kr, tempstr, 10);
         x = RATIOXX - (int) strlen(tempstr) * 2;
         Write (x, 18, tempstr);
 
-        bonus = (s32) timeleft *PAR_AMOUNT +
+        bonus = (int32_t) timeleft *PAR_AMOUNT +
             (PERCENT100AMT * (kr >= 100)) +
             (PERCENT100AMT * (sr >= 100)) + (PERCENT100AMT * (tr >= 100));
-        
-        GivePoints(bonus);
 
-#if defined (SWITCH) || defined (N3DS)            
-        utoa(bonus, tempstr, 10);
-#else 
-        ltoa(bonus, tempstr, 10);
-#endif
+        GivePoints (bonus);
+        ltoa (bonus, tempstr, 10);
         x = 36 - (int) strlen(tempstr) * 2;
         Write (x, 7, tempstr);
 
@@ -944,7 +920,7 @@ PreloadUpdate (unsigned current, unsigned total)
 
     VWB_BarScaledCoord (WindowX + scaleFactor * 5, WindowY + WindowH - scaleFactor * 3,
         w, scaleFactor * 2, BLACK);
-    w = ((s32) w * current) / total;
+    w = ((int32_t) w * current) / total;
     if (w)
     {
         VWB_BarScaledCoord (WindowX + scaleFactor * 5, WindowY + WindowH - scaleFactor * 3,
@@ -966,9 +942,7 @@ PreloadUpdate (unsigned current, unsigned total)
 void
 PreloadGraphics (void)
 {
-
-    DrawLevel();
-
+    DrawLevel ();
     ClearSplitVWB ();           // set up for double buffering in split screen
 
     VWB_BarScaledCoord (0, 0, screenWidth, screenHeight - scaleFactor * (STATUSLINES - 1), bordercol);
@@ -1154,7 +1128,7 @@ DrawHighScores (void)
 */
 
 void
-CheckHighScore (s32 score, word other)
+CheckHighScore (int32_t score, word other)
 {
     word i, j;
     int n;
@@ -1442,7 +1416,7 @@ CopyProtection (void)
 #define TYPEBOX_BKGD    0x9c
 #define PRINTCOLOR      HIGHLIGHT
 
-    u32 i;
+    unsigned i;
     int match, whichboss, bossnum, attempt, whichline;
     int enemypicked[4] = { 0, 0, 0, 0 };
     int bosses[4] = { BOSSPIC1PIC, BOSSPIC2PIC, BOSSPIC3PIC, BOSSPIC4PIC };

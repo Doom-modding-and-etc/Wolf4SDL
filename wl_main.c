@@ -7,10 +7,9 @@
 #endif
 
 #include "wl_def.h"
-
 #include "wl_atmos.h"
-
 #include <SDL_syswm.h>
+
 
 /*
 =============================================================================
@@ -57,14 +56,14 @@ int     dirangle[9] = {0,ANGLES/8,2*ANGLES/8,3*ANGLES/8,4*ANGLES/8,
 // proejection variables
 //
 fixed    focallength;
-u32 screenofs;
+unsigned screenofs;
 int      viewscreenx, viewscreeny;
 int      viewwidth;
 int      viewheight;
 short    centerx,centery;
 int      shootdelta;           // pixels away from centerx a target can be
 fixed    scale;
-s32  heightnumerator;
+int32_t  heightnumerator;
 
 
 void    Quit (const char *error,...);
@@ -175,9 +174,19 @@ void ReadConfig(void)
         read(file,&sds,sizeof(sds));
 
         read(file,&mouseenabled,sizeof(mouseenabled));
+        read(file,&joystickenabled,sizeof(joystickenabled));
+        boolean dummyJoypadEnabled;
+        read(file,&dummyJoypadEnabled,sizeof(dummyJoypadEnabled));
+        boolean dummyJoystickProgressive;
+        read(file,&dummyJoystickProgressive,sizeof(dummyJoystickProgressive));
+        int dummyJoystickPort = 0;
+        read(file,&dummyJoystickPort,sizeof(dummyJoystickPort));
+
         read(file,dirscan,sizeof(dirscan));
         read(file,buttonscan,sizeof(buttonscan));
         read(file,buttonmouse,sizeof(buttonmouse));
+        read(file,buttonjoy,sizeof(buttonjoy));
+
         read(file,&viewsize,sizeof(viewsize));
         read(file,&mouseadjustment,sizeof(mouseadjustment));
         read(file, &mousemoveenabled, sizeof(mousemoveenabled));
@@ -207,7 +216,7 @@ void ReadConfig(void)
         {
             mouseenabled = true;
         }
-        
+
         if(joystickenabled)
         {
             joystickenabled = true;
@@ -273,10 +282,6 @@ noconfig:
 
     SD_SetMusicMode (sm);
     SD_SetSoundMode (sd);
-#ifdef VIEASM
-    SD_ChangeVolume((byte)(soundvol * 1.28), (byte)(musicvol * 1.28));
-    SD_Reverse(reversestereo);
-#endif    
     SD_SetDigiDevice (sds);
 }
 
@@ -313,17 +318,21 @@ void WriteConfig(void)
         write(file,&DigiMode,sizeof(DigiMode));
 
         write(file,&mouseenabled,sizeof(mouseenabled));
+        write(file,&joystickenabled,sizeof(joystickenabled));
+        boolean dummyJoypadEnabled = false;
+        write(file,&dummyJoypadEnabled,sizeof(dummyJoypadEnabled));
+        boolean dummyJoystickProgressive = false;
+        write(file,&dummyJoystickProgressive,sizeof(dummyJoystickProgressive));
+        int dummyJoystickPort = 0;
+        write(file,&dummyJoystickPort,sizeof(dummyJoystickPort));
+
         write(file,dirscan,sizeof(dirscan));
         write(file,buttonscan,sizeof(buttonscan));
         write(file,buttonmouse,sizeof(buttonmouse));
+        write(file,buttonjoy,sizeof(buttonjoy));
+
         write(file,&viewsize,sizeof(viewsize));
         write(file,&mouseadjustment,sizeof(mouseadjustment));
-#ifdef VIEASM
-        write(file, &soundvol, sizeof(soundvol));
-        write(file, &musicvol, sizeof(musicvol));
-        write(file, &reversestereo, sizeof(reversestereo));
-#endif
-
 
         close(file);
     }
@@ -364,7 +373,7 @@ void NewGame (int difficulty,int episode)
 
 void DiskFlopAnim(int x,int y)
 {
-    static s8 which=0;
+    static int8_t which=0;
     if (!x && !y)
         return;
     VWB_DrawPic(x,y,C_DISKLOADING1PIC+which);
@@ -375,7 +384,7 @@ void DiskFlopAnim(int x,int y)
 
 int32_t DoChecksum(byte *source,unsigned size,int32_t checksum)
 {
-    u32 i;
+    unsigned i;
 
     for (i=0;i<size-1;i++)
     checksum += source[i]^source[i+1];
@@ -521,7 +530,7 @@ boolean LoadTheGame(FILE *file,int x,int y)
     int i,j;
     int actnum = 0;
     word laststatobjnum;
-    s32 checksum,oldchecksum;
+    int32_t checksum,oldchecksum;
     objtype nullobj;
     statobj_t nullstat;
 
@@ -842,8 +851,9 @@ void SetupWalls (void)
 
 void SignonScreen (void)                        // VGA version
 {
-    VL_SetVGAPlaneMode();
-    VL_MemToScreen(signon,320,200,0,0);
+    VL_SetVGAPlaneMode ();
+
+    VL_MemToScreen (signon,320,200,0,0);
 }
 
 
@@ -1029,21 +1039,24 @@ static int wolfdigimap[] =
 #endif
         LASTSOUND
     };
-#ifdef VIEASM
 
-#else
+
 void InitDigiMap (void)
 {
     int *map;
 
     for (map = wolfdigimap; *map != LASTSOUND; map += 3)
     {
+#ifdef VIEASM
+
+#else
         DigiMap[map[0]] = map[1];
         DigiChannel[map[1]] = map[2];
+#endif
         SD_PrepareSound(map[1]);
     }
 }
-#endif
+
 #ifndef SPEAR
 CP_iteminfo MusicItems={CTL_X,CTL_Y,6,0,32};
 CP_itemtype MusicMenu[]=
@@ -1089,8 +1102,8 @@ CP_itemtype MusicMenu[]=
 void DoJukebox(void)
 {
     int which,lastsong=-1;
-    u32 start;
-    u32 songs[]=
+    unsigned start;
+    unsigned songs[]=
         {
 #ifndef SPEAR
             GETTHEM_MUS,
@@ -1207,7 +1220,7 @@ static void InitGame()
 #if defined (SWITCH) || defined (N3DS)  
     printf("GAME START");
 #endif    
-    // initialize SDL    
+    // initialize SDL
     if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK 
 #if SDL_MAJOR_VERSION == 1    
     ) < 0 )
@@ -1293,11 +1306,8 @@ static void InitGame()
 //
 // build some tables
 //
-#ifdef VIEASM    
-
-#else
     InitDigiMap ();
-#endif
+
     ReadConfig ();
 
     SetupSaveGames();
@@ -1308,9 +1318,8 @@ static void InitGame()
 	IN_ProcessEvents();
 
 #ifndef SPEARDEMO
-    if (Keyboard(sc_M))    
+    if (Keyboard(sc_M))
     {
-       
         DoJukebox();
         didjukebox=true;
     }
@@ -1440,9 +1449,6 @@ void NewViewSize (int width)
 
 void Quit (const char *errorStr, ...)
 {
-#if defined(SWITCH) || defined (N3DS)
-    printf(errorStr);
-#endif
 #ifdef NOTYET
     byte *screen;
 #endif
@@ -1459,7 +1465,7 @@ void Quit (const char *errorStr, ...)
     if (!pictable)  // don't try to display the red box before it's loaded
     {
         ShutdownId();
-        if (*error) //error && error what?
+        if (*error)
         {
 #ifdef NOTYET
             SetTextCursor(0,0);
@@ -1472,7 +1478,7 @@ void Quit (const char *errorStr, ...)
         exit(1);
     }
 
-    if (!*error)
+    if (!error || !*error)
     {
 #ifdef NOTYET
         #ifndef JAPAN
@@ -1512,7 +1518,6 @@ void Quit (const char *errorStr, ...)
     }
 
     exit(0);
-
 }
 
 //===========================================================================
@@ -1548,14 +1553,7 @@ static void DemoLoop()
         gamestate.episode = 0;
         gamestate.mapon = param_tedlevel;
 #endif
-#if defined(SWITCH) || defined (N3DS)
-        printf("BEFORE GAME LOOP\n");
-#endif       
         GameLoop();
-#if N3DS
-        printf("SHOW TITLE\n");
-        VWB_Bar(0, 0, screenWidth, screenHeight, VIEWCOLOR);     // background
-#endif        
         Quit (NULL);
     }
 
@@ -1661,7 +1659,7 @@ static void DemoLoop()
         VW_FadeOut ();
 
 #ifdef DEBUGKEYS
-        if (Keyboard(sc_Tab) && param_debugmode)          
+        if (Keyboard(sc_Tab) && param_debugmode)
             RecordDemo ();
         else
             US_ControlPanel (0);
@@ -1690,7 +1688,7 @@ void CheckParameters(int argc, char *argv[])
 {
     boolean hasError = false, showHelp = false;
     boolean sampleRateGiven = false, audioBufferGiven = false;
-    int i, defaultSampleRate = param_samplerate;
+    int i,defaultSampleRate = param_samplerate;
 
     for(i = 1; i < argc; i++)
     {
@@ -1738,7 +1736,7 @@ void CheckParameters(int argc, char *argv[])
             {
                 screenWidth = atoi(argv[++i]);
                 screenHeight = atoi(argv[++i]);
-                u32 factor = screenWidth / 320;
+                unsigned factor = screenWidth / 320;
                 if(screenWidth % 320 || screenHeight != 200 * factor && screenHeight != 240 * factor)
                     printf("Screen size must be a multiple of 320x200 or 320x240!\n"), hasError = true;
             }

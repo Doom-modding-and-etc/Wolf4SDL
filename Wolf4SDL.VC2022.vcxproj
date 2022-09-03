@@ -198,6 +198,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="dosbox\cdosbox.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">EnableAllWarnings</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="dosbox\dbopl.cpp" />
     <ClCompile Include="id_crt.c" />
     <ClCompile Include="id_ca.c" />
     <ClCompile Include="id_in.c" />
@@ -238,6 +242,8 @@
     <ClInclude Include="asmcref.h" />
     <ClInclude Include="audiosod.h" />
     <ClInclude Include="audiowl6.h" />
+    <ClInclude Include="dosbox\cdosbox.h" />
+    <ClInclude Include="dosbox\dbopl.h" />
     <ClInclude Include="id_crt.h" />
     <ClInclude Include="foreign.h" />
     <ClInclude Include="f_spear.h" />

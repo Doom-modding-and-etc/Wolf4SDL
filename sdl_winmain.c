@@ -31,9 +31,6 @@
 /* Include the SDL main definition header */
 #include <SDL.h>
 #include <SDL_main.h>
-
-#include "wl_def.h"
-
 #ifdef main
 # ifndef _WIN32_WCE_EMULATION
 #  undef main
@@ -58,11 +55,7 @@
 /* seems to be undefined in Win CE although in online help */
 #define isspace(a) (((CHAR)a == ' ') || ((CHAR)a == '\t'))
 #endif /* _WIN32_WCE < 300 */
-#ifdef VIEASM
-boolean allowwindow = true;
-#else
 
-#endif
 /* Parse a command line buffer into arguments */
 static int ParseCommandLine(char *cmdline, char **argv)
 {
@@ -176,18 +169,7 @@ static void cleanup_output(void)
             char buf[16384];
             size_t readbytes = fread(buf, 1, 16383, file);
             fclose(file);
-#ifdef VIEASM
-			if (allowwindow)
-			{
-				if (readbytes != 0)
-				{
-					buf[readbytes] = 0;     // cut after last byte (<=16383)
-					MessageBox(NULL, buf, "Wolf4SDL", MB_OK);
-				}
-				else
-					remove(stdoutPath);     // remove empty file
-			}
-#else
+
             if(readbytes != 0)
             {
                 buf[readbytes] = 0;     // cut after last byte (<=16383)
@@ -195,7 +177,6 @@ static void cleanup_output(void)
             }
             else
                 remove(stderrPath);     // remove empty file
-#endif
 		}
 	}
 #endif
@@ -207,7 +188,6 @@ static void cleanup_output(void)
 //#define console_main main
 //#endif
 
-#if SDL_MAJOR_VERSION == 2
 /* This is where execution begins [console apps] */
 int console_main(int argc, char *argv[])
 {
@@ -243,7 +223,14 @@ int console_main(int argc, char *argv[])
 	}
 	atexit(cleanup_output);
 	atexit(cleanup);
-
+#if SDL_MAJOR_VERSION == 1
+	/* Sam:
+	   We still need to pass in the application handle so that
+	   DirectInput will initialize properly when SDL_RegisterApp()
+	   is called later in the video initialization.
+	 */
+	SDL_SetModuleHandle(GetModuleHandle(NULL));
+#endif
 	/* Run the application main() code */
 	status = SDL_main(argc, argv);
 
@@ -253,7 +240,7 @@ int console_main(int argc, char *argv[])
 	/* Hush little compiler, don't you cry... */
 	return 0;
 }
-#endif
+
 /* This is where execution begins [windowed apps] */
 #ifdef _WIN32_WCE
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, LPWSTR szCmdLine, int sw)
@@ -280,15 +267,6 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, LPSTR szCmdLine, int sw)
 	char path[MAX_PATH];
 #endif
 	FILE *newfp;
-#endif
-
-#if SDL_MAJOR_VERSION == 1
-	/* Sam:
-	   We still need to pass in the application handle so that
-	   DirectInput will initialize properly when SDL_RegisterApp()
-	   is called later in the video initialization.
-	 */
-	SDL_SetModuleHandle(GetModuleHandle(NULL));
 #endif
 
 	/* Start up DDHELP.EXE before opening any files, so DDHELP doesn't
@@ -390,9 +368,8 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, LPSTR szCmdLine, int sw)
 	ParseCommandLine(cmdline, argv);
 
 	/* Run the main program (after a little SDL initialization) */
-#if SDL_MAJOR_VERSION == 2	
 	console_main(argc, argv);
-#endif
+
 	/* Hush little compiler, don't you cry... */
 	return 0;
 }

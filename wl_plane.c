@@ -41,9 +41,9 @@ void DrawSpan (int16_t x1, int16_t x2, int16_t height)
     byte      *dest;
     byte      *shade;
     word      texture,spot;
-    u32  rowofs;
-    s16   ceilingpage,floorpage,lastceilingpage,lastfloorpage;
-    s16   count,prestep;
+    uint32_t  rowofs;
+    int16_t   ceilingpage,floorpage,lastceilingpage,lastfloorpage;
+    int16_t   count,prestep;
     fixed     basedist,stepscale;
     fixed     xfrac,yfrac;
     fixed     xstep,ystep;
@@ -169,8 +169,8 @@ void DrawSpan (int16_t x1, int16_t x2, int16_t height)
     byte     *dest;
     byte     *shade;
     word     texture;
-    u32 rowofs;                                    
-    s16  count,prestep;
+    uint32_t rowofs;                                    
+    int16_t  count,prestep;
     fixed    basedist,stepscale;
     fixed    xfrac,yfrac;
     fixed    xstep,ystep;
@@ -228,7 +228,7 @@ void DrawSpan (int16_t x1, int16_t x2, int16_t height)
 void DrawPlanes (void)
 {
     int     x,y;
-    s16	height;
+    int16_t	height;
 
 //
 // loop over all columns

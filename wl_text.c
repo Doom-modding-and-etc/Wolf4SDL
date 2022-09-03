@@ -52,10 +52,10 @@ TEXT FORMATTING COMMANDS
 static int pagenum;
 static int numpages;
 
-static u32 leftmargin[TEXTROWS];
-static u32 rightmargin[TEXTROWS];
+static unsigned leftmargin[TEXTROWS];
+static unsigned rightmargin[TEXTROWS];
 static char*    text;
-static u32 rowon;
+static unsigned rowon;
 
 static int     picx;
 static int     picy;
@@ -413,8 +413,8 @@ void HandleWord (void)
 
 void PageLayout (boolean shownumber)
 {
-    int i, oldfontcolor;
-    char ch;
+    int     i,oldfontcolor;
+    char    ch;
 
     oldfontcolor = fontcolor;
 
@@ -615,7 +615,7 @@ void ShowArticle (char *article)
 #endif
     };
 #endif
-    u32    oldfontnumber;
+    unsigned    oldfontnumber;
     boolean     newpage,firstpage;
     ControlInfo ci;
 

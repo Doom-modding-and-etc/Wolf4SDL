@@ -42,7 +42,7 @@ void    SpawnNewObj (unsigned tilex, unsigned tiley, statetype *state);
 void    NewState (objtype *ob, statetype *state);
 
 boolean TryWalk (objtype *ob);
-void    MoveObj (objtype *ob, s32 move);
+void    MoveObj (objtype *ob, int32_t move);
 
 void    KillActor (objtype *ob);
 void    DamageActor (objtype *ob, unsigned damage);
@@ -90,8 +90,8 @@ void SpawnNewObj (unsigned tilex, unsigned tiley, statetype *state)
 
     newobj->tilex = (short) tilex;
     newobj->tiley = (short) tiley;
-    newobj->x = ((s32)tilex<<TILESHIFT)+TILEGLOBAL/2;
-    newobj->y = ((s32)tiley<<TILESHIFT)+TILEGLOBAL/2;
+    newobj->x = ((int32_t)tilex<<TILESHIFT)+TILEGLOBAL/2;
+    newobj->y = ((int32_t)tiley<<TILESHIFT)+TILEGLOBAL/2;
     newobj->dir = nodir;
 
     actorat[tilex][tiley] = newobj;
@@ -386,10 +386,10 @@ boolean TryWalk (objtype *ob)
 void SelectDodgeDir (objtype *ob)
 {
     int         deltax,deltay,i;
-    u32   absdx,absdy;
+    unsigned    absdx,absdy;
     dirtype     dirtry[5];
     dirtype     turnaround,tdir;
- 
+
     if (ob->flags & FL_FIRSTATTACK)
     {
         //
@@ -683,9 +683,9 @@ void SelectRunDir (objtype *ob)
 =================
 */
 
-void MoveObj (objtype *ob, s32 move)
+void MoveObj (objtype *ob, int32_t move)
 {
-    s32    deltax,deltay;
+    int32_t    deltax,deltay;
 
     switch (ob->dir)
     {
@@ -869,12 +869,12 @@ void KillActor (objtype *ob)
 
         case mutantobj:
             GivePoints (700);
-            NewState (ob,&s_mutdie1);     
+            NewState (ob,&s_mutdie1);
             PlaceItemType (bo_clip2,tilex,tiley);
             break;
 
         case ssobj:
-            GivePoints (500);           
+            GivePoints (500);
             NewState (ob,&s_ssdie1);
             if (gamestate.bestweapon < wp_machinegun)
                 PlaceItemType (bo_machinegun,tilex,tiley);
@@ -883,8 +883,8 @@ void KillActor (objtype *ob)
             break;
 
         case dogobj:
-            GivePoints(200);
-            NewState (ob,&s_dogdie1);        
+            GivePoints (200);
+            NewState (ob,&s_dogdie1);
             break;
 
 #ifndef SPEAR
@@ -939,39 +939,38 @@ void KillActor (objtype *ob)
         case spectreobj:
             if (ob->flags&FL_BONUS)
             {
-                GivePoints (200);       // Get points once for each   
+                GivePoints (200);       // Get points once for each
                 ob->flags &= ~FL_BONUS;
             }
             NewState (ob,&s_spectredie1);
             break;
 
-        case angelobj:       
+        case angelobj:
             GivePoints (5000);
-            NewState(ob, &s_angeldie1);          
+            NewState (ob,&s_angeldie1);
             break;
 
         case transobj:
             GivePoints (5000);
-            NewState(ob, &s_transdie0);
+            NewState (ob,&s_transdie0);
             PlaceItemType (bo_key1,tilex,tiley);
             break;
 
         case uberobj:
-            GivePoints(5000);
-            NewState(ob, &s_uberdie0);
-
+            GivePoints (5000);
+            NewState (ob,&s_uberdie0);
             PlaceItemType (bo_key1,tilex,tiley);
             break;
 
         case willobj:
-            GivePoints(5000);
-            NewState(ob, &s_willdie1);
+            GivePoints (5000);
+            NewState (ob,&s_willdie1);
             PlaceItemType (bo_key1,tilex,tiley);
             break;
 
         case deathobj:
-            GivePoints(5000);
-            NewState(ob, &s_deathdie1);    
+            GivePoints (5000);
+            NewState (ob,&s_deathdie1);
             PlaceItemType (bo_key1,tilex,tiley);
             break;
 #endif
@@ -1076,9 +1075,9 @@ boolean CheckLine (objtype *ob)
     int         x,y;
     int         xdist,ydist,xstep,ystep;
     int         partial,delta;
-    s32     ltemp;
+    int32_t     ltemp;
     int         xfrac,yfrac,deltafrac;
-    u32    value,intercept;
+    unsigned    value,intercept;
 
     x1 = ob->x >> UNSIGNEDSHIFT;            // 1/256 tile precision
     y1 = ob->y >> UNSIGNEDSHIFT;
@@ -1107,14 +1106,14 @@ boolean CheckLine (objtype *ob)
 
         deltafrac = abs(x2-x1);
         delta = y2-y1;
-        ltemp = ((s32)delta<<8)/deltafrac;
+        ltemp = ((int32_t)delta<<8)/deltafrac;
         if (ltemp > 0x7fffl)
             ystep = 0x7fff;
         else if (ltemp < -0x7fffl)
             ystep = -0x7fff;
         else
             ystep = ltemp;
-        yfrac = y1 + (((s32)ystep*partial) >>8);
+        yfrac = y1 + (((int32_t)ystep*partial) >>8);
 
         x = xt1+xstep;
         xt2 += xstep;
@@ -1123,7 +1122,7 @@ boolean CheckLine (objtype *ob)
             y = yfrac>>8;
             yfrac += ystep;
 
-            value = (u32) tilemap[x][y];
+            value = (unsigned)tilemap[x][y];
             x += xstep;
 
             if (!value)
@@ -1161,14 +1160,14 @@ boolean CheckLine (objtype *ob)
 
         deltafrac = abs(y2-y1);
         delta = x2-x1;
-        ltemp = ((s32)delta<<8)/deltafrac;
+        ltemp = ((int32_t)delta<<8)/deltafrac;
         if (ltemp > 0x7fffl)
             xstep = 0x7fff;
         else if (ltemp < -0x7fffl)
             xstep = -0x7fff;
         else
             xstep = ltemp;
-        xfrac = x1 + (((s32)xstep*partial) >>8);
+        xfrac = x1 + (((int32_t)xstep*partial) >>8);
 
         y = yt1 + ystep;
         yt2 += ystep;
@@ -1177,7 +1176,7 @@ boolean CheckLine (objtype *ob)
             x = xfrac>>8;
             xfrac += xstep;
 
-            value = (u32)tilemap[x][y];
+            value = (unsigned)tilemap[x][y];
             y += ystep;
 
             if (!value)
@@ -1219,7 +1218,7 @@ boolean CheckLine (objtype *ob)
 
 boolean CheckSight (objtype *ob)
 {
-    s32 deltax,deltay;
+    int32_t deltax,deltay;
 
     //
     // don't bother tracing a line if the area isn't connected to the player's

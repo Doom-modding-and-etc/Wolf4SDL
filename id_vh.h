@@ -18,15 +18,15 @@
 
 typedef struct
 {
-	u16 width,height;
+	int16_t width,height;
 } pictabletype;
 
 
 typedef struct
 {
-	s16 height;
-	s16 location[256];
-	s8 width[256];
+	int16_t height;
+	int16_t location[256];
+	int8_t width[256];
 } fontstruct;
 
 
@@ -67,13 +67,10 @@ void VWB_Vlin (int y1, int y2, int x, int color);
 #define VWB_VlinScaledCoord VW_Vlin
 
 void VH_UpdateScreen (SDL_Surface *surface);
-
+#define VW_UpdateScreen()   VH_UpdateScreen (screenBuffer)
 #if SDL_MAJOR_VERSION == 2
-//Wolf3s:
 void VH_RenderTextures(SDL_Surface* surface);
 #endif
-#define VW_UpdateScreen()   VH_UpdateScreen (screenBuffer)
-
 //
 // wolfenstein EGA compatability stuff
 //
@@ -93,6 +90,6 @@ void	VW_MeasurePropString (const char *string, word *width, word *height);
 
 void    VH_Startup();
 boolean FizzleFade (SDL_Surface *source, int x1, int y1,
-    u32 width, u32 height, u32 frames, boolean abortable);
+    unsigned width, unsigned height, unsigned frames, boolean abortable);
 
 #endif

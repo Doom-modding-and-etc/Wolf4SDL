@@ -26,23 +26,23 @@
 
 byte     *vbuf;
 
-s32    lasttimecount;
-s32    frameon;
+int32_t    lasttimecount;
+int32_t    frameon;
 boolean fpscounter;
 
 int fps_frames=0, fps_time=0, fps=0;
 
 #if defined(USE_FLOORCEILINGTEX) || defined(USE_CLOUDSKY)
-s16 *spanstart;
+int16_t *spanstart;
 #endif
 
-s16 *wallheight;
+int16_t *wallheight;
 
 //
 // math tables
 //
 short *pixelangle;
-s32 finetangent[FINEANGLES/4];
+int32_t finetangent[FINEANGLES/4];
 fixed sintable[ANGLES+ANGLES/4];
 fixed *costable = sintable+(ANGLES/4);
 
@@ -198,15 +198,15 @@ void TransformActor (objtype *ob)
 ========================
 */
 
-boolean TransformTile(int tx, int ty, short *dispx, short *dispheight)
+boolean TransformTile (int tx, int ty, short *dispx, short *dispheight)
 {
     fixed gx,gy,gxt,gyt,nx,ny;
 
 //
 // translate point to view centered coordinates
 //
-    gx = ((s32)tx<<TILESHIFT)+0x8000-viewx;
-    gy = ((s32)ty<<TILESHIFT)+0x8000-viewy;
+    gx = ((int32_t)tx<<TILESHIFT)+0x8000-viewx;
+    gy = ((int32_t)ty<<TILESHIFT)+0x8000-viewy;
 
 //
 // calculate newx
@@ -255,10 +255,10 @@ boolean TransformTile(int tx, int ty, short *dispx, short *dispheight)
 ====================
 */
 
-int16_t CalcHeight(void)
+int16_t CalcHeight (void)
 {
-    s16 height;
-    fixed   gx,gy,gxt,gyt,nx;
+    int16_t height;
+    fixed   gx,gy,gxt,gyt,nx,ny;
 
 //
 // translate point to view centered coordinates
@@ -288,7 +288,7 @@ int16_t CalcHeight(void)
     if (nx < MINDIST)
         nx = MINDIST;             // don't let divide overflow
 
-    height = (s16)(heightnumerator / (nx >> 8));
+    height = (int16_t)(heightnumerator / (nx >> 8));
 #endif
 
     return height;
@@ -304,7 +304,7 @@ int16_t CalcHeight(void)
 ===================
 */
 
-void ScalePost(void)
+void ScalePost (void)
 {
     int ywcount, yoffs, yw, yd, yendoffs;
     byte col;
@@ -423,7 +423,7 @@ void ScaleSkyPost (void)
 ====================
 */
 
-void HitVertWall(void)
+void HitVertWall (void)
 {
     int wallpic;
     int texture;
@@ -475,7 +475,7 @@ void HitVertWall(void)
 #endif
     }
 
-    ScalePost();
+    ScalePost ();
 }
 
 
@@ -490,7 +490,7 @@ void HitVertWall(void)
 ====================
 */
 
-void HitHorizWall(void)
+void HitHorizWall (void)
 {
     int wallpic;
     int texture;
@@ -541,7 +541,7 @@ void HitHorizWall(void)
 #endif
     }
 
-    ScalePost();
+    ScalePost ();
 }
 
 //==========================================================================
@@ -787,7 +787,7 @@ void DrawScaleds (void)
     int      i,least,numvisable,height;
     byte     *visspot;
     tiletype *tilespot;
-    //u32 spotloc;
+    unsigned spotloc;
 
     statobj_t *statptr;
     objtype   *obj;
@@ -807,9 +807,8 @@ void DrawScaleds (void)
 
         if (TransformTile (statptr->tilex,statptr->tiley,
             &visptr->viewx,&visptr->viewheight) && statptr->flags & FL_BONUS)
-        {  
+        {
             GetBonus (statptr);
-          
             if(statptr->shapenum == -1)
                 continue;                                           // object has been taken
         }
@@ -946,7 +945,7 @@ void DrawPlayerWeapon (void)
     }
 #endif
 
-    if (gamestate.weapon != wp_none)
+    if (gamestate.weapon != -1)
     {
         shapenum = weaponscale[gamestate.weapon]+gamestate.weaponframe;
         SimpleScaleShape(viewwidth/2,shapenum,viewheight+1);
@@ -973,10 +972,10 @@ void CalcTics (void)
 //
 // calculate tics since last refresh for adaptive timing
 //
-    if (lasttimecount > (s32) GetTimeCount())
+    if (lasttimecount > (int32_t) GetTimeCount())
         lasttimecount = GetTimeCount();    // if the game was paused a LONG time
 
-    u32 curtime = SDL_GetTicks();
+    uint32_t curtime = SDL_GetTicks();
     tics = (curtime * 7) / 100 - lasttimecount;
     if(!tics)
     {
@@ -1012,8 +1011,8 @@ void CalcTics (void)
 
 void WallRefresh (void)
 {
-    s16   angle;
-    s32   xstep,ystep;
+    int16_t   angle;
+    int32_t   xstep,ystep;
     fixed     xinttemp,yinttemp;                            // holds temporary intercept position
     longword  xpartial,ypartial;
     doorobj_t *door;
@@ -1240,8 +1239,7 @@ vertentry:
 
                             HitVertWall();
                         }
-                        
-			else
+                        else
                         {
                             yinttemp = yintercept + ((ystep * pwallposinv) >> 6);
 
@@ -1256,8 +1254,7 @@ vertentry:
                             HitVertWall();
                         }
                     }
-                    
-		    else
+                    else
                     {
                         if (pwalldir == di_north)
                             pwallposi = 64 - pwallpos;
@@ -1269,8 +1266,8 @@ vertentry:
                         {
                             if (xtile == pwallx && yinttile == pwally)
                             {
-                                if (pwalldir == di_south && (s32)((word)yintercept) + ystep < (pwallposi << 10)
-                                 || pwalldir == di_north && (s32)((word)yintercept) + ystep > (pwallposi << 10))
+                                if (pwalldir == di_south && (int32_t)((word)yintercept) + ystep < (pwallposi << 10)
+                                 || pwalldir == di_north && (int32_t)((word)yintercept) + ystep > (pwallposi << 10))
                                     goto passvert;
 
                                 //
@@ -1308,8 +1305,8 @@ vertentry:
                             }
                             else
                             {
-                                if (pwalldir == di_south && (s32)((word)yintercept) + ystep > (pwallposi << 10)
-                                 || pwalldir == di_north && (s32)((word)yintercept) + ystep < (pwallposi << 10))
+                                if (pwalldir == di_south && (int32_t)((word)yintercept) + ystep > (pwallposi << 10)
+                                 || pwalldir == di_north && (int32_t)((word)yintercept) + ystep < (pwallposi << 10))
                                     goto passvert;
 
                                 //
@@ -1480,8 +1477,8 @@ horizentry:
                         {
                             if (xinttile == pwallx && ytile == pwally)
                             {
-                                if (pwalldir == di_east && (s32)((word)xintercept) + xstep < (pwallposi << 10)
-                                 || pwalldir == di_west && (s32)((word)xintercept) + xstep > (pwallposi << 10))
+                                if (pwalldir == di_east && (int32_t)((word)xintercept) + xstep < (pwallposi << 10)
+                                 || pwalldir == di_west && (int32_t)((word)xintercept) + xstep > (pwallposi << 10))
                                     goto passhoriz;
 
                                 //
@@ -1508,8 +1505,7 @@ horizentry:
                                 HitHorizWall();
                             }
                         }
-                        
-			else
+                        else
                         {
                             if (xinttile == pwallx && ytile == pwally)
                             {
@@ -1521,8 +1517,8 @@ horizentry:
                             }
                             else
                             {
-                                if (pwalldir == di_east && (s32)((word)xintercept) + xstep > (pwallposi << 10)
-                                 || pwalldir == di_west && (s32)((word)xintercept) + xstep < (pwallposi << 10))
+                                if (pwalldir == di_east && (int32_t)((word)xintercept) + xstep > (pwallposi << 10)
+                                 || pwalldir == di_west && (int32_t)((word)xintercept) + xstep < (pwallposi << 10))
                                     goto passhoriz;
 
                                 //
@@ -1543,8 +1539,7 @@ horizentry:
                         }
                     }
                 }
-                
-		else
+                else
                 {
                     yintercept = (fixed)ytile << TILESHIFT;
 
@@ -1670,7 +1665,8 @@ void ThreeDRefresh (void)
 #endif
 
     DrawPlayerWeapon ();    // draw player's hands
-    if(Keyboard(sc_Tab) && viewsize == 21 && gamestate.weapon != wp_none)
+
+    if(Keyboard(sc_Tab) && viewsize == 21 && gamestate.weapon != -1)
         ShowActStatus();
 
     VL_UnlockSurface(screenBuffer);

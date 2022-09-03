@@ -36,7 +36,7 @@
 
 #include "../version.h"
 
-#ifdef USE_GPL
+#ifdef USE_DOSBOX
 #define GCC_UNLIKELY(x) x
 
 #include <math.h>
@@ -45,7 +45,7 @@
 
 #pragma pack(1)
 
-#include "dbopl.hpp"
+#include "dbopl.h"
 
 
 #ifndef PI

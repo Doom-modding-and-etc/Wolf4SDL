@@ -23,7 +23,7 @@ INCS      = -I$(DEVKITPRO)/portlibs/switch/include -I$(DEVKITPRO)/portlibs/switc
 BIN       = Wolf4SDL.elf
 BUILD	  =	build
 ARCH 	  = -march=armv8-a -mtune=cortex-a57 -mtp=soft -fPIE -fPIC -O3 -O2
-DEFINES   = -DSWITCH -D_SWITCH
+DEFINES   = -DSWITCH 
 CFLAGS    = $(INCS) $(DEFINES) $(ARCH) -Wall -W -g -Wpointer-arith -Wreturn-type -Wwrite-strings -Wcast-align -std=gnu99 -Wimplicit-int -Wsequence-point -Wswitch
 RM        = rm -f
 LINK      = aarch64-none-elf-gcc-11.2.0

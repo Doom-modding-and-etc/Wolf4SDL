@@ -182,8 +182,8 @@ void InitSky (void)
     byte            colormap[256];
     int             i,j,k,m,n,calcedCols;
     int             cloudskyid = GetCloudSkyDefID();
-    s16         index;
-    s32         value;
+    int16_t         index;
+    int32_t         value;
 
     if(cloudskyid >= lengthof(cloudSkys))
         Quit("Illegal cloud sky id: %u", cloudskyid);
@@ -282,7 +282,7 @@ void DrawCloudSpan (int16_t x1, int16_t x2, int16_t height)
 {
     byte     *dest;
     word     texture;
-    s16  count,prestep;
+    int16_t  count,prestep;
     fixed    basedist;
     fixed    stepscale;
     fixed    xfrac,yfrac;
@@ -328,8 +328,8 @@ void DrawCloudSpan (int16_t x1, int16_t x2, int16_t height)
 void DrawCloudPlanes (void)
 {
     int     x,y;
-    s16	height;
-    s32 speed;
+    int16_t	height;
+    int32_t speed;
 
     speed = curSky->speed * tics;
 

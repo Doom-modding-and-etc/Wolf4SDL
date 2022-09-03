@@ -4,12 +4,10 @@
 #include "wl_def.h"
 #include <SDL_mixer.h>
 
+#ifdef MYPROFILE
+#include <TIME.H>
+#endif
 
-//#ifdef MYPROFILE
-//#include <TIME.H>
-//#endif
-
-//#include <time.h>
 
 /*
 =============================================================================
@@ -33,8 +31,8 @@ gametype        gamestate;
 byte            bordercol=VIEWCOLOR;        // color of the Change View/Ingame border
 
 #ifdef SPEAR
-s32         spearx,speary;
-u32        spearangle;
+int32_t         spearx,speary;
+unsigned        spearangle;
 boolean         spearflag;
 #endif
 
@@ -80,9 +78,7 @@ void GameLoop (void);
 
 int leftchannel, rightchannel;
 #define ATABLEMAX 15
-
-byte righttable[ATABLEMAX][ATABLEMAX * 2] = 
-{
+byte righttable[ATABLEMAX][ATABLEMAX * 2] = {
 { 8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 6, 0, 0, 0, 0, 0, 1, 3, 5, 8, 8, 8, 8, 8, 8, 8, 8},
 { 8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 6, 4, 0, 0, 0, 0, 0, 2, 4, 6, 8, 8, 8, 8, 8, 8, 8, 8},
 { 8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 6, 6, 4, 1, 0, 0, 0, 1, 2, 4, 6, 8, 8, 8, 8, 8, 8, 8, 8},
@@ -99,8 +95,7 @@ byte righttable[ATABLEMAX][ATABLEMAX * 2] =
 { 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8},
 { 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8}
 };
-byte lefttable[ATABLEMAX][ATABLEMAX * 2] = 
-{
+byte lefttable[ATABLEMAX][ATABLEMAX * 2] = {
 { 8, 8, 8, 8, 8, 8, 8, 8, 5, 3, 1, 0, 0, 0, 0, 0, 6, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8},
 { 8, 8, 8, 8, 8, 8, 8, 8, 6, 4, 2, 0, 0, 0, 0, 0, 4, 6, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8},
 { 8, 8, 8, 8, 8, 8, 8, 8, 6, 4, 2, 1, 0, 0, 0, 1, 4, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8},
@@ -118,9 +113,6 @@ byte lefttable[ATABLEMAX][ATABLEMAX * 2] =
 { 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8}
 };
 
-/*
- 
-*/
 void
 SetSoundLoc(fixed gx,fixed gy)
 {
@@ -203,11 +195,7 @@ void UpdateSoundLoc(void)
         SD_SetPosition(leftchannel,rightchannel);
     }*/
 
-#ifdef VIEASM
-    for (i = 0; i < ASM_CurChannels(); i++)
-#else
     for(i = 0; i < MIX_CHANNELS; i++)
-#endif
     {
         if(channelSoundPos[i].valid)
         {
@@ -234,7 +222,7 @@ void UpdateSoundLoc(void)
 
 static void ScanInfoPlane(void)
 {
-    u32 x,y;
+    unsigned x,y;
     int      tile;
     word     *start;
 
@@ -918,7 +906,7 @@ void DrawPlayBorder (void)
             statusborderw+px*8, px*STATUSLINES, bordercol);
     }
 
-    if((u32) viewheight == screenHeight) return;
+    if((unsigned) viewheight == screenHeight) return;
 
     VWB_BarScaledCoord (0,0,screenWidth,screenHeight-px*STATUSLINES,bordercol);
 
@@ -978,7 +966,6 @@ void ShowActStatus()
     VL_MemToScreenScaledCoord2(source, width, height, 9, 4, destx, desty, width - 18, height - 7);
 
     ingame = false;
-
     DrawFace ();
     DrawHealth ();
     DrawLives ();
@@ -1009,7 +996,7 @@ char    demoname[13] = "DEMO?.";
 void StartDemoRecord (int levelnumber)
 {
     demobuffer = SafeMalloc(MAXDEMOSIZE);
-    demoptr = (s8 *) demobuffer;
+    demoptr = (int8_t *) demobuffer;
     lastdemoptr = demoptr+MAXDEMOSIZE;
 
     *demoptr = levelnumber;
@@ -1028,15 +1015,15 @@ void StartDemoRecord (int levelnumber)
 
 void FinishDemoRecord (void)
 {
-    s32    length,level;
+    int32_t    length,level;
 
     demorecord = false;
 
-    length = (s32) (demoptr - (s8 *)demobuffer);
+    length = (int32_t) (demoptr - (int8_t *)demobuffer);
 
-    demoptr = ((s8 *)demobuffer)+1;
-    demoptr[0] = (s8) length;
-    demoptr[1] = (s8) (length >> 8);
+    demoptr = ((int8_t *)demobuffer)+1;
+    demoptr[0] = (int8_t) length;
+    demoptr[1] = (int8_t) (length >> 8);
     demoptr[2] = 0;
 
     VW_FadeIn();
@@ -1165,7 +1152,7 @@ void PlayDemo (int demonumber)
     int dems[1]={T_DEMO0};
 #endif
 
-    demoptr = (s8 *) grsegs[dems[demonumber]];
+    demoptr = (int8_t *) grsegs[dems[demonumber]];
 #else
     demoname[4] = '0'+demonumber;
     CA_LoadFile (demoname,&demobuffer);
@@ -1175,7 +1162,7 @@ void PlayDemo (int demonumber)
     NewGame (1,0);
     gamestate.mapon = *demoptr++;
     gamestate.difficulty = gd_hard;
-    length = READWORD((u8 *)demoptr);
+    length = READWORD((uint8_t *)demoptr);
     // TODO: Seems like the original demo format supports 16 MB demos
     //       But T_DEM00 and T_DEM01 of Wolf have a 0xd8 as third length size...
     demoptr += 3;
@@ -1219,7 +1206,7 @@ void PlayDemo (int demonumber)
 void Died (void)
 {
     float   fangle;
-    s32 dx,dy;
+    int32_t dx,dy;
     int     iangle,curangle,clockwise,counter,change;
 
     if (screenfaded)
@@ -1364,9 +1351,6 @@ void Died (void)
 void GameLoop (void)
 {
     boolean died;
-#if defined(SWITCH) || defined (N3DS)
-    printf("START GAME\n");
-#endif
 #ifdef MYPROFILE
     clock_t start,end;
 #endif
@@ -1381,8 +1365,7 @@ restartgame:
     {
         if (!loadedgame)
             gamestate.score = gamestate.oldscore;
-        if(!died || viewsize != 21) 
-            DrawScore();
+        if(!died || viewsize != 21) DrawScore();
 
         startgame = false;
         if (!loadedgame)
@@ -1395,7 +1378,6 @@ restartgame:
             DrawKeys ();
         }
 #endif
-
 
         DrawLevel ();                        // ADDEDFIX 5 -  Chris Chokan
 

@@ -8,11 +8,14 @@ BY GERARD 'ALUMIUN' WATSON
 #define _ASMCREF_H_
 
 #ifdef VIEASM
+
 // This table holds the file names for the sounds defined in AUDIOWL6.H.
 // Change these to suit your sounds and your AUDIOHED.WL6 or SOD file.
 // Currently these are set up for Wolfenstein, not SoD.
 
 const char *sounddir = "sounds\\";
+#define NUMSOUNDS 87
+#define NUMMUSICS 27
 
 const char *ASM_Soundnames[NUMSOUNDS] = 
 {

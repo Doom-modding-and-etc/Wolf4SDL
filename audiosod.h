@@ -14,8 +14,7 @@
 //
 // Sound names & indexes
 //
-typedef enum 
-{
+typedef enum {
 	HITWALLSND,              // 0
 	MISSILEHITSND,           // 1
 	SELECTITEMSND,           // 2
@@ -104,20 +103,14 @@ typedef enum
 // Base offsets
 //
 #define STARTPCSOUNDS		0
-#ifdef VIEASM
-#define STARTADLIBSOUNDS    0
-#define STARTDIGISOUNDS		0
-#define STARTMUSIC		    0
-#else
 #define STARTADLIBSOUNDS	81
 #define STARTDIGISOUNDS		162
 #define STARTMUSIC		    243
-#endif
+
 //
 // Music names & indexes
 //
-typedef enum 
-{
+typedef enum {
 	XFUNKIE_MUS,             // 0
 	DUNGEON_MUS,             // 1
 	XDEATH_MUS,              // 2
@@ -144,10 +137,6 @@ typedef enum
 	XTOWER2_MUS,             // 23
 	LASTMUSIC
 } musicnames;
-#ifndef VIEASM
-#define NUMMUSICS LASTMUSIC
-#endif
-
 
 /////////////////////////////////////////////////
 //

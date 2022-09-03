@@ -27,30 +27,32 @@
 #endif
 
 //	Global variables
-word PrintX, PrintY, WindowX, WindowY, WindowW, WindowH;
+		word		PrintX,PrintY;
+		word		WindowX,WindowY,WindowW,WindowH;
 
 //	Internal variables
-//#define	ConfigVersion	1
+#define	ConfigVersion	1
 
+static	boolean		US_Started;
 
-void (*USL_MeasureString)(const char *,word *,word *) = VW_MeasurePropString;
-void (*USL_DrawString)(const char *) = VWB_DrawPropString;
+		void		(*USL_MeasureString)(const char *,word *,word *) = VW_MeasurePropString;
+		void		(*USL_DrawString)(const char *) = VWB_DrawPropString;
 
-SaveGame Games[MaxSaveGames];
+		SaveGame	Games[MaxSaveGames];
+		HighScore	Scores[MaxScores] =
+					{
+						{"id software-'92",10000,1},
+						{"Adrian Carmack",10000,1},
+						{"John Carmack",10000,1},
+						{"Kevin Cloud",10000,1},
+						{"Tom Hall",10000,1},
+						{"John Romero",10000,1},
+						{"Jay Wilbur",10000,1},
+					};
 
-HighScore Scores[MaxScores] =
-{
-  {"id software-'92", 10000, 1},
-  {"Adrian Carmack", 10000, 1},
-  {"John Carmack", 10000, 1},
-  {"Kevin Cloud", 10000, 1},
-  {"Tom Hall", 10000,1},
-  {"John Romero", 10000,1},
-  {"Jay Wilbur", 10000,1},
-};
+int rndindex = 0;
 
-static byte rndtable[] = 
-{
+static byte rndtable[] = {
       0,   8, 109, 220, 222, 241, 149, 107,  75, 248, 254, 140,  16,  66,
 	 74,  21, 211,  47,  80, 242, 154,  27, 205, 128, 161,  89,  77,  36,
 	 95, 110,  85,  48, 212, 140, 211, 249,  22,  79, 200,  50,  28, 188,
@@ -80,7 +82,6 @@ static byte rndtable[] =
 //	US_Startup() - Starts the User Mgr
 //
 ///////////////////////////////////////////////////////////////////////////
-static boolean US_Started;
 void US_Startup()
 {
 	if (US_Started)
@@ -97,7 +98,8 @@ void US_Startup()
 //	US_Shutdown() - Shuts down the User Mgr
 //
 ///////////////////////////////////////////////////////////////////////////
-void US_Shutdown(void)
+void
+US_Shutdown(void)
 {
 	if (!US_Started)
 		return;
@@ -114,8 +116,9 @@ void US_Shutdown(void)
 //		between masked and non-masked fonts
 //
 ///////////////////////////////////////////////////////////////////////////
-void US_SetPrintRoutines(void (*measure)(const char *,word *,word *), 
-void (*print)(const char *))
+void
+US_SetPrintRoutines(void (*measure)(const char *,word *,word *),
+    void (*print)(const char *))
 {
 	USL_MeasureString = measure;
 	USL_DrawString = print;
@@ -127,13 +130,14 @@ void (*print)(const char *))
 //		supported.
 //
 ///////////////////////////////////////////////////////////////////////////
-void US_Print(const char *sorg)
+void
+US_Print(const char *sorg)
 {
 	char c;
 	char *sstart = strdup(sorg);
 	char *s = sstart;
 	char *se;
-	word w, h;
+	word w,h;
 
 	while (*s)
 	{
@@ -167,7 +171,8 @@ void US_Print(const char *sorg)
 //	US_PrintUnsigned() - Prints an unsigned long
 //
 ///////////////////////////////////////////////////////////////////////////
-void US_PrintUnsigned(longword n)
+void
+US_PrintUnsigned(longword n)
 {
 	char	buffer[32];
 	sprintf(buffer, "%lu", n);
@@ -180,15 +185,12 @@ void US_PrintUnsigned(longword n)
 //	US_PrintSigned() - Prints a signed long
 //
 ///////////////////////////////////////////////////////////////////////////
-void US_PrintSigned(s32 n)
+void
+US_PrintSigned(int32_t n)
 {
-	char buffer[32];
-#if defined(SWITCH) || defined (N3DS)
-	sprintf(buffer, "%lu", n);
-	US_Print(buffer);
-#else
+	char	buffer[32];
+
 	US_Print(ltoa(n,buffer,10));
-#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -196,9 +198,11 @@ void US_PrintSigned(s32 n)
 //	USL_PrintInCenter() - Prints a string in the center of the given rect
 //
 ///////////////////////////////////////////////////////////////////////////
-void USL_PrintInCenter(const char *s,Rect r)
+void
+USL_PrintInCenter(const char *s,Rect r)
 {
-	word w, h, rw, rh;
+	word	w,h,
+			rw,rh;
 
 	USL_MeasureString(s,&w,&h);
 	rw = r.lr.x - r.ul.x;
@@ -214,9 +218,10 @@ void USL_PrintInCenter(const char *s,Rect r)
 //	US_PrintCentered() - Prints a string centered in the current window.
 //
 ///////////////////////////////////////////////////////////////////////////
-void US_PrintCentered(const char *s)
+void
+US_PrintCentered(const char *s)
 {
-	Rect r;
+	Rect	r;
 
 	r.ul.x = WindowX;
 	r.ul.y = WindowY;
@@ -232,9 +237,10 @@ void US_PrintCentered(const char *s)
 //		advances to the next line. Newlines are not supported.
 //
 ///////////////////////////////////////////////////////////////////////////
-void US_CPrintLine(const char *s)
+void
+US_CPrintLine(const char *s)
 {
-	word w, h;
+	word	w,h;
 
 	USL_MeasureString(s,&w,&h);
 
@@ -252,9 +258,10 @@ void US_CPrintLine(const char *s)
 //      Newlines are supported.
 //
 ///////////////////////////////////////////////////////////////////////////
-void US_CPrint(const char *sorg)
+void
+US_CPrint(const char *sorg)
 {
-	char  c;
+	char	c;
 	char *sstart = strdup(sorg);
 	char *s = sstart;
 	char *se;
@@ -322,7 +329,8 @@ void US_CPrintf(const char *formatStr, ...)
 //		cursor
 //
 ///////////////////////////////////////////////////////////////////////////
-void US_ClearWindow(void)
+void
+US_ClearWindow(void)
 {
 	VWB_Bar(WindowX,WindowY,WindowW,WindowH,WHITE);
 	PrintX = WindowX;
@@ -334,9 +342,11 @@ void US_ClearWindow(void)
 //	US_DrawWindow() - Draws a frame and sets the current window parms
 //
 ///////////////////////////////////////////////////////////////////////////
-void US_DrawWindow(word x,word y,word w,word h)
+void
+US_DrawWindow(word x,word y,word w,word h)
 {
-	word i, sx, sy, sw, sh;
+	word	i,
+			sx,sy,sw,sh;
 
 	WindowX = x * 8;
 	WindowY = y * 8;
@@ -368,7 +378,8 @@ void US_DrawWindow(word x,word y,word w,word h)
 //		middle of the screen
 //
 ///////////////////////////////////////////////////////////////////////////
-void US_CenterWindow(word w,word h)
+void
+US_CenterWindow(word w,word h)
 {
 	US_DrawWindow(((MaxX / 8) - w) / 2,((MaxY / 8) - h) / 2,w,h);
 }
@@ -379,7 +390,8 @@ void US_CenterWindow(word w,word h)
 //		later restoration
 //
 ///////////////////////////////////////////////////////////////////////////
-void US_SaveWindow(WindowRec *win)
+void
+US_SaveWindow(WindowRec *win)
 {
 	win->x = WindowX;
 	win->y = WindowY;
@@ -396,7 +408,8 @@ void US_SaveWindow(WindowRec *win)
 //		record
 //
 ///////////////////////////////////////////////////////////////////////////
-void US_RestoreWindow(WindowRec *win)
+void
+US_RestoreWindow(WindowRec *win)
 {
 	WindowX = win->x;
 	WindowY = win->y;
@@ -414,7 +427,8 @@ void US_RestoreWindow(WindowRec *win)
 //	USL_XORICursor() - XORs the I-bar text cursor. Used by US_LineInput()
 //
 ///////////////////////////////////////////////////////////////////////////
-static void USL_XORICursor(int x,int y,const char *s,word cursor)
+static void
+USL_XORICursor(int x,int y,const char *s,word cursor)
 {
 	static	boolean	status;		// VGA doesn't XOR...
 	char	buf[MaxString];
@@ -466,18 +480,23 @@ char USL_RotateChar(char ch, int dir)
 //		returned
 //
 ///////////////////////////////////////////////////////////////////////////
-boolean US_LineInput(int x, int y, char *buf, const char *def, boolean escok, 
-int maxchars, int maxwidth)
+boolean
+US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
+				int maxchars,int maxwidth)
 {
-	boolean	redraw, cursorvis, cursormoved, done, result, checkkey;
-	ScanCode sc;
-	char c;
-	char s[MaxString],olds[MaxString];
-	int cursor, len;
-	word w,h, i, temp;
-	longword curtime, lasttime, lastdirtime, lastbuttontime, lastdirmovetime;
+	boolean		redraw,
+				cursorvis,cursormoved,
+				done,result, checkkey;
+	ScanCode	sc;
+	char		c;
+	char		s[MaxString],olds[MaxString];
+	int         cursor,len;
+	word		i,
+				w,h,
+				temp;
+	longword	curtime, lasttime, lastdirtime, lastbuttontime, lastdirmovetime;
 	ControlInfo ci;
-	Direction lastdir = dir_None;
+	Direction   lastdir = dir_None;
 
 	if (def)
 		strcpy(s,def);
@@ -664,7 +683,7 @@ int maxchars, int maxwidth)
 					cursormoved = true;
 					break;
 
-				case SDLK_KP_5: //0x4c:	// Keypad 5 // TODO: hmmm...			
+				case SDLK_KP_5: //0x4c:	// Keypad 5 // TODO: hmmm...
 				case sc_UpArrow:
 				case sc_DownArrow:
 				case sc_PgUp:
@@ -682,7 +701,7 @@ int maxchars, int maxwidth)
 				if(isprint(c) && (len < MaxString - 1) && ((!maxchars) || (len < maxchars))
 					&& ((!maxwidth) || (w < maxwidth)))
 				{
-					for (i = len + 1; i > cursor; i--)
+					for (i = len + 1;i > cursor;i--)
 						s[i] = s[i - 1];
 					s[cursor++] = c;
 					redraw = true;
@@ -748,11 +767,9 @@ int maxchars, int maxwidth)
 //      current time
 //
 ///////////////////////////////////////////////////////////////////////////
-
-int rndindex = 0;
 void US_InitRndT(int randomize)
 {
-	if(randomize)
+    if(randomize)
         rndindex = (SDL_GetTicks() >> 4) & 0xff;
     else
         rndindex = 0;
@@ -765,6 +782,6 @@ void US_InitRndT(int randomize)
 ///////////////////////////////////////////////////////////////////////////
 int US_RndT()
 {
-	rndindex = (rndindex+1)&0xff;
+    rndindex = (rndindex+1)&0xff;
     return rndtable[rndindex];
 }

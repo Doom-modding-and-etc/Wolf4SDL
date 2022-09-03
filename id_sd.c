@@ -34,11 +34,78 @@
 #include <SDL_mixer.h>
 #if defined(GP2X_940)
 #include "gp2x/fmopl.h"
-#endif
-#include "mame/fmopl.h"
 
+#else
+#ifdef USE_DOSBOX
+#include "dosbox/cdosbox.h"
+#else
+#include "mame/fmopl.h"
+#endif
+#endif
 
 #define ORIGSAMPLERATE 7042
+
+#ifdef USE_DOSBOX
+
+static bool YM3812Init(int numChips, int clock, int rate)
+{
+    Chip_Setup(rate);
+    return false;
+}
+
+static void YM3812Write(struct Chip which, Bit32u reg, Bit8u val)
+{
+    Chip_WriteReg(reg, val);
+}
+
+static void YM3812UpdateOne(struct Chip which, int16_t* stream, int length)
+{
+    Bit32s buffer[512 * 2];
+    int i;
+
+    // length is at maximum samplesPerMusicTick = param_samplerate / 700
+    // so 512 is sufficient for a sample rate of 358.4 kHz (default 44.1 kHz)
+    if (length > 512)
+        length = 512;
+
+    if (which.opl3Active)
+    {
+        Chip_GenerateBlock3(length, buffer);
+
+        // GenerateBlock3 generates a number of "length" 32-bit stereo samples
+        // so we only need to convert them to 16-bit samples
+        for (i = 0; i < length * 2; i++)  // * 2 for left/right channel
+        {
+            // Multiply by 4 to match loudness of MAME emulator.
+            Bit32s sample = buffer[i] << 2;
+            if (sample > 32767) sample = 32767;
+            else if (sample < -32768) sample = -32768;
+            stream[i] = sample;
+        }
+    }
+    else
+    {
+        Chip_GenerateBlock2(length, buffer);
+
+        // GenerateBlock3 generates a number of "length" 32-bit mono samples
+        // so we need to convert them to 32-bit stereo samples
+        for (i = 0; i < length; i++)
+        {
+            // Multiply by 4 to match loudness of MAME emulator.
+            // Then upconvert to stereo.
+            Bit32s sample = buffer[i] << 2;
+            if (sample > 32767) sample = 32767;
+            else if (sample < -32768) sample = -32768;
+            stream[i * 2] = stream[i * 2 + 1] = (int16_t)sample;
+        }
+    }
+}
+
+#else
+
+static const int oplChip = 0;
+
+#endif
 
 typedef struct
 {
@@ -110,9 +177,10 @@ static  int                     sqHackLen;
 static  int                     sqHackSeqLen;
 static  longword                sqHackTime;
 
-static const int oplChip = 0;
 
-void Delay(s32 wolfticks)
+
+
+void Delay (int32_t wolfticks)
 {
     if (wolfticks > 0)
         SDL_Delay ((wolfticks * 100) / 7);
@@ -130,7 +198,8 @@ static void SDL_SoundFinished(void)
 //      SDL_PCPlaySound() - Plays the specified sound on the PC speaker
 //
 ///////////////////////////////////////////////////////////////////////////
-static void SDL_PCPlaySound(PCSound *sound)
+static void
+SDL_PCPlaySound(PCSound *sound)
 {
         pcLastSample = (byte)-1;
         pcLengthLeft = sound->common.length;
@@ -142,7 +211,8 @@ static void SDL_PCPlaySound(PCSound *sound)
 //      SDL_PCStopSound() - Stops the current sound playing on the PC Speaker
 //
 ///////////////////////////////////////////////////////////////////////////
-static void SDL_PCStopSound(void)
+static void
+SDL_PCStopSound(void)
 {
         pcSound = 0;
 }
@@ -152,7 +222,8 @@ static void SDL_PCStopSound(void)
 //      SDL_ShutPC() - Turns off the pc speaker
 //
 ///////////////////////////////////////////////////////////////////////////
-static void SDL_ShutPC(void)
+static void
+SDL_ShutPC(void)
 {
         pcSound = 0;
 }
@@ -166,8 +237,6 @@ static void SDL_PCMixCallback(void *udata, Uint8 *stream, int len)
     static int current_freq = 0;
     static int phase_offset = 0;
 
-    void* streamp = stream;
-
     Sint16 *leftptr;
     Sint16 *rightptr;
     Sint16 this_value;
@@ -179,8 +248,8 @@ static void SDL_PCMixCallback(void *udata, Uint8 *stream, int len)
 
     nsamples = len / 4;
 
-    leftptr = (Sint16 *) streamp;
-    rightptr = ((Sint16 *) streamp) + 1;
+    leftptr = (Sint16 *) stream;
+    rightptr = ((Sint16 *) stream) + 1;
 
     // Fill the output buffer
 
@@ -271,7 +340,8 @@ static void SDL_PCMixCallback(void *udata, Uint8 *stream, int len)
     }
 }
 
-void SD_StopDigitized(void)
+void
+SD_StopDigitized(void)
 {
     DigiPlaying = false;
     DigiNumber = (soundnames) 0;
@@ -311,7 +381,7 @@ void SD_SetPosition(int channel, int leftpos, int rightpos)
     switch (DigiMode)
     {
         case sds_SoundBlaster:
-        Mix_SetPanning(channel, 120 - (leftpos * 28), 120 - (rightpos * 28));	     
+            Mix_SetPanning(channel, 255 - (leftpos * 28), 255 - (rightpos * 28));
             break;
     }
 }
@@ -327,7 +397,7 @@ Sint16 GetSample(float csample, byte *samples, int size)
     if(cursample+1 < size) s2 = (float) (samples[cursample+1] - 128);
 
     float val = s0*sf*(sf-1)/2 - s1*(sf*sf-1) + s2*(sf+1)*sf/2;
-    s32 intval = (s32) (val * 256);
+    int32_t intval = (int32_t) (val * 256);
     if(intval < -32768) intval = -32768;
     else if(intval > 32767) intval = 32767;
     return (Sint16) intval;
@@ -335,6 +405,7 @@ Sint16 GetSample(float csample, byte *samples, int size)
 
 void SD_PrepareSound(int which)
 {
+    longword i;
 
     if(DigiList == NULL)
         Quit("SD_PrepareSound(%i): DigiList not initialized!\n", which);
@@ -346,7 +417,7 @@ void SD_PrepareSound(int which)
     if(origsamples + size >= PM_GetPageEnd())
         Quit("SD_PrepareSound(%i): Sound reaches out of page file!\n", which);
 
-    longword destsamples = (int) ((float) size * (float) param_samplerate
+    int destsamples = (int) ((float) size * (float) param_samplerate
         / (float) ORIGSAMPLERATE);
 
     byte *wavebuffer = SafeMalloc(sizeof(headchunk) + sizeof(wavechunk)
@@ -365,17 +436,17 @@ void SD_PrepareSound(int which)
         + sizeof(wavechunk));
     float cursample = 0.F;
     float samplestep = (float) ORIGSAMPLERATE / (float) param_samplerate;
-    for(int i=0; i<destsamples; cursample+=samplestep, i++)
+    for(i=0; i<destsamples; i++, cursample+=samplestep)
     {
         newsamples[i] = GetSample((float)size * (float)i / (float)destsamples,
-        origsamples, size);
+            origsamples, size);
     }
-
 
     SDL_RWops* temp = SDL_RWFromMem(wavebuffer,
         sizeof(headchunk) + sizeof(wavechunk) + destsamples * 2);
 
     SoundChunks[which] = Mix_LoadWAV_RW(temp, 1);
+
     free(wavebuffer);
 }
 
@@ -413,7 +484,8 @@ void SD_ChannelFinished(int channel)
     channelSoundPos[channel].valid = 0;
 }
 
-void SD_SetDigiDevice(SDSMode mode)
+void
+SD_SetDigiDevice(SDSMode mode)
 {
     boolean devicenotpresent;
 
@@ -437,7 +509,8 @@ void SD_SetDigiDevice(SDSMode mode)
     }
 }
 
-void SDL_SetupDigi(void)
+void
+SDL_SetupDigi(void)
 {
     // Correct padding enforced by PM_Startup()
     word *soundInfoPage = (word *) (void *) PM_GetPage(ChunksInFile-1);
@@ -498,16 +571,17 @@ void SDL_SetupDigi(void)
 //              AdLib card
 //
 ///////////////////////////////////////////////////////////////////////////
-static void SDL_ALStopSound(void)
+static void
+SDL_ALStopSound(void)
 {
     alSound = 0;
     alOut(alFreqH + 0, 0);
 }
 
-static void SDL_AlSetFXInst(Instrument *inst)
+static void
+SDL_AlSetFXInst(Instrument *inst)
 {
     byte c,m;
-
     m = 0;      // modulator cell for channel 0
     c = 3;      // carrier cell for channel 0
     alOut(m + alChar,inst->mChar);
@@ -531,7 +605,8 @@ static void SDL_AlSetFXInst(Instrument *inst)
 //      SDL_ALPlaySound() - Plays the specified sound on the AdLib card
 //
 ///////////////////////////////////////////////////////////////////////////
-static void SDL_ALPlaySound(AdLibSound *sound)
+static void
+SDL_ALPlaySound(AdLibSound *sound)
 {
     Instrument      *inst;
     byte            *data;
@@ -557,7 +632,8 @@ static void SDL_ALPlaySound(AdLibSound *sound)
 //      SDL_ShutAL() - Shuts down the AdLib card for sound effects
 //
 ///////////////////////////////////////////////////////////////////////////
-static void SDL_ShutAL(void)
+static void
+SDL_ShutAL(void)
 {
     alSound = 0;
     alOut(alEffects,0);
@@ -570,10 +646,13 @@ static void SDL_ShutAL(void)
 //      SDL_CleanAL() - Totally shuts down the AdLib card
 //
 ///////////////////////////////////////////////////////////////////////////
-static void SDL_CleanAL(void)
+static void
+SDL_CleanAL(void)
 {
+    int     i;
+
     alOut(alEffects,0);
-    for (int i = 1; i < 0xf5; i++)
+    for (i = 1; i < 0xf5; i++)
         alOut(i, 0);
 }
 
@@ -582,7 +661,8 @@ static void SDL_CleanAL(void)
 //      SDL_StartAL() - Starts up the AdLib card for sound effects
 //
 ///////////////////////////////////////////////////////////////////////////
-static void SDL_StartAL(void)
+static void
+SDL_StartAL(void)
 {
     alOut(alEffects, 0);
     SDL_AlSetFXInst(&alZeroInst);
@@ -594,14 +674,16 @@ static void SDL_StartAL(void)
 //              emulating an AdLib) present
 //
 ///////////////////////////////////////////////////////////////////////////
-static boolean SDL_DetectAdLib(void)
+static boolean
+SDL_DetectAdLib(void)
 {
+    int i;
 
-    for (int i = 1; i <= 0xf5; i++)       // Zero all the registers
+    for (i = 1; i <= 0xf5; i++)       // Zero all the registers
         alOut(i, 0);
 
     alOut(1, 0x20);             // Set WSE=1
-//  alOut(8, 0);                // Set CSM=0 & SEL=0
+//    alOut(8, 0);                // Set CSM=0 & SEL=0
 
     return true;
 }
@@ -611,7 +693,8 @@ static boolean SDL_DetectAdLib(void)
 //      SDL_ShutDevice() - turns off whatever device was being used for sound fx
 //
 ////////////////////////////////////////////////////////////////////////////
-static void SDL_ShutDevice(void)
+static void
+SDL_ShutDevice(void)
 {
     switch (SoundMode)
     {
@@ -630,7 +713,8 @@ static void SDL_ShutDevice(void)
 //      SDL_CleanDevice() - totally shuts down all sound devices
 //
 ///////////////////////////////////////////////////////////////////////////
-static void SDL_CleanDevice(void)
+static void
+SDL_CleanDevice(void)
 {
     if ((SoundMode == sdm_AdLib) || (MusicMode == smm_AdLib))
         SDL_CleanAL();
@@ -641,7 +725,8 @@ static void SDL_CleanDevice(void)
 //      SDL_StartDevice() - turns on whatever device is to be used for sound fx
 //
 ///////////////////////////////////////////////////////////////////////////
-static void SDL_StartDevice(void)
+static void
+SDL_StartDevice(void)
 {
     switch (SoundMode)
     {
@@ -660,7 +745,8 @@ static void SDL_StartDevice(void)
 //      SD_SetSoundMode() - Sets which sound hardware to use for sound effects
 //
 ///////////////////////////////////////////////////////////////////////////
-boolean SD_SetSoundMode(SDMode mode)
+boolean
+SD_SetSoundMode(SDMode mode)
 {
     boolean result = false;
     word    tableoffset;
@@ -706,7 +792,8 @@ boolean SD_SetSoundMode(SDMode mode)
 //      SD_SetMusicMode() - sets the device to use for background music
 //
 ///////////////////////////////////////////////////////////////////////////
-boolean SD_SetMusicMode(SMMode mode)
+boolean
+SD_SetMusicMode(SMMode mode)
 {
     boolean result = false;
 
@@ -742,7 +829,7 @@ void SDL_IMFMusicPlayer(void *udata, Uint8 *stream, int len)
 {
     int stereolen = len>>1;
     int sampleslen = stereolen>>1;
-    s16 *stream16 = (s16 *) (void *) stream;    // expect correct alignment
+    int16_t *stream16 = (int16_t *) (void *) stream;    // expect correct alignment
 
     while(1)
     {
@@ -819,9 +906,10 @@ void SDL_IMFMusicPlayer(void *udata, Uint8 *stream, int len)
 //              Detects all additional sound hardware and installs my ISR
 //
 ///////////////////////////////////////////////////////////////////////////
-void SD_Startup(void)
+void
+SD_Startup(void)
 {
-    int i;
+    int     i;
 
     if (SD_Started)
         return;
@@ -874,7 +962,8 @@ void SD_Startup(void)
 //              Removes sound ISR and turns off whatever sound hardware was active
 //
 ///////////////////////////////////////////////////////////////////////////
-void SD_Shutdown(void)
+void
+SD_Shutdown(void)
 {
     int i;
 
@@ -901,7 +990,8 @@ void SD_Shutdown(void)
 //              sound to be played. Each channel ranges from 0 to 15.
 //
 ///////////////////////////////////////////////////////////////////////////
-void SD_PositionSound(int leftvol,int rightvol)
+void
+SD_PositionSound(int leftvol,int rightvol)
 {
     LeftPosition = leftvol;
     RightPosition = rightvol;
@@ -913,7 +1003,8 @@ void SD_PositionSound(int leftvol,int rightvol)
 //      SD_PlaySound() - plays the specified sound on the appropriate hardware
 //
 ///////////////////////////////////////////////////////////////////////////
-boolean SD_PlaySound(soundnames sound)
+boolean
+SD_PlaySound(soundnames sound)
 {
     boolean         ispos;
     SoundCommon     *s;
@@ -927,11 +1018,10 @@ boolean SD_PlaySound(soundnames sound)
     ispos = nextsoundpos;
     nextsoundpos = false;
 
-    if (sound == (soundnames) -1 || (DigiMode == sds_Off && SoundMode == sdm_Off))
+    if (sound == (soundnames)-1  | (DigiMode == sds_Off && SoundMode == sdm_Off))
         return 0;
 
-    void* p = SoundTable[sound];
-    s = (SoundCommon*)p;
+    s = (SoundCommon *) SoundTable[sound];
 
     if ((SoundMode != sdm_Off) && !s)
             Quit("SD_PlaySound() - Uncached sound");
@@ -999,7 +1089,8 @@ boolean SD_PlaySound(soundnames sound)
 //              no sound is playing
 //
 ///////////////////////////////////////////////////////////////////////////
-word SD_SoundPlaying(void)
+word
+SD_SoundPlaying(void)
 {
     boolean result = false;
 
@@ -1024,7 +1115,8 @@ word SD_SoundPlaying(void)
 //      SD_StopSound() - if a sound is playing, stops it
 //
 ///////////////////////////////////////////////////////////////////////////
-void SD_StopSound(void)
+void
+SD_StopSound(void)
 {
     if (DigiPlaying)
         SD_StopDigitized();
@@ -1049,7 +1141,8 @@ void SD_StopSound(void)
 //      SD_WaitSoundDone() - waits until the current sound is done playing
 //
 ///////////////////////////////////////////////////////////////////////////
-void SD_WaitSoundDone(void)
+void
+SD_WaitSoundDone(void)
 {
     while (SD_SoundPlaying())
         SDL_Delay(5);
@@ -1060,7 +1153,8 @@ void SD_WaitSoundDone(void)
 //      SD_MusicOn() - turns on the sequencer
 //
 ///////////////////////////////////////////////////////////////////////////
-void SD_MusicOn(void)
+void
+SD_MusicOn(void)
 {
     sqActive = true;
 }
@@ -1071,7 +1165,8 @@ void SD_MusicOn(void)
 //      returns the last music offset for music continue
 //
 ///////////////////////////////////////////////////////////////////////////
-int SD_MusicOff(void)
+int
+SD_MusicOff(void)
 {
     word    i;
 
@@ -1093,13 +1188,14 @@ int SD_MusicOff(void)
 //      SD_StartMusic() - starts playing the music pointed to
 //
 ///////////////////////////////////////////////////////////////////////////
-void SD_StartMusic(int chunk)
+void
+SD_StartMusic(int chunk)
 {
     SD_MusicOff();
 
     if (MusicMode == smm_AdLib)
     {
-        s32 chunkLen = CA_CacheAudioChunk(chunk);
+        int32_t chunkLen = CA_CacheAudioChunk(chunk);
         sqHack = (word *)(void *) audiosegs[chunk];     // alignment is correct
         if(*sqHack == 0) sqHackLen = sqHackSeqLen = chunkLen;
         else sqHackLen = sqHackSeqLen = *sqHack++;
@@ -1110,7 +1206,8 @@ void SD_StartMusic(int chunk)
     }
 }
 
-void SD_ContinueMusic(int chunk, int startoffs)
+void
+SD_ContinueMusic(int chunk, int startoffs)
 {
     int i;
 
@@ -1118,9 +1215,9 @@ void SD_ContinueMusic(int chunk, int startoffs)
 
     if (MusicMode == smm_AdLib)
     {
-        s32 chunkLen = CA_CacheAudioChunk(chunk);
-        sqHack = (word*)(void*)audiosegs[chunk];     // alignment is correct
-        if (*sqHack == 0) sqHackLen = sqHackSeqLen = chunkLen;
+        int32_t chunkLen = CA_CacheAudioChunk(chunk);
+        sqHack = (word *)(void *) audiosegs[chunk];     // alignment is correct
+        if(*sqHack == 0) sqHackLen = sqHackSeqLen = chunkLen;
         else sqHackLen = sqHackSeqLen = *sqHack++;
         sqHackPtr = sqHack;
 
@@ -1161,7 +1258,8 @@ void SD_ContinueMusic(int chunk, int startoffs)
 //              to see if the fadeout is complete
 //
 ///////////////////////////////////////////////////////////////////////////
-void SD_FadeOutMusic(void)
+void
+SD_FadeOutMusic(void)
 {
     switch (MusicMode)
     {
@@ -1178,7 +1276,8 @@ void SD_FadeOutMusic(void)
 //              not
 //
 ///////////////////////////////////////////////////////////////////////////
-boolean SD_MusicPlaying(void)
+boolean
+SD_MusicPlaying(void)
 {
     boolean result;
 

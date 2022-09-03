@@ -178,6 +178,7 @@ typedef	int		ScanCode;
 #define gc_trigger_right SDL_CONTROLLER_AXIS_TRIGGERRIGHT
 #define gc_axis_max SDL_CONTROLLER_AXIS_MAX
 #endif
+#define KEYCOUNT 129
 #else
 #if SDL_MAJOR_VERSION == 1
 #define SDLK_SCROLLLOCK SDLK_SCROLLOCK
@@ -359,7 +360,7 @@ typedef	enum
 
 typedef	struct
 {
-	boolean	button0,button1,button2,button3;
+	boolean	button0, button1, button2, button3;
 	short x, y;
 	Motion xaxis, yaxis;
 	Direction dir;
@@ -370,9 +371,9 @@ typedef	CursorInfo ControlInfo;
 typedef	struct
 {
 	ScanCode button0, button1,
-	upleft,	up, upright,
-	left, right,
-	downleft, down,	downright;
+		upleft, up, upright,
+		left, right,
+		downleft, down, downright;
 } KeyboardDef;
 
 typedef	struct
@@ -409,33 +410,33 @@ int KeyboardLookup(int key);
 
 
 // DEBUG - put names in prototypes
-extern	void		IN_Startup(void),IN_Shutdown(void);
+extern	void		IN_Startup(void), IN_Shutdown(void);
 extern	void		IN_ClearKeysDown(void);
-extern	void		IN_ReadControl(int,ControlInfo *);
-extern	void		IN_GetJoyAbs(word joy,word *xp,word *yp);
-extern	void		IN_SetupJoy(word joy,word minx,word maxx,
-								word miny,word maxy);
-extern	void		IN_StopDemo(void),IN_FreeDemoBuffer(void),
-					IN_Ack(void);
+extern	void		IN_ReadControl(int, ControlInfo*);
+extern	void		IN_GetJoyAbs(word joy, word* xp, word* yp);
+extern	void		IN_SetupJoy(word joy, word minx, word maxx,
+	word miny, word maxy);
+extern	void		IN_StopDemo(void), IN_FreeDemoBuffer(void),
+IN_Ack(void);
 extern	boolean		IN_UserInput(longword delay);
 extern	char		IN_WaitForASCII(void);
 extern	ScanCode	IN_WaitForKey(void);
 extern	word		IN_GetJoyButtonsDB(word joy);
-extern	const char *IN_GetScanName(ScanCode);
+extern	const char* IN_GetScanName(ScanCode);
 
 void    IN_WaitAndProcessEvents();
 void    IN_ProcessEvents();
 
-int     IN_MouseButtons (void);
+int     IN_MouseButtons(void);
 
 boolean IN_JoyPresent();
 void    IN_SetJoyCurrent(int joyIndex);
-int     IN_JoyButtons (void);
-void    IN_GetJoyDelta(int *dx,int *dy);
-void    IN_GetJoyFineDelta(int *dx, int *dy);
+int     IN_JoyButtons(void);
+void    IN_GetJoyDelta(int* dx, int* dy);
+void    IN_GetJoyFineDelta(int* dx, int* dy);
 
 void    IN_StartAck(void);
-boolean IN_CheckAck (void);
+boolean IN_CheckAck(void);
 boolean    IN_IsInputGrabbed();
 void    IN_CenterMouse();
 

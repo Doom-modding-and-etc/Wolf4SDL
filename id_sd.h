@@ -8,6 +8,9 @@
 #ifndef __ID_SD_H_
 #define __ID_SD_H_
 
+#ifdef USE_DOSBOX
+static int oplChip;
+#endif
 #define alOut(n,b) YM3812Write(oplChip, n, b)
 
 #define TickBase        70      // 70Hz per tick - used as a base for timer 0
@@ -25,9 +28,7 @@ typedef enum
 
 typedef enum
 {
-    sds_Off,
-    sds_PC,
-    sds_SoundBlaster
+    sds_Off,sds_PC,sds_SoundBlaster
 } SDSMode;
 
 typedef struct
@@ -111,8 +112,8 @@ typedef struct
 
 typedef struct
 {
-    u32 startpage;
-    u32 length;
+    uint32_t startpage;
+    uint32_t length;
 } digiinfo;
 
 extern globalsoundpos channelSoundPos[];
@@ -132,7 +133,7 @@ extern  int             DigiChannel[];
 #define GetTimeCount()  ((SDL_GetTicks()*7)/100)
 
 // Function prototypes
-void            Delay (s32 wolfticks);
+void            Delay (int32_t wolfticks);
 
 extern  void    SD_Startup(void),
                 SD_Shutdown(void);

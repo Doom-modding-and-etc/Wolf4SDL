@@ -18,12 +18,12 @@
 //
 
 #include "wl_def.h"
-#include "id_in.h"
 #if SDL_MAJOR_VERSION == 1
 #include <SDL_keysym.h>
 #elif SDL_MAJOR_VERSION == 2
 #include <SDL_keyboard.h>
 #endif
+#include "id_in.h"
 /*
 =============================================================================
 
@@ -32,14 +32,15 @@
 =============================================================================
 */
 
-#define UNKNOWN_KEY SDLK_UNKNOWN
 
+#define UNKNOWN_KEY KEYCOUNT
 
 //
 // configuration variables
 //
 boolean MousePresent;
 boolean forcegrabmouse;
+
 volatile boolean KeyboardState[129];
 
 // 	Global variables
@@ -47,8 +48,8 @@ volatile boolean	Paused;
 volatile char		LastASCII;
 volatile ScanCode	LastScan;
 
-static KeyboardDef KbdDefs = 
-{
+//KeyboardDef	KbdDefs = {0x1d,0x38,0x47,0x48,0x49,0x4b,0x4d,0x4f,0x50,0x51};
+static KeyboardDef KbdDefs = {
     sc_Control,             // button0
     sc_Alt,                 // button1
     sc_Home,                // upleft
@@ -71,6 +72,7 @@ int GameControllerRightStick[2];
 SDL_GameController* GameController;
 #endif
 static boolean GrabInput = false;
+boolean fullscreen = true;
 
 /*
 =============================================================================
@@ -79,7 +81,7 @@ static boolean GrabInput = false;
 
 =============================================================================
 */
-byte ASCIINames[] =		// Unshifted ASCII for scan codes       // TODO: keypad
+byte        ASCIINames[] =		// Unshifted ASCII for scan codes       // TODO: keypad
 {
 //	 0   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F
 	0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,8  ,9  ,0  ,0  ,0  ,13 ,0  ,0  ,	// 0
@@ -117,9 +119,9 @@ byte SpecialNames[] =	// ASCII for 0xe0 prefixed codes
 };
 
 
-static boolean IN_Started;
+static	boolean		IN_Started;
 
-static Direction DirTable[] =		// Quick lookup for total direction
+static	Direction	DirTable[] =		// Quick lookup for total direction
 {
     dir_NorthWest,	dir_North,	dir_NorthEast,
     dir_West,		dir_None,	dir_East,
@@ -260,7 +262,7 @@ int KeyboardLookup(int key)
 	    case SDLK_SYSREQ		: return 112;
 	    case SDLK_MENU		: return 113;
 	    case SDLK_POWER		: return 114;
-	    case SDLK_UNDO		: return 115;     
+	    case SDLK_UNDO		: return 115;
         case SDLK_KP_0		: return 116;
 	    case SDLK_KP_1		: return 117;
 	    case SDLK_KP_2		: return 118;
@@ -278,13 +280,15 @@ int KeyboardLookup(int key)
     }
 }
 
+
 ///////////////////////////////////////////////////////////////////////////
 //
 //	INL_GetMouseButtons() - Gets the status of the mouse buttons from the
 //		mouse driver
 //
 ///////////////////////////////////////////////////////////////////////////
-static int INL_GetMouseButtons(void)
+static int
+INL_GetMouseButtons(void)
 {
     int buttons = SDL_GetMouseState(NULL, NULL);
     int middlePressed = buttons & SDL_BUTTON(SDL_BUTTON_MIDDLE);
@@ -316,13 +320,12 @@ void IN_GetJoyDelta(int *dx,int *dy)
     int y = 0;
 #else
     int x = SDL_JoystickGetAxis(Joystick, 0) >> 8;
-    //1 here?
     int y = SDL_JoystickGetAxis(Joystick, 1) >> 8;
 #endif
 
     if(param_joystickhat != -1)
     {
-        u8 hatState = SDL_JoystickGetHat(Joystick, param_joystickhat);
+        uint8_t hatState = SDL_JoystickGetHat(Joystick, param_joystickhat);
         if(hatState & SDL_HAT_RIGHT)
             x += 127;
         else if(hatState & SDL_HAT_LEFT)
@@ -382,13 +385,14 @@ void IN_GetJoyFineDelta(int *dx, int *dy)
 
 int IN_JoyButtons()
 {
+    int i;
 
     if(!Joystick) return 0;
 
     SDL_JoystickUpdate();
 
     int res = 0;
-    for( int i = 0; i < JoyNumButtons && i < 32; i++ )
+    for(i = 0; i < JoyNumButtons && i < 32; i++)
         res |= SDL_JoystickGetButton(Joystick, i) << i;
     return res;
 }
@@ -398,10 +402,10 @@ boolean IN_JoyPresent()
     return Joystick != NULL;
 }
 
+
 static boolean ToggleFullScreenKeyShortcut(SDL_Keysym* sym)
 {
     Uint16 flags = (KMOD_LALT | KMOD_RALT);
- 
 
 #if defined(__MACOSX__)
     flags |= (KMOD_LGUI | KMOD_RGUI);
@@ -411,20 +415,19 @@ static boolean ToggleFullScreenKeyShortcut(SDL_Keysym* sym)
         sym->scancode == SDLK_KP_ENTER) && (sym->mod & flags) != 0;
 #elif SDL_MAJOR_VERSION == 2
     return (sym->scancode == SDL_SCANCODE_RETURN ||
-    sym->scancode == SDL_SCANCODE_KP_ENTER) && (sym->mod & flags) != 0;
+        sym->scancode == SDL_SCANCODE_KP_ENTER) && (sym->mod & flags) != 0;
 #endif
 }
 
 static void I_ToggleFullScreen(void)
 {
     unsigned int flags = 0;
-
     fullscreen = !fullscreen;
 
     if (fullscreen)
     {
 #if SDL_MAJOR_VERSION == 1
-   
+        
 #elif SDL_MAJOR_VERSION == 2
         SDL_GetWindowSize(window, (int*)&screenWidth, (int*)&screenHeight);
 #endif
@@ -435,7 +438,7 @@ static void I_ToggleFullScreen(void)
 #endif        
         GrabInput = true;
 #if SDL_MAJOR_VERSION == 1
-        SDL_WM_GrabInput(GrabInput ? SDL_GRAB_ON : SDL_GRAB_OFF);
+        SDL_WM_GrabInput(GrabInput ? SDL_GRAB_ON : SDL_GRAB_FULLSCREEN);
 #elif SDL_MAJOR_VERSION == 2
         SDL_SetWindowGrab(window, SDL_TRUE);
 #endif    
@@ -443,12 +446,11 @@ static void I_ToggleFullScreen(void)
 
 #if SDL_MAJOR_VERSION == 1
     SDL_WM_ToggleFullScreen(screen);
-    SDL_GrabMode grab;
 
-    if(!fullscreen)
+    if (!fullscreen)
     {
         SDL_SetVideoMode(screenWidth, screenHeight, screenBits, flags);
-        SDL_WM_GrabInput(grab ? SDL_GRAB_ON : SDL_GRAB_OFF);
+        SDL_WM_GrabInput(GrabInput ? SDL_GRAB_ON : SDL_GRAB_OFF);
     }
 #elif SDL_MAJOR_VERSION == 2
     SDL_SetWindowFullscreen(window, flags);
@@ -478,21 +480,22 @@ static void processEvent(SDL_Event *event)
                 return;
             }
 
-            if (event->key.keysym.sym == SDLK_SCROLLLOCK || event->key.keysym.sym == SDLK_F12)
-            { 
+            if(event->key.keysym.sym==SDLK_SCROLLLOCK || event->key.keysym.sym==SDLK_F12)
+            {
+
                 GrabInput = fullscreen || !GrabInput;
 
 #if SDL_MAJOR_VERSION == 1
-            SDL_WM_GrabInput(GrabInput ? SDL_GRAB_ON : SDL_GRAB_OFF);                
+                SDL_WM_GrabInput(GrabInput ? SDL_GRAB_ON : SDL_GRAB_OFF);
 #elif SDL_MAJOR_VERSION == 2
-            SDL_SetRelativeMouseMode(GrabInput ? SDL_TRUE : SDL_FALSE);
+                SDL_SetRelativeMouseMode(GrabInput ? SDL_TRUE : SDL_FALSE);
 #endif
-            return;
+                return;
             }
 
-            LastScan = event->key.keysym.sym;  
+            LastScan = event->key.keysym.sym;
             SDL_Keymod mod = SDL_GetModState();
-            if(Keyboard(sc_Alt))            
+            if(Keyboard(sc_Alt))
             {
                 if(LastScan==SDLK_F4)
                     Quit(NULL);
@@ -507,17 +510,16 @@ static void processEvent(SDL_Event *event)
                 if((mod & KMOD_NUM) == 0)
                 {
                     switch(LastScan)
-                    {                           
+                    {
                         case SDLK_KP_2: LastScan = SDLK_DOWN; break;
                         case SDLK_KP_4: LastScan = SDLK_LEFT; break;
                         case SDLK_KP_6: LastScan = SDLK_RIGHT; break;
-                        case SDLK_KP_8: LastScan = SDLK_UP; break;                    
+                        case SDLK_KP_8: LastScan = SDLK_UP; break;
                     }
                 }
             }
 
-            u32 sym;  
-            sym = LastScan;
+            int sym = LastScan;
             if(sym >= 'a' && sym <= 'z')
                 sym -= 32;  // convert to uppercase
 
@@ -531,7 +533,10 @@ static void processEvent(SDL_Event *event)
                 if(sym < lengthof(ASCIINames) && ASCIINames[sym])
                     LastASCII = ASCIINames[sym];
             }
-            KeyboardSet(LastScan, true);
+
+            int intLastScan = LastScan;
+            KeyboardSet(intLastScan, 1);
+
             if(LastScan == SDLK_PAUSE)
                 Paused = true;
             break;
@@ -553,11 +558,12 @@ static void processEvent(SDL_Event *event)
                         case SDLK_KP_2: key = SDLK_DOWN; break;
                         case SDLK_KP_4: key = SDLK_LEFT; break;
                         case SDLK_KP_6: key = SDLK_RIGHT; break;
-                        case SDLK_KP_8: key = SDLK_UP; break;                                       
+                        case SDLK_KP_8: key = SDLK_UP; break;
                     }
                 }
-            }           
-            KeyboardSet(key, false);     
+            }
+
+            KeyboardSet(key, 0);
         }
 
 #if defined(GP2X)
@@ -582,7 +588,6 @@ static void processEvent(SDL_Event *event)
                     GameController = SDL_GameControllerOpen(id);
                 }
             }
-            break;
         }
         case SDL_CONTROLLERDEVICEREMOVED: 
         {
@@ -598,7 +603,7 @@ static void processEvent(SDL_Event *event)
             {
                 GameControllerButtons[event->cbutton.button] = (boolean)event->cbutton.state == SDL_PRESSED;
             }
-            break;
+
         case SDL_CONTROLLERAXISMOTION:
             if (GameController)
             {
@@ -614,7 +619,7 @@ static void processEvent(SDL_Event *event)
                     GameControllerButtons[bt_LeftShoulder] = event->caxis.value == 32767;
                 if (event->caxis.axis == gc_trigger_right)
                     GameControllerButtons[bt_RightShoulder] = event->caxis.value == 32767;
-            }
+}
             break;
 #endif
     }
@@ -647,7 +652,8 @@ void IN_ProcessEvents()
 //	IN_Startup() - Starts up the Input Mgr
 //
 ///////////////////////////////////////////////////////////////////////////
-void IN_Startup(void)
+void
+IN_Startup(void)
 {
 	if (IN_Started)
 		return;
@@ -678,7 +684,7 @@ void IN_Startup(void)
                 JoyNumHats = SDL_JoystickNumHats(Joystick);
                 if (param_joystickhat < -1 || param_joystickhat >= JoyNumHats)
                     Quit("The joystickhat param must be between 0 and %i!", JoyNumHats - 1);
-            }
+    }
         }
 #endif
     }
@@ -688,11 +694,11 @@ void IN_Startup(void)
     if(fullscreen || forcegrabmouse)
     {
         GrabInput = true;
-    #if SDL_MAJOR_VERSION == 1
-      SDL_WM_GrabInput(SDL_GRAB_ON);
+#if SDL_MAJOR_VERSION == 1
+        SDL_WM_GrabInput(SDL_GRAB_ON);
     #elif SDL_MAJOR_VERSION == 2      
-      SDL_SetRelativeMouseMode(SDL_TRUE);
-    #endif
+        SDL_SetRelativeMouseMode(SDL_TRUE);
+#endif
     }
 
     // I didn't find a way to ask libSDL whether a mouse is present, yet...
@@ -712,7 +718,8 @@ void IN_Startup(void)
 //	IN_Shutdown() - Shuts down the Input Mgr
 //
 ///////////////////////////////////////////////////////////////////////////
-void IN_Shutdown(void)
+void
+IN_Shutdown(void)
 {
 	if (!IN_Started)
 		return;
@@ -732,11 +739,12 @@ void IN_Shutdown(void)
 //	IN_ClearKeysDown() - Clears the keyboard array
 //
 ///////////////////////////////////////////////////////////////////////////
-void IN_ClearKeysDown(void)
+void
+IN_ClearKeysDown(void)
 {
 	LastScan = sc_None;
 	LastASCII = key_None;
-    memset((void*)KeyboardState, 0, sizeof(KeyboardState));
+	memset ((void *) KeyboardState,0,sizeof(KeyboardState));
 }
 
 
@@ -746,7 +754,8 @@ void IN_ClearKeysDown(void)
 //		player and fills in the control info struct
 //
 ///////////////////////////////////////////////////////////////////////////
-void IN_ReadControl(int player,ControlInfo *info)
+void
+IN_ReadControl(int player,ControlInfo *info)
 {
 	word		buttons;
 	int			dx,dy;
@@ -759,32 +768,26 @@ void IN_ReadControl(int player,ControlInfo *info)
 	IN_ProcessEvents();
 
     if (Keyboard(KbdDefs.upleft))
-        mx = motion_Left, my = motion_Up;
-
+        mx = motion_Left,my = motion_Up;
     else if (Keyboard(KbdDefs.upright))
-        mx = motion_Right, my = motion_Up;
-
+        mx = motion_Right,my = motion_Up;
     else if (Keyboard(KbdDefs.downleft))
-        mx = motion_Left, my = motion_Down;
-
+        mx = motion_Left,my = motion_Down;
     else if (Keyboard(KbdDefs.downright))
-        mx = motion_Right, my = motion_Down;
+        mx = motion_Right,my = motion_Down;
 
     if (Keyboard(KbdDefs.up))
         my = motion_Up;
-
     else if (Keyboard(KbdDefs.down))
         my = motion_Down;
 
     if (Keyboard(KbdDefs.left))
         mx = motion_Left;
-
     else if (Keyboard(KbdDefs.right))
         mx = motion_Right;
 
     if (Keyboard(KbdDefs.button0))
         buttons += 1 << 0;
-
     if (Keyboard(KbdDefs.button1))
         buttons += 1 << 1;
 
@@ -819,8 +822,8 @@ void IN_ReadControl(int player,ControlInfo *info)
     if (GameControllerButtons[bt_Back] || GameControllerButtons[bt_B])
         buttons += 1 << 1;
 #endif
-	
-    dx = mx * 127;
+
+	dx = mx * 127;
 	dy = my * 127;
 
 	info->x = dx;
@@ -840,7 +843,8 @@ void IN_ReadControl(int player,ControlInfo *info)
 //		returns the scan code
 //
 ///////////////////////////////////////////////////////////////////////////
-ScanCode IN_WaitForKey(void)
+ScanCode
+IN_WaitForKey(void)
 {
 	ScanCode	result;
 
@@ -856,7 +860,8 @@ ScanCode IN_WaitForKey(void)
 //		returns the ASCII value
 //
 ///////////////////////////////////////////////////////////////////////////
-char IN_WaitForASCII(void)
+char
+IN_WaitForASCII(void)
 {
 	char		result;
 
@@ -884,10 +889,7 @@ void IN_StartAck(void)
 // get initial state of everything
 //
 	IN_ClearKeysDown();
-#if SDL_MAJOR_VERSION == 2
-    memset(GameControllerButtons, 0, sizeof(boolean));
-#endif	
-    memset(btnstate, 0, sizeof(btnstate));
+	memset(btnstate, 0, sizeof(btnstate));
 
 	int buttons = IN_JoyButtons() << 4;
 
@@ -952,7 +954,7 @@ boolean IN_CheckAck (void)
 }
 
 
-void IN_Ack(void)
+void IN_Ack (void)
 {
 	IN_StartAck ();
 
@@ -974,7 +976,7 @@ void IN_Ack(void)
 ///////////////////////////////////////////////////////////////////////////
 boolean IN_UserInput(longword delay)
 {
-	longword lasttime;
+	longword	lasttime;
 
 	lasttime = GetTimeCount();
 	IN_StartAck ();

@@ -5,7 +5,8 @@
 word ChunksInFile;
 word PMSpriteStart;
 word PMSoundStart;
-boolean PMSoundInfoPagePadded = false;
+
+bool PMSoundInfoPagePadded = false;
 
 word *pageLengths;
 
@@ -38,6 +39,7 @@ void PM_Startup (void)
 
 
     strcat (fname,extension);
+
     file = fopen(fname,"rb");
 
     if (!file)
@@ -193,12 +195,12 @@ void PM_Shutdown (void)
 ==================
 */
 
-u32 PM_GetPageSize (int page)
+uint32_t PM_GetPageSize (int page)
 {
     if (page < 0 || page >= ChunksInFile)
         Quit ("PM_GetPageSize: Invalid page request: %i",page);
 
-    return (u32)(PMPages[page + 1] - PMPages[page]);
+    return (uint32_t)(PMPages[page + 1] - PMPages[page]);
 }
 
 

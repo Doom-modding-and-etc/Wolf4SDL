@@ -8,7 +8,7 @@
 #define SafeMalloc(s)    safe_malloc ((s),__FILE__,__LINE__)
 #define FRACBITS         16
 
-void     *safe_malloc (size_t size, const char *fname, u32 line);
+void     *safe_malloc (size_t size, const char *fname, uint32_t line);
 fixed    FixedMul (fixed a, fixed b);
 fixed    FixedDiv (fixed a, fixed b);
 

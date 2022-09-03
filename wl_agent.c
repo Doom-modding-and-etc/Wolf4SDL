@@ -30,7 +30,7 @@
 //
 // player state info
 //
-s32         thrustspeed;
+int32_t         thrustspeed;
 
 word            plux,pluy;          // player coordinates scaled to unsigned
 
@@ -50,27 +50,8 @@ objtype        *LastAttacker;
 void    T_Player (objtype *ob);
 void    T_Attack (objtype *ob);
 
-statetype   s_player = 
-{
-    false,
-    0,
-    0,
-    (statefunc) 
-    T_Player,
-    NULL,
-    NULL
-};
-
-statetype   s_attack = 
-{
-    false,
-    0,
-    0,
-    (statefunc) 
-    T_Attack,
-    NULL,
-    NULL
-};
+statetype   s_player = {false,0,0,(statefunc) T_Player,NULL,NULL};
+statetype   s_attack = {false,0,0,(statefunc) T_Attack,NULL,NULL};
 
 struct atkinf
 {
@@ -98,7 +79,7 @@ void SelectItem (void);
 boolean TryMove (objtype *ob);
 void T_Player (objtype *ob);
 
-void ClipMove(objtype *ob, s32 xmove, s32 ymove);
+void ClipMove (objtype *ob, int32_t xmove, int32_t ymove);
 
 /*
 =============================================================================
@@ -179,9 +160,9 @@ void CheckWeaponChange (void)
 =======================
 */
 
-void ControlMovement(objtype *ob)
+void ControlMovement (objtype *ob)
 {
-    s32 oldx, oldy;
+    int32_t oldx,oldy;
     int     angle;
     int     angleunits;
 
@@ -211,31 +192,7 @@ void ControlMovement(objtype *ob)
         else
             Thrust(angle, BASEMOVE * MOVESCALE * tics);
     }
-#if SDL_MAJOR_VERSION == 2
-    if (gamecontrolstrafe < 0)
-    {
-        angle = ob->angle + ANGLES / 4;
-        if (angle >= ANGLES)
-            angle -= ANGLES;
 
-        s32 speed = -gamecontrolstrafe * MOVESCALE;
-        if (controly != 0)
-            speed = (speed * 70) / 100; // correct faster diagonal movement
-        Thrust(angle, speed);           // move to left
-    }
-
-    else if (gamecontrolstrafe > 0)
-    {
-        angle = ob->angle - ANGLES / 4;
-        if (angle < 0)
-            angle += ANGLES;
-
-        s32 speed = gamecontrolstrafe * MOVESCALE;
-        if (controly != 0)
-            speed = (speed * 70) / 100; // correct faster diagonal movement
-        Thrust(angle, speed);           // move to right
-    }
-#endif
     //
     // side to side move
     //
@@ -281,26 +238,15 @@ void ControlMovement(objtype *ob)
     // forward/backwards move
     //
     if (controly < 0)
-    {      
-        s32 speed = -controly * MOVESCALE;
-#if SDL_MAJOR_VERSION == 2
-        if (gamecontrolstrafe != 0)
-            speed = (speed * 70) / 100; // correct faster diagonal movement
-#endif        
-        Thrust(ob->angle, speed);       // move forwards
+    {
+        Thrust (ob->angle,-controly*MOVESCALE); // move forwards
     }
     else if (controly > 0)
     {
         angle = ob->angle + ANGLES/2;
         if (angle >= ANGLES)
             angle -= ANGLES;
-
-        s32 speed = controly * BACKMOVESCALE;
-#if SDL_MAJOR_VERSION == 2
-        if (gamecontrolstrafe != 0)
-            speed = (speed * 70) / 100; // correct faster diagonal movement
-#endif        
-        Thrust(angle, speed);       // move backwards
+        Thrust (angle,controly*BACKMOVESCALE);          // move backwards
     }
 
     if (gamestate.victoryflag)              // watching the BJ actor
@@ -330,7 +276,7 @@ void StatusDrawPic (unsigned x, unsigned y, unsigned picnum)
         screenHeight-scaleFactor*(STATUSLINES-y),picnum);
 }
 
-void StatusDrawFace(u32 picnum)
+void StatusDrawFace(unsigned picnum)
 {
     StatusDrawPic(17, 4, picnum);
 
@@ -426,14 +372,12 @@ void UpdateFace (void)
 
 static void LatchNumber (int x, int y, unsigned width, int32_t number)
 {
-    u32 length,c;
+    unsigned length,c;
     char    str[20];
-#if defined(SWITCH) || defined (N3DS)
-    utoa(number, str, 10);
-#else
+
     ltoa (number,str,10);
-#endif
-    length = (u32) strlen (str);
+
+    length = (unsigned) strlen (str);
 
     while (length<width)
     {
@@ -988,9 +932,9 @@ boolean TryMove (objtype *ob)
 ===================
 */
 
-void ClipMove(objtype *ob, s32 xmove, s32 ymove)
+void ClipMove (objtype *ob, int32_t xmove, int32_t ymove)
 {
-    s32 basex, basey;
+    int32_t    basex,basey;
 
     basex = ob->x;
     basey = ob->y;
@@ -1064,7 +1008,7 @@ static fixed FixedByFracOrig(fixed a, fixed b)
         a = -a;
         sign = !sign;
     }
-    fixed res = (fixed)(((s64) a * b) >> 16);
+    fixed res = (fixed)(((int64_t) a * b) >> 16);
     if(sign)
         res = -res;
     return res;
@@ -1072,7 +1016,7 @@ static fixed FixedByFracOrig(fixed a, fixed b)
 
 void Thrust (int angle, int32_t speed)
 {
-    s32 xmove,ymove;
+    int32_t xmove,ymove;
 
     //
     // ZERO FUNNY COUNTER IF MOVED!
@@ -1246,8 +1190,8 @@ void SpawnPlayer (int tilex, int tiley, int dir)
     player->tilex = tilex;
     player->tiley = tiley;
     player->areanumber = MAPSPOT(tilex,tiley,0) - AREATILE;
-    player->x = ((s32)tilex<<TILESHIFT)+TILEGLOBAL/2;
-    player->y = ((s32)tiley<<TILESHIFT)+TILEGLOBAL/2;
+    player->x = ((int32_t)tilex<<TILESHIFT)+TILEGLOBAL/2;
+    player->y = ((int32_t)tiley<<TILESHIFT)+TILEGLOBAL/2;
     player->state = &s_player;
     player->angle = (1-dir)*90;
     if (player->angle<0)
@@ -1274,7 +1218,7 @@ void SpawnPlayer (int tilex, int tiley, int dir)
 void    KnifeAttack (objtype *ob)
 {
     objtype *check,*closest;
-    s32  dist;
+    int32_t  dist;
 
     SD_PlaySound (ATKKNIFESND);
     // actually fire
@@ -1310,7 +1254,7 @@ void    GunAttack (objtype *ob)
     objtype *check,*closest,*oldclosest;
     int      damage;
     int      dx,dy,dist;
-    s32      viewdist;
+    int32_t  viewdist;
 
     switch (gamestate.weapon)
     {
@@ -1391,7 +1335,7 @@ void    GunAttack (objtype *ob)
 
 void VictorySpin (void)
 {
-    s32    desty;
+    int32_t    desty;
 
     if (player->angle > 270)
     {
@@ -1406,7 +1350,7 @@ void VictorySpin (void)
             player->angle = 270;
     }
 
-    desty = (((s32)player->tiley-5)<<TILESHIFT)-0x3000;
+    desty = (((int32_t)player->tiley-5)<<TILESHIFT)-0x3000;
 
     if (player->y > desty)
     {

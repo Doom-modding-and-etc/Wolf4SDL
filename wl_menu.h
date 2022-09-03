@@ -4,6 +4,7 @@
 #ifndef __WL_MENU_H_
 #define __WL_MENU_H_
 
+#include "wl_def.h"
 #ifdef SPEAR
 
 #define BORDCOLOR       0x99
@@ -43,13 +44,9 @@
 #endif
 
 #define SENSITIVE       60
-#if N3DS
-#define CENTERX         //((int) screenWidth / 2)
-#define CENTERY         //((int) screenHeight / 2)
-#else
 #define CENTERX         ((int) screenWidth / 2)
 #define CENTERY         ((int) screenHeight / 2)
-#endif
+
 #define MENU_X  76
 #define MENU_Y  55
 #define MENU_W  178
@@ -66,26 +63,14 @@
 #define SM_X    48
 #define SM_W    250
 
-#ifdef VIEASM
-#define SM_Y1   20
-#define SM_H1   3*13-7
-#define SM_Y2   SM_Y1+4*13
-#define SM_H2   3*13-7
-#define SM_Y3   SM_Y2+4*13
-#define SM_H3   3*13-7
-#else
 #define SM_Y1   20
 #define SM_H1   4*13-7
 #define SM_Y2   SM_Y1+5*13
 #define SM_H2   4*13-7
 #define SM_Y3   SM_Y2+5*13
 #define SM_H3   3*13-7
-#endif
-#if N3DS
-#define CTL_X   CENTERX - (160 - 24)
-#else
+
 #define CTL_X   24
-#endif
 #ifdef JAPAN
 #define CTL_Y   70
 #else
@@ -118,22 +103,19 @@
 //
 // TYPEDEFS
 //
-typedef struct 
-{
-    short x,y,amount,curpos,indent;
-} CP_iteminfo;
+typedef struct {
+                short x,y,amount,curpos,indent;
+                } CP_iteminfo;
 
-typedef struct 
-{
-    short active;
-    char string[36];
-    int (* routine)(int temp1);
-} CP_itemtype;
+typedef struct {
+                short active;
+                char string[36];
+                int (* routine)(int temp1);
+                } CP_itemtype;
 
-typedef struct 
-{
-   short allowed[4];
-} CustomCtrls;
+typedef struct {
+                short allowed[4];
+                } CustomCtrls;
 
 extern CP_itemtype MainMenu[];
 extern CP_iteminfo MainItems;
@@ -167,7 +149,9 @@ void CheckPause(void);
 void ShootSnd(void);
 void CheckSecretMissions(void);
 void BossKey(void);
-
+#ifdef VIEASM
+int AdjustVolume(int vol);
+#endif
 void DrawGun(CP_iteminfo *item_i,CP_itemtype *items,int x,int *y,int which,int basey,void (*routine)(int w));
 void DrawHalfStep(int x,int y);
 void EraseGun(CP_iteminfo *item_i,CP_itemtype *items,int x,int y,int which);
@@ -181,10 +165,6 @@ void DefineKeyMove(void);
 void EnterCtrlData(int index,CustomCtrls *cust,void (*DrawRtn)(int),void (*PrintRtn)(int),int type);
 
 void DrawMainMenu(void);
-#ifdef VIEASM
-extern void DrawSoundVols(bool);
-extern int AdjustVolume(int);
-#endif
 void DrawSoundMenu(void);
 void DrawLoadSaveScreen(int loadsave);
 void DrawNewEpisode(void);
@@ -218,7 +198,9 @@ int CP_ExitOptions(int);
 int CP_Quit(int);
 int CP_ViewScores(int);
 int  CP_EndGame(int);
+
 int  CP_CheckQuick(ScanCode scancode);
+
 int CustomControls(int);
 int MouseSensitivity(int);
 
@@ -226,13 +208,8 @@ void CheckForEpisodes(void);
 
 void FreeMusic(void);
 
-enum
-{
-    MOUSE,
-    JOYSTICK,
-    KEYBOARDBTNS,
-    KEYBOARDMOVE,
-}; //FOR INPUT TYPES
+
+enum {MOUSE,JOYSTICK,KEYBOARDBTNS,KEYBOARDMOVE};        // FOR INPUT TYPES
 
 enum menuitems
 {
@@ -254,17 +231,13 @@ enum menuitems
         quit
 };
 
-
-
-
 //
 // WL_INTER
 //
-typedef struct 
-{
-  int kill,secret,treasure;
-  s32 time;
-} LRstruct;
+typedef struct {
+                int kill,secret,treasure;
+                int32_t time;
+                } LRstruct;
 
 extern LRstruct LevelRatios[];
 

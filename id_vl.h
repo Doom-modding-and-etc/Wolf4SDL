@@ -1,10 +1,10 @@
 // ID_VL.H
+
 #ifndef __ID_VL_H_
 #define __ID_VL_H_
 
 // wolf compatability
 #include "wl_def.h"
-
 void Quit (const char *error,...);
 
 //===========================================================================
@@ -25,14 +25,14 @@ extern  boolean  fullscreen, usedoublebuffering;
 #if N3DS
 extern  int screenWidth, screenHeight, screenBits, screenPitch, bufferPitch;
 #else
-extern  u32 screenWidth, screenHeight, screenBits, screenPitch, bufferPitch;   
+extern  unsigned screenWidth, screenHeight, screenBits, screenPitch, bufferPitch;   
 #endif
 extern  int      scaleFactor;
 
 extern	boolean  screenfaded;
-extern	u32 bordercolor;
+extern	unsigned bordercolor;
 
-extern  u32 *ylookup;
+extern  uint32_t *ylookup;
 
 extern SDL_Color gamepal[256];
 
@@ -67,7 +67,7 @@ void VL_UnlockSurface(SDL_Surface *surface);
 
 byte VL_GetPixel        (int x, int y);
 void VL_Plot            (int x, int y, int color);
-void VL_Hlin            (u32 x, u32 y, u32 width, int color);
+void VL_Hlin            (unsigned x, unsigned y, unsigned width, int color);
 void VL_Vlin            (int x, int y, int height, int color);
 void VL_BarScaledCoord  (int scx, int scy, int scwidth, int scheight, int color);
 void VL_Bar             (int x, int y, int width, int height, int color);

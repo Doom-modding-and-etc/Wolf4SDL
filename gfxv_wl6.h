@@ -8,8 +8,7 @@
 #ifndef __GFXV_WL6_H_
 #define __GFXV_WL6_H_
 
-typedef enum 
-{
+typedef enum {
     // Lump Start
     H_BJPIC=3,
     H_CASTLEPIC,                         // 4

@@ -12,7 +12,6 @@
 #include "wl_cloudsky.h"
 #endif
 
-
 /*
 =============================================================================
 
@@ -139,9 +138,9 @@ void PictureGrabber (void)
 
 void BasicOverhead (void)
 {
-    int x,y;
-    int zoom, temp;
-    int offx,offy;
+    int       x,y;
+    int       zoom,temp;
+    int       offx,offy;
     uintptr_t tile;
     int       color;
 
@@ -230,6 +229,7 @@ void ShapeTest (void)
     byte       v;
     byte       *addr;
     soundnames sound;
+
     CenterWindow (20,16);
     VW_UpdateScreen();
 
@@ -255,7 +255,7 @@ void ShapeTest (void)
 
         US_Print ("\n Address: ");
         addr = PM_GetPage(i);
-        sprintf(str,"0x%IX",(intptr_t)addr);
+        sprintf (str,"0x%010X",(intptr_t)addr);
         US_Print (str);
 
         if (addr)
@@ -266,7 +266,7 @@ void ShapeTest (void)
                 // draw the wall
                 //
                 vbuf = VL_LockSurface(screenBuffer);
-
+               
                 if (!vbuf)
                     Quit ("ShapeTest: Unable to create surface for walls!");
 
@@ -323,14 +323,11 @@ void ShapeTest (void)
                 // display sound info
                 //
                 US_Print ("\n\n Number of sounds: ");
-#ifdef VIEASM //WIP
-
-#else
                 US_PrintUnsigned (NumDigi);
 
 				for (l = j = 0; j < NumDigi; j++)
 					l += DigiList[j].length;
-#endif
+
                 US_Print ("\n Total bytes: ");
                 US_PrintUnsigned (l);
                 US_Print ("\n Total pages: ");
@@ -338,9 +335,6 @@ void ShapeTest (void)
             }
             else
             {
-#ifdef VIEASM //WIP
-
-#else
                 //
                 // display sounds
                 //
@@ -364,7 +358,7 @@ void ShapeTest (void)
                     US_Print ("\n Segment #");
                     US_PrintSigned (i - PMSoundStart - DigiList[j].startpage);
                 }
-#endif
+
                 for (j = 0; j < pageLengths[i]; j += 32)
                 {
                     v = addr[j];
@@ -421,11 +415,7 @@ void ShapeTest (void)
 
             case sc_P:
                 if (sound != -1)
-#ifdef VIEASM
-                    SD_PlayDigitized(sound, 8, 8, false);
-#else
                     SD_PlayDigitized (sound,8,8);
-#endif
                 break;
 
             case sc_Escape:
@@ -454,7 +444,7 @@ int DebugKeys (void)
     boolean esc;
     int level;
 
-    if (Keyboard(sc_B))             // B = border color     
+    if (Keyboard(sc_B))             // B = border color
     {
         CenterWindow(20,3);
         PrintY+=6;
@@ -483,15 +473,13 @@ int DebugKeys (void)
         }
         return 1;
     }
-    if (Keyboard(sc_C))             // C = count objects   
+    if (Keyboard(sc_C))             // C = count objects
     {
-
         CountObjects();
         return 1;
     }
-    if (Keyboard(sc_D))             // D = Darkone's FPS counter   
+    if (Keyboard(sc_D))             // D = Darkone's FPS counter
     {
-       
         CenterWindow (22,2);
         if (fpscounter)
             US_PrintCentered ("Darkone's FPS Counter OFF");
@@ -505,9 +493,8 @@ int DebugKeys (void)
     if (Keyboard(sc_E))             // E = quit level
         playstate = ex_completed;
 
-    if (Keyboard(sc_F))             // F = facing spot   
+    if (Keyboard(sc_F))             // F = facing spot
     {
-   
         char str[60];
         CenterWindow (14,6);
         US_Print ("x:");     US_PrintUnsigned (player->x);
@@ -531,9 +518,8 @@ int DebugKeys (void)
         return 1;
     }
 
-    if (Keyboard(sc_G))             // G = god mode    
+    if (Keyboard(sc_G))             // G = god mode
     {
-
         CenterWindow (12,2);
         if (godmode == 0)
             US_PrintCentered ("God mode ON");
@@ -550,13 +536,12 @@ int DebugKeys (void)
             godmode = 0;
         return 1;
     }
-
-    if(Keyboard(sc_H))             // H = hurt self
+    if (Keyboard(sc_H))             // H = hurt self
     {
         IN_ClearKeysDown ();
         TakeDamage (16,NULL);
     }
-    else if (Keyboard(sc_I))        // I = item cheat   
+    else if (Keyboard(sc_I))        // I = item cheat
     {
         CenterWindow (12,3);
         US_PrintCentered ("Free items!");
@@ -572,10 +557,8 @@ int DebugKeys (void)
         IN_Ack ();
         return 1;
     }
-
-    else if (Keyboard(sc_K))        // K = give keys    
+    else if (Keyboard(sc_K))        // K = give keys
     {
-
         CenterWindow(16,3);
         PrintY+=6;
         US_Print("  Give Key (1-4): ");
@@ -584,14 +567,13 @@ int DebugKeys (void)
         if (!esc)
         {
             level = atoi (str);
-            if (level > 0 && level < 5)
+            if (level>0 && level<5)
                 GiveKey(level-1);
         }
         return 1;
     }
-    else if (Keyboard(sc_L))        // L = level ratios    
+    else if (Keyboard(sc_L))        // L = level ratios
     {
-
         byte x,start,end=LRpack;
 
         if (end == 8)   // wolf3d
@@ -632,13 +614,10 @@ again:
         }
 
         return 1;
-
     }
-
 #ifdef REVEALMAP
     else if (Keyboard(sc_M))        // M = Map reveal
     {
-
         mapreveal ^= true;
         CenterWindow (18,3);
         if (mapreveal)
@@ -650,9 +629,8 @@ again:
         return 1;
     }
 #endif
-    else if (Keyboard(sc_N))        // N = no clip   
+    else if (Keyboard(sc_N))        // N = no clip
     {
-
         noclip^=1;
         CenterWindow (18,3);
         if (noclip)
@@ -664,50 +642,41 @@ again:
         return 1;
     }
 #ifndef VIEWMAP
-    else if (Keyboard(sc_O))        // O = basic overhead    
+    else if (Keyboard(sc_O))        // O = basic overhead
     {
-
         BasicOverhead();
         return 1;
     }
-
 #endif
-
     else if(Keyboard(sc_P))         // P = Ripper's picture grabber
     {
-
         PictureGrabber();
         return 1;
     }
-
     else if (Keyboard(sc_Q))        // Q = fast quit
-    Quit(NULL);
-
+        Quit (NULL);
     else if (Keyboard(sc_S))        // S = slow motion
     {
-     CenterWindow(30,3);
-     PrintY+=6;
-     US_Print(" Slow Motion steps (default 14): ");
-     VW_UpdateScreen();
-     esc = !US_LineInput (px,py,str,NULL,true,2,0);
-     if (!esc)
-     {
-       level = atoi (str);
-       if (level>=0 && level<=50)
-           singlestep = level;
-     }
+        CenterWindow(30,3);
+        PrintY+=6;
+        US_Print(" Slow Motion steps (default 14): ");
+        VW_UpdateScreen();
+        esc = !US_LineInput (px,py,str,NULL,true,2,0);
+        if (!esc)
+        {
+            level = atoi (str);
+            if (level>=0 && level<=50)
+                singlestep = level;
+        }
         return 1;
     }
     else if (Keyboard(sc_T))        // T = shape test
     {
-
         ShapeTest ();
         return 1;
     }
-
     else if (Keyboard(sc_V))        // V = extra VBLs
     {
-
         CenterWindow(30,3);
         PrintY+=6;
         US_Print("  Add how many extra VBLs(0-8): ");
@@ -721,10 +690,8 @@ again:
         }
         return 1;
     }
-
     else if (Keyboard(sc_W))        // W = warp to level
     {
-
         CenterWindow(26,3);
         PrintY+=6;
 #ifndef SPEAR
@@ -749,25 +716,18 @@ again:
         }
         return 1;
     }
-
     else if (Keyboard(sc_X))        // X = item cheat
     {
-
         CenterWindow (12,3);
         US_PrintCentered ("Extra stuff!");
         VW_UpdateScreen();
         // DEBUG: put stuff here
-        IN_Ack ()
-     };
+        IN_Ack ();
         return 1;
-}
-#endif
-
+    }
 #ifdef USE_CLOUDSKY
-
-    else if(Keyboard(sc_Z) && curSky)  
+    else if(Keyboard(sc_Z) && curSky)
     {
-
         char defstr[15];
 
         CenterWindow(34,4);
@@ -804,7 +764,7 @@ again:
             IN_Ack ();
         }
     }
-
+#endif
 
     return 0;
 }
@@ -906,7 +866,7 @@ void DrawMapDoor (int16_t sx, int16_t sy, int16_t doornum)
             doorpage = DOORWALL + 4;
             break;
     }
-
+    
     DrawMapWall (sx,sy,doorpage);
 }
 
@@ -973,7 +933,7 @@ void DrawMapBorder (void)
     while (height--)
     {
         memset (vbuf,BLACK,screenWidth);
-
+    
         vbuf -= bufferPitch;
     }
 }
@@ -991,8 +951,8 @@ void OverheadRefresh (void)
 {
     int       x,y;
     byte      rotate[9] = {6,5,4,3,2,1,0,7,0};
-    s16   endx,endy;
-    s16   sx,sy,shapenum;
+    int16_t   endx,endy;
+    int16_t   sx,sy,shapenum;
     uintptr_t tile;
     statobj_t *statptr;
     objtype   *obj;
@@ -1028,8 +988,7 @@ void OverheadRefresh (void)
                 if (tile < BIT_DOOR && tile != BIT_WALL)
                 {
                     if (DebugOk && Keyboard(sc_P) && MAPSPOT(x,y,1) == PUSHABLETILE)
-                        DrawMapFloor(sx, sy, COL_SECRET);
-
+                        DrawMapFloor (sx,sy,COL_SECRET);
                     else
                         DrawMapWall (sx,sy,horizwall[tile]);
                 }
@@ -1169,6 +1128,7 @@ void ViewMap (void)
         OverheadRefresh ();
 
     } while (!Keyboard(sc_Escape));
+
     IN_ClearKeysDown ();
 
     if (viewsize != 21)

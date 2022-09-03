@@ -19,7 +19,7 @@ typedef struct
 {
     short      picnum;
     wl_stat_t  type;
-    u32   specialFlags;    // they are ORed to the statobj_t flags
+    uint32_t   specialFlags;    // they are ORed to the statobj_t flags
 } statinfo_t;
 
 statinfo_t statinfo[] =
@@ -207,7 +207,7 @@ void SpawnStatic (int tilex, int tiley, int type)
 ===============
 */
 
-void PlaceItemType(int itemtype, int tilex, int tiley)
+void PlaceItemType (int itemtype, int tilex, int tiley)
 {
     int type;
     statobj_t *spot;
@@ -301,7 +301,7 @@ boolean         areabyplayer[NUMAREAS];
 ==============
 */
 
-void RecursiveConnect(int areanumber)
+void RecursiveConnect (int areanumber)
 {
     int i;
 
@@ -316,7 +316,7 @@ void RecursiveConnect(int areanumber)
 }
 
 
-void ConnectAreas(void)
+void ConnectAreas (void)
 {
     memset (areabyplayer,0,sizeof(areabyplayer));
     areabyplayer[player->areanumber] = true;
@@ -324,7 +324,7 @@ void ConnectAreas(void)
 }
 
 
-void InitAreas(void)
+void InitAreas (void)
 {
     memset (areabyplayer,0,sizeof(areabyplayer));
     if (player->areanumber < NUMAREAS)
@@ -341,7 +341,7 @@ void InitAreas(void)
 ===============
 */
 
-void InitDoorList(void)
+void InitDoorList (void)
 {
     memset (areabyplayer,0,sizeof(areabyplayer));
     memset (areaconnect,0,sizeof(areaconnect));
@@ -359,7 +359,7 @@ void InitDoorList(void)
 ===============
 */
 
-void SpawnDoor(int tilex, int tiley, boolean vertical, int lock)
+void SpawnDoor (int tilex, int tiley, boolean vertical, int lock)
 {
     word *map;
 
@@ -408,7 +408,7 @@ void SpawnDoor(int tilex, int tiley, boolean vertical, int lock)
 =====================
 */
 
-void OpenDoor(int door)
+void OpenDoor (int door)
 {
     if (doorobjlist[door].action == dr_open)
         doorobjlist[door].ticcount = 0;         // reset open time
@@ -425,7 +425,7 @@ void OpenDoor(int door)
 =====================
 */
 
-void CloseDoor(int door)
+void CloseDoor (int door)
 {
     int     tilex,tiley,area;
     objtype *check;
@@ -505,7 +505,7 @@ void CloseDoor(int door)
 =====================
 */
 
-void OperateDoor(int door)
+void OperateDoor (int door)
 {
     int lock;
 
@@ -545,7 +545,7 @@ void OperateDoor(int door)
 ===============
 */
 
-void DoorOpen(int door)
+void DoorOpen (int door)
 {
     if ( (doorobjlist[door].ticcount += (short) tics) >= OPENTICS)
         CloseDoor (door);
@@ -561,11 +561,11 @@ void DoorOpen(int door)
 ===============
 */
 
-void DoorOpening(int door)
+void DoorOpening (int door)
 {
-    u32 area1,area2;
+    unsigned area1,area2;
     word *map;
-    s32 position;
+    int32_t position;
 
     position = doorposition[door];
     if (!position)
@@ -628,11 +628,11 @@ void DoorOpening(int door)
 ===============
 */
 
-void DoorClosing(int door)
+void DoorClosing (int door)
 {
-    u32 area1,area2;
+    unsigned area1,area2;
     word *map;
-    s32 position;
+    int32_t position;
     int tilex,tiley;
 
     tilex = doorobjlist[door].tilex;
@@ -684,6 +684,7 @@ void DoorClosing(int door)
                 ConnectAreas ();
         }
     }
+
     doorposition[door] = (word) position;
 }
 
@@ -700,7 +701,7 @@ void DoorClosing(int door)
 =====================
 */
 
-void MoveDoors(void)
+void MoveDoors (void)
 {
     int door;
 
@@ -750,7 +751,7 @@ int dirs[4][2]={{0,-1},{1,0},{0,1},{-1,0}};
 ===============
 */
 
-void PushWall(int checkx, int checky, int dir)
+void PushWall (int checkx, int checky, int dir)
 {
     int oldtile, dx, dy;
 
@@ -796,7 +797,7 @@ void PushWall(int checkx, int checky, int dir)
 =================
 */
 
-void MovePWalls(void)
+void MovePWalls (void)
 {
     int oldblock,oldtile;
 

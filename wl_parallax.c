@@ -9,7 +9,7 @@
 #ifdef USE_FEATUREFLAGS
 
 // The lower left tile of every map determines the start texture of the parallax sky.
-int GetParallaxStartTexture(void)
+int GetParallaxStartTexture (void)
 {
     int startTex = ffDataBottomLeft;
 
@@ -20,7 +20,7 @@ int GetParallaxStartTexture(void)
 
 #else
 
-int GetParallaxStartTexture(void)
+int GetParallaxStartTexture (void)
 {
     int startTex;
 
@@ -45,16 +45,16 @@ int GetParallaxStartTexture(void)
 ====================
 */
 
-void DrawParallax(void)
+void DrawParallax (void)
 {
     int     x,y;
     byte    *dest,*skysource;
     word    texture;
-    s16 angle;
-    s16 skypage,curskypage;
-    s16 lastskypage;
-    s16 xtex;
-    s16 toppix;
+    int16_t angle;
+    int16_t skypage,curskypage;
+    int16_t lastskypage;
+    int16_t xtex;
+    int16_t toppix;
 
     skypage = GetParallaxStartTexture();
     skypage += USE_PARALLAX - 1;

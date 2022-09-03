@@ -1,6 +1,5 @@
 #include "wl_def.h"
 
-
 pictabletype	*pictable;
 
 int	    px,py;
@@ -16,13 +15,12 @@ void VWB_DrawPropString(const char* string)
 	byte	    *source, *dest;
 	byte	    ch;
 	int i;
-	u32 sx, sy;
+	unsigned sx, sy;
 
 	dest = VL_LockSurface(screenBuffer);
 	if(dest == NULL) return;
 
-    void* p = grsegs[STARTFONT + fontnumber];
-    font = (fontstruct*)p;
+	font = (fontstruct *) grsegs[STARTFONT+fontnumber];
 	height = font->height;
 	dest += scaleFactor * (ylookup[py] + px);
 
@@ -52,26 +50,25 @@ void VWB_DrawPropString(const char* string)
 }
 
 
-void VWL_MeasureString(const char *string, word *width, word *height, fontstruct *font)
+void VWL_MeasureString (const char *string, word *width, word *height, fontstruct *font)
 {
 	*height = font->height;
 	for (*width = 0;*string;string++)
 		*width += font->width[*((byte *)string)];	// proportional width
 }
 
-void VW_MeasurePropString(const char *string, word *width, word *height)
+void VW_MeasurePropString (const char *string, word *width, word *height)
 {
-    void* p = grsegs[STARTFONT + fontnumber];
-    VWL_MeasureString(string, width, height, (fontstruct*)p);
+	VWL_MeasureString(string,width,height,(fontstruct *)grsegs[STARTFONT+fontnumber]);
 }
 
 #if SDL_MAJOR_VERSION == 2
-void VH_RenderTextures(SDL_Surface* surface)
+void VH_RenderTextures(SDL_Surface *surface)
 {
     SDL_UpdateTexture(texture, NULL, screen->pixels, screenWidth * sizeof(Uint32));
     SDL_RenderClear(renderer);
     SDL_RenderCopy(renderer, texture, NULL, NULL);
-    SDL_RenderPresent(renderer);  
+    SDL_RenderPresent(renderer);
 }
 #endif
 
@@ -86,7 +83,6 @@ void VH_RenderTextures(SDL_Surface* surface)
 void VH_UpdateScreen(SDL_Surface *surface)
 {
 	SDL_BlitSurface (surface,NULL,screen,NULL);
-
 #if SDL_MAJOR_VERSION == 1
     SDL_Flip(screen);
 #elif SDL_MAJOR_VERSION == 2
@@ -96,23 +92,23 @@ void VH_UpdateScreen(SDL_Surface *surface)
 
 void VWB_DrawTile8 (int x, int y, int tile)
 {
-	VL_MemToScreen(grsegs[STARTTILE8]+tile*64,8,8,x,y);
+	VL_MemToScreen (grsegs[STARTTILE8]+tile*64,8,8,x,y);
 }
 
-void VWB_DrawPic(int x, int y, int chunknum)
+void VWB_DrawPic (int x, int y, int chunknum)
 {
 	int	picnum = chunknum - STARTPICS;
-    u32 width,height;
+	unsigned width,height;
 
 	x &= ~7;
 
 	width = pictable[picnum].width;
 	height = pictable[picnum].height;
 
-	VL_MemToScreen(grsegs[chunknum],width,height,x,y);
+	VL_MemToScreen (grsegs[chunknum],width,height,x,y);
 }
 
-void VWB_DrawPicScaledCoord(int scx, int scy, int chunknum)
+void VWB_DrawPicScaledCoord (int scx, int scy, int chunknum)
 {
 	int	picnum = chunknum - STARTPICS;
 	unsigned width,height;
@@ -120,16 +116,16 @@ void VWB_DrawPicScaledCoord(int scx, int scy, int chunknum)
 	width = pictable[picnum].width;
 	height = pictable[picnum].height;
 
-    VL_MemToScreenScaledCoord(grsegs[chunknum],width,height,scx,scy);
+    VL_MemToScreenScaledCoord (grsegs[chunknum],width,height,scx,scy);
 }
 
 
-void VWB_Bar(int x, int y, int width, int height, int color)
+void VWB_Bar (int x, int y, int width, int height, int color)
 {
-	VW_Bar(x,y,width,height,color);
+	VW_Bar (x,y,width,height,color);
 }
 
-void VWB_Plot(int x, int y, int color)
+void VWB_Plot (int x, int y, int color)
 {
     if(scaleFactor == 1)
         VW_Plot(x,y,color);
@@ -137,7 +133,7 @@ void VWB_Plot(int x, int y, int color)
         VW_Bar(x, y, 1, 1, color);
 }
 
-void VWB_Hlin(int x1, int x2, int y, int color)
+void VWB_Hlin (int x1, int x2, int y, int color)
 {
     if(scaleFactor == 1)
     	VW_Hlin(x1,x2,y,color);
@@ -145,7 +141,7 @@ void VWB_Hlin(int x1, int x2, int y, int color)
         VW_Bar(x1, y, x2-x1+1, 1, color);
 }
 
-void VWB_Vlin(int y1, int y2, int x, int color)
+void VWB_Vlin (int y1, int y2, int x, int color)
 {
     if(scaleFactor == 1)
 		VW_Vlin(y1,y2,x,color);
@@ -192,8 +188,8 @@ static const uint32_t rndmasks[] = {
     0x01200000,     // 25   25,22      (this is enough for 8191x4095)
 };
 
-static u32 rndbits_y;
-static u32 rndmask;
+static unsigned int rndbits_y;
+static unsigned int rndmask;
 
 extern SDL_Color curpal[256];
 
@@ -201,7 +197,7 @@ extern SDL_Color curpal[256];
 static int log2_ceil(uint32_t x)
 {
     int n = 0;
-    u32 v = 1;
+    uint32_t v = 1;
     while(v < x)
     {
         n++;
@@ -225,10 +221,10 @@ void VH_Startup()
 }
 
 boolean FizzleFade (SDL_Surface *source, int x1, int y1,
-    u32 width, u32 height, u32 frames, boolean abortable)
+    unsigned width, unsigned height, unsigned frames, boolean abortable)
 {
-    u32 x, y, p, frame, pixperframe;
-    s32 rndval, lastrndval;
+    unsigned x, y, p, frame, pixperframe;
+    int32_t  rndval, lastrndval;
     int      i,first = 1;
 
     lastrndval = 0;
@@ -314,7 +310,6 @@ boolean FizzleFade (SDL_Surface *source, int x1, int y1,
             VL_UnlockSurface(screen);
             VH_UpdateScreen(screen);
         }
-
         else
         {
             // No surface, so only enhance rndval

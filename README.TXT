@@ -179,7 +179,7 @@ The current version of the source code is available on GitHub at:
    https://github.com/Doom-modding-and-etc/Wolf4SDL
 
 The following ways of compiling the source code are supported:
- - Makefile (for Linux, BSD variants, MinGW/MSYS and dreamcast see README-dc.txt for more details)
+ - Makefile (for Linux, BSD variants, MinGW/MSYS, dreamcast and Nintendo Switch. see README-dc.txt for more details)
  - Visual C++ (Wolf4SDL.VC2022.sln and Wolf4SDL.vcproj) (see README-VC.txt)
  - Special compiling for Dreamcast (see README-dc.txt)
  - Xcode (for Mac OS X, macosx/Wolf4SDL.xcodeproj/project.pbxproj)
@@ -218,12 +218,13 @@ IMPORTANT: Do not forget to take care of version.h!
 TODOs:
 ------
  - Add support for any graphic resolution >= 320x200(40%)
- - Fix sdl1
  - Add Sony´s Playstation 2 support(WIP) 
  - Add latest fmopl sound
  - Fix nintendo 3ds Makefile and wl_def.h
- - Add some Documentation
- 
+ - Fix VIEASM 
+ - Fix CRT on SDL1
+ - Fix quick fade on SDL1
+ - Add plataform readme.
 Known bugs:
 -----------
 
@@ -252,7 +253,6 @@ Credits:
  - Thanks to Terraformer9x and Nexion for the advice and help for the Mixer sound problem
  - Thanks to Fabian greffrath for the patches on the code 
  - Thanks to keeganatorr for the Nintendo Switch support
- - Thanks to Zombieskittles for add on a separte repo the WASD Key support
  - Thanks to Fabian Sangalard for the awesoeme crt feature used on Chocolate Wolfenstein 3d. 
  
 Licenses:

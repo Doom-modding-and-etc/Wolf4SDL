@@ -24,7 +24,7 @@
 typedef	struct
 {
     char	name[MaxHighName + 1];
-    s32	score;
+    int32_t	score;
     word	completed,episode;
 } HighScore;
 
@@ -83,7 +83,7 @@ void			US_Printf(const char *formatStr, ...);
 void			US_CPrintf(const char *formatStr, ...);
 
 void			US_PrintUnsigned(longword n);
-void			US_PrintSigned(s32 n);
+void			US_PrintSigned(int32_t n);
 void			US_StartCursor(void),
 				US_ShutCursor(void);
 void			US_CheckHighScore(int32_t score,word other);

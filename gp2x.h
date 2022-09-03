@@ -1,7 +1,6 @@
 #ifndef GP2X_H
 #define GP2X_H
 
-#ifdef GP2X
 #include <SDL/SDL.h>
 #include <sys/ioctl.h>
 #include <sys/soundcard.h>
@@ -48,5 +47,5 @@ void GP2X_ButtonDown( int button );
 void GP2X_ButtonUp( int button );
 void Screenshot( void );
 void SetKeyboard( unsigned int key, int press );
-#endif
+
 #endif // GP2X_H

@@ -8,11 +8,13 @@
 #ifndef __AUDIOWL6_H_
 #define __AUDIOWL6_H_
 
+
+// 
+//
 //
 // Sound names & indexes
 //
-typedef enum 
-{
+typedef enum {
 	HITWALLSND,              // 0
 	SELECTWPNSND,            // 1
 	SELECTITEMSND,           // 2
@@ -109,20 +111,14 @@ typedef enum
 // Base offsets
 //
 #define STARTPCSOUNDS		0
-#ifdef VIEASM
-#define STARTADLIBSOUNDS	0
-#define STARTDIGISOUNDS		0
-#define STARTMUSIC		    0
-#else
 #define STARTADLIBSOUNDS	LASTSOUND
 #define STARTDIGISOUNDS		(2*LASTSOUND)
 #define STARTMUSIC		    (3*LASTSOUND)
-#endif
+
 //
 // Music names & indexes
 //
-typedef enum 
-{
+typedef enum {
 	CORNER_MUS,              // 0
 	DUNGEON_MUS,             // 1
 	WARMARCH_MUS,            // 2
@@ -152,9 +148,7 @@ typedef enum
 	PACMAN_MUS,              // 26
 	LASTMUSIC
 } musicnames;
-#ifdef VIEASM
-#define NUMMUSICS LASTMUSIC
-#endif
+
 #define NUMSOUNDS		    LASTSOUND
 #define NUMSNDCHUNKS		(STARTMUSIC + LASTMUSIC)
 
