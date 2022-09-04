@@ -18,6 +18,8 @@
 #if SDL_MAJOR_VERSION == 1
 #if defined (N3DS)
 
+#elif defined(_XBOX)
+#include "xbox\fakeglx.h"
 #else
 #include <WTypes.h>
 #include <gl\GL.h>

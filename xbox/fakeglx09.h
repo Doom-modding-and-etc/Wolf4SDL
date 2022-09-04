@@ -28,7 +28,7 @@ NOTE:
 #ifndef H_FAKEGLWRAPPER
 #define H_FAKEGLWRAPPER
 
-#include "./version.h" //Da luz start... 
+#include "../version.h" //Da luz start... 
 
 #if defined (_XBOX)
 
