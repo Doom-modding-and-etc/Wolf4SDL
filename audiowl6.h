@@ -111,9 +111,15 @@ typedef enum {
 // Base offsets
 //
 #define STARTPCSOUNDS		0
+#ifdef VIEASM
+#define STARTADLIBSOUNDS	0
+#define STARTDIGISOUNDS		0
+#define STARTMUSIC		    0
+#else
 #define STARTADLIBSOUNDS	LASTSOUND
 #define STARTDIGISOUNDS		(2*LASTSOUND)
 #define STARTMUSIC		    (3*LASTSOUND)
+#endif
 
 //
 // Music names & indexes
@@ -148,6 +154,10 @@ typedef enum {
 	PACMAN_MUS,              // 26
 	LASTMUSIC
 } musicnames;
+
+#ifdef VIEASM
+#define NUMMUSICS LASTMUSIC
+#endif
 
 #define NUMSOUNDS		    LASTSOUND
 #define NUMSNDCHUNKS		(STARTMUSIC + LASTMUSIC)

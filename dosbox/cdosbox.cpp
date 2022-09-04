@@ -1,16 +1,15 @@
-
 #include "cdosbox.h"
+
 #ifdef USE_DOSBOX
 #include "dbopl.h"
-
-DBOPL::Operator op;
-DBOPL::Operator::State state;
-DBOPL::Channel channel;
-DBOPL::Chip chips;
+using namespace DBOPL;
+struct Operator op;
+Operator::State state;
+struct Channel channel;
+struct Chip chips;
 
 //Operator
- 
-//Private:
+
 //Public:
 void Operator_UpdateAttenuation()
 {
@@ -64,7 +63,7 @@ Bits Operator_GetWave(Bitu index, Bitu vol)
 
 //Channel:
 //Private:
-struct Operator* Channel_Op(Bitu index)
+struct COperator* Channel_Op(Bitu index)
 {
 	channel.Op(index);
 }

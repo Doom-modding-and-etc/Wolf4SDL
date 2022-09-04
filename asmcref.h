@@ -14,8 +14,6 @@ BY GERARD 'ALUMIUN' WATSON
 // Currently these are set up for Wolfenstein, not SoD.
 
 const char *sounddir = "sounds\\";
-#define NUMSOUNDS 87
-#define NUMMUSICS 27
 
 const char *ASM_Soundnames[NUMSOUNDS] = 
 {

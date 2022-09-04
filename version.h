@@ -56,7 +56,7 @@
                               // (actually better, as the second demo rarely worked)
 //#define CRT // Makes the screen fixed in 4:3
 #define FIXCALCROTATE         // Apply a modified version of Ginyu's fix to make CalcRotate more accurate at high resolutions
-//#define VIEASM //Activates: VODKA-INDUCED ENTERTAINMENT ADVANCED SOUND MANAGER v0.9.1(Warning: only works with .wav and .ogg placed in sounds/ follow the asmcref.h for more details).
+#define VIEASM //Activates: VODKA-INDUCED ENTERTAINMENT ADVANCED SOUND MANAGER v0.9.1(Warning: only works with .wav and .ogg placed in sounds/ follow the asmcref.h for more details).
 //#define BANDEDHOLOWALLS     // Use the old DOS-style "banded" wall drawing behaviour when inside walls
 //#define OLD_BOOL //Use the old bool enum some compilers doesn´t support stdbool.h
 //#define USE_DOSBOX //Replaces fmopl sound and uses DOSBOX Sound instead.

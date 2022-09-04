@@ -221,10 +221,12 @@ TODOs:
  - Add Sony´s Playstation 2 support(WIP) 
  - Add latest fmopl sound
  - Fix nintendo 3ds Makefile and wl_def.h
- - Fix VIEASM 
+ - Fix messy controls buttons on SDL1
  - Fix CRT on SDL1
  - Fix quick fade on SDL1
  - Add plataform readme.
+ - Deprecate SDL links since they are merged now on github
+ 
 Known bugs:
 -----------
 

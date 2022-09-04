@@ -2,13 +2,12 @@
 #ifdef USE_DOSBOX
 #include <stdio.h>
 
+
 #if defined(_arch_dreamcast)
 #	include "dc/dc_main.h"
 #elif !defined(_WIN32)
 #	include <stdint.h>
 #endif
-
-
 #include <SDL.h>
 
 typedef uint32_t	Bitu;
@@ -35,52 +34,10 @@ typedef Bits(DB_FASTCALL* WaveHandler) (Bitu i, Bitu volume);
 #endif
 
 typedef Bits (*Operator_VolumeHandler) ();
-typedef struct Channel* (*Channel_SynthHandler) (struct Chip* chip, Bit32u samples, Bit32s output);
+typedef struct CChannel* (*Channel_SynthHandler) (struct CChip* chip, Bit32u samples, Bit32s output);
 
-//Different synth modes that can generate blocks of data
-typedef enum 
-{
-	sm2AM,
-	sm2FM,
-	sm3AM,
-	sm3FM,
-	sm4Start,
-	sm3FMFM,
-	sm3AMFM,
-	sm3FMAM,
-	sm3AMAM,
-	sm6Start,
-	sm2Percussion,
-	sm3Percussion,
-} SynthMode;
 
-//Shifts for the values contained in chandata variable
-enum 
-{
-	SHIFT_KSLBASE = 16,
-	SHIFT_KEYCODE = 24,
-};
-
-//Operator Struct
-//Masks for operator 20 values
-enum
-{
-	MASK_KSR = 0x10,
-	MASK_SUSTAIN = 0x20,
-	MASK_VIBRATO = 0x40,
-	MASK_TREMOLO = 0x80,
-};
-
-typedef enum
-{
-	OFF,
-	RELEASE,
-	SUSTAIN,
-	DECAY,
-	ATTACK,
-} Operator_State;
-
-struct Operator
+struct COperator
 {
 	Operator_VolumeHandler volHandler;
 #if (DBOPL_WAVE == WAVE_HANDLER)
@@ -121,9 +78,9 @@ struct Operator
 	Bit8u ksr;
 };
 
-struct Channel
+struct CChannel
 {
-	struct Operator op[2];
+	struct COperator op[2];
 
 	Channel_SynthHandler synthHandler;
 	Bit32u chanData;		//Frequency/octave and derived values
@@ -138,7 +95,7 @@ struct Channel
 	Bit8s maskRight;
 };
 
-struct Chip
+struct CChip
 {
 	//This is used as the base counter for vibrato and tremolo
 	Bit32u lfoCounter;
@@ -157,7 +114,7 @@ struct Chip
 	Bit32u attackRates[76];
 
 	//18 channels with 2 operators each
-	struct Channel chan[18];
+	struct CChannel chan[18];
 
 	Bit8u reg104;
 	Bit8u reg08;
@@ -185,7 +142,7 @@ void Operator_UpdateRelease(const struct Chip* chip);
 void Operator_UpdaateDecay(const struct Chip* chip);
 #endif
 //Channel:
-struct Operator* Channel_Op(Bitu index);
+struct COperator* Channel_Op(Bitu index);
 #ifdef WIP
 DOSBOX_API void Channel_SetChanData(const struct Chip* chip, Bit32u data);
 DOSBOX_API void Channel_UpdateFrequency(const struct Chip* chip, Bit8u fourOp);
@@ -197,15 +154,15 @@ DOSBOX_API void Channel_GeneratePercussion(struct Chip* chip, Bit32s* output);
 DOSBOX_API struct Channel* Channel_BlockTemplate(struct Chip* chip, Bit32u samples, Bit32s* output);
 #endif
 //Chip:
-Bit32u Chip_ForwardLFO(Bit32u samples);
-Bit32u Chip_ForwardNoise();
-void Chip_WriteBD(Bit8u val);
-void Chip_WriteReg(Bit32u reg, Bit8u val);
-Bit32u Chip_WriteAddr(Bit32u port, Bit8u val);
-void Chip_GenerateBlock2(Bitu samples, Bit32s* output);
-void Chip_GenerateBlock3(Bitu samples, Bit32s* output);
-void Chip_Generate(Bit32u samples);
-void Chip_Setup(Bit32u r);
+extern Bit32u Chip_ForwardLFO(Bit32u samples);
+extern Bit32u Chip_ForwardNoise();
+extern void Chip_WriteBD(Bit8u val);
+extern void Chip_WriteReg(Bit32u reg, Bit8u val);
+extern Bit32u Chip_WriteAddr(Bit32u port, Bit8u val);
+extern void Chip_GenerateBlock2(Bitu samples, Bit32s* output);
+extern void Chip_GenerateBlock3(Bitu samples, Bit32s* output);
+extern void Chip_Generate(Bit32u samples);
+extern void Chip_Setup(Bit32u r);
 
 
 //Public:

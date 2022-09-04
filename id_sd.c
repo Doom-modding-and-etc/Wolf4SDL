@@ -46,19 +46,32 @@
 #define ORIGSAMPLERATE 7042
 
 #ifdef USE_DOSBOX
+struct CChip chip;
+
+Bit32u Chip_ForwardLFO(Bit32u samples);
+Bit32u Chip_ForwardNoise();
+void Chip_WriteBD(Bit8u val);
+void Chip_WriteReg(Bit32u reg, Bit8u val);
+Bit32u Chip_WriteAddr(Bit32u port, Bit8u val);
+void Chip_GenerateBlock2(Bitu samples, Bit32s* output);
+void Chip_GenerateBlock3(Bitu samples, Bit32s* output);
 
 static bool YM3812Init(int numChips, int clock, int rate)
 {
+#ifdef WIP
     Chip_Setup(rate);
+#endif    
     return false;
 }
 
-static void YM3812Write(struct Chip which, Bit32u reg, Bit8u val)
+static void YM3812Write(struct CChip which, Bit32u reg, Bit8u val)
 {
+#ifdef WIP    
     Chip_WriteReg(reg, val);
+#endif
 }
 
-static void YM3812UpdateOne(struct Chip which, int16_t* stream, int length)
+static void YM3812UpdateOne(struct CChip which, int16_t* stream, int length)
 {
     Bit32s buffer[512 * 2];
     int i;
@@ -70,8 +83,9 @@ static void YM3812UpdateOne(struct Chip which, int16_t* stream, int length)
 
     if (which.opl3Active)
     {
+#ifdef WIP        
         Chip_GenerateBlock3(length, buffer);
-
+#endif
         // GenerateBlock3 generates a number of "length" 32-bit stereo samples
         // so we only need to convert them to 16-bit samples
         for (i = 0; i < length * 2; i++)  // * 2 for left/right channel
@@ -85,8 +99,9 @@ static void YM3812UpdateOne(struct Chip which, int16_t* stream, int length)
     }
     else
     {
+#ifdef WIP
         Chip_GenerateBlock2(length, buffer);
-
+#endif
         // GenerateBlock3 generates a number of "length" 32-bit mono samples
         // so we need to convert them to 32-bit stereo samples
         for (i = 0; i < length; i++)
@@ -837,13 +852,21 @@ void SDL_IMFMusicPlayer(void *udata, Uint8 *stream, int len)
         {
             if(numreadysamples<sampleslen)
             {
+#ifdef USE_DOSBOX
+                YM3812UpdateOne(chip, stream16, numreadysamples);
+#else
                 YM3812UpdateOne(oplChip, stream16, numreadysamples);
+#endif
                 stream16 += numreadysamples*2;
                 sampleslen -= numreadysamples;
             }
             else
             {
+#ifdef USE_DOSBOX
+                YM3812UpdateOne(chip, stream16, sampleslen);
+#else
                 YM3812UpdateOne(oplChip, stream16, sampleslen);
+#endif
                 numreadysamples -= sampleslen;
                 return;
             }
@@ -933,11 +956,17 @@ SD_Startup(void)
     }
 
     for(i=1;i<0xf6;i++)
+#ifdef USE_DOSBOX
+        YM3812Write(chip, i, 0);
+#else
         YM3812Write(oplChip,i,0);
-
+#endif
+#ifdef USE_DOSBOX
+    YM3812Write(chip, 1, 0x20);
+#else
     YM3812Write(oplChip,1,0x20); // Set WSE=1
 //    YM3812Write(0,8,0); // Set CSM=0 & SEL=0		 // already set in for statement
-
+#endif
     Mix_HookMusic(SDL_IMFMusicPlayer, 0);
     Mix_ChannelFinished(SD_ChannelFinished);
     AdLibPresent = true;

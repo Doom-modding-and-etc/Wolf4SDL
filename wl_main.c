@@ -283,6 +283,10 @@ noconfig:
     SD_SetMusicMode (sm);
     SD_SetSoundMode (sd);
     SD_SetDigiDevice (sds);
+#ifdef VIEASM
+    SD_ChangeVolume((byte)(soundvol * 1.28), (byte)(musicvol * 1.28));
+    SD_Reverse(reversestereo);
+#endif
 }
 
 /*
@@ -333,6 +337,12 @@ void WriteConfig(void)
 
         write(file,&viewsize,sizeof(viewsize));
         write(file,&mouseadjustment,sizeof(mouseadjustment));
+
+#ifdef VIEASM
+        write(file, &soundvol, sizeof(soundvol));
+        write(file, &musicvol, sizeof(musicvol));
+        write(file, &reversestereo, sizeof(reversestereo));
+#endif
 
         close(file);
     }

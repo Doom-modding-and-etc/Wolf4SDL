@@ -9,10 +9,12 @@
 #define __ID_SD_H_
 
 #ifdef USE_DOSBOX
-static int oplChip;
-#endif
+static const int oplChip;
+//extern struct CChip chip;
+#define alOut(n,b) YM3812Write(chip, n, b)
+#else
 #define alOut(n,b) YM3812Write(oplChip, n, b)
-
+#endif
 #define TickBase        70      // 70Hz per tick - used as a base for timer 0
 
 typedef enum

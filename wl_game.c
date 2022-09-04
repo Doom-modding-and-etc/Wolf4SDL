@@ -195,7 +195,11 @@ void UpdateSoundLoc(void)
         SD_SetPosition(leftchannel,rightchannel);
     }*/
 
-    for(i = 0; i < MIX_CHANNELS; i++)
+#ifdef VIEASM
+    for (i = 0; i < ASM_CurChannels(); i++)
+#else
+    for (i = 0; i < MIX_CHANNELS; i++)
+#endif
     {
         if(channelSoundPos[i].valid)
         {

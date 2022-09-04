@@ -200,6 +200,7 @@
   <ItemGroup>
     <ClCompile Include="dosbox\cdosbox.cpp">
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">EnableAllWarnings</WarningLevel>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="dosbox\dbopl.cpp" />
     <ClCompile Include="id_crt.c" />

@@ -2854,11 +2854,14 @@ void SpawnFakeHitler (int tilex, int tiley)
 
 void SpawnHitler (int tilex, int tiley)
 {
+#ifdef VIEASM
+
+#else
     if (DigiMode != sds_Off)
         s_hitlerdie2.tictime = 140;
     else
         s_hitlerdie2.tictime = 5;
-
+#endif
 
     SpawnNewObj (tilex,tiley,&s_mechastand);
     newobj->speed = SPDPATROL;
