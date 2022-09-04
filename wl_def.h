@@ -1083,7 +1083,7 @@ extern  tiletype    tilemap[MAPSIZE][MAPSIZE];      // wall values only
 extern  boolean        spotvis[MAPSIZE][MAPSIZE];
 extern  objtype     *actorat[MAPSIZE][MAPSIZE];
 #ifdef REVEALMAP
-extern  bool        mapseen[MAPSIZE][MAPSIZE];
+extern  boolean        mapseen[MAPSIZE][MAPSIZE];
 #endif
 extern  boolean     singlestep,godmode,noclip,ammocheat,mapreveal;
 extern  int         extravbls;

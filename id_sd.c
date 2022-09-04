@@ -56,7 +56,7 @@ Bit32u Chip_WriteAddr(Bit32u port, Bit8u val);
 void Chip_GenerateBlock2(Bitu samples, Bit32s* output);
 void Chip_GenerateBlock3(Bitu samples, Bit32s* output);
 
-static bool YM3812Init(int numChips, int clock, int rate)
+static boolean YM3812Init(int numChips, int clock, int rate)
 {
 #ifdef WIP
     Chip_Setup(rate);

@@ -67,14 +67,14 @@ BEGIN
     BEGIN
         BLOCK "000904b0"
         BEGIN
-            VALUE "FileDescription", "SDL-Port of Wolfenstein 3D"
-            VALUE "FileVersion", "2.0.0.0"
+            VALUE "FileDescription", "SDL Port of Wolfenstein 3D"
+            VALUE "FileVersion", "2.2.0.0"
             VALUE "InternalName", "Wolf4SDL"
             VALUE "LegalCopyright", "Original Wolfenstein 3D is copyrighted by id Software"
             VALUE "LegalTrademarks", "Wolfenstein 3D is a trademark of id Software"
             VALUE "OriginalFilename", "Wolf4SDL.exe"
             VALUE "ProductName", "Wolf4SDL"
-            VALUE "ProductVersion", "2.0.0.0"
+            VALUE "ProductVersion", "2.2.0.0"
         END
     END
     BLOCK "VarFileInfo"

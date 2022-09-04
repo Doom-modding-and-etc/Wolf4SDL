@@ -12,7 +12,7 @@ include $(DEVKITPRO)/libnx/switch_rules
 APP_TITLE = Wolf4SDL
 APP_DESCRIPTION := Cross Plataform Source Port Of Wolfenstein 3d for Nintendo Switch by: keeganatorr and Adopted by: Wolf3s
 APP_AUTHOR := Wolf3s, keeganatorr, Aryan, Mortriz Ripper and The other contribuitors
-APP_VERSION := 2.1
+APP_VERSION := 2.2
 ICON := icon/wolf4sdl.png
 WINDRES   = windres.exe
 OBJ       = mame/fmopl.o id_ca.o id_crt.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vieasm.o id_vl.o signon.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o

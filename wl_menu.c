@@ -1147,7 +1147,7 @@ DrawSliderBox(int x, int y, int val, int valinc, int width, int height, byte col
 }
 
 void
-DrawSoundVols(bool curmode)
+DrawSoundVols(boolean curmode)
 {
     ClearMScreen();
     DrawWindow(40, 25, 240, 145, BKGDCOLOR);
@@ -4476,13 +4476,20 @@ CheckForEpisodes (void)
 // ENGLISH
 //
 #ifdef UPLOAD
-#if SWITCH    
-    if(!stat(DATADIR "vswap.wl1", &statbuf))
+#if defined (SWITCH) || defined(N3DS)    
+    if (!stat(DATADIR "vswap.wl1", &statbuf)) 
+    {
+    
+    }
 #else        
-    if (!stat("vswap.wl1", &statbuf))
+    if(!stat("vswap.wl1", &statbuf))
+    {
+    
+    }
 #endif
     else
         Quit ("NO WOLFENSTEIN 3-D DATA FILES to be found!");
+
 #else
 #ifndef SPEAR
     if(!stat("vswap.wl6", &statbuf))

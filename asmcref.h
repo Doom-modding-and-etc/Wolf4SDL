@@ -20,12 +20,20 @@ const char *ASM_Soundnames[NUMSOUNDS] =
 	"HITWALLSND.wav",              // 0
     "SELECTWPNSND.wav",            // 1
     "SELECTITEMSND.wav",           // 2
+#ifdef SPEAR
+    "GHOSTSIGHTSND.wav", //3
+#elif defined(WOLF3D)
     "HEARTBEATSND.wav",            // 3
+#endif
     "MOVEGUN2SND.wav",             // 4
     "MOVEGUN1SND.wav",             // 5
     "NOWAYSND.wav",                // 6
     "NAZIHITPLAYERSND.wav",        // 7
+#ifdef SPEAR
+    "MISSILEFIRESND.wav",          // 8
+#elif defined(WOLF3D)
     "SCHABBSTHROWSND.wav",         // 8
+#endif
     "PLAYERDEATHSND.wav",          // 9
     "DOGDEATHSND.wav",             // 10
     "ATKGATLINGSND.wav",           // 11
@@ -70,27 +78,58 @@ const char *ASM_Soundnames[NUMSOUNDS] =
     "MUTTISND.wav",                // 50
     "SCHUTZADSND.wav",             // 51
     "AHHHGSND.wav",                // 52
+#ifdef SPEAR
+    "DEATHSCREAM5SND.wav",         // 53
+    "DEATHSCREAM7SND.wav",         // 54
+    "DEATHSCREAM8SND.wav",         // 55
+#elif defined(WOLF3D)
     "DIESND.wav",                  // 53
     "EVASND.wav",                  // 54
     "GUTENTAGSND.wav",             // 55
+#endif
     "LEBENSND.wav",                // 56
+#ifdef SPEAR
+    "DEATHSCREAM6SND.wav",         // 57
+#elif defined(WOLF3D)
     "SCHEISTSND.wav",              // 57
+#endif
     "NAZIFIRESND.wav",             // 58
     "BOSSFIRESND.wav",             // 59
     "SSFIRESND.wav",               // 60
     "SLURPIESND.wav",              // 61
+#ifdef SPEAR
+    "GHOSTFADESND.wav",            // 62
+    "DEATHSCREAM9SND.wav",         // 63
+    "GETAMMOBOXSND.wav",           // 64
+    "ANGELSIGHTSND.wav",           // 65
+#elif defined(WOLF3D)
     "TOT_HUNDSND.wav",             // 62
     "MEINGOTTSND.wav",             // 63
     "SCHABBSHASND.wav",            // 64
     "HITLERHASND.wav",             // 65
+#endif
     "SPIONSND.wav",                // 66
     "NEINSOVASSND.wav",            // 67
     "DOGATTACKSND.wav",            // 68
+#ifdef SPEAR
+    "ANGELFIRESND.wav",            // 69
+    "TRANSSIGHTSND.wav",           // 70
+    "TRANSDEATHSND.wav",           // 71
+    "WILHELMSIGHTSND.wav",         // 72
+    "WILHELMDEATHSND.wav",         // 73
+    "UBERDEATHSND.wav",            // 74
+    "KNIGHTSIGHTSND.wav",          // 75
+    "KNIGHTDEATHSND.wav",          // 76
+    "ANGELDEATHSND.wav",           // 77
+    "KNIGHTMISSILESND.wav",        // 78
+    "GETSPEARSND.wav",             // 79
+    "ANGELTIREDSND.wav",           // 80
+#elif defined (WOLF3D)
     "FLAMETHROWERSND.wav",         // 69
     "MECHSTEPSND.wav",             // 70
     "GOOBSSND.wav",                // 71
     "YEAHSND.wav",                 // 72
-#ifndef APOGEE_1_0
+#elif APOGEE_1_0
     "DEATHSCREAM4SND.wav",         // 73
     "DEATHSCREAM5SND.wav",         // 74
     "DEATHSCREAM6SND.wav",         // 75
@@ -121,6 +160,35 @@ const char *ASM_Soundnames[NUMSOUNDS] =
 
 const char *musicdir = "music\\";
 
+#ifdef SPEAR
+const char* ASM_Musicnames[NUMMUSICS] =
+{
+    "XFUNKIE.OGG",             // 0
+    "DUNGEON.OGG",             // 1
+    "XDEATH.OGG",              // 2
+    "GETTHEM.OGG",             // 3
+    "XTIPTOE.OGG",             // 4
+    "GOINGAFT.OGG",            // 5
+    "URAHERO.OGG",             // 6
+    "XTHEEND.OGG",             // 7
+    "NAZI_OMI.OGG",            // 8
+    "POW.OGG",                 // 9
+    "TWELFTH.OGG",             // 10
+    "SEARCHN.OGG",             // 11
+    "SUSPENSE.OGG",            // 12
+    "ZEROHOUR.OGG",            // 13
+    "WONDERIN.OGG",            // 14
+    "ULTIMATE.OGG",            // 15
+    "ENDLEVEL.OGG",            // 16
+    "XEVIL.OGG",               // 17
+    "XJAZNAZI.OGG",            // 18
+    "COPYPRO.OGG",             // 19
+    "XAWARD.OGG",              // 20
+    "XPUTIT_MUS.OGG",              // 21
+    "XGETYOU_MUS.OGG",             // 22
+    "XTOWER2_MUS.OGG",             // 23
+};
+#elif defined(WOLF3D)
 const char *ASM_Musicnames[NUMMUSICS] = 
 {
 	"CORNER.OGG",              // 0
@@ -151,5 +219,6 @@ const char *ASM_Musicnames[NUMMUSICS] =
 	"VICMARCH.OGG",            // 25
 	"PACMAN.OGG"               // 26
 };
+#endif
 #endif
 #endif  // _ASMCREF_H_

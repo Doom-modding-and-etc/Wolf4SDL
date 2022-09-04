@@ -8,7 +8,7 @@
 #ifndef __AUDIOWL6_H_
 #define __AUDIOWL6_H_
 
-
+#include "version.h"
 // 
 //
 //
@@ -88,7 +88,7 @@ typedef enum {
 	MECHSTEPSND,             // 70
 	GOOBSSND,                // 71
 	YEAHSND,                 // 72
-#ifndef APOGEE_1_0
+//#ifdef APOGEE_1_0
 	DEATHSCREAM4SND,         // 73
 	DEATHSCREAM5SND,         // 74
 	DEATHSCREAM6SND,         // 75
@@ -103,7 +103,7 @@ typedef enum {
 	ROSESND,                 // 84
 	MISSILEFIRESND,          // 85
 	MISSILEHITSND,           // 86
-#endif
+//#endif
 	LASTSOUND
 } soundnames;
 
@@ -155,12 +155,13 @@ typedef enum {
 	LASTMUSIC
 } musicnames;
 
-#ifdef VIEASM
-#define NUMMUSICS LASTMUSIC
-#endif
 
 #define NUMSOUNDS		    LASTSOUND
 #define NUMSNDCHUNKS		(STARTMUSIC + LASTMUSIC)
+
+#ifdef VIEASM
+#define NUMMUSICS LASTMUSIC
+#endif
 
 /////////////////////////////////////////////////
 //

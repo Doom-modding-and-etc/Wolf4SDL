@@ -18,7 +18,44 @@ typedef struct
     char* name;
 } sample;
 
+// These enums are now treated differently. Because there are no seperate devices,
+// any value other than sxm_Off will turn the device on, and SDSMode is no longer used.
+typedef enum
+{
+    sdm_Off,
+    sdm_PC,
+    sdm_AdLib,
+} SDMode;
+
+typedef enum
+{
+    smm_Off,
+    smm_AdLib
+} SMMode;
+
+typedef enum
+{
+    sds_Off,
+    sds_PC,
+    sds_SoundBlaster
+} SDSMode;
+
+typedef struct
+{
+    int valid;
+    fixed globalsoundx, globalsoundy;
+} globalsoundpos;
+
 extern boolean switching;
+
+extern globalsoundpos channelSoundPos[];
+
+extern  SDMode          SoundMode;
+extern  SMMode          MusicMode;
+extern  SDSMode         DigiMode;
+extern  boolean  		nosound;
+
+extern  boolean         AdLibPresent, SoundBlasterPresent, SBProPresent, SoundPositioned;
 
 /* defines for management */
 
@@ -81,14 +118,14 @@ extern boolean switching;
 
 extern sample ASM_Audiosegs[NUMSOUNDS];
 
-extern bool ASM_Open(int frequency, int channels, int maxchan, int buffersize, Uint8 sndvolume, Uint8 musvolume, bool reverse);
-extern bool ASM_IsOpen(void);
-extern bool ASM_PlayMusic(char* musfile);
-extern bool ASM_SwitchMus(char* loadmus, int fadems, bool fade);
-extern bool ASM_FadeInMus(char* loadmus, int fadems);
+extern boolean ASM_Open(int frequency, int channels, int maxchan, int buffersize, Uint8 sndvolume, Uint8 musvolume, bool reverse);
+extern boolean ASM_IsOpen(void);
+extern boolean ASM_PlayMusic(char* musfile);
+extern boolean ASM_SwitchMus(char* loadmus, int fadems, bool fade);
+extern boolean ASM_FadeInMus(char* loadmus, int fadems);
 extern sample ASM_Cache(char* sndfile, const char* name);
 extern sample ASM_CacheFromMem(void* ptr, int size, const char* name);
-extern int ASM_PlaySound(sample sound, int angle, Uint8 distance, bool ambient);
+extern int ASM_PlaySound(sample sound, int angle, Uint8 distance, boolean ambient);
 extern void ASM_Uncache(sample chunk);
 extern void ASM_FadeOutMus(int fadems);
 extern void ASM_HaltSound(void);
@@ -129,42 +166,6 @@ inline void Delay(int wolfticks)
 #define SD_GetVolume(snd, mus) ASM_ReturnVolume(snd, mus)
 #define SD_Reverse(reverse) ASM_ReverseStereo(reverse)
 
-// These enums are now treated differently. Because there are no seperate devices,
-// any value other than sxm_Off will turn the device on, and SDSMode is no longer used.
-typedef enum
-{
-    sdm_Off,
-    sdm_PC,
-    sdm_AdLib,
-} SDMode;
-
-typedef enum
-{
-    smm_Off,
-    smm_AdLib
-} SMMode;
-
-typedef enum
-{
-    sds_Off,
-    sds_PC,
-    sds_SoundBlaster
-} SDSMode;
-
-typedef struct
-{
-    int valid;
-    fixed globalsoundx, globalsoundy;
-} globalsoundpos;
-
-extern globalsoundpos channelSoundPos[];
-
-extern  SDMode          SoundMode;
-extern  SMMode          MusicMode;
-extern  SDSMode         DigiMode;
-extern  boolean  		nosound;
-
-extern  boolean         AdLibPresent, SoundBlasterPresent, SBProPresent, SoundPositioned;
 // Functions
 extern  void    SD_Startup(void);                                           // DONE
 extern  void    SD_Shutdown(void);                                          // DONE

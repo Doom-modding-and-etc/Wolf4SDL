@@ -33,7 +33,7 @@ const char* ASM_Verstring = "v0.9.1 Beta";  // Version string
 
 Uint8 sndvol, musvol;                       // Volumes for sound
 int origchannels, maxchannels, lastchan;    // Channel variables
-bool chanused[ASM_ABSMAXCHANNELS];          // Is channel used?
+boolean chanused[ASM_ABSMAXCHANNELS];          // Is channel used?
 static Mix_Music* music = 0, * switchto = 0; // Music references
 int fadetime;                               // Milliseconds to fade in\out
 boolean deviceopen = false;                    // Is device open?
@@ -55,7 +55,7 @@ globalsoundpos channelSoundPos[ASM_ABSMAXCHANNELS];
 
 // ASM_IsOpen
 // Returns true if the device is open, false otherwise
-bool ASM_IsOpen(void)
+boolean ASM_IsOpen(void)
 {
     return (deviceopen) ? true : false;
 }
@@ -101,7 +101,7 @@ void ASM_ChannelDone(int channel)
 // ASM_Open
 // Opens audio device at given specs, clears used
 
-bool ASM_Open(int frequency, int channels, int maxchan, int buffersize, Uint8 sndvolume, Uint8 musvolume, bool reverse)
+boolean ASM_Open(int frequency, int channels, int maxchan, int buffersize, Uint8 sndvolume, Uint8 musvolume, boolean reverse)
 {
     if (ASM_IsOpen())       // Device is already open!
         return false;
@@ -229,7 +229,7 @@ void ASM_Halt(void)
 // ASM_PlayMusic
 // Plays a music sample from a file
 
-bool ASM_PlayMusic(char* musfile)
+boolean ASM_PlayMusic(char* musfile)
 {
     ASM_AbortIfClosed false;
 
@@ -294,7 +294,7 @@ void ASM_ReturnVolume(Uint8* retsnd, Uint8* retmus)
 // ASM_SwitchMus
 // Changes music to another track, either directly or via a fade-in/out
 
-bool ASM_SwitchMus(char* loadmus, int fadems, bool fade)
+boolean ASM_SwitchMus(char* loadmus, int fadems, boolean fade)
 {
     ASM_AbortIfClosed false;
 
@@ -334,7 +334,7 @@ bool ASM_SwitchMus(char* loadmus, int fadems, bool fade)
 // ASM_FadeInMus
 // Fades in a piece of music, stopping whatever was playing before it
 
-bool ASM_FadeInMus(char* loadmus, int fadems)
+boolean ASM_FadeInMus(char* loadmus, int fadems)
 {
     ASM_AbortIfClosed false;
 
@@ -449,7 +449,7 @@ void ASM_Uncache(sample sound)
 // Play a sound in memory loaded with ASM_Cache or Mix_LoadWAV
 // Returns -1 on errors or channel number
 
-int ASM_PlaySound(sample sound, int angle, Uint8 distance, bool ambient)
+int ASM_PlaySound(sample sound, int angle, Uint8 distance, boolean ambient)
 {
     ASM_AbortIfClosed - 1;
 
@@ -524,7 +524,7 @@ void ASM_SwitchStep(void)
 // ASM_ReverseStereo
 // Sets reverse stereo mode after initialization
 
-void ASM_ReverseStereo(bool reverse)
+void ASM_ReverseStereo(boolean reverse)
 {
     ASM_AbortIfClosed;
 
@@ -745,7 +745,7 @@ byte SD_PlaySound(soundnames sound)
 
     int lp = LeftPosition;
     int rp = RightPosition;
-    bool amb = ambience;
+    boolean amb = ambience;
 
     LeftPosition = RightPosition = ambience = 0;
 
@@ -770,7 +770,7 @@ byte SD_PlaySound(soundnames sound)
     return channel;
 }
 
-int SD_PlayDigitized(word which, int leftpos, int rightpos, bool ambient)
+int SD_PlayDigitized(word which, int leftpos, int rightpos, boolean ambient)
 {
     SD_AbortIfSndOff 0;
 

@@ -1,3 +1,25 @@
+Wolf4SDL v2.2
+- Remerge the codebase from aryan + mine to Fix SDL1 Problem
+- Fix sound volume problem thanks to: Terraformer9x and other guy which i forgot his name for the advice and help
+- Set mixer volume to 120
+- Cleanups
+- Implement Nintendo Switch support by keeganatorr
+- Rework Makefiles
+- Make compile for dreamcast but no binnaries are not buildable.
+- Add crt screen support from Fabian Sangalard
+- Remove some missing ADDEDFIX flags 
+- Add joystick support using adapted sdl_gamecontroller used in chocolete-doom fork by adelciotto
+- Implement vieasm by GERARD 'ALUMIUN' WATSON
+- Add nintendo 3ds support (WIP)
+- Update the all build files even they are unsupported
+- Add Toogle Fullsceeen by Fabian Greffrath, use ALT + Enter to activate.
+- Added wall flag on Visual Studio 2022 thanks to the Judson Santiago discord member rilletcs for this
+- Add xbox original initial support(WIP)
+- Add some documentations
+- Added a wrapper for dosbox sound made in c by me (WIP and Not working yet).
+- Fix some Wolfenstein 3d shareware´s and Spear of destiny builds using vieasm
+- Add SDL1 builds for other solutions
+
 Wolf4SDL v2.1
 - Rework on boolean stuff
 - Change typedefs to more cleaner
@@ -15,8 +37,7 @@ Wolf4SDL v2.1
 - Support Windows 64bits Version(WIP) 
 - Update Visual Studio 19 to 2022
 - merge some stuff from sdl_wrap.c into id_vh.c
-- Merge the stuff into c17
-and c++20 for dbopl.cpp 
+- Merge the stuff into c17 and c++20 for dbopl.cpp 
 - Deprecate some builds(see the unsupported builds if you want to compile)
 
 Wolf4SDL v2.0

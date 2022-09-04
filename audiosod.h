@@ -144,7 +144,7 @@ typedef enum {
 	LASTMUSIC
 } musicnames;
 
-#ifndef VIEASM
+#ifdef VIEASM
 #define NUMMUSICS LASTMUSIC
 #endif
 

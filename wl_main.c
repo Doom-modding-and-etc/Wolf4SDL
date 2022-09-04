@@ -966,7 +966,7 @@ static int wolfdigimap[] =
 
         YEAHSND,                32, -1,
 
-#ifndef UPLOAD
+#ifdef UPLOAD
         // These are in all other episodes
         DOGDEATHSND,            16, -1,
         AHHHGSND,               17, -1,
@@ -1902,7 +1902,7 @@ void CheckParameters(int argc, char *argv[])
     {
         if(hasError) printf("\n");
         printf(
-            "Wolf4SDL v2.1\n"
+            "Wolf4SDL v2.2\n"
             "Ported by Chaos-Software, additions by the community\n"
             "Original Wolfenstein 3D by id Software\n\n"
             "Usage: Wolf4SDL [options]\n"
