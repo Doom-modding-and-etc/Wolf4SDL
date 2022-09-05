@@ -966,7 +966,7 @@ static int wolfdigimap[] =
 
         YEAHSND,                32, -1,
 
-#ifdef UPLOAD
+#ifndef UPLOAD
         // These are in all other episodes
         DOGDEATHSND,            16, -1,
         AHHHGSND,               17, -1,

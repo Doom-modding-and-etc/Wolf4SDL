@@ -186,7 +186,7 @@ void VL_SetVGAPlaneMode (void)
 
 #ifdef CRT  
     //Fab's and André´s CRT Hack
-    CRT_Init(screen);
+    CRT_Init(screenWidth);
 #endif 
     screenBuffer = SDL_CreateRGBSurface(SDL_SWSURFACE, screenWidth,
         screenHeight, 8, 0, 0, 0, 0);
@@ -349,7 +349,7 @@ void VL_SetColor	(int color, int red, int green, int blue)
         SDL_SetPalette(screenBuffer, SDL_LOGPAL, &col, color, 1);
 
 #ifdef CRT        
-        SDL_Flip(screen);
+        //CRT_Init(screenWidth);
         CRT_DAC();
 #else
         VH_UpdateScreen(screen);

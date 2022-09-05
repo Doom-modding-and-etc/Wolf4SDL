@@ -88,7 +88,7 @@ typedef enum {
 	MECHSTEPSND,             // 70
 	GOOBSSND,                // 71
 	YEAHSND,                 // 72
-//#ifdef APOGEE_1_0
+#ifndef APOGEE_1_0
 	DEATHSCREAM4SND,         // 73
 	DEATHSCREAM5SND,         // 74
 	DEATHSCREAM6SND,         // 75
@@ -103,7 +103,7 @@ typedef enum {
 	ROSESND,                 // 84
 	MISSILEFIRESND,          // 85
 	MISSILEHITSND,           // 86
-//#endif
+#endif
 	LASTSOUND
 } soundnames;
 
