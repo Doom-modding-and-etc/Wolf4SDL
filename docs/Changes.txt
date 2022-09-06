@@ -19,6 +19,10 @@ Wolf4SDL v2.2
 - Added a wrapper for dosbox sound made in c by me (WIP and Not working yet).
 - Fix some Wolfenstein 3d shareware´s and Spear of destiny builds using vieasm
 - Add SDL1 builds for other solutions
+- Revert some changes to bugfix the audio detection 
+- Update mac os build(x86 will be no longer supported).
+- Fix apogee on vieasm
+
 
 Wolf4SDL v2.1
 - Rework on boolean stuff
