@@ -129,7 +129,8 @@ const char *ASM_Soundnames[NUMSOUNDS] =
     "MECHSTEPSND.wav",             // 70
     "GOOBSSND.wav",                // 71
     "YEAHSND.wav",                 // 72
-#elif APOGEE_1_0
+#endif
+#ifndef APOGEE_1_0
     "DEATHSCREAM4SND.wav",         // 73
     "DEATHSCREAM5SND.wav",         // 74
     "DEATHSCREAM6SND.wav",         // 75

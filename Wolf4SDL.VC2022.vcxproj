@@ -252,7 +252,6 @@
     <ClInclude Include="gfxv_jap.h" />
     <ClInclude Include="gfxv_sod.h" />
     <ClInclude Include="gfxv_wl6.h" />
-    <ClInclude Include="gp2x.h" />
     <ClInclude Include="id_ca.h" />
     <ClInclude Include="id_in.h" />
     <ClInclude Include="id_pm.h" />

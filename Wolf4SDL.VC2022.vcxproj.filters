@@ -154,9 +154,6 @@
     <ClInclude Include="gfxv_wl6.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gp2x.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="id_ca.h">
       <Filter>Header Files</Filter>
     </ClInclude>
