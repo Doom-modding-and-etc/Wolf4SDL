@@ -234,21 +234,57 @@ void ControlMovement (objtype *ob)
 
     }
 
+#if SDL_MAJOR_VERSION == 2
+    if (gamecontrolstrafe < 0)
+    {
+        angle = ob->angle + ANGLES / 4;
+        if (angle >= ANGLES)
+            angle -= ANGLES;
+
+        int32_t speed = -gamecontrolstrafe * MOVESCALE;
+        if (controly != 0)
+            speed = (speed * 70) / 100; // correct faster diagonal movement
+        Thrust(angle, speed);           // move to left
+    }
+    else if (gamecontrolstrafe > 0)
+    {
+        angle = ob->angle - ANGLES / 4;
+        if (angle < 0)
+            angle += ANGLES;
+
+        int32_t speed = gamecontrolstrafe * MOVESCALE;
+        if (controly != 0)
+            speed = (speed * 70) / 100; // correct faster diagonal movement
+        Thrust(angle, speed);           // move to right
+    }
+#endif
+
     //
     // forward/backwards move
     //
     if (controly < 0)
     {
-        Thrust (ob->angle,-controly*MOVESCALE); // move forwards
+        int32_t speed = -controly * MOVESCALE;
+#if SDL_MAJOR_VERSION == 2        
+        if (gamecontrolstrafe != 0)
+            speed = (speed * 70) / 100; // correct faster diagonal movement
+#endif   
+        Thrust(ob->angle, speed);       // move forwards
     }
     else if (controly > 0)
     {
-        angle = ob->angle + ANGLES/2;
+        int32_t speed = controly * BACKMOVESCALE;
+        angle = ob->angle + ANGLES / 2;
         if (angle >= ANGLES)
             angle -= ANGLES;
-        Thrust (angle,controly*BACKMOVESCALE);          // move backwards
+#if SDL_MAJOR_VERSION == 2        
+        if (gamecontrolstrafe != 0)
+#endif
+            speed = (speed * 70) / 100; // correct faster diagonal movement
+        
+        Thrust(angle, speed);           // move backwards
     }
-
+    
     if (gamestate.victoryflag)              // watching the BJ actor
         return;
 }

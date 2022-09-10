@@ -76,7 +76,7 @@ Revision History:
 		verify volume of the FM part on the Y8950
 */
 
-#include "../version.h"
+#include "../../version.h"
 #ifndef USE_DOSBOX
 
 #include <stdio.h>

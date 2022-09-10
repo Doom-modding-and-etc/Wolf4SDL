@@ -1,8 +1,7 @@
-#include "../version.h"
+#include "../../version.h"
 #ifdef USE_DOSBOX
 #include <stdio.h>
-
-
+#include "../wl_def.h"
 #if defined(_arch_dreamcast)
 #	include "dc/dc_main.h"
 #elif !defined(_WIN32)
@@ -135,8 +134,8 @@ struct CChip
 };
 //Private:
 //Operator:
+extern void Operator_SetState(Bit8u s);
 #ifdef WIP
-void Operator_SetState(Bit8u s);
 void Operator_UpdateAttack(const struct Chip* chip);
 void Operator_UpdateRelease(const struct Chip* chip);
 void Operator_UpdaateDecay(const struct Chip* chip);
@@ -161,16 +160,15 @@ extern void Chip_WriteReg(Bit32u reg, Bit8u val);
 extern Bit32u Chip_WriteAddr(Bit32u port, Bit8u val);
 extern void Chip_GenerateBlock2(Bitu samples, Bit32s* output);
 extern void Chip_GenerateBlock3(Bitu samples, Bit32s* output);
-extern void Chip_Generate(Bit32u samples);
 extern void Chip_Setup(Bit32u r);
 
 
 //Public:
-void Operator_UpdateAttenuation();
+extern void Operator_UpdateAttenuation();
 #ifdef WIP
 DOSBOX_API void Operator_UpdateRates(const struct CChip* chip);
 #endif
-void Operator_UpdateFrequency();
+extern void Operator_UpdateFrequency();
 #ifdef WIP
 DOSBOX_API void Operator_Write20(const struct Chip* chip, Bit8u val);
 DOSBOX_API void Operator_Write40(const struct Chip* chip, Bit8u val);
@@ -178,18 +176,16 @@ DOSBOX_API void Operator_Write60(const struct Chip* chip, Bit8u val);
 DOSBOX_API void Operator_Write80(const struct Chip* chip, Bit8u val);
 DOSBOX_API void Operator_WriteE0(const struct Chip* chip, Bit8u val);
 #endif
-const bool Operator_Silent();
+extern const boolean Operator_Silent();
 #ifdef WIP
 DOSBOX_API void Operator_Prepare(const struct Chip* chip);
 #endif
-void Operator_KeyOn(Bit8u mask);
-void Operator_KeyOff(Bit8u mask);
-#ifdef WIP
-DOSBOX_API Bits Operator_TemplateVolume();
-#endif
-Bit32s Operator_RateForward(Bit32u add);
-Bitu Operator_ForwardWave();
-Bitu Operator_ForwardVolume();
-Bits Operator_GetSample(Bits modulation);
-Bits Operator_GetWave(Bitu index, Bitu vol);
+extern void Operator_KeyOn(Bit8u mask);
+extern void Operator_KeyOff(Bit8u mask);
+extern Bits Operator_TemplateVolume();
+extern Bit32s Operator_RateForward(Bit32u add);
+extern Bitu Operator_ForwardWave();
+extern Bitu Operator_ForwardVolume();
+extern Bits Operator_GetSample(Bits modulation);
+extern Bits Operator_GetWave(Bitu index, Bitu vol);
 #endif

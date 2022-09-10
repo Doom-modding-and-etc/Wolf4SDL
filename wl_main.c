@@ -8,7 +8,9 @@
 
 #include "wl_def.h"
 #include "wl_atmos.h"
+#ifndef __APPLE__
 #include <SDL_syswm.h>
+#endif
 
 
 /*

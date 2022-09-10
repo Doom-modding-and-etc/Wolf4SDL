@@ -303,11 +303,11 @@
 				Name="mame"
 				>
 				<File
-					RelativePath=".\mame\fmopl.c"
+					RelativePath=".aud_sys\mame\fmopl.c"
 					>
 				</File>
 				<File
-					RelativePath=".\mame\fmopl.h"
+					RelativePath=".aud_sys\mame\fmopl.h"
 					>
 				</File>
 			</Filter>

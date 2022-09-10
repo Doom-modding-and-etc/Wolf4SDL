@@ -161,7 +161,7 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>SDL.lib;SDLmain.lib;SDL_mixer.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL.lib;SDLmain.lib;SDL_mixer.lib;SDL_net.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>F:\SDL-1.2.12\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -198,11 +198,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="dosbox\cdosbox.cpp">
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">EnableAllWarnings</WarningLevel>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="dosbox\dbopl.cpp" />
+    <ClCompile Include="aud_sys\dosbox\cdosbox.cpp" />
+    <ClCompile Include="aud_sys\dosbox\dbopl.cpp" />
+    <ClCompile Include="aud_sys\mame\fmopl.c" />
     <ClCompile Include="id_crt.c" />
     <ClCompile Include="id_ca.c" />
     <ClCompile Include="id_in.c" />
@@ -212,7 +210,6 @@
     <ClCompile Include="id_vh.c" />
     <ClCompile Include="id_vieasm.c" />
     <ClCompile Include="id_vl.c" />
-    <ClCompile Include="mame\fmopl.c" />
     <ClCompile Include="sdl_winmain.c" />
     <ClCompile Include="signon.c" />
     <ClCompile Include="wl_act1.c" />
@@ -243,8 +240,10 @@
     <ClInclude Include="asmcref.h" />
     <ClInclude Include="audiosod.h" />
     <ClInclude Include="audiowl6.h" />
-    <ClInclude Include="dosbox\cdosbox.h" />
-    <ClInclude Include="dosbox\dbopl.h" />
+    <ClInclude Include="aud_sys\dosbox\cdosbox.h" />
+    <ClInclude Include="aud_sys\dosbox\dbopl.h" />
+    <ClInclude Include="aud_sys\mame\fmopl.h" />
+    <ClInclude Include="fixedptc.h" />
     <ClInclude Include="id_crt.h" />
     <ClInclude Include="foreign.h" />
     <ClInclude Include="f_spear.h" />
@@ -260,7 +259,6 @@
     <ClInclude Include="id_vh.h" />
     <ClInclude Include="id_vieasm.h" />
     <ClInclude Include="id_vl.h" />
-    <ClInclude Include="mame\fmopl.h" />
     <ClInclude Include="version.h" />
     <ClInclude Include="win\resource.h" />
     <ClInclude Include="wl_atmos.h" />

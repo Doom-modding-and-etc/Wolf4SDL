@@ -48,17 +48,9 @@
 #ifdef USE_DOSBOX
 struct CChip chip;
 
-Bit32u Chip_ForwardLFO(Bit32u samples);
-Bit32u Chip_ForwardNoise();
-void Chip_WriteBD(Bit8u val);
-void Chip_WriteReg(Bit32u reg, Bit8u val);
-Bit32u Chip_WriteAddr(Bit32u port, Bit8u val);
-void Chip_GenerateBlock2(Bitu samples, Bit32s* output);
-void Chip_GenerateBlock3(Bitu samples, Bit32s* output);
-
 static boolean YM3812Init(int numChips, int clock, int rate)
 {
-#ifdef WIP
+#ifdef WIP //Not resloved
     Chip_Setup(rate);
 #endif    
     return false;

@@ -62,7 +62,7 @@ clean:
 $(BIN): $(OBJ)
 	$(LINK) $(LINKOBJ) -o "Wolf4SDL.elf" $(LIBS)
 
-mame/fmopl.o: $(GLOBALDEPS) mame/fmopl.c mame/fmopl.h 
+aud_sys/mame/fmopl.o: $(GLOBALDEPS) mame/fmopl.c mame/fmopl.h 
 	$(C) -c mame/fmopl.c -o mame/fmopl.o $(CFLAGS)
 
 id_ca.o: $(GLOBALDEPS) id_ca.c wl_def.h 

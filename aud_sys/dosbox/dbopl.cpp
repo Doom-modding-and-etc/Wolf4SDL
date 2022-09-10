@@ -34,7 +34,7 @@
 
 /* $Id: dbopl.cpp,v 1.10 2009-06-10 19:54:51 harekiet Exp $ */
 
-#include "../version.h"
+#include "../../version.h"
 
 #ifdef USE_DOSBOX
 #define GCC_UNLIKELY(x) x

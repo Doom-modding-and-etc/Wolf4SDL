@@ -137,7 +137,6 @@ public:
 	//Keep track of the calculated KSR so we can check for changes
 	Bit8u ksr;
 private:
-	void SetState( Bit8u s );
 	void UpdateAttack( const Chip* chip );
 	void UpdateRelease( const Chip* chip );
 	void UpdateDecay( const Chip* chip );
@@ -145,6 +144,7 @@ public:
 	void UpdateAttenuation();
 	void UpdateRates( const Chip* chip );
 	void UpdateFrequency( );
+	void SetState(Bit8u s);
 
 	void Write20( const Chip* chip, Bit8u val );
 	void Write40( const Chip* chip, Bit8u val );
@@ -255,7 +255,7 @@ struct Chip {
 	void GenerateBlock2( Bitu samples, Bit32s* output );
 	void GenerateBlock3( Bitu samples, Bit32s* output );
 
-	void Generate( Bit32u samples );
+	//void Generate( Bit32u samples );
 	void Setup( Bit32u r );
 
 	Chip();

@@ -109,21 +109,34 @@ according data files version as the differences are hardcoded into the binary!
 SDL1.2:
 On Windows SDL.dll and SDL_mixer.dll must also be copied into this directory.
 SDL 1.2.15 Runtimes can be acquired at: 
-https://www.libsdl.org/download-1.2.php and download "SDL-1.2.15-win32.zip"
+https://github.com/wolfysdl/SDL-Archive/raw/main/SDL-1.2.15-win32.zip and download "SDL-1.2.15-win32.zip"
 
 SDL_mixer 1.2.12 Runtimes can be acquired at:
-https://www.libsdl.org/projects/SDL_mixer/release-1.2.html and download "SDL_mixer-1.2.12-win32.zip"
+https://github.com/wolfysdl/SDL_mixer-archive/raw/main/SDL_mixer-1.2.12-win32.zip and download "SDL_mixer-1.2.12-win32.zip"
 
 or
 
 SDL2:
 On Windows SDL2.dll and SDL2_mixer.dll must also be copied into this directory.
 
-SDL2 2.0.22 Runtimes can be acquired at:
-https://www.libsdl.org/download-2.0.php and download "SDL_mixer-2.0.22-win32.zip"
+SDL2 2.0.24 Runtimes can be acquired at:
+https://github.com/wolfysdl/SDL-Archive/raw/main/SDL2-2.24.0-win32-x86.zip and download "SDL_mixer-2.0.24-win32.zip"
 
 SDL_mixer 2.0.4 Runtimes can be acquired at:
-https://www.libsdl.org/projects/SDL_mixer/ and download "SDL_mixer-2.0.4-win32.zip"
+https://github.com/wolfysdl/SDL_mixer-archive/raw/main/SDL2_mixer-2.6.2-win32-x86.zip and download "SDL_mixer-2.0.4-win32.zip"
+
+
+deprecated links:
+SDL1.2:
+https://www.libsdl.org/download-1.2.php 
+SDL_mixer
+https://www.libsdl.org/projects/SDL_mixer/release-1.2.html
+
+SDL2
+https://www.libsdl.org/download-2.0.php 
+SDL2_mixer
+https://www.libsdl.org/projects/SDL_mixer/
+
 
 
 ! ATTENTION ! Do NOT download the x64 version of SDL or SDL_mixer. x86 binairies are required.
@@ -195,6 +208,12 @@ The following ways of compiling the source code are supported:
 
 To compile the source code you need the development libraries of
  
+SDL or SDL2 (https://github.com/wolfysdl/SDL-Archive) and
+SDL_mixer or SDL2_mixer (https://github.com/wolfysdl/SDL_mixer-archive)
+
+Warning: pick the devel version
+
+Deprecated links:
  - SDL (https://www.libsdl.org/download-1.2.php) and
  - SDL_mixer (https://www.libsdl.org/projects/SDL_mixer/release-1.2.html)
  
@@ -202,7 +221,10 @@ To compile the source code you need the development libraries of
  
  - SDL2 (https://www.libsdl.org/) and
  - SDL2_mixer (https://www.libsdl.org/projects/SDL_mixer/)
- 
+
+- https://github.com/wolfysdl/SDL-Archive
+- https://github.com/wolfysdl/SDL_mixer-archive
+
 and have to adjust the include and library paths in the projects accordingly.
 
 Please note, that there is no official SDL_mixer development pack for MinGW,
@@ -225,7 +247,7 @@ TODOs:
  - Fix CRT on SDL1
  - Fix quick fade on SDL1
  - Add plataform readme.
- - Deprecate SDL links since they are merged now on github
+ - Fix some versions of Wolfenstein 3d.
  
 Known bugs:
 -----------

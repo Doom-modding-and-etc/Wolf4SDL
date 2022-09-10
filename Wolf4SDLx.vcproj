@@ -797,7 +797,7 @@
 				Name="mame"
 				Filter="">
 				<File
-					RelativePath=".\mame\fmopl.c">
+					RelativePath=".aud_sys/\mame\fmopl.c">
 					<FileConfiguration
 						Name="Release|Xbox">
 						<Tool
@@ -816,10 +816,10 @@
 				Name="dosbox"
 				Filter="">
 				<File
-					RelativePath=".\dosbox\cdosbox.cpp">
+					RelativePath=".aud_sys\dosbox\cdosbox.cpp">
 				</File>
 				<File
-					RelativePath=".\dosbox\dbopl.cpp">
+					RelativePath=".aud_sys\dosbox\dbopl.cpp">
 				</File>
 			</Filter>
 		</Filter>
@@ -916,17 +916,17 @@
 				Name="dosbox"
 				Filter="">
 				<File
-					RelativePath=".\dosbox\cdosbox.h">
+					RelativePath=".aud_sys\dosbox\cdosbox.h">
 				</File>
 				<File
-					RelativePath=".\dosbox\dbopl.h">
+					RelativePath=".aud_sys\dosbox\dbopl.h">
 				</File>
 			</Filter>
 			<Filter
 				Name="mame"
 				Filter="">
 				<File
-					RelativePath=".\mame\fmopl.h">
+					RelativePath=".aud_sys\mame\fmopl.h">
 				</File>
 			</Filter>
 		</Filter>

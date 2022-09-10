@@ -577,9 +577,9 @@ static void processEvent(SDL_Event *event)
 #endif
     
 #if SDL_MAJOR_VERSION == 2
-        // check for game controller events
-        case SDL_CONTROLLERDEVICEADDED: 
-        {
+
+            // check for game controller events
+        case SDL_CONTROLLERDEVICEADDED: {
             if (!GameController)
             {
                 int id = event->cdevice.which;
@@ -588,12 +588,13 @@ static void processEvent(SDL_Event *event)
                     GameController = SDL_GameControllerOpen(id);
                 }
             }
+            break;
         }
-        case SDL_CONTROLLERDEVICEREMOVED: 
-        {
+        case SDL_CONTROLLERDEVICEREMOVED: {
             if (GameController)
             {
                 SDL_GameControllerClose(GameController);
+                GameController = NULL;
             }
             break;
         }
@@ -601,25 +602,26 @@ static void processEvent(SDL_Event *event)
         case SDL_CONTROLLERBUTTONUP:
             if (GameController)
             {
-                GameControllerButtons[event->cbutton.button] = (boolean)event->cbutton.state == SDL_PRESSED;
+                GameControllerButtons[event->cbutton.button] = (bool)event->cbutton.state == SDL_PRESSED;
             }
-
+            break;
         case SDL_CONTROLLERAXISMOTION:
             if (GameController)
             {
-                if (event->caxis.axis == gc_axis_leftx)
+                if (event->caxis.axis == SDL_CONTROLLER_AXIS_LEFTX)
                     GameControllerLeftStick[0] = event->caxis.value >> 8;
-                if (event->caxis.axis == gc_axis_lefty)
+                if (event->caxis.axis == SDL_CONTROLLER_AXIS_LEFTY)
                     GameControllerLeftStick[1] = event->caxis.value >> 8;
-                if (event->caxis.axis == gc_axis_rightx)
+                if (event->caxis.axis == SDL_CONTROLLER_AXIS_RIGHTX)
                     GameControllerRightStick[0] = event->caxis.value >> 8;
-                if (event->caxis.axis == gc_axis_righty)
+                if (event->caxis.axis == SDL_CONTROLLER_AXIS_RIGHTY)
                     GameControllerRightStick[1] = event->caxis.value >> 8;
-                if (event->caxis.axis == gc_trigger_left)
+
+                if (event->caxis.axis == SDL_CONTROLLER_AXIS_TRIGGERLEFT)
                     GameControllerButtons[bt_LeftShoulder] = event->caxis.value == 32767;
-                if (event->caxis.axis == gc_trigger_right)
+                if (event->caxis.axis == SDL_CONTROLLER_AXIS_TRIGGERRIGHT)
                     GameControllerButtons[bt_RightShoulder] = event->caxis.value == 32767;
-}
+            }
             break;
 #endif
     }
@@ -889,6 +891,10 @@ void IN_StartAck(void)
 // get initial state of everything
 //
 	IN_ClearKeysDown();
+#if SDL_MAJOR_VERSION == 2
+    memset(GameControllerButtons, 0, sizeof(boolean));
+#endif
+
 	memset(btnstate, 0, sizeof(btnstate));
 
 	int buttons = IN_JoyButtons() << 4;
