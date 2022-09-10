@@ -37,9 +37,9 @@
 
 #else
 #ifdef USE_DOSBOX
-#include "dosbox/cdosbox.h"
+#include "aud_sys/dosbox/cdosbox.h"
 #else
-#include "mame/fmopl.h"
+#include "aud_sys/mame/fmopl.h"
 #endif
 #endif
 
