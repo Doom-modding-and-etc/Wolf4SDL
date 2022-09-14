@@ -14,9 +14,7 @@
 #ifdef OLD_BOOL
 
 #else
-#ifndef _XBOX
 #include <stdbool.h>
-#endif
 #endif
 
 
@@ -115,9 +113,7 @@ typedef u8 byte;
 typedef u16 word;
 typedef s32 fixed;
 typedef u32 longword;
-
 #endif
-
 #if defined(_XBOX)
 typedef enum
 {
@@ -125,7 +121,6 @@ typedef enum
 	true
 }bool;
 #else
-
 #ifdef OLD_BOOL
 typedef enum
 {
@@ -136,6 +131,7 @@ typedef enum
 typedef bool boolean;
 #endif
 #endif
+
 
 typedef struct
 {
