@@ -22,7 +22,7 @@ const char *ASM_Soundnames[NUMSOUNDS] =
     "SELECTITEMSND.wav",           // 2
 #ifdef SPEAR
     "GHOSTSIGHTSND.wav", //3
-#elif defined(WOLF3D)
+#else
     "HEARTBEATSND.wav",            // 3
 #endif
     "MOVEGUN2SND.wav",             // 4
@@ -31,7 +31,7 @@ const char *ASM_Soundnames[NUMSOUNDS] =
     "NAZIHITPLAYERSND.wav",        // 7
 #ifdef SPEAR
     "MISSILEFIRESND.wav",          // 8
-#elif defined(WOLF3D)
+#else
     "SCHABBSTHROWSND.wav",         // 8
 #endif
     "PLAYERDEATHSND.wav",          // 9
@@ -82,7 +82,7 @@ const char *ASM_Soundnames[NUMSOUNDS] =
     "DEATHSCREAM5SND.wav",         // 53
     "DEATHSCREAM7SND.wav",         // 54
     "DEATHSCREAM8SND.wav",         // 55
-#elif defined(WOLF3D)
+#else
     "DIESND.wav",                  // 53
     "EVASND.wav",                  // 54
     "GUTENTAGSND.wav",             // 55
@@ -90,7 +90,7 @@ const char *ASM_Soundnames[NUMSOUNDS] =
     "LEBENSND.wav",                // 56
 #ifdef SPEAR
     "DEATHSCREAM6SND.wav",         // 57
-#elif defined(WOLF3D)
+#else
     "SCHEISTSND.wav",              // 57
 #endif
     "NAZIFIRESND.wav",             // 58
@@ -102,7 +102,7 @@ const char *ASM_Soundnames[NUMSOUNDS] =
     "DEATHSCREAM9SND.wav",         // 63
     "GETAMMOBOXSND.wav",           // 64
     "ANGELSIGHTSND.wav",           // 65
-#elif defined(WOLF3D)
+#else
     "TOT_HUNDSND.wav",             // 62
     "MEINGOTTSND.wav",             // 63
     "SCHABBSHASND.wav",            // 64
@@ -124,7 +124,7 @@ const char *ASM_Soundnames[NUMSOUNDS] =
     "KNIGHTMISSILESND.wav",        // 78
     "GETSPEARSND.wav",             // 79
     "ANGELTIREDSND.wav",           // 80
-#elif defined (WOLF3D)
+#else
     "FLAMETHROWERSND.wav",         // 69
     "MECHSTEPSND.wav",             // 70
     "GOOBSSND.wav",                // 71
@@ -189,7 +189,7 @@ const char* ASM_Musicnames[NUMMUSICS] =
     "XGETYOU_MUS.OGG",             // 22
     "XTOWER2_MUS.OGG",             // 23
 };
-#elif defined(WOLF3D)
+#else
 const char *ASM_Musicnames[NUMMUSICS] = 
 {
 	"CORNER.OGG",              // 0

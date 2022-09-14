@@ -2,7 +2,6 @@
 // Project: Wolf4SDL
 // Original author: Fabien sanglard 
 // Modificaton author: André Guilherme 
-// Creation date: 2022-07-11 
 // Original Creation date: 2014-08-26.
 // Description: 
 // Header file for the whole contents
