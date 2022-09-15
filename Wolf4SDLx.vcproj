@@ -171,8 +171,8 @@
 				Optimization="3"
 				OmitFramePointers="TRUE"
 				OptimizeForProcessor="2"
-				AdditionalIncludeDirectories=""
-				PreprocessorDefinitions="NDEBUG;_XBOX;OLD_BOOL"
+				AdditionalIncludeDirectories="&quot;C:\Documents and Settings\WOLF3S\SDL2\include&quot;"
+				PreprocessorDefinitions="NDEBUG;_XBOX;_CRT_SECURE_NON_STDC_WANINGS;_CRT_SECURE_NO_WARNINGS"
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
 				BufferSecurityCheck="TRUE"
@@ -180,17 +180,17 @@
 				EnableEnhancedInstructionSet="1"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderFile="$(OutDir)/$(ProjectName).pch"
-				WarningLevel="3"
+				WarningLevel="4"
 				Detect64BitPortabilityProblems="FALSE"
 				DebugInformationFormat="3"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xapilib.lib d3d8.lib d3dx8.lib xgraphics.lib dsound.lib dmusic.lib xacteng.lib xsndtrk.lib xvoice.lib xonlines.lib xboxkrnl.lib"
+				AdditionalDependencies="xapilib.lib d3d8.lib d3dx8.lib xgraphics.lib dsound.lib dmusic.lib xacteng.lib xsndtrk.lib xvoice.lib xonlines.lib xboxkrnl.lib libSDL2x.lib libSDL2x_mixer.lib"
 				OutputFile="$(OutDir)/$(ProjectName).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories=""
+				AdditionalLibraryDirectories="&quot;C:\Documents and Settings\WOLF3S\SDL2\libs&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
 				SubSystem="2"
@@ -797,29 +797,17 @@
 				Name="mame"
 				Filter="">
 				<File
-					RelativePath=".aud_sys/\mame\fmopl.c">
-					<FileConfiguration
-						Name="Release|Xbox">
-						<Tool
-							Name="VCCLCompilerTool"
-							WarningLevel="4"/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="SDL1.2|Xbox">
-						<Tool
-							Name="VCCLCompilerTool"
-							WarningLevel="4"/>
-					</FileConfiguration>
+					RelativePath=".\aud_sys\mame\fmopl.c">
 				</File>
 			</Filter>
 			<Filter
 				Name="dosbox"
 				Filter="">
 				<File
-					RelativePath=".aud_sys\dosbox\cdosbox.cpp">
+					RelativePath=".\aud_sys\dosbox\cdosbox.cpp">
 				</File>
 				<File
-					RelativePath=".aud_sys\dosbox\dbopl.cpp">
+					RelativePath=".\aud_sys\dosbox\dbopl.cpp">
 				</File>
 			</Filter>
 		</Filter>
@@ -916,17 +904,17 @@
 				Name="dosbox"
 				Filter="">
 				<File
-					RelativePath=".aud_sys\dosbox\cdosbox.h">
+					RelativePath=".\aud_sys\dosbox\cdosbox.h">
 				</File>
 				<File
-					RelativePath=".aud_sys\dosbox\dbopl.h">
+					RelativePath=".\aud_sys\dosbox\dbopl.h">
 				</File>
 			</Filter>
 			<Filter
 				Name="mame"
 				Filter="">
 				<File
-					RelativePath=".aud_sys\mame\fmopl.h">
+					RelativePath=".\aud_sys\mame\fmopl.h">
 				</File>
 			</Filter>
 		</Filter>

@@ -14,13 +14,17 @@
 #ifdef OLD_BOOL
 
 #else
+#ifndef _XBOX
 #include <stdbool.h>
+#endif
 #endif
 
 
 #include <SDL.h>
 #if N3DS
 #include <3ds.h>
+#elif _XBOX
+#include <xtl.h>
 #endif
 #if defined(_arch_dreamcast)
 #	include <string.h>
@@ -71,9 +75,27 @@
 #define O_BINARY 0
 #endif
 
-#ifdef PS2
-//include dir for the types definitions
-#include <tamtypes.h>
+#if defined (_XBOX)
+typedef signed char int8_t;
+typedef signed short int16_t;
+typedef signed int int32_t;
+typedef signed long long int64_t;
+
+typedef unsigned char uint8_t;
+typedef unsigned short uint16_t;
+typedef unsigned int uint32_t;
+typedef unsigned long long uint64_t;
+
+typedef int8_t s8;
+typedef int16_t s16;
+typedef int32_t s32;
+typedef int64_t s64;
+
+typedef uint8_t u8;
+typedef uint16_t u16;
+typedef uint32_t u32;
+typedef uint64_t u64;
+
 typedef u8 byte;
 typedef u16 word;
 typedef s32 fixed;
@@ -93,7 +115,16 @@ typedef u8 byte;
 typedef u16 word;
 typedef s32 fixed;
 typedef u32 longword;
+
 #endif
+
+#if defined(_XBOX)
+typedef enum
+{
+	false,
+	true
+}bool;
+#else
 
 #ifdef OLD_BOOL
 typedef enum
@@ -103,6 +134,7 @@ typedef enum
 } boolean;
 #else
 typedef bool boolean;
+#endif
 #endif
 
 typedef struct

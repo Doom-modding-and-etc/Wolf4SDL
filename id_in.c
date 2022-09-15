@@ -602,7 +602,7 @@ static void processEvent(SDL_Event *event)
         case SDL_CONTROLLERBUTTONUP:
             if (GameController)
             {
-                GameControllerButtons[event->cbutton.button] = (bool)event->cbutton.state == SDL_PRESSED;
+                GameControllerButtons[event->cbutton.button] = (boolean)event->cbutton.state == SDL_PRESSED;
             }
             break;
         case SDL_CONTROLLERAXISMOTION:

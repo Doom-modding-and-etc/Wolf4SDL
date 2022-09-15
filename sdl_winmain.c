@@ -12,8 +12,11 @@
 #include <stdlib.h>
 
 #define WIN32_LEAN_AND_MEAN
+#if defined(_XBOX)
+#include <xtl.h>
+#else
 #include <windows.h>
-
+#endif
 #ifdef _WIN32_WCE
 # define DIR_SEPERATOR TEXT("\\")
 # undef _getcwd

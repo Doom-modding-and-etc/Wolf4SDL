@@ -31,7 +31,7 @@ struct iovec
     //#include <sys/uio.h>
     #include <unistd.h>
 #endif
-
+#include "id_sd.h"
 #include "wl_def.h"
 
 #define THREEBYTEGRSTARTS
