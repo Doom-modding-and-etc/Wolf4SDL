@@ -14,7 +14,11 @@
 #ifdef OLD_BOOL
 
 #else
+#if defined(_XBOX)
+
+#else
 #include <stdbool.h>
+#endif
 #endif
 
 
