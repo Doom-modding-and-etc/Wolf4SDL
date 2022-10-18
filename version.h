@@ -64,6 +64,6 @@
 #define DATADIR "/switch/wolf4sdl/wolf3d/"
 #elif defined(N3DS)
 #define DATADIR "/3ds/wolf4sdl/wolf3d/"
-#endif
-
+#elif defined(SEGA_SATURN)
+#define DATADIR "/data"
 #endif

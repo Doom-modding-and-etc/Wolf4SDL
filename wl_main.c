@@ -82,6 +82,8 @@ boolean reversestereo;
 char configdir[256] = "/switch/wolf4sdl/";
 #elif N3DS
 char configdir[256] = "/3ds/wolf4sdl/wolf3d";
+#elif SEGA_SATURN
+char configdir[256] = "data/";
 #else
 char    configdir[256] = "";
 #endif
