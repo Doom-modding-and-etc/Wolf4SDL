@@ -92,7 +92,7 @@ char graphext[5];
 
 char audioext[5];
 
-#if defined(SWITCH) //|| defined(N3DS)
+#if defined(SWITCH) || defined(SEGA_SATURN)//|| defined(N3DS)
 static const char gheadname[] = DATADIR "vgahead.";
 static const char gfilename[] = DATADIR "vgagraph.";
 static const char gdictname[] = DATADIR "vgadict.";
