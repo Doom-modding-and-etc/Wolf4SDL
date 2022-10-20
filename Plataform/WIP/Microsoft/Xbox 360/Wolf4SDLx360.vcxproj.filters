@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="id_ca.c" />
+    <ClCompile Include="id_crt.c" />
+    <ClCompile Include="id_in.c" />
+    <ClCompile Include="id_pm.c" />
+    <ClCompile Include="id_sd.c" />
+    <ClCompile Include="id_us.c" />
+    <ClCompile Include="id_vh.c" />
+    <ClCompile Include="id_vieasm.c" />
+    <ClCompile Include="id_vl.c" />
+    <ClCompile Include="sdl_winmain.c" />
+    <ClCompile Include="signon.c" />
+    <ClCompile Include="wl_act1.c" />
+    <ClCompile Include="wl_act2.c" />
+    <ClCompile Include="wl_agent.c" />
+    <ClCompile Include="wl_atmos.c" />
+    <ClCompile Include="wl_cloudsky.c" />
+    <ClCompile Include="wl_debug.c" />
+    <ClCompile Include="wl_draw.c" />
+    <ClCompile Include="wl_game.c" />
+    <ClCompile Include="wl_inter.c" />
+    <ClCompile Include="wl_main.c" />
+    <ClCompile Include="wl_menu.c" />
+    <ClCompile Include="wl_parallax.c" />
+    <ClCompile Include="wl_plane.c" />
+    <ClCompile Include="wl_play.c" />
+    <ClCompile Include="wl_scale.c" />
+    <ClCompile Include="wl_shade.c" />
+    <ClCompile Include="wl_state.c" />
+    <ClCompile Include="wl_text.c" />
+    <ClCompile Include="wl_utils.c" />
+    <ClCompile Include="aud_sys\mame\fmopl.c">
+      <Filter>aud_sys\fmopl</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="asmcref.h" />
+    <ClInclude Include="audiosod.h" />
+    <ClInclude Include="audiowl6.h" />
+    <ClInclude Include="f_spear.h" />
+    <ClInclude Include="foreign.h" />
+    <ClInclude Include="gfxv_apo.h" />
+    <ClInclude Include="gfxv_jap.h" />
+    <ClInclude Include="gfxv_sod.h" />
+    <ClInclude Include="gfxv_wl6.h" />
+    <ClInclude Include="gp2x.h" />
+    <ClInclude Include="id_ca.h" />
+    <ClInclude Include="id_crt.h" />
+    <ClInclude Include="id_in.h" />
+    <ClInclude Include="id_pm.h" />
+    <ClInclude Include="id_sd.h" />
+    <ClInclude Include="id_us.h" />
+    <ClInclude Include="id_vh.h" />
+    <ClInclude Include="id_vieasm.h" />
+    <ClInclude Include="id_vl.h" />
+    <ClInclude Include="version.h" />
+    <ClInclude Include="wl_atmos.h" />
+    <ClInclude Include="wl_cloudsky.h" />
+    <ClInclude Include="wl_def.h" />
+    <ClInclude Include="wl_menu.h" />
+    <ClInclude Include="wl_shade.h" />
+    <ClInclude Include="wl_utils.h" />
+    <ClInclude Include="aud_sys\mame\fmopl.h">
+      <Filter>aud_sys\fmopl</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="sodpal.inc" />
+    <None Include="wolfpal.inc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="aud_sys">
+      <UniqueIdentifier>{3e4126cd-c2f0-4278-833b-d377c7b9929a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="aud_sys\fmopl">
+      <UniqueIdentifier>{16cec103-cb32-4aa7-b7a8-0a0f66d9387b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

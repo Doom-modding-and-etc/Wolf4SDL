@@ -67,3 +67,4 @@
 #elif defined(SEGA_SATURN)
 #define DATADIR "/data"
 #endif
+#endif

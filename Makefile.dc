@@ -1,6 +1,6 @@
 TARGET = 1ST_READ.BIN
 
-DC_OBJS += dc/dc_cd.o dc/dc_main.o dc/dc_maple.o dc/dc_video.o dc/dc_vmu.o \
+DC_OBJS += Plataform/dc/dc_cd.o Plataform/dc/dc_main.o Plataform/dc/dc_maple.o Plataform/dc/dc_video.o Plataform/dc/dc_vmu.o \
 aud_sys/mame/fmopl.o id_ca.o id_in.o id_pm.o  \
 id_us.o id_vh.o id_vl.o signon.o wl_act1.o wl_act2.o \
 wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o \
