@@ -1,0 +1,82 @@
+#
+#   SEGA SATURN Graphic library make file for GNU
+#
+# slightly modified for ISO building, COFF toolchain
+
+# specify on command line
+# OBJFMT = coff
+ OBJFMT = elf
+
+# macro
+AS = sh-$(OBJFMT)-as
+CC = sh-$(OBJFMT)-gcc
+CONV = sh-$(OBJFMT)-objcopy
+RM = rm
+
+# directory
+SGLDIR = C:/SaturnOrbit/SGL_302j
+SGLIDR = $(SGLDIR)/inc
+SGLLDR = $(SGLDIR)/lib_elf
+
+CMNDIR = l:/saturn/dev/wolf3ddma/root 
+
+# source_program
+SRCS = Plataform/sega/saturn/low.s Plataform/sega/saturn/saturn.c Plataform/sega/saturn/pcmsys.c \ 
+Plataform/sega/saturn/workarea.c aud_sys/fmopl/fmopl.c id_ca.c id_in.c id_pm.c id_us.c id_vh.c id_vieasm.c id_vl.c \
+signon.c wl_act1.c wl_act2.c wl_agent.c wl_atmos.c wl_cloudsky.c wl_debug.c wl_draw.c wl_game.c \
+wl_inter.c wl_main.c wl_menu.c wl_parallax.c wl_plane.c wl_play.c wl_scale.c wl_shade.c wl_state \
+wl_utils.c l:/saturn/SBL6/SEGALIB/GFS/elf/gfs2.o l:/saturn/SBL6/SEGALIB/GFS/elf/gfs_cdb2.o l:/saturn/SBL6/SEGALIB/GFS/elf/gfs_cdc2.o \
+l:/saturn/SBL6/SEGALIB/GFS/elf/gfs_cdf2.o l:/saturn/SBL6/SEGALIB/GFS/elf/gfs_trn2.o l:/saturn/SBL6/SEGALIB/GFS/elf/gfs_buf2.o \
+l:/saturn/SBL6/SEGALIB/GFS/elf/gfs_dir2.o \
+
+OBJS = $(filter %.o, $(SRCS:.s=.o) $(SRCS:.c=.o))
+
+LIBS = C:/SaturnOrbit/SGL_302j/LIB_ELF/libsgl_real_elf.a \
+L:/saturn/SBL6/SEGALIB/LIB/vbtelf2/sega_mth.a \
+L:/saturn/SBL6/SEGALIB/LIB/vbtelf2/sega_dma.a \
+L:/saturn/SBL6/SEGALIB/LIB/vbtelf2/sega_int.a \
+L:/saturn/SBL6/SEGALIB/LIB/vbtelf2/sega_sys.a \
+L:/saturn/SBL6/SEGALIB/LIB/vbtelf4/cdcrep.a
+
+# option
+CFLAGS = -fpermissive -Os -m2 -falign-functions=4 -Wformat-diag -Wno-conversion-null \
+-Wshadow -Wall -Wswitch -Wpadded -fno-common -Wextra -Wno-narrowing -funit-at-a-time \
+-Wwrite-strings -Wl,--strip-all -Wl,--verbose -mno-fsrra -maccumulate-outgoing-args \
+-fomit-frame-pointer -D_SH -DMODEL_S -DSEGA_SATURN -DUSE_DIR3DSPR -DUSE_ADX -DUSE_SPRITES -DUSE_SLAVE -DEMBEDDED -DPONY \
+-std=gnu99 -Werror-implicit-function-declaration -Wimplicit-int Wsequence-point -lm -lc -lgcc -I$(SGLIDR) -IPlataform/Sega/Saturn/SDL 
+
+# -m2 must be specified in LDFLAGS so the linker will search the SH2 lib dirs
+# Specify path of libsgl.a by using "-L" option
+
+LDFLAGS = -m2 -Xlinker -n -Xlinker -T$(LDFILE) -Xlinker -Map -Xlinker $(MPFILE) -Xlinker -e -Xlinker ___Start \
+-Xlinker -S -nostartfiles -nostartfiles -LL:/GNUSHV12/sh-elf/sh-elf/lib/m2/libc.a \
+-LC:/SaturnOrbit/SGL_302j/LIB_ELF/LIBSGL.A 
+
+TARGET   = Plataform/Sega/Saturn/root/sl.coff
+TARGET1  = Plataform/Sega/Saturn/root/sl.bin
+MPFILE   = $(TARGET:.coff=.maps)
+IPFILE   = $(CMNDIR)/IP.BIN
+LDFILE   = Plataform/Sega/Saturn/root/SL.LNK
+MAKEFILE = makefile
+
+all: $(TARGET) $(TARGET1)
+
+# Use gcc to link so it will automagically find correct libs directory
+
+$(TARGET) : $(SYSOBJS) $(OBJS) $(MAKEFILE) $(LDFILE) #$(OBJECTS)
+	$(CC) $(LDFLAGS) $(SYSOBJS) $(OBJS) $(LIBS) -o $@
+
+$(TARGET1) : $(SYSOBJS) $(OBJS) $(MAKEFILE) $(LDFILE)
+	$(CONV) -O binary $(TARGET) $(TARGET1)
+
+# suffix
+.SUFFIXES: .asm
+
+.s.o:
+	$(AS) $< $(ASFLAGS) $(_ASFLAGS) -o $@
+
+.c.o:
+	$(CC) $< $(DFLAGS) $(CFLAGS) $(_CFLAGS) -o $@
+
+clean:
+	$(RM) $(OBJS) $(TARGET) $(TARGET1) $(TARGET2) $(MPFILE) cd/0.bin

@@ -30,6 +30,7 @@
 #define SDLK_NUMLOCKCLEAR SDLK_NUMLOCK
 #define SDLK_SCROLLLOCK	SDLK_SCROLLOCK
 #define SDL_Keymod SDLMod
+#define SDL_Keysym SDL_keysym
 #endif
 typedef	int		ScanCode;
 #define	sc_None			0
@@ -310,7 +311,7 @@ typedef	int		ScanCode;
 #define gc_axis_max SDL_CONTROLLER_AXIS_MAX
 #endif
 #if SDL_MAJOR_VERSION == 2
-extern boolean GameControllerButtons[bt_Max];
+extern bool GameControllerButtons[bt_Max];
 extern int GameControllerLeftStick[2];
 extern int GameControllerRightStick[2];
 extern SDL_GameController* GameController;
@@ -360,7 +361,7 @@ typedef	enum
 
 typedef	struct
 {
-	boolean	button0, button1, button2, button3;
+	bool	button0, button1, button2, button3;
 	short x, y;
 	Motion xaxis, yaxis;
 	Direction dir;
@@ -387,25 +388,21 @@ typedef	struct
 } JoystickDef;
 
 //Global variables
-#if SDL_MAJOR_VERSION == 1
-extern volatile boolean KeyboardPress[SDLK_LAST];
-#elif SDL_MAJOR_VERSION == 2
-extern volatile boolean KeyboardState[129];
-#endif
-extern boolean MousePresent;
-extern volatile boolean Paused;
+extern volatile bool KeyboardState[129];
+extern bool MousePresent;
+extern volatile bool Paused;
 extern volatile char LastASCII;
 extern volatile ScanCode LastScan;
 extern int JoyNumButtons;
-extern boolean forcegrabmouse;
+extern bool forcegrabmouse;
 
 #define	IN_KeyDown(code)	(Keyboard((code)))
 #define	IN_ClearKey(code)	{ KeyboardSet(code, false);\
 						      if (code == LastScan) LastScan = sc_None;}
 
 
-boolean Keyboard(int key);
-void KeyboardSet(int key, boolean state);
+bool Keyboard(int key);
+void KeyboardSet(int key, bool state);
 int KeyboardLookup(int key);
 
 
@@ -418,7 +415,7 @@ extern	void		IN_SetupJoy(word joy, word minx, word maxx,
 	word miny, word maxy);
 extern	void		IN_StopDemo(void), IN_FreeDemoBuffer(void),
 IN_Ack(void);
-extern	boolean		IN_UserInput(longword delay);
+extern	bool		IN_UserInput(longword delay);
 extern	char		IN_WaitForASCII(void);
 extern	ScanCode	IN_WaitForKey(void);
 extern	word		IN_GetJoyButtonsDB(word joy);
@@ -429,15 +426,15 @@ void    IN_ProcessEvents();
 
 int     IN_MouseButtons(void);
 
-boolean IN_JoyPresent();
+bool IN_JoyPresent();
 void    IN_SetJoyCurrent(int joyIndex);
 int     IN_JoyButtons(void);
 void    IN_GetJoyDelta(int* dx, int* dy);
 void    IN_GetJoyFineDelta(int* dx, int* dy);
 
 void    IN_StartAck(void);
-boolean IN_CheckAck(void);
-boolean    IN_IsInputGrabbed();
+bool IN_CheckAck(void);
+bool    IN_IsInputGrabbed();
 void    IN_CenterMouse();
 
 #endif

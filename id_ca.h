@@ -6,9 +6,7 @@
 #define NUMMAPS         60
 #define MAPPLANES       3
 #include "wl_def.h"
-#ifdef VIEASM
-
-#else
+#ifndef VIEASM
 #define UNCACHEAUDIOCHUNK(chunk) {if(audiosegs[chunk]) {free(audiosegs[chunk]); audiosegs[chunk]=NULL;}}
 #endif
 //===========================================================================
@@ -25,26 +23,24 @@ typedef struct
 
 extern  word    *mapsegs[MAPPLANES];
 extern  maptype *mapheaderseg[NUMMAPS];
-#ifdef VIEASM
 
-#else
+#if !defined(SEGA_SATURN) || !defined(VIEASM)
 extern  byte    *audiosegs[NUMSNDCHUNKS];
 #endif
 extern  byte    *grsegs[NUMCHUNKS];
 
 extern  char  extension[5];
+#ifndef SEGA_SATURN
 extern  char  graphext[5];
-extern  char  audioext[5];
-
-#ifdef VIEASM
-
-#else
+#ifndef VIEASM
 extern  char  audioext[5];
 #endif
+#endif
+
 //===========================================================================
 
-boolean CA_LoadFile (const char *filename, void **ptr);
-boolean CA_WriteFile (const char *filename, void *ptr, int32_t length);
+bool CA_LoadFile (const char *filename, void **ptr);
+bool CA_WriteFile (const char *filename, void *ptr, int32_t length);
 
 int32_t CA_RLEWCompress (word *source, int32_t length, word *dest, word rlewtag);
 
@@ -53,8 +49,10 @@ void CA_RLEWexpand (word *source, word *dest, int32_t length, word rlewtag);
 void CA_Startup (void);
 void CA_Shutdown (void);
 
+#ifndef SEGA_SATURN
 int32_t CA_CacheAudioChunk (int chunk);
 void CA_LoadAllSounds (void);
+#endif
 
 void CA_CacheGrChunks (void);
 void CA_CacheMap (int mapnum);

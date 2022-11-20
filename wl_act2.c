@@ -16,7 +16,7 @@
 
 #define BJRUNSPEED      2048
 #define BJJUMPSPEED     680
-
+#define DIRCOUNT 9
 
 /*
 =============================================================================
@@ -160,6 +160,12 @@ short starthitpoints[4][NUMENEMIES] =
     }
 };
 
+#ifdef SEGA_SATURN
+extern fixed MTH_Atan(fixed y, fixed x);
+#undef atan2
+#define atan2(a,b) MTH_Atan(a,b)
+#endif
+
 void    A_StartDeathCam (objtype *ob);
 
 
@@ -268,7 +274,7 @@ void A_Smoke (objtype *ob)
 
 #define PROJSIZE        0x2000
 
-boolean ProjectileTryMove (objtype *ob)
+bool ProjectileTryMove (objtype *ob)
 {
     int      xl,yl,xh,yh,x,y;
     objtype *check;
@@ -285,8 +291,12 @@ boolean ProjectileTryMove (objtype *ob)
     for (y=yl;y<=yh;y++)
         for (x=xl;x<=xh;x++)
         {
+#ifdef SEGA_SATURN
+            if (solid_actor_at(x, y))
+#else
             check = actorat[x][y];
             if (check && !ISPOINTER(check))
+#endif
                 return false;
         }
 
@@ -381,7 +391,7 @@ GUARD
 
 =============================================================================
 */
-
+#ifndef SEGA_SATURN //Why?
 //
 // guards
 //
@@ -837,7 +847,7 @@ statetype s_gretelshoot6        = {false,SPR_GRETEL_SHOOT2,10,NULL,(statefunc)T_
 statetype s_gretelshoot7        = {false,SPR_GRETEL_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_gretelshoot8};
 statetype s_gretelshoot8        = {false,SPR_GRETEL_SHOOT1,10,NULL,NULL,&s_gretelchase1};
 #endif
-
+#endif
 
 /*
 ===============
@@ -857,28 +867,36 @@ void SpawnStand (enemy_t which, int tilex, int tiley, int dir)
         case en_guard:
             SpawnNewObj (tilex,tiley,&s_grdstand);
             newobj->speed = SPDPATROL;
+#ifndef SEGA_SATURN
             if (!loadedgame)
+#endif
                 gamestate.killtotal++;
             break;
 
         case en_officer:
             SpawnNewObj (tilex,tiley,&s_ofcstand);
             newobj->speed = SPDPATROL;
+#ifndef SEGA_SATURN
             if (!loadedgame)
+#endif
                 gamestate.killtotal++;
             break;
 
         case en_mutant:
             SpawnNewObj (tilex,tiley,&s_mutstand);
             newobj->speed = SPDPATROL;
+#ifndef SEGA_SATURN
             if (!loadedgame)
+#endif
                 gamestate.killtotal++;
             break;
 
         case en_ss:
             SpawnNewObj (tilex,tiley,&s_ssstand);
             newobj->speed = SPDPATROL;
+#ifndef SEGA_SATURN
             if (!loadedgame)
+#endif
                 gamestate.killtotal++;
             break;
     }
@@ -932,8 +950,7 @@ void SpawnDeadGuard (int tilex, int tiley)
 }
 
 
-
-#ifndef SPEAR
+#ifndef SPEAR //|| !defined(SEGA_SATUNR) //?
 /*
 ===============
 =
@@ -951,7 +968,9 @@ void SpawnBoss (int tilex, int tiley)
     newobj->hitpoints = starthitpoints[gamestate.difficulty][en_boss];
     newobj->dir = nodir;
     newobj->flags |= FL_SHOOTABLE|FL_AMBUSH;
+#ifndef SEGA_SATURN
     if (!loadedgame)
+#endif
         gamestate.killtotal++;
 }
 
@@ -972,7 +991,9 @@ void SpawnGretel (int tilex, int tiley)
     newobj->hitpoints = starthitpoints[gamestate.difficulty][en_gretel];
     newobj->dir = nodir;
     newobj->flags |= FL_SHOOTABLE|FL_AMBUSH;
+#ifndef SEGA_SATURN
     if (!loadedgame)
+#endif
         gamestate.killtotal++;
 }
 #endif
@@ -992,35 +1013,45 @@ void SpawnPatrol (enemy_t which, int tilex, int tiley, int dir)
         case en_guard:
             SpawnNewObj (tilex,tiley,&s_grdpath1);
             newobj->speed = SPDPATROL;
+#ifndef SEGA_SATURN
             if (!loadedgame)
+#endif
                 gamestate.killtotal++;
             break;
 
         case en_officer:
             SpawnNewObj (tilex,tiley,&s_ofcpath1);
             newobj->speed = SPDPATROL;
+#ifndef SEGA_SATURN
             if (!loadedgame)
+#endif
                 gamestate.killtotal++;
             break;
 
         case en_ss:
             SpawnNewObj (tilex,tiley,&s_sspath1);
             newobj->speed = SPDPATROL;
+#ifndef SEGA_SATURN
             if (!loadedgame)
+#endif
                 gamestate.killtotal++;
             break;
 
         case en_mutant:
             SpawnNewObj (tilex,tiley,&s_mutpath1);
             newobj->speed = SPDPATROL;
+#ifndef SEGA_SATURN
             if (!loadedgame)
+#endif
                 gamestate.killtotal++;
             break;
 
         case en_dog:
             SpawnNewObj (tilex,tiley,&s_dogpath1);
             newobj->speed = SPDDOG;
+#ifndef SEGA_SATURN
             if (!loadedgame)
+#endif
                 gamestate.killtotal++;
             break;
     }
@@ -1032,8 +1063,11 @@ void SpawnPatrol (enemy_t which, int tilex, int tiley, int dir)
     newobj->flags |= FL_SHOOTABLE;
     newobj->active = ac_yes;
 
+#ifdef SEGA_SATURN
+    clear_actor(newobj->tilex, newobj->tiley); // don't use original spot
+#else
     actorat[newobj->tilex][newobj->tiley] = NULL;           // don't use original spot
-
+#endif
     switch (dir)
     {
         case 0:
@@ -1050,7 +1084,11 @@ void SpawnPatrol (enemy_t which, int tilex, int tiley, int dir)
             break;
     }
 
+#ifdef SEGA_SATURN
+    move_actor(newobj);
+#else
     actorat[newobj->tilex][newobj->tiley] = newobj;
+#endif
 }
 
 
@@ -1264,7 +1302,9 @@ void SpawnTrans (int tilex, int tiley)
     newobj->obclass = transobj;
     newobj->hitpoints = starthitpoints[gamestate.difficulty][en_trans];
     newobj->flags |= FL_SHOOTABLE|FL_AMBUSH;
+#ifndef SEGA_SATURN
     if (!loadedgame)
+#endif
         gamestate.killtotal++;
 }
 
@@ -1343,7 +1383,9 @@ void SpawnUber (int tilex, int tiley)
     newobj->obclass = uberobj;
     newobj->hitpoints = starthitpoints[gamestate.difficulty][en_uber];
     newobj->flags |= FL_SHOOTABLE|FL_AMBUSH;
+#ifndef SEGA_SATURN
     if (!loadedgame)
+#endif
         gamestate.killtotal++;
 }
 
@@ -1440,7 +1482,9 @@ void SpawnWill (int tilex, int tiley)
     newobj->obclass = willobj;
     newobj->hitpoints = starthitpoints[gamestate.difficulty][en_will];
     newobj->flags |= FL_SHOOTABLE|FL_AMBUSH;
+#ifndef SEGA_SATURN
     if (!loadedgame)
+#endif
         gamestate.killtotal++;
 }
 
@@ -1457,7 +1501,7 @@ void T_Will (objtype *ob)
 {
     int32_t move;
     int     dx,dy,dist;
-    boolean dodge;
+    bool dodge;
 
     dodge = false;
     dx = abs(ob->tilex - player->tilex);
@@ -1617,7 +1661,9 @@ void SpawnDeath (int tilex, int tiley)
     newobj->obclass = deathobj;
     newobj->hitpoints = starthitpoints[gamestate.difficulty][en_death];
     newobj->flags |= FL_SHOOTABLE|FL_AMBUSH;
+#ifndef SEGA_SATURN
     if (!loadedgame)
+#endif
         gamestate.killtotal++;
 }
 
@@ -1806,7 +1852,9 @@ void SpawnAngel (int tilex, int tiley)
     newobj->obclass = angelobj;
     newobj->hitpoints = starthitpoints[gamestate.difficulty][en_angel];
     newobj->flags |= FL_SHOOTABLE|FL_AMBUSH;
+#ifndef SEGA_SATURN
     if (!loadedgame)
+#endif
         gamestate.killtotal++;
 }
 
@@ -1918,7 +1966,9 @@ void SpawnSpectre (int tilex, int tiley)
     newobj->obclass = spectreobj;
     newobj->hitpoints = starthitpoints[gamestate.difficulty][en_spectre];
     newobj->flags |= FL_SHOOTABLE|FL_AMBUSH|FL_BONUS; // |FL_NEVERMARK|FL_NONMARK;
+#ifndef SEGA_SATURN
     if (!loadedgame)
+#endif
         gamestate.killtotal++;
 }
 
@@ -2015,7 +2065,9 @@ void SpawnGhosts (int which, int tilex, int tiley)
 
     newobj->dir = east;
     newobj->flags |= FL_AMBUSH;
+#ifndef SEGA_SATURN
     if (!loadedgame)
+#endif
     {
         gamestate.killtotal++;
         gamestate.killcount++;
@@ -2228,7 +2280,9 @@ void SpawnSchabbs (int tilex, int tiley)
     newobj->hitpoints = starthitpoints[gamestate.difficulty][en_schabbs];
     newobj->dir = nodir;
     newobj->flags |= FL_SHOOTABLE|FL_AMBUSH;
+#ifndef SEGA_SATURN
     if (!loadedgame)
+#endif
         gamestate.killtotal++;
 }
 
@@ -2258,7 +2312,9 @@ void SpawnGift (int tilex, int tiley)
     newobj->hitpoints = starthitpoints[gamestate.difficulty][en_gift];
     newobj->dir = nodir;
     newobj->flags |= FL_SHOOTABLE|FL_AMBUSH;
+#ifndef SEGA_SATURN
     if (!loadedgame)
+#endif
         gamestate.killtotal++;
 }
 
@@ -2288,7 +2344,9 @@ void SpawnFat (int tilex, int tiley)
     newobj->hitpoints = starthitpoints[gamestate.difficulty][en_fat];
     newobj->dir = nodir;
     newobj->flags |= FL_SHOOTABLE|FL_AMBUSH;
+#ifndef SEGA_SATURN
     if (!loadedgame)
+#endif
         gamestate.killtotal++;
 }
 
@@ -2387,7 +2445,7 @@ void T_Schabb (objtype *ob)
 {
     int32_t move;
     int     dx,dy,dist;
-    boolean dodge;
+    bool dodge;
 
     dodge = false;
     dx = abs(ob->tilex - player->tilex);
@@ -2479,7 +2537,7 @@ void T_Gift (objtype *ob)
 {
     int32_t move;
     int     dx,dy,dist;
-    boolean dodge;
+    bool dodge;
 
     dodge = false;
     dx = abs(ob->tilex - player->tilex);
@@ -2571,7 +2629,7 @@ void T_Fat (objtype *ob)
 {
     int32_t move;
     int     dx,dy,dist;
-    boolean dodge;
+    bool dodge;
 
     dodge = false;
     dx = abs(ob->tilex - player->tilex);
@@ -2839,7 +2897,9 @@ void SpawnFakeHitler (int tilex, int tiley)
     newobj->hitpoints = starthitpoints[gamestate.difficulty][en_fake];
     newobj->dir = nodir;
     newobj->flags |= FL_SHOOTABLE|FL_AMBUSH;
+#ifndef SEGA_SATURN
     if (!loadedgame)
+#endif
         gamestate.killtotal++;
 }
 
@@ -2854,9 +2914,7 @@ void SpawnFakeHitler (int tilex, int tiley)
 
 void SpawnHitler (int tilex, int tiley)
 {
-#ifdef VIEASM
-
-#else
+#ifndef VIEASM
     if (DigiMode != sds_Off)
         s_hitlerdie2.tictime = 140;
     else
@@ -2869,9 +2927,11 @@ void SpawnHitler (int tilex, int tiley)
     newobj->obclass = mechahitlerobj;
     newobj->hitpoints = starthitpoints[gamestate.difficulty][en_hitler];
     newobj->dir = nodir;
-    newobj->flags |= FL_SHOOTABLE|FL_AMBUSH;
-    if (!loadedgame)
-        gamestate.killtotal++;
+    newobj->flags = (newobj->flags & ~FL_NONMARK) | FL_SHOOTABLE;	// fixes a bug where hitler appears in every tile he moved through in the overhead map
+#ifndef SEGA_SATURN
+        if (!loadedgame)
+#endif      
+          gamestate.killtotal++;
 }
 
 
@@ -2901,7 +2961,9 @@ void A_HitlerMorph (objtype *ob)
     newobj->obclass = realhitlerobj;
     newobj->hitpoints = hitpoints[gamestate.difficulty];
 
-    if (!loadedgame)               // ADDEDFIX Count real hitler for correct kill ratios 
+#ifndef SEGA_SATURN
+    if (!loadedgame)   // ADDEDFIX Count real hitler for correct kill ratios 
+#endif  
         gamestate.killtotal++; 
 
 }
@@ -3078,7 +3140,7 @@ void T_Chase (objtype *ob)
 {
     int32_t move,target;
     int     dx,dy,dist,chance;
-    boolean dodge;
+    bool dodge;
 
     if (gamestate.victoryflag)
         return;
@@ -3497,14 +3559,14 @@ void T_Shoot (objtype *ob)
 
         if (thrustspeed >= RUNSPEED)
         {
-            if (ob->flags&FL_VISABLE)
+            if (ob->flags&FL_VISIBLE)
                 hitchance = 160-dist*16;                // player can see to dodge
             else
                 hitchance = 160-dist*8;
         }
         else
         {
-            if (ob->flags&FL_VISABLE)
+            if (ob->flags&FL_VISIBLE)
                 hitchance = 256-dist*16;                // player can see to dodge
             else
                 hitchance = 256-dist*8;
@@ -3757,7 +3819,7 @@ void T_BJDone (objtype *ob)
 ===============
 */
 
-boolean CheckPosition (objtype *ob)
+bool CheckPosition (objtype *ob)
 {
     int     x,y,xl,yl,xh,yh;
     objtype *check;
@@ -3813,10 +3875,19 @@ void    A_StartDeathCam (objtype *ob)
     if(usedoublebuffering) VW_UpdateScreen();
 
     gamestate.victoryflag = true;
+#ifndef SEGA_SATURN
     unsigned fadeheight = viewsize != 21 ? screenHeight-scaleFactor*STATUSLINES : screenHeight;
+#endif
+#ifdef SEGA_SATURN
+    slTVOff();
+#endif
+#ifndef SEGA_SATURN
     VL_BarScaledCoord (0, 0, screenWidth, fadeheight, bordercol);
     FizzleFade(screenBuffer, 0, 0, screenWidth, fadeheight, 70, false);
-
+#endif
+#ifdef SEGA_SATURN
+    slTVOn();
+#endif
     if (bordercol != VIEWCOLOR)
     {
         fontnumber = 1;
@@ -3835,7 +3906,9 @@ void    A_StartDeathCam (objtype *ob)
 #endif
     }
 
+#if !defined(SEGA_SATURN) && !defined(USE_SPRITES)
     VW_UpdateScreen ();
+#endif
     if(usedoublebuffering) VW_UpdateScreen();
 
     IN_UserInput(300);
@@ -3879,9 +3952,12 @@ void    A_StartDeathCam (objtype *ob)
     //
     // go back to the game
     //
-
+#ifdef SEGA_SATURN
+    DrawPlayScreen(); // vbt ajout
+    DrawStatusBar(); // vbt ajout
+#else
     DrawPlayBorder ();
-
+#endif
     fizzlein = true;
 
     switch (ob->obclass)

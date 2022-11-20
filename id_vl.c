@@ -7,23 +7,40 @@
 #endif
 // Uncomment the following line, if you get destination out of bounds
 // assertion errors and want to ignore them during debugging
+#ifdef SEGA_SATURN
+#define IGNORE_BAD_DEST
+#else
 //#define IGNORE_BAD_DEST
-
+#endif
 #ifdef IGNORE_BAD_DEST
+#ifdef SEGA_SATURN
+//#undef assert
+//#define assert(x) if(!(x))  { slPrint((char *)"asset test failed0", slLocate(10,20));return;}
+#define assert1(x) if(!(x)) { slPrint((char *)"asset test failed1", slLocate(10,20));return;}
+#define assert2(x) if(!(x)) { slPrint((char *)"asset test failed2", slLocate(10,20));return;}
+#define assert3(x) if(!(x)) { slPrint((char *)"asset test failed3", slLocate(10,20));return;}
+#define assert4(x) if(!(x)) { slPrint((char *)"asset test failed4", slLocate(10,20));return;}
+#define assert5(x) if(!(x)) { slPrint((char *)"asset test failed5", slLocate(10,20));return;}
+#define assert6(x) if(!(x)) { slPrint((char *)"asset test failed6", slLocate(10,20));return;}
+//#define assert7(x) if(!(x)) { slPrint((char *)"asset test failed7", slLocate(10,20));return;}
+#define assert8(x) if(!(x)) { slPrint((char *)"asset test failed8", slLocate(10,20));return;}
+#define assert_ret(x) if(!(x)) return 0
+#else
 #undef assert
 #define assert(x) if(!(x)) return
 #define assert_ret(x) if(!(x)) return 0
+#endif
 #else
 #define assert_ret(x) assert(x)
 #endif
 
 #if defined(_arch_dreamcast)
-boolean usedoublebuffering = false;
+bool usedoublebuffering = false;
 unsigned screenWidth = 320;
 unsigned screenHeight = 200;
 int      screenBits = 8;
 #elif defined(GP2X)
-boolean usedoublebuffering = true;
+bool usedoublebuffering = true;
 unsigned screenWidth = 320;
 unsigned screenHeight = 240;
 #if defined(GP2X_940)
@@ -33,20 +50,32 @@ int      screenBits = 16;
 #endif
 //WIP:
 #elif defined(PS2)
-boolean usedoublebuffering = true;
+bool usedoublebuffering = true;
 u32 screenWidth = 640;
 u32 screenHeight = 448;
 int screenBits = 8;
 #elif defined(N3DS)
-boolean fullscreen = true;
-boolean usedoublebuffering = true;
+bool fullscreen = true;
+bool usedoublebuffering = true;
 int screenWidth = 400;
 int screenHeight = 240;
 int screenBits = 32;      // use "best" color depth according to libSDL  // ADDEDFIX 0
 #else
-boolean usedoublebuffering = true;
+bool usedoublebuffering = true;
+#if defined(SCALE2X) 
+u32 screenWidth = 320;
+u32 screenHeight = 200;
+static unsigned scaledScreenWidth = 640;
+static unsigned scaledScreenHeight = 405;
+#else
+#ifdef SEGA_SATURN
+u32 screenWidth = SATURN_WIDTH;
+u32 screenHeight = SATURN_HEIGHT;
+#else
 u32 screenWidth = 640;
 u32 screenHeight = 405;
+#endif
+#endif
 u32 screenBits = 8;      // use "best" color depth according to libSDL
 #endif
 
@@ -63,22 +92,30 @@ u32 bufferPitch;
 SDL_Window *window;
 SDL_Renderer *renderer;
 SDL_Texture *texture;
+#if defined(SCALE2X) 
+SDL_Texture* upscaledTexture = NULL;
+#endif
 #endif
 
 int      scaleFactor;
 
-boolean	 screenfaded;
+bool	 screenfaded;
+#ifndef SEGA_SATURN
 unsigned bordercolor;
 
 uint32_t *ylookup;
 
 SDL_Color palette1[256], palette2[256];
+#endif
 SDL_Color curpal[256];
 
 
 #define CASSERT(x) extern int ASSERT_COMPILE[((x) != 0) * 2 - 1];
+#ifdef SEGA_SATURN
+#define RGB(r, g, b) {(r)*255/63, (g)*255/63, 0x100(b)*255/63, 0}
+#else
 #define RGB(r, g, b) {(r)*255/63, (g)*255/63, (b)*255/63, 0}
-
+#endif
 SDL_Color gamepal[] =
 {
 #ifdef SPEAR
@@ -88,7 +125,9 @@ SDL_Color gamepal[] =
 #endif
 };
 
+#ifndef SEGA_SATURN
 CASSERT(lengthof(gamepal) == 256)
+#endif
 
 //===========================================================================
 
@@ -145,6 +184,47 @@ void VL_SetVGAPlaneMode (void)
 #endif
 
 #if SDL_MAJOR_VERSION == 1
+#ifdef SEGA_SATURN
+    if (screenBits == -1)
+    {
+        const SDL_VideoInfo* vidInfo = SDL_GetVideoInfo();
+        screenBits = vidInfo->vfmt->BitsPerPixel;
+    }
+
+    if (screen == NULL)
+    {
+        screen = SDL_SetVideoMode(screenWidth, screenHeight, screenBits,
+            SDL_SWSURFACE | (screenBits == 8 ? SDL_HWPALETTE : 0));
+    }
+    //slPrintHex(screen->pixels,slLocate(20,8));	
+    if (!screen)
+    {
+        //        printf("Unable to set %ix%ix%i video mode: %s\n", screenWidth,
+        //            screenHeight, screenBits, SDL_GetError());
+        SYS_Exit(1);
+    }
+
+
+    if (screenBuffer == NULL)
+    {
+        screenBuffer = SDL_CreateRGBSurface(SDL_SWSURFACE, screenWidth, screenHeight, 8, 0, 0, 0, 0);
+        if (!screenBuffer)
+        {
+            //        printf("Unable to create screen buffer surface: %s\n", SDL_GetError());
+            SYS_Exit(1);
+        }
+
+        //    SDL_ShowCursor(SDL_DISABLE);
+        //curSurface = screenBuffer;
+        //curPitch = screenBuffer->pitch;
+    }
+        SDL_SetColors(screen, gamepal, 0, 256);
+    memcpyl(curpal, gamepal, sizeof(SDL_Color) * 256);
+
+    scaleFactor = screenWidth / SATURN_WIDTH;
+    if (screenHeight / 200 < scaleFactor) scaleFactor = screenHeight / 200;
+    if (pixelangle == NULL) SafeMalloc(pixelangle) = (short*)malloc(screenWidth * sizeof(short));
+#else
 #ifdef CRT
     //Fab's CRT Hack
     //Adjust height so the screen is 4:3 aspect ratio
@@ -163,12 +243,7 @@ void VL_SetVGAPlaneMode (void)
 #else
     screen = SDL_SetVideoMode(screenWidth, screenHeight, screenBits,
         (usedoublebuffering ? SDL_HWSURFACE | SDL_DOUBLEBUF : 0) | (screenBits == 8 ? SDL_HWPALETTE : 0)
-
-#ifdef CRT
-        | (fullscreen ? SDL_FULLSCREEN : 0) | SDL_OPENGL | SDL_OPENGLBLIT);
-#else       
         | (fullscreen ? SDL_FULLSCREEN : 0));
-#endif
 #endif
 
     if(!screen)
@@ -179,6 +254,7 @@ void VL_SetVGAPlaneMode (void)
     }
     if((screen->flags & SDL_DOUBLEBUF) != SDL_DOUBLEBUF)
         usedoublebuffering = false;
+
     SDL_ShowCursor(SDL_DISABLE);
 
     SDL_SetColors(screen, gamepal, 0, 256);
@@ -196,22 +272,31 @@ void VL_SetVGAPlaneMode (void)
         exit(1);
     }
     SDL_SetColors(screenBuffer, gamepal, 0, 256);
+#endif
 #elif SDL_MAJOR_VERSION == 2
 #ifdef CRT
     //Fab's CRT Hack:
     //Adjust height so the screen is 4:3 aspect ratio
     screenHeight = screenWidth * 3.0 / 4.0;
-#endif    
+#endif     
+#if defined(SCALE2X) 
+    window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, scaledScreenWidth, scaledScreenHeight,
+        (fullscreen ? SDL_WINDOW_FULLSCREEN : 0 | SDL_WINDOW_OPENGL));
+#else
     window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight,
     (fullscreen ? SDL_WINDOW_FULLSCREEN : 0 | SDL_WINDOW_OPENGL));
-
+#endif
     SDL_PixelFormatEnumToMasks (SDL_PIXELFORMAT_ARGB8888,&screenBits,&r,&g,&b,&a);
 
     screen = SDL_CreateRGBSurface(0,screenWidth,screenHeight,screenBits,r,g,b,a);
 
     if(!screen)
     {
+#if defined(SCALE2X) 
+        printf("Unable to set %ux%ux%i video mode: %s\n", scaledScreenWidth, scaledScreenHeight, screenBits, SDL_GetError());
+#else
         printf("Unable to set %ux%ux%i video mode: %s\n", screenWidth, screenHeight, screenBits, SDL_GetError());
+#endif
         exit(1);
     }
 
@@ -228,7 +313,6 @@ void VL_SetVGAPlaneMode (void)
     //Fab's and André´s CRT Hack
     CRT_Init(screen);
 #endif
-
     screenBuffer = SDL_CreateRGBSurface(0, screenWidth, screenHeight, 
     8, 0, 0, 0, 0);
     
@@ -239,8 +323,33 @@ void VL_SetVGAPlaneMode (void)
     }
     SDL_SetPaletteColors(screenBuffer->format->palette, gamepal, 0, 256);
 
-    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, 
-    SDL_TEXTUREACCESS_STREAMING, screenWidth, screenHeight);
+
+#if defined(SCALE2X) 
+    // Create the intermediate texture that we render the screen surface into.
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+#endif
+    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888,
+        SDL_TEXTUREACCESS_STREAMING, screenWidth, screenHeight);
+
+
+    if (!texture)
+    {
+        printf("Unable to create screen texture: %s\n", SDL_GetError());
+        exit(1);
+    }
+
+    // Create the up-scaled texture that we render to the window. We use 'nearest' scaling here because depending on the
+    // window size, the texture may need to be scaled by a non-integer factor.
+#if defined(SCALE2X) 
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
+    SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
+    upscaledTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, scaledScreenWidth, scaledScreenHeight);
+    if (!upscaledTexture)
+    {
+        printf("Unable to create up-scaled texture: %s\n", SDL_GetError());
+        exit(1);
+    }
+#endif
 #endif
 
     screenPitch = screen->pitch;
@@ -332,6 +441,10 @@ void VL_FillPalette (int red, int green, int blue)
 
 void VL_SetColor	(int color, int red, int green, int blue)
 {
+#ifdef SEGA_SATURN
+    memcpyl(curpal, palette, sizeof(SDL_Color) * 256);
+#else
+   
     SDL_Color col = 
     { 
         (Uint8) red, 
@@ -354,6 +467,7 @@ void VL_SetColor	(int color, int red, int green, int blue)
 #else
         VH_UpdateScreen(screen);
 #endif
+
 #elif SDL_MAJOR_VERSION == 2
         SDL_SetPaletteColors(screen->format->palette, &col, color, 1);
     else
@@ -367,6 +481,7 @@ void VL_SetColor	(int color, int red, int green, int blue)
         CRT_DAC();
 #else
         VH_UpdateScreen(screen);
+#endif
 #endif
 #endif
     }
@@ -403,7 +518,7 @@ void VL_GetColor	(int color, int *red, int *green, int *blue)
 =================
 */
 
-void VL_SetPalette(SDL_Color* palette, boolean forceupdate)
+void VL_SetPalette(SDL_Color* palette, bool forceupdate)
 {
     memcpy(curpal, palette, sizeof(SDL_Color) * 256);
 
@@ -562,14 +677,17 @@ void VL_FadeIn (int start, int end, SDL_Color *palette, int steps)
 
 byte *VL_LockSurface(SDL_Surface *surface)
 {
+#ifndef SEGA_SATURN
     if(SDL_MUSTLOCK(surface))
     {
         if(SDL_LockSurface(surface) < 0)
             return NULL;
     }
+#endif
     return (byte *) surface->pixels;
 }
 
+#ifndef SEGA_SATURN
 void VL_UnlockSurface(SDL_Surface *surface)
 {
     if(SDL_MUSTLOCK(surface))
@@ -601,7 +719,7 @@ void VL_Plot (int x, int y, int color)
 
     VL_UnlockSurface(screenBuffer);
 }
-
+#endif 
 /*
 =================
 =
@@ -617,6 +735,9 @@ byte VL_GetPixel (int x, int y)
     assert_ret(x >= 0 && (unsigned) x < screenWidth
             && y >= 0 && (unsigned) y < screenHeight
             && "VL_GetPixel: Pixel out of bounds!");
+#ifdef SEGA_SATURN
+    return ((byte*)surface->pixels)[y * pitch + x];
+#else
 
     if (!VL_LockSurface(screenBuffer))
         return 0;
@@ -626,6 +747,7 @@ byte VL_GetPixel (int x, int y)
     VL_UnlockSurface(screenBuffer);
 
     return col;
+#endif
 }
 
 
@@ -650,7 +772,9 @@ void VL_Hlin (unsigned x, unsigned y, unsigned width, int color)
 
     memset(dest + ylookup[y] + x, color, width);
 
+#ifndef SEGA_SATURN
     VL_UnlockSurface(screenBuffer);
+#endif
 }
 
 
@@ -681,7 +805,9 @@ void VL_Vlin (int x, int y, int height, int color)
 		dest += bufferPitch;
 	}
 
+#ifndef SEGA_SATURN
 	VL_UnlockSurface(screenBuffer);
+#endif
 }
 
 
@@ -702,10 +828,11 @@ void VL_BarScaledCoord (int scx, int scy, int scwidth, int scheight, int color)
 {
 	byte *dest;
 
+#ifndef SEGA_SATURN
 	assert(scx >= 0 && (unsigned) scx + scwidth <= screenWidth
 			&& scy >= 0 && (unsigned) scy + scheight <= screenHeight
 			&& "VL_BarScaledCoord: Destination rectangle out of bounds!");
-
+#endif
 	dest = VL_LockSurface(screenBuffer);
 	if(dest == NULL) return;
 
@@ -796,6 +923,48 @@ void VL_MemToScreen (byte *source, int width, int height, int x, int y)
 
 void VL_MemToScreenScaledCoord (byte *source, int width, int height, int destx, int desty)
 {
+#ifdef SEGA_SATURN
+    //    assert5(destx >= 0 && destx + width * scaleFactor <= screenWidth
+    //            && desty >= 0 && desty + height * scaleFactor <= screenHeight
+    //            && "VL_MemToScreenScaledCoord: Destination rectangle out of bounds!");
+
+    //    VL_LockSurface(curSurface);
+    byte* vbuf = (byte*)curSurface->pixels + (desty * curPitch) + destx;
+    unsigned char w2 = width >> 2;
+    unsigned int mul = w2 * height;
+
+    //	if(scaleFactor == 1)
+    {
+        for (unsigned int j = 0; j < height; j++)
+        {
+            for (unsigned int i = 0; i < width; i++)
+            {
+                vbuf[i] = source[(i >> 2) + (i & 3) * mul];
+            }
+            //vbuf += curPitch;
+            source += w2;
+        }
+    }
+    /*	else
+        {
+            for(unsigned int j=0,scj=0; j<height; j++, scj+=scaleFactor)
+            {
+                for(unsigned int i=0,sci=0; i<width; i++, sci+=scaleFactor)
+                {
+                    byte col = source[(j*w2+(i>>2))+(i&3)*mul];
+                    for(unsigned m=0; m<scaleFactor; m++)
+                    {
+                        for(unsigned n=0; n<scaleFactor; n++)
+                        {
+                            vbuf[(scj+m)*curPitch+sci+n] = col;
+                        }
+                    }
+                }
+            }
+        }*/
+    VL_UnlockSurface(surface); // vbt utile pour signon screen
+
+#else
     byte *dest;
     int i, j, sci, scj;
     unsigned m, n;
@@ -822,6 +991,7 @@ void VL_MemToScreenScaledCoord (byte *source, int width, int height, int destx, 
         }
     }
     VL_UnlockSurface(screenBuffer);
+#endif
 }
 
 /*

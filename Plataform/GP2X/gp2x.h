@@ -7,7 +7,6 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-#include "../wl_def.h"
 #if defined(GP2X_940)
 #include "fmopl.h"
 #include <SDL_gp2x.h>
@@ -50,5 +49,10 @@ void GP2X_ButtonDown( int button );
 void GP2X_ButtonUp( int button );
 void Screenshot( void );
 void SetKeyboard( unsigned int key, int press );
+
+#if defined(GP2X_940)
+void GP2X_MemoryInit (void);
+void GP2X_Shutdown (void);
+#endif
 
 #endif // GP2X_H

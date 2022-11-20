@@ -33,12 +33,14 @@
 //	Internal variables
 #define	ConfigVersion	1
 
-static	boolean		US_Started;
+static	bool		US_Started;
 
 		void		(*USL_MeasureString)(const char *,word *,word *) = VW_MeasurePropString;
 		void		(*USL_DrawString)(const char *) = VWB_DrawPropString;
 
+#ifndef SEGA_SATURN
 		SaveGame	Games[MaxSaveGames];
+#endif
 		HighScore	Scores[MaxScores] =
 					{
 						{"id software-'92",10000,1},
@@ -109,6 +111,7 @@ US_Shutdown(void)
 
 //	Window/Printing routines
 
+#ifndef SEGA_SATURN
 ///////////////////////////////////////////////////////////////////////////
 //
 //	US_SetPrintRoutines() - Sets the routines used to measure and print
@@ -123,6 +126,7 @@ US_SetPrintRoutines(void (*measure)(const char *,word *,word *),
 	USL_MeasureString = measure;
 	USL_DrawString = print;
 }
+#endif
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -164,8 +168,11 @@ US_Print(const char *sorg)
 			PrintX += w;
 	}
 	free(sstart);
+#ifdef SEGA_SATURN
+	sstart = true;
+#endif
 }
-
+#ifndef SEGA_SATURN
 ///////////////////////////////////////////////////////////////////////////
 //
 //	US_PrintUnsigned() - Prints an unsigned long
@@ -230,6 +237,7 @@ US_PrintCentered(const char *s)
 
 	USL_PrintInCenter(s,r);
 }
+#endif
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -283,8 +291,11 @@ US_CPrint(const char *sorg)
 		}
 	}
 	free(sstart);
+#ifdef SEGA_SATURN
+	sstart = true;
+#endif
 }
-
+#ifndef SEGA_SATURN
 ///////////////////////////////////////////////////////////////////////////
 //
 //  US_Printf() - Prints a formatted string in the current window.
@@ -322,6 +333,7 @@ void US_CPrintf(const char *formatStr, ...)
         strbuf[sizeof(strbuf) - 1] = 0;
     US_CPrint(strbuf);
 }
+#endif
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -371,7 +383,7 @@ US_DrawWindow(word x,word y,word w,word h)
 	for (i = sy + 8;i <= sy + sh - 8;i += 8)
 		VWB_DrawTile8(sx,i,3),VWB_DrawTile8(sx + sw,i,4);
 }
-
+#ifndef SEGA_SATURN
 ///////////////////////////////////////////////////////////////////////////
 //
 //	US_CenterWindow() - Generates a window of a given width & height in the
@@ -419,7 +431,7 @@ US_RestoreWindow(WindowRec *win)
 	PrintX = win->px;
 	PrintY = win->py;
 }
-
+#endif
 //	Input routines
 
 ///////////////////////////////////////////////////////////////////////////
@@ -430,7 +442,7 @@ US_RestoreWindow(WindowRec *win)
 static void
 USL_XORICursor(int x,int y,const char *s,word cursor)
 {
-	static	boolean	status;		// VGA doesn't XOR...
+	static	bool	status;		// VGA doesn't XOR...
 	char	buf[MaxString];
 	int		temp;
 	word	w,h;
@@ -469,7 +481,7 @@ char USL_RotateChar(char ch, int dir)
     else if(i >= numChars) i = 0;
     return charSet[i];
 }
-
+#ifndef SEGA_SATURN
 ///////////////////////////////////////////////////////////////////////////
 //
 //	US_LineInput() - Gets a line of user input at (x,y), the string defaults
@@ -480,11 +492,11 @@ char USL_RotateChar(char ch, int dir)
 //		returned
 //
 ///////////////////////////////////////////////////////////////////////////
-boolean
-US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
+bool
+US_LineInput(int x,int y,char *buf,const char *def,bool escok,
 				int maxchars,int maxwidth)
 {
-	boolean		redraw,
+	bool		redraw,
 				cursorvis,cursormoved,
 				done,result, checkkey;
 	ScanCode	sc;
@@ -759,6 +771,7 @@ US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 	IN_ClearKeysDown();
 	return(result);
 }
+#endif
 
 ///////////////////////////////////////////////////////////////////////////
 //

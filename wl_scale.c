@@ -89,7 +89,165 @@ void ScaleLine (int16_t x, int16_t toppix, fixed fracstep, byte *linesrc, byte *
     }
 }
 
+#ifdef SEGA_SATURN
+//==========================================================================
+inline void ScaleShapeDemo(int xcenter, int shapenum, unsigned width)
+{
+    unsigned char* surfacePtr = (unsigned char*)PM_GetSprite(shapenum); // + ((0) * source->pitch) + 0;
+    unsigned char* nextSurfacePtr = (unsigned char*)PM_GetSprite(shapenum + 1);
+    unsigned int height = (nextSurfacePtr - surfacePtr) >> 6;
 
+    if (!texture_list[shapenum])
+    {
+        loadActorTexture(shapenum, height << 6, surfacePtr);
+    }
+    //--------------------------------------------------------------------------------------------
+    TEXTURE* txptr = &tex_spr[SATURN_WIDTH + 1 + shapenum];
+    // correct on touche pas		
+    SPRITE user_sprite;
+    user_sprite.CTRL = FUNC_Sprite | _ZmCC;
+    user_sprite.PMOD = CL256Bnk | ECdis;// | ECenb | SPdis;  // pas besoin pour les sprites
+    user_sprite.SRCA = ((txptr->CGadr));
+    user_sprite.COLR = 256;
+
+    user_sprite.SIZE = 0x800 + height;
+    user_sprite.XA = (xcenter - centerx);
+    user_sprite.YA = width * (32 - height / 2) / 64;
+    user_sprite.XB = width;
+    user_sprite.YB = width * height / 64;
+    user_sprite.GRDA = 0;
+    slSetSprite(&user_sprite, toFIXED(10));	// à remettre // ennemis et objets
+    //--------------------------------------------------------------------------------------------	
+}
+inline void ScaleShape(int xcenter, int shapenum, unsigned width)
+{
+    unsigned scalel, pixwidth;
+
+#ifdef USE_SHADING
+    byte* curshades;
+    if (flags & FL_FULLBRIGHT)
+        curshades = shadetable[0];
+    else
+        curshades = shadetable[GetShade(width)];
+#endif
+    scalel = width / 8;                 // low three bits are fractional
+    if (!scalel) return;   // too close or far away
+    pixwidth = scalel * SPRITESCALEFACTOR;
+
+    //shapenum=SPR_DEMO+45;
+    //shapenum=SPR_STAT_49-1;
+#ifdef USE_SPRITES
+    unsigned char* surfacePtr = (unsigned char*)PM_GetSprite(shapenum); // + ((0) * source->pitch) + 0;
+    unsigned char* nextSurfacePtr = (unsigned char*)PM_GetSprite(shapenum + 1);
+    unsigned int height = (nextSurfacePtr - surfacePtr) >> 6;
+    //	unsigned int height=64;
+
+    int* val = (int*)surfacePtr;
+    //slPrintHex((int)val,slLocate(10,15));	
+    //	slPrintHex(height,slLocate(10,16));
+    //slPrintHex(shapenum,slLocate(10,17));
+
+    if (!texture_list[shapenum])
+    {
+        loadActorTexture(shapenum, height << 6, surfacePtr);
+    }
+    //--------------------------------------------------------------------------------------------
+    TEXTURE* txptr = &tex_spr[SATURN_WIDTH + 1 + shapenum];
+    // correct on touche pas		
+    SPRITE user_sprite;
+    user_sprite.CTRL = FUNC_Sprite | _ZmCC;
+    user_sprite.PMOD = CL256Bnk | ECdis;// | ECenb | SPdis;  // pas besoin pour les sprites
+    user_sprite.SRCA = ((txptr->CGadr));
+    user_sprite.COLR = 256;
+
+    user_sprite.SIZE = 0x800 + height;
+    user_sprite.XA = (xcenter - centerx);
+    user_sprite.YA = pixwidth * (32 - height / 2) / 64;
+    user_sprite.XB = pixwidth;
+    user_sprite.YB = pixwidth * height / 64;
+    user_sprite.GRDA = 0;
+    slSetSprite(&user_sprite, toFIXED(0 + (SATURN_SORT_VALUE - pixwidth / 2)));	// à remettre // ennemis et objets
+    //--------------------------------------------------------------------------------------------	
+#else
+    byte* vbuf = LOCK() + screenofs;
+    t_compshape* shape;
+
+    unsigned starty, endy;
+    word* cmdptr;
+    byte* cline;
+    byte* line;
+    byte* vmem;
+    unsigned j;
+    byte col;
+    int actx, i, upperedge;
+    short newstart;
+    int scrstarty, screndy, lpix, rpix, pixcnt, ycnt;
+
+    actx = xcenter - scale;
+    upperedge = viewwidth / 2 - scale;
+
+    shape = (t_compshape*)PM_GetSprite(shapenum);
+
+    cmdptr = (word*)shape->dataofs;
+
+    for (i = shape->leftpix, pixcnt = i * pixwidth, rpix = (pixcnt >> 6) + actx; i <= shape->rightpix; i++, cmdptr++)
+    {
+        lpix = rpix;
+        if (lpix >= viewwidth) break;
+        pixcnt += pixwidth;
+        rpix = (pixcnt >> 6) + actx;
+        if (lpix != rpix && rpix > 0)
+        {
+            if (lpix < 0) lpix = 0;
+            if (rpix > viewwidth) rpix = viewwidth, i = shape->rightpix + 1;
+            cline = (byte*)shape + *cmdptr;
+            while (lpix < rpix)
+            {
+                if (wallwidth[lpix] <= (int)width)
+                {
+                    line = cline;
+                    while ((endy = READWORD(line)) != 0)
+                    {
+                        endy >>= 1;
+                        newstart = READWORD(line);
+                        starty = READWORD(line) >> 1;
+                        //                        j=starty;
+                        ycnt = j * pixwidth;
+                        screndy = (ycnt >> 6) + upperedge;
+                        if (screndy < 0) vmem = vbuf + lpix;
+                        else vmem = vbuf + screndy * curPitch + lpix;
+                        for (; j < endy; j++)
+                        {
+                            scrstarty = screndy;
+                            ycnt += pixwidth;
+                            screndy = (ycnt >> 6) + upperedge;
+                            if (scrstarty != screndy && screndy > 0)
+                            {
+#ifdef USE_SHADING
+                                col = curshades[((byte*)shape)[newstart + j]];
+#else
+                                col = ((byte*)shape)[newstart + j];
+#endif
+                                if (scrstarty < 0) scrstarty = 0;
+                                if (screndy > viewwidth) screndy = viewwidth, j = endy;
+
+                                while (scrstarty < screndy)
+                                {
+                                    *vmem = col;
+                                    vmem += curPitch;
+                                    scrstarty++;
+                                }
+                            }
+                        }
+                    }
+                }
+                lpix++;
+            }
+        }
+    }
+#endif
+
+#else
 /*
 ===================
 =
@@ -224,7 +382,7 @@ void SimpleScaleShape (int xcenter, int shapenum, int height)
         }
     }
 }
-
+#endif
 #ifdef USE_DIR3DSPR
 
 /*

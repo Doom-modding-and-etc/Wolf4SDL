@@ -34,7 +34,7 @@ typedef	struct
 {
     char	signature[4];
     word	*oldtest;
-    boolean	present;
+    bool	present;
     char	name[MaxGameName + 1];
 } SaveGame;
 
@@ -47,8 +47,10 @@ typedef	struct
         px,py;
 } WindowRec;	// Record used to save & restore screen windows
 
-extern	boolean		ingame,		// Set by game code if a game is in progress
+extern	bool		ingame,		// Set by game code if a game is in progress
+#ifndef SEGA_SATURN
 					loadedgame;	// Set if the current game was loaded
+#endif
 extern	word		PrintX,PrintY;	// Current printing location in the window
 extern	word		WindowX,WindowY,// Current location of window
 					WindowW,WindowH;// Current size of window
@@ -56,7 +58,7 @@ extern	word		WindowX,WindowY,// Current location of window
 extern	void		(*USL_MeasureString)(const char *,word *,word *);
 extern void			(*USL_DrawString)(const char *);
 
-extern	boolean		(*USL_SaveGame)(int),(*USL_LoadGame)(int);
+extern	bool		(*USL_SaveGame)(int),(*USL_LoadGame)(int);
 extern	void		(*USL_ResetGame)(void);
 extern	SaveGame	Games[MaxSaveGames];
 extern	HighScore	Scores[];
@@ -88,8 +90,8 @@ void			US_StartCursor(void),
 				US_ShutCursor(void);
 void			US_CheckHighScore(int32_t score,word other);
 void			US_DisplayHighScores(int which);
-extern	boolean	US_UpdateCursor(void);
-boolean         US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
+extern	bool	US_UpdateCursor(void);
+bool         US_LineInput(int x,int y,char *buf,const char *def,bool escok,
                              int maxchars,int maxwidth);
 
 void	        USL_PrintInCenter(const char *s,Rect r);

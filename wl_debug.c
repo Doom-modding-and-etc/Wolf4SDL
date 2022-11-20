@@ -12,6 +12,18 @@
 #include "wl_cloudsky.h"
 #endif
 
+#ifdef DEBUG
+extern	statetype s_grddie4;
+extern	statetype s_dogdead;
+extern	statetype s_ofcdie5;
+extern	statetype s_mutdie5;
+extern	statetype s_ssdie4;
+extern	statetype s_fakestand;
+extern	statetype s_fakedie6;
+extern	statetype s_mechadie4;
+extern	statetype s_mechastand;
+#endif
+
 /*
 =============================================================================
 
@@ -44,13 +56,15 @@ int DebugKeys (void);
 
 void CountObjects (void)
 {
-    int     i,total,count,active,inactive,doors;
+    //int     i,total,count,active,inactive,doors;
+    int	i, total, count, active, inactive, lgdoors, lsdoors, edoors, ndoors, doors;
     objtype *obj;
 
     CenterWindow (17,7);
-    active = inactive = count = doors = 0;
+    //active = inactive = count = doors = 0;
+    active = inactive = count = lgdoors = lsdoors = edoors = ndoors = doors = 0;
 
-    US_Print ("Total statics :");
+    US_Print("Total statics    :");
     total = (int)(laststatobj-&statobjlist[0]);
     US_PrintUnsigned (total);
 
@@ -58,7 +72,7 @@ void CountObjects (void)
     sprintf(str,"\nlaststatobj=%.8X",(int32_t)(uintptr_t)laststatobj);
     US_Print(str);
 
-    US_Print ("\nIn use statics:");
+    US_Print("\nIn use statics   :");
     for (i=0;i<total;i++)
     {
         if (statobjlist[i].shapenum != -1)
@@ -68,8 +82,32 @@ void CountObjects (void)
     }
     US_PrintUnsigned (count);
 
-    US_Print ("\nDoors         :");
-    US_PrintUnsigned (doornum);
+    US_Print("\nTotal Doors       :");
+    for (i = 0; i < doornum; i++)
+    {
+        if (doorobjlist[i].lock == dr_lock1)
+            lgdoors++;
+        else if (doorobjlist[i].lock == dr_lock2)
+            lsdoors++;
+        else if (doorobjlist[i].lock == dr_elevator)
+            edoors++;
+        else if (doorobjlist[i].lock == dr_normal)
+            ndoors++;
+        doors++;
+    }
+    US_PrintUnsigned(doors);
+
+    US_Print("\nGold Key Doors   :");
+    US_PrintUnsigned(lgdoors);
+
+    US_Print("\nSilver Key Doors :");
+    US_PrintUnsigned(lsdoors);
+
+    US_Print("\nNormal Doors     :");
+    US_PrintUnsigned(ndoors);
+
+    US_Print("\nElevator Doors   :");
+    US_PrintUnsigned(edoors);
 
     for (obj=player->next;obj;obj=obj->next)
     {
@@ -79,11 +117,14 @@ void CountObjects (void)
             inactive++;
     }
 
-    US_Print ("\nTotal actors  :");
-    US_PrintUnsigned (active+inactive);
+    US_Print("\nTotal actors     :");
+    US_PrintUnsigned(active + inactive);
 
-    US_Print ("\nActive actors :");
-    US_PrintUnsigned (active);
+    US_Print("\nActive actors    :");
+    US_PrintUnsigned(active);
+
+    US_Print("\nInactive actors  :");
+    US_PrintUnsigned(inactive);
 
     VW_UpdateScreen();
     IN_Ack ();
@@ -91,7 +132,7 @@ void CountObjects (void)
 
 
 //===========================================================================
-
+#ifndef SEGA_SATURN
 /*
 ===================
 =
@@ -124,7 +165,7 @@ void PictureGrabber (void)
     VW_UpdateScreen();
     IN_Ack();
 }
-
+#endif
 
 #ifndef VIEWMAP
 
@@ -220,7 +261,7 @@ void BasicOverhead (void)
 
 void ShapeTest (void)
 {
-    boolean    done;
+    bool    done;
     ScanCode   scan;
     int        i,j,k,x;
     int        v2;
@@ -323,9 +364,7 @@ void ShapeTest (void)
                 // display sound info
                 //
                 US_Print ("\n\n Number of sounds: ");
-#ifdef VIEASM //WIP
-
-#else
+#ifndef VIEASM //WIP
                 US_PrintUnsigned(NumDigi);
 
                 for (l = j = 0; j < NumDigi; j++)
@@ -339,10 +378,7 @@ void ShapeTest (void)
             }
             else
             {
-#ifdef VIEASM
-
-
-#else
+#ifndef VIEASM
                 //
                 // display sounds
                 //
@@ -453,7 +489,7 @@ void ShapeTest (void)
 
 int DebugKeys (void)
 {
-    boolean esc;
+    bool esc;
     int level;
 
     if (Keyboard(sc_B))             // B = border color
@@ -529,7 +565,7 @@ int DebugKeys (void)
         IN_Ack();
         return 1;
     }
-
+#if 0 //Removed.
     if (Keyboard(sc_G))             // G = god mode
     {
         CenterWindow (12,2);
@@ -548,6 +584,7 @@ int DebugKeys (void)
             godmode = 0;
         return 1;
     }
+#endif
     if (Keyboard(sc_H))             // H = hurt self
     {
         IN_ClearKeysDown ();
@@ -641,6 +678,7 @@ again:
         return 1;
     }
 #endif
+#if 0
     else if (Keyboard(sc_N))        // N = no clip
     {
         noclip^=1;
@@ -653,6 +691,7 @@ again:
         IN_Ack ();
         return 1;
     }
+#endif 
 #ifndef VIEWMAP
     else if (Keyboard(sc_O))        // O = basic overhead
     {
@@ -660,11 +699,13 @@ again:
         return 1;
     }
 #endif
+#ifndef SEGA_SATURN
     else if(Keyboard(sc_P))         // P = Ripper's picture grabber
     {
         PictureGrabber();
         return 1;
     }
+#endif
     else if (Keyboard(sc_Q))        // Q = fast quit
         Quit (NULL);
     else if (Keyboard(sc_S))        // S = slow motion
@@ -677,8 +718,10 @@ again:
         if (!esc)
         {
             level = atoi (str);
+#ifndef SEGA_SATURN
             if (level>=0 && level<=50)
                 singlestep = level;
+#endif
         }
         return 1;
     }
@@ -791,7 +834,7 @@ again:
 =============================================================================
 */
 
-#ifdef VIEWMAP
+#if defined(VIEWMAP) || !defined(SEGA_SATURN)
 
 #define COL_FLOOR   0x19                // empty area color
 #define COL_SECRET  WHITE               // pushwall color

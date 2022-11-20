@@ -9,20 +9,27 @@ Wolfenstein 3D to the cross-platform multimedia library "Simple DirectMedia
 Layer (SDL)" (http://www.libsdl.org). It is meant to keep the original feel
 while taking advantage of some improvements mentioned in the list below.
 
+Discord:
+----------
+https://discord.gg/YNTdx5dXF6
+
 
 Main features:
 --------------
  - Cross-platform:
       Supported operating systems are at least:
-       - Windows 98, Windows ME, Windows 2000, Windows XP, Windows Vista
-         (32 and 64 bit), Windows 7 (32 and 64 bit), Windows 10 (32 and 64 bit)
+       - Windows 98, Windows ME, Windows 2000, Windows XP(32 and 64 bit), Windows Vista
+         (32 and 64 bit), Windows 7 (32 and 64 bit), Windows 8(32 and 64 bit) Windows 10 (32 and 64 bit)
        - Linux
        - BSD variants
-       - Mac OS X (x86)
+       - Mac OS X (x86 and x64)
        - KallistiOS (used for Dreamcast)
       Only little endian platforms like x86, ARM and SH-4 are currently supported.
 	   - Nintendo Switch
-	   
+	   - Nintendo 3DS(WIP On Makefile part)
+	   - GP2X
+	   - Sega Saturn(WIP: Only ported the id´s stuff).
+
  - AdLib sounds and music:
       This port includes the OPL2 emulator from MAME, so you can not only
       hear the AdLib sounds but also music without any AdLib-compatible
@@ -239,18 +246,18 @@ IMPORTANT: Do not forget to take care of version.h!
 
 TODOs:
 ------
- - Add support for any graphic resolution >= 320x200(40%)
  - Add Sony´s Playstation 2 support(WIP) 
  - Add latest fmopl sound
- - Fix nintendo 3ds Makefile and wl_def.h
- - Fix messy controls buttons on SDL1
- - Fix CRT on SDL1
- - Fix quick fade on SDL1
  - Add plataform readme.
  - Fix some versions of Wolfenstein 3d.
+ - Prepare to SDL3 Support.
+ - support to sega saturn: wl_draw.c, wl_inter.c, wl_game.c and wl_menu.c
  
 Known bugs:
 -----------
+Severe: Bug on the changed key controls keys like: w a s d or something on the Wolf3d part.
+Spear of destiny works file atleast.
+
 
 Troubleshooting:
 ----------------
@@ -263,7 +270,7 @@ Credits:
  - Special thanks to id Software! Without the source code we would still have
    to pelt Wolfenstein 3D with hex editors and disassemblers ;D
  - Special thanks to the DOSBox team for providing a GPL'ed OPL2/3 emulator!
- - Special thanks to the MAME developer team for providing the source code
+ - Special thanks to the MAME developement team for providing the source code
    of the OPL2 emulator!
  - Speacial thanks to aryan3d for upgrade this source port
  - Many thanks to "Der Tron" for hosting the svn repository, making Wolf4SDL

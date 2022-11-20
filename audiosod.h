@@ -8,7 +8,11 @@
 #ifndef __AUDIOSOD_H_
 #define __AUDIOSOD_H_
 
+#ifdef VIEASM
+#define NUMSOUNDS		    95
+#else
 #define NUMSOUNDS		    81
+#endif
 #define NUMSNDCHUNKS	    267
 
 //

@@ -115,12 +115,14 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="C:\SDL\include\SDL"
-				PreprocessorDefinitions="_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS"
+				InlineFunctionExpansion="2"
+				AdditionalIncludeDirectories="C:\SDL2\include"
+				PreprocessorDefinitions="_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;OLD_BOOL"
 				RuntimeLibrary="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
+				CompileAs="1"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -133,8 +135,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="SDL.lib SDLmain.lib SDL_mixer.lib"
-				AdditionalLibraryDirectories="C:\SDL\lib\x86"
+				AdditionalDependencies="SDL2.lib SDL2main.lib SDL2_mixer.lib"
+				AdditionalLibraryDirectories="C:\SDL2\lib\x86"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -303,11 +305,11 @@
 				Name="mame"
 				>
 				<File
-					RelativePath=".aud_sys\mame\fmopl.c"
+					RelativePath=".\aud_sys\mame\fmopl.c"
 					>
 				</File>
 				<File
-					RelativePath=".aud_sys\mame\fmopl.h"
+					RelativePath=".\aud_sys\mame\fmopl.h"
 					>
 				</File>
 			</Filter>

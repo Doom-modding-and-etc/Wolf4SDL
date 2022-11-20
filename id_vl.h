@@ -3,7 +3,7 @@
 #ifndef __ID_VL_H_
 #define __ID_VL_H_
 
-// wolf compatability
+// wolf compatbility
 #include "wl_def.h"
 void Quit (const char *error,...);
 
@@ -19,18 +19,29 @@ extern SDL_Surface *screen, *screenBuffer;
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
 extern SDL_Texture *texture;
+#if defined(SCALE2X)
+extern SDL_Texture* upscaledTexture;
+#endif
 #endif
 
-extern  boolean  fullscreen, usedoublebuffering;
+#ifndef SEGA_SATURN 
+extern  bool fullscreen, usedoublebuffering;
+#endif
+
 #if N3DS
 extern  int screenWidth, screenHeight, screenBits, screenPitch, bufferPitch;
 #else
-extern  unsigned screenWidth, screenHeight, screenBits, screenPitch, bufferPitch;   
+extern  unsigned screenWidth, screenHeight, screenBits, 
+#ifndef SEGA_SATURN
+screenPitch, bufferPitch;   
+#endif
 #endif
 extern  int      scaleFactor;
 
-extern	boolean  screenfaded;
+extern	bool  screenfaded;
+#ifndef SEGA_SATURN
 extern	unsigned bordercolor;
+#endif
 
 extern  uint32_t *ylookup;
 
@@ -42,14 +53,13 @@ extern SDL_Color gamepal[256];
 // VGA hardware routines
 //
 
+#ifdef SEGA_SATURN
+#define VL_WaitVBL(a)	wait_vblank(a*1)  //SDL_Delay((a)*8)
+#else
 #define VL_WaitVBL(a)        SDL_Delay((a)*8)
+#endif
 #define VL_ClearScreen(c)    SDL_FillRect(screenBuffer,NULL,(c))
-#ifdef CRT
 
-#if SDL_MAJOR_VERSION == 2
-#define SDL_Flip(x) CRT_Init(x)
-#endif
-#endif
 
 void VL_DePlaneVGA (byte *source, int width, int height);
 void VL_SetVGAPlaneMode (void);
@@ -60,14 +70,17 @@ void VL_ConvertPalette(byte *srcpal, SDL_Color *destpal, int numColors);
 void VL_FillPalette (int red, int green, int blue);
 void VL_SetColor    (int color, int red, int green, int blue);
 void VL_GetColor    (int color, int *red, int *green, int *blue);
-void VL_SetPalette  (SDL_Color *palette, boolean forceupdate);
+void VL_SetPalette  (SDL_Color *palette, bool forceupdate);
 void VL_GetPalette  (SDL_Color *palette);
 void VL_FadeOut     (int start, int end, int red, int green, int blue, int steps);
 void VL_FadeIn      (int start, int end, SDL_Color *palette, int steps);
 
 byte *VL_LockSurface(SDL_Surface *surface);
+#ifndef SEGA_SATURN
 void VL_UnlockSurface(SDL_Surface *surface);
-
+#else
+#define VL_UnlockSurface(surface) SDL_UnlockSurface(surface)
+#endif
 byte VL_GetPixel        (int x, int y);
 void VL_Plot            (int x, int y, int color);
 void VL_Hlin            (unsigned x, unsigned y, unsigned width, int color);

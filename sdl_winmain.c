@@ -60,7 +60,7 @@
 #endif /* _WIN32_WCE < 300 */
 
 #ifdef VIEASM
-  boolean allowwindow = true;
+  bool allowwindow = true;
 #else
 
 /* Parse a command line buffer into arguments */
@@ -176,8 +176,10 @@ static void cleanup_output(void)
             if(readbytes != 0)
             {
                 buf[readbytes] = 0;     // cut after last byte (<=16383)
+#ifndef _XBOX
                 MessageBox(NULL, buf, "Wolf4SDL", MB_OK);
-            }
+#endif
+			}
             else
                 remove(stdoutPath);     // remove empty file
 
@@ -194,8 +196,10 @@ static void cleanup_output(void)
             if(readbytes != 0)
             {
                 buf[readbytes] = 0;     // cut after last byte (<=16383)
+#ifndef _XBOX
                 MessageBox(NULL, buf, "Wolf4SDL", MB_OK);
-            }
+#endif
+			}
             else
                 remove(stderrPath);     // remove empty file
 		}

@@ -208,9 +208,6 @@
     <ClInclude Include="asmcref.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="fixedptc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="aud_sys\dosbox\cdosbox.h">
       <Filter>Source Files\audiosys\dosbox</Filter>
     </ClInclude>
@@ -219,6 +216,9 @@
     </ClInclude>
     <ClInclude Include="aud_sys\mame\fmopl.h">
       <Filter>Source Files\audiosys\mame</Filter>
+    </ClInclude>
+    <ClInclude Include="wl_utils.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

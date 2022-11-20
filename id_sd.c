@@ -28,15 +28,19 @@
 //
 
 #include "wl_def.h"
-#ifdef VIEASM
 
-#else
+#ifndef VIEASM
+#ifndef SEGA_SATURN
 #include <SDL_mixer.h>
+#else
+#include "Plataform/Sega/Saturn/pcmsys.h"
+#include <string.h>
+#endif
+
 #if defined(GP2X_940)
 #include "gp2x/fmopl.h"
-
 #else
-#ifdef USE_DOSBOX
+#if defined(USE_DOSBOX)
 #include "aud_sys/dosbox/cdosbox.h"
 #else
 #include "aud_sys/mame/fmopl.h"
@@ -45,10 +49,11 @@
 
 #define ORIGSAMPLERATE 7042
 
+#ifndef SEGA_SATURN
 #ifdef USE_DOSBOX
 struct CChip chip;
 
-static boolean YM3812Init(int numChips, int clock, int rate)
+static bool YM3812Init(int numChips, int clock, int rate)
 {
 #ifdef WIP //Not resloved
     Chip_Setup(rate);
@@ -134,25 +139,43 @@ typedef struct
 	char chunkid[4];
 	longword chunklength;
 } wavechunk;
+#endif
 
+#ifndef SEGA_SATURN
 static Mix_Chunk *SoundChunks[ STARTMUSIC - STARTDIGISOUNDS];
-
 globalsoundpos channelSoundPos[MIX_CHANNELS];
-
+#endif
 //      Global variables
-        boolean         AdLibPresent,
-                        SoundBlasterPresent,SBProPresent,
+        bool       
+#ifndef SEGA_SATURN
+                        AdLibPresent,
+#endif
+                        SoundBlasterPresent,
+#ifndef SEGA_SATURN                        
+                        SBProPresent,
+#endif                        
                         SoundPositioned;
+#ifndef SEGA_SATURN
         SDMode          SoundMode;
         SMMode          MusicMode;
+#endif
         SDSMode         DigiMode;
+#ifndef SEGA_SATURN
 static  byte          **SoundTable;
+#endif
+#ifdef SEGA_SATURN
+#ifndef USE_ADX
         int             DigiMap[LASTSOUND];
+#endif
+#else
+        int             DigiMap[LASTSOUND];
+#endif
+#ifndef SEGA_SATURN
         int             DigiChannel[STARTMUSIC - STARTDIGISOUNDS];
 
 //      Internal variables
-static  boolean                 SD_Started;
-static  boolean                 nextsoundpos;
+static  bool                 SD_Started;
+static  bool                 nextsoundpos;
 static  soundnames              SoundNumber;
 static  soundnames              DigiNumber;
 static  word                    SoundPriority;
@@ -162,7 +185,7 @@ static  int                     RightPosition;
 
         word                    NumDigi;
         digiinfo                *DigiList;
-static  boolean                 DigiPlaying;
+static  bool                 DigiPlaying;
 
 //      PC Sound variables
 static  volatile byte           pcLastSample;
@@ -177,15 +200,26 @@ static  longword                alTimeCount;
 static  Instrument              alZeroInst;
 
 //      Sequencer variables
-static  volatile boolean        sqActive;
+static  volatile bool        sqActive;
 static  word                   *sqHack;
 static  word                   *sqHackPtr;
 static  int                     sqHackLen;
 static  int                     sqHackSeqLen;
 static  longword                sqHackTime;
+#endif
 
-
-
+#ifdef SEGA_SATURN
+extern int SDL_OpenAudio(SDL_AudioSpec* desired, SDL_AudioSpec* obtained);
+#ifndef PONY	
+extern PCM m_dat[4];
+static Mix_Chunk* SoundChunks[STARTMUSIC - STARTDIGISOUNDS];
+uintptr_t lowsound = (uintptr_t)0x002C0000;
+#endif
+extern void	satPlayMusic(Uint8 track);
+extern void	satStopMusic(void);
+extern 	void sound_cdda(int track, int loop);
+short	load_adx(Sint8* filename);
+#endif
 
 void Delay (int32_t wolfticks)
 {
@@ -193,7 +227,7 @@ void Delay (int32_t wolfticks)
         SDL_Delay ((wolfticks * 100) / 7);
 }
 
-
+#ifndef SEGA_SATURN
 static void SDL_SoundFinished(void)
 {
 	SoundNumber   = (soundnames)0;
@@ -379,6 +413,7 @@ int SD_GetChannelForDigi(int which)
     return channel;
 }
 
+
 void SD_SetPosition(int channel, int leftpos, int rightpos)
 {
     if((leftpos < 0) || (leftpos > 15) || (rightpos < 0) || (rightpos > 15)
@@ -392,6 +427,7 @@ void SD_SetPosition(int channel, int leftpos, int rightpos)
             break;
     }
 }
+
 
 Sint16 GetSample(float csample, byte *samples, int size)
 {
@@ -409,9 +445,77 @@ Sint16 GetSample(float csample, byte *samples, int size)
     else if(intval > 32767) intval = 32767;
     return (Sint16) intval;
 }
+#endif
 
 void SD_PrepareSound(int which)
 {
+#ifdef SEGA_SATURN
+    char filename[15];
+    unsigned char* mem_buf;
+#ifndef USE_ADX	
+    sprintf(filename, "%03d.PCM", which);
+#else	
+    sprintf(filename, "%03d.ADX", which);
+#endif
+
+
+#ifdef PONY
+    //	if(fileId>0)
+    {
+
+
+        //		if(which <23)
+        //		if(fileSize>8192 && fileSize<20000)
+        {
+#ifndef USE_ADX				
+            //			load_8bit_pcm((Sint8*)filename, ORIGSAMPLERATE);
+#else
+            load_adx((Sint8*)filename);
+#endif			
+        }
+    }
+#else
+    Sint32 fileId;
+    long fileSize;
+
+    fileId = GFS_NameToId((Sint8*)filename);
+
+    fileSize = GetFileSize(fileId);
+
+    if (fileId > 0)
+    {
+        fileSize = GetFileSize(fileId);
+
+        if (which < 23)
+            //		if(fileSize>8192 && fileSize<20000)
+        {
+            mem_buf = (unsigned char*)SafeMalloc(fileSize);
+            //CHECKMALLOCRESULT(mem_buf);
+        }
+        else
+        {
+            mem_buf = (unsigned char*)lowsound;
+            lowsound += (size_t)fileSize;
+
+            if (lowsound % 4 != 0)
+                lowsound = (lowsound + (4 - 1)) & -4;
+        }
+
+        GFS_Load(fileId, 0, mem_buf, fileSize);
+        SoundChunks[which] = (Mix_Chunk*)malloc(sizeof(Mix_Chunk));
+
+        SoundChunks[which]->abuf = mem_buf;
+        SoundChunks[which]->alen = fileSize;
+
+        if (fileSize < 0x900)
+            SoundChunks[which]->alen = 0x900;
+    }
+    else
+    {
+        SoundChunks[which]->alen = 0;
+    }
+#endif	
+#else
     longword i;
 
     if(DigiList == NULL)
@@ -455,8 +559,10 @@ void SD_PrepareSound(int which)
     SoundChunks[which] = Mix_LoadWAV_RW(temp, 1);
 
     free(wavebuffer);
+#endif
 }
 
+#ifndef SEGA_SATURN
 int SD_PlayDigitized(word which,int leftpos,int rightpos)
 {
     if (!DigiMode)
@@ -491,10 +597,11 @@ void SD_ChannelFinished(int channel)
     channelSoundPos[channel].valid = 0;
 }
 
+
 void
 SD_SetDigiDevice(SDSMode mode)
 {
-    boolean devicenotpresent;
+    bool devicenotpresent;
 
     if (mode == DigiMode)
         return;
@@ -515,6 +622,7 @@ SD_SetDigiDevice(SDSMode mode)
         DigiMode = mode;
     }
 }
+#endif
 
 void
 SDL_SetupDigi(void)
@@ -571,7 +679,7 @@ SDL_SetupDigi(void)
 }
 
 //      AdLib Code
-
+#ifndef SEGA_SATURN
 ///////////////////////////////////////////////////////////////////////////
 //
 //      SDL_ALStopSound() - Turns off any sound effects playing through the
@@ -681,7 +789,7 @@ SDL_StartAL(void)
 //              emulating an AdLib) present
 //
 ///////////////////////////////////////////////////////////////////////////
-static boolean
+static bool
 SDL_DetectAdLib(void)
 {
     int i;
@@ -752,10 +860,10 @@ SDL_StartDevice(void)
 //      SD_SetSoundMode() - Sets which sound hardware to use for sound effects
 //
 ///////////////////////////////////////////////////////////////////////////
-boolean
+bool
 SD_SetSoundMode(SDMode mode)
 {
-    boolean result = false;
+    bool result = false;
     word    tableoffset;
 
     SD_StopSound();
@@ -799,10 +907,10 @@ SD_SetSoundMode(SDMode mode)
 //      SD_SetMusicMode() - sets the device to use for background music
 //
 ///////////////////////////////////////////////////////////////////////////
-boolean
+bool
 SD_SetMusicMode(SMMode mode)
 {
-    boolean result = false;
+    bool result = false;
 
     SD_FadeOutMusic();
     while (SD_MusicPlaying())
@@ -824,6 +932,7 @@ SD_SetMusicMode(SMMode mode)
 
     return(result);
 }
+#endif 
 
 int numreadysamples = 0;
 byte *curAlSound = 0;
@@ -924,6 +1033,24 @@ void SDL_IMFMusicPlayer(void *udata, Uint8 *stream, int len)
 void
 SD_Startup(void)
 {
+#ifdef SEGA_SATURN
+    //   AdLibPresent = false;
+    SoundBlasterPresent = true;
+
+    //    alTimeCount = 0;
+
+        //SD_SetSoundMode(sdm_PC);
+        //SD_SetMusicMode(sdm_PC);
+
+    SDL_AudioSpec desired, obtained;
+    desired.freq = ORIGSAMPLERATE;
+    desired.format = AUDIO_U8;
+    desired.channels = 1;
+    //  desired.samples = 1024;
+    //  desired.userdata = NULL;
+
+    SDL_OpenAudio(&desired, &obtained);
+#else
     int     i;
 
     if (SD_Started)
@@ -975,6 +1102,7 @@ SD_Startup(void)
     SDL_SetupDigi();
 
     SD_Started = true;
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -986,6 +1114,7 @@ SD_Startup(void)
 void
 SD_Shutdown(void)
 {
+#ifndef SEGA_SATURN
     int i;
 
     if (!SD_Started)
@@ -1003,8 +1132,10 @@ SD_Shutdown(void)
     DigiList = NULL;
 
     SD_Started = false;
+#endif
 }
 
+#ifndef SEGA_SATURN
 ///////////////////////////////////////////////////////////////////////////
 //
 //      SD_PositionSound() - Sets up a stereo imaging location for the next
@@ -1018,16 +1149,30 @@ SD_PositionSound(int leftvol,int rightvol)
     RightPosition = rightvol;
     nextsoundpos = true;
 }
-
+#endif
 ///////////////////////////////////////////////////////////////////////////
 //
 //      SD_PlaySound() - plays the specified sound on the appropriate hardware
 //
 ///////////////////////////////////////////////////////////////////////////
-boolean
+bool
 SD_PlaySound(soundnames sound)
 {
-    boolean         ispos;
+#ifdef SEGA_SATURN
+    //slPrint("SD_PlaySound",slLocate(10,9));		
+    //slPrintHex(sound,slLocate(24,9));		
+#ifdef PONY
+#ifndef USE_ADX	
+    if (Mix_PlayChannel(DigiMap[sound], NULL, 0) == -1)
+#else
+    return Mix_PlayChannel(sound, NULL, 0);
+#endif
+#else
+    Mix_Chunk* sample = SoundChunks[DigiMap[sound]];	 //DigiMap[sound]
+    if (Mix_PlayChannel(0, sample, 0) == -1)
+#endif	
+#else
+    bool         ispos;
     SoundCommon     *s;
     int             lp,rp;
 
@@ -1102,6 +1247,7 @@ SD_PlaySound(soundnames sound)
     SoundPriority = s->priority;
 
     return 0;
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -1113,7 +1259,26 @@ SD_PlaySound(soundnames sound)
 word
 SD_SoundPlaying(void)
 {
-    boolean result = false;
+#ifdef SEGA_SATURN
+#ifdef PONY	
+
+#else
+    unsigned char i;
+    for (i = 0; i < 4; i++)
+    {
+        if (slPCMStat(&m_dat[i]))
+        {
+            //			slSndFlush() ;
+                        //slSynch(); // vbt remis 26/05 // necessaire sinon reste planré à la fin du niveau
+            return true;
+        }
+    }
+    ////slPrintHex(SoundMode,slLocate(10,3));
+#endif
+
+    return false;
+#else
+    bool result = false;
 
     switch (SoundMode)
     {
@@ -1129,6 +1294,7 @@ SD_SoundPlaying(void)
         return(SoundNumber);
     else
         return(false);
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -1139,6 +1305,7 @@ SD_SoundPlaying(void)
 void
 SD_StopSound(void)
 {
+#ifndef SEGA_SATURN
     if (DigiPlaying)
         SD_StopDigitized();
 
@@ -1155,6 +1322,7 @@ SD_StopSound(void)
     SoundPositioned = false;
 
     SDL_SoundFinished();
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -1165,8 +1333,10 @@ SD_StopSound(void)
 void
 SD_WaitSoundDone(void)
 {
+#ifndef SEGA_SATURN
     while (SD_SoundPlaying())
         SDL_Delay(5);
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -1177,7 +1347,9 @@ SD_WaitSoundDone(void)
 void
 SD_MusicOn(void)
 {
+#ifndef SEGA_SATURN
     sqActive = true;
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -1189,6 +1361,7 @@ SD_MusicOn(void)
 int
 SD_MusicOff(void)
 {
+#ifndef SEGA_SATURN
     word    i;
 
     sqActive = false;
@@ -1202,6 +1375,9 @@ SD_MusicOff(void)
     }
 
     return (int) (sqHackPtr-sqHack);
+#else
+    return 0;
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -1230,6 +1406,7 @@ SD_StartMusic(int chunk)
 void
 SD_ContinueMusic(int chunk, int startoffs)
 {
+#ifndef SEGA_SATURN
     int i;
 
     SD_MusicOff();
@@ -1271,6 +1448,9 @@ SD_ContinueMusic(int chunk, int startoffs)
 
         SD_MusicOn();
     }
+#else
+    satPlayMusic(chunk);
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -1297,10 +1477,10 @@ SD_FadeOutMusic(void)
 //              not
 //
 ///////////////////////////////////////////////////////////////////////////
-boolean
+bool
 SD_MusicPlaying(void)
 {
-    boolean result;
+    bool result;
 
     switch (MusicMode)
     {

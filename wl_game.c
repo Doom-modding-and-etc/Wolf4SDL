@@ -1,39 +1,54 @@
 // WL_GAME.C
-
 #include <math.h>
 #include "wl_def.h"
+#ifndef SEGA_SATURN
 #include <SDL_mixer.h>
+#endif
 
 #ifdef MYPROFILE
 #include <TIME.H>
 #endif
+#ifdef SEGA_SATURN
+extern fixed MTH_Atan(fixed y, fixed x);
+short atan2fix(fixed x, fixed y);
 
+#ifdef USE_SPRITES
+unsigned int position_vram = ((SATURN_WIDTH + 64) * 64);
+//unsigned int static_items=0;
+extern unsigned char wall_buffer[(SATURN_WIDTH + 64) * 64];
+extern TEXTURE tex_spr[SPR_NULLSPRITE + SATURN_WIDTH];
+unsigned char texture_list[SPR_NULLSPRITE];
+#endif
+
+void readChunks(Sint32 fileId, uint32_t size, uint32_t* pageOffsets, Uint8* Chunks, uint8_t* ptr);
+uint8_t* PM_DecodeSprites2(unsigned int start, unsigned int endi, uint32_t* pageOffsets, word* pageLengths, uint8_t* ptr, Sint32 fileId);
+
+#undef atan2
+//#define atan2(a,b) slAtan(a,b)
+#define atan2(a,b) MTH_Atan(a,b)
+#endif
 
 /*
 =============================================================================
-
                              LOCAL CONSTANTS
-
 =============================================================================
 */
 
 
 /*
 =============================================================================
-
                              GLOBAL VARIABLES
-
 =============================================================================
 */
 
-boolean         ingame,fizzlein;
+bool         ingame,fizzlein;
 gametype        gamestate;
 byte            bordercol=VIEWCOLOR;        // color of the Change View/Ingame border
 
 #ifdef SPEAR
 int32_t         spearx,speary;
-unsigned        spearangle;
-boolean         spearflag;
+u32        spearangle;
+bool         spearflag;
 #endif
 
 #ifdef USE_FEATUREFLAGS
@@ -51,9 +66,7 @@ void GameLoop (void);
 
 /*
 =============================================================================
-
                              LOCAL VARIABLES
-
 =============================================================================
 */
 
@@ -112,7 +125,7 @@ byte lefttable[ATABLEMAX][ATABLEMAX * 2] = {
 { 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8},
 { 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8}
 };
-
+#ifndef SEGA_SATURN
 void
 SetSoundLoc(fixed gx,fixed gy)
 {
@@ -209,7 +222,7 @@ void UpdateSoundLoc(void)
         }
     }
 }
-
+#endif
 /*
 **      JAB End
 */
@@ -229,6 +242,12 @@ static void ScanInfoPlane(void)
     unsigned x,y;
     int      tile;
     word     *start;
+
+#ifdef SEGA_SATURN
+    //-----------------------------------------------------------------------------------
+    uint8_t* itemmap = (uint8_t*)saturnChunk + 0x4000; // ne pas toucher
+    //-----------------------------------------------------------------------------------
+#endif
 
     start = mapsegs[1];
     for (y=0;y<mapheight;y++)
@@ -316,7 +335,9 @@ static void ScanInfoPlane(void)
 // P wall
 //
                 case 98:
+#ifndef SEGA_SATURN
                     if (!loadedgame)
+#endif
                         gamestate.secrettotal++;
                     break;
 
@@ -562,6 +583,11 @@ static void ScanInfoPlane(void)
                 case 253:
                 case 254:
                 case 255:
+#ifdef SEGA_SATURN
+                    if (itemmap[SPR_MUT_S_1 + PMSpriteStart] == 0)
+                        PRELOAD_ITEMS(SPR_MUT_S_1, SPR_MUT_SHOOT4);
+#endif
+
                     if (gamestate.difficulty<gd_hard)
                         break;
                     tile -= 18;
@@ -569,6 +595,10 @@ static void ScanInfoPlane(void)
                 case 235:
                 case 236:
                 case 237:
+#ifdef SEGA_SATURN
+                    if (itemmap[SPR_MUT_S_1 + PMSpriteStart] == 0)
+                        PRELOAD_ITEMS(SPR_MUT_S_1, SPR_MUT_SHOOT4);
+#endif
                     if (gamestate.difficulty<gd_medium)
                         break;
                     tile -= 18;
@@ -576,6 +606,10 @@ static void ScanInfoPlane(void)
                 case 217:
                 case 218:
                 case 219:
+#ifdef SEGA_SATURN
+                    if (itemmap[SPR_MUT_S_1 + PMSpriteStart] == 0)
+                        PRELOAD_ITEMS(SPR_MUT_S_1, SPR_MUT_SHOOT4);
+#endif
                     SpawnStand(en_mutant,x,y,tile-216);
                     break;
 
@@ -583,6 +617,10 @@ static void ScanInfoPlane(void)
                 case 257:
                 case 258:
                 case 259:
+#ifdef SEGA_SATURN
+                    if (itemmap[SPR_MUT_S_1 + PMSpriteStart] == 0)
+                        PRELOAD_ITEMS(SPR_MUT_S_1, SPR_MUT_SHOOT4);
+#endif
                     if (gamestate.difficulty<gd_hard)
                         break;
                     tile -= 18;
@@ -590,6 +628,10 @@ static void ScanInfoPlane(void)
                 case 239:
                 case 240:
                 case 241:
+#ifdef SEGA_SATURN
+                    if (itemmap[SPR_MUT_S_1 + PMSpriteStart] == 0)
+                        PRELOAD_ITEMS(SPR_MUT_S_1, SPR_MUT_SHOOT4);
+#endif
                     if (gamestate.difficulty<gd_medium)
                         break;
                     tile -= 18;
@@ -598,6 +640,10 @@ static void ScanInfoPlane(void)
                 case 222:
                 case 223:
                     SpawnPatrol(en_mutant,x,y,tile-220);
+#ifdef SEGA_SATURN
+                    if (itemmap[SPR_MUT_S_1 + PMSpriteStart] == 0)
+                        PRELOAD_ITEMS(SPR_MUT_S_1, SPR_MUT_SHOOT4);
+#endif
                     break;
 
 //
@@ -620,9 +666,16 @@ static void ScanInfoPlane(void)
             }
         }
     }
+
 }
 
 //==========================================================================
+
+#ifdef SEGA_SATURN
+void VblIn(void);
+
+uint8_t* wallData = NULL;
+#endif
 
 /*
 ==================
@@ -639,8 +692,9 @@ void SetupGameLevel (void)
     word *map;
     word tile;
 
-
+#ifndef SEGA_SATURN
     if (!loadedgame)
+#endif
     {
         gamestate.TimeCount
             = gamestate.secrettotal
@@ -718,6 +772,53 @@ void SetupGameLevel (void)
     InitDoorList ();
     InitStaticList ();
 
+#if defined(SEGA_SATURN)
+    char fname[13] = "VSWAP.";
+    //	Uint32 i=0;
+    Uint8* Chunks;
+    long fileSize;
+
+    strcat(fname, extension);
+
+    Sint32 fileId;
+
+    fileId = GFS_NameToId((Sint8*)fname);
+    fileSize = GetFileSize(fileId);
+
+    Chunks = (Uint8*)saturnChunk;
+    GFS_Load(fileId, 0, (void*)Chunks, 0x2000);
+    ChunksInFile = Chunks[0] | Chunks[1] << 8;
+    PMSpriteStart = Chunks[2] | Chunks[3] << 8;
+
+    // vbt : on ne charge pas les sons !	
+    ChunksInFile = Chunks[4] | Chunks[5] << 8;
+
+    uint32_t* pageOffsets = (uint32_t*)saturnChunk + 0x2000;
+    word* pageLengths = (word*)saturnChunk + (ChunksInFile + 1) * sizeof(int32_t);
+
+    for (int i = 0; i < ChunksInFile; i++)
+    {
+        pageOffsets[i] = Chunks[6] << 0 | Chunks[7] << 8 | Chunks[8] << 16 | Chunks[9] << 24;
+        Chunks += 4;
+    }
+
+    for (int i = PMSpriteStart; i < ChunksInFile; i++)
+    {
+        pageLengths[i - PMSpriteStart] = Chunks[6] | Chunks[7] << 8;
+        Chunks += 2;
+    }
+
+    //fread(pageLengths, sizeof(word), ChunksInFile, file);
+    long pageDataSize = fileSize - pageOffsets[0];
+    if (pageDataSize > (size_t) -1)
+        Quit("The page file \"%s\" is too large!", fname);
+
+    pageOffsets[ChunksInFile] = fileSize;
+
+    uint8_t* itemmap = (uint8_t*)saturnChunk + 0x4000;
+    memset(itemmap, 0x00, 0x2000); // itemmap et itemmap communs, ne pas toucher à la taille du memset
+#endif
+
     map = mapsegs[0];
     for (y=0;y<mapheight;y++)
     {
@@ -750,6 +851,14 @@ void SetupGameLevel (void)
         }
     }
 
+#ifdef USE_SPRITES
+    memset(texture_list, 0x00, SPR_NULLSPRITE);
+    position_vram = (SATURN_WIDTH + 64) * 64;
+
+    if (viewheight == screenHeight)
+        VL_ClearScreen(0);
+#endif
+
 //
 // spawn actors
 //
@@ -768,9 +877,13 @@ void SetupGameLevel (void)
             if (tile == AMBUSHTILE)
             {
                 tilemap[x][y] = 0;
-                if ( (unsigned)(uintptr_t)actorat[x][y] == AMBUSHTILE)
+#ifdef SEGA_SATURN
+                if (get_actor_at(x, y) == AMBUSHTILE)
+                    clear_actor(x, y);
+#else
+                if ((unsigned)(uintptr_t)actorat[x][y] == AMBUSHTILE)
                     actorat[x][y] = NULL;
-
+#endif
                 if (*map >= AREATILE)
                     tile = *map;
                 if (*(map-1-mapwidth) >= AREATILE)
@@ -784,7 +897,25 @@ void SetupGameLevel (void)
             }
         }
     }
+#ifdef SEGA_SATURN
 
+    int total = (int)(laststatobj - &statobjlist[0]);
+
+    for (int i = 0; i <= total; i++)
+    {
+        if (statobjlist[i].shapenum != -1)
+        {
+            itemmap[statobjlist[i].shapenum + PMSpriteStart] = 1;
+    }
+    }
+    //-----------------------------------------------------------------------------------	
+
+    //-----------------------------------------------------------------------------------	
+    slScrTransparent(0);
+    slSynch();
+    extern const void* TransList;
+    memset((void*)TransList, 0x00, 0xf0 * 4 * 3);
+#else
 //
 // load floor/ceiling textures
 //
@@ -797,6 +928,7 @@ void SetupGameLevel (void)
 // are in memory
 //
     CA_LoadAllSounds ();
+#endif
 }
 
 
@@ -865,6 +997,7 @@ void DrawPlayBorderSides(void)
 
 void DrawStatusBorder (byte color)
 {
+#ifndef SEGA_SATURN
     int statusborderw = (screenWidth-scaleFactor*320)/2;
 
     VWB_BarScaledCoord (0,0,screenWidth,screenHeight-scaleFactor*(STATUSLINES-3),color);
@@ -884,8 +1017,8 @@ void DrawStatusBorder (byte color)
         scaleFactor*1, scaleFactor*20, color-2);
     VWB_BarScaledCoord (screenWidth-statusborderw-scaleFactor*9, screenHeight-scaleFactor*(STATUSLINES/2-4),
         scaleFactor*1, scaleFactor*14, color-3);
+#endif
 }
-
 
 /*
 ===================
@@ -903,11 +1036,28 @@ void DrawPlayBorder (void)
         DrawStatusBorder(bordercol);
     else
     {
+#ifdef SEGA_SATURN
+        const int statusborderw = (screenWidth - px * SATURN_WIDTH) / 2;
+
+#if SATURN_WIDTH == 352
+        VWB_BarScaledCoord(0, screenHeight - px * STATUSLINES,
+            8 + statusborderw + px * 8, px * STATUSLINES, bordercol);
+        VWB_BarScaledCoord(screenWidth - 8 - statusborderw - px * 8, screenHeight - px * STATUSLINES,
+            8 + statusborderw + px * 8, px * STATUSLINES, bordercol
+#else
+        VWB_BarScaledCoord(0, screenHeight - px * STATUSLINES,
+            statusborderw + px * 8, px * STATUSLINES, bordercol);
+        VWB_BarScaledCoord(screenWidth - statusborderw - px * 8, screenHeight - px * STATUSLINES,
+            statusborderw + px * 8, px * STATUSLINES, bordercol);
+#endif
+#else
         const int statusborderw = (screenWidth-px*320)/2;
+
         VWB_BarScaledCoord (0, screenHeight-px*STATUSLINES,
             statusborderw+px*8, px*STATUSLINES, bordercol);
         VWB_BarScaledCoord (screenWidth-statusborderw-px*8, screenHeight-px*STATUSLINES,
             statusborderw+px*8, px*STATUSLINES, bordercol);
+#endif
     }
 
     if((unsigned) viewheight == screenHeight) return;
@@ -920,6 +1070,14 @@ void DrawPlayBorder (void)
 
     if(xl != 0)
     {
+#ifdef SEGA_SATURN
+        SPRITE* sys_clip = (SPRITE*)SpriteVRAM;
+        (*sys_clip).XC = (xl + viewwidth) - 1;
+        (*sys_clip).YC = (yl + viewheight) - 1;
+
+        slWindow(xl, yl, (xl + viewwidth) - 1, (yl + viewheight) - 1, 300, screenWidth / 2, (yl * 2 + viewheight) / 2);
+#endif
+
         // Paint game view border lines
         VWB_BarScaledCoord(xl-px, yl-px, viewwidth+px, px, 0);                      // upper border
         VWB_BarScaledCoord(xl, yl+viewheight, viewwidth+px, px, bordercol-2);       // lower border
@@ -929,6 +1087,13 @@ void DrawPlayBorder (void)
     }
     else
     {
+#ifdef SEGA_SATURN
+        SPRITE* sys_clip = (SPRITE*)SpriteVRAM;
+        (*sys_clip).XC = SATURN_WIDTH - 1;
+        (*sys_clip).YC = 239;
+
+        slWindow(0, 0, SATURN_WIDTH - 1, 239, 300, screenWidth / 2, screenHeight / 2);
+#endif
         // Just paint a lower border line
         VWB_BarScaledCoord(0, yl+viewheight, viewwidth, px, bordercol-2);       // lower border
     }
@@ -945,9 +1110,12 @@ void DrawPlayBorder (void)
 
 void DrawPlayScreen (void)
 {
+#ifdef SEGA_SATURN
+    VWB_DrawPicScaledCoord(SATURN_ADJUST + (screenWidth - scaleFactor * SATURN_WIDTH) / 2, screenHeight - scaleFactor * STATUSLINES, STATUSBARPIC);
+#else
     VWB_DrawPicScaledCoord ((screenWidth-scaleFactor*320)/2,screenHeight-scaleFactor*STATUSLINES,STATUSBARPIC);
+#endif
     DrawPlayBorder ();
-
     DrawFace ();
     DrawHealth ();
     DrawLives ();
@@ -958,6 +1126,7 @@ void DrawPlayScreen (void)
     DrawScore ();
 }
 
+#ifndef SEGA_SATURN
 void ShowActStatus()
 {
     // Draw status bar without borders
@@ -967,6 +1136,7 @@ void ShowActStatus()
     int height = pictable[picnum].height;
     int destx = (screenWidth-scaleFactor*320)/2 + 9 * scaleFactor;
     int desty = screenHeight - (height - 4) * scaleFactor;
+	//TODO:
     VL_MemToScreenScaledCoord2(source, width, height, 9, 4, destx, desty, width - 18, height - 7);
 
     ingame = false;
@@ -1108,7 +1278,6 @@ void RecordDemo (void)
     VW_FadeIn ();
 
     startgame = false;
-    demorecord = true;
 
     SetupGameLevel ();
     StartMusic ();
@@ -1118,7 +1287,6 @@ void RecordDemo (void)
 
     PlayLoop ();
 
-    demoplayback = false;
 
     StopMusic ();
     VW_FadeOut ();
@@ -1130,7 +1298,7 @@ void RecordDemo (void)
 void FinishDemoRecord (void) {return;}
 void RecordDemo (void) {return;}
 #endif
-
+#endif
 
 
 //==========================================================================
@@ -1151,9 +1319,10 @@ void PlayDemo (int demonumber)
 #ifdef DEMOSEXTERN
 // debug: load chunk
 #ifndef SPEARDEMO
-    int dems[4]={T_DEMO0,T_DEMO1,T_DEMO2,T_DEMO3};
+   //Wolf3s: Count better the num of demos using NUMDEMOS By wayneca.
+    int dems[NUMDEMOS]={T_DEMO0,T_DEMO1,T_DEMO2,T_DEMO3};
 #else
-    int dems[1]={T_DEMO0};
+    int dems[NUMDEMOS]={T_DEMO0};
 #endif
 
     demoptr = (int8_t *) grsegs[dems[demonumber]];
@@ -1229,12 +1398,19 @@ void Died (void)
     {
         dx = killerobj->x - player->x;
         dy = player->y - killerobj->y;
-
+#ifdef SEGA_SATURN
+        fangle = atan2fix(dy, dx);
+#else
         fangle = (float) atan2((float) dy, (float) dx);     // returns -pi to pi
+#endif
         if (fangle<0)
             fangle = (float) (M_PI*2+fangle);
 
+#ifdef SEGA_SATURN
+        iangle = atan2fix(dy, dx);
+#else
         iangle = (int) (fangle/(M_PI*2)*ANGLES);
+#endif
     }
     else
     {
@@ -1352,12 +1528,25 @@ void Died (void)
 ===================
 */
 
+#ifdef SEGA_SATURN
+void heapWalk();
+#endif
+
 void GameLoop (void)
 {
-    boolean died;
+    bool died;
 #ifdef MYPROFILE
     clock_t start,end;
 #endif
+
+//TODO: Saturn.
+//gamestate.mapon = 8;
+//gamestate.mapon = 3;
+//gamestate.episode=3;
+//GiveWeapon (gamestate.bestweapon+2);
+//gamestate.ammo = 99;
+//gamestate.keys = 3;
+//vbt dernier niveau
 
 restartgame:
     ClearMemory ();
@@ -1367,12 +1556,16 @@ restartgame:
     died = false;
     do
     {
+#ifndef SEGA_SATURN
         if (!loadedgame)
+#endif
             gamestate.score = gamestate.oldscore;
         if(!died || viewsize != 21) DrawScore();
 
         startgame = false;
+#ifndef SEGA_SATURN        
         if (!loadedgame)
+#endif            
             SetupGameLevel ();
 
 #ifdef SPEAR
@@ -1386,13 +1579,14 @@ restartgame:
         DrawLevel ();                        // ADDEDFIX 5 -  Chris Chokan
 
         ingame = true;
+#ifndef SEGA_SATURN
         if(loadedgame)
         {
             ContinueMusic(lastgamemusicoffset);
             loadedgame = false;
         }
         else StartMusic ();
-
+#endif
         if (!died)
             PreloadGraphics ();             // TODO: Let this do something useful!
         else
@@ -1455,6 +1649,9 @@ startplayloop:
                 ClearMemory ();
 
                 LevelCompleted ();              // do the intermission
+#ifdef SEGA_SATURN
+                gamestate.keys = 3;
+#endif
                 if(viewsize == 21) DrawPlayScreen();
 
 #ifdef SPEARDEMO
@@ -1585,7 +1782,9 @@ startplayloop:
 
             default:
                 if(viewsize == 21) DrawPlayScreen();
+#ifndef SEGA_SATURN
                 ClearMemory ();
+#endif
                 break;
         }
     } while (1);

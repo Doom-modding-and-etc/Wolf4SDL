@@ -8,10 +8,11 @@
 TEXT FORMATTING COMMANDS
 ------------------------
 ^C<hex digit>           Change text color
-^E[enter]               End of layout (all pages)
-^G<y>,<x>,<pic>[enter]  Draw a graphic and push margins
-^P[enter]               start new page, must be the first chars in a layout
+^E[ENTER]               End of layout (all pages)
+^G<y>,<x>,<pic>[ENTER]  Draw a graphic and push margins
+^P[enter]               Start new page, It must be the first chars in a layout
 ^L<x>,<y>[ENTER]        Locate to a specific spot, x in pixels, y in lines
+^T<y>,<x>,<pic>,<delay>[ENTER]	Timed pic delay=tics
 
 =============================================================================
 */
@@ -33,12 +34,23 @@ TEXT FORMATTING COMMANDS
 #define FONTHEIGHT      10
 #define TOPMARGIN       16
 #define BOTTOMMARGIN    32
+#ifdef SEGA_SATURN
+#define LEFTMARGIN      16 +SATURN_ADJUST
+#define RIGHTMARGIN     16 -SATURN_ADJUST
+#define PICMARGIN       8  +SATURN_ADJUST
+
+#else
 #define LEFTMARGIN      16
 #define RIGHTMARGIN     16
 #define PICMARGIN       8
+#endif
 #define TEXTROWS        ((200-TOPMARGIN-BOTTOMMARGIN)/FONTHEIGHT)
 #define SPACEWIDTH      7
+#ifdef SEGA_SATURN
+#define SCREENPIXWIDTH  SATURN_WIDTH
+#else
 #define SCREENPIXWIDTH  320
+#endif
 #define SCREENMID       (SCREENPIXWIDTH/2)
 
 /*
@@ -61,7 +73,7 @@ static int     picx;
 static int     picy;
 static int     picnum;
 static int     picdelay;
-static boolean layoutdone;
+static bool layoutdone;
 
 //===========================================================================
 
@@ -166,8 +178,9 @@ void TimedPicCommand (void)
     //
     // update the screen, and wait for time delay
     //
+#if !defined(USE_SPRIES) && !defined(USE_SPRITES)
     VW_UpdateScreen ();
-
+#endif
     //
     // wait for time
     //
@@ -248,7 +261,11 @@ void HandleCommand (void)
 
         case 'G':               // ^Gyyy,xxx,ppp draws graphic
             ParsePicCommand ();
+#ifdef SEGA_SATURN
+            VWB_DrawPic(SATURN_ADJUST + (picx & ~7), picy, picnum);
+#else
             VWB_DrawPic (picx&~7,picy,picnum);
+#endif
             picwidth = pictable[picnum-STARTPICS].width;
             picheight = pictable[picnum-STARTPICS].height;
             //
@@ -411,7 +428,7 @@ void HandleWord (void)
 =====================
 */
 
-void PageLayout (boolean shownumber)
+void PageLayout (bool shownumber)
 {
     int     i,oldfontcolor;
     char    ch;
@@ -423,12 +440,19 @@ void PageLayout (boolean shownumber)
     //
     // clear the screen
     //
+#ifdef SEGA_SATURN
+    VWB_Bar(SATURN_ADJUST, 0, SATURN_WIDTH, 200, BACKCOLOR);
+    VWB_DrawPic(SATURN_ADJUST, 0, H_TOPWINDOWPIC);
+    VWB_DrawPic(SATURN_ADJUST, 8, H_LEFTWINDOWPIC);
+    VWB_DrawPic(SATURN_ADJUST + 312, 8, H_RIGHTWINDOWPIC);
+    VWB_DrawPic(SATURN_ADJUST + 8, 176, H_BOTTOMINFOPIC);
+#else
     VWB_Bar (0,0,320,200,BACKCOLOR);
     VWB_DrawPic (0,0,H_TOPWINDOWPIC);
     VWB_DrawPic (0,8,H_LEFTWINDOWPIC);
     VWB_DrawPic (312,8,H_RIGHTWINDOWPIC);
     VWB_DrawPic (8,176,H_BOTTOMINFOPIC);
-
+#endif
 
     for (i=0; i<TEXTROWS; i++)
     {
@@ -482,10 +506,18 @@ void PageLayout (boolean shownumber)
     {
 #ifdef SPANISH
         sprintf(str, "Hoja %d de %d", pagenum, numpages);
-        px = 208;
+#ifdef SEGA_SATURN
+        px = 208 + SATURN_ADJUST;
 #else
-        sprintf(str, "pg %d of %d", pagenum, numpages);
+        px = 208;
+#endif
+#else
+        sprintf(str, "pg %d of %d", pagenum, numpages);    
+#ifdef SEGA_SATURN
+        px = 213 + SATURN_ADJUST;
+#else
         px = 213;
+#endif
 #endif
         py = 183;
         fontcolor = 0x4f;                          //12^BACKCOLOR;
@@ -616,7 +648,7 @@ void ShowArticle (char *article)
     };
 #endif
     unsigned    oldfontnumber;
-    boolean     newpage,firstpage;
+    bool     newpage,firstpage;
     ControlInfo ci;
 
 #ifdef JAPAN
@@ -629,7 +661,11 @@ void ShowArticle (char *article)
     text = article;
     oldfontnumber = fontnumber;
     fontnumber = 0;
+#ifdef SEGA_SATURN
+    VWB_Bar(0, 0, SATURN_WIDTH, 200, BACKCOLOR);
+#else
     VWB_Bar (0,0,320,200,BACKCOLOR);
+#endif
     CacheLayout ();
 #endif
 
@@ -649,7 +685,9 @@ void ShowArticle (char *article)
 #else
             PageLayout (true);
 #endif
+#if !defined(USE_SPRITES) && !defined(SEGA_SATURN)
             VW_UpdateScreen ();
+#endif
             if (firstpage)
             {
                 VL_FadeIn(0,255,gamepal,10);
@@ -732,8 +770,9 @@ int     endextern = T_ENDART1;
 int     helpextern = T_HELPART;
 #endif
 #endif
-char helpfilename[13] = "HELPART.",
-    endfilename[13] = "ENDART1.";
+#ifndef SEGA_SATURN
+char helpfilename[13] = "HELPART.", endfilename[13] = "ENDART1.";
+#endif
 #endif
 
 /*
@@ -743,7 +782,7 @@ char helpfilename[13] = "HELPART.",
 =
 =================
 */
-#ifndef SPEAR
+#if !defined(SPEAR) || !defined(SEGA_SATURN)
 void HelpScreens (void)
 {
     int     artnum;
@@ -786,7 +825,9 @@ void HelpScreens (void)
 void EndText (void)
 {
     int     artnum;
+#ifndef SEGA_SATURN
     char    *text;
+#endif
 #ifndef ARTSEXTERN
     void    *layout;
 #endif
@@ -802,8 +843,9 @@ void EndText (void)
     IN_ClearKeysDown();
     if (MousePresent && IN_IsInputGrabbed())
         IN_CenterMouse();  // Clear accumulated mouse movement
-
+#ifndef SEGA_SATURN
     FreeMusic ();
+#endif
 #else
 
 
@@ -812,8 +854,10 @@ void EndText (void)
     artnum = endextern+gamestate.episode;
     text = (char *)grsegs[artnum];
 #else
+#ifndef SEGA_SATURN
     endfilename[6] = '1'+gamestate.episode;
     CA_LoadFile (endfilename,&layout);
+#endif
     text = (char *)layout;
 #endif
 
@@ -829,8 +873,9 @@ void EndText (void)
     IN_ClearKeysDown();
     if (MousePresent && IN_IsInputGrabbed())
         IN_CenterMouse();  // Clear accumulated mouse movement
-
+#ifndef SEGA_SATURN
     FreeMusic ();
+#endif
 #endif
 }
 #endif

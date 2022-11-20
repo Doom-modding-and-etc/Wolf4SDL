@@ -23,37 +23,44 @@
 =============================================================================
 */
 
-boolean madenoise;              // true when shooting or screaming
+bool madenoise;              // true when shooting or screaming
 
 exit_t playstate;
 
 static musicnames lastmusicchunk = (musicnames) 0;
 
+#ifndef SEGA_SATURN
 int     DebugOk;
+#endif
 
 objtype objlist[MAXACTORS];
 objtype *newobj, *obj, *player, *lastobj, *objfreelist, *killerobj;
-
-boolean singlestep,godmode,noclip,ammocheat,mapreveal;
+#ifdef SEGA_SATURN
+bool godmode;
+#else
+bool singlestep,godmode,noclip,ammocheat,mapreveal;
+#endif
 int     extravbls;
 
 tiletype tilemap[MAPSIZE][MAPSIZE]; // wall values only
-boolean     spotvis[MAPSIZE][MAPSIZE];
+bool     spotvis[MAPSIZE][MAPSIZE];
 objtype *actorat[MAPSIZE][MAPSIZE];
 #ifdef REVEALMAP
-boolean     mapseen[MAPSIZE][MAPSIZE];
+bool     mapseen[MAPSIZE][MAPSIZE];
 #endif
 
 //
 // replacing refresh manager
 //
 word     mapwidth,mapheight;
-unsigned tics;
+u32 tics;
 
 //
 // control info
 //
-boolean mouseenabled, joystickenabled;
+#ifndef SEGA_SATURN
+bool mouseenabled, joystickenabled;
+#endif
 int dirscan[4] =
 {
     sc_UpArrow,
@@ -61,7 +68,7 @@ int dirscan[4] =
     sc_DownArrow,
     sc_LeftArrow
 };
-#ifndef EXTRACONTROLS
+
 int buttonscan[NUMBUTTONS] =
 {
     sc_Control,
@@ -79,19 +86,8 @@ int buttonscan[NUMBUTTONS] =
     sc_6,
     sc_7
 };
-#else
-int buttonscan[NUMBUTTONS] =
-{
-     sc_Control,
-     sc_Alt,
-     sc_LShift,
-     sc_Space,
-     sc_1,
-     sc_2,
-     sc_3,
-     sc_4
-};
-#endif // EXTRACONTROLS
+
+#ifndef SEGA_SATURN
 #if SDL_MAJOR_VERSION == 2
 int buttongamecontroller[bt_Max] =
 {
@@ -156,8 +152,8 @@ int buttonjoy[32] =
     bt_straferight,
     bt_esc,
     bt_pause,
-    bt_nextweapon,
     bt_prevweapon,
+    bt_nextweapon,
     bt_nobutton,
     bt_nobutton,
     bt_nobutton,
@@ -182,29 +178,33 @@ int buttonjoy[32] =
     bt_nobutton,
     bt_nobutton
 };
-
+#endif
 int viewsize;
 
-boolean buttonheld[NUMBUTTONS];
+bool buttonheld[NUMBUTTONS];
 
-boolean demorecord, demoplayback;
+bool demorecord, demoplayback;
 int8_t *demoptr, *lastdemoptr;
+#ifndef SEGA_SATURN
 void   *demobuffer;
-
+#endif
 //
 // current user input
 //
 int controlx, controly;         // range from -100 to 100 per tic
-#ifdef EXTRACONTROLS
-int controlstrafe;
-#endif // EXTRACONTROLS
 #if SDL_MAJOR_VERSION == 2
 int gamecontrolstrafe;
 #endif
-boolean buttonstate[NUMBUTTONS];
+bool buttonstate[NUMBUTTONS];
 
 int lastgamemusicoffset = 0;
-
+#ifdef USE_SPRITES
+extern unsigned int position_vram;
+extern unsigned int static_items;
+extern unsigned char wall_buffer[(SATURN_WIDTH + 64) * 64];
+extern SPRITE user_walls[MAX_WALLS];
+extern char texture_list[SPR_NULLSPRITE];
+#endif
 
 //===========================================================================
 
@@ -226,9 +226,9 @@ void PlayLoop (void);
 =============================================================================
 */
 
-
+#ifndef SEGA_SATURN
 objtype dummyobj;
-
+#endif
 //
 // LIST OF SONGS FOR EACH VERSION
 //
@@ -405,7 +405,7 @@ void PollMouseButtons (void)
     if (buttons & 4)
         buttonstate[buttonmouse[2]] = true;
 }
-#ifndef EXTRACONTROLS
+
 /*
 ===================
 =
@@ -424,7 +424,6 @@ void PollJoystickButtons (void)
             buttonstate[buttonjoy[i]] = true;
     }
 }
-#endif
 
 #if SDL_MAJOR_VERSION == 2
 /*
@@ -723,6 +722,7 @@ void PollControls (void)
 //              middle of the screen
 //
 ///////////////////////////////////////////////////////////////////////////
+#ifndef SEGA_SATURN
 #define MAXX    320
 #define MAXY    160
 
@@ -730,7 +730,7 @@ void CenterWindow (word w, word h)
 {
     US_DrawWindow (((MAXX / 8) - w) / 2, ((MAXY / 8) - h) / 2, w, h);
 }
-
+#endif
 //===========================================================================
 
 
@@ -752,18 +752,67 @@ void CheckKeys (void)
 
     scan = LastScan;
 
+#ifdef DEBUG
+    if (Keyboard(sc_Tab) &&
+        Keyboard(sc_O))		// O = overhead
+    {
+        ViewMap();
+        return;
+    }
 
-#ifdef SPEAR
+    if (Keyboard[s(_Tab) &&
+        Keyboard(sc_N))			// N = no clip
+    {
+        noclip ^= 1;
+        //		WindowH = 160;
+
+        ClearMemory();
+        CA_CacheGrChunks();
+        ClearSplitVWB();
+        //VW_ScreenToScreen(displayofs, bufferofs, 80, 160);
+
+        if (noclip)
+            Message("No clipping ON");
+        else
+            Message("No clipping OFF");
+        /*
+            UNCACHEGRCHUNK(STARTFONT + 1);
+            PM_CheckMainMem();
+        */
+        if (noclip)
+        {
+            SD_PlaySound(DEATHSCREAM6SND);
+        }
+        else
+        {
+            SD_PlaySound(ENDBONUS2SND);
+        }
+        IN_Ack();
+        noclip ^= 1;
+        DrawAllPlayBorderSides();
+        IN_ClearKeysDown();
+        return;	// return 1;
+    }
+#endif
+
+#ifndef SEGA_SATURN
+//#ifdef SPEAR
     //
     // SECRET CHEAT CODE: TAB-G-F10
     //
-    if (Keyboard(sc_Tab) && Keyboard(sc_G) && Keyboard(sc_F10))
+    if (Keyboard(sc_Tab)) //&& Keyboard(sc_G) && Keyboard(sc_F10)) 
     {
-        WindowH = 160;
+
+        ClearMemory();
+        // CA_CacheGrChunk(STARTFONT + 1);
+        CA_CacheGrChunks();
+        ClearSplitVWB();
+
         if (godmode)
         {
             Message ("God mode OFF");
-            SD_PlaySound (NOBONUSSND);
+            //Better use sound.
+            SD_PlaySound (DEATHSCREAM1SND);
         }
         else
         {
@@ -777,13 +826,12 @@ void CheckKeys (void)
         IN_ClearKeysDown ();
         return;
     }
-#endif
-
+//#endif
 
     //
     // SECRET CHEAT CODE: 'MLI'
     //
-    if (Keyboard(sc_M) && Keyboard(sc_L) && Keyboard(sc_I))
+    if (Keyboard(sc_M)) //&& Keyboard(sc_L) && Keyboard(sc_I))
     {
         gamestate.health = 100;
         gamestate.ammo = 99;
@@ -809,12 +857,13 @@ void CheckKeys (void)
         if (viewsize < 17)
             DrawPlayBorder ();
     }
+#endif
 
     //
     // OPEN UP DEBUG KEYS
     //
 #ifdef DEBUGKEYS
-    if (Keyboard(sc_BackSpace) && Keyboard(sc_LShift) && Keyboard(sc_Alt) && param_debugmode)
+    if (Keyboard(sc_BackSpace)) //&& Keyboard(sc_LShift) && Keyboard(sc_Alt) && param_debugmode)
     {
         ClearMemory ();
         ClearSplitVWB ();
@@ -828,25 +877,25 @@ void CheckKeys (void)
     }
 #endif
 
+#ifndef SEGA_SATURN
     //
     // TRYING THE KEEN CHEAT CODE!
     //
-    if (Keyboard(sc_B) && Keyboard(sc_A) && Keyboard(sc_T))
+    if (Keyboard(sc_B)) //&& Keyboard(sc_A) && Keyboard(sc_T))
     {
-        ClearMemory ();
-        ClearSplitVWB ();
+        ClearMemory();
+        ClearSplitVWB();
 
-        Message ("Commander Keen is also\n"
-                 "available from Apogee, but\n"
-                 "then, you already know\n" "that - right, Cheatmeister?!");
+        Message("Commander Keen is also\n"
+            "available from Apogee, but\n"
+            "then, you already know\n" "that - right, Cheatmeister?!");
 
-        IN_ClearKeysDown ();
-        IN_Ack ();
+        IN_ClearKeysDown();
+        IN_Ack();
 
         if (viewsize < 18)
-            DrawPlayBorder ();
+            DrawPlayBorder();
     }
-
 //
 // pause key weirdness can't be checked as a scan code
 //
@@ -886,8 +935,12 @@ void CheckKeys (void)
         IN_ClearKeysDown ();
         return;
     }
-
+#endif
+#ifdef SEGA_SATURN
+    if (scan == sc_Escape)
+#else
     if ((scan >= sc_F1 && scan <= sc_F9) || scan == sc_Escape || buttonstate[bt_esc])
+#endif
     {
         int lastoffs = StopMusic ();
         ClearMemory ();
@@ -902,8 +955,10 @@ void CheckKeys (void)
             DrawPlayScreen ();
         if (!startgame && !loadedgame)
             ContinueMusic (lastoffs);
+#ifndef SEGA_SATURN
         if (loadedgame)
             playstate = ex_abort;
+#endif
         lasttimecount = GetTimeCount();
         if (MousePresent && IN_IsInputGrabbed())
             IN_CenterMouse();     // Clear accumulated mouse movement
@@ -914,6 +969,7 @@ void CheckKeys (void)
 // TAB-? debug keys
 //
 #ifdef DEBUGKEYS
+#ifndef SEGA_SATURN
     if (Keyboard(sc_Tab) && DebugOk)
     {
         fontnumber = 0;
@@ -929,6 +985,7 @@ void CheckKeys (void)
         }
         return;
     }
+#endif
 #endif
 
 #ifdef VIEWMAP
@@ -954,7 +1011,7 @@ void CheckKeys (void)
 
 #############################################################################
 
-objlist containt structures for every actor currently playing.  The structure
+objlist contains structures for every actor currently playing.  The structure
 is accessed as a linked list starting at *player, ending when ob->next ==
 NULL.  GetNewObj inserts a new object at the end of the list, meaning that
 if an actor spawn another actor, the new one WILL get to think and react the
@@ -980,7 +1037,9 @@ next element.
 =========================
 */
 
+#ifndef SEGA_SATURN
 int objcount;
+#endif
 
 void InitActorList (void)
 {
@@ -1000,8 +1059,9 @@ void InitActorList (void)
     objfreelist = &objlist[0];
     lastobj = NULL;
 
+#ifndef SEGA_SATURN
     objcount = 0;
-
+#endif
 //
 // give the player the first free spots
 //
@@ -1037,12 +1097,13 @@ void GetNewActor (void)
 
     if (lastobj)
         lastobj->next = newobj;
-    newobj->prev = lastobj;     // new->next is allready NULL from memset
+    newobj->prev = lastobj;     // new->next is already NULL from memset
 
     newobj->active = ac_no;
     lastobj = newobj;
-
+#ifndef SEGA_SATURN
     objcount++;
+#endif
 }
 
 //===========================================================================
@@ -1084,7 +1145,9 @@ void RemoveObj (objtype * gone)
     gone->prev = objfreelist;
     objfreelist = gone;
 
+#ifndef SEGA_SATURN
     objcount--;
+#endif
 }
 
 /*
@@ -1106,9 +1169,9 @@ void RemoveObj (objtype * gone)
 int StopMusic (void)
 {
     int lastoffs = SD_MusicOff ();
-
+#ifndef SEGA_SATURN
     UNCACHEAUDIOCHUNK (STARTMUSIC + lastmusicchunk);
-
+#endif
     return lastoffs;
 }
 
@@ -1157,7 +1220,7 @@ SDL_Color redshifts[NUMREDSHIFTS][256];
 SDL_Color whiteshifts[NUMWHITESHIFTS][256];
 
 int damagecount, bonuscount;
-boolean palshifted;
+bool palshifted;
 
 /*
 =====================
@@ -1340,8 +1403,6 @@ void FinishPaletteShifts (void)
 
 =============================================================================
 */
-
-
 /*
 =====================
 =
@@ -1350,6 +1411,107 @@ void FinishPaletteShifts (void)
 =====================
 */
 
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
+void DoActor(objtype* ob)
+{
+    void (*think) (objtype*);
+/*
+    if (!ob->active && ob->areanumber < NUMAREAS && !areabyplayer[ob->areanumber])
+        return;
+
+    if (!(ob->flags & (FL_NONMARK | FL_NEVERMARK)))
+        actorat[ob->tilex][ob->tiley] = NULL;
+*/
+    if (!(ob->flags & (FL_NONMARK | FL_NEVERMARK)))
+        clear_actor(ob->tilex, ob->tiley);
+
+    //
+    // non transitional object
+    //
+
+    if (!ob->ticcount)
+    {
+        think = (void (*)(objtype*)) ob->state->think;
+        if (think)
+        {
+            think(ob);
+            if (!ob->state)
+            {
+                RemoveObj(ob);
+                return;
+            }
+        }
+
+        if (ob->flags & FL_NEVERMARK)
+            return;
+
+        if ((ob->flags & FL_NONMARK) && actorat[ob->tilex][ob->tiley])
+            return;
+
+
+        move_actor(ob);
+        return;
+    }
+
+    //
+    // transitional object
+    //
+    ob->ticcount -= (short)tics;
+    while (ob->ticcount <= 0)
+    {
+        think = (void (*)(objtype*)) ob->state->action;        // end of state action
+        if (think)
+        {
+            think(ob);
+            if (!ob->state)
+            {
+                RemoveObj(ob);
+                return;
+            }
+        }
+
+        ob->state = ob->state->next;
+
+        if (!ob->state)
+        {
+            RemoveObj(ob);
+            return;
+        }
+
+        if (!ob->state->tictime)
+        {
+            ob->ticcount = 0;
+            goto think;
+        }
+
+        ob->ticcount += ob->state->tictime;
+    }
+
+think:
+    //
+    // think
+    //
+    think = (void (*)(objtype*)) ob->state->think;
+    if (think)
+    {
+        think(ob);
+        if (!ob->state)
+        {
+            RemoveObj(ob);
+            return;
+        }
+    }
+
+    if (ob->flags & FL_NEVERMARK)
+        return;
+
+    if ((ob->flags & FL_NONMARK) && actorat[ob->tilex][ob->tiley])
+        return;
+
+
+    move_actor(ob);
+}
+#else
 void DoActor (objtype * ob)
 {
     void (*think) (objtype *);
@@ -1444,7 +1606,7 @@ think:
 
     actorat[ob->tilex][ob->tiley] = ob;
 }
-
+#endif
 //==========================================================================
 
 
@@ -1474,7 +1636,9 @@ void PlayLoop (void)
 
     playstate = ex_stillplaying;
     lasttimecount = GetTimeCount();
+#ifndef SEGA_SATURN
     frameon = 0;
+#endif
     anglefrac = 0;
     facecount = 0;
     funnyticount = 0;
@@ -1489,6 +1653,9 @@ void PlayLoop (void)
 #if defined (SWITCH) || defined (N3DS)    
     printf("LOOP HERE\n");
 #endif    
+#ifdef SEGA_SATURN
+    DrawStatusBar(); // vbt : ajout
+#endif
     do
     {
         PollControls ();
@@ -1523,8 +1690,9 @@ void PlayLoop (void)
 #endif
 
         gamestate.TimeCount += tics;
-
+#ifndef SEGA_SATURN
         UpdateSoundLoc ();      // JAB
+#endif
         if (screenfaded)
             VW_FadeIn ();
 
@@ -1533,6 +1701,7 @@ void PlayLoop (void)
 //
 // debug aids
 //
+#ifndef SEGA_SATURN
         if (singlestep)
         {
             VW_WaitVBL (singlestep);
@@ -1540,7 +1709,7 @@ void PlayLoop (void)
         }
         if (extravbls)
             VW_WaitVBL (extravbls);
-
+#endif
         if (demoplayback)
         {
             if (IN_CheckAck ())

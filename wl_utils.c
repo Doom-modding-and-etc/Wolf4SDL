@@ -2,10 +2,8 @@
 
 #include "wl_utils.h"
 
-
-#if defined(SWITCH) || defined (N3DS)
-
-#else
+#ifndef N3DS
+#ifndef SWITCH
 /*
 ===================
 =
@@ -28,11 +26,16 @@ void *safe_malloc (size_t size, const char *fname, uint32_t line)
     return ptr;
 }
 #endif
+#endif
 
 
 fixed FixedMul (fixed a, fixed b)
 {
+#ifdef SEGA_SATURN
+    return MTH_Mul2(a, b);
+#else
 	return (fixed)(((int64_t)a * b + 0x8000) >> FRACBITS);
+#endif
 }
 
 fixed FixedDiv (fixed a, fixed b)
@@ -45,7 +48,9 @@ fixed FixedDiv (fixed a, fixed b)
 word READWORD (byte *ptr)
 {
     word val = ptr[0] | ptr[1] << 8;
-
+#ifdef SEGA_SATURN
+    ptr += 2;
+#endif
     return val;
 }
 
@@ -55,3 +60,55 @@ longword READLONGWORD (byte *ptr)
 
     return val;
 }
+
+#ifdef SEGA_SATURN
+short atan2fix(fixed x, fixed y)
+{
+    boolean negative;
+    long long quot;
+    fixed tang;
+    int offset;
+    int res;
+    if (x < 0) {
+        x = -x;
+        negative = true;
+        offset = 180;
+    }
+    else {
+        negative = false;
+        offset = 0;
+    }
+    if (y < 0) {
+        y = -y;
+        negative = !negative;
+        if (negative)
+            offset = 360;
+    }
+    if (x == 0)
+        return negative ? 270 : 90;
+    if (y == 0)
+        return offset;
+    quot = ((long long)y << 32) / x;
+    tang = (fixed)quot;
+    if (quot != tang) {
+        /* Overflow.  */
+        res = 90;
+    }
+    else {
+        int low = 0;
+        int high = FINEANGLES / 4 - 1;
+
+        while (low + 1 < high) {
+            res = (low + high) >> 1;
+            if (finetangent[res] < tang)
+                high = res;
+            else
+                low = res;
+        }
+        res = res / (FINEANGLES / ANGLES);
+    }
+    if (negative)
+        res = -res;
+    return res + offset;
+}
+#endif

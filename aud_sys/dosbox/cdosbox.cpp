@@ -3,17 +3,10 @@
 #ifdef USE_DOSBOX
 #include "dbopl.h"
 using namespace DBOPL;
-struct Operator op;
+Operator op;
 Operator::State state;
 struct Channel channel;
 struct Chip chips;
-
-
-template<Operator::State Yes>
-void Operator_TemplateVolumeWrapper()
-{
-	op.TemplateVolume(Yes);
-}
 
 void Operator_SetState(Bit8u s)
 {
@@ -31,7 +24,7 @@ void Operator_UpdateFrequency()
 	op.UpdateFrequency();
 }
 
-const boolean Operator_Silent()
+const bool Operator_Silent()
 {
 	return op.Silent();
 }
@@ -73,14 +66,14 @@ Bits Operator_GetWave(Bitu index, Bitu vol)
 
 //Channel:
 //Private:
-struct COperator* Channel_Op(Bitu index)
+dOperator* Channel_Op(Bitu index)
 {
 	channel.Op(index);
 }
 
-Bits Operator_TemplateVolume()
+void Operator_TemplateVolume(Bits out)
 {
-
+    out = op.TemplateVolume();
 }
 
 //Chip:
@@ -124,5 +117,18 @@ void Chip_Setup(Bit32u r)
 {
 	chips.Setup(r);
 }
+
+void Channel_SetChanData(const dChip *chip, Bit32u data)
+{
+     chip->chan = channel.SetChanData(&chips, data);
+}
+
+void Channel_UpdateFrequency(const dChip* chip, Bit8u fourOp);
+void Channel_WriteA0(const dChip* chip, Bit8u val);
+void Channel_WriteB0(const dChip* chip, Bit8u val);
+void Channel_WriteC0(const dChip* chip, Bit8u val);
+void Channel_ResetC0(const dChip* chip);
+void Channel_GeneratePercussion(dChip* chip, Bit32s* output);
+dChannel* Channel_BlockTemplate(dChip* chip, Bit32u samples, Bit32s* output);
 
 #endif

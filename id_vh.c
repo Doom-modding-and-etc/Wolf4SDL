@@ -10,6 +10,47 @@ int	    fontnumber;
 
 void VWB_DrawPropString(const char* string)
 {
+#ifdef SEGA_SATURN
+    fontstruct* font;
+    int		    width, step, height;
+    byte* source, * dest;
+    byte	    ch;
+
+    byte* vbuf = LOCK();
+
+    font = (fontstruct*)grsegs[STARTFONT + fontnumber];
+    font->height = SWAP_BYTES_16(font->height);
+    height = font->height;//SWAP_BYTES_16(font->height);//font->height;//font->height;//font->height;//SWAP_BYTES_16(font->height);
+
+    dest = vbuf + scaleFactor * (py * curPitch + px);
+
+    while ((ch = (byte)*string++) != 0)
+    {
+        width = step = font->width[ch];
+        source = ((byte*)font) + SWAP_BYTES_16(font->location[ch]);
+
+        while (width--)
+        {
+            for (int i = 0; i < height; i++)
+            {
+                if (source[i * step])
+                {
+                    for (unsigned sy = 0; sy < scaleFactor; sy++)
+                        for (unsigned sx = 0; sx < scaleFactor; sx++)
+                            dest[(scaleFactor * i + sy) * curPitch + sx] = fontcolor;
+                }
+            }
+
+            source++;
+            px++;
+            dest += scaleFactor;
+        }
+    }
+
+    font->height = SWAP_BYTES_16(font->height);
+
+    UNLOCK();
+#else
 	fontstruct  *font;
 	int		    width, step, height;
 	byte	    *source, *dest;
@@ -47,14 +88,21 @@ void VWB_DrawPropString(const char* string)
 	}
 
 	VL_UnlockSurface(screenBuffer);
+#endif
 }
 
 
 void VWL_MeasureString (const char *string, word *width, word *height, fontstruct *font)
 {
+#ifdef SEGA_SATURN
+    *height = SWAP_BYTES_16(font->height);
+
+#else
 	*height = font->height;
-	for (*width = 0;*string;string++)
+#endif
+    for (*width = 0;*string;string++)
 		*width += font->width[*((byte *)string)];	// proportional width
+
 }
 
 void VW_MeasurePropString (const char *string, word *width, word *height)
@@ -80,19 +128,25 @@ void VH_RenderTextures(SDL_Surface *surface)
 =============================================================================
 */
 
+#if !defined(SEGA_SATURN) && !defined(USE_SPRITE)
 void VH_UpdateScreen(SDL_Surface *surface)
 {
-	SDL_BlitSurface (surface,NULL,screen,NULL);
+    SDL_BlitSurface (surface,NULL,screen,NULL);
 #if SDL_MAJOR_VERSION == 1
     SDL_Flip(screen);
 #elif SDL_MAJOR_VERSION == 2
     VH_RenderTextures(screen);
 #endif
 }
+#endif
 
 void VWB_DrawTile8 (int x, int y, int tile)
 {
+#ifdef SEGA_SATURN
+    LatchDrawChar(x, y, tile);
+#else
 	VL_MemToScreen (grsegs[STARTTILE8]+tile*64,8,8,x,y);
+#endif
 }
 
 void VWB_DrawPic (int x, int y, int chunknum)
@@ -105,7 +159,11 @@ void VWB_DrawPic (int x, int y, int chunknum)
 	width = pictable[picnum].width;
 	height = pictable[picnum].height;
 
+#ifdef SEGA_SATURN
+    VL_MemToScreenScaledCoord(grsegs[chunknum], width, height, scaleFactor * x, scaleFactor * y);
+#else
 	VL_MemToScreen (grsegs[chunknum],width,height,x,y);
+#endif
 }
 
 void VWB_DrawPicScaledCoord (int scx, int scy, int chunknum)
@@ -125,6 +183,7 @@ void VWB_Bar (int x, int y, int width, int height, int color)
 	VW_Bar (x,y,width,height,color);
 }
 
+#ifndef SEGA_SATURN
 void VWB_Plot (int x, int y, int color)
 {
     if(scaleFactor == 1)
@@ -132,6 +191,7 @@ void VWB_Plot (int x, int y, int color)
     else
         VW_Bar(x, y, 1, 1, color);
 }
+#endif
 
 void VWB_Hlin (int x1, int x2, int y, int color)
 {
@@ -158,6 +218,77 @@ void VWB_Vlin (int y1, int y2, int x, int color)
 =============================================================================
 */
 
+#ifdef SEGA_SATURN
+/*
+===================
+=
+= LoadLatchMem
+=
+===================
+*/
+
+void LoadLatchMem(void)
+{
+    int	i, width, height, start, end;
+    byte* src;
+    SDL_Surface* surf; //,*surf1;
+#if 0
+    //
+    // tile 8s
+    //
+    surf = SDL_CreateRGBSurface(SDL_HWSURFACE, 8 * 8,
+        ((NUMTILE8 + 7) / 8) * 8, 8, 0, 0, 0, 0);
+    if (surf == NULL)
+    {
+        Quit("Unable to create surface for tiles!");
+    }
+    SDL_SetColors(surf, gamepal, 0, 256);
+
+    latchpics[0] = surf;
+
+    CA_CacheGrChunk(STARTTILE8);
+    src = grsegs[STARTTILE8];
+    for (i = 0; i < NUMTILE8; i++)
+    {
+        VL_MemToLatch(src, 8, 8, surf, (i & 7) * 8, (i >> 3) * 8);
+        src += 64;
+    }
+    UNCACHEGRCHUNK(STARTTILE8);
+
+    latchpics[1] = surf;
+#endif	
+    //
+    // pics
+    //
+    start = LATCHPICS_LUMP_START;
+    end = LATCHPICS_LUMP_END;
+
+    for (i = start; i <= end; i++)
+    {
+        width = pictable[i - STARTPICS].width;
+        height = pictable[i - STARTPICS].height;
+
+        surf = SDL_CreateRGBSurface(SDL_HWSURFACE, width, height, 8, 0, 0, 0, 0);
+        if (surf == NULL)
+        {
+            Quit("Unable to create surface for picture!");
+        }
+        //       SDL_SetColors(surf, gamepal, 0, 256);
+        latchpics[2 + i - start] = surf;
+        CA_CacheGrChunk(i);
+        VL_MemToLatch(grsegs[i], width, height, surf, 0, 0);
+        UNCACHEGRCHUNK(i);
+        // vbt 26/07/2020 free remis	
+        // vbt 15/08/2020 pas de free c'est les images de la barre de statut	
+        //		free(surf);
+        //		surf=NULL;
+    }
+    // vbt 26/07/2020 free remis	
+    // vbt 15/08/2020 utilisation de lowworkram
+    //free(surf1);
+    //surf1=NULL;
+}
+#endif
 
 /*
 ===================
@@ -220,9 +351,112 @@ void VH_Startup()
     rndmask = rndmasks[rndbits - 17];
 }
 
-boolean FizzleFade (SDL_Surface *source, int x1, int y1,
-    unsigned width, unsigned height, unsigned frames, boolean abortable)
+bool FizzleFade (SDL_Surface *source, int x1, int y1,
+    unsigned width, unsigned height, unsigned frames, bool abortable)
 {
+#ifdef SEGA_SATURN
+#if 1
+    unsigned x, y, frame, pixperframe;
+    int32_t  rndval, lastrndval;
+    int      first = 1;
+
+    lastrndval = 0;
+    pixperframe = width * height / frames;
+
+    IN_StartAck();
+
+    frame = GetTimeCount();
+    byte* srcptr = (byte*)source->pixels;
+    byte color = (srcptr[x1 + (y1 * width)] ? 0 : 4);
+
+    SDL_Rect rect = { x1,y1,width,height };
+
+    if (curSurface == screen)
+    {
+        curSurface = screenBuffer;
+        VL_BarScaledCoord(x1, y1, width, height, srcptr[x1 + (y1 * width)]); // vbt ajout
+        DrawStatusBar(); // vbt : ajout
+    }
+    else
+    {
+        VL_BarScaledCoord(x1, y1, width, height, color); // vbt ajout		
+        DrawStatusBar(); // vbt : ajout
+        curSurface = screen;
+    }
+
+    do
+    {
+        if (abortable && IN_CheckAck())
+        {
+#ifndef USE_SPRITES
+            //            SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
+            //            SDL_UpdateRect(screen, 0, 0, 0, 0);
+#endif
+// xxx			VGAClearScreen(); // vbt : maj du fond d'écran
+            //curSurface = source;
+            VL_BarScaledCoord(x1, y1, width, height, color); // vbt ajout
+            return true;
+        }
+
+
+        byte* destptr = (byte*)dest->pixels;
+
+        rndval = lastrndval;
+
+        // When using double buffering, we have to copy the pixels of the last AND the current frame.
+        // Only for the first frame, there is no "last frame"
+        for (int i = first; i < 2; i++)
+        {
+
+            for (unsigned p = 0; p < pixperframe; p++)
+            {
+                //
+                // seperate random value into x/y pair
+                //
+
+                x = rndval >> rndbits_y;
+                y = rndval & ((1 << rndbits_y) - 1);
+
+                //
+                // advance to next random element
+                //
+
+                rndval = (rndval >> 1) ^ (rndval & 1 ? 0 : rndmask);
+
+                if (x >= width || y >= height)
+                {
+                    if (rndval == 0)     // entire sequence has been completed
+                        goto finished;
+                    p--;
+                    continue;
+                }
+
+                //
+                // copy one pixel
+                //
+
+                *(destptr + (y1 + y) * dest->pitch + x1 + x) = *(srcptr + (y1 + y) * source->pitch + x1 + x);
+
+                if (rndval == 0)		// entire sequence has been completed
+                    goto finished;
+            }
+
+            if (!i || first) lastrndval = rndval;
+        }
+        first = 0;
+
+        SDL_BlitSurface(dest, &rect, source, &rect);
+        frame++;
+
+        Delay(frame - GetTimeCount());        // don't go too fast
+    } while (1);
+
+
+finished:
+    SDL_BlitSurface(dest, &rect, source, &rect);
+    return false;
+#endif
+#else
     unsigned x, y, p, frame, pixperframe;
     int32_t  rndval, lastrndval;
     int      i,first = 1;
@@ -333,4 +567,5 @@ finished:
     VL_UnlockSurface(screen);
     VH_UpdateScreen(source);
     return false;
+#endif
 }

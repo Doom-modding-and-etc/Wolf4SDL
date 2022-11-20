@@ -51,8 +51,14 @@
 #define CENTERY         ((int) screenHeight / 2)
 #endif
 
+#ifdef SEGA_SATURN
+#define SATURN_ADJUST (SATURN_WIDTH-320)/2
+#define MENU_X  76+SATURN_ADJUST
+#else
 #define MENU_X  76
+#endif
 #define MENU_Y  55
+
 #define MENU_W  178
 #ifndef SPEAR
 #ifndef GOODTIMES
@@ -64,24 +70,27 @@
 #define MENU_H  13*9+6
 #endif
 
+#ifdef SEGA_SATURN
+#define SM_X    48+SATURN_ADJUST
+#else
 #define SM_X    48
+#endif
 #define SM_W    250
 
-#ifdef VIEASM
+
 #define SM_Y1   20
+#ifdef VIEASM
 #define SM_H1   3*13-7
 #define SM_Y2   SM_Y1+4*13
 #define SM_H2   3*13-7
 #define SM_Y3   SM_Y2+4*13
-#define SM_H3   3*13-7
 #else
-#define SM_Y1   20
 #define SM_H1   4*13-7
 #define SM_Y2   SM_Y1+5*13
 #define SM_H2   4*13-7
 #define SM_Y3   SM_Y2+5*13
-#define SM_H3   3*13-7
 #endif
+#define SM_H3   3*13-7
 
 #if N3DS
 #define CTL_X   CENTERX - (160 - 24)
@@ -101,14 +110,22 @@
 #define LSM_W   175
 #define LSM_H   10*13+10
 
+#ifdef SEGA_SATURN
+#define NM_X    50 + SATURN_ADJUST
+#else
 #define NM_X    50
+#endif
 #define NM_Y    100
 #define NM_W    225
 #define NM_H    13*4+15
 
 #define NE_X    10
 #define NE_Y    23
+#ifdef SEGA_SATUR
+#define NE_W    SATURN_WIDTH-NE_X*2
+#else
 #define NE_W    320-NE_X*2
+#endif
 #define NE_H    200-NE_Y*2
 
 #define CST_X           20
@@ -180,7 +197,7 @@ void DefineKeyMove(void);
 void EnterCtrlData(int index,CustomCtrls *cust,void (*DrawRtn)(int),void (*PrintRtn)(int),int type);
 
 #ifdef VIEASM
-extern void DrawSoundVols(bool);
+extern void DrawSoundVols(bool curmode);
 extern int AdjustVolume(int);
 #endif
 void DrawMainMenu(void);

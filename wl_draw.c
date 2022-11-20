@@ -28,7 +28,7 @@ byte     *vbuf;
 
 int32_t    lasttimecount;
 int32_t    frameon;
-boolean fpscounter;
+bool fpscounter;
 
 int fps_frames=0, fps_time=0, fps=0;
 
@@ -198,7 +198,7 @@ void TransformActor (objtype *ob)
 ========================
 */
 
-boolean TransformTile (int tx, int ty, short *dispx, short *dispheight)
+bool TransformTile (int tx, int ty, short *dispx, short *dispheight)
 {
     fixed gx,gy,gxt,gyt,nx,ny;
 
@@ -875,10 +875,10 @@ void DrawScaleds (void)
 #endif
                 visptr++;
             }
-            obj->flags |= FL_VISABLE;
+            obj->flags |= FL_VISIBLE;
         }
         else
-            obj->flags &= ~FL_VISABLE;
+            obj->flags &= ~FL_VISIBLE;
     }
 
 //
@@ -1017,7 +1017,7 @@ void WallRefresh (void)
     longword  xpartial,ypartial;
     doorobj_t *door;
     int       pwallposnorm,pwallposinv,pwallposi;           // holds modified pwallpos
-    boolean      passdoor;
+    bool      passdoor;
 
     for (pixx = 0; pixx < viewwidth; pixx++)
     {

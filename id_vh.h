@@ -3,7 +3,7 @@
 #ifndef __ID_VH_H_
 #define __ID_VH_H_
 
-#define WHITE			15			// graphics mode independant colors
+#define WHITE			15			// graphics mode independent colors
 #define BLACK			0
 #define FIRSTCOLOR		1
 #define SECONDCOLOR		12
@@ -43,7 +43,7 @@ extern	int             px,py;
 #define SETFONTCOLOR(f,b) fontcolor=f;backcolor=b;
 
 //
-// mode independant routines
+// mode independent routines
 // coordinates in pixels, rounded to best screen res
 // regions marked in double buffer
 //
@@ -67,12 +67,14 @@ void VWB_Vlin (int y1, int y2, int x, int color);
 #define VWB_VlinScaledCoord VW_Vlin
 
 void VH_UpdateScreen (SDL_Surface *surface);
+#ifndef SEGA_SATURN
 #define VW_UpdateScreen()   VH_UpdateScreen (screenBuffer)
+#endif
 #if SDL_MAJOR_VERSION == 2
 void VH_RenderTextures(SDL_Surface* surface);
 #endif
 //
-// wolfenstein EGA compatability stuff
+// wolfenstein EGA compatbility stuff
 //
 
 
@@ -89,7 +91,7 @@ void VH_RenderTextures(SDL_Surface* surface);
 void	VW_MeasurePropString (const char *string, word *width, word *height);
 
 void    VH_Startup();
-boolean FizzleFade (SDL_Surface *source, int x1, int y1,
-    unsigned width, unsigned height, unsigned frames, boolean abortable);
+bool FizzleFade (SDL_Surface *source, int x1, int y1,
+    unsigned width, unsigned height, unsigned frames, bool abortable);
 
 #endif

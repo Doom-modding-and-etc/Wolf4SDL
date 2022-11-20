@@ -2,20 +2,20 @@
 
 #include "wl_def.h"
 
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
+extern statetype gamestates[MAXSTATES];
+#endif
+
 /*
 =============================================================================
-
                             LOCAL CONSTANTS
-
 =============================================================================
 */
 
 
 /*
 =============================================================================
-
                             GLOBAL VARIABLES
-
 =============================================================================
 */
 
@@ -38,24 +38,26 @@ static const dirtype diagonal[9][9] =
 
 
 
-void    SpawnNewObj (unsigned tilex, unsigned tiley, statetype *state);
+#ifdef EMBEDDED
+void SpawnNewObj(unsigned tilex, unsigned tiley, int state);
+#else
+void SpawnNewObj(unsigned tilex, unsigned tiley, statetype* state);
+#endif
 void    NewState (objtype *ob, statetype *state);
 
-boolean TryWalk (objtype *ob);
+bool TryWalk (objtype *ob);
 void    MoveObj (objtype *ob, int32_t move);
 
 void    KillActor (objtype *ob);
 void    DamageActor (objtype *ob, unsigned damage);
 
-boolean CheckLine (objtype *ob);
+bool CheckLine (objtype *ob);
 void    FirstSighting (objtype *ob);
-boolean CheckSight (objtype *ob);
+bool CheckSight (objtype *ob);
 
 /*
 =============================================================================
-
                                 LOCAL VARIABLES
-
 =============================================================================
 */
 
@@ -69,14 +71,35 @@ boolean CheckSight (objtype *ob);
 =
 = SpawnNewObj
 =
-= Spaws a new actor at the given TILE coordinates, with the given state, and
+= Spawns a new actor at the given TILE coordinates, with the given state, and
 = the given size in GLOBAL units.
 =
 = newobj = a pointer to an initialized new actor
 =
 ===================
 */
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
 
+GetNewActor();
+
+newobj->state = state;
+if (gamestates[state].tictime)
+newobj->ticcount = US_RndT() % gamestates[state].tictime;
+else
+newobj->ticcount = 0;
+
+newobj->tilex = tilex;
+newobj->tiley = tiley;
+newobj->x = ((long)tilex << TILESHIFT) + TILEGLOBAL / 2;
+newobj->y = ((long)tiley << TILESHIFT) + TILEGLOBAL / 2;
+newobj->dir = nodir;
+
+actorat[tilex][tiley] = newobj->id | 0x8000;
+newobj->areanumber =
+*(mapsegs[0] + farmapylookup[newobj->tiley] + newobj->tilex) - AREATILE;
+
+}
+#else
 void SpawnNewObj (unsigned tilex, unsigned tiley, statetype *state)
 {
     GetNewActor ();
@@ -97,8 +120,7 @@ void SpawnNewObj (unsigned tilex, unsigned tiley, statetype *state)
     actorat[tilex][tiley] = newobj;
     newobj->areanumber = MAPSPOT(tilex,tiley,0) - AREATILE;
 }
-
-
+#endif
 
 /*
 ===================
@@ -110,19 +132,25 @@ void SpawnNewObj (unsigned tilex, unsigned tiley, statetype *state)
 ===================
 */
 
-void NewState (objtype *ob, statetype *state)
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
+void NewState(objtype* ob, int state)
+#else
+void NewState(objtype* ob, statetype* state)
+#endif
 {
     ob->state = state;
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
+    ob->ticcount = gamestates[state].tictime;
+#else	
     ob->ticcount = state->tictime;
+#endif
 }
 
 
 
 /*
 =============================================================================
-
                         ENEMY TILE WORLD MOVEMENT CODE
-
 =============================================================================
 */
 
@@ -150,7 +178,19 @@ void NewState (objtype *ob, statetype *state)
 =
 ==================================
 */
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
+#define CHECKDIAG(x,y)								\
+{                                               \
+	if (any_actor_at(x, y))                                       \
+	{                                               \
+		if (!obj_actor_at(x, y))                               \
+			return false;                           \
+		if (objlist[get_actor_at(x, y)].flags & FL_SHOOTABLE)  \
+			return false;                           \
+	}                                               \
+}
 
+#else
 #define CHECKDIAG(x,y)                              \
 {                                                   \
     temp=(uintptr_t)actorat[x][y];                  \
@@ -162,7 +202,7 @@ void NewState (objtype *ob, statetype *state)
             return false;                           \
     }                                               \
 }
-
+#endif
 #ifdef PLAYDEMOLIKEORIGINAL
     #define DOORCHECK                                   \
             if(DEMOCOND_ORIG)                           \
@@ -190,6 +230,21 @@ void NewState (objtype *ob, statetype *state)
             }
 #endif
 
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
+#define CHECKSIDE(x,y)								\
+{                                               \
+	if (any_actor_at(x, y))                                       \
+	{                                               \
+		if (wall_actor_at(x, y))                               \
+			return false;                           \
+		if (!obj_actor_at(x, y))                               \
+			doornum = get_actor_at(x, y);                      \
+		else if (objlist[get_actor_at(x, y)].flags & FL_SHOOTABLE) \
+			return false;                           \
+	}                                               \
+}
+
+#else
 #define CHECKSIDE(x,y)                                  \
 {                                                       \
     temp=(uintptr_t)actorat[x][y];                      \
@@ -205,9 +260,9 @@ void NewState (objtype *ob, statetype *state)
             return false;                               \
     }                                                   \
 }
+#endif
 
-
-boolean TryWalk (objtype *ob)
+bool TryWalk (objtype *ob)
 {
     int       doornum = -1;
     uintptr_t temp;
@@ -353,8 +408,11 @@ boolean TryWalk (objtype *ob)
         return true;
     }
 #endif
-
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
+    ob->areanumber = *(mapsegs[0] + farmapylookup[tiley] + tilex) - AREATILE;
+#else
     ob->areanumber = MAPSPOT(ob->tilex,ob->tiley,0) - AREATILE;
+#endif
     ob->distance = TILEGLOBAL;
     return true;
 }
@@ -406,7 +464,7 @@ void SelectDodgeDir (objtype *ob)
     deltay = player->tiley - ob->tiley;
 
     //
-    // arange 5 direction choices in order of preference
+    // arrange 5 direction choices in order of preference
     // the four cardinal directions plus the diagonal straight towards
     // the player
     //
@@ -462,7 +520,7 @@ void SelectDodgeDir (objtype *ob)
     dirtry[0] = diagonal [ dirtry[1] ] [ dirtry[2] ];
 
     //
-    // try the directions util one works
+    // try the directions until one works
     //
     for (i=0;i<5;i++)
     {
@@ -728,7 +786,11 @@ void MoveObj (objtype *ob, int32_t move)
     //
     // check to make sure it's not on top of player
     //
+#ifdef SEGA_SATURN
+    if (getareabyplayer(ob->areanumber))
+#else
     if (ob->areanumber >= NUMAREAS || areabyplayer[ob->areanumber])
+#endif
     {
         deltax = ob->x - player->x;
         if (deltax < -MINACTORDIST || deltax > MINACTORDIST)
@@ -788,12 +850,10 @@ moveok:
 
 /*
 =============================================================================
-
                                 STUFF
-
 =============================================================================
 */
-
+#ifndef SEGA_SATURN
 /*
 ===============
 =
@@ -835,7 +895,7 @@ void DropItem (wl_stat_t itemtype, int tilex, int tiley)
         }
     }
 }
-
+#endif
 
 
 /*
@@ -845,7 +905,152 @@ void DropItem (wl_stat_t itemtype, int tilex, int tiley)
 =
 ===============
 */
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
+void KillActor(objtype* ob)
+{
+    int	tilex, tiley;
+    int	points;
+    int	newstate;
 
+    tilex = ob->tilex = ob->x >> TILESHIFT;		// drop item on center
+    tiley = ob->tiley = ob->y >> TILESHIFT;
+
+    switch (ob->obclass)
+    {
+    case guardobj:
+        points = 100;
+        newstate = s_grddie1;
+        PlaceItemType(bo_clip2, tilex, tiley);
+        break;
+
+    case officerobj:
+        points = 400;
+        newstate = s_ofcdie1;
+        PlaceItemType(bo_clip2, tilex, tiley);
+        break;
+
+    case mutantobj:
+        points = 700;
+        newstate = s_mutdie1;
+        PlaceItemType(bo_clip2, tilex, tiley);
+        break;
+
+    case ssobj:
+        points = 500;
+        newstate = s_ssdie1;
+        if (gamestate.bestweapon < wp_machinegun)
+            PlaceItemType(bo_machinegun, tilex, tiley);
+        else
+            PlaceItemType(bo_clip2, tilex, tiley);
+        break;
+
+    case dogobj:
+        points = 200;
+        newstate = s_dogdie1;
+        break;
+
+#ifndef SPEAR
+    case bossobj:
+        points = 5000;
+        newstate = s_bossdie1;
+        PlaceItemType(bo_key1, tilex, tiley);
+        break;
+
+    case gretelobj:
+        points = 5000;
+        newstate = s_greteldie1;
+        PlaceItemType(bo_key1, tilex, tiley);
+        break;
+
+    case giftobj:
+        points = 5000;
+        gamestate.killx = player->x;
+        gamestate.killy = player->y;
+        newstate = s_giftdie1;
+        break;
+
+    case fatobj:
+        points = 5000;
+        gamestate.killx = player->x;
+        gamestate.killy = player->y;
+        newstate = s_fatdie1;
+        break;
+
+    case schabbobj:
+        points = 5000;
+        gamestate.killx = player->x;
+        gamestate.killy = player->y;
+        newstate = s_schabbdie1;
+        A_DeathScream(ob);
+        break;
+    case fakeobj:
+        points = 2000;
+        newstate = s_fakedie1;
+        break;
+
+    case mechahitlerobj:
+        points = 5000;
+        newstate = s_mechadie1;
+        break;
+    case realhitlerobj:
+        points = 5000;
+        gamestate.killx = player->x;
+        gamestate.killy = player->y;
+        newstate = s_hitlerdie1;
+        A_DeathScream(ob);
+        break;
+#else
+    case spectreobj:
+        points = 200;
+        newstate = s_spectredie1;
+        break;
+
+    case angelobj:
+        points = 5000;
+        newstate = s_angeldie1;
+        break;
+
+    case transobj:
+        points = 5000;
+        newstate = s_transdie0;
+        PlaceItemType(bo_key1, tilex, tiley);
+        break;
+
+    case uberobj:
+        points = 5000;
+        newstate = s_uberdie0;
+        PlaceItemType(bo_key1, tilex, tiley);
+        break;
+
+    case willobj:
+        points = 5000;
+        newstate = s_willdie1;
+        PlaceItemType(bo_key1, tilex, tiley);
+        break;
+
+    case deathobj:
+        points = 5000;
+        newstate = s_deathdie1;
+        PlaceItemType(bo_key1, tilex, tiley);
+        break;
+#endif
+    default:
+        points = 0;
+        newstate = ob->state;
+        break;
+    }
+
+    GivePoints(points);
+    NewState(ob, newstate);
+    //#ifdef ENABLE_STATS
+    gamestate.killcount++;
+    //#endif
+    ob->flags &= ~FL_SHOOTABLE;
+    //	clear_actor(ob->tilex, ob->tiley);
+    actorat[ob->tilex][ob->tiley] = NULL;
+    ob->flags |= FL_NONMARK;
+}
+#else
 void KillActor (objtype *ob)
 {
     int     tilex,tiley;
@@ -981,7 +1186,7 @@ void KillActor (objtype *ob)
     actorat[ob->tilex][ob->tiley] = NULL;
     ob->flags |= FL_NONMARK;
 }
-
+#endif
 
 
 /*
@@ -989,7 +1194,7 @@ void KillActor (objtype *ob)
 =
 = DamageActor
 =
-= Called when the player succesfully hits an enemy.
+= Called when the player successfully hits an enemy.
 =
 = Does damage points to enemy ob, either putting it into a stun frame or
 = killing it.
@@ -1020,31 +1225,54 @@ void DamageActor (objtype *ob, unsigned damage)
         {
             case guardobj:
                 if (ob->hitpoints&1)
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
+                    NewState(ob, s_grdpain);
+                else
+                    NewState(ob, s_grdpain1);
+#else
                     NewState (ob,&s_grdpain);
                 else
                     NewState (ob,&s_grdpain1);
+#endif
                 break;
 
             case officerobj:
                 if (ob->hitpoints&1)
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
+                    NewState(ob, s_ofcpain);
+                else
+                    NewState(ob, s_ofcpain1);
+#else
                     NewState (ob,&s_ofcpain);
                 else
                     NewState (ob,&s_ofcpain1);
+#endif     
                 break;
 
             case mutantobj:
                 if (ob->hitpoints&1)
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
+                    NewState(ob, s_mutpain);
+                else
+                    NewState(ob, s_mutpain1);
+#else
                     NewState (ob,&s_mutpain);
                 else
                     NewState (ob,&s_mutpain1);
+#endif
                 break;
 
             case ssobj:
                 if (ob->hitpoints&1)
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
+                    NewState(ob, s_sspain);
+                else
+                    NewState(ob, s_sspain1);
+#else
                     NewState (ob,&s_sspain);
                 else
                     NewState (ob,&s_sspain1);
-
+#endif
                 break;
         }
     }
@@ -1052,9 +1280,7 @@ void DamageActor (objtype *ob, unsigned damage)
 
 /*
 =============================================================================
-
                                 CHECKSIGHT
-
 =============================================================================
 */
 
@@ -1069,7 +1295,7 @@ void DamageActor (objtype *ob, unsigned damage)
 =====================
 */
 
-boolean CheckLine (objtype *ob)
+bool CheckLine (objtype *ob)
 {
     int         x1,y1,xt1,yt1,x2,y2,xt2,yt2;
     int         x,y;
@@ -1209,14 +1435,14 @@ boolean CheckLine (objtype *ob)
 =
 = If the sight is ok, check alertness and angle to see if they notice
 =
-= returns true if the player has been spoted
+= returns true if the player has been spotted
 =
 ================
 */
 
 #define MINSIGHT        0x18000l
 
-boolean CheckSight (objtype *ob)
+bool CheckSight (objtype *ob)
 {
     int32_t deltax,deltay;
 
@@ -1311,121 +1537,201 @@ void FirstSighting (objtype *ob)
     {
         case guardobj:
             PlaySoundLocActor(HALTSND,ob);
-            NewState (ob,&s_grdchase1);
+#ifdef EMBEDDED
+            NewState(ob, s_grdchase1);
+#else
+            NewState(ob, &s_grdchase1);
+#endif
             ob->speed *= 3;                 // go faster when chasing player
             break;
 
         case officerobj:
             PlaySoundLocActor(SPIONSND,ob);
-            NewState (ob,&s_ofcchase1);
+#ifdef EMBEDDED
+            NewState(ob, s_ofcchase1);
+#else
+            NewState(ob, &s_ofcchase1);
+#endif
             ob->speed *= 5;                 // go faster when chasing player
             break;
 
         case mutantobj:
-            NewState (ob,&s_mutchase1);
+#ifdef EMBEDDED
+            NewState(ob, s_mutchase1);
+#else
+            NewState(ob, &s_mutchase1);
+#endif
             ob->speed *= 3;                 // go faster when chasing player
             break;
 
         case ssobj:
             PlaySoundLocActor(SCHUTZADSND,ob);
-            NewState (ob,&s_sschase1);
+#ifdef EMBEDDED
+            NewState(ob, s_sschase1);
+#else
+            NewState(ob, &s_sschase1);
+#endif
             ob->speed *= 4;                 // go faster when chasing player
             break;
 
         case dogobj:
             PlaySoundLocActor(DOGBARKSND,ob);
-            NewState (ob,&s_dogchase1);
+#ifdef EMBEDDED
+            NewState(ob, s_dogchase1);
+#else
+            NewState(ob, &s_dogchase1);
+#endif
             ob->speed *= 2;                 // go faster when chasing player
             break;
 
 #ifndef SPEAR
         case bossobj:
             SD_PlaySound(GUTENTAGSND);
-            NewState (ob,&s_bosschase1);
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
+            NewState(ob, s_bosschase1);
+#else
+            NewState(ob, &s_bosschase1);
+#endif
             ob->speed = SPDPATROL*3;        // go faster when chasing player
             break;
 
 #ifndef APOGEE_1_0
         case gretelobj:
             SD_PlaySound(KEINSND);
-            NewState (ob,&s_gretelchase1);
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
+            NewState(ob, s_gretelchase1);
+#else
+            NewState(ob, &s_gretelchase1);
+#endif
             ob->speed *= 3;                 // go faster when chasing player
             break;
 
         case giftobj:
             SD_PlaySound(EINESND);
-            NewState (ob,&s_giftchase1);
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
+            NewState(ob, s_giftchase1);
+#else			
+            NewState(ob, &s_giftchase1);
+#endif
             ob->speed *= 3;                 // go faster when chasing player
             break;
 
         case fatobj:
             SD_PlaySound(ERLAUBENSND);
-            NewState (ob,&s_fatchase1);
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
+            NewState(ob, s_fatchase1);
+#else
+            NewState(ob, &s_fatchase1);
+#endif
             ob->speed *= 3;                 // go faster when chasing player
             break;
 #endif
 
         case schabbobj:
             SD_PlaySound(SCHABBSHASND);
-            NewState (ob,&s_schabbchase1);
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
+            NewState(ob, s_schabbchase1);
+#else
+            NewState(ob, &s_schabbchase1);
+#endif
             ob->speed *= 3;                 // go faster when chasing player
             break;
 
         case fakeobj:
             SD_PlaySound(TOT_HUNDSND);
-            NewState (ob,&s_fakechase1);
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
+            NewState(ob, s_fakechase1);
+#else
+            NewState(ob, &s_fakechase1);
+#endif
             ob->speed *= 3;                 // go faster when chasing player
             break;
 
         case mechahitlerobj:
             SD_PlaySound(DIESND);
-            NewState (ob,&s_mechachase1);
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
+            NewState(ob, s_mechachase1);
+#else
+            NewState(ob, &s_mechachase1);
+#endif
             ob->speed *= 3;                 // go faster when chasing player
             break;
 
         case realhitlerobj:
             SD_PlaySound(DIESND);
-            NewState (ob,&s_hitlerchase1);
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
+            NewState(ob, s_hitlerchase1);
+#else
+            NewState(ob, &s_hitlerchase1);
+#endif
             ob->speed *= 5;                 // go faster when chasing player
             break;
 
         case ghostobj:
-            NewState (ob,&s_blinkychase1);
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
+            NewState(ob, s_blinkychase1);
+#else
+            NewState(ob, &s_blinkychase1);
+#endif
             ob->speed *= 2;                 // go faster when chasing player
             break;
 #else
         case spectreobj:
             SD_PlaySound(GHOSTSIGHTSND);
-            NewState (ob,&s_spectrechase1);
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
+            NewState(ob, s_spectrechase1);
+#else
+            NewState(ob, &s_spectrechase1);
+#endif
             ob->speed = 800;                        // go faster when chasing player
             break;
 
         case angelobj:
             SD_PlaySound(ANGELSIGHTSND);
-            NewState (ob,&s_angelchase1);
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
+            NewState(ob, s_angelchase1);
+#else
+            NewState(ob, &s_angelchase1);
+#endif
             ob->speed = 1536;                       // go faster when chasing player
             break;
 
         case transobj:
             SD_PlaySound(TRANSSIGHTSND);
-            NewState (ob,&s_transchase1);
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
+            NewState(ob, s_transchase1);
+#else
+            NewState(ob, &s_transchase1);
+#endif
             ob->speed = 1536;                       // go faster when chasing player
             break;
 
         case uberobj:
-            NewState (ob,&s_uberchase1);
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
+            NewState(ob, s_uberchase1);
+#else
+            NewState(ob, &s_uberchase1);
+#endif
             ob->speed = 3000;                       // go faster when chasing player
             break;
 
         case willobj:
             SD_PlaySound(WILHELMSIGHTSND);
-            NewState (ob,&s_willchase1);
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
+            NewState(ob, s_willchase1);
+#else
+            NewState(ob, &s_willchase1);
+#endif
             ob->speed = 2048;                       // go faster when chasing player
             break;
 
         case deathobj:
             SD_PlaySound(KNIGHTSIGHTSND);
-            NewState (ob,&s_deathchase1);
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
+            NewState(ob, s_deathchase1);
+#else
+            NewState(ob, &s_deathchase1);
+#endif
             ob->speed = 2048;                       // go faster when chasing player
             break;
 #endif
@@ -1435,6 +1741,7 @@ void FirstSighting (objtype *ob)
         ob->distance = 0;       // ignore the door opening command
 
     ob->flags |= FL_ATTACKMODE|FL_FIRSTATTACK;
+    ob->active = true;	// wake up the guards! Wolf3s: HUH?
 }
 
 
@@ -1453,7 +1760,7 @@ void FirstSighting (objtype *ob)
 ===============
 */
 
-boolean SightPlayer (objtype *ob)
+bool SightPlayer (objtype *ob)
 {
     if (ob->flags & FL_ATTACKMODE)
         Quit ("An actor in ATTACKMODE called SightPlayer!");

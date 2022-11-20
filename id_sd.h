@@ -20,25 +20,32 @@ static const int oplChip;
 typedef enum
 {
     sdm_Off,
-    sdm_PC,sdm_AdLib,
+    sdm_PC,
+#ifndef SEGA_SATURN
+    sdm_AdLib,
+#endif
 } SDMode;
 
 typedef enum
 {
-    smm_Off,smm_AdLib
+    smm_Off,
+    smm_AdLib
 } SMMode;
 
 typedef enum
 {
-    sds_Off,sds_PC,sds_SoundBlaster
+    sds_Off,
+    sds_PC,
+    sds_SoundBlaster
 } SDSMode;
 
+#ifndef SEGA_SATURN
 typedef struct
 {
     longword        length;
     word            priority;
 } SoundCommon;
-
+#endif
 #define ORIG_SOUNDCOMMON_SIZE 6
 
 //      PC Sound stuff
@@ -48,11 +55,13 @@ typedef struct
 
 #define pcSpkBits       3
 
+#ifndef SEGA_SATURN
 typedef struct
 {
     SoundCommon     common;
     byte            data[1];
 } PCSound;
+#endif
 
 //      Register addresses
 // Operator stuff
@@ -68,6 +77,7 @@ typedef struct
 // Global stuff
 #define alEffects       0xbd
 
+#ifndef SEGA_SATURN
 typedef struct
 {
     byte    mChar,cChar,
@@ -82,9 +92,10 @@ typedef struct
             mode;
     byte    unused[3];
 } Instrument;
-
+#endif
 #define ORIG_INSTRUMENT_SIZE 16
 
+#ifndef SEGA_SATURN
 typedef struct
 {
     SoundCommon     common;
@@ -92,7 +103,7 @@ typedef struct
     byte            block;
     byte            data[1];
 } AdLibSound;
-
+#endif
 #define ORIG_ADLIBSOUND_SIZE (ORIG_SOUNDCOMMON_SIZE + ORIG_INSTRUMENT_SIZE + 2)
 
 //
@@ -100,6 +111,7 @@ typedef struct
 //
 #define sqMaxTracks     10
 
+#ifndef SEGA_SATURN
 typedef struct
 {
     word    length;
@@ -111,27 +123,37 @@ typedef struct
     int valid;
     fixed globalsoundx, globalsoundy;
 } globalsoundpos;
-
+#endif
 typedef struct
 {
     uint32_t startpage;
     uint32_t length;
 } digiinfo;
 
+#ifndef SEGA_SATURN
 extern globalsoundpos channelSoundPos[];
+#endif
 
 // Global variables
-extern  boolean         AdLibPresent,
+extern  bool         
+#ifndef SEGA_SATURN
+                        AdLibPresent,
+#endif     
                         SoundBlasterPresent,
                         SoundPositioned;
 extern  SDMode          SoundMode;
 extern  SDSMode         DigiMode;
+#ifndef SEGA_SATURN
 extern  SMMode          MusicMode;
+#endif
 extern  word            NumDigi;
 extern  digiinfo        *DigiList;
+#if !defined(USE_ADX) && !defined(SEGA_SATURN)
 extern  int             DigiMap[];
+#endif
+#ifndef SEGA_SATURN
 extern  int             DigiChannel[];
-
+#endif
 #define GetTimeCount()  ((SDL_GetTicks()*7)/100)
 
 // Function prototypes
@@ -141,9 +163,13 @@ extern  void    SD_Startup(void),
                 SD_Shutdown(void);
 
 extern  int     SD_GetChannelForDigi(int which);
+#ifndef SEGA_SATURN
 extern  void    SD_PositionSound(int leftvol,int rightvol);
-extern  boolean SD_PlaySound(soundnames sound);
+#endif
+extern  bool SD_PlaySound(soundnames sound);
+#ifndef SEGA_SATURN
 extern  void    SD_SetPosition(int channel, int leftvol,int rightvol);
+#endif
 extern  void    SD_StopSound(void),
                 SD_WaitSoundDone(void);
 
@@ -153,12 +179,16 @@ extern  void    SD_MusicOn(void),
                 SD_FadeOutMusic(void);
 extern  int     SD_MusicOff(void);
 
-extern  boolean SD_MusicPlaying(void);
-extern  boolean SD_SetSoundMode(SDMode mode);
-extern  boolean SD_SetMusicMode(SMMode mode);
+extern  bool SD_MusicPlaying(void);
+#ifndef SEGA_SATURN
+extern  bool SD_SetSoundMode(SDMode mode);
+extern  bool SD_SetMusicMode(SMMode mode);
+#endif
 extern  word    SD_SoundPlaying(void);
 
+#ifndef SEGA_SATURN
 extern  void    SD_SetDigiDevice(SDSMode);
+#endif
 extern  void	SD_PrepareSound(int which);
 extern  int     SD_PlayDigitized(word which,int leftpos,int rightpos);
 extern  void    SD_StopDigitized(void);

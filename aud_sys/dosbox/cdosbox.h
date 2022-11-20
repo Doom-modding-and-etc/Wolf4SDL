@@ -1,7 +1,8 @@
 #include "../../version.h"
+
 #ifdef USE_DOSBOX
 #include <stdio.h>
-#include "../wl_def.h"
+#include "../../wl_def.h"
 #if defined(_arch_dreamcast)
 #	include "dc/dc_main.h"
 #elif !defined(_WIN32)
@@ -36,7 +37,7 @@ typedef Bits (*Operator_VolumeHandler) ();
 typedef struct CChannel* (*Channel_SynthHandler) (struct CChip* chip, Bit32u samples, Bit32s output);
 
 
-struct COperator
+typedef struct dOperator
 {
 	Operator_VolumeHandler volHandler;
 #if (DBOPL_WAVE == WAVE_HANDLER)
@@ -75,11 +76,11 @@ struct COperator
 	Bit8u vibStrength;
 	//Keep track of the calculated KSR so we can check for changes
 	Bit8u ksr;
-};
+}; 
 
-struct CChannel
+typedef struct dChannel
 {
-	struct COperator op[2];
+	dOperator op[2];
 
 	Channel_SynthHandler synthHandler;
 	Bit32u chanData;		//Frequency/octave and derived values
@@ -94,7 +95,7 @@ struct CChannel
 	Bit8s maskRight;
 };
 
-struct CChip
+typedef struct dChip
 {
 	//This is used as the base counter for vibrato and tremolo
 	Bit32u lfoCounter;
@@ -113,7 +114,7 @@ struct CChip
 	Bit32u attackRates[76];
 
 	//18 channels with 2 operators each
-	struct CChannel chan[18];
+	dChannel chan[18];
 
 	Bit8u reg104;
 	Bit8u reg08;
@@ -136,22 +137,22 @@ struct CChip
 //Operator:
 extern void Operator_SetState(Bit8u s);
 #ifdef WIP
-void Operator_UpdateAttack(const struct Chip* chip);
-void Operator_UpdateRelease(const struct Chip* chip);
-void Operator_UpdaateDecay(const struct Chip* chip);
+void Operator_UpdateAttack(const dChip* chip);
+void Operator_UpdateRelease(const dChip* chip);
+void Operator_UpdaateDecay(const dChip* chip);
 #endif
 //Channel:
-struct COperator* Channel_Op(Bitu index);
-#ifdef WIP
-DOSBOX_API void Channel_SetChanData(const struct Chip* chip, Bit32u data);
-DOSBOX_API void Channel_UpdateFrequency(const struct Chip* chip, Bit8u fourOp);
-DOSBOX_API void Channel_WriteA0(const struct Chip* chip, Bit8u val);
-DOSBOX_API void Channel_WriteB0(const struct Chip* chip, Bit8u val);
-DOSBOX_API void Channel_WriteC0(const struct Chip* chip, Bit8u val);
-DOSBOX_API void Channel_ResetC0(const struct Chip* chip);
-DOSBOX_API void Channel_GeneratePercussion(struct Chip* chip, Bit32s* output);
-DOSBOX_API struct Channel* Channel_BlockTemplate(struct Chip* chip, Bit32u samples, Bit32s* output);
-#endif
+dOperator* Channel_Op(Bitu index);
+
+void Channel_SetChanData(const dChip* chip, Bit32u data);
+void Channel_UpdateFrequency(const dChip* chip, Bit8u fourOp);
+void Channel_WriteA0(const dChip* chip, Bit8u val);
+void Channel_WriteB0(const dChip* chip, Bit8u val);
+void Channel_WriteC0(const dChip* chip, Bit8u val);
+void Channel_ResetC0(const dChip* chip);
+void Channel_GeneratePercussion(dChip* chip, Bit32s* output);
+dChannel* Channel_BlockTemplate(dChip* chip, Bit32u samples, Bit32s* output);
+
 //Chip:
 extern Bit32u Chip_ForwardLFO(Bit32u samples);
 extern Bit32u Chip_ForwardNoise();
@@ -176,13 +177,13 @@ DOSBOX_API void Operator_Write60(const struct Chip* chip, Bit8u val);
 DOSBOX_API void Operator_Write80(const struct Chip* chip, Bit8u val);
 DOSBOX_API void Operator_WriteE0(const struct Chip* chip, Bit8u val);
 #endif
-extern const boolean Operator_Silent();
+extern const bool Operator_Silent();
 #ifdef WIP
 DOSBOX_API void Operator_Prepare(const struct Chip* chip);
 #endif
 extern void Operator_KeyOn(Bit8u mask);
 extern void Operator_KeyOff(Bit8u mask);
-extern Bits Operator_TemplateVolume();
+extern void Operator_TemplateVolume();
 extern Bit32s Operator_RateForward(Bit32u add);
 extern Bitu Operator_ForwardWave();
 extern Bitu Operator_ForwardVolume();
