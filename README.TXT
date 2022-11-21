@@ -251,7 +251,7 @@ TODOs:
  - Add plataform readme.
  - Fix some versions of Wolfenstein 3d.
  - Prepare to SDL3 Support.
- - support to sega saturn: wl_draw.c, wl_inter.c, wl_game.c and wl_menu.c
+ - support to sega saturn: wl_draw.c, wl_main.c and wl_menu.c
  
 Known bugs:
 -----------
