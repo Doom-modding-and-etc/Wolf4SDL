@@ -272,7 +272,8 @@ Credits:
  - Special thanks to the DOSBox team for providing a GPL'ed OPL2/3 emulator!
  - Special thanks to the MAME developement team for providing the source code
    of the OPL2 emulator!
- - Speacial thanks to aryan3d for upgrade this source port
+ - Speacial thanks to AryanWolf3d for upgrade this source port
+ - Ultra special many thanks to the prboom+ team for providing the c port of dosbox opl
  - Many thanks to "Der Tron" for hosting the svn repository, making Wolf4SDL
    FreeBSD compatible, testing, bugfixing and cleaning up the code!
  - Thanks to Chris Chokan for his improvements on Wolf4GW (base of Wolf4SDL)
@@ -285,7 +286,8 @@ Credits:
  - Thanks to Fabian greffrath for the patches on the code 
  - Thanks to keeganatorr for the Nintendo Switch support
  - Thanks to Fabian Sangalard for the awesoeme crt feature used on Chocolate Wolfenstein 3d. 
- 
+ - Thanks to vbt for the port of sega saturn
+
 Licenses:
 ---------
  - The original source code of Wolfenstein 3D:

@@ -219,7 +219,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="aud_sys\dosbox\cdosbox.cpp" />
-    <ClCompile Include="aud_sys\dosbox\dbopl.cpp" />
+    <ClCompile Include="aud_sys\dosbox\dbopl.c" />
     <ClCompile Include="aud_sys\mame\fmopl.c" />
     <ClCompile Include="id_crt.c" />
     <ClCompile Include="id_ca.c" />

@@ -40,8 +40,8 @@
 #if defined(GP2X_940)
 #include "gp2x/fmopl.h"
 #else
-#if defined(USE_DOSBOX)
-#include "aud_sys/dosbox/cdosbox.h"
+#ifdef USE_DOSBOX
+#include "aud_sys/dosbox/dosbox.h"
 #else
 #include "aud_sys/mame/fmopl.h"
 #endif
@@ -51,21 +51,17 @@
 
 #ifndef SEGA_SATURN
 #ifdef USE_DOSBOX
-struct CChip chip;
+Chip chip;
 
 static bool YM3812Init(int numChips, int clock, int rate)
 {
-#ifdef WIP //Not resloved
-    Chip_Setup(rate);
-#endif    
+    Chip__Setup(&chip ,rate);
     return false;
 }
 
 static void YM3812Write(struct CChip which, Bit32u reg, Bit8u val)
 {
-#ifdef WIP    
-    Chip_WriteReg(reg, val);
-#endif
+    Chip__WriteReg(reg, val);
 }
 
 static void YM3812UpdateOne(struct CChip which, int16_t* stream, int length)
@@ -79,10 +75,8 @@ static void YM3812UpdateOne(struct CChip which, int16_t* stream, int length)
         length = 512;
 
     if (which.opl3Active)
-    {
-#ifdef WIP        
-        Chip_GenerateBlock3(length, buffer);
-#endif
+    {       
+ Chip_GenerateBlock3(length, buffer);
         // GenerateBlock3 generates a number of "length" 32-bit stereo samples
         // so we only need to convert them to 16-bit samples
         for (i = 0; i < length * 2; i++)  // * 2 for left/right channel
@@ -96,9 +90,7 @@ static void YM3812UpdateOne(struct CChip which, int16_t* stream, int length)
     }
     else
     {
-#ifdef WIP
         Chip_GenerateBlock2(length, buffer);
-#endif
         // GenerateBlock3 generates a number of "length" 32-bit mono samples
         // so we need to convert them to 32-bit stereo samples
         for (i = 0; i < length; i++)

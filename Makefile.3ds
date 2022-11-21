@@ -11,7 +11,7 @@ APP_DESCRIPTION := Cross Plataform Source Port Of Wolfenstein 3d for Nintendo 3d
 APP_AUTHOR := Wolf3s, hax0kartik, Aryan, Mortriz Ripper and The other contribuitors
 APP_VERSION := 2.2
 ICON := icon/wolf4sdl.png
-OBJ       = aud_sys/mame/fmopl.o id_ca.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vieasm.o id_vl.o signon.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
+OBJ       = aud_sys/mame/fmopl.o aud_sys/dosbox/dbopl.o id_ca.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vieasm.o id_vl.o signon.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
 LINKOBJ   = aud_sys/mame/fmopl.o id_ca.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vieasm.o id_vl.o signon.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
 LIBDIR := -L$(DEVKITPRO)/libctru/lib -L$(DEVKITPRO)/portlibs/3ds/lib
 LIBS	:= $(LIBDIR) -lSDL_mixer -lvorbisidec -lmikmod -lmad -logg -lSDL_ttf -lSDL_image -lSDL_gfx -lSDL -lfreetype -lpng -ljpeg -lz -lcitro3d -lctru -lm
@@ -66,6 +66,9 @@ $(BIN): $(OBJ)
 
 aud_sys/mame/fmopl.o: $(GLOBALDEPS) aud_sys/mame/fmopl.c aud_sys/mame/fmopl.h 
 	$(C) -c aud_sys/mame/fmopl.c -o aud_sys/mame/fmopl.o $(CFLAGS)
+
+aud_sys/dosbox/dbopl.o: $(GLOBALDEPS) aud_sys/dosbox/dbopl.c aud_sys/dosbox/dbopl.h 
+	$(C) -c aud_sys/dosbox/dbopl.c -o aud_sys/dosbox/dbopl.o $(CFLAGS)
 
 id_ca.o: $(GLOBALDEPS) id_ca.c wl_def.h 
 	$(C) -c id_ca.c -o id_ca.o $(CFLAGS)	
