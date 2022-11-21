@@ -1,7 +1,6 @@
 #ifndef __WL_DEF_H_
 #define __WL_DEF_H_
 
-
 #include "version.h"
 
 #include <assert.h>
@@ -24,10 +23,14 @@
 #if defined(_arch_dreamcast)
 #	include <string.h>
 #	include "dc/dc_main.h"
-#elif !defined(_WIN32)
+#elif !defined(OLD_SYSTEMS)
 #	include <stdint.h>
 #	include <string.h>
 #	include <stdarg.h>
+#else
+#include <stdint.h>
+#include <string.h>
+#include <stdarg.h>
 #endif
 
 #pragma pack(1)
@@ -66,6 +69,10 @@
 #include "f_spear.h"
 #endif
 
+#ifdef USE_FIXEDPTC
+#include "3rdparty/fixedptc.h"
+#endif
+
 #if !defined O_BINARY
 #define O_BINARY 0
 #endif
@@ -87,7 +94,11 @@ typedef unsigned short int word;
 typedef u8 byte;
 typedef u16 word;
 #endif
+#ifdef USE_FIXEDPTC
+fixedptc fixed
+#else
 typedef s32 fixed;
+#endif
 typedef u32 longword;
 
 #ifdef OLD_BOOL
