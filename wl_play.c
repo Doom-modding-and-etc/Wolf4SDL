@@ -69,22 +69,16 @@ int dirscan[4] =
     sc_LeftArrow
 };
 
-int buttonscan[NUMBUTTONS] =
-{
-    sc_Control,
-    sc_Alt,
-    sc_LShift,
-    sc_Space,
-    sc_W,
-    sc_S,
-    sc_1,
-    sc_2,
-    sc_3,
-    sc_4,
-    sc_A,
-    sc_D,
-    sc_6,
-    sc_7
+int buttonscan[NUMBUTTONS] = 
+{ 
+    sc_Control, 
+    sc_Alt, 
+    sc_LShift, 
+    sc_Space, 
+    sc_1, 
+    sc_2, 
+    sc_3, 
+    sc_4 
 };
 
 #ifndef SEGA_SATURN
@@ -198,7 +192,7 @@ int gamecontrolstrafe;
 bool buttonstate[NUMBUTTONS];
 
 int lastgamemusicoffset = 0;
-#ifdef USE_SPRITES
+#if defined(USE_SPRITES) && defined(SEGA_SATURN)
 extern unsigned int position_vram;
 extern unsigned int static_items;
 extern unsigned char wall_buffer[(SATURN_WIDTH + 64) * 64];
@@ -760,7 +754,7 @@ void CheckKeys (void)
         return;
     }
 
-    if (Keyboard[s(_Tab) &&
+    if (Keyboard(sc_Tab) &&
         Keyboard(sc_N))			// N = no clip
     {
         noclip ^= 1;
@@ -796,11 +790,11 @@ void CheckKeys (void)
 #endif
 
 #ifndef SEGA_SATURN
-//#ifdef SPEAR
+#ifdef GOD_MODE
     //
     // SECRET CHEAT CODE: TAB-G-F10
     //
-    if (Keyboard(sc_Tab)) //&& Keyboard(sc_G) && Keyboard(sc_F10)) 
+    if (Keyboard(sc_Tab)) && Keyboard(sc_G) && Keyboard(sc_F10)) 
     {
 
         ClearMemory();
@@ -826,12 +820,12 @@ void CheckKeys (void)
         IN_ClearKeysDown ();
         return;
     }
-//#endif
+#endif
 
     //
     // SECRET CHEAT CODE: 'MLI'
     //
-    if (Keyboard(sc_M)) //&& Keyboard(sc_L) && Keyboard(sc_I))
+    if (Keyboard(sc_M) && Keyboard(sc_L) && Keyboard(sc_I))
     {
         gamestate.health = 100;
         gamestate.ammo = 99;

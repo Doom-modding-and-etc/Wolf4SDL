@@ -69,9 +69,7 @@
 #include "f_spear.h"
 #endif
 
-#ifdef USE_FIXEDPTC
 #include "3rdparty/fixedptc.h"
-#endif
 
 #if !defined O_BINARY
 #define O_BINARY 0
@@ -94,11 +92,7 @@ typedef unsigned short int word;
 typedef u8 byte;
 typedef u16 word;
 #endif
-#ifdef USE_FIXEDPTC
-fixedptc fixed
-#else
-typedef s32 fixed;
-#endif
+typedef fixedpt fixed;
 typedef u32 longword;
 
 #ifdef OLD_BOOL
@@ -849,7 +843,6 @@ typedef enum
     en_uber,
     en_will,
     en_death,
-
     NUMENEMIES
 } enemy_t;
 

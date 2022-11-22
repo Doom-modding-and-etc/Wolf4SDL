@@ -190,7 +190,7 @@
       <DataExecutionPrevention>false</DataExecutionPrevention>
     </Link>
     <ClCompile>
-      <PreprocessorDefinitions>_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;WINDOWS_IGNORE_PACKING_MISMATCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;WINDOWS_IGNORE_PACKING_MISMATCH;USE_FIXEDPTC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard_C>Default</LanguageStandard_C>
       <OmitFramePointers>false</OmitFramePointers>
       <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -218,7 +218,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="aud_sys\dosbox\cdosbox.cpp" />
     <ClCompile Include="aud_sys\dosbox\dbopl.c" />
     <ClCompile Include="aud_sys\mame\fmopl.c" />
     <ClCompile Include="id_crt.c" />
@@ -257,10 +256,16 @@
     <None Include="wolfpal.inc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="3rdparty\fixedptc.h" />
+    <ClInclude Include="3rdparty\uthash\utarray.h" />
+    <ClInclude Include="3rdparty\uthash\uthash.h" />
+    <ClInclude Include="3rdparty\uthash\utlist.h" />
+    <ClInclude Include="3rdparty\uthash\utringbuffer.h" />
+    <ClInclude Include="3rdparty\uthash\utstack.h" />
+    <ClInclude Include="3rdparty\uthash\utstring.h" />
     <ClInclude Include="asmcref.h" />
     <ClInclude Include="audiosod.h" />
     <ClInclude Include="audiowl6.h" />
-    <ClInclude Include="aud_sys\dosbox\cdosbox.h" />
     <ClInclude Include="aud_sys\dosbox\dbopl.h" />
     <ClInclude Include="aud_sys\mame\fmopl.h" />
     <ClInclude Include="id_crt.h" />

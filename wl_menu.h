@@ -121,7 +121,7 @@
 
 #define NE_X    10
 #define NE_Y    23
-#ifdef SEGA_SATUR
+#ifdef SEGA_SATURN
 #define NE_W    SATURN_WIDTH-NE_X*2
 #else
 #define NE_W    320-NE_X*2

@@ -64,7 +64,7 @@ all: $(BIN)
 $(BIN): $(OBJ)
 	$(LINK) $(LINKOBJ) -o "Wolf4SDL.elf" $(LIBS)
 
-aud_sys/mame/fmopl.o: $(GLOBALDEPS) aud_sys/mame/fmopl.c aud_sys/fmopl/fmopl.h
+aud_sys/mame/fmopl.o: $(GLOBALDEPS) aud_sys/mame/fmopl.c aud_sys/mame/fmopl.h
 	$(C) -c aud_sys/mame/fmopl.c -o aud_sys/mame/fmopl.o $(CFLAGS)
 
 aud_sys/dosbox/dbopl.o: $(GLOBALDEPS) aud_sys/dosbox/dbopl.c aud_sys/dosbox/dbopl.h

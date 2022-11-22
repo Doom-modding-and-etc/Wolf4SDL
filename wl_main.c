@@ -75,7 +75,7 @@ bool loadedgame;
 int     mouseadjustment;
 #ifdef VIEASM
 byte    soundvol, musicvol;
-boolean reversestereo;
+bool reversestereo;
 #endif
 #if SWITCH
 char configdir[256] = "/switch/wolf4sdl/";
@@ -192,9 +192,6 @@ void ReadConfig(void)
 
         read(file,&viewsize,sizeof(viewsize));
         read(file,&mouseadjustment,sizeof(mouseadjustment));
-        read(file, &mousemoveenabled, sizeof(mousemoveenabled));
-        bool dummyMouseMoveEnabled;
-        read(file, &dummyMouseMoveEnabled, sizeof(dummyMouseMoveEnabled));
 #ifdef VIEASM
         read(file, &soundvol, sizeof(soundvol));
         read(file, &musicvol, sizeof(musicvol));

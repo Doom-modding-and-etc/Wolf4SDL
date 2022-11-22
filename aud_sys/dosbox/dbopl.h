@@ -16,7 +16,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "SDL_stdinc.h"
 #include "../../wl_def.h"
 #ifdef USE_DOSBOX
 #ifdef _MSC_VER
@@ -207,13 +206,14 @@ extern "C" void DBOPL_InitTables( void );
 extern "C" void Chip__Chip(Chip *self);
 extern "C" void Chip__WriteReg(Chip *self, Bit32u reg, Bit8u val );
 extern "C" void Chip__GenerateBlock2(Chip *self, Bitu total, Bit32s* output );
+extern "C" void Chip__GenerateBlock3(Chip * self, Bitu total, Bit32s * output);
 #else
 void Chip__Setup(Chip *self, Bit32u rate );
 void DBOPL_InitTables( void );
 void Chip__Chip(Chip *self);
 void Chip__WriteReg(Chip *self, Bit32u reg, Bit8u val );
 void Chip__GenerateBlock2(Chip *self, Bitu total, Bit32s* output );
-
+void Chip__GenerateBlock3(Chip* self, Bitu total, Bit32s* output);
 #endif
 #endif //USE_DOSBOX
 

@@ -10,7 +10,6 @@
 
 #ifdef USE_DOSBOX
 static const int oplChip;
-//extern struct CChip chip;
 #define alOut(n,b) YM3812Write(chip, n, b)
 #else
 #define alOut(n,b) YM3812Write(oplChip, n, b)

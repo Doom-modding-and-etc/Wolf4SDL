@@ -22,6 +22,15 @@
     <Filter Include="Source Files\audiosys\mame">
       <UniqueIdentifier>{df99e693-62e7-40a9-bc0a-efd1cd9c313e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\3rdparty">
+      <UniqueIdentifier>{c3d7d364-46d3-4487-9cbd-cf678ca18cf3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\3rdparty\uthash">
+      <UniqueIdentifier>{ee62495d-7e7d-47cd-887a-6ab58fcf9cf2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\3rdparty\lwlib">
+      <UniqueIdentifier>{a9f3821a-b61e-49a6-b5a9-ee159e8aff87}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="id_in.c">
@@ -114,14 +123,11 @@
     <ClCompile Include="id_vieasm.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="aud_sys\dosbox\cdosbox.cpp">
-      <Filter>Source Files\audiosys\dosbox</Filter>
-    </ClCompile>
-    <ClCompile Include="aud_sys\dosbox\dbopl.cpp">
-      <Filter>Source Files\audiosys\dosbox</Filter>
-    </ClCompile>
     <ClCompile Include="aud_sys\mame\fmopl.c">
       <Filter>Source Files\audiosys\mame</Filter>
+    </ClCompile>
+    <ClCompile Include="aud_sys\dosbox\dbopl.c">
+      <Filter>Source Files\audiosys\dosbox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -208,9 +214,6 @@
     <ClInclude Include="asmcref.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="aud_sys\dosbox\cdosbox.h">
-      <Filter>Source Files\audiosys\dosbox</Filter>
-    </ClInclude>
     <ClInclude Include="aud_sys\dosbox\dbopl.h">
       <Filter>Source Files\audiosys\dosbox</Filter>
     </ClInclude>
@@ -219,6 +222,27 @@
     </ClInclude>
     <ClInclude Include="wl_utils.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\fixedptc.h">
+      <Filter>Header Files\3rdparty</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\uthash\utarray.h">
+      <Filter>Header Files\3rdparty\uthash</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\uthash\uthash.h">
+      <Filter>Header Files\3rdparty\uthash</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\uthash\utlist.h">
+      <Filter>Header Files\3rdparty\uthash</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\uthash\utringbuffer.h">
+      <Filter>Header Files\3rdparty\uthash</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\uthash\utstack.h">
+      <Filter>Header Files\3rdparty\uthash</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\uthash\utstring.h">
+      <Filter>Header Files\3rdparty\uthash</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

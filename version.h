@@ -4,7 +4,7 @@
 #ifndef VERSIONALREADYCHOSEN              // used for batch compiling
 
 /* Defines used for different versions */
-#define SPEAR
+//#define SPEAR
 //#define SPEARDEMO
 //#define UPLOAD
 #define GOODTIMES
@@ -52,13 +52,14 @@
 #define PLAYDEMOLIKEORIGINAL  // When playing or recording demos, several bug fixes do not take
                               // effect to let the original demos work as in the original Wolf3D v1.4
                               // (actually better, as the second demo rarely worked)
-#define CRT // Makes the screen fixed in 4:3
+//#define CRT // Makes the screen fixed in 4:3
 //#define SCALE2X //The screen will be scaled in 2x with linear filter. This guy needs to work with CRT defined or else it won´t work..
 #define FIXCALCROTATE         // Apply a modified version of Ginyu's fix to make CalcRotate more accurate at high resolutions
 //#define VIEASM //Activates: VODKA-INDUCED ENTERTAINMENT ADVANCED SOUND MANAGER v0.9.2(Warning: only works with .wav and .ogg placed in sounds/ follow the asmcref.h for more details).
 //#define BANDEDHOLOWALLS     // Use the old DOS-style "banded" wall drawing behaviour when inside walls
 //#define USE_DOSBOX //Replaces fmopl sound and uses DOSBOX Sound instead.
-
+//#define GOD_MODE //Use godmode
+#define USE_LWLIB //Use linuxwolf library.
 #if defined(SWITCH) 
 #define DATADIR "/switch/wolf4sdl/wolf3d/"
 #elif defined(N3DS)

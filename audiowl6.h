@@ -14,7 +14,7 @@
 //
 // Sound names & indexes
 //
-enum {
+typedef enum {
 	HITWALLSND,              // 0
 	SELECTWPNSND,            // 1
 	SELECTITEMSND,           // 2
