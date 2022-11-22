@@ -19,16 +19,17 @@ Main features:
  - Cross-platform:
       Supported operating systems are at least:
        - Windows 98, Windows ME, Windows 2000, Windows XP(32 and 64 bit), Windows Vista
-         (32 and 64 bit), Windows 7 (32 and 64 bit), Windows 8(32 and 64 bit) Windows 10 (32 and 64 bit)
+         (32 and 64 bit), Windows 7 (32 and 64 bit), Windows 8(32 and 64 bit) Windows 10 (32 and 64 bit) and
+         Windows 11(64 Bits only)
        - Linux
        - BSD variants
        - Mac OS X (x86 and x64)
        - KallistiOS (used for Dreamcast)
       Only little endian platforms like x86, ARM and SH-4 are currently supported.
-	   - Nintendo Switch
-	   - Nintendo 3DS(WIP On Makefile part)
-	   - GP2X
-	   - Sega Saturn(WIP: Only ported the id´s stuff).
+       - Nintendo Switch
+       - Nintendo 3DS(WIP On Makefile part)
+       - GP2X
+       - Sega Saturn(WIP: Only ported the id´s stuff).
 
  - AdLib sounds and music:
       This port includes the OPL2 emulator from MAME, so you can not only
@@ -115,8 +116,11 @@ according data files version as the differences are hardcoded into the binary!
 
 SDL1.2:
 On Windows SDL.dll and SDL_mixer.dll must also be copied into this directory.
-SDL 1.2.15 Runtimes can be acquired at: 
+SDL 1.2.15 32 bit Runtimes can be acquired at: 
 https://github.com/wolfysdl/SDL-Archive/raw/main/SDL-1.2.15-win32.zip and download "SDL-1.2.15-win32.zip"
+
+SDL 1.2.15 64 bit Runtimes can be acquired at: 
+https://github.com/wolfysdl/SDL-Archive/raw/main/SDL-1.2.15-win32-x64.zip and download "SDL-1.2.15-win32-x64.zip"
 
 SDL_mixer 1.2.12 Runtimes can be acquired at:
 https://github.com/wolfysdl/SDL_mixer-archive/raw/main/SDL_mixer-1.2.12-win32.zip and download "SDL_mixer-1.2.12-win32.zip"
@@ -126,31 +130,30 @@ or
 SDL2:
 On Windows SDL2.dll and SDL2_mixer.dll must also be copied into this directory.
 
-SDL2 2.0.24 Runtimes can be acquired at:
-https://github.com/wolfysdl/SDL-Archive/raw/main/SDL2-2.24.0-win32-x86.zip and download "SDL_mixer-2.0.24-win32.zip"
+SDL2 2.26.0 32 bit Runtimes can be acquired at:
+https://github.com/wolfysdl/SDL-Archive/raw/main/SDL2-2.26.0-win32-x86.zip and download "SDL_mixer-2.26.0-win32-x86.zip"
 
-SDL_mixer 2.0.4 Runtimes can be acquired at:
-https://github.com/wolfysdl/SDL_mixer-archive/raw/main/SDL2_mixer-2.6.2-win32-x86.zip and download "SDL_mixer-2.0.4-win32.zip"
+SDL2 2.26.0 64 bit Runtimes can be acquired at:
+https://github.com/wolfysdl/SDL-Archive/raw/main/SDL2-2.26.0-win32-x64.zip and download "SDL_mixer-2.26.0-win32-x64.zip"
 
+SDL2_mixer 2.0.4 32 bit Runtimes can be acquired at:
+https://github.com/wolfysdl/SDL_mixer-archive/raw/main/SDL2_mixer-2.6.2-win32-x86.zip and download "SDL2_mixer-2.0.4-win32-x86.zip"
+
+SDL2_mixer 2.0.4 64 bit Runtimes can be acquired at:
+https://github.com/wolfysdl/SDL_mixer-archive/raw/main/SDL2_mixer-2.6.2-win32-x64.zip and download "SDL2_mixer-2.0.4-win32-x64.zip"
 
 deprecated links:
 SDL1.2:
 https://www.libsdl.org/download-1.2.php 
-SDL_mixer
+SDL_mixer:
 https://www.libsdl.org/projects/SDL_mixer/release-1.2.html
-
-SDL2
+SDL2:
 https://www.libsdl.org/download-2.0.php 
-SDL2_mixer
+SDL2_mixer:
 https://www.libsdl.org/projects/SDL_mixer/
-
-
-
-! ATTENTION ! Do NOT download the x64 version of SDL or SDL_mixer. x86 binairies are required.
 
 If you play in windowed mode (--windowed parameter), press SCROLLLOCK or F12
 to grab the mouse. Press it again to release the mouse.
-
 
 Usage:
 ------
@@ -203,7 +206,8 @@ The following ways of compiling the source code are supported:
  - Visual C++ (Wolf4SDL.VC2022.sln and Wolf4SDL.vcproj) (see README-VC.txt)
  - Special compiling for Dreamcast (see README-dc.txt)
  - Xcode (for Mac OS X, macosx/Wolf4SDL.xcodeproj/project.pbxproj)
- 
+ - Special compiling for GP2X (see README-GP2X.txt)
+
 - Deprecated:
  - Visual C++ 2008 (Wolf4SDL.VC9.sln and Wolf4SDL.VC9.vcproj)
  - Visual C++ 2005 (Wolf4SDL.sln and Wolf4SDL.vcproj)
@@ -211,8 +215,7 @@ The following ways of compiling the source code are supported:
  - Code::Blocks 8.02 (Wolf4SDL.cbp)
  - Dev-C++ 5.0 Beta 9.2 (4.9.9.2) (Wolf4SDL.dev) (see README-devcpp.txt)
  - Visual C++ 2019 (Wolf4SDL.VC2019.sln and Wolf4SDL.VC2019.vcproj) (see README-VC.txt)
- - Special compiling for GP2X (see README-GP2X.txt)
-
+ 
 To compile the source code you need the development libraries of
  
 SDL or SDL2 (https://github.com/wolfysdl/SDL-Archive) and
