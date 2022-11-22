@@ -73,7 +73,6 @@ void    Quit (const char *error,...);
 bool startgame;
 bool loadedgame;
 int     mouseadjustment;
-bool     mousemoveenabled;
 #ifdef VIEASM
 byte    soundvol, musicvol;
 boolean reversestereo;
