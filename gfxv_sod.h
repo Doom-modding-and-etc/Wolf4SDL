@@ -8,7 +8,7 @@
 #ifndef __GFXV_SOD_H_
 #define __GFXV_SOD_H_
 
-enum {
+typedef enum {
     // Lump Start
     C_BACKDROPPIC=3,
     C_MOUSELBACKPIC,                     // 4

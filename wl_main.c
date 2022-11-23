@@ -58,7 +58,7 @@ int     dirangle[9] = {0,ANGLES/8,2*ANGLES/8,3*ANGLES/8,4*ANGLES/8,
 // proejection variables
 //
 fixed    focallength;
-unsigned screenofs;
+u32 screenofs;
 int      viewscreenx, viewscreeny;
 int      viewwidth;
 int      viewheight;

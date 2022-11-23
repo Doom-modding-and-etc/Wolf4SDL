@@ -1,6 +1,10 @@
 #ifndef __FMOPL_H_
 #define __FMOPL_H_
 
+#ifdef USE_INLINE_C89
+#define inline __inline
+#endif
+
 #define HAS_YM3812 1
 
 /* --- select emulation chips --- */

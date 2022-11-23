@@ -72,14 +72,24 @@
 #define FIXEDPT_BITS	32
 #endif
 
-#ifdef USE_TYPES
+#include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
+#if !defined(_WIN32)
+#	include <stdint.h>
+#	include <string.h>
+#	include <stdarg.h>
+#endif
+#ifdef _MSC_VER
 typedef unsigned int uint32_t;
 typedef signed int int32_t;
 typedef unsigned __int64 uint64_t;
 typedef signed __int64 int64_t;
+#define inline __inline
 #else
 #include <stdint.h>
 #endif
+
 
 
 #if FIXEDPT_BITS == 32

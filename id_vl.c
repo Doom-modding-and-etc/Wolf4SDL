@@ -55,7 +55,6 @@ u32 screenWidth = 640;
 u32 screenHeight = 448;
 int screenBits = 8;
 #elif defined(N3DS)
-bool fullscreen = true;
 bool usedoublebuffering = true;
 int screenWidth = 400;
 int screenHeight = 240;

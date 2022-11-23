@@ -28,9 +28,6 @@
     <Filter Include="Header Files\3rdparty\uthash">
       <UniqueIdentifier>{ee62495d-7e7d-47cd-887a-6ab58fcf9cf2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\3rdparty\lwlib">
-      <UniqueIdentifier>{a9f3821a-b61e-49a6-b5a9-ee159e8aff87}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="id_in.c">

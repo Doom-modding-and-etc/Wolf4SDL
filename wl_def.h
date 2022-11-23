@@ -23,14 +23,10 @@
 #if defined(_arch_dreamcast)
 #	include <string.h>
 #	include "dc/dc_main.h"
-#elif !defined(OLD_SYSTEMS)
+#elif !defined(_WIN32)
 #	include <stdint.h>
 #	include <string.h>
 #	include <stdarg.h>
-#else
-#include <stdint.h>
-#include <string.h>
-#include <stdarg.h>
 #endif
 
 #pragma pack(1)

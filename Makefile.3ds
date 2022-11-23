@@ -11,35 +11,37 @@ APP_DESCRIPTION := Cross Plataform Source Port Of Wolfenstein 3d for Nintendo 3d
 APP_AUTHOR := Wolf3s, hax0kartik, Aryan, Mortriz Ripper and The other contribuitors
 APP_VERSION := 2.2
 ICON := icon/wolf4sdl.png
-OBJ       = aud_sys/mame/fmopl.o aud_sys/dosbox/dbopl.o id_ca.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vieasm.o id_vl.o signon.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
-LINKOBJ   = aud_sys/mame/fmopl.o id_ca.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vieasm.o id_vl.o signon.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
-LIBDIR := -L$(DEVKITPRO)/libctru/lib -L$(DEVKITPRO)/portlibs/3ds/lib
-LIBS	:= $(LIBDIR) -lSDL_mixer -lvorbisidec -lmikmod -lmad -logg -lSDL_ttf -lSDL_image -lSDL_gfx -lSDL -lfreetype -lpng -ljpeg -lz -lcitro3d -lctru -lm
-INCS      = -I$(DEVKITPRO)/portlibs/3ds/include -I$(DEVKITPRO)/portlibs/3ds/include/SDL -I$(DEVKITPRO)/libctru/include  -I$(DEVKITPRO)/portlibs/3ds
+WINDRES   = windres.exe
+OBJ       = aud_sys/mame/fmopl.o aud_sys/dosbox/dbopl.o id_ca.o id_crt.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vieasm.o id_vl.o signon.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
+LINKOBJ   = aud_sys/mame/fmopl.o aud_sys/dosbox/dbopl.o id_ca.o id_crt.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vieasm.o id_vl.o signon.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
+LIBDIR    = -L$(DEVKITPRO)/libctru/lib -L$(DEVKITPRO)/portlibs/3ds/lib
+CTRUINCS = -I$(DEVKITPRO)/libctru/include -I$(DEVKITPRO)/libctru/include/3ds -I$(DEVKITPRO)/libctru/include/arpa -I$(DEVKITPRO)/libctru/include/c2d -I$(DEVKITPRO)/libctru/include/c3d -I$(DEVKITPRO)/libctru/include/netinet -I$(DEVKITPRO)/libctru/include/sys
+INCS      = $(CTRUINCS) -I$(DEVKITPRO)/portlibs/3ds/include -I$(DEVKITPRO)/portlibs/3ds/include/SDL -I$(DEVKITPRO)/portlibs/3ds
+LIBS      = $(LIBDIR) -lSDL_mixer -lvorbisidec -lmikmod -lmad -logg -lSDL_ttf -lSDL_image -lSDL_gfx -lSDL -lfreetype -lpng -ljpeg -lz -lcitro2d -lcitro3d -lctru -lm `sdl-config --libs`
 BIN       = Wolf4SDL.elf
 BUILD	  =	build
+ARCH 	  = -march=armv6k -mtune=mpcore -mfloat-abi=hard -mtp=soft -marm -mthumb-interwork
 DEFINES   = -DN3DS -D__3DS__
-ARCH	:=	-march=armv6k -mtune=mpcore -mfloat-abi=hard -mtp=soft -marm -mthumb-interwork
-CFLAGS	:=	$(ARCH) $(INCS) $(DEFINES) \
+CFLAGS    = $(ARCH) $(INCS) $(DEFINES) \
 			-Wno-narrowing -Ofast -mword-relocations \
 			-fomit-frame-pointer -ffunction-sections \
 			-std=gnu99 -Wall `sdl-config --libs` -Wall -W -g \
 			-Wpointer-arith -Wreturn-type -Wwrite-strings -Wcast-align -Wimplicit-int -Wsequence-point -Wswitch 
 ASFLAGS	:=	-g $(ARCH)
-LDFLAGS	=	-specs=3dsx.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)	
+LDFLAGS	=	-specs=3dsx.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map) 
 RM        = rm -f
-LINK      = arm-none-eabi-gcc
-C		  = arm-none-eabi-gcc
-OUTPUT    = Wolf4SDL
+LINK      = arm-none-eabi-gcc-12.2.0
+C		  = arm-none-eabi-gcc-12.2.0
+OUTPUT    = $(APP_TITLE)
 
 #--------------------------------------------------------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------
 ifeq ($(strip $(ICON)),)
 	icons := $(wildcard *.png)
-	ifneq (,$(findstring $(TARGET).jpg,$(icons)))
+	ifneq (,$(findstring $(TARGET).png,$(icons)))
 		export APP_ICON := $(TOPDIR)/$(TARGET).png
 	else
-		ifneq (,$(findstring icon.jpg,$(icons)))
+		ifneq (,$(findstring icon.png,$(icons)))
 			export APP_ICON := $(TOPDIR)/icon.png
 		endif
 	endif
@@ -55,11 +57,21 @@ ifneq ($(ROMFS),)
 	export _3DSXFLAGS += --romfs=$(CURDIR)/$(ROMFS)
 endif
 
+ifeq ($(strip $(NO_3DSX)),)
+	export _3DSXFLAGS += --nacp=$(OUTPUT).3dsx
+endif
 
-all: $(BIN) 
+ifneq ($(APP_TITLEID),)
+	export _3DSXFLAGS += --titleid=$(APP_TITLEID)
+endif
 
-clean: 
-	$(RM) $(OBJ) $(BIN)
+ifneq ($(ROMFS),)
+	export _3DSXFLAGS += --romfsdir=$(ROMFS)
+endif
+
+ifneq ($(ROMFS),)
+	export _3DSXFLAGS += --romfs=$(CURDIR)/$(ROMFS)
+endif
 
 $(BIN): $(OBJ)
 	$(LINK) $(LINKOBJ) -o "Wolf4SDL.elf" $(LIBS)
@@ -153,28 +165,6 @@ wl_text.o: $(GLOBALDEPS) wl_text.c wl_def.h
 	
 wl_utils.o: $(GLOBALDEPS) wl_utils.c wl_def.h 
 	$(C) -c wl_utils.c -o wl_utils.o $(CFLAGS)
-
-ifeq ($(strip $(ICON)),)
-	icons := $(wildcard *.png)
-	ifneq (,$(findstring $(TARGET).png,$(icons)))
-		export APP_ICON := $(TOPDIR)/$(TARGET).png
-	else
-		ifneq (,$(findstring icon.png,$(icons)))
-			export APP_ICON := $(TOPDIR)/icon.png
-		endif
-	endif
-else
-	export APP_ICON := $(TOPDIR)/$(ICON)
-endif
-
-ifeq ($(strip $(NO_SMDH)),)
-	export _3DSXFLAGS += --smdh=$(CURDIR)/$(TARGET).smdh
-endif
-
-ifneq ($(ROMFS),)
-	export _3DSXFLAGS += --romfs=$(CURDIR)/$(ROMFS)
-endif
-
 
 #---------------------------------------------------------------------------------
 # main targets

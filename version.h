@@ -4,7 +4,7 @@
 #ifndef VERSIONALREADYCHOSEN              // used for batch compiling
 
 /* Defines used for different versions */
-//#define SPEAR
+#define SPEAR
 //#define SPEARDEMO
 //#define UPLOAD
 #define GOODTIMES
@@ -59,7 +59,6 @@
 //#define BANDEDHOLOWALLS     // Use the old DOS-style "banded" wall drawing behaviour when inside walls
 //#define USE_DOSBOX //Replaces fmopl sound and uses DOSBOX Sound instead.
 //#define GOD_MODE //Use godmode
-#define USE_LWLIB //Use linuxwolf library.
 #if defined(SWITCH) 
 #define DATADIR "/switch/wolf4sdl/wolf3d/"
 #elif defined(N3DS)
