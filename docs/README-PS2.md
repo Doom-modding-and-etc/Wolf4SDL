@@ -3,7 +3,7 @@
 Official quick support of Wolf4SDL source port to the Sony´s Playstation 2 made by André Guilherme
 it´s under construction but you can still comipile and contribute.
 
-[Demonstration video](https://www.youtube.com/watch?v=1RJOi6xVe3o])
+[Demonstration video](https://www.youtube.com/watch?v=H0uJxuxbpu0)
 
 # Screenshots:
 
