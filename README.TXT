@@ -30,6 +30,7 @@ Main features:
        - Nintendo 3DS(WIP On Makefile part)
        - GP2X
        - Sega Saturn(WIP: Only ported the id´s stuff).
+       - Sony Playstation 2
 
  - AdLib sounds and music:
       This port includes the OPL2 emulator from MAME, so you can not only
@@ -202,7 +203,8 @@ The current version of the source code is available on GitHub at:
    https://github.com/Doom-modding-and-etc/Wolf4SDL
 
 The following ways of compiling the source code are supported:
- - Makefile (for Linux, BSD variants, MinGW/MSYS, dreamcast and Nintendo Switch. see README-dc.txt for more details)
+ - Makefile for Linux, BSD variants, MinGW/MSYS, dreamcast(see README.dc), Nintendo Switch(See README.md), 
+Nintendo 3DS and Sony Playstation 2. see README-dc.txt for more details
  - Visual C++ (Wolf4SDL.VC2022.sln and Wolf4SDL.vcproj) (see README-VC.txt)
  - Special compiling for Dreamcast (see README-dc.txt)
  - Xcode (for Mac OS X, macosx/Wolf4SDL.xcodeproj/project.pbxproj)
@@ -249,7 +251,6 @@ IMPORTANT: Do not forget to take care of version.h!
 
 TODOs:
 ------
- - Add Sony´s Playstation 2 support(WIP) 
  - Add latest fmopl sound
  - Add plataform readme.
  - Fix some versions of Wolfenstein 3d.

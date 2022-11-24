@@ -1,4 +1,3 @@
-
 # Wolf4SDL-3DS
 
 Port of Wolfenstein 3D to Nintendo 3DS using Wolf4SDL as a base.
@@ -23,13 +22,11 @@ Download and copy `wolf4sdl.3dsx` or `wolf4sdl-shareware.3dsx` from the [release
 
 ## Building
 
-Building requires latest `ctrulib` and `sdl1.2` 3ds port.
-You can install them using dkp-pacman
-
-## Screenshots
-
-![Screenshot1](screenshots/screenshot.png)
-![Screenshot2](screenshots/ingame.png)
+Building requires latest `ctrulib` and `sdl1.2` 3ds port. You can install them using dkp-pacman
+and then you hit:
+```
+make -f Makefile.3ds
+```
 
 ## Credits
 * All wolf4sdl contributors

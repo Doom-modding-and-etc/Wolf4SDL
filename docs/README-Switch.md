@@ -1,4 +1,3 @@
-
 # Wolf4SDL-Switch
 
 Port of Wolfenstein 3D to Nintendo Switch using Wolf4SDL as a base.
@@ -13,20 +12,20 @@ Sound currently has issues which causes popping and crackling.
 
 ## Controls
 
-| Keys        | Controls           |
-| :-------------: |:-------------:|
-| D-Pad Up | Forward |
-| D-Pad Down | Back |
-| D-Pad Left | Turn Left |
-| D-Pad Right | Turn Right |
-| Minus | Return to Menu/ESC |
-| Plus | Pause |
-| A / ZR | Fire/OK |
-| B | Open |
-| X | Strafe/Turn |
-| Y / ZL | Run |
-| L | Previous Weapon |
-| R | Next Weapon |
+|    Keys    |      Controls      |
+| :---------: | :----------------: |
+|  D-Pad Up  |      Forward      |
+| D-Pad Down |        Back        |
+| D-Pad Left |     Turn Left     |
+| D-Pad Right |     Turn Right     |
+|    Minus    | Return to Menu/ESC |
+|    Plus    |       Pause       |
+|   A / ZR   |      Fire/OK      |
+|      B      |        Open        |
+|      X      |    Strafe/Turn    |
+|   Y / ZL   |        Run        |
+|      L      |  Previous Weapon  |
+|      R      |    Next Weapon    |
 
 ## Compiling
 
@@ -38,7 +37,7 @@ Requires SDL-1.2.15 for switch
 https://github.com/KeeganatorP/SDL-SWITCH
 ```
 
-Requires a copy of Wolfenstein 3D 
+Requires a copy of Wolfenstein 3D
 
 ```
 Wolf3d Full v1.4 GT/ID/Activision
@@ -49,7 +48,7 @@ Wolf3d Full v1.4 GT/ID/Activision
 Run make
 
 ```
-make -j8
+make -f Makefile.switch
 ```
 
 Copy
@@ -57,7 +56,9 @@ Copy
 ```
 Wolf4SDL.nro
 ```
+
 and
+
 ```
 wolf3d/audiohed.wl6
 wolf3d/audiot.wl6

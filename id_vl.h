@@ -31,7 +31,7 @@ extern  bool fullscreen, usedoublebuffering;
 #if N3DS
 extern  int screenWidth, screenHeight, screenBits, screenPitch, bufferPitch;
 #else
-extern  unsigned screenWidth, screenHeight, screenBits, 
+extern  u32 screenWidth, screenHeight, screenBits, 
 #ifndef SEGA_SATURN
 screenPitch, bufferPitch;   
 #endif

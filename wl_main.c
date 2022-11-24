@@ -65,7 +65,7 @@ int      viewheight;
 short    centerx,centery;
 int      shootdelta;           // pixels away from centerx a target can be
 fixed    scale;
-int32_t  heightnumerator;
+s32  heightnumerator;
 
 
 void    Quit (const char *error,...);
@@ -77,11 +77,11 @@ int     mouseadjustment;
 byte    soundvol, musicvol;
 bool reversestereo;
 #endif
-#if SWITCH
+#if defined(SWITCH)
 char configdir[256] = "/switch/wolf4sdl/";
-#elif N3DS
+#elif defined(N3DS)
 char configdir[256] = "/3ds/wolf4sdl/wolf3d";
-#elif SEGA_SATURN
+#elif defined(SEGA_SATURN) || defined(PS2)
 char configdir[256] = "data/";
 #else
 char    configdir[256] = "";
@@ -712,6 +712,9 @@ void ShutdownId (void)
 #if defined(GP2X_940)
     GP2X_Shutdown();
 #endif
+#if defined(PS2)
+    PS2_Shutdown(); //PT-BR Moment: Desligue tudo!!!
+#endif
 }
 
 
@@ -1227,7 +1230,7 @@ static void InitGame()
 #ifndef SPEARDEMO
     bool didjukebox=false;
 #endif
-#if defined (SWITCH) || defined (N3DS)  
+#if defined (SWITCH) || defined (N3DS) || defined (PS2)
     printf("GAME START");
 #endif    
     // initialize SDL
@@ -1239,8 +1242,8 @@ static void InitGame()
     }
     atexit(SDL_Quit);
 
-#if defined (SWITCH) && defined (N3DS)
-#if SDL_MAJOR_VERSION == 1
+#if defined(SWITCH) || defined (N3DS) || defined (PS2)
+#if SDL_MAJOR_VERSION == 1 
     printf("SDL1.2 Initialized");   
 #elif SDL_MAJOR_VERSION == 2
     printf("SDL2 Initialized");
@@ -1267,29 +1270,37 @@ static void InitGame()
 	VW_UpdateScreen();
 
     VH_Startup ();
-#if defined(SWITCH) || defined (N3DS)
+#if defined(SWITCH) || defined (N3DS) || defined (PS2)
     printf("VH Started");
 #endif
     IN_Startup ();
-#if defined(SWITCH) || defined (N3DS)
+#if defined(SWITCH) || defined (N3DS) || defined (PS2) 
     printf("IN Started");
 #endif
     PM_Startup ();
-#if defined(SWITCH) || defined (N3DS)
+#if defined(SWITCH) || defined (N3DS) || defined (PS2)
     printf("PM Started");
 #endif
     SD_Startup ();
-#if defined(SWITCH) || defined (N3DS)
+#if defined(SWITCH) || defined (N3DS) || defined (PS2)
     printf("SD Started");
 #endif
     CA_Startup ();
-#if defined(SWITCH) || defined (N3DS)
+#if defined(SWITCH) || defined (N3DS) || defined(PS2)
     printf("CA Started");
 #endif
     US_Startup ();
-#if defined(SWITCH) || defined (N3DS)
+#if defined(SWITCH) || defined (N3DS) || defined (PS2)
     printf("US Started");
 #endif
+#ifdef PS2
+    PS2_Started(); //Load everything for ps2.
+    //init_scr();
+    //scr_setXY(20, 20);
+    //scr_printf("PS2 Started");
+    printf("PS2 Started");
+#endif
+
     // TODO: Will any memory checking be needed someday??
 #ifdef NOTYET
 #ifndef SPEAR
@@ -1964,21 +1975,21 @@ int main (int argc, char *argv[])
 #else
     CheckParameters(argc, argv);
 #endif
-#if defined(SWITCH) || defined (N3DS)  
+#if defined(SWITCH) || defined (N3DS) || defined (PS2)
     printf("CheckParameters() DONE\n");
-#endif    
+#endif
     CheckForEpisodes();
-#if defined(SWITCH) || defined (N3DS)  
+#if defined(SWITCH) || defined (N3DS) || defined (PS2)
     printf("CheckForEpisodes() DONE\n");
-#endif    
+#endif
     InitGame();
-#if defined(SWITCH) || defined (N3DS)
+#if defined(SWITCH) || defined (N3DS) || defined(PS2)
     printf("InitGame() DONE\n");
-#endif    
+#endif
     DemoLoop();
-#if defined(SWITCH) || defined (N3DS)  
+#if defined(SWITCH) || defined (N3DS) || defined(PS2)
     printf("DemoLoop() DONE\n");
-#endif    
+#endif
     Quit("Demo loop exited???");
     return 1;
 }

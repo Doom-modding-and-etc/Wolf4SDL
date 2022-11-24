@@ -26,7 +26,7 @@
 //
 // player state info
 //
-int32_t         thrustspeed;
+s32         thrustspeed;
 
 word            plux, pluy;          // player coordinates scaled to unsigned
 

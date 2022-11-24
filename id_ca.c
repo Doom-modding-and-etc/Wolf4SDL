@@ -22,7 +22,7 @@ loaded into the data segment
 #elif defined(SWITCH)
 	#include <sys/_iovec.h>
 #else
-#ifdef N3DS
+#if defined(N3DS) || defined(PS2) 
 struct iovec 
 {
      void *iov_base;     
@@ -167,7 +167,7 @@ char graphext[5];
 char audioext[5];
 #endif
 
-#if defined(SWITCH) || defined(SEGA_SATURN) || defined(N3DS)
+#if defined(SWITCH) || defined(SEGA_SATURN) || defined(N3DS) || defined(PS2)
 #ifdef SEGA_SATURN
 static const char gheadname[] = DATADIR "VGAHEAD.";
 static const char gfilename[] = DATADIR "VGAGRAPH.";

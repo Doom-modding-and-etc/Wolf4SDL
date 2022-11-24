@@ -4443,7 +4443,7 @@ CheckForEpisodes (void)
 //
 #ifdef JAPAN
 #ifdef JAPDEMO
-#if SWITCH    
+#if defined(SWITCH) || defined (N3DS) || defined(PS2) 
     if(!stat(DATADIR "vswap.wj1", &statbuf))
 #else    
     if (!stat("vswap.wj1", &statbuf))
@@ -4452,7 +4452,7 @@ CheckForEpisodes (void)
         strcpy (extension, "wj1");
 #else
 
-#if SWITCH
+#if defined(SWITCH) || defined (N3DS) || defined(PS2) 
     if(!stat(DATADIR "vswap.wj6", &statbuf))
 #else
     if(!stat("vswap.wj6", &statbuf))
@@ -4476,7 +4476,7 @@ CheckForEpisodes (void)
 // ENGLISH
 //
 #ifdef UPLOAD
-#if defined (SWITCH) || defined(N3DS)    
+#if defined(SWITCH) || defined (N3DS) || defined(PS2) 
     if (!stat(DATADIR "vswap.wl1", &statbuf)) 
     {
     
@@ -4492,7 +4492,11 @@ CheckForEpisodes (void)
 
 #else
 #ifndef SPEAR
+#if defined(SWITCH) || defined (N3DS) || defined(PS2) 
+    if(!stat(DATADIR "vswap.wl6", &statbuf))
+#else
     if(!stat("vswap.wl6", &statbuf))
+#endif
     {
         strcpy (extension, "wl6");
         NewEmenu[2].active =
@@ -4505,7 +4509,7 @@ CheckForEpisodes (void)
     }
     else
     {
-#if defined (SWITCH) || defined (N3DS)        
+#if defined(SWITCH) || defined (N3DS) || defined(PS2)  
         if(!stat(DATADIR "vswap.wl3", &statbuf))
 #else 
         if (!stat("vswap.wl3", &statbuf))
@@ -4516,7 +4520,7 @@ CheckForEpisodes (void)
         }
         else
         {
-#if defined (SWITCH) || defined (N3DS)             
+#if defined(SWITCH) || defined (N3DS) || defined(PS2)          
             if (!stat(DATADIR "vswap.wl1", &statbuf))
 #else
             if (!stat("vswap.wl1", &statbuf))
@@ -4566,7 +4570,11 @@ CheckForEpisodes (void)
     strcpy (graphext, "sod");
     strcpy (audioext, "sod");
 #else
+#if defined(SWITCH) || defined (N3DS) || defined(PS2) 
+    if(!stat(DATADIR "vswap.sdm", &statbuf))
+#else
     if(!stat("vswap.sdm", &statbuf))
+#endif
     {
         strcpy (extension, "sdm");
     }

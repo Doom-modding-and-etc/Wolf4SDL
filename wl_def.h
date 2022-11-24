@@ -15,9 +15,9 @@
 
 #include <SDL.h>
 
-#if N3DS
+#ifdef N3DS
 #include <3ds.h>
-#elif _XBOX
+#elif defined(_XBOX)
 #include <xtl.h>
 #endif
 #if defined(_arch_dreamcast)
@@ -64,13 +64,19 @@
 #include "gfxv_sod.h"
 #include "f_spear.h"
 #endif
-
+#if defined(GP2X) || defined(GP2X_940)
+#include "Plataform/GP2X/gp2x.h"
+#endif
+#ifdef PS2
+#include "Plataform/PS2/ps2_main.h"
+#include <tamtypes.h>
+#endif
 #include "3rdparty/fixedptc.h"
 
 #if !defined O_BINARY
 #define O_BINARY 0
 #endif
-
+#ifndef PS2
 typedef int8_t s8;
 typedef int16_t s16;
 typedef int32_t s32;
@@ -80,7 +86,7 @@ typedef uint8_t u8;
 typedef uint16_t u16;
 typedef uint32_t u32;
 typedef uint64_t u64;
-
+#endif
 #ifdef SEGA_SATURN
 typedef unsigned char byte;
 typedef unsigned short int word;
@@ -127,9 +133,7 @@ void Quit(const char* errorStr, ...);
 #include "id_ca.h"
 #include "wl_menu.h"
 #include "wl_utils.h"
-#if defined(GP2X) || defined(GP2X_940)
-#include "Plataform/GP2X/gp2x.h"
-#endif
+
 /*
 =============================================================================
 

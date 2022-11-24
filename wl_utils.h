@@ -16,8 +16,7 @@
 #define strcasecmp stricmp
 #define strncasecmp strnicmp
 #define snprintf _snprintf
-#elif defined(SWITCH) || defined(N3DS)
-
+#elif defined(SWITCH) || defined(N3DS) || defined(PS2)
 static inline char* ltoa(long value, char* string, int radix)
 {
     sprintf(string, "%ld", value);

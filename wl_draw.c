@@ -26,8 +26,8 @@
 
 byte     *vbuf;
 
-int32_t    lasttimecount;
-int32_t    frameon;
+s32    lasttimecount;
+s32    frameon;
 bool fpscounter;
 
 int fps_frames=0, fps_time=0, fps=0;
@@ -42,7 +42,7 @@ int16_t *wallheight;
 // math tables
 //
 short *pixelangle;
-int32_t finetangent[FINEANGLES/4];
+s32 finetangent[FINEANGLES/4];
 fixed sintable[ANGLES+ANGLES/4];
 fixed *costable = sintable+(ANGLES/4);
 

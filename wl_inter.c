@@ -1270,7 +1270,7 @@ PreloadGraphics (void)
         else
             PMPages[y] = ptr;
     }
-    // weapons  doit être après les ennemis
+    // weapons  doit ï¿½tre aprï¿½s les ennemis
     for (y = PMSpriteStart + SPR_KNIFEREADY; y < PMSpriteStart + SPR_NULLSPRITE; y++)
     {
 #ifdef APOGEE_1_1	
@@ -1512,7 +1512,7 @@ DrawHighScores (void)
 */
 
 void
-CheckHighScore (int32_t score, word other)
+CheckHighScore (s32 score, word other)
 {
     word i, j;
     int n;

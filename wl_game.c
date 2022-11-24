@@ -46,7 +46,7 @@ gametype        gamestate;
 byte            bordercol=VIEWCOLOR;        // color of the Change View/Ingame border
 
 #ifdef SPEAR
-int32_t         spearx,speary;
+s32        spearx,speary;
 u32        spearangle;
 bool         spearflag;
 #endif
@@ -816,7 +816,7 @@ void SetupGameLevel (void)
     pageOffsets[ChunksInFile] = fileSize;
 
     uint8_t* itemmap = (uint8_t*)saturnChunk + 0x4000;
-    memset(itemmap, 0x00, 0x2000); // itemmap et itemmap communs, ne pas toucher à la taille du memset
+    memset(itemmap, 0x00, 0x2000); // itemmap et itemmap communs, ne pas toucher ï¿½ la taille du memset
 #endif
 
     map = mapsegs[0];

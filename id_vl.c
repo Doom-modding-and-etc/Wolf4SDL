@@ -53,7 +53,7 @@ int      screenBits = 16;
 bool usedoublebuffering = true;
 u32 screenWidth = 640;
 u32 screenHeight = 448;
-int screenBits = 8;
+u32 screenBits = 8;
 #elif defined(N3DS)
 bool usedoublebuffering = true;
 int screenWidth = 400;
@@ -260,7 +260,7 @@ void VL_SetVGAPlaneMode (void)
     memcpy(curpal, gamepal, sizeof(SDL_Color) * 256);
 
 #ifdef CRT  
-    //Fab's and André´s CRT Hack
+    //Fab's and Andrï¿½s CRT Hack
     CRT_Init(screen);
 #endif 
     screenBuffer = SDL_CreateRGBSurface(SDL_SWSURFACE, screenWidth,
@@ -309,7 +309,7 @@ void VL_SetVGAPlaneMode (void)
     memcpy(curpal, gamepal, sizeof(SDL_Color) * 256);
     
 #ifdef CRT  
-    //Fab's and André´s CRT Hack
+    //Fab's and Andrï¿½s CRT Hack
     CRT_Init(screen);
 #endif
     screenBuffer = SDL_CreateRGBSurface(0, screenWidth, screenHeight, 
