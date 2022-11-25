@@ -23,7 +23,7 @@ Main features:
        - BSD variants
        - Mac OS X (x86 and x64)
        - KallistiOS (used for Dreamcast)
-      Only little endian platforms like x86, ARM and SH-4 are currently supported.
+       Only little endian platforms like x86, ARM and SH-4 are currently supported.
        - Nintendo Switch
        - Nintendo 3DS(WIP On Makefile part)
        - GP2X
@@ -52,10 +52,13 @@ Main features:
       buttons are required (shoot/YES and open door/NO), but five or more
       are recommended (run, strafe, ESC).
 	  
-  - Toggle Screen Feature:
+ - Toggle Screen Feature:
     Wolf4SDL can toggle into fullscreen if you press ALT+ENTER
+ 
+ - Linux Wolf Library + WolfRad incorporation
+	Wolf4SDL Has Linux Wolf Library + WolfRad incorporated 
+	for modding development
 	
-
 Additional features:
 --------------------
 
@@ -203,7 +206,7 @@ The current version of the source code is available on GitHub at:
 The following ways of compiling the source code are supported:
  - Makefile for Linux, BSD variants, MinGW/MSYS, dreamcast(see README.dc), Nintendo Switch(See README.md), 
 Nintendo 3DS and Sony Playstation 2. see README-dc.txt for more details
- - Visual C++ (Wolf4SDL.VC2022.sln and Wolf4SDL.vcproj) (see README-VC.txt)
+ - Visual C++ (Wolf4SDL.VC2022.sln and Wolf4SDL.VC2022.vcproj) (see README-VC.txt)
  - Special compiling for Dreamcast (see README-dc.txt)
  - Xcode (for Mac OS X, macosx/Wolf4SDL.xcodeproj/project.pbxproj)
  - Special compiling for GP2X (see README-GP2X.txt)
@@ -253,7 +256,8 @@ TODOs:
  - Add plataform readme.
  - Fix some versions of Wolfenstein 3d.
  - Prepare to SDL3 Support.
- - support to sega saturn: wl_draw.c, wl_main.c and wl_menu.c
+ - Support to sega saturn: wl_draw.c, wl_main.c and wl_menu.c
+ - Support OpenBSD.
  
 Known bugs:
 -----------

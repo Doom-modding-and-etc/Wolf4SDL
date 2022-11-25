@@ -30,6 +30,26 @@
 
 #endif
 
+//This defines must be activated with LWLIB + WOLFRAD + USE_SHADE
+//#define LWLIB //Actives the LinuxWolf library ported to C99
+//#define WOLFRAD //Actives the Wolfrad functions ported to C99
+//#define USE_AI //Enables the Artificial intelligence function(see wl_ai.c)
+//#define USE_ACTOR //Enables the Actor function(see wl_anyactor.c)
+//#define USE_BENCHHOBO //Enables the benchhobo function(see wl_benchhobo.c)
+//#define USE_CONARTIST //Enables conartist function(see wl_conartist.c)
+//#define USE_CLOCKKING //Enables clockking function(see wl_clockking.c)
+//#define USE_EDITOR //Enables the editor(see wl_ed.c)
+//#define USE_FIREFLY //Enables the fire effect?(see wl_firefly.c)
+//#define USE_HEALTHMETTER //Enables the health metter(see wl_healthmetter.c)
+//#define USE_HOOKER //Enables the hooker function(see wl_hooker.c)
+//#define USE_LED //Enables the led function(see wl_led.c)
+//#define USE_MATH //Enables the math function(see wl_math.c)
+//#define USE_PHYSICS //Enables the physic function(see wl_physics.c)
+//#define USE_PIMP //Enables the pimp function(see wl_pimp.c)
+//#define USE_POLYGON //Enables the polygon function(see wl_polygon.c)
+//#define USE_SLEEPHOBO //Enables the polygon function(see wl_sleephobo.c)
+//End.
+
 //#define USE_FEATUREFLAGS    // Enables the level feature flags (see bottom of wl_def.h)
 //#define USE_SHADING         // Enables shading support (see wl_shade.c)
 //#define USE_DIR3DSPR        // Enables directional 3d sprites
@@ -59,6 +79,7 @@
 //#define BANDEDHOLOWALLS     // Use the old DOS-style "banded" wall drawing behaviour when inside walls
 //#define USE_DOSBOX //Replaces fmopl sound and uses DOSBOX Sound instead.
 //#define GOD_MODE //Use godmode
+
 #if defined(SWITCH) 
 #define DATADIR "/switch/wolf4sdl/wolf3d/"
 #elif defined(N3DS)

@@ -4,18 +4,18 @@ EE_BIN = Wolf4SDL.elf
 ID_ENGINE_OBJS = id_ca.o id_crt.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vl.o signon.o
 
 #LinuxWolf Library 
-#LW_LIB_OBJS = 
+LW_LIB_OBJS = 3rdparty/lwlib/lw_ai_enemy.o 3rdparty/lwlib/lw_bres.o 3rdparty/lwlib/lw_ctx.o 3rdparty/lwlib/lw_edit.o 3rdparty/lwlib/lw_fs.o 3rdparty/lwlib/lw_maptool.o 3rdparty/lwlib/lw_misc.o 3rdparty/lwlib/lw_protmsg.o 3rdparty/lwlib/lw_pwscan.o 3rdparty/lwlib/lw_vec.o
 #Wolf Rad 
-#WOLFRAD_OBJS = 
+WOLFRAD_OBJS = 3rdparty/wolfrad/wolfrad.o 3rdparty/wolfrad/wr_level.o 3rdparty/wolfrad/wr_lightinfo.o 3rdparty/wolfrad/lightmap.o 3rdparty/wolfrad/wr_rad.o 3rdparty/wolfrad/wr_radmap.o 3rdparty/wolfrad/wr_raycaster.o 3rdparty/wolfrad/wr_room.o 3rdparty/wolfrad/wr_screne.o
 
 #Wolf Files
-WL_OBJS = wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o \
-wl_game.o wl_inter.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o \
+WL_OBJS = wl_ai.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_benchhobo.o wl_cloudsky.o wl_conartist.o wl_clockking.o wl_debug.o wl_draw.o \
+wl_ed.o wl_firefly.o wl_hooker.o wl_healthmeter.o wl_math.o wl_physics.o wl_pimp.o wl_polygon.o wl_sleephobo.o wl_game.o wl_inter.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o \
 wl_shade.o wl_state.o wl_text.o wl_utils.o 
 
 PS2_OBJS = Plataform/PS2/ps2_modules.o Plataform/PS2/ps2_mc.o Plataform/PS2/ps2_main.o
 
-EE_OBJS = $(PS2_OBJS) aud_sys/mame/fmopl.o aud_sys/dosbox/dbopl.o $(ID_ENGINE_OBJS) $(WL_OBJS)
+EE_OBJS = $(PS2_OBJS) aud_sys/mame/fmopl.o aud_sys/dosbox/dbopl.o $(ID_ENGINE_OBJS) $(LW_LIB_OBJS) $(WOLFRAD_OBJS) $(WL_OBJS)
 
 EE_INCS = -I$(PS2SDK)/ports/include/SDL2 -I$(PS2SDK)/ports/include -I$(PS2DEV)/isjpcm/include/ -I$(GSKIT)/include -I$(GSKIT)/ee/dma/include -I$(GSKIT)/ee/gs/include -I$(GSKIT)/ee/toolkit/include 
 EE_LDFLAGS = -L$(PS2SDK)/ports/lib -L$(PS2SDK)/iop/lib/ -L$(PS2SDK)/ee/lib/ -L$(PS2DEV)/gsKit/lib 

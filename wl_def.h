@@ -122,6 +122,43 @@ void Quit(const char* errorStr, ...);
 #include "wl_menu.h"
 #include "wl_utils.h"
 
+#ifdef LWLIB
+#include "3rdparty/lw_lib/lw_ai_enemy.h"
+#include "3rdparty/lw_lib/lw_bres.h"
+#include "3rdparty/lw_lib/lw_ctx.h"
+#include "3rdparty/lw_lib/lw_dict.h"
+#include "3rdparty/lw_lib/lw_edit.h"
+#include "3rdparty/lw_lib/lw_fs.h"
+#include "3rdparty/lw_lib/lw_img.h"
+#include "3rdparty/lw_lib/lw_intmap.h"
+#include "3rdparty/lw_lib/lw_maptool.h"
+#include "3rdparty/lw_lib/lw_misc.h"
+#include "3rdparty/lw_lib/lw_protmsg.h"
+#include "3rdparty/lw_lib/lw_pwscan.h"
+#include "3rdparty/lw_lib/lw_strmap.h"
+#include "3rdparty/lw_lib/lw_vec.h"
+#include "wl_ai.h"
+#include "wl_anyactor.h"
+#include "wl_ed.h"
+#include "wl_healthbar.h"
+#include "wl_led.h"
+#include "wl_math.h"
+#include "wl_physics.h"
+#include "wl_polygon.h"
+#endif
+
+#ifdef WOLFRAD
+#include "3rdparty/wolfrad/wolfrad.h"
+#include "3rdparty/wolfrad/wr_level.h"
+#include "3rdparty/wolfrad/wr_lightinfo.h"
+#include "3rdparty/wolfrad/wr_lightmap.h"
+#include "3rdparty/wolfrad/wr_rad.h"
+#include "3rdparty/wolfrad/wr_radmap.h"
+#include "3rdparty/wolfrad/wr_raycaster.h"
+#include "3rdparty/wolfrad/wr_room.h"
+#include "3rdparty/wolfrad/wr_scene.h"
+#endif
+
 /*
 =============================================================================
 

@@ -80,7 +80,7 @@
 #	include <string.h>
 #	include <stdarg.h>
 #endif
-#ifdef _MSC_VER
+#ifdef _MSC_VER 
 typedef unsigned int uint32_t;
 typedef signed int int32_t;
 typedef unsigned __int64 uint64_t;
@@ -89,8 +89,6 @@ typedef signed __int64 int64_t;
 #else
 #include <stdint.h>
 #endif
-
-
 
 #if FIXEDPT_BITS == 32
 typedef int32_t fixedpt;
