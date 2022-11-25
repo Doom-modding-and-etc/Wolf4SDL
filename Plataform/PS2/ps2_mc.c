@@ -14,7 +14,6 @@ bool PS2_Init_Memory_Card_Type()
        return success = false;
     }
 
-
     ret = mcInit(MC_TYPE_PSX);
     if(!ret)
     {
