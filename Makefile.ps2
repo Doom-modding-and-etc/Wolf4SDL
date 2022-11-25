@@ -22,7 +22,7 @@ EE_LDFLAGS = -L$(PS2SDK)/ports/lib -L$(PS2SDK)/iop/lib/ -L$(PS2SDK)/ee/lib/ -L$(
 SDL2_LIBS = -lSDL2main -lSDL2_mixer -lSDL2 -lmodplug -lmikmod -logg -lopusfile -lopus
 EE_LIBS = $(SDL2_LIBS) -lcdvd -lm -lps2ip -lkernel -ldebug -lmc -lc -lhdd -lpoweroff -lps2_drivers -lgskit -ldmakit -lpadx -lmtap -laudsrv -lstdc++ -lfileXio -linput -lpatches
 EE_DEFINES = -DPS2
-EE_CFLAGS = $(EE_DEFINES) -Wall -Wall -W -g -Wpointer-arith -Wreturn-type -Wwrite-strings -Wcast-align -std=gnu99 -Wimplicit-int -Wsequence-point -Wswitch
+EE_CFLAGS = $(EE_DEFINES) -Wall -W -g -Wpointer-arith -Wreturn-type -Wwrite-strings -Wcast-align -std=gnu99 -Wimplicit-int -Wsequence-point -Wswitch
 
 EE_OBJS_DIR = obj/
 
