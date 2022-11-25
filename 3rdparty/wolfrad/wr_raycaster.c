@@ -18,7 +18,11 @@
 #include "wr_rad.h"
 #include "wr_room.h"
 #include "wr_raycaster.h"
+#ifdef PS2
+//#include "lw_vec.h"
+#else
 #include "..\lw_lib\lw_bres.h"
+#endif
 #ifdef WOLFRAD
 #include "..\..\wl_def.h"
 

@@ -19,7 +19,11 @@
 #include "wr_rad.h"
 #include "wr_room.h"
 #include "wr_lightmap.h"
+#ifdef PS2
+//#include "lw_vec.h"
+#else
 #include "..\..\wl_def.h"
+#endif
 #ifdef WOLFRAD
 
 typedef struct WR_Room_Priv_s

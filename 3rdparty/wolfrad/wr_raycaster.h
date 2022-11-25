@@ -19,7 +19,11 @@
 
 #include "wr_rad.h"
 #include "wr_level.h"
+#ifdef PS2
+//#include "lw_vec.h"
+#else
 #include "..\lw_lib\lw_bres.h"
+#endif
 #ifdef WOLFRAD
 
 #ifndef WOLFRAD_RAYCASTER_TYPE

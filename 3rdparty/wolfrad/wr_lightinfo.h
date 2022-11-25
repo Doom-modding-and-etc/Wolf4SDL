@@ -19,7 +19,11 @@
 #define WR_LIGHTINFO_H
 
 
+#ifdef PS2
+//#include "lw_vec.h"
+#else
 #include "..\lw_lib\lw_vec.h"
+#endif
 #ifdef WOLFRAD
 #include "wr_level.h"
 

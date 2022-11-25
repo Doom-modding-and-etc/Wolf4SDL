@@ -21,7 +21,11 @@
 #include "wr_scene.h"
 #include "wr_lightmap.h"
 #include "wr_radmap.h"
+#ifdef PS2
+//#include "lw_vec.h"
+#else
 #include "..\lw_lib\lw_img.h"
+#endif
 #ifdef WOLFRAD
 #include "..\..\wl_def.h"
 

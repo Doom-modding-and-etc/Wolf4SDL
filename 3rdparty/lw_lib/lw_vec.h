@@ -21,7 +21,11 @@
 #include <math.h>
 #include <assert.h>
 #include <stdlib.h>
+#ifdef PS2
+#include "wl_def.h"
+#else
 #include "..\..\wl_def.h"
+#endif
 #ifdef LWLIB
 #include "lw_misc.h"
 #include "lw_intmap.h"

@@ -16,14 +16,19 @@
 *************************************************************************/
 
 #include <sys/types.h>
+#ifdef PS2
+#include "wl_def.h"
+#else
+#include "..\..\wl_def.h"
+#endif
+#ifdef LWLIB
 #if defined _WIN32
 	#include <io.h>
 #else
 	#include <sys/uio.h>
 	#include <unistd.h>
 #endif
-#include "..\..\wl_def.h"
-#ifdef LWLIB
+
 #include "lw_maptool.h"
 
 #define LWLIB_MAPTOOL_EDITORID "LWMTv1.0"

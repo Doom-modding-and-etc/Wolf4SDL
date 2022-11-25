@@ -45,4 +45,4 @@ then use pcsx2 to start the game
 - Change keyboard pads.
 - Support the usb/hdd loading data files.
 - Figure out why the modules are sucking to load :(
-- Switch u32 to uint32_t for major compatbility
+- ~~Switch u32 to uint32_t for major compatbility~~
