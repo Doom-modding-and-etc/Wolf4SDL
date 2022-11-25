@@ -6,6 +6,14 @@ bool PS2_Init_Memory_Card_Type()
 {
     int ret;
     bool success = true; //Initialize the memory;
+    
+    ret = mcInit(MC_TYPE_XMC);
+    if(!ret)
+    {
+       printf("Failed to initialize server\n");
+       return success = false;
+    }
+
 
     ret = mcInit(MC_TYPE_PSX);
     if(!ret)
