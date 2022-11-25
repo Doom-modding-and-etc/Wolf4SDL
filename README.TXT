@@ -18,9 +18,7 @@ Main features:
 --------------
  - Cross-platform:
       Supported operating systems are at least:
-       - Windows 98, Windows ME, Windows 2000, Windows XP(32 and 64 bit), Windows Vista
-         (32 and 64 bit), Windows 7 (32 and 64 bit), Windows 8(32 and 64 bit) Windows 10 (32 and 64 bit) and
-         Windows 11(64 Bits only)
+       - Windows 98, Windows ME, Windows 2000, Windows XP(32 and 64 bit), Windows Vista(32 and 64 bit), Windows 7 (32 and 64 bit), Windows 8(32 and 64 bit) Windows 10 (32 and 64 bit) and Windows 11(64 Bits only)
        - Linux
        - BSD variants
        - Mac OS X (x86 and x64)
