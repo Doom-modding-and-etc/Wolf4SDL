@@ -69,7 +69,6 @@
 #endif
 #ifdef PS2
 #include "Plataform/PS2/ps2_main.h"
-#include <tamtypes.h>
 #endif
 #include "3rdparty/fixedptc.h"
 

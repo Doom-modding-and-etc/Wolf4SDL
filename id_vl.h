@@ -28,7 +28,7 @@ extern SDL_Texture* upscaledTexture;
 extern  bool fullscreen, usedoublebuffering;
 #endif
 
-extern int32_t screenWidth, screenHeight, screenBits,
+extern uint32_t screenWidth, screenHeight, screenBits,
 #ifndef SEGA_SATURN
 screenPitch, bufferPitch;   
 #endif

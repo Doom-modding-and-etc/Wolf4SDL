@@ -15,13 +15,13 @@ wl_shade.o wl_state.o wl_text.o wl_utils.o
 
 PS2_OBJS = Plataform/PS2/ps2_modules.o Plataform/PS2/ps2_mc.o Plataform/PS2/ps2_main.o
 
-EE_OBJS = $(PS2_OBJS) aud_sys/mame/fmopl.o aud_sys/dosbox/dbopl.o  $(ID_ENGINE_OBJS) $(WL_OBJS)
+EE_OBJS = $(PS2_OBJS) aud_sys/mame/fmopl.o aud_sys/dosbox/dbopl.o $(ID_ENGINE_OBJS) $(WL_OBJS)
 
 EE_INCS = -I$(PS2SDK)/ports/include/SDL2 -I$(PS2SDK)/ports/include -I$(PS2DEV)/isjpcm/include/ -I$(GSKIT)/include -I$(GSKIT)/ee/dma/include -I$(GSKIT)/ee/gs/include -I$(GSKIT)/ee/toolkit/include 
 EE_LDFLAGS = -L$(PS2SDK)/ports/lib -L$(PS2SDK)/iop/lib/ -L$(PS2SDK)/ee/lib/ -L$(PS2DEV)/gsKit/lib 
 SDL2_LIBS = -lSDL2main -lSDL2_mixer -lSDL2 -lmodplug -lmikmod -logg -lopusfile -lopus
 EE_LIBS = $(SDL2_LIBS) -lcdvd -lm -lps2ip -lkernel -ldebug -lmc -lc -lhdd -lpoweroff -lps2_drivers -lgskit -ldmakit -lpadx -lmtap -laudsrv -lstdc++ -lfileXio -linput -lpatches
-EE_DEFINES = -DPS2
+EE_DEFINES = -DPS2 -DRESET_IOP
 EE_CFLAGS = $(EE_DEFINES) -Wall -W -g -Wpointer-arith -Wreturn-type -Wwrite-strings -Wcast-align -std=gnu99 -Wimplicit-int -Wsequence-point -Wswitch
 
 EE_OBJS_DIR = obj/

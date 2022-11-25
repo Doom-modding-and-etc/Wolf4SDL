@@ -3,7 +3,6 @@
 
 void PS2_Started()
 {
-    PS2_Load_RPC_Patches();
 	PS2_Load_Modules();
     PS2_Load_Memory_Card();
 }
