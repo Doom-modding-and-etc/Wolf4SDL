@@ -1512,7 +1512,7 @@ DrawHighScores (void)
 */
 
 void
-CheckHighScore (s32 score, word other)
+CheckHighScore (int32_t score, word other)
 {
     word i, j;
     int n;

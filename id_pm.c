@@ -43,9 +43,9 @@ void PM_Startup (void)
     int      i;
     int      padding;
     byte     *page;
-    u32 *pageOffsets;
-    u32 pagesize;
-    s32 
+    uint32_t *pageOffsets;
+    uint32_t pagesize;
+    int32_t 
 #ifndef SEGA_SATURN
     filesize,
 #endif

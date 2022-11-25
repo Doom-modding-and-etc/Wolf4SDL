@@ -53,7 +53,7 @@ bool     mapseen[MAPSIZE][MAPSIZE];
 // replacing refresh manager
 //
 word     mapwidth,mapheight;
-u32 tics;
+uint32_t tics;
 
 //
 // control info
@@ -1611,7 +1611,7 @@ think:
 =
 ===================
 */
-s32 funnyticount;
+int32_t funnyticount;
 
 
 void PlayLoop (void)

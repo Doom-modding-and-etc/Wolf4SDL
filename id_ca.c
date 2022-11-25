@@ -21,8 +21,7 @@ loaded into the data segment
     #include <unistd.h>
 #elif defined(SWITCH)
 	#include <sys/_iovec.h>
-#else
-#if defined(N3DS) || defined(PS2) 
+#elif defined(N3DS) || defined(PS2) 
 struct iovec 
 {
      void *iov_base;     
@@ -31,7 +30,6 @@ struct iovec
 #else	
     #include <sys/uio.h>
     #include <unistd.h>
-#endif
 #endif
 #endif
 
@@ -148,7 +146,7 @@ static maptype mapheaderseg;
 maptype *mapheaderseg[NUMMAPS];
 #endif
 
-#if defined(VIEASM) || !defined(SEGA_SATURN)
+#if !defined(VIEASM) || !defined(SEGA_SATURN)
 byte *audiosegs[NUMSNDCHUNKS];
 #endif
 byte *grsegs[NUMCHUNKS];
@@ -225,7 +223,7 @@ int    maphandle = -1;              // handle to MAPTEMP / GAMEMAPS
 #if !defined(VIEASM) || !defined(SEGA_SATURN)
 int    audiohandle = -1;            // handle to AUDIOT / AUDIO
 #endif
-s32   chunkcomplen,chunkexplen;
+int32_t   chunkcomplen,chunkexplen;
 
 #ifndef VIEASM
 SDMode oldsoundmode;
@@ -942,7 +940,7 @@ void CAL_SetupMapFile (void)
 #else
     int     i;
     int handle;
-    s32 pos;
+    int32_t pos;
 #if defined(SWITCH) || defined (N3DS) || defined(SATURN)
     char fname[13 + sizeof(DATADIR)];
 #else
@@ -1020,7 +1018,7 @@ void CAL_SetupMapFile (void)
 #if !defined(VIEASM) || !defined(SEGA_SATURN)
 void CAL_SetupAudioFile (void)
 {
-#if defined SWITCH && defined N3DS
+#if defined(SWITCH) || defined(N3DS) || defined(PS2)
     char fname[13 + sizeof(DATADIR)];
 #else    
     char fname[13];
@@ -1028,7 +1026,9 @@ void CAL_SetupAudioFile (void)
 //
 // load audiohed.ext (offsets for audio file)
 //
+#ifndef VIEASM
     strcpy(fname,aheadname);
+#endif
     strcat(fname,audioext);
 
     void* ptr;
@@ -1138,7 +1138,7 @@ void CA_Shutdown (void)
 
     free (tinf);
     tinf = NULL;
-
+#ifndef VIEASM
     switch(oldsoundmode)
     {
         case sdm_Off:
@@ -1150,7 +1150,7 @@ void CA_Shutdown (void)
             start = STARTADLIBSOUNDS;
             break;
     }
-
+#endif
     for(i=0; i<NUMSOUNDS; i++,start++)
         UNCACHEAUDIOCHUNK(start);
 }

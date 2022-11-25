@@ -76,26 +76,15 @@
 #if !defined O_BINARY
 #define O_BINARY 0
 #endif
-#ifndef PS2
-typedef int8_t s8;
-typedef int16_t s16;
-typedef int32_t s32;
-typedef int64_t s64;
-
-typedef uint8_t u8;
-typedef uint16_t u16;
-typedef uint32_t u32;
-typedef uint64_t u64;
-#endif
 #ifdef SEGA_SATURN
 typedef unsigned char byte;
 typedef unsigned short int word;
 #else
-typedef u8 byte;
-typedef u16 word;
+typedef uint8_t byte;
+typedef uint16_t word;
 #endif
 typedef fixedpt fixed;
-typedef u32 longword;
+typedef uint32_t longword;
 
 #ifdef OLD_BOOL
 typedef enum
@@ -197,9 +186,9 @@ void Quit(const char* errorStr, ...);
 #endif
 
 #if WALLSHIFT >= 7
-typedef u16 tiletype;
+typedef uint16_t tiletype;
 #else
-typedef u8 tiletype;
+typedef uint8_t tiletype;
 #endif
 
 //
@@ -878,7 +867,7 @@ typedef struct statstruct
     byte      tilex, tiley;
     short     shapenum;           // if shapenum == -1 the obj has been removed
     byte* visspot;
-    u32 flags;
+    uint32_t flags;
     byte      itemnumber;
 } statobj_t;
 
@@ -925,9 +914,9 @@ typedef struct objstruct
     int		state; /* stateenum */
 #endif
 
-    u32    flags;              // FL_SHOOTABLE, etc
+    uint32_t    flags;              // FL_SHOOTABLE, etc
 
-    s32     distance;           // if negative, wait for that door to open
+    int32_t     distance;           // if negative, wait for that door to open
     dirtype     dir;
 
     fixed       x, y;
@@ -940,7 +929,7 @@ typedef struct objstruct
 
     short       angle;
     short       hitpoints;
-    s32     speed;
+    int32_t     speed;
 
     short       temp1, temp2, hidden;
     struct objstruct* next, * prev;
@@ -1000,7 +989,7 @@ typedef struct
 {
     short       difficulty;
     short       mapon;
-    s32     oldscore, score, nextextra;
+    int32_t     oldscore, score, nextextra;
     short       lives;
     short       health;
     short       ammo;
@@ -1012,8 +1001,8 @@ typedef struct
 
     short       episode, secretcount, treasurecount, killcount,
         secrettotal, treasuretotal, killtotal;
-    s32     TimeCount;
-    s32     killx, killy;
+    int32_t     TimeCount;
+    int32_t     killx, killy;
     bool     victoryflag;            // set during victory animations
 } gametype;
 
@@ -1049,7 +1038,7 @@ extern  char     configname[13];
 
 extern  fixed    focallength;
 #ifndef SEGA_SATURN
-extern  u32 screenofs;
+extern  uint32_t screenofs;
 #endif
 extern  int      viewscreenx, viewscreeny;
 extern  int      viewwidth;
@@ -1072,7 +1061,7 @@ extern  int      mouseadjustment;
 //
 // derived constants
 //
-extern  s32  heightnumerator;
+extern  int32_t  heightnumerator;
 extern  fixed    scale;
 
 #ifndef SEGA_SATURN
@@ -1118,8 +1107,8 @@ extern  char        demoname[13];
 #endif
 
 #ifdef SPEAR
-extern  s32     spearx, speary;
-extern  u32    spearangle;
+extern  int32_t     spearx, speary;
+extern  uint32_t    spearangle;
 extern  bool     spearflag;
 #endif
 
@@ -1171,7 +1160,7 @@ void    UpdateSoundLoc(void);
 #define JOYSCALE    2
 
 #ifdef SPEAR
-extern  s32     funnyticount;           // FOR FUNNY BJ FACE
+extern  int32_t     funnyticount;           // FOR FUNNY BJ FACE
 #endif
 
 extern  exit_t      playstate;
@@ -1203,7 +1192,7 @@ extern  bool  singlestep, godmode, noclip, ammocheat, mapreveal;
 extern  int  extravbls;
 #endif
 extern  word        mapwidth, mapheight;
-extern  u32    tics;
+extern  uint32_t    tics;
 #ifndef SEGA_SATURN
 extern  int         lastgamemusicoffset;
 #endif
@@ -1234,7 +1223,7 @@ extern  int         controlx, controly;              // range from -100 to 100
 extern  bool     buttonstate[NUMBUTTONS];
 
 extern  bool     demorecord, demoplayback;
-extern  s8* demoptr, * lastdemoptr;
+extern  int8_t* demoptr, * lastdemoptr;
 #ifndef SEGA_SATURN
 extern  void* demobuffer;
 #endif
@@ -1266,7 +1255,7 @@ void    StartBonusFlash(void);
 void IntroScreen(void);
 void PG13(void);
 void DrawHighScores(void);
-void CheckHighScore(s32 score, word other);
+void CheckHighScore(int32_t score, word other);
 void Victory(void);
 void LevelCompleted(void);
 void ClearSplitVWB(void);
@@ -1296,21 +1285,21 @@ void ViewMap(void);
 
 extern  byte* vbuf;
 
-extern  s32 lasttimecount;
-extern  s32 frameon;
+extern  int32_t lasttimecount;
+extern  int32_t frameon;
 extern  bool fizzlein, fpscounter;
 
 #if defined(USE_FLOORCEILINGTEX) || defined(USE_CLOUDSKY)
-extern  s16* spanstart;
+extern  int16_t* spanstart;
 #endif
 #ifndef SEGA_SATURN
-extern  s16* wallheight;
+extern  int16_t* wallheight;
 #endif
 //
 // math tables
 //
 extern  short* pixelangle;
-extern  s32 finetangent[FINEANGLES / 4];
+extern  int32_t finetangent[FINEANGLES / 4];
 extern  fixed   sintable[ANGLES + ANGLES / 4];
 extern  fixed* costable;
 
@@ -1397,7 +1386,7 @@ bool CheckSight(objtype* ob);
 //
 // player state info
 //
-extern  s32  thrustspeed;
+extern  int32_t  thrustspeed;
 extern  word     plux, pluy;         // player coordinates scaled to unsigned
 extern  objtype* LastAttacker;
 
@@ -1413,7 +1402,7 @@ void    GetBonus(statobj_t* check);
 void    GiveWeapon(int weapon);
 void    GiveAmmo(int ammo);
 void    GiveKey(int key);
-void    StatusDrawFace(u32 picnum);
+void    StatusDrawFace(uint32_t picnum);
 void    DrawFace(void);
 void    DrawHealth(void);
 void    HealSelf(int points);

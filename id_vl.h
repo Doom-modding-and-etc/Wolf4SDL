@@ -28,13 +28,9 @@ extern SDL_Texture* upscaledTexture;
 extern  bool fullscreen, usedoublebuffering;
 #endif
 
-#if N3DS
-extern  int screenWidth, screenHeight, screenBits, screenPitch, bufferPitch;
-#else
-extern  u32 screenWidth, screenHeight, screenBits, 
+extern int32_t screenWidth, screenHeight, screenBits,
 #ifndef SEGA_SATURN
 screenPitch, bufferPitch;   
-#endif
 #endif
 extern  int      scaleFactor;
 

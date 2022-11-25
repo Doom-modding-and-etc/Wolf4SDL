@@ -46,8 +46,8 @@ gametype        gamestate;
 byte            bordercol=VIEWCOLOR;        // color of the Change View/Ingame border
 
 #ifdef SPEAR
-s32        spearx,speary;
-u32        spearangle;
+int32_t        spearx,speary;
+uint32_t        spearangle;
 bool         spearflag;
 #endif
 

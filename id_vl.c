@@ -51,19 +51,19 @@ int      screenBits = 16;
 //WIP:
 #elif defined(PS2)
 bool usedoublebuffering = true;
-u32 screenWidth = 640;
-u32 screenHeight = 448;
-u32 screenBits = 8;
+uint32_t screenWidth = 640;
+uint32_t screenHeight = 448;
+uint32_t screenBits = 8;
 #elif defined(N3DS)
 bool usedoublebuffering = true;
-int screenWidth = 400;
-int screenHeight = 240;
-int screenBits = 32;      // use "best" color depth according to libSDL  // ADDEDFIX 0
+uint32_t screenWidth = 400;
+uint32_t screenHeight = 240;
+uint32_t screenBits = 32;      // use "best" color depth according to libSDL  // ADDEDFIX 0
 #else
 bool usedoublebuffering = true;
 #if defined(SCALE2X) 
-u32 screenWidth = 320;
-u32 screenHeight = 200;
+uint32_t screenWidth = 320;
+uint32_t screenHeight = 200;
 static unsigned scaledScreenWidth = 640;
 static unsigned scaledScreenHeight = 405;
 #else
@@ -71,11 +71,11 @@ static unsigned scaledScreenHeight = 405;
 u32 screenWidth = SATURN_WIDTH;
 u32 screenHeight = SATURN_HEIGHT;
 #else
-u32 screenWidth = 640;
-u32 screenHeight = 405;
+uint32_t screenWidth = 640;
+uint32_t screenHeight = 405;
 #endif
 #endif
-u32 screenBits = 8;      // use "best" color depth according to libSDL
+uint32_t screenBits = 8;      // use "best" color depth according to libSDL
 #endif
 
 SDL_Surface *screen = NULL;
@@ -84,8 +84,8 @@ SDL_Surface* screenBuffer = NULL;
 int screenPitch;
 int bufferPitch;
 #else
-u32 screenPitch;
-u32 bufferPitch;
+uint32_t screenPitch;
+uint32_t bufferPitch;
 #endif
 #if SDL_MAJOR_VERSION == 2
 SDL_Window *window;

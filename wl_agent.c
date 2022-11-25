@@ -26,7 +26,7 @@
 //
 // player state info
 //
-s32         thrustspeed;
+int32_t        thrustspeed;
 
 word            plux, pluy;          // player coordinates scaled to unsigned
 
@@ -329,7 +329,7 @@ inline void StatusDrawPicIndirect(unsigned x, unsigned y, unsigned picnum)
 }
 #endif
 
-void StatusDrawFace(u32 picnum)
+void StatusDrawFace(uint32_t picnum)
 {
     StatusDrawPic(17, 4, picnum);
 
