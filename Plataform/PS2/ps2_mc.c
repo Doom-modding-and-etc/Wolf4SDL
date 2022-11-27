@@ -1,8 +1,10 @@
+//PS2_MC.C
 #ifdef PS2
 #include "ps2_mc.h"
+#include "wl_def.h"
 #include <stdio.h>
 
-bool PS2_Init_Memory_Card_Type()
+void PS2_Init_Memory_Card_Type()
 {
     int ret;
     bool success = true; //Initialize the memory;
@@ -18,7 +20,7 @@ bool PS2_Init_Memory_Card_Type()
     if(!ret)
     {
         printf("Failed to initialize PSX Memory Card\n");
-       return success = false;
+        return success = false;
     }
 
     ret = mcInit(MC_TYPE_PS2);
@@ -46,10 +48,9 @@ bool PS2_Init_Memory_Card_Type()
         printf("There´s no memory card inserted");
         return success = false;
     }
-    return success;
 }
 
-bool PS2_Get_Memory_Card0_Info()
+void PS2_Get_Memory_Card0_Info()
 {
     bool success = true;
     int ret;
@@ -67,10 +68,9 @@ bool PS2_Get_Memory_Card0_Info()
 	    printf("Type: %d Free: %d Format: %d\n\n", type, free, info);//Cosmito
         return success = true;
     }
-    return success;
 }
 
-bool PS2_Get_Memory_Card1_Info()
+void PS2_Get_Memory_Card1_Info()
 {
     bool success = true;
     int ret;
@@ -88,7 +88,48 @@ bool PS2_Get_Memory_Card1_Info()
 	    printf("Type: %d Free: %d Format: %d\n\n", type, free, info);//Cosmito
         return success = true;
     }
-    return success;
+}
+
+void PS2_SaveFile_Memory_Card0(const char* filename)
+{
+    sceMcTblGetDir dir;
+    int ret, fd;
+    PS2_Init_Memory_Card_Type(); //Get the what type of memory card;
+    //ret = mcDetectMemoryCard(0, 0);
+    //if(ret == NULL)
+    {
+        printf("Failed to detect the memory card from Slot 1");
+    }
+    //else
+    {
+        //mcGetDir(0, 0, "mc0://Wolf4SDL", NULL, NULL, NULL); //
+    }
+
+    fd = open(filename, O_RDWR);
+    //TBD: Add write here:
+    close(fd);
+    mcClose(0);
+}
+
+void PS2_SaveFile_Memory_Card1(const char *filename)
+{
+    sceMcTblGetDir dir;
+    int ret, fd;
+    PS2_Init_Memory_Card_Type(); //Get the what type of memory card;
+    //ret = mcDetectMemoryCard(1, 1);
+    //if(ret == NULL)
+    {
+        printf("Failed to detect the memory card from Slot 2");
+    }
+    //else
+    {
+        mcGetDir(0, 0, "mc0://Wolf4SDL", NULL, NULL, NULL); //
+    }
+
+    fd = open(filename, O_RDWR);
+    //TBD: Add write here:
+    close(fd);
+    mcClose(0);
 }
 
 void PS2_Load_Memory_Card()

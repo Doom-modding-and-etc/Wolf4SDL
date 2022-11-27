@@ -20,7 +20,7 @@
 #include "wr_room.h"
 #include "wr_lightmap.h"
 #ifdef PS2
-//#include "lw_vec.h"
+#include "wl_def.h"
 #else
 #include "..\..\wl_def.h"
 #endif

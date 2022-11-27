@@ -22,7 +22,7 @@
 #include "wr_lightmap.h"
 #include "wr_radmap.h"
 #ifdef PS2
-//#include "lw_vec.h"
+//#include "3rdparty/lw_lib/lw_vec.h"
 #else
 #include "..\lw_lib\lw_img.h"
 #endif

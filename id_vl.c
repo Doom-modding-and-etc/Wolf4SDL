@@ -322,14 +322,12 @@ void VL_SetVGAPlaneMode (void)
     }
     SDL_SetPaletteColors(screenBuffer->format->palette, gamepal, 0, 256);
 
-
 #if defined(SCALE2X) 
     // Create the intermediate texture that we render the screen surface into.
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 #endif
     texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888,
         SDL_TEXTUREACCESS_STREAMING, screenWidth, screenHeight);
-
 
     if (!texture)
     {

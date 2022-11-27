@@ -4,21 +4,17 @@
 #ifdef RESET_IOP
 void resetIOP()
 {
-	#ifdef RESET_IOP  
     SifInitRpc(0);
     while (!SifIopReset("", 0)){};
     while (!SifIopSync()){};
     SifInitRpc(0);
-    #endif
 }
 #else
 void initRPC()
 {
   SifInitRpc(0);
-  while (!SifIopReset(NULL, 0)) {
-  };
-  while (!SifIopSync()) {
-  };
+  while (!SifIopReset(NULL, 0)) {};
+  while (!SifIopSync()){};
   SifInitRpc(0);
 }
 #endif
@@ -59,7 +55,4 @@ void PS2_Unload_Modules()
 	deinit_hdd_driver(false);
 	deinit_fileXio_driver();
 }
-
-
-
 #endif

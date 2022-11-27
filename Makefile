@@ -36,15 +36,15 @@ LW_LIB_SRCS += 3rdparty/lwlib/lw_ai_enemy.c 3rdparty/lwlib/lw_bres.c 3rdparty/lw
 3rdparty/lwlib/lw_edit.c 3rdparty/lwlib/lw_fs.c 3rdparty/lwlib/lw_maptool.c 3rdparty/lwlib/lw_misc.c \
 3rdparty/lwlib/lw_protmsg.c 3rdparty/lwlib/lw_pwscan.c 3rdparty/lwlib/lw_vec.c
 
-WOLFRAD_SRCS += 3rdparty/wolfrad/wolfrad.c 3rdparty/wolfrad/wr_level.c 3rdparty/wolfrad/wr_lightinfo.c \ 
-3rdparty/wolfrad/lightmap.c 3rdparty/wolfrad/wr_rad.c 3rdparty/wolfrad/wr_radmap.c 3rdparty/wolfrad/wr_raycaster.c \ 
+WOLFRAD_SRCS += 3rdparty/wolfrad/wolfrad.c 3rdparty/wolfrad/wr_level.c 3rdparty/wolfrad/wr_lightinfo.c \
+3rdparty/wolfrad/lightmap.c 3rdparty/wolfrad/wr_rad.c 3rdparty/wolfrad/wr_radmap.c 3rdparty/wolfrad/wr_raycaster.c \
 3rdparty/wolfrad/wr_room.c 3rdparty/wolfrad/wr_screne.c
 
 ID_ENGINE_SRCS += id_ca.c id_crt.o id_in.c id_pm.c id_sd.c id_us.c id_vh.c id_vieasm.c id_vl.c
 
 SRCS += aud_sys/mame/fmopl.c aud_sys/dosbox/dbopl.c $(LW_LIB_SRCS) $(WOLFRAD_SRCS) $(ID_ENGINE_SRCS) signon.c \
-wl_ai.c wl_conartist.c wl_benchobo.c wl_clockking.c wl_ed.c wl_firefly.c wl_hooker.c wl_led.c wl_healthmetter.c \ 
-wl_math.c wl_physics.c wl_pimp.c wl_polygon.c wl_sleephobo.c wl_anyactor.c \ 
+wl_ai.c wl_conartist.c wl_benchobo.c wl_clockking.c wl_ed.c wl_firefly.c wl_hooker.c wl_led.c wl_healthmetter.c \
+wl_math.c wl_physics.c wl_pimp.c wl_polygon.c wl_sleephobo.c wl_anyactor.c \
 wl_act1.c wl_act2.c wl_agent.c wl_atmos.c wl_cloudsky.c wl_debug.c wl_draw.c wl_game.c wl_inter.c \
 wl_main.c wl_menu.c wl_parallax.c wl_plane.c wl_play.c wl_scale.c wl_shade.c wl_state.c \
 wl_text.c wl_utils.c 

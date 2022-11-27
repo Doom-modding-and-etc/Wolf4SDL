@@ -1,3 +1,5 @@
+//PS2_MAIN.H
+
 #ifdef PS2
 #include "ps2_mc.h"
 #include "ps2_modules.h"

@@ -348,6 +348,9 @@ void WriteConfig(void)
     }
 #ifdef _arch_dreamcast
     DC_SaveToVMU(configname, NULL);
+#elif defined(PS2)
+    PS2_SaveFile_Memory_Card0(configname);
+    PS2_SaveFile_Memory_Card1(configname);
 #endif
 }
 
@@ -712,7 +715,7 @@ void ShutdownId (void)
 #if defined(GP2X_940)
     GP2X_Shutdown();
 #endif
-#if defined(PS2)
+#ifdef PS2
     PS2_Shutdown(); //PT-BR Moment: Desligue tudo!!!
 #endif
 }
@@ -1295,9 +1298,6 @@ static void InitGame()
 #endif
 #ifdef PS2
     PS2_Started(); //Load everything for ps2.
-    //init_scr();
-    //scr_setXY(20, 20);
-    //scr_printf("PS2 Started");
     printf("PS2 Started");
 #endif
 
@@ -1941,7 +1941,7 @@ void CheckParameters(int argc, char *argv[])
             " --ignorenumchunks      Ignores the number of chunks in VGAHEAD.*\n"
             "                        (may be useful for some broken mods)\n"
             " --configdir <dir>      Directory where config file and save games are stored\n"
-#if defined(_arch_dreamcast) || defined(_WIN32)
+#if defined(_arch_dreamcast) || defined(_WIN32) || defined(PS2)
             "                        (default: current directory)\n"
 #else
             "                        (default: $HOME/.wolf4sdl)\n"

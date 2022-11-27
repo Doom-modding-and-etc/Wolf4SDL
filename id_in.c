@@ -423,13 +423,13 @@ static bool ToggleFullScreenKeyShortcut(SDL_Keysym* sym)
 
 static void I_ToggleFullScreen(void)
 {
-    unsigned int flags = 0;
+    uint32_t flags;
     fullscreen = !fullscreen;
 
     if (fullscreen)
     {
 #if SDL_MAJOR_VERSION == 1
-        //SDL_SetVideoMode((u32*)screenWidth, (u32*)screenHeight, (u32*)screenBits, SDL_RESIZABLE);
+        SDL_SetVideoMode((u32*)screenWidth, (u32*)screenHeight, (u32*)screenBits, SDL_RESIZABLE);
 #elif SDL_MAJOR_VERSION == 2
         SDL_GetWindowSize(window, (int*)&screenWidth, (int*)&screenHeight);
 #endif

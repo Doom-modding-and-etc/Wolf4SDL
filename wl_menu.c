@@ -23,9 +23,7 @@ extern int lastgamemusicoffset;
 //
 int  CP_ReadThis (int);
 #ifdef CRT
-#if SDL_MAJOR_VERSION == 1
-
-#elif SDL_MAJOR_VERSION == 2
+#if !SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2
 extern void SetTextColor(CP_itemtype* items, int hlight);
 #endif
 #else
@@ -3389,9 +3387,7 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
 
     VWB_DrawPic (x, y, C_CURSOR1PIC);
 #ifdef CRT
-#if SDL_MAJOR_VERSION == 1
-
-#elif SDL_MAJOR_VERSION == 2
+#if !SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2
     SetTextColor(items + which, 1);
 #endif
 #else
@@ -3623,9 +3619,7 @@ EraseGun (CP_iteminfo * item_i, CP_itemtype * items, int x, int y, int which)
 {
     VWB_Bar (x - 1, y, 25, 16, BKGDCOLOR);
 #ifdef CRT    
-#if SDL_MAJOR_VERSION == 1
-
-#elif SDL_MAJOR_VERSION == 2
+#if !SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2
     SetTextColor(items + which, 0);
 #endif
 #else
@@ -3662,9 +3656,7 @@ DrawGun (CP_iteminfo * item_i, CP_itemtype * items, int x, int *y, int which, in
     *y = basey + which * 13;
     VWB_DrawPic (x, *y, C_CURSOR1PIC);
 #ifdef CRT
-#if SDL_MAJOR_VERSION == 1
-
-#elif SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2
     SetTextColor(items + which, 1);
 #endif
 #else
@@ -3722,9 +3714,7 @@ DrawMenu (CP_iteminfo * item_i, CP_itemtype * items)
     for (i = 0; i < item_i->amount; i++)
     {
 #ifdef CRT
-#if SDL_MAJOR_VERSION == 1
-
-#elif SDL_MAJOR_VERSION == 2
+#if !SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2
         SetTextColor(items + i, which == 1);
 #endif
 #else
@@ -3745,10 +3735,7 @@ DrawMenu (CP_iteminfo * item_i, CP_itemtype * items)
 }
 
 #ifdef CRT
-
-#if SDL_MAJOR_VERSION == 1
-
-#elif SDL_MAJOR_VERSION == 2
+#if !SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2
 
 ////////////////////////////////////////////////////////////////////
 //
@@ -4404,7 +4391,7 @@ CheckForEpisodes (void)
     struct stat statbuf;
 
     // On Linux like systems, the configdir defaults to $HOME/.wolf4sdl
-#if !defined(_WIN32) && !defined(_arch_dreamcast)
+#if !defined(_WIN32) && !defined(_arch_dreamcast) || !defined(PS2) 
     if(configdir[0] == 0)
     {
         // Set config location to home directory for multi-user support
@@ -4539,28 +4526,44 @@ CheckForEpisodes (void)
 #ifndef SPEARDEMO
     if(param_mission == 0)
     {
+#if defined(SWITCH) || defined (N3DS) || defined(PS2)  
+        if(!stat(DATADIR"vswap.sod", &statbuf))
+#else
         if(!stat("vswap.sod", &statbuf))
+#endif
             strcpy (extension, "sod");
         else
             Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
     }
     else if(param_mission == 1)
     {
+#if defined(SWITCH) || defined (N3DS) || defined(PS2)  
+        if(!stat(DATADIR"vswap.sd1", &statbuf))
+#else
         if(!stat("vswap.sd1", &statbuf))
+#endif
             strcpy (extension, "sd1");
         else
             Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
     }
     else if(param_mission == 2)
     {
+#if defined(SWITCH) || defined (N3DS) || defined(PS2)  
+        if(!stat(DATADIR"vswap.sd2", &statbuf))
+#else
         if(!stat("vswap.sd2", &statbuf))
+#endif
             strcpy (extension, "sd2");
         else
             Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
     }
     else if(param_mission == 3)
     {
+#if defined(SWITCH) || defined (N3DS) || defined(PS2)  
+        if(!stat(DATADIR"vswap.sd3", &statbuf))
+#else        
         if(!stat("vswap.sd3", &statbuf))
+#endif      
             strcpy (extension, "sd3");
         else
             Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");

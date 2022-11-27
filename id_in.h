@@ -177,10 +177,10 @@ typedef	int		ScanCode;
 typedef	int		ScanCode;
 #define	sc_None			0
 #define	sc_Bad			0xff
-#define	sc_Return		SDLK_RETURN
+#define	sc_Return		sc_B
 #define	sc_Enter		sc_Return
 #define	sc_Escape		SDLK_ESCAPE
-#define	sc_Space		SDLK_SPACE
+#define	sc_Space		sc_X
 #define	sc_BackSpace	SDLK_BACKSPACE
 #define	sc_Tab			SDLK_TAB
 #define	sc_Alt			SDLK_LALT
