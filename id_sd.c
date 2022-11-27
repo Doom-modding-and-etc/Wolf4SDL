@@ -55,7 +55,7 @@ Chip chip;
 
 static bool YM3812Init(int numChips, int clock, int rate)
 {
-    Chip__Setup(&chip ,rate);
+    Chip__Setup(&numChips, rate / clock);
     return true;
 }
 
@@ -74,7 +74,7 @@ static void YM3812UpdateOne(Chip which, int16_t* stream, int length)
     if (length > 512)
         length = 512;
 
-    if (which.opl3Active)
+    if (!which.opl3Active)
     {       
         Chip__GenerateBlock3(&which, length, buffer);
         // GenerateBlock3 generates a number of "length" 32-bit stereo samples
@@ -1073,7 +1073,7 @@ SD_Startup(void)
         YM3812Write(oplChip,i,0);
 #endif
 #ifdef USE_DOSBOX
-    YM3812Write(chip, 1, 0x20);
+    YM3812Write(chip, i, 0x20);
 #else
     YM3812Write(oplChip,1,0x20); // Set WSE=1
 //    YM3812Write(0,8,0); // Set CSM=0 & SEL=0		 // already set in for statement

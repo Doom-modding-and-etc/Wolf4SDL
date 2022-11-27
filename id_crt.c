@@ -18,7 +18,7 @@
 static int width;
 static int height;
 
-u8 coloredFrameBuffer[320 * 200 * 3];
+uint8_t coloredFrameBuffer[320 * 200 * 3];
 
 #if SDL_MAJOR_VERSION == 1
 GLuint crtTexture;
@@ -87,7 +87,7 @@ void CRT_DAC(void)
     //Convert palette based framebuffer to RGB for OpenGL
     byte* pixelPointer = coloredFrameBuffer;
     for (int i = 0; i < 320 * 200; i++) {
-        u8 paletteIndex;
+        uint8_t paletteIndex;
         paletteIndex = ((byte*)screen->pixels)[i];
         *pixelPointer++ = curpal[paletteIndex].r;
         *pixelPointer++ = curpal[paletteIndex].g;
@@ -123,19 +123,7 @@ void CRT_DAC(void)
     SDL_GetKeyboardState(NULL);
 #endif
 
-    static int wasPressed = 0;
-    if(Keyboard(sc_I))
-    {
-        if(!wasPressed) 
-        {
-            wasPressed = 1;
-            CRT_Screenshot();
-        }
-        else
-        {
-            wasPressed = 0;
-        }
-    }
+
 
 }
 

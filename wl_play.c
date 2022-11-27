@@ -740,30 +740,31 @@ void CheckKeys (void)
 {
     ScanCode scan;
 
-
     if (screenfaded || demoplayback)    // don't do anything with a faded screen
         return;
 
     scan = LastScan;
 
-#ifdef DEBUG
+#ifdef DEBUGKEYS
+#if 0
     if (Keyboard(sc_Tab) &&
         Keyboard(sc_O))		// O = overhead
     {
         ViewMap();
         return;
     }
+#endif
 
     if (Keyboard(sc_Tab) &&
         Keyboard(sc_N))			// N = no clip
     {
         noclip ^= 1;
-        //		WindowH = 160;
+        WindowH = 160;
 
         ClearMemory();
         CA_CacheGrChunks();
         ClearSplitVWB();
-        //VW_ScreenToScreen(displayofs, bufferofs, 80, 160);
+        //VW_ScreenToScreen(screen, screenBuffer, 80, 160);
 
         if (noclip)
             Message("No clipping ON");
@@ -783,18 +784,36 @@ void CheckKeys (void)
         }
         IN_Ack();
         noclip ^= 1;
-        DrawAllPlayBorderSides();
+        DrawPlayBorderSides();
         IN_ClearKeysDown();
         return;	// return 1;
     }
 #endif
 
+    static int wasPressed = 0;
+    if (Keyboard(sc_Tab) && Keyboard(sc_P)) //Fabien Sangalard + Ripper Picture Grabber.
+    {
+        if (!wasPressed)
+        {
+            wasPressed = 1;
+#ifdef CRT
+            CRT_Screenshot();
+#elif defined(DEBUGKEYS)
+            PictureGrabber();
+#endif
+        }
+        else
+        {
+            wasPressed = 0;
+        }
+    }
+//#endif
 #ifndef SEGA_SATURN
-#ifdef GOD_MODE
+#if defined(GOD_MODE) || defined(SPEAR)
     //
     // SECRET CHEAT CODE: TAB-G-F10
     //
-    if (Keyboard(sc_Tab)) && Keyboard(sc_G) && Keyboard(sc_F10)) 
+    if (Keyboard(sc_Tab) && Keyboard(sc_G) && Keyboard(sc_F10)) 
     {
 
         ClearMemory();
@@ -875,7 +894,7 @@ void CheckKeys (void)
     //
     // TRYING THE KEEN CHEAT CODE!
     //
-    if (Keyboard(sc_B)) //&& Keyboard(sc_A) && Keyboard(sc_T))
+    if (Keyboard(sc_B) && Keyboard(sc_A) && Keyboard(sc_T))
     {
         ClearMemory();
         ClearSplitVWB();

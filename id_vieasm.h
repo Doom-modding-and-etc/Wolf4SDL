@@ -46,6 +46,44 @@ typedef struct
     fixed globalsoundx, globalsoundy;
 } globalsoundpos;
 
+#ifndef SEGA_SATURN
+typedef struct
+{
+    longword        length;
+    word            priority;
+} SoundCommon;
+#endif
+#define ORIG_SOUNDCOMMON_SIZE 6
+
+#ifndef SEGA_SATURN
+typedef struct
+{
+    byte    mChar, cChar,
+        mScale, cScale,
+        mAttack, cAttack,
+        mSus, cSus,
+        mWave, cWave,
+        nConn,
+
+        // These are only for Muse - these bytes are really unused
+        voice,
+        mode;
+    byte    unused[3];
+} Instrument;
+#endif
+
+#ifndef SEGA_SATURN
+typedef struct
+{
+    SoundCommon     common;
+    Instrument      inst;
+    byte            block;
+    byte            data[1];
+} AdLibSound;
+#define ORIG_INSTRUMENT_SIZE 16
+#define ORIG_ADLIBSOUND_SIZE (ORIG_SOUNDCOMMON_SIZE + ORIG_INSTRUMENT_SIZE + 2)
+#endif
+
 extern bool switching;
 
 extern globalsoundpos channelSoundPos[];

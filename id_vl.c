@@ -80,13 +80,10 @@ uint32_t screenBits = 8;      // use "best" color depth according to libSDL
 
 SDL_Surface *screen = NULL;
 SDL_Surface* screenBuffer = NULL;
-#if N3DS
-int screenPitch;
-int bufferPitch;
-#else
+
 uint32_t screenPitch;
 uint32_t bufferPitch;
-#endif
+
 #if SDL_MAJOR_VERSION == 2
 SDL_Window *window;
 SDL_Renderer *renderer;
@@ -247,7 +244,7 @@ void VL_SetVGAPlaneMode (void)
 
     if(!screen)
     {
-        printf("Unable to set %ux%ux%i video mode: %s\n", screenWidth,
+        printf("Unable to set %ux%lux%li video mode: %s\n", screenWidth,
             screenHeight, screenBits, SDL_GetError());
         exit(1);
     }

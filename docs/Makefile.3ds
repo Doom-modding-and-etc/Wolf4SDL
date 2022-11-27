@@ -22,13 +22,13 @@ LIBS      = $(LIBDIR) -lSDL_mixer -lvorbisidec -lmikmod -lmad -logg -lSDL_ttf -l
 BIN       = Wolf4SDL.elf
 BUILD	  =	build
 ARCH 	  = -march=armv6k -mtune=mpcore -mfloat-abi=hard -mtp=soft -marm -mthumb-interwork
-CFLAGS    = $(ARCH) $(INCS) $(DEFINES) \
+ASFLAGS	:=	-g $(ARCH)
+CFLAGS    = $(ASFLAGS) $(INCS) $(DEFINES) \
 			-Wno-narrowing -Ofast -mword-relocations \
 			-fomit-frame-pointer -ffunction-sections \
-			-std=gnu99 -Wall `sdl-config --libs` -Wall -W -g \
-			-Wpointer-arith -Wreturn-type -Wwrite-strings \
-			-Wcast-align -Wimplicit-int -Wsequence-point
-ASFLAGS	:=	-g $(ARCH)
+			-std=gnu99 -Wall `sdl-config --libs` -W -g \
+			-Wpointer-arith -g -Wall -O2 -mword-relocations \
+			-ffunction-sections \
 LDFLAGS	=	-specs=3dsx.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map) 
 RM        = rm -f
 LINK      = arm-none-eabi-gcc-12.2.0

@@ -309,7 +309,7 @@ typedef uint8_t tiletype;
 #define TEXTURESIZE     (1 << TEXTURESHIFT)
 #define TEXTUREMASK     (TEXTURESIZE * (TEXTURESIZE - 1))
 
-typedef enum
+enum
 {
     NORTH,
     EAST,
@@ -1309,7 +1309,7 @@ void PreloadGraphics(void);
 
 int DebugKeys(void);
 void ViewMap(void);
-
+void PictureGrabber(void);
 
 /*
 =============================================================================

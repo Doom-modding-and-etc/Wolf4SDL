@@ -1145,7 +1145,7 @@ DrawSliderBox(int x, int y, int val, int valinc, int width, int height, byte col
 }
 
 void
-DrawSoundVols(boolean curmode)
+DrawSoundVols(bool curmode)
 {
     ClearMScreen();
     DrawWindow(40, 25, 240, 145, BKGDCOLOR);
@@ -4391,7 +4391,7 @@ CheckForEpisodes (void)
     struct stat statbuf;
 
     // On Linux like systems, the configdir defaults to $HOME/.wolf4sdl
-#if !defined(_WIN32) && !defined(_arch_dreamcast) || !defined(PS2) 
+#ifndef _WIN32 || !defined(_arch_dreamcast)
     if(configdir[0] == 0)
     {
         // Set config location to home directory for multi-user support
@@ -4571,7 +4571,9 @@ CheckForEpisodes (void)
     else
         Quit ("UNSUPPORTED MISSION!");
     strcpy (graphext, "sod");
+#ifndef VIEASM
     strcpy (audioext, "sod");
+#endif
 #else
 #if defined(SWITCH) || defined (N3DS) || defined(PS2) 
     if(!stat(DATADIR "vswap.sdm", &statbuf))

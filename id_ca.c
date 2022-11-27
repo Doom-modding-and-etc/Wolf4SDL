@@ -1164,7 +1164,7 @@ void CA_Shutdown (void)
 =
 ======================
 */
-
+#ifndef VIEASM
 int32_t CA_CacheAudioChunk (int chunk)
 {
     int32_t pos = audiostarts[chunk];
@@ -1180,6 +1180,7 @@ int32_t CA_CacheAudioChunk (int chunk)
 
     return size;
 }
+#endif
 
 void CA_CacheAdlibSoundChunk (int chunk)
 {

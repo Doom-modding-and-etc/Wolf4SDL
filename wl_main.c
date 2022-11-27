@@ -1466,9 +1466,7 @@ void NewViewSize (int width)
 
 void Quit (const char *errorStr, ...)
 {
-#ifdef NOTYET
     byte *screen;
-#endif
     char error[256];
     if(errorStr != NULL)
     {
@@ -1495,19 +1493,15 @@ void Quit (const char *errorStr, ...)
         exit(1);
     }
 
-    if (!error || !*error)
+    if (!*error)
     {
-#ifdef NOTYET
         #ifndef JAPAN
         screen = grsegs[ORDERSCREEN];
         #endif
-#endif
         WriteConfig ();
     }
-#ifdef NOTYET
     else
         screen = grsegs[ERRORSCREEN];
-#endif
 
     ShutdownId ();
 

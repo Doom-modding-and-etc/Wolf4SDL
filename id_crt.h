@@ -15,19 +15,17 @@
 #ifdef CRT
 #include <SDL.h>
 // Win32
-#if SDL_MAJOR_VERSION == 1
-#if defined (N3DS)
+#if SDL_MAJOR_VERSION == 1 || !defined SDL_MAJOR_VERSION == 2
+#if defined (N3DS) 
 
 #elif defined(_XBOX)
 #include "xbox\fakeglx.h"
 #elif defined(_WIN32)
-#include <WTypes.h>
-#include <gl\GL.h>
+#include <Windows.h>
+#include <GL/gl.h>
 #elif defined(__linux__)
 #include <GL/gl.h>
 #endif
-#elif SDL_MAJOR_VERSION == 2
-
 #endif
 
 extern SDL_Color curpal[256];
@@ -44,7 +42,7 @@ void CRT_Screenshot(void);
 
 void CRT_FreeScreenshot(SDL_Surface *surface1, SDL_Surface *surface2);
 
-#ifndef SDL_MAJOR_VERSION == 1
+#if !SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2
 void CRT_DestroyTexture(SDL_Texture* texture1, SDL_Texture* texture2);
 #endif
 

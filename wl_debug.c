@@ -699,6 +699,7 @@ again:
         return 1;
     }
 #endif
+/*
 #ifndef SEGA_SATURN
     else if(Keyboard(sc_P))         // P = Ripper's picture grabber
     {
@@ -706,6 +707,7 @@ again:
         return 1;
     }
 #endif
+*/
     else if (Keyboard(sc_Q))        // Q = fast quit
         Quit (NULL);
     else if (Keyboard(sc_S))        // S = slow motion

@@ -7,9 +7,10 @@
 
 #ifndef __ID_SD_H_
 #define __ID_SD_H_
+#include "version.h"
 
+#ifndef VIEASM
 #ifdef USE_DOSBOX
-static const int oplChip;
 #define alOut(n,b) YM3812Write(chip, n, b)
 #else
 #define alOut(n,b) YM3812Write(oplChip, n, b)
@@ -102,9 +103,9 @@ typedef struct
     byte            block;
     byte            data[1];
 } AdLibSound;
-#endif
-#define ORIG_ADLIBSOUND_SIZE (ORIG_SOUNDCOMMON_SIZE + ORIG_INSTRUMENT_SIZE + 2)
 
+#define ORIG_ADLIBSOUND_SIZE (ORIG_SOUNDCOMMON_SIZE + ORIG_INSTRUMENT_SIZE + 2)
+#endif
 //
 //      Sequencing stuff
 //
@@ -191,5 +192,5 @@ extern  void    SD_SetDigiDevice(SDSMode);
 extern  void	SD_PrepareSound(int which);
 extern  int     SD_PlayDigitized(word which,int leftpos,int rightpos);
 extern  void    SD_StopDigitized(void);
-
+#endif
 #endif
