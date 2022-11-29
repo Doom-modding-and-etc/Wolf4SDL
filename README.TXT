@@ -252,13 +252,14 @@ IMPORTANT: Do not forget to take care of version.h!
 
 TODOs:
 ------
- - Add latest fmopl sound
+ - Add nuked opl to probably replace fmopl
  - Add plataform readme.
  - Fix some versions of Wolfenstein 3d.
  - Prepare to SDL3 Support.
  - Support to sega saturn: wl_draw.c, wl_main.c and wl_menu.c
  - Support OpenBSD.
  
+
 Known bugs:
 -----------
 Severe: Bug on the changed key controls keys like: w a s d or something on the Wolf3d part.
