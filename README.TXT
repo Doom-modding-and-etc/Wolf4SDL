@@ -27,8 +27,9 @@ Main features:
        - Nintendo Switch
        - Nintendo 3DS(WIP On Makefile part)
        - GP2X
-       - Sega Saturn(WIP: Only ported the id´s stuff).
+       - Sega Saturn.
        - Sony Playstation 2
+       - Xbox/Xbox 360(W.I.P)
 
  - AdLib sounds and music:
       This port includes the OPL2 emulator from MAME, so you can not only
@@ -294,6 +295,8 @@ Credits:
  - Thanks to keeganatorr for the Nintendo Switch support
  - Thanks to Fabian Sangalard for the awesoeme crt feature used on Chocolate Wolfenstein 3d. 
  - Thanks to vbt for the port of sega saturn
+ - Thanks to WayneCa for upgrade the original Wolf
+ - Thanks to hax0kartik for the port of Wolf4SDL to Nintendo 3DS
 
 Licenses:
 ---------
