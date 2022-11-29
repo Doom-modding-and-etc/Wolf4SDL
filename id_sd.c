@@ -55,8 +55,8 @@ Chip chip;
 
 static bool YM3812Init(int numChips, int clock, int rate)
 {
-    Chip__Setup(&numChips, rate / clock);
-    return true;
+    Chip__Setup(&numChips, rate);
+    return false;
 }
 
 static void YM3812Write(Chip which, Bit32u reg, Bit8u val)
@@ -74,7 +74,7 @@ static void YM3812UpdateOne(Chip which, int16_t* stream, int length)
     if (length > 512)
         length = 512;
 
-    if (!which.opl3Active)
+    if (which.opl3Active)
     {       
         Chip__GenerateBlock3(&which, length, buffer);
         // GenerateBlock3 generates a number of "length" 32-bit stereo samples
@@ -1261,7 +1261,7 @@ SD_SoundPlaying(void)
         if (slPCMStat(&m_dat[i]))
         {
             //			slSndFlush() ;
-                        //slSynch(); // vbt remis 26/05 // necessaire sinon reste planré à la fin du niveau
+                        //slSynch(); // vbt remis 26/05 // necessaire sinon reste planrÃ© Ã  la fin du niveau
             return true;
         }
     }
