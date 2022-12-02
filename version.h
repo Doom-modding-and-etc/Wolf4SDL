@@ -85,7 +85,7 @@
 #elif defined(N3DS)
 #define DATADIR "/3ds/wolf4sdl/wolf3d/"
 #elif defined(PS2)
-#define DATADIR "/data"
+#define DATADIR "host0://data"
 #elif defined(SEGA_SATURN)
 #define DATADIR "/data"
 #endif

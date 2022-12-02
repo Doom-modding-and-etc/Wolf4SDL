@@ -4,6 +4,7 @@
 
 #ifndef N3DS
 #ifndef SWITCH
+
 /*
 ===================
 =
@@ -13,7 +14,6 @@
 =
 ===================
 */
-
 void *safe_malloc (size_t size, const char *fname, uint32_t line)
 {
     void *ptr;
@@ -28,7 +28,15 @@ void *safe_malloc (size_t size, const char *fname, uint32_t line)
 #endif
 #endif
 
-
+/*
+===================
+=
+= FixedMul
+=
+= Multiplication of a Fixed value by a and b
+=
+===================
+*/
 fixed FixedMul (fixed a, fixed b)
 {
 #ifdef SEGA_SATURN
@@ -38,6 +46,15 @@ fixed FixedMul (fixed a, fixed b)
 #endif
 }
 
+/*
+===================
+=
+= FixedDiv
+=
+= Division of the fixed value a by b
+=
+===================
+*/
 fixed FixedDiv (fixed a, fixed b)
 {
 	int64_t c = ((int64_t)a << FRACBITS) / (int64_t)b;
@@ -45,6 +62,15 @@ fixed FixedDiv (fixed a, fixed b)
 	return (fixed)c;
 }
 
+/*
+===================
+=
+= READWORD
+=
+= Read the word value pointer.
+=
+===================
+*/
 word READWORD (byte *ptr)
 {
     word val = ptr[0] | ptr[1] << 8;
@@ -54,6 +80,15 @@ word READWORD (byte *ptr)
     return val;
 }
 
+/*
+===================
+=
+= READLONGWORD
+=
+= Reads the longword pointer value
+=
+===================
+*/
 longword READLONGWORD (byte *ptr)
 {
     longword val = ptr[0] | ptr[1] << 8 | ptr[2] << 16 | ptr[3] << 24;
@@ -61,6 +96,15 @@ longword READLONGWORD (byte *ptr)
     return val;
 }
 
+/*
+===================
+=
+= atan2fix
+=
+= Another unknown calculation math
+=
+===================
+*/
 #ifdef SEGA_SATURN
 short atan2fix(fixed x, fixed y)
 {
@@ -112,3 +156,4 @@ short atan2fix(fixed x, fixed y)
     return res + offset;
 }
 #endif
+

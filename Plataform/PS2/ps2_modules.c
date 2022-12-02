@@ -22,18 +22,16 @@ void initRPC()
 void PS2_Load_RPC_Patches()
 {
 	sbv_patch_enable_lmb();
-    sbv_patch_disable_prefix_check();
 	sbv_patch_fileio();
+}
+
+void PS2_Unload_RPC_Patches(void)
+{
+	sbv_patch_disable_prefix_check();
 }
 
 void PS2_Load_Modules(void)
 {
-#ifdef RESET_IOP
-	resetIOP();
-#else
-	initRPC();
-#endif
-	PS2_Load_RPC_Patches();
 	init_fileXio_driver();
 	init_memcard_driver(true);
 	init_usb_driver(true);

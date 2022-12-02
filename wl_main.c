@@ -705,18 +705,49 @@ bool LoadTheGame(FILE *file,int x,int y)
 */
 
 void ShutdownId (void)
-{
+{  
     US_Shutdown ();         // This line is completely useless...
+#if defined(SWITCH) || defined (N3DS)
+    printf("US_Shutdown DONE\n");
+#elif defined(PS2)
+    ps2_printf ("US_Shutdown DONE\n",  4);
+#endif
     SD_Shutdown ();
+#if defined(SWITCH) || defined (N3DS)
+    printf("SD_Shutdown DONE\n");
+#elif defined(PS2)
+    ps2_printf ("SD_Shutdown DONE\n", 4);
+#endif    
     PM_Shutdown ();
+#if defined(SWITCH) || defined (N3DS)
+    printf("PM_Shutdown DONE\n");
+#elif defined(PS2)
+    ps2_printf("PM_Shutdown DONE\n", 4);
+#endif    
     IN_Shutdown ();
+#if defined(SWITCH) || defined (N3DS)
+    printf("IN_Shutdown DONE\n");
+#elif defined(PS2)
+    ps2_printf("IN_Shutdown DONE\n", 4);
+#endif        
     VW_Shutdown ();
+#if defined(SWITCH) || defined (N3DS)
+    printf("VW_Shutdown DONE\n");
+#elif defined(PS2)
+    ps2_printf("VW_Shutdown DONE\n", 4);
+#endif    
     CA_Shutdown ();
+#if defined(SWITCH) || defined (N3DS)
+    printf("CA_Shutdown DONE\n");
+#elif defined(PS2)
+    ps2_printf("CA_Shutdown DONE\n", 4);
+#endif    
 #if defined(GP2X_940)
     GP2X_Shutdown();
 #endif
-#ifdef PS2
-    PS2_Shutdown(); //PT-BR Moment: Desligue tudo!!!
+#if defined(PS2)
+    PS2_Shutdown();
+    ps2_printf("PS2_Shutdown DONE\n", 4);
 #endif
 }
 
@@ -1233,26 +1264,32 @@ static void InitGame()
 #ifndef SPEARDEMO
     bool didjukebox=false;
 #endif
-#if defined (SWITCH) || defined (N3DS) || defined (PS2)
+#if defined (SWITCH) || defined (N3DS) 
     printf("GAME START");
-#endif    
+#elif defined(PS2)
+    ps2_printf("GAME START", 4);
+#endif
     // initialize SDL
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
- 
     {
         printf("Unable to init SDL: %s\n", SDL_GetError());
         exit(1);
     }
     atexit(SDL_Quit);
 
-#if defined(SWITCH) || defined (N3DS) || defined (PS2)
+#if defined(SWITCH) || defined (N3DS) 
 #if SDL_MAJOR_VERSION == 1 
     printf("SDL1.2 Initialized");   
 #elif SDL_MAJOR_VERSION == 2
     printf("SDL2 Initialized");
 #endif
+#elif defined (PS2)
+#if SDL_MAJOR_VERSION == 1 
+    ps2_printf("SDL1.2 Initialized", 4);   
+#elif SDL_MAJOR_VERSION == 2
+    ps2_printf("SDL2 Initialized", 4);
 #endif
-
+#endif
 
     int numJoysticks = SDL_NumJoysticks();
     if(param_joystickindex && (param_joystickindex < -1 || param_joystickindex >= numJoysticks))
@@ -1273,32 +1310,40 @@ static void InitGame()
 	VW_UpdateScreen();
 
     VH_Startup ();
-#if defined(SWITCH) || defined (N3DS) || defined (PS2)
-    printf("VH Started");
+#if defined(SWITCH) || defined (N3DS) 
+    printf("VH Started DONE\n");
+#elif defined(PS2)
+    ps2_printf("VH Started DONE\n", 5);
 #endif
     IN_Startup ();
-#if defined(SWITCH) || defined (N3DS) || defined (PS2) 
-    printf("IN Started");
+#if defined(SWITCH) || defined (N3DS) 
+    printf("IN Started DONE\n");
+#elif defined(PS2)
+    ps2_printf("IN Started DONE\n", 4);
 #endif
     PM_Startup ();
-#if defined(SWITCH) || defined (N3DS) || defined (PS2)
+#if defined(SWITCH) || defined (N3DS) 
     printf("PM Started");
+#elif defined(PS2)
+    ps2_printf("PM Started DONE\n", 4);
 #endif
     SD_Startup ();
-#if defined(SWITCH) || defined (N3DS) || defined (PS2)
-    printf("SD Started");
+#if defined(SWITCH) || defined (N3DS)
+    printf("SD Started DONE\n");
+#elif defined(PS2)
+    ps2_printf("SD Started DONE\n", 4);
 #endif
     CA_Startup ();
-#if defined(SWITCH) || defined (N3DS) || defined(PS2)
+#if defined(SWITCH) || defined (N3DS) 
     printf("CA Started");
+#elif defined(PS2)
+    ps2_printf("CA Started DONE\n", 4);
 #endif
     US_Startup ();
-#if defined(SWITCH) || defined (N3DS) || defined (PS2)
+#if defined(SWITCH) || defined (N3DS)
     printf("US Started");
-#endif
-#ifdef PS2
-    PS2_Started(); //Load everything for ps2.
-    printf("PS2 Started");
+#elif defined(PS2)
+    ps2_printf("US Started DONE\n", 4);
 #endif
 
     // TODO: Will any memory checking be needed someday??
@@ -1480,7 +1525,7 @@ void Quit (const char *errorStr, ...)
     if (!pictable)  // don't try to display the red box before it's loaded
     {
         ShutdownId();
-        if (*error)
+        if (error)
         {
 #ifdef NOTYET
             SetTextCursor(0,0);
@@ -1505,7 +1550,7 @@ void Quit (const char *errorStr, ...)
 
     ShutdownId ();
 
-    if (*error)
+    if (!error)
     {
 #ifdef NOTYET
         memcpy((byte *)0xb8000,screen+7,7*160);
@@ -1517,8 +1562,7 @@ void Quit (const char *errorStr, ...)
 #endif
         exit(1);
     }
-    else
-    if (!*error)
+    else if (!*error)
     {
 #ifdef NOTYET
         #ifndef JAPAN
@@ -1969,20 +2013,28 @@ int main (int argc, char *argv[])
 #else
     CheckParameters(argc, argv);
 #endif
-#if defined(SWITCH) || defined (N3DS) || defined (PS2)
+#if defined(SWITCH) || defined (N3DS) 
     printf("CheckParameters() DONE\n");
+#elif defined(PS2)
+    ps2_printf("CheckParameters DONE\n", 4);
 #endif
-    CheckForEpisodes();
-#if defined(SWITCH) || defined (N3DS) || defined (PS2)
+    CheckForEpisodes(); 
+#if defined(SWITCH) || defined (N3DS) 
     printf("CheckForEpisodes() DONE\n");
+#elif defined(PS2)
+    ps2_printf("ChceckForEpisodes() DONE\n" , 4);
 #endif
     InitGame();
-#if defined(SWITCH) || defined (N3DS) || defined(PS2)
+#if defined(SWITCH) || defined (N3DS)
     printf("InitGame() DONE\n");
+#elif defined(PS2)
+    ps2_printf("InitGame()", 4);
 #endif
     DemoLoop();
-#if defined(SWITCH) || defined (N3DS) || defined(PS2)
+#if defined(SWITCH) || defined (N3DS)
     printf("DemoLoop() DONE\n");
+#elif defined(PS2)
+    ps2_printf("DemoLoop() DONE\n", 4);
 #endif
     Quit("Demo loop exited???");
     return 1;

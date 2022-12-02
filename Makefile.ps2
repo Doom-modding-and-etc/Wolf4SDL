@@ -20,8 +20,8 @@ EE_OBJS = $(PS2_OBJS) aud_sys/mame/fmopl.o aud_sys/dosbox/dbopl.o $(LW_LIB_OBJS)
 EE_INCS = -I$(PS2SDK)/ee/include -I$(PS2SDK)/ports/include/SDL2 -I$(PS2SDK)/ports/include -I$(PS2DEV)/isjpcm/include/ -I$(GSKIT)/include -I$(GSKIT)/ee/dma/include -I$(GSKIT)/ee/gs/include -I$(GSKIT)/ee/toolkit/include 
 EE_LDFLAGS = -L$(PS2SDK)/ports/lib -L$(PS2SDK)/iop/lib/ -L$(PS2SDK)/ee/lib/ -L$(PS2DEV)/gsKit/lib 
 SDL2_LIBS = -lSDL2main -lSDL2_mixer -lSDL2 -lmodplug -lmikmod -logg -lopusfile -lopus -lstdc++ 
-EE_LIBS = $(SDL2_LIBS) -lcdvd -lm -lkernel -ldebug -lmc -lc -lhdd -lpoweroff -lps2_drivers -lgskit -ldmakit -lpadx -lmtap -laudsrv -lfileXio -linput -lpatches
-EE_DEFINES = -DPS2
+EE_LIBS = $(SDL2_LIBS) -lcdvd -lm -lkernel -lps2_printf -ldebug -lmc -lc -lhdd -lpoweroff -lps2_drivers -lgskit -ldmakit -lpadx -lmtap -laudsrv -lfileXio -linput -lpatches
+EE_DEFINES = -DPS2 -DSDL_MAJOR_VERSION
 EE_CFLAGS = $(EE_DEFINES) -Wall -W -g -Wpointer-arith -Wreturn-type -Wwrite-strings -Wcast-align -std=gnu99 -Wimplicit-int -Wsequence-point 
 
 EE_OBJS_DIR = obj/
@@ -30,7 +30,12 @@ $(EE_OBJS_DIR):
 	@mkdir -p $@
 	mv $(EE_OBJS) obj/
 
-all: $(EE_BIN) $(EE_OBJS_DIR) $(EE_ASM_OBJS)
+BIN2S = $(PS2SDK)/bin/bin2s
+
+$(EE_ASM_DIR):
+	@mkdir -p $@
+
+all: $(EE_BIN)$(EE_OBJS_DIR)
 
 clean: 
 	rm -fr $(EE_BIN) $(EE_OBJS_DIR)

@@ -7,45 +7,79 @@
 void PS2_Init_Memory_Card_Type()
 {
     int ret;
-    bool success = true; //Initialize the memory;
-    
+    bool success; //Initialize the memory;
+
+#ifdef USE_MC
+    ret = mcInit(MC_TYPE_MC);
+    if(!ret)
+    {
+        ps2_printf("Failed to initialize server\n", 3);
+        return false;
+    }
+    else
+    {
+        ps2_printf("Initialized server.\n", 2);
+        return true;
+    }
+#else
     ret = mcInit(MC_TYPE_XMC);
     if(!ret)
     {
-       printf("Failed to initialize server\n");
+       ps2_printf("Failed to initialize server\n", 3);
        return success = false;
     }
-
+    else
+    {
+        ps2_printf("Initialized server with sucess\n", 2);
+        return true;
+    }
+#endif
     ret = mcInit(MC_TYPE_PSX);
     if(!ret)
     {
-        printf("Failed to initialize PSX Memory Card\n");
+        ps2_printf("Failed to detect PSX Memory Card\n", 3);
         return success = false;
+    }
+    else
+    {
+        ps2_printf("Detected PSX Memory Card, Initializing...", 3);
+        return true;
     }
 
     ret = mcInit(MC_TYPE_PS2);
     if(!ret)
     {
-        printf("Failed to initialize PS2 Memory Card\n");
+        ps2_printf("Failed to detect PS2 Memory Card\n", 3);
         return success = false;
+    }
+    else
+    {
+        ps2_printf("Detected PS2 Memory Card, Initializing...\n", 3);
+        return success = true;
     }
 
     ret = mcInit(MC_TYPE_POCKET);
     if(!ret)
     {
-        printf("Failed to initialize POCKET Memory Card\n");
+        ps2_printf("Failed to detect POCKET Memory Card\n", 3);
         return success = false;
+    }
+    else
+    {
+        ps2_printf("Detected POCKET Memory Card, Initializing...\n", 3);
+        return success = true;
     }   
     
     ret = mcInit(MC_TYPE_NONE);
     if(!ret)
     {
-       printf("Unknown type of Memory Card Detected");
-       return success = false;
+       ps2_printf("Unknown type of Memory Card Detected", 3);
+       return success = true;
     }
     else
     {
-        printf("There´s no memory card inserted");
+        ps2_printf("There´s no memory card inserted", 3);
+        PS2_Unload_Memory_Card();
         return success = false;
     }
 }
@@ -58,34 +92,34 @@ void PS2_Get_Memory_Card0_Info()
     ret = mcGetInfo(0, 0, &type, &free, &info);
     if(!ret)
     {
-        printf("Failed to get information of the memory card on slot 0");      
+        ps2_printf("Failed to get information of the memory card on slot 1", 3);      
         return success = false;
     }
     else
     {
         mcSync(0, NULL, &ret);
-        printf("mcGetInfo returned %d\n",ret);
-	    printf("Type: %d Free: %d Format: %d\n\n", type, free, info);//Cosmito
+        ps2_printf("mcGetInfo returned %d\n", 4, ret);
+	    ps2_printf("Type: %d Free: %d Format: %d\n\n", 4, type, free, info);//Cosmito
         return success = true;
     }
 }
 
 void PS2_Get_Memory_Card1_Info()
 {
-    bool success = true;
+    bool success;
     int ret;
     int type, free, info;  
     ret = mcGetInfo(1, 1, &type, &free, &info);
     if(!ret)
     {
-        printf("Failed to get information of the memory card on slot 1");      
+        ps2_printf("Failed to get information of the memory card on slot 2", 3);      
         return success = false;
     }
     else
     {
         mcSync(0, NULL, &ret);
-        printf("mcGetInfo returned %d\n",ret);
-	    printf("Type: %d Free: %d Format: %d\n\n", type, free, info);//Cosmito
+        ps2_printf("mcGetInfo returned %d\n", 3, ret);
+	    ps2_printf("Type: %d Free: %d Format: %d\n\n", 3, type, free, info);//Cosmito
         return success = true;
     }
 }
@@ -94,17 +128,10 @@ void PS2_SaveFile_Memory_Card0(const char* filename)
 {
     sceMcTblGetDir dir;
     int ret, fd;
+    bool success;
     PS2_Init_Memory_Card_Type(); //Get the what type of memory card;
-    //ret = mcDetectMemoryCard(0, 0);
-    //if(ret == NULL)
-    {
-        printf("Failed to detect the memory card from Slot 1");
-    }
-    //else
-    {
-        //mcGetDir(0, 0, "mc0://Wolf4SDL", NULL, NULL, NULL); //
-    }
 
+    mcGetDir(0, 0, "mc0:data", NULL, NULL, NULL); //
     fd = open(filename, O_RDWR);
     //TBD: Add write here:
     close(fd);
@@ -116,15 +143,8 @@ void PS2_SaveFile_Memory_Card1(const char *filename)
     sceMcTblGetDir dir;
     int ret, fd;
     PS2_Init_Memory_Card_Type(); //Get the what type of memory card;
-    //ret = mcDetectMemoryCard(1, 1);
-    //if(ret == NULL)
-    {
-        printf("Failed to detect the memory card from Slot 2");
-    }
-    //else
-    {
-        mcGetDir(0, 0, "mc0://Wolf4SDL", NULL, NULL, NULL); //
-    }
+    mcGetDir(0, 0, "mc1:data/", NULL, NULL, NULL); 
+ 
 
     fd = open(filename, O_RDWR);
     //TBD: Add write here:
