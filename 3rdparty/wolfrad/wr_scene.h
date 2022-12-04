@@ -24,7 +24,7 @@
 //include "3rdparty/lw_lib/lw_vec.h"
 #include "3rdparty/lw_lib/lw_vec.h"
 #else
-#include "..\lw_lib\lw_vec.h"
+#include "../lw_lib/lw_vec.h"
 #endif
 #ifdef WOLFRAD
 #include "..\lw_lib\lw_bres.h"

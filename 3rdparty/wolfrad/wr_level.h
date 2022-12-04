@@ -18,10 +18,10 @@
 #ifndef WR_LEVEL_H
 #define WR_LEVEL_H
 
-#ifdef PS2
-#include "3rdparty/lw_lib/lw_vec.h"
-#else
+#ifdef _MSVC
 #include "..\lw_lib\lw_vec.h"
+#else
+#include "../lw_lib/lw_vec.h"
 #endif
 #ifdef WOLFRAD
 #include "..\lw_lib\lw_misc.h"

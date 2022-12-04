@@ -22,7 +22,7 @@
 #ifdef PS2
 #include "wl_def.h"
 #else
-#include "..\..\wl_def.h"
+#include "../../wl_def.h"
 #endif
 #ifdef WOLFRAD
 

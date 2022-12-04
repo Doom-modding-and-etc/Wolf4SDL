@@ -21,7 +21,7 @@
 #ifdef PS2
 #include "3rdparty/lw_lib/lw_bres.h"
 #else
-#include "..\lw_lib\lw_bres.h"
+#include "../lw_lib/lw_bres.h"
 #endif
 #ifdef WOLFRAD
 #include "..\..\wl_def.h"

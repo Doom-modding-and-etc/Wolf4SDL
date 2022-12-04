@@ -24,7 +24,7 @@
 #ifdef PS2
 //#include "3rdparty/lw_lib/lw_vec.h"
 #else
-#include "..\lw_lib\lw_img.h"
+#include "../lw_lib/lw_img.h"
 #endif
 #ifdef WOLFRAD
 #include "..\..\wl_def.h"

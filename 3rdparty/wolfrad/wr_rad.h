@@ -24,12 +24,12 @@ typedef struct WR_Rad_s
 	void *priv;
 } WR_Rad_t;
 #endif
-#ifdef PS2
-#include "3rdparty/lw_lib/lw_vec.h"
-#include "3rdparty/lw_lib/lw_ctx.h"
-#else
+#ifdef _MSVC
 #include "..\lw_lib\lw_vec.h"
 #include "..\lw_lib\lw_ctx.h"
+#else
+#include "../lw_lib/lw_vec.h"
+#include "../lw_lib/lw_ctx.h"
 #endif
 #ifdef WOLFRAD
 #include "wr_radmap.h"
