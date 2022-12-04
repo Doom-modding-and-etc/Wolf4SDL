@@ -9,18 +9,16 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
-#ifndef _XBOX
 #ifndef OLD_BOOL 
 #include <stdbool.h>
 #endif
-#endif 
+
 #include <SDL.h>
 
 #ifdef N3DS
 #include <3ds.h>
 #elif defined(_XBOX)
 #include <xtl.h>
-#include <xobjbase.h>
 #endif
 #if defined(_arch_dreamcast)
 #	include <string.h>
@@ -944,7 +942,6 @@ typedef struct doorstruct
 
 typedef struct objstruct
 {
-
     activetype  active;
     short       ticcount;
     classtype   obclass;
