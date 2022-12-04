@@ -17,11 +17,7 @@
 
 #include "lw_bres.h"
 #ifdef LWLIB
-#ifdef PS2
-#include "wl_def.h"
-#else
-#include "..\..\wl_def.h"
-#endif
+#include "../../wl_def.h"
 /*
 =======================================================================
 

@@ -18,11 +18,8 @@
 #include <stdlib.h>
 #include "wr_level.h"
 #include "wr_lightmap.h"
-#ifdef PS2
-#include "wl_def.h"
-#else
 #include "../../wl_def.h"
-#endif
+
 #ifdef WOLFRAD
 
 typedef struct WR_Level_Priv_s

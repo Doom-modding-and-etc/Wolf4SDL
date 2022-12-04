@@ -25,11 +25,11 @@
 #include "wr_raycaster.h"
 #include "wr_level.h"
 #ifdef WOLFRAD
-#include "..\lw_lib\lw_protmsg.h"
-#include "..\lw_lib\lw_dict.h"
-#include "..\lw_lib\lw_img.h"
-#include "..\lw_lib\lw_bres.h"
-#include "..\..\wl_def.h"
+#include "../lw_lib/lw_protmsg.h"
+#include "../lw_lib/lw_dict.h"
+#include "../lw_lib/lw_img.h"
+#include "../lw_lib/lw_bres.h"
+#include "../../wl_def.h"
 
 #define LIGHTMAP_WIDTH PROT_MSG_LIGHTMAP_WIDTH
 #define LIGHTMAP_HEIGHT PROT_MSG_LIGHTMAP_HEIGHT

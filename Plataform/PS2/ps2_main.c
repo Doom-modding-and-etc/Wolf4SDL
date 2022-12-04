@@ -23,7 +23,7 @@ void PS2_Started()
 void PS2_Shutdown()
 {
     ps2_printf("Undloadind SBV Patches", 4);
-    PS2_Unload_RPC_Patches(void);
+    PS2_Unload_RPC_Patches();
     ps2_printf("Unloading MC...", 4);
     PS2_Unload_Memory_Card();
     ps2_printf("Unloading modules...", 4);

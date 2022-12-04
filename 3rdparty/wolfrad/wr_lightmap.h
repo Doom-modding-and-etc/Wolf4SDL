@@ -23,8 +23,8 @@
 #include "wr_level.h"
 #include "wr_lightinfo.h"
 #ifdef WOLFRAD
-#include "..\lw_lib\lw_bres.h"
-#include "..\lw_lib\lw_vec.h"
+#include "../lw_lib/lw_bres.h"
+#include "../lw_lib/lw_vec.h"
 
 typedef struct WR_LightMapper_s
 {

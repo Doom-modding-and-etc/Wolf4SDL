@@ -20,14 +20,9 @@
 
 #include "wr_rad.h"
 #include "wr_level.h"
-#ifdef PS2
-//include "3rdparty/lw_lib/lw_vec.h"
-#include "3rdparty/lw_lib/lw_vec.h"
-#else
 #include "../lw_lib/lw_vec.h"
-#endif
 #ifdef WOLFRAD
-#include "..\lw_lib\lw_bres.h"
+#include "../lw_lib/lw_bres.h"
 
 typedef enum
 {

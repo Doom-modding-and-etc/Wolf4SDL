@@ -24,7 +24,7 @@
 #include <malloc.h>
 #include "lw_misc.h"
 #ifdef LWLIB
-#include "..\uthash\uthash.h"
+#include "../uthash/uthash.h"
 
 #define lwlib_StrMap_MaxString 128
 

@@ -18,13 +18,9 @@
 #ifndef WR_LEVEL_H
 #define WR_LEVEL_H
 
-#ifdef _MSVC
-#include "..\lw_lib\lw_vec.h"
-#else
 #include "../lw_lib/lw_vec.h"
-#endif
 #ifdef WOLFRAD
-#include "..\lw_lib\lw_misc.h"
+#include "../lw_lib/lw_misc.h"
 
 typedef enum
 { 

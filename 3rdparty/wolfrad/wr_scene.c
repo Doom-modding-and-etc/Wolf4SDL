@@ -21,13 +21,9 @@
 #include "wr_scene.h"
 #include "wr_lightmap.h"
 #include "wr_radmap.h"
-#ifdef PS2
-//#include "3rdparty/lw_lib/lw_vec.h"
-#else
 #include "../lw_lib/lw_img.h"
-#endif
 #ifdef WOLFRAD
-#include "..\..\wl_def.h"
+#include "../../wl_def.h"
 
 typedef struct WR_Scene_Priv_s
 {

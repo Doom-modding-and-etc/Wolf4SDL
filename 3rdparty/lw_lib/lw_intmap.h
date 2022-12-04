@@ -23,7 +23,7 @@
 #include <string.h>
 #include "lw_misc.h"
 #ifdef LWLIB
-#include "..\uthash\uthash.h"
+#include "../uthash/uthash.h"
 
 #define lwlib_IntMapIterDecl(it) lwlib_IntMapHashUser_t *it, *tmp ## it
 #define lwlib_IntMapIterLoop(intMap, it) HASH_ITER(hh, (intMap).users, it, tmp ## it)

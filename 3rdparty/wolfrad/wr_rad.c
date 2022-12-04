@@ -25,7 +25,7 @@
 #include "wr_level.h"
 #include "wr_room.h"
 #ifdef WOLFRAD
-#include "..\..\wl_def.h"
+#include "../../wl_def.h"
 
 typedef struct WR_Rad_Priv_s
 {

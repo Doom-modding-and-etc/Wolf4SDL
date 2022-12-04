@@ -18,11 +18,7 @@
 #ifndef WOLFRAD_RADMAP_H
 #define WOLFRAD_RADMAP_H
 
-#ifdef PS2
-#include "3rdparty/lw_lib/lw_vec.h"
-#else
 #include "../lw_lib/lw_vec.h"
-#endif
 #ifdef WOLFRAD
 #define RadMapValid(radMap) ((radMap).spectra != NULL)
 

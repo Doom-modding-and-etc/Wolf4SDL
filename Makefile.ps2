@@ -35,7 +35,7 @@ BIN2S = $(PS2SDK)/bin/bin2s
 $(EE_ASM_DIR):
 	@mkdir -p $@
 
-all: $(EE_BIN)$(EE_OBJS_DIR)
+all: $(EE_BIN) $(EE_OBJS_DIR)
 
 clean: 
 	rm -fr $(EE_BIN) $(EE_OBJS_DIR)

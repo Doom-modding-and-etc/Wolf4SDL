@@ -18,13 +18,9 @@
 #include "wr_rad.h"
 #include "wr_room.h"
 #include "wr_raycaster.h"
-#ifdef PS2
-#include "3rdparty/lw_lib/lw_bres.h"
-#else
 #include "../lw_lib/lw_bres.h"
-#endif
 #ifdef WOLFRAD
-#include "..\..\wl_def.h"
+#include "../../wl_def.h"
 
 typedef struct WR_RayCaster_Priv_s
 {

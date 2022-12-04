@@ -16,11 +16,7 @@
 *************************************************************************/
 
 #include <sys/types.h>
-#ifdef PS2
-#include "wl_def.h"
-#else
 #include "../../wl_def.h"
-#endif
 #ifdef LWLIB
 #if defined _WIN32
 	#include <io.h>
