@@ -11,7 +11,9 @@
 #ifdef	__DEBUG__
 #define	__DEBUG_UserMgr__
 #endif
-
+#ifdef _XBOX
+#include <xtl.h>
+#endif
 //#define	HELPTEXTLINKED
 
 #define	MaxX	320

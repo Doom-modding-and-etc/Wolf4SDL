@@ -746,15 +746,6 @@ void CheckKeys (void)
     scan = LastScan;
 
 #ifdef DEBUGKEYS
-#if 0
-    if (Keyboard(sc_Tab) &&
-        Keyboard(sc_O))		// O = overhead
-    {
-        ViewMap();
-        return;
-    }
-#endif
-
     if (Keyboard(sc_Tab) &&
         Keyboard(sc_N))			// N = no clip
     {

@@ -9,16 +9,18 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
-#ifndef OLD_BOOL
+#ifndef _XBOX
+#ifndef OLD_BOOL 
 #include <stdbool.h>
 #endif
-
+#endif 
 #include <SDL.h>
 
 #ifdef N3DS
 #include <3ds.h>
 #elif defined(_XBOX)
 #include <xtl.h>
+#include <xobjbase.h>
 #endif
 #if defined(_arch_dreamcast)
 #	include <string.h>
@@ -79,7 +81,9 @@
 typedef unsigned char byte;
 typedef unsigned short int word;
 #else
+#ifndef _XBOX
 typedef uint8_t byte;
+#endif
 typedef uint16_t word;
 #endif
 typedef fixedpt fixed;
@@ -940,6 +944,7 @@ typedef struct doorstruct
 
 typedef struct objstruct
 {
+
     activetype  active;
     short       ticcount;
     classtype   obclass;

@@ -91,7 +91,9 @@ Revision History:
 #if _MSC_VER == 1200            // Visual C++ 6
 inline void logerror(...) {}
 #else
+#ifndef XBOX
 #define logerror(...)
+#endif
 #endif
 
 #include "fmopl.h"
@@ -1179,7 +1181,9 @@ static int init_tables(void)
 
 	for (x=0; x<TL_RES_LEN; x++)
 	{
+#ifndef _XBOX
 		m = (1<<16) / pow(2, (x+1) * (ENV_STEP/4.0) / 8.0);
+#endif
 		m = floor(m);
 
 		/* we never reach (1<<16) here due to the (x+1) */
@@ -1599,7 +1603,9 @@ static void OPLWriteReg(FM_OPL *OPL, int r, int v)
 			break;
 #endif
 		default:
+#ifndef XBOX
 			logerror("FMOPL.C: write to unknown register: %02x\n",r);
+#endif
 			break;
 		}
 		break;
@@ -1750,11 +1756,11 @@ static void OPLWriteReg(FM_OPL *OPL, int r, int v)
 static void OPLMute(FM_OPL *OPL,int channel,BOOL mute)
 {
 	if(channel<0 || channel>8) return;
-
+#ifndef _XBOX
 	OPL_CH *CH = &OPL->P_CH[channel];
 
 	CH->muted=mute;
-
+#endif
 /*	if(!mute)
 	{
 		if(ChannelMuted[channel]&1)
@@ -1889,7 +1895,11 @@ static void OPLResetChip(FM_OPL *OPL)
 /* 'rate'  is sampling rate  */
 static FM_OPL *OPLCreate(int type, int clock, int rate)
 {
+#ifdef XBOX
+	void *ptr;
+#else
 	char *ptr;
+#endif
 	FM_OPL *OPL;
 	int state_size;
 
@@ -1912,9 +1922,11 @@ static FM_OPL *OPLCreate(int type, int clock, int rate)
 	memset(ptr,0,state_size);
 
 	OPL  = (FM_OPL *)(void *)ptr;   // ptr comes from malloc, so it is correctly aligned
-
+#ifdef XBOX
+	sizeof(FM_OPL);
+#else
 	ptr += sizeof(FM_OPL);
-
+#endif
 #if BUILD_Y8950
 	if (type&OPL_TYPE_ADPCM)
 	{

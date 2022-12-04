@@ -1077,8 +1077,12 @@ static fixed FixedByFracOrig(fixed a, fixed b)
         a = -a;
         sign = !sign;
     }
+#ifdef _XBOX
+	fixed res = (fixed) (((int32_t)a * b) >> 16);
+#else
     fixed res = (fixed)(((int64_t)a * b) >> 16);
-    if (sign)
+#endif
+	if (sign)
         res = -res;
     return res;
 }

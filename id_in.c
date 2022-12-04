@@ -440,7 +440,7 @@ static void I_ToggleFullScreen(void)
 #endif        
         GrabInput = true;
 #if SDL_MAJOR_VERSION == 1
-        SDL_WM_GrabInput(SDL_TRUE);
+        SDL_WM_GrabInput(SDL_GRAB_OFF);
 #elif SDL_MAJOR_VERSION == 2
         SDL_SetWindowGrab(window, SDL_TRUE);
 #endif    

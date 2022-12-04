@@ -3,6 +3,10 @@
 #ifndef __ID_PM_H_
 #define __ID_PM_H_
 
+#ifdef _XBOX
+#include <xtl.h>
+#endif
+
 #define PMPageSize             (TEXTURESIZE * TEXTURESIZE)
 
 #define PM_GetSpritePage(v)    PM_GetPage (PMSpriteStart + (v))

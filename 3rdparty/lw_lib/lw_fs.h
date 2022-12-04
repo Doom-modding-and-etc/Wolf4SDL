@@ -19,8 +19,11 @@
 #define LWLIB_FS_H
 
 #include <stdlib.h>
+#ifdef _XBOX
+#include "..\fixedptc.h"
+#else
 #include <stdint.h>
-
+#endif
 #include "lw_misc.h"
 #ifdef LWLIB
 #define lwlib_Fs_Valid(fs) ((fs).priv != NULL)

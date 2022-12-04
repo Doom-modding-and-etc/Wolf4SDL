@@ -15,16 +15,18 @@
 #ifdef CRT
 #include <SDL.h>
 // Win32
-#if SDL_MAJOR_VERSION == 1 || !defined SDL_MAJOR_VERSION == 2
-#if defined (N3DS) 
-
-#elif defined(_XBOX)
-#include "xbox\fakeglx.h"
+#if SDL_MAJOR_VERSION == 1
+#if defined(_XBOX)
+#include "xbox/fakeglx.h"
+/*
 #elif defined(_WIN32)
 #include <Windows.h>
 #include <GL/gl.h>
 #elif defined(__linux__)
 #include <GL/gl.h>
+*/
+#else
+#include <SDL_opengl.h>
 #endif
 #endif
 

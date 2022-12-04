@@ -122,9 +122,6 @@ void CRT_DAC(void)
     SDL_RenderPresent(renderer);
     SDL_GetKeyboardState(NULL);
 #endif
-
-
-
 }
 
 void CRT_FreeScreenshot(SDL_Surface* surface1, SDL_Surface *surface2)

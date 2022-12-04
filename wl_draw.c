@@ -785,8 +785,12 @@ visobj_t *visptr,*visstep,*farthest;
 void DrawScaleds (void)
 {
     int      i,least,numvisable,height;
+#ifdef _XBOX
+	bool     *visspot;
+#else
     byte     *visspot;
-    tiletype *tilespot;
+#endif
+	tiletype *tilespot;
     unsigned spotloc;
 
     statobj_t *statptr;

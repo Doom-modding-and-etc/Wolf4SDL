@@ -169,10 +169,14 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="3"
+				GlobalOptimizations="TRUE"
+				InlineFunctionExpansion="2"
+				EnableIntrinsicFunctions="TRUE"
+				FavorSizeOrSpeed="2"
 				OmitFramePointers="TRUE"
 				OptimizeForProcessor="2"
 				AdditionalIncludeDirectories="&quot;C:\Documents and Settings\WOLF3S\SDL2\include&quot;"
-				PreprocessorDefinitions="NDEBUG;_XBOX;_CRT_SECURE_NON_STDC_WANINGS;_CRT_SECURE_NO_WARNINGS;OLD_BOOL"
+				PreprocessorDefinitions="NDEBUG;_XBOX;_CRT_SECURE_NON_STDC_WANINGS;_CRT_SECURE_NO_WARNINGS;XBOX"
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
 				BufferSecurityCheck="TRUE"
@@ -181,9 +185,10 @@
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderFile="$(OutDir)/$(ProjectName).pch"
 				WarningLevel="4"
+				WarnAsError="FALSE"
 				Detect64BitPortabilityProblems="FALSE"
 				DebugInformationFormat="3"
-				CompileAs="1"/>
+				CompileAs="2"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -319,16 +324,192 @@
 	</References>
 	<Files>
 		<Filter
-			Name="xbox"
+			Name="aud_sys"
 			Filter="">
+			<Filter
+				Name="dosbox"
+				Filter="">
+				<File
+					RelativePath=".\aud_sys\dosbox\dbopl.c">
+				</File>
+				<File
+					RelativePath=".\aud_sys\dosbox\dbopl.h">
+				</File>
+			</Filter>
 			<Filter
 				Name="mame"
 				Filter="">
 				<File
-					RelativePath=".\Plataform\Xbox\mame\fmopl.c">
+					RelativePath=".\aud_sys\mame\fmopl.c">
 				</File>
 				<File
-					RelativePath=".\Plataform\Xbox\mame\fmopl.h">
+					RelativePath=".\aud_sys\mame\fmopl.h">
+				</File>
+				<File
+					RelativePath=".\wolfpal.inc">
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="3rdparty"
+			Filter="">
+			<File
+				RelativePath=".\3rdparty\fixedptc.h">
+			</File>
+			<Filter
+				Name="lw_lib"
+				Filter="">
+				<File
+					RelativePath=".\3rdparty\lw_lib\lw_ai_enemy.c">
+				</File>
+				<File
+					RelativePath=".\3rdparty\lw_lib\lw_ai_enemy.h">
+				</File>
+				<File
+					RelativePath=".\3rdparty\lw_lib\lw_bres.c">
+				</File>
+				<File
+					RelativePath=".\3rdparty\lw_lib\lw_bres.h">
+				</File>
+				<File
+					RelativePath=".\3rdparty\lw_lib\lw_ctx.c">
+				</File>
+				<File
+					RelativePath=".\3rdparty\lw_lib\lw_ctx.h">
+				</File>
+				<File
+					RelativePath=".\3rdparty\lw_lib\lw_dict.h">
+				</File>
+				<File
+					RelativePath=".\3rdparty\lw_lib\lw_edit.c">
+				</File>
+				<File
+					RelativePath=".\3rdparty\lw_lib\lw_edit.h">
+				</File>
+				<File
+					RelativePath=".\3rdparty\lw_lib\lw_fs.c">
+				</File>
+				<File
+					RelativePath=".\3rdparty\lw_lib\lw_fs.h">
+				</File>
+				<File
+					RelativePath=".\3rdparty\lw_lib\lw_img.h">
+				</File>
+				<File
+					RelativePath=".\3rdparty\lw_lib\lw_intmap.h">
+				</File>
+				<File
+					RelativePath=".\3rdparty\lw_lib\lw_maptool.c">
+				</File>
+				<File
+					RelativePath=".\3rdparty\lw_lib\lw_maptool.h">
+				</File>
+				<File
+					RelativePath=".\3rdparty\lw_lib\lw_misc.c">
+				</File>
+				<File
+					RelativePath=".\3rdparty\lw_lib\lw_misc.h">
+				</File>
+				<File
+					RelativePath=".\3rdparty\lw_lib\lw_protmsg.c">
+				</File>
+				<File
+					RelativePath=".\3rdparty\lw_lib\lw_protmsg.h">
+				</File>
+				<File
+					RelativePath=".\3rdparty\lw_lib\lw_pwscan.c">
+				</File>
+				<File
+					RelativePath=".\3rdparty\lw_lib\lw_pwscan.h">
+				</File>
+				<File
+					RelativePath=".\3rdparty\lw_lib\lw_strmap.h">
+				</File>
+				<File
+					RelativePath=".\3rdparty\lw_lib\lw_vec.c">
+				</File>
+				<File
+					RelativePath=".\3rdparty\lw_lib\lw_vec.h">
+				</File>
+			</Filter>
+			<Filter
+				Name="uthash"
+				Filter="">
+				<File
+					RelativePath=".\3rdparty\uthash\utarray.h">
+				</File>
+				<File
+					RelativePath=".\3rdparty\uthash\uthash.h">
+				</File>
+				<File
+					RelativePath=".\3rdparty\uthash\utlist.h">
+				</File>
+				<File
+					RelativePath=".\3rdparty\uthash\utringbuffer.h">
+				</File>
+				<File
+					RelativePath=".\3rdparty\uthash\utstack.h">
+				</File>
+				<File
+					RelativePath=".\3rdparty\uthash\utstring.h">
+				</File>
+			</Filter>
+			<Filter
+				Name="wolfrad"
+				Filter="">
+				<File
+					RelativePath=".\3rdparty\wolfrad\wolfrad.c">
+				</File>
+				<File
+					RelativePath=".\3rdparty\wolfrad\wolfrad.h">
+				</File>
+				<File
+					RelativePath=".\3rdparty\wolfrad\wr_level.c">
+				</File>
+				<File
+					RelativePath=".\3rdparty\wolfrad\wr_level.h">
+				</File>
+				<File
+					RelativePath=".\3rdparty\wolfrad\wr_lightinfo.c">
+				</File>
+				<File
+					RelativePath=".\3rdparty\wolfrad\wr_lightinfo.h">
+				</File>
+				<File
+					RelativePath=".\3rdparty\wolfrad\wr_lightmap.c">
+				</File>
+				<File
+					RelativePath=".\3rdparty\wolfrad\wr_lightmap.h">
+				</File>
+				<File
+					RelativePath=".\3rdparty\wolfrad\wr_rad.c">
+				</File>
+				<File
+					RelativePath=".\3rdparty\wolfrad\wr_rad.h">
+				</File>
+				<File
+					RelativePath=".\3rdparty\wolfrad\wr_radmap.c">
+				</File>
+				<File
+					RelativePath=".\3rdparty\wolfrad\wr_radmap.h">
+				</File>
+				<File
+					RelativePath=".\3rdparty\wolfrad\wr_raycaster.c">
+				</File>
+				<File
+					RelativePath=".\3rdparty\wolfrad\wr_raycaster.h">
+				</File>
+				<File
+					RelativePath=".\3rdparty\wolfrad\wr_room.c">
+				</File>
+				<File
+					RelativePath=".\3rdparty\wolfrad\wr_room.h">
+				</File>
+				<File
+					RelativePath=".\3rdparty\wolfrad\wr_scene.c">
+				</File>
+				<File
+					RelativePath=".\3rdparty\wolfrad\wr_scene.h">
 				</File>
 			</Filter>
 		</Filter>
@@ -520,21 +701,6 @@
 		</File>
 		<File
 			RelativePath=".\id_vl.h">
-		</File>
-		<File
-			RelativePath=".\sdl_winmain.c">
-			<FileConfiguration
-				Name="Release|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="SDL1.2|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
 		</File>
 		<File
 			RelativePath=".\signon.c">
@@ -859,9 +1025,6 @@
 		</File>
 		<File
 			RelativePath=".\wl_utils.h">
-		</File>
-		<File
-			RelativePath=".\wolfpal.inc">
 		</File>
 	</Files>
 	<Globals>

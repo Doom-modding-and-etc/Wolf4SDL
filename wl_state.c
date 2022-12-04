@@ -1741,7 +1741,11 @@ void FirstSighting (objtype *ob)
         ob->distance = 0;       // ignore the door opening command
 
     ob->flags |= FL_ATTACKMODE|FL_FIRSTATTACK;
+#ifdef _XBOX
+	ob->active = ac_yes;
+#else
     ob->active = true;	// wake up the guards! Wolf3s: HUH?
+#endif
 }
 
 

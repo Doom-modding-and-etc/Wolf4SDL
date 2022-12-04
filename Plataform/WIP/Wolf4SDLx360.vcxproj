@@ -27,6 +27,26 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="3rdparty\lw_lib\lw_ai_enemy.c" />
+    <ClCompile Include="3rdparty\lw_lib\lw_bres.c" />
+    <ClCompile Include="3rdparty\lw_lib\lw_ctx.c" />
+    <ClCompile Include="3rdparty\lw_lib\lw_edit.c" />
+    <ClCompile Include="3rdparty\lw_lib\lw_fs.c" />
+    <ClCompile Include="3rdparty\lw_lib\lw_maptool.c" />
+    <ClCompile Include="3rdparty\lw_lib\lw_misc.c" />
+    <ClCompile Include="3rdparty\lw_lib\lw_protmsg.c" />
+    <ClCompile Include="3rdparty\lw_lib\lw_pwscan.c" />
+    <ClCompile Include="3rdparty\lw_lib\lw_vec.c" />
+    <ClCompile Include="3rdparty\wolfrad\wolfrad.c" />
+    <ClCompile Include="3rdparty\wolfrad\wr_level.c" />
+    <ClCompile Include="3rdparty\wolfrad\wr_lightinfo.c" />
+    <ClCompile Include="3rdparty\wolfrad\wr_lightmap.c" />
+    <ClCompile Include="3rdparty\wolfrad\wr_rad.c" />
+    <ClCompile Include="3rdparty\wolfrad\wr_radmap.c" />
+    <ClCompile Include="3rdparty\wolfrad\wr_raycaster.c" />
+    <ClCompile Include="3rdparty\wolfrad\wr_room.c" />
+    <ClCompile Include="3rdparty\wolfrad\wr_scene.c" />
+    <ClCompile Include="aud_sys\dosbox\dbopl.c" />
     <ClCompile Include="aud_sys\mame\fmopl.c" />
     <ClCompile Include="id_ca.c" />
     <ClCompile Include="id_crt.c" />
@@ -34,14 +54,11 @@
     <ClCompile Include="id_pm.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Xbox 360'">CompileAsCpp</CompileAs>
     </ClCompile>
-    <ClCompile Include="id_sd.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Xbox 360'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="id_sd.c" />
     <ClCompile Include="id_us.c" />
     <ClCompile Include="id_vh.c" />
     <ClCompile Include="id_vieasm.c" />
     <ClCompile Include="id_vl.c" />
-    <ClCompile Include="sdl_winmain.c" />
     <ClCompile Include="signon.c" />
     <ClCompile Include="wl_act1.c" />
     <ClCompile Include="wl_act2.c" />
@@ -64,9 +81,40 @@
     <ClCompile Include="wl_utils.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="3rdparty\fixedptc.h" />
+    <ClInclude Include="3rdparty\lw_lib\lw_ai_enemy.h" />
+    <ClInclude Include="3rdparty\lw_lib\lw_bres.h" />
+    <ClInclude Include="3rdparty\lw_lib\lw_ctx.h" />
+    <ClInclude Include="3rdparty\lw_lib\lw_dict.h" />
+    <ClInclude Include="3rdparty\lw_lib\lw_edit.h" />
+    <ClInclude Include="3rdparty\lw_lib\lw_fs.h" />
+    <ClInclude Include="3rdparty\lw_lib\lw_img.h" />
+    <ClInclude Include="3rdparty\lw_lib\lw_intmap.h" />
+    <ClInclude Include="3rdparty\lw_lib\lw_maptool.h" />
+    <ClInclude Include="3rdparty\lw_lib\lw_misc.h" />
+    <ClInclude Include="3rdparty\lw_lib\lw_protmsg.h" />
+    <ClInclude Include="3rdparty\lw_lib\lw_pwscan.h" />
+    <ClInclude Include="3rdparty\lw_lib\lw_strmap.h" />
+    <ClInclude Include="3rdparty\lw_lib\lw_vec.h" />
+    <ClInclude Include="3rdparty\uthash\utarray.h" />
+    <ClInclude Include="3rdparty\uthash\uthash.h" />
+    <ClInclude Include="3rdparty\uthash\utlist.h" />
+    <ClInclude Include="3rdparty\uthash\utringbuffer.h" />
+    <ClInclude Include="3rdparty\uthash\utstack.h" />
+    <ClInclude Include="3rdparty\uthash\utstring.h" />
+    <ClInclude Include="3rdparty\wolfrad\wolfrad.h" />
+    <ClInclude Include="3rdparty\wolfrad\wr_level.h" />
+    <ClInclude Include="3rdparty\wolfrad\wr_lightinfo.h" />
+    <ClInclude Include="3rdparty\wolfrad\wr_lightmap.h" />
+    <ClInclude Include="3rdparty\wolfrad\wr_rad.h" />
+    <ClInclude Include="3rdparty\wolfrad\wr_radmap.h" />
+    <ClInclude Include="3rdparty\wolfrad\wr_raycaster.h" />
+    <ClInclude Include="3rdparty\wolfrad\wr_room.h" />
+    <ClInclude Include="3rdparty\wolfrad\wr_scene.h" />
     <ClInclude Include="asmcref.h" />
     <ClInclude Include="audiosod.h" />
     <ClInclude Include="audiowl6.h" />
+    <ClInclude Include="aud_sys\dosbox\dbopl.h" />
     <ClInclude Include="aud_sys\mame\fmopl.h" />
     <ClInclude Include="foreign.h" />
     <ClInclude Include="f_spear.h" />
@@ -271,10 +319,13 @@
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <PrecompiledHeaderOutputFile>$(OutDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <PreprocessorDefinitions>NDEBUG;_XBOX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_XBOX;XBOX_360;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CompileAs>CompileAsCpp</CompileAs>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>C:\SDL1X\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\SDLx360\SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -282,8 +333,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <ProgramDatabaseFile>$(OutDir)$(ProjectName).pdb</ProgramDatabaseFile>
       <SetChecksum>true</SetChecksum>
-      <AdditionalDependencies>xapilib.lib;d3d9.lib;d3dx9.lib;xgraphics.lib;xboxkrnl.lib;xnet.lib;xaudio2.lib;xact3.lib;x3daudio.lib;xmcore.lib;vcomp.lib;SDLx360.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\SDL1X\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>xapilib.lib;d3d9.lib;d3dx9.lib;xgraphics.lib;xboxkrnl.lib;xnet.lib;xaudio2.lib;xact3.lib;x3daudio.lib;xmcore.lib;vcomp.lib;SDLx360.lib;SDL_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\SDLx360;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_LTCG|Xbox 360'">

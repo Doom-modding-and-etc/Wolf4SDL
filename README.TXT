@@ -57,7 +57,7 @@ Main features:
     Wolf4SDL can toggle into fullscreen if you press ALT+ENTER
  
  - Linux Wolf Library + WolfRad incorporation
-	Wolf4SDL Has Linux Wolf Library + WolfRad incorporated 
+	Wolf4SDL Has Linux Wolf Library + WolfRad incorporated pure wip but still useful
 	for modding development
 	
 Additional features:
@@ -253,7 +253,7 @@ IMPORTANT: Do not forget to take care of version.h!
 
 TODOs:
 ------
- - Add nuked opl to probably replace fmopl
+ - Add nuked opl.
  - Add plataform readme.
  - Fix some versions of Wolfenstein 3d.
  - Prepare to SDL3 Support.
