@@ -994,7 +994,6 @@ enum
     bt_movebackward,
     bt_turnleft,
     bt_turnright,
-
     NUMBUTTONS
 };
 

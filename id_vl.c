@@ -36,17 +36,17 @@
 
 #if defined(_arch_dreamcast)
 bool usedoublebuffering = false;
-unsigned screenWidth = 320;
-unsigned screenHeight = 200;
-int      screenBits = 8;
+uint32_t screenWidth = 320;
+uint32_t screenHeight = 200;
+uint32_t      screenBits = 8;
 #elif defined(GP2X)
 bool usedoublebuffering = true;
-unsigned screenWidth = 320;
-unsigned screenHeight = 240;
+uint32_t screenWidth = 320;
+uint32_t screenHeight = 240;
 #if defined(GP2X_940)
-int      screenBits = 8;
+uint32_t      screenBits = 8;
 #else
-int      screenBits = 16;
+uint32_t      screenBits = 16;
 #endif
 //WIP:
 #elif defined(PS2)
@@ -64,12 +64,12 @@ bool usedoublebuffering = true;
 #if defined(SCALE2X) 
 uint32_t screenWidth = 320;
 uint32_t screenHeight = 200;
-static unsigned scaledScreenWidth = 640;
-static unsigned scaledScreenHeight = 405;
+static uint32_t scaledScreenWidth = 640;
+static uint32_t scaledScreenHeight = 405;
 #else
 #ifdef SEGA_SATURN
-u32 screenWidth = SATURN_WIDTH;
-u32 screenHeight = SATURN_HEIGHT;
+uint32_t screenWidth = SATURN_WIDTH;
+uint32_t screenHeight = SATURN_HEIGHT;
 #else
 uint32_t screenWidth = 640;
 uint32_t screenHeight = 405;
@@ -144,7 +144,6 @@ void VL_Shutdown (void)
     SDL_DestroyWindow(window);
     SDL_DestroyTexture(texture);
 #endif
-
     free (ylookup);
     free (pixelangle);
     free (wallheight);
@@ -251,8 +250,6 @@ void VL_SetVGAPlaneMode (void)
     if((screen->flags & SDL_DOUBLEBUF) != SDL_DOUBLEBUF)
         usedoublebuffering = false;
 
-    SDL_ShowCursor(SDL_DISABLE);
-
     SDL_SetColors(screen, gamepal, 0, 256);
     memcpy(curpal, gamepal, sizeof(SDL_Color) * 256);
 
@@ -345,6 +342,8 @@ void VL_SetVGAPlaneMode (void)
     }
 #endif
 #endif
+
+    SDL_ShowCursor(SDL_DISABLE);
 
     screenPitch = screen->pitch;
     bufferPitch = screenBuffer->pitch;

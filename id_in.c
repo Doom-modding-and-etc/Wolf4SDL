@@ -40,7 +40,7 @@
 bool MousePresent;
 bool forcegrabmouse;
 
-volatile bool KeyboardState[129];
+volatile bool KeyboardState[KEYCOUNT];
 #endif
 
 // 	Global variables
@@ -66,7 +66,7 @@ static SDL_Joystick* Joystick;
 int JoyNumButtons;
 static int JoyNumHats;
 #if SDL_MAJOR_VERSION == 2
-bool GameControllerButtons[bt_Max];
+bool GameControllerButtons[GAMECONTROLLER_MAX];
 int GameControllerLeftStick[2];
 int GameControllerRightStick[2];
 SDL_GameController* GameController;
@@ -429,7 +429,7 @@ static void I_ToggleFullScreen(void)
     if (fullscreen)
     {
 #if SDL_MAJOR_VERSION == 1
-        //SDL_SetVideoMode((u32*)screenWidth, (u32*)screenHeight, (u32*)screenBits, SDL_RESIZABLE);
+        SDL_SetVideoMode(screenWidth, screenHeight, screenBits, SDL_RESIZABLE);
 #elif SDL_MAJOR_VERSION == 2
         SDL_GetWindowSize(window, (int*)&screenWidth, (int*)&screenHeight);
 #endif
@@ -772,9 +772,6 @@ void
 IN_ClearKeysDown(void)
 {
     LastScan = sc_None;
-#ifndef SEGA_SATURN
-    LastASCII = key_None;
-#endif
     memset((void*)KeyboardState, 0, sizeof(KeyboardState));
 }
 
