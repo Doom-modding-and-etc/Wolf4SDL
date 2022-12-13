@@ -480,7 +480,7 @@ typedef	enum
 
 typedef	struct
 {
-	bool	button0, button1, button2, button3;
+	bool button0, button1, button2, button3;
 	short x, y;
 	Motion xaxis, yaxis;
 	Direction dir;
@@ -488,14 +488,19 @@ typedef	struct
 
 typedef	CursorInfo ControlInfo;
 
-typedef	struct
+typedef	enum
 {
-	ScanCode button0, button1,
-		upleft, up, upright,
-		left, right,
-		downleft, down, downright;
+	button0, 
+	button1,
+	upleft, 
+	up, 
+	upright,
+	left, 
+	right,
+	downleft, 
+	down, 
+	downright
 } KeyboardDef;
-
 
 //Global variables
 extern volatile bool KeyboardState[KEYCOUNT];
@@ -514,11 +519,7 @@ extern bool forcegrabmouse;
 bool Keyboard(int key);
 void KeyboardSet(int key, bool state);
 int KeyboardLookup(int key);
-#if SDL_MAJOR_VERSION == 2
-bool GameControl(int button);
-void GameControlSet(int button, bool state);
-int GameControllerLookup(int button);
-#endif
+
 
 // DEBUG - put names in prototypes
 extern	void		IN_Startup(void), IN_Shutdown(void);

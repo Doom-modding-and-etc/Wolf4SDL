@@ -36,9 +36,8 @@
 
 #if defined(_arch_dreamcast)
 bool usedoublebuffering = false;
-uint32_t screenWidth = 320;
-uint32_t screenHeight = 200;
-uint32_t      screenBits = 8;
+uint32_t screenWidth = 640;
+uint32_t screenHeight = 400;
 #elif defined(GP2X)
 bool usedoublebuffering = true;
 uint32_t screenWidth = 320;

@@ -21,8 +21,9 @@
 #include <xtl.h>
 #endif
 #if defined(_arch_dreamcast)
-#	include <string.h>
-#	include "dc/dc_main.h"
+#include <kos.h>
+#include <SDL.h>
+#include <SDL_dreamcast.h>
 #elif !defined(_WIN32)
 #	include <stdint.h>
 #	include <string.h>
@@ -64,6 +65,7 @@
 #include "gfxv_sod.h"
 #include "f_spear.h"
 #endif
+
 #if defined(GP2X) || defined(GP2X_940)
 #include "Plataform/GP2X/gp2x.h"
 #endif
@@ -71,6 +73,17 @@
 #include "Plataform/PS2/ps2_main.h"
 #endif
 #include "3rdparty/fixedptc.h"
+
+#ifdef _arch_dreamcast
+typedef uint8 uint8_t;
+typedef uint16 uint16_t;
+typedef uint32 uint32_t;
+typedef int8 int8_t;
+typedef int16 int16_t;
+typedef int32 int32_t;
+typedef int64 int64_t;
+typedef ptr_t uintptr_t;
+#endif
 
 #if !defined O_BINARY
 #define O_BINARY 0

@@ -13,7 +13,7 @@ WL_OBJS = wl_ai.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_benchhobo.o wl_cl
 wl_ed.o wl_firefly.o wl_hooker.o wl_healthmeter.o wl_math.o wl_physics.o wl_pimp.o wl_polygon.o wl_sleephobo.o wl_game.o wl_inter.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o \
 wl_shade.o wl_state.o wl_text.o wl_utils.o 
 
-PS2_OBJS = Plataform/PS2/ps2_modules.o Plataform/PS2/ps2_mc.o Plataform/PS2/ps2_main.o
+PS2_OBJS = Plataform/PS2/ps2_modules.o Plataform/PS2/ps2_mc.o Plataform/PS2/ps2_main.o Plataform/PS2/ps2_data_loader.o
 
 EE_OBJS = $(PS2_OBJS) aud_sys/mame/fmopl.o aud_sys/dosbox/dbopl.o $(LW_LIB_OBJS) $(WOLFRAD_OBJS) $(ID_ENGINE_OBJS) $(WL_OBJS)
 
@@ -22,7 +22,7 @@ EE_LDFLAGS = -L$(PS2SDK)/ports/lib -L$(PS2SDK)/iop/lib/ -L$(PS2SDK)/ee/lib/ -L$(
 SDL2_LIBS = -lSDL2main -lSDL2_mixer -lSDL2 -lmodplug -lmikmod -logg -lopusfile -lopus -lstdc++ 
 EE_LIBS = $(SDL2_LIBS) -lcdvd -lm -lkernel -lps2_printf -ldebug -lmc -lc -lhdd -lpoweroff -lps2_drivers -lgskit -ldmakit -lpadx -lmtap -laudsrv -lfileXio -linput -lpatches
 EE_DEFINES = -DPS2 -DSDL_MAJOR_VERSION
-EE_CFLAGS = $(EE_DEFINES) -Wall -W -g -Wpointer-arith -Wreturn-type -Wwrite-strings -Wcast-align -std=gnu99 -Wimplicit-int -Wsequence-point 
+EE_CFLAGS = $(EE_DEFINES) -Wall -W -g -Wwrite-strings -Wcast-align -std=gnu99 -Wimplicit-int -Wsequence-point 
 
 EE_OBJS_DIR = obj/
 

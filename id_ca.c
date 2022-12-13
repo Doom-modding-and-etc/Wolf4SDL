@@ -17,8 +17,6 @@ loaded into the data segment
 #include <sys/types.h>
 #if defined _WIN32
     #include <io.h>
-#elif defined _arch_dreamcast
-    #include <unistd.h>
 #elif defined(SWITCH)
 	#include <sys/_iovec.h>
 #elif defined(N3DS) || defined(PS2) 
@@ -27,6 +25,9 @@ struct iovec
      void *iov_base;     
      size_t iov_len;    
 };
+#elif !defined(_arch_dreamcast)
+    #include <sys/uio.h>
+    #include <unistd.h>
 #else	
     #include <sys/uio.h>
     #include <unistd.h>

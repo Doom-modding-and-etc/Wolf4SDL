@@ -20,8 +20,11 @@
 #include "wl_def.h"
 #ifndef SEGA_SATURN
 #if SDL_MAJOR_VERSION == 1
-#include "SDL_keysym.h"
+#include <SDL_keysym.h>
 #endif
+#endif
+#ifdef _arch_dreamcast
+#include <SDL_dreamcast.h>
 #endif
 #include "id_in.h"
 /*
@@ -49,7 +52,7 @@ volatile char		LastASCII;
 volatile ScanCode	LastScan;
 
 //KeyboardDef	KbdDefs = {0x1d,0x38,0x47,0x48,0x49,0x4b,0x4d,0x4f,0x50,0x51};
-static KeyboardDef KbdDefs = {
+KeyboardDef KbdDefs[] = {
     sc_Control,             // button0
     sc_Alt,                 // button1
     sc_Home,                // upleft
@@ -580,8 +583,7 @@ static void processEvent(SDL_Event *event)
 #endif
 
 #if SDL_MAJOR_VERSION == 2
-
-        // check for game controller events
+    // check for game controller events
     case SDL_CONTROLLERDEVICEADDED: {
         if (!GameController)
         {
@@ -700,18 +702,18 @@ IN_Startup(void)
                 Quit("The joystickhat param must be between 0 and %i!", JoyNumHats - 1);
         }
 #elif SDL_MAJOR_VERSION == 2
-    if (!SDL_IsGameController(param_joystickindex))
-    {
-        Joystick = SDL_JoystickOpen(param_joystickindex);
-        if (Joystick)
+        if (!SDL_IsGameController(param_joystickindex))
         {
-            JoyNumButtons = SDL_JoystickNumButtons(Joystick);
-                if (JoyNumButtons > 32)
-                    JoyNumButtons = 32; // only up to 32 buttons are supported
-            JoyNumHats = SDL_JoystickNumHats(Joystick);
-            if (param_joystickhat < -1 || param_joystickhat >= JoyNumHats)
-                Quit("The joystickhat param must be between 0 and %i!", JoyNumHats - 1);
-        }
+        Joystick = SDL_JoystickOpen(param_joystickindex);
+            if (Joystick)
+            {
+                JoyNumButtons = SDL_JoystickNumButtons(Joystick);
+                    if (JoyNumButtons > 32)
+                        JoyNumButtons = 32; // only up to 32 buttons are supported
+                JoyNumHats = SDL_JoystickNumHats(Joystick);
+                if (param_joystickhat < -1 || param_joystickhat >= JoyNumHats)
+                    Quit("The joystickhat param must be between 0 and %i!", JoyNumHats - 1);
+            }
         }
 #endif
     }
@@ -795,28 +797,28 @@ IN_ReadControl(int player, ControlInfo* info)
 
     IN_ProcessEvents();
 
-    if (Keyboard(KbdDefs.upleft))
+    if (Keyboard(upleft))
         mx = motion_Left, my = motion_Up;
-    else if (Keyboard(KbdDefs.upright))
+    else if (Keyboard(upright))
         mx = motion_Right, my = motion_Up;
-    else if (Keyboard(KbdDefs.downleft))
+    else if (Keyboard(downleft))
         mx = motion_Left, my = motion_Down;
-    else if (Keyboard(KbdDefs.downright))
+    else if (Keyboard(downright))
         mx = motion_Right, my = motion_Down;
 
-    if (Keyboard(KbdDefs.up))
+    if (Keyboard(up))
         my = motion_Up;
-    else if (Keyboard(KbdDefs.down))
+    else if (Keyboard(down))
         my = motion_Down;
 
-    if (Keyboard(KbdDefs.left))
+    if (Keyboard(left))
         mx = motion_Left;
-    else if (Keyboard(KbdDefs.right))
+    else if (Keyboard(right))
         mx = motion_Right;
 
-    if (Keyboard(KbdDefs.button0))
+    if (Keyboard(button0))
         buttons += 1 << 0;
-    if (Keyboard(KbdDefs.button1))
+    if (Keyboard(button1))
         buttons += 1 << 1;
 
 #if SDL_MAJOR_VERSION == 2

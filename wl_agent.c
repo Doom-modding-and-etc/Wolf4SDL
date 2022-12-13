@@ -334,7 +334,7 @@ void StatusDrawFace(uint32_t picnum)
     StatusDrawPic(17, 4, picnum);
 
 #ifdef _arch_dreamcast
-    DC_StatusDrawLCD(picnum);
+    StatusDrawLCD(picnum);
 #endif
 }
 

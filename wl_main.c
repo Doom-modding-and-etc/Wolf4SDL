@@ -12,6 +12,10 @@
 #include <SDL_syswm.h>
 #endif
 
+#ifdef _arch_dreamcast
+#include <SDL.h>
+#include <SDL_dreamcast.h>
+#endif
 
 /*
 =============================================================================
@@ -1277,6 +1281,13 @@ static void InitGame()
     }
     atexit(SDL_Quit);
 
+#ifdef _arch_dreamcast
+    SDL_DC_ShowAskHz(SDL_FALSE);
+    SDL_DC_Default60Hz(SDL_FALSE);
+    SDL_DC_VerticalWait(SDL_FALSE);
+    SDL_DC_SetVideoDriver(SDL_DC_DMA_VIDEO);
+#endif
+
 #if defined(SWITCH) || defined (N3DS) 
 #if SDL_MAJOR_VERSION == 1 
     printf("SDL1.2 Initialized");   
@@ -1392,10 +1403,6 @@ static void InitGame()
 // draw intro screen stuff
 //
     IntroScreen ();
-
-#ifdef _arch_dreamcast
-    //TODO: VMU Selection Screen
-#endif
 
 //
 // load in and lock down some basic chunks
@@ -1995,7 +2002,11 @@ void CheckParameters(int argc, char *argv[])
     }
 
     if(sampleRateGiven && !audioBufferGiven)
+#ifdef _arch_dreamcast
+        param_audiobuffer = 4096 / (44100 / param_samplerate);
+#else
         param_audiobuffer = 2048 / (44100 / param_samplerate);
+#endif
 }
 
 /*
@@ -2009,7 +2020,8 @@ void CheckParameters(int argc, char *argv[])
 int main (int argc, char *argv[])
 {
 #if defined(_arch_dreamcast)
-    DC_Init();
+    DC_Main();
+    DC_CheckParameters();
 #else
     CheckParameters(argc, argv);
 #endif
@@ -2017,6 +2029,9 @@ int main (int argc, char *argv[])
     printf("CheckParameters() DONE\n");
 #elif defined(PS2)
     ps2_printf("CheckParameters DONE\n", 4);
+#endif
+#ifdef PS2
+        PS2_Started();
 #endif
     CheckForEpisodes(); 
 #if defined(SWITCH) || defined (N3DS) 

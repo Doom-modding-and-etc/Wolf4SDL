@@ -1,52 +1,54 @@
-TARGET = 1ST_READ.BIN
+######################################################################
+#              DreanWolf/SDL DC update                               #
+######################################################################
+#																	 #
+#					Makefile (c)2020 from Ian Micheal  				 #
+#                                                                    #
+######################################################################
 
-DC_OBJS += Plataform/dc/dc_cd.o Plataform/dc/dc_main.o Plataform/dc/dc_maple.o Plataform/dc/dc_video.o Plataform/dc/dc_vmu.o \
-aud_sys/mame/fmopl.o aud_sys/dosbox/dbopl.o id_ca.o id_in.o id_pm.o  \
-id_us.o id_vh.o id_vl.o signon.o wl_act1.o wl_act2.o \
-wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o \
-wl_inter.o wl_main.o wl_menu.o wl_parallax.o wl_play.o wl_state.o wl_text.o wl_utils.o 
-#todo: id_sd.o, wl_game.o and id_vieasm.o: Probably need to port the SDL_mixer code to the kos standards or do my onwn port of SDL 
+# Files ---------------------------------------------------------------------------
+#
 
-KOS_CFLAGS += -I${KOS_BASE}/../kos-ports/include/SDL -Wparentheses -Wall -std=gnu99 `sdl-config --libs`
-# Broken port? -Darch_dreamcast
-Wolf4SDL.elf: $(DC_OBJS)
-	$(KOS_CC) $(KOS_CFLAGS) $(KOS_LDFLAGS) -o Wolf4SDL.elf $(KOS_START) \
-		$(DC_OBJS) -lSDL -lm -lz $(OBJEXTRA) $(KOS_LIBS)
+TARGET = Wolf4SDL.elf
+BIN = Wolf4SDL.bin
+FIRSTREAD = wolf3d_scr.bin
+# Optimize -------------------------------------------------------------------------
+OPT= -O3 -Wall -ffast-math 
+ 
+# Defines -------------------------------------------------------------------------
+KOS_LOCAL_CFLAGS =  -DDREAMCAST -DMAX_MEM_LEVEL -DSDL -DLSB_FIRST -DALIGN_LONG -DINLINE -DDC -DUCHAR_MAX=0xff -DUSHRT_MAX=0xffff -DULONG_MAX=0xffffffff
+KOS_CFLAGS += $(OPT)
+# Files ---------------------------------------------------------------------------
+OBJS =  dc_main.o dc_vmu.o fmopl.o  id_ca.o id_in.o id_pm.o id_sd.o id_us_1.o id_vh.o id_vl.o signon.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o  wl_floorceiling.o wl_game.o  wl_inter.o wl_main.o wl_menu.o wl_parallax.o wl_play.o wl_state.o wl_text.o
 
-Wolf4SDL.bin: Wolf4SDL.elf
-	kos-objcopy -O binary -R .stack Wolf4SDL.elf Wolf4SDL.bin
+KOS_CFLAGS += -I${KOS_BASE}/../kos-ports/include/SDL
 
-1ST_READ.BIN: Wolf4SDL.bin
-	$(SCRAMBLE) Wolf4SDL.bin make-cd/1ST_READ.BIN
-
-all: $(TARGET) Wolf4SDL.elf Wolf4SDL.bin 1ST_READ.BIN
+all: rm-elf $(TARGET)
+# Base ----------------------------------------------------------------------------
+include $(KOS_BASE)/Makefile.rules
 
 clean:
-	-rm -f Wolf4SDL.bin Wolf4SDL.elf $(DC_OBJS)
+	-rm -f $(TARGET) $(BIN) $(FIRSTREAD) $(OBJS) romdisk.*
 
 rm-elf:
-	-rm -f $(TARGET) Wolf4SDL.bin Wolf4SDL.elf
+	-rm -f $(TARGET) romdisk.*
+# Link ----------------------------------------------------------------------------
+$(TARGET): $(OBJS) romdisk.o
+	$(KOS_CC) $(KOS_CFLAGS) $(KOS_LDFLAGS) -o $(TARGET) $(KOS_START) \
+		$(OBJS) romdisk.o $(OBJEXTRA) -L$(KOS_BASE)/lib -lSDL_mixer_126 -lSDL_129 -lz_123 -lm   $(KOS_LIBS)
+# ROM Disk Creation ---------------------------------------------------------------
+romdisk.img:
+	$(KOS_GENROMFS) -f romdisk.img -d romdisk -v
 
-##############################################################################
-#dc-tool IP commands for BBA\LAN owners.
-#
-#It enables uploading binaries directly to your Dreamcast from your PC and
-#also allows for remote debugging.
-#
-#You'll have to change the IP to your BBA\LAN's IP and also the MAC address,
-#if your dc-tool IP needs ARP.
-##############################################################################
+romdisk.o: romdisk.img
+	$(KOS_BASE)/utils/bin2o/bin2o romdisk.img romdisk romdisk.o
 
-#arp:
-#	arp.exe -s 192.168.1.137 00-d0-f1-02-8a-f9
-
-run: Wolf4SDL.elf
-	$(DCTOOL_IP) -t 192.168.1.137 -i data.iso -x Wolf4SDL.elf
-
-debug: Wolf4SDL.elf
-	$(DCTOOL_IP) -g -t 192.168.1.137 -i data.iso -x Wolf4SDL.elf & sh-elf-insight.exe Wolf4SDL.elf
-
-reset:
-	$(DCTOOL_IP) -r -t 192.168.1.137
-
-include $(KOS_BASE)/Makefile.rules
+run: $(TARGET)
+	$(KOS_LOADER) $(TARGET)
+# ELF2BIN ---------------------------------------------------------------------------
+dist:
+	rm -f $(OBJS) romdisk.o romdisk.img
+	$(KOS_STRIP) $(TARGET)
+	$(KOS_CC_BASE)/bin/sh-elf-objcopy -O binary $(TARGET) $(BIN)
+	$(KOS_CC_BASE)/bin/sh-elf-scramble $(BIN) $(FIRSTREAD)
+	cp $(FIRSTREAD) 1st_read.bin

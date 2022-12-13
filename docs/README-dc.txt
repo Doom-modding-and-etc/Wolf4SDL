@@ -1,3 +1,17 @@
+#Dream-wolf3D-SDL  Update port
+Update by Ian micheal
+Hardware scaling 640x400
+New build makefile now works 
+Custom SDL DMA Custom version of Chui SDL 1.2.9 just for this.
+Compiled for wolf3D fullversion
+Fast hardware scaling 640x400 on hardware DMA driver SDL
+Src now builds on kos1.3 included custom SDL with fixed controls 
+and DMA hardware scaling Driver 
+Update to new src base
+ADDED correct headers for building with chui's custom sdl version plus the changes i needed to do
+to fix all controls they dont work with normal chui version for dreamcast
+# Plainfiles and CDI included ready to burn to a cdr for dreamcast.
+
 Wolf4SDL\DC 1.7
 ported to Dreamcast by dcbasic
 
