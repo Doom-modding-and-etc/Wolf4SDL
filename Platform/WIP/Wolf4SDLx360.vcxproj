@@ -49,7 +49,9 @@
     <ClCompile Include="aud_sys\dosbox\dbopl.c" />
     <ClCompile Include="aud_sys\mame\fmopl.c" />
     <ClCompile Include="id_ca.c" />
-    <ClCompile Include="id_crt.c" />
+    <ClCompile Include="id_crt.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Xbox 360'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="id_in.c" />
     <ClCompile Include="id_pm.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Xbox 360'">CompileAsCpp</CompileAs>
@@ -124,7 +126,9 @@
     <ClInclude Include="gfxv_wl6.h" />
     <ClInclude Include="gp2x.h" />
     <ClInclude Include="id_ca.h" />
-    <ClInclude Include="id_crt.h" />
+    <ClInclude Include="id_crt.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Xbox 360'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="id_in.h" />
     <ClInclude Include="id_pm.h" />
     <ClInclude Include="id_sd.h" />
@@ -319,7 +323,7 @@
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <PrecompiledHeaderOutputFile>$(OutDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <PreprocessorDefinitions>NDEBUG;_XBOX;XBOX_360;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_XBOX;XBOX_360;OLD_BOOL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CompileAs>CompileAsCpp</CompileAs>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <AdditionalIncludeDirectories>..\SDLx360\SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

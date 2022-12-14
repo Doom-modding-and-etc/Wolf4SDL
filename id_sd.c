@@ -42,6 +42,8 @@
 #else
 #ifdef USE_DOSBOX
 #include "aud_sys/dosbox/dbopl.h"
+#elif defined(USE_OPL3)
+#include "aud_sys/nuked-opl3/opl3.h"
 #else
 #include "aud_sys/mame/fmopl.h"
 #endif
@@ -98,6 +100,62 @@ static void YM3812UpdateOne(Chip which, int16_t* stream, int length)
             // Multiply by 4 to match loudness of MAME emulator.
             // Then upconvert to stereo.
             Bit32s sample = buffer[i] << 2;
+            if (sample > 32767) sample = 32767;
+            else if (sample < -32768) sample = -32768;
+            stream[i * 2] = stream[i * 2 + 1] = (int16_t)sample;
+        }
+    }
+}
+
+#elif defined(USE_OPL3)
+opl3_chip chip;
+static bool YM3812Init(int numChips, int clock, int rate)
+{
+    OPL3_Generate(&numChips, rate);
+    return false;
+}
+
+static void YM3812Write(opl3_chip which, uint32_t reg, uint8_t val)
+{
+    OPL3_WriteReg(&which, reg, val);
+}
+
+static void YM3812UpdateOne(opl3_chip which, int16_t* stream, int length)
+{
+    int32_t buffer[512 * 2];
+    int i;
+
+    // length is at maximum samplesPerMusicTick = param_samplerate / 700
+    // so 512 is sufficient for a sample rate of 358.4 kHz (default 44.1 kHz)
+    if (length > 512)
+        length = 512;
+
+    if(which.samples[i])
+    {
+        //Chip__GenerateBlock3(&which, length, buffer);
+        OPL3_Generate4ChResampled(&which, buffer);
+        // GenerateBlock3 generates a number of "length" 32-bit stereo samples
+        // so we only need to convert them to 16-bit samples
+        for (i = 0; i < length * 2; i++)  // * 2 for left/right channel
+        {
+            // Multiply by 4 to match loudness of MAME emulator.
+            int32_t sample = buffer[i] << 2;
+            if (sample > 32767) sample = 32767;
+            else if (sample < -32768) sample = -32768;
+            stream[i] = sample;
+        }
+    }
+    else
+    {
+        //Chip__GenerateBlock2(&which, length, buffer);
+        OPL3_GenerateResampled(&which, length);
+        // GenerateBlock3 generates a number of "length" 32-bit mono samples
+        // so we need to convert them to 32-bit stereo samples
+        for (i = 0; i < length; i++)
+        {
+            // Multiply by 4 to match loudness of MAME emulator.
+            // Then upconvert to stereo.
+            int32_t sample = buffer[i] << 2;
             if (sample > 32767) sample = 32767;
             else if (sample < -32768) sample = -32768;
             stream[i * 2] = stream[i * 2 + 1] = (int16_t)sample;
@@ -947,6 +1005,8 @@ void SDL_IMFMusicPlayer(void *udata, Uint8 *stream, int len)
             {
 #ifdef USE_DOSBOX
                 YM3812UpdateOne(chip, stream16, numreadysamples);
+#elif defined(USE_OPL3)
+                YM3812UpdateOne(chip, stream16, numreadysamples);
 #else
                 YM3812UpdateOne(oplChip, stream16, numreadysamples);
 #endif
@@ -956,6 +1016,8 @@ void SDL_IMFMusicPlayer(void *udata, Uint8 *stream, int len)
             else
             {
 #ifdef USE_DOSBOX
+                YM3812UpdateOne(chip, stream16, sampleslen);
+#elif defined(USE_OPL3)
                 YM3812UpdateOne(chip, stream16, sampleslen);
 #else
                 YM3812UpdateOne(oplChip, stream16, sampleslen);
@@ -1069,11 +1131,15 @@ SD_Startup(void)
     for(i=1;i<0xf6;i++)
 #ifdef USE_DOSBOX
         YM3812Write(chip, i, 0);
+#elif defined(USE_OPL3)
+        YM3812Write(chip, i, 0);
 #else
         YM3812Write(oplChip,i,0);
 #endif
 #ifdef USE_DOSBOX
     YM3812Write(chip, i, 0x20);
+#elif defined(USE_OPL3)
+    YM3812Write(chip, i, 0);
 #else
     YM3812Write(oplChip,1,0x20); // Set WSE=1
 //    YM3812Write(0,8,0); // Set CSM=0 & SEL=0		 // already set in for statement

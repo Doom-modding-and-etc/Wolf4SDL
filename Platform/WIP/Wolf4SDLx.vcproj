@@ -176,7 +176,7 @@
 				OmitFramePointers="TRUE"
 				OptimizeForProcessor="2"
 				AdditionalIncludeDirectories="&quot;C:\Documents and Settings\WOLF3S\SDL2\include&quot;"
-				PreprocessorDefinitions="NDEBUG;_XBOX;_CRT_SECURE_NON_STDC_WANINGS;_CRT_SECURE_NO_WARNINGS;XBOX"
+				PreprocessorDefinitions="NDEBUG;_XBOX;_CRT_SECURE_NO_WARNINGS;XBOX;USE_INLINE_C89;OLD_BOOL"
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
 				BufferSecurityCheck="TRUE"
@@ -184,7 +184,7 @@
 				EnableEnhancedInstructionSet="1"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderFile="$(OutDir)/$(ProjectName).pch"
-				WarningLevel="4"
+				WarningLevel="0"
 				WarnAsError="FALSE"
 				Detect64BitPortabilityProblems="FALSE"
 				DebugInformationFormat="3"
@@ -344,9 +344,6 @@
 				</File>
 				<File
 					RelativePath=".\aud_sys\mame\fmopl.h">
-				</File>
-				<File
-					RelativePath=".\wolfpal.inc">
 				</File>
 			</Filter>
 		</Filter>
@@ -1025,6 +1022,9 @@
 		</File>
 		<File
 			RelativePath=".\wl_utils.h">
+		</File>
+		<File
+			RelativePath=".\wolfpal.inc">
 		</File>
 	</Files>
 	<Globals>

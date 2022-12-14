@@ -29,6 +29,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
+    <Filter Include="aud_sys\nuked-opl3">
+      <UniqueIdentifier>{cbc2b12a-61ff-4e8f-9774-f5a2dc2e6891}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="aud_sys\mame\fmopl.c">
@@ -139,6 +142,9 @@
     <ClCompile Include="wl_state.c" />
     <ClCompile Include="wl_text.c" />
     <ClCompile Include="wl_utils.c" />
+    <ClCompile Include="aud_sys\nuked-opl3\opl3.c">
+      <Filter>aud_sys\nuked-opl3</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="sodpal.inc" />
@@ -292,6 +298,9 @@
     <ClInclude Include="wl_polygon.h" />
     <ClInclude Include="wl_shade.h" />
     <ClInclude Include="wl_utils.h" />
+    <ClInclude Include="aud_sys\nuked-opl3\opl3.h">
+      <Filter>aud_sys\nuked-opl3</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="win\Wolf4SDL.rc">
