@@ -136,7 +136,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>F:\SDL-1.2.12\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)thirdparty\;$(SolutionDir)thirdparty\lw_lib;$(SolutionDir)uthash;$(SolutionDir)wolfrad;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;WINDOWS_IGNORE_PACKING_MISMATCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
@@ -159,7 +159,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='SDL|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>F:\SDL-1.2.12\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)thirdparty\;$(SolutionDir)thirdparty\lw_lib;$(SolutionDir)uthash;$(SolutionDir)wolfrad;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;WINDOWS_IGNORE_PACKING_MISMATCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
@@ -168,7 +168,7 @@
       <LanguageStandard_C>Default</LanguageStandard_C>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>SDL.lib;SDLmain.lib;SDL_mixer.lib;SDL_net.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL.lib;SDLmain.lib;SDL_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>F:\SDL-1.2.12\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
       <OptimizeReferences>true</OptimizeReferences>
@@ -195,11 +195,12 @@
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
+      <AdditionalIncludeDirectories>$(SolutionDir)thirdparty\;$(SolutionDir)thirdparty\lw_lib;$(SolutionDir)uthash;$(SolutionDir)wolfrad;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='SDL|x64'">
     <Link>
-      <AdditionalDependencies>SDL.lib;SDLmain.lib;SDL_mixer.lib;opengl32.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL.lib;SDLmain.lib;SDL_mixer.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>false</DataExecutionPrevention>
       <AdditionalLibraryDirectories>$(SolutionDir)\3rdparty\glew-2.2.0\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -210,7 +211,7 @@
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>$(SolutionDir)\3rdparty\glew-2.2.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)thirdparty\;$(SolutionDir)thirdparty\lw_lib;$(SolutionDir)uthash;$(SolutionDir)wolfrad;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -287,6 +288,11 @@
     <ClCompile Include="wl_utils.c" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="docs\Makefile.3ds" />
+    <None Include="docs\README-3DS.md" />
+    <None Include="docs\README-CRT.md" />
+    <None Include="docs\README-PS2.md" />
+    <None Include="docs\README-Switch.md" />
     <None Include="sodpal.inc" />
     <None Include="wolfpal.inc" />
   </ItemGroup>
@@ -362,6 +368,17 @@
     <ResourceCompile Include="win\Wolf4SDL.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="docs\Changes-dc.txt" />
+    <Text Include="docs\Changes.txt" />
+    <Text Include="docs\license-mame.txt" />
+    <Text Include="docs\README-codeblocks.txt" />
+    <Text Include="docs\README-dc.txt" />
+    <Text Include="docs\README-devcpp.txt" />
+    <Text Include="docs\README-GP2X.txt" />
+    <Text Include="docs\README-VC.txt" />
+    <Text Include="docs\SVNLOG.TXT" />
+    <Text Include="docs\VIEASM Beta readme.txt" />
+    <Text Include="docs\wolfinst.txt" />
     <Text Include="README.txt" />
   </ItemGroup>
   <ItemGroup>

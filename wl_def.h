@@ -85,7 +85,7 @@ typedef int64 int64_t;
 typedef ptr_t uintptr_t;
 #endif
 
-#if !defined O_BINARY
+#ifndef _WIN32
 #define O_BINARY 0
 #endif
 #ifdef SEGA_SATURN
@@ -138,20 +138,20 @@ void Quit(const char* errorStr, ...);
 #include "wl_utils.h"
 
 #ifdef LWLIB
-#include "3rdparty/lw_lib/lw_ai_enemy.h"
-#include "3rdparty/lw_lib/lw_bres.h"
-#include "3rdparty/lw_lib/lw_ctx.h"
-#include "3rdparty/lw_lib/lw_dict.h"
-#include "3rdparty/lw_lib/lw_edit.h"
-#include "3rdparty/lw_lib/lw_fs.h"
-#include "3rdparty/lw_lib/lw_img.h"
-#include "3rdparty/lw_lib/lw_intmap.h"
-#include "3rdparty/lw_lib/lw_maptool.h"
-#include "3rdparty/lw_lib/lw_misc.h"
-#include "3rdparty/lw_lib/lw_protmsg.h"
-#include "3rdparty/lw_lib/lw_pwscan.h"
-#include "3rdparty/lw_lib/lw_strmap.h"
-#include "3rdparty/lw_lib/lw_vec.h"
+#include "lw_ai_enemy.h"
+#include "lw_bres.h"
+#include "lw_ctx.h"
+#include "lw_dict.h"
+#include "lw_edit.h"
+#include "lw_fs.h"
+#include "lw_img.h"
+#include "lw_intmap.h"
+#include "lw_maptool.h"
+#include "lw_misc.h"
+#include "lw_protmsg.h"
+#include "lw_pwscan.h"
+#include "lw_strmap.h"
+#include "lw_vec.h"
 #include "wl_ai.h"
 #include "wl_anyactor.h"
 #include "wl_ed.h"
@@ -163,15 +163,15 @@ void Quit(const char* errorStr, ...);
 #endif
 
 #ifdef WOLFRAD
-#include "3rdparty/wolfrad/wolfrad.h"
-#include "3rdparty/wolfrad/wr_level.h"
-#include "3rdparty/wolfrad/wr_lightinfo.h"
-#include "3rdparty/wolfrad/wr_lightmap.h"
-#include "3rdparty/wolfrad/wr_rad.h"
-#include "3rdparty/wolfrad/wr_radmap.h"
-#include "3rdparty/wolfrad/wr_raycaster.h"
-#include "3rdparty/wolfrad/wr_room.h"
-#include "3rdparty/wolfrad/wr_scene.h"
+#include "wolfrad.h"
+#include "wr_level.h"
+#include "wr_lightinfo.h"
+#include "wr_lightmap.h"
+#include "wr_rad.h"
+#include "wr_radmap.h"
+#include "wr_raycaster.h"
+#include "wr_room.h"
+#include "wr_scene.h"
 #endif
 
 /*

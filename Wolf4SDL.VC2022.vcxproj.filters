@@ -1,462 +1,342 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="3rdparty">
+      <UniqueIdentifier>{cec84b94-af05-4151-ac59-51c24c0289bc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    <Filter Include="3rdparty\lwlib">
+      <UniqueIdentifier>{8b498f7b-c5b8-48ed-829c-b58511a05bed}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
+    <Filter Include="3rdparty\wolfrad">
+      <UniqueIdentifier>{e2409aa0-11eb-4a37-8788-2652d2e086d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdparty\uthash">
+      <UniqueIdentifier>{ee62495d-7e7d-47cd-887a-6ab58fcf9cf2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="docs">
+      <UniqueIdentifier>{edf36f10-9ca6-4453-8266-36aa89a35560}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="aud_sys">
+      <UniqueIdentifier>{0508f7ca-accd-4598-8412-f3c247f894f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="aud_sys\dosbox">
+      <UniqueIdentifier>{419f6066-74f0-4417-bc2e-87df8083433a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="aud_sys\mame">
+      <UniqueIdentifier>{df99e693-62e7-40a9-bc0a-efd1cd9c313e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="win">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
-    <Filter Include="Source Files\audiosys">
-      <UniqueIdentifier>{0508f7ca-accd-4598-8412-f3c247f894f8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\audiosys\dosbox">
-      <UniqueIdentifier>{419f6066-74f0-4417-bc2e-87df8083433a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\audiosys\mame">
-      <UniqueIdentifier>{df99e693-62e7-40a9-bc0a-efd1cd9c313e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\3rdparty">
-      <UniqueIdentifier>{c3d7d364-46d3-4487-9cbd-cf678ca18cf3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\3rdparty\uthash">
-      <UniqueIdentifier>{ee62495d-7e7d-47cd-887a-6ab58fcf9cf2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\3rdparty">
-      <UniqueIdentifier>{cec84b94-af05-4151-ac59-51c24c0289bc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\3rdparty\lwlib">
-      <UniqueIdentifier>{8b498f7b-c5b8-48ed-829c-b58511a05bed}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\3rdparty\wolfrad">
-      <UniqueIdentifier>{e2409aa0-11eb-4a37-8788-2652d2e086d9}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="id_in.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="id_pm.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="id_sd.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="id_us.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="id_vh.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="id_vl.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sdl_winmain.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="signon.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wl_act1.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wl_act2.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wl_agent.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wl_atmos.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wl_cloudsky.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wl_debug.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wl_draw.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wl_game.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wl_inter.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wl_main.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wl_menu.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wl_parallax.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wl_plane.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wl_play.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wl_scale.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wl_shade.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wl_state.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wl_text.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wl_utils.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="id_crt.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="id_ca.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="id_vieasm.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="aud_sys\mame\fmopl.c">
-      <Filter>Source Files\audiosys\mame</Filter>
+      <Filter>aud_sys\mame</Filter>
     </ClCompile>
     <ClCompile Include="aud_sys\dosbox\dbopl.c">
-      <Filter>Source Files\audiosys\dosbox</Filter>
+      <Filter>aud_sys\dosbox</Filter>
     </ClCompile>
     <ClCompile Include="3rdparty\lw_lib\lw_ai_enemy.c">
-      <Filter>Source Files\3rdparty\lwlib</Filter>
+      <Filter>3rdparty\lwlib</Filter>
     </ClCompile>
     <ClCompile Include="3rdparty\lw_lib\lw_bres.c">
-      <Filter>Source Files\3rdparty\lwlib</Filter>
+      <Filter>3rdparty\lwlib</Filter>
     </ClCompile>
     <ClCompile Include="3rdparty\lw_lib\lw_ctx.c">
-      <Filter>Source Files\3rdparty\lwlib</Filter>
+      <Filter>3rdparty\lwlib</Filter>
     </ClCompile>
     <ClCompile Include="3rdparty\lw_lib\lw_edit.c">
-      <Filter>Source Files\3rdparty\lwlib</Filter>
+      <Filter>3rdparty\lwlib</Filter>
     </ClCompile>
     <ClCompile Include="3rdparty\lw_lib\lw_fs.c">
-      <Filter>Source Files\3rdparty\lwlib</Filter>
+      <Filter>3rdparty\lwlib</Filter>
     </ClCompile>
     <ClCompile Include="3rdparty\lw_lib\lw_maptool.c">
-      <Filter>Source Files\3rdparty\lwlib</Filter>
+      <Filter>3rdparty\lwlib</Filter>
     </ClCompile>
     <ClCompile Include="3rdparty\lw_lib\lw_misc.c">
-      <Filter>Source Files\3rdparty\lwlib</Filter>
+      <Filter>3rdparty\lwlib</Filter>
     </ClCompile>
     <ClCompile Include="3rdparty\lw_lib\lw_protmsg.c">
-      <Filter>Source Files\3rdparty\lwlib</Filter>
+      <Filter>3rdparty\lwlib</Filter>
     </ClCompile>
     <ClCompile Include="3rdparty\lw_lib\lw_pwscan.c">
-      <Filter>Source Files\3rdparty\lwlib</Filter>
+      <Filter>3rdparty\lwlib</Filter>
     </ClCompile>
     <ClCompile Include="3rdparty\lw_lib\lw_vec.c">
-      <Filter>Source Files\3rdparty\lwlib</Filter>
+      <Filter>3rdparty\lwlib</Filter>
     </ClCompile>
     <ClCompile Include="3rdparty\wolfrad\wolfrad.c">
-      <Filter>Source Files\3rdparty\wolfrad</Filter>
+      <Filter>3rdparty\wolfrad</Filter>
     </ClCompile>
     <ClCompile Include="3rdparty\wolfrad\wr_level.c">
-      <Filter>Source Files\3rdparty\wolfrad</Filter>
+      <Filter>3rdparty\wolfrad</Filter>
     </ClCompile>
     <ClCompile Include="3rdparty\wolfrad\wr_lightinfo.c">
-      <Filter>Source Files\3rdparty\wolfrad</Filter>
+      <Filter>3rdparty\wolfrad</Filter>
     </ClCompile>
     <ClCompile Include="3rdparty\wolfrad\wr_lightmap.c">
-      <Filter>Source Files\3rdparty\wolfrad</Filter>
+      <Filter>3rdparty\wolfrad</Filter>
     </ClCompile>
     <ClCompile Include="3rdparty\wolfrad\wr_rad.c">
-      <Filter>Source Files\3rdparty\wolfrad</Filter>
+      <Filter>3rdparty\wolfrad</Filter>
     </ClCompile>
     <ClCompile Include="3rdparty\wolfrad\wr_radmap.c">
-      <Filter>Source Files\3rdparty\wolfrad</Filter>
+      <Filter>3rdparty\wolfrad</Filter>
     </ClCompile>
     <ClCompile Include="3rdparty\wolfrad\wr_raycaster.c">
-      <Filter>Source Files\3rdparty\wolfrad</Filter>
+      <Filter>3rdparty\wolfrad</Filter>
     </ClCompile>
     <ClCompile Include="3rdparty\wolfrad\wr_room.c">
-      <Filter>Source Files\3rdparty\wolfrad</Filter>
+      <Filter>3rdparty\wolfrad</Filter>
     </ClCompile>
     <ClCompile Include="3rdparty\wolfrad\wr_scene.c">
-      <Filter>Source Files\3rdparty\wolfrad</Filter>
+      <Filter>3rdparty\wolfrad</Filter>
     </ClCompile>
-    <ClCompile Include="wl_firefly.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wl_healthmeter.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wl_hooker.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wl_led.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wl_math.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wl_physics.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wl_pimp.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wl_polygon.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wl_sleephobo.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wl_ai.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wl_anyactor.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wl_benchhobo.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wl_clockking.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wl_conartist.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wl_ed.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ClCompile Include="id_ca.c" />
+    <ClCompile Include="id_crt.c" />
+    <ClCompile Include="id_in.c" />
+    <ClCompile Include="id_pm.c" />
+    <ClCompile Include="id_sd.c" />
+    <ClCompile Include="id_us.c" />
+    <ClCompile Include="id_vh.c" />
+    <ClCompile Include="id_vieasm.c" />
+    <ClCompile Include="id_vl.c" />
+    <ClCompile Include="sdl_winmain.c" />
+    <ClCompile Include="signon.c" />
+    <ClCompile Include="wl_act1.c" />
+    <ClCompile Include="wl_act2.c" />
+    <ClCompile Include="wl_agent.c" />
+    <ClCompile Include="wl_ai.c" />
+    <ClCompile Include="wl_anyactor.c" />
+    <ClCompile Include="wl_atmos.c" />
+    <ClCompile Include="wl_benchhobo.c" />
+    <ClCompile Include="wl_clockking.c" />
+    <ClCompile Include="wl_cloudsky.c" />
+    <ClCompile Include="wl_conartist.c" />
+    <ClCompile Include="wl_debug.c" />
+    <ClCompile Include="wl_draw.c" />
+    <ClCompile Include="wl_ed.c" />
+    <ClCompile Include="wl_firefly.c" />
+    <ClCompile Include="wl_game.c" />
+    <ClCompile Include="wl_healthmeter.c" />
+    <ClCompile Include="wl_hooker.c" />
+    <ClCompile Include="wl_inter.c" />
+    <ClCompile Include="wl_led.c" />
+    <ClCompile Include="wl_main.c" />
+    <ClCompile Include="wl_math.c" />
+    <ClCompile Include="wl_menu.c" />
+    <ClCompile Include="wl_parallax.c" />
+    <ClCompile Include="wl_physics.c" />
+    <ClCompile Include="wl_pimp.c" />
+    <ClCompile Include="wl_plane.c" />
+    <ClCompile Include="wl_play.c" />
+    <ClCompile Include="wl_polygon.c" />
+    <ClCompile Include="wl_scale.c" />
+    <ClCompile Include="wl_shade.c" />
+    <ClCompile Include="wl_sleephobo.c" />
+    <ClCompile Include="wl_state.c" />
+    <ClCompile Include="wl_text.c" />
+    <ClCompile Include="wl_utils.c" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="sodpal.inc">
-      <Filter>Source Files</Filter>
+    <None Include="sodpal.inc" />
+    <None Include="wolfpal.inc" />
+    <None Include="docs\README-PS2.md">
+      <Filter>docs</Filter>
     </None>
-    <None Include="wolfpal.inc">
-      <Filter>Source Files</Filter>
+    <None Include="docs\README-Switch.md">
+      <Filter>docs</Filter>
+    </None>
+    <None Include="docs\Makefile.3ds">
+      <Filter>docs</Filter>
+    </None>
+    <None Include="docs\README-3DS.md">
+      <Filter>docs</Filter>
+    </None>
+    <None Include="docs\README-CRT.md">
+      <Filter>docs</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="audiosod.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="audiowl6.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="f_spear.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="foreign.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gfxv_apo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gfxv_jap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gfxv_sod.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gfxv_wl6.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="id_ca.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="id_in.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="id_pm.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="id_sd.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="id_us.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="id_vh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="id_vl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="version.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="wl_atmos.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="wl_cloudsky.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="wl_def.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="wl_menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="wl_shade.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="win\resource.h">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
-    <ClInclude Include="id_crt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="id_vieasm.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="asmcref.h">
-      <Filter>Header Files</Filter>
+      <Filter>win</Filter>
     </ClInclude>
     <ClInclude Include="aud_sys\dosbox\dbopl.h">
-      <Filter>Source Files\audiosys\dosbox</Filter>
+      <Filter>aud_sys\dosbox</Filter>
     </ClInclude>
     <ClInclude Include="aud_sys\mame\fmopl.h">
-      <Filter>Source Files\audiosys\mame</Filter>
-    </ClInclude>
-    <ClInclude Include="wl_utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdparty\fixedptc.h">
-      <Filter>Header Files\3rdparty</Filter>
+      <Filter>aud_sys\mame</Filter>
     </ClInclude>
     <ClInclude Include="3rdparty\uthash\utarray.h">
-      <Filter>Header Files\3rdparty\uthash</Filter>
+      <Filter>3rdparty\uthash</Filter>
     </ClInclude>
     <ClInclude Include="3rdparty\uthash\uthash.h">
-      <Filter>Header Files\3rdparty\uthash</Filter>
+      <Filter>3rdparty\uthash</Filter>
     </ClInclude>
     <ClInclude Include="3rdparty\uthash\utlist.h">
-      <Filter>Header Files\3rdparty\uthash</Filter>
+      <Filter>3rdparty\uthash</Filter>
     </ClInclude>
     <ClInclude Include="3rdparty\uthash\utringbuffer.h">
-      <Filter>Header Files\3rdparty\uthash</Filter>
+      <Filter>3rdparty\uthash</Filter>
     </ClInclude>
     <ClInclude Include="3rdparty\uthash\utstack.h">
-      <Filter>Header Files\3rdparty\uthash</Filter>
+      <Filter>3rdparty\uthash</Filter>
     </ClInclude>
     <ClInclude Include="3rdparty\uthash\utstring.h">
-      <Filter>Header Files\3rdparty\uthash</Filter>
+      <Filter>3rdparty\uthash</Filter>
     </ClInclude>
     <ClInclude Include="3rdparty\lw_lib\lw_ai_enemy.h">
-      <Filter>Source Files\3rdparty\lwlib</Filter>
+      <Filter>3rdparty\lwlib</Filter>
     </ClInclude>
     <ClInclude Include="3rdparty\lw_lib\lw_bres.h">
-      <Filter>Source Files\3rdparty\lwlib</Filter>
+      <Filter>3rdparty\lwlib</Filter>
     </ClInclude>
     <ClInclude Include="3rdparty\lw_lib\lw_ctx.h">
-      <Filter>Source Files\3rdparty\lwlib</Filter>
+      <Filter>3rdparty\lwlib</Filter>
     </ClInclude>
     <ClInclude Include="3rdparty\lw_lib\lw_dict.h">
-      <Filter>Source Files\3rdparty\lwlib</Filter>
+      <Filter>3rdparty\lwlib</Filter>
     </ClInclude>
     <ClInclude Include="3rdparty\lw_lib\lw_edit.h">
-      <Filter>Source Files\3rdparty\lwlib</Filter>
+      <Filter>3rdparty\lwlib</Filter>
     </ClInclude>
     <ClInclude Include="3rdparty\lw_lib\lw_fs.h">
-      <Filter>Source Files\3rdparty\lwlib</Filter>
+      <Filter>3rdparty\lwlib</Filter>
     </ClInclude>
     <ClInclude Include="3rdparty\lw_lib\lw_img.h">
-      <Filter>Source Files\3rdparty\lwlib</Filter>
+      <Filter>3rdparty\lwlib</Filter>
     </ClInclude>
     <ClInclude Include="3rdparty\lw_lib\lw_intmap.h">
-      <Filter>Source Files\3rdparty\lwlib</Filter>
+      <Filter>3rdparty\lwlib</Filter>
     </ClInclude>
     <ClInclude Include="3rdparty\lw_lib\lw_maptool.h">
-      <Filter>Source Files\3rdparty\lwlib</Filter>
+      <Filter>3rdparty\lwlib</Filter>
     </ClInclude>
     <ClInclude Include="3rdparty\lw_lib\lw_misc.h">
-      <Filter>Source Files\3rdparty\lwlib</Filter>
+      <Filter>3rdparty\lwlib</Filter>
     </ClInclude>
     <ClInclude Include="3rdparty\lw_lib\lw_protmsg.h">
-      <Filter>Source Files\3rdparty\lwlib</Filter>
+      <Filter>3rdparty\lwlib</Filter>
     </ClInclude>
     <ClInclude Include="3rdparty\lw_lib\lw_pwscan.h">
-      <Filter>Source Files\3rdparty\lwlib</Filter>
+      <Filter>3rdparty\lwlib</Filter>
     </ClInclude>
     <ClInclude Include="3rdparty\lw_lib\lw_strmap.h">
-      <Filter>Source Files\3rdparty\lwlib</Filter>
+      <Filter>3rdparty\lwlib</Filter>
     </ClInclude>
     <ClInclude Include="3rdparty\lw_lib\lw_vec.h">
-      <Filter>Source Files\3rdparty\lwlib</Filter>
+      <Filter>3rdparty\lwlib</Filter>
     </ClInclude>
     <ClInclude Include="3rdparty\wolfrad\wolfrad.h">
-      <Filter>Source Files\3rdparty\wolfrad</Filter>
+      <Filter>3rdparty\wolfrad</Filter>
     </ClInclude>
     <ClInclude Include="3rdparty\wolfrad\wr_level.h">
-      <Filter>Source Files\3rdparty\wolfrad</Filter>
+      <Filter>3rdparty\wolfrad</Filter>
     </ClInclude>
     <ClInclude Include="3rdparty\wolfrad\wr_lightinfo.h">
-      <Filter>Source Files\3rdparty\wolfrad</Filter>
+      <Filter>3rdparty\wolfrad</Filter>
     </ClInclude>
     <ClInclude Include="3rdparty\wolfrad\wr_lightmap.h">
-      <Filter>Source Files\3rdparty\wolfrad</Filter>
+      <Filter>3rdparty\wolfrad</Filter>
     </ClInclude>
     <ClInclude Include="3rdparty\wolfrad\wr_rad.h">
-      <Filter>Source Files\3rdparty\wolfrad</Filter>
+      <Filter>3rdparty\wolfrad</Filter>
     </ClInclude>
     <ClInclude Include="3rdparty\wolfrad\wr_radmap.h">
-      <Filter>Source Files\3rdparty\wolfrad</Filter>
+      <Filter>3rdparty\wolfrad</Filter>
     </ClInclude>
     <ClInclude Include="3rdparty\wolfrad\wr_raycaster.h">
-      <Filter>Source Files\3rdparty\wolfrad</Filter>
+      <Filter>3rdparty\wolfrad</Filter>
     </ClInclude>
     <ClInclude Include="3rdparty\wolfrad\wr_room.h">
-      <Filter>Source Files\3rdparty\wolfrad</Filter>
+      <Filter>3rdparty\wolfrad</Filter>
     </ClInclude>
     <ClInclude Include="3rdparty\wolfrad\wr_scene.h">
-      <Filter>Source Files\3rdparty\wolfrad</Filter>
+      <Filter>3rdparty\wolfrad</Filter>
     </ClInclude>
-    <ClInclude Include="wl_ed.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="3rdparty\fixedptc.h">
+      <Filter>3rdparty</Filter>
     </ClInclude>
-    <ClInclude Include="wl_math.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="wl_physics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="wl_anyactor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="wl_polygon.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="wl_led.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="wl_healthbar.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="wl_ai.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClInclude Include="asmcref.h" />
+    <ClInclude Include="audiosod.h" />
+    <ClInclude Include="audiowl6.h" />
+    <ClInclude Include="f_spear.h" />
+    <ClInclude Include="foreign.h" />
+    <ClInclude Include="gfxv_apo.h" />
+    <ClInclude Include="gfxv_jap.h" />
+    <ClInclude Include="gfxv_sod.h" />
+    <ClInclude Include="gfxv_wl6.h" />
+    <ClInclude Include="id_ca.h" />
+    <ClInclude Include="id_crt.h" />
+    <ClInclude Include="id_in.h" />
+    <ClInclude Include="id_pm.h" />
+    <ClInclude Include="id_sd.h" />
+    <ClInclude Include="id_us.h" />
+    <ClInclude Include="id_vh.h" />
+    <ClInclude Include="id_vieasm.h" />
+    <ClInclude Include="id_vl.h" />
+    <ClInclude Include="version.h" />
+    <ClInclude Include="wl_ai.h" />
+    <ClInclude Include="wl_anyactor.h" />
+    <ClInclude Include="wl_atmos.h" />
+    <ClInclude Include="wl_cloudsky.h" />
+    <ClInclude Include="wl_def.h" />
+    <ClInclude Include="wl_ed.h" />
+    <ClInclude Include="wl_healthbar.h" />
+    <ClInclude Include="wl_led.h" />
+    <ClInclude Include="wl_math.h" />
+    <ClInclude Include="wl_menu.h" />
+    <ClInclude Include="wl_physics.h" />
+    <ClInclude Include="wl_polygon.h" />
+    <ClInclude Include="wl_shade.h" />
+    <ClInclude Include="wl_utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="win\Wolf4SDL.rc">
-      <Filter>Resource Files</Filter>
+      <Filter>win</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="README.txt" />
+    <Text Include="docs\README-dc.txt">
+      <Filter>docs</Filter>
+    </Text>
+    <Text Include="docs\README-devcpp.txt">
+      <Filter>docs</Filter>
+    </Text>
+    <Text Include="docs\README-GP2X.txt">
+      <Filter>docs</Filter>
+    </Text>
+    <Text Include="docs\README-VC.txt">
+      <Filter>docs</Filter>
+    </Text>
+    <Text Include="docs\SVNLOG.TXT">
+      <Filter>docs</Filter>
+    </Text>
+    <Text Include="docs\VIEASM Beta readme.txt">
+      <Filter>docs</Filter>
+    </Text>
+    <Text Include="docs\wolfinst.txt">
+      <Filter>docs</Filter>
+    </Text>
+    <Text Include="docs\Changes.txt">
+      <Filter>docs</Filter>
+    </Text>
+    <Text Include="docs\Changes-dc.txt">
+      <Filter>docs</Filter>
+    </Text>
+    <Text Include="docs\license-mame.txt">
+      <Filter>docs</Filter>
+    </Text>
+    <Text Include="docs\README-codeblocks.txt">
+      <Filter>docs</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <Image Include="win\Wolf4SDL.ico">
-      <Filter>Resource Files</Filter>
+      <Filter>win</Filter>
     </Image>
   </ItemGroup>
 </Project>
