@@ -70,7 +70,7 @@
 #include "Plataform/GP2X/gp2x.h"
 #endif
 #ifdef PS2
-#include "Plataform/PS2/ps2_main.h"
+#include "Platform/PS2/ps2_main.h"
 #endif
 #include "3rdparty/fixedptc.h"
 

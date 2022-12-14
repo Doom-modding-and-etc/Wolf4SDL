@@ -19,7 +19,7 @@ OPT= -O3 -Wall -ffast-math
 KOS_LOCAL_CFLAGS =  -DDREAMCAST -DMAX_MEM_LEVEL -DSDL -DLSB_FIRST -DALIGN_LONG -DINLINE -DDC -DUCHAR_MAX=0xff -DUSHRT_MAX=0xffff -DULONG_MAX=0xffffffff
 KOS_CFLAGS += $(OPT)
 # Files ---------------------------------------------------------------------------
-OBJS =  dc_main.o dc_vmu.o fmopl.o  id_ca.o id_in.o id_pm.o id_sd.o id_us_1.o id_vh.o id_vl.o signon.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o  wl_floorceiling.o wl_game.o  wl_inter.o wl_main.o wl_menu.o wl_parallax.o wl_play.o wl_state.o wl_text.o
+OBJS =  dc_main.o dc_vmu.o fmopl.o id_ca.o id_in.o id_pm.o id_sd.o id_us_1.o id_vh.o id_vl.o signon.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o  wl_floorceiling.o wl_game.o  wl_inter.o wl_main.o wl_menu.o wl_parallax.o wl_play.o wl_state.o wl_text.o
 
 KOS_CFLAGS += -I${KOS_BASE}/../kos-ports/include/SDL
 
