@@ -1,4 +1,4 @@
-SDL_MAJOR_VERSION += 2
+SDL_MAJOR_VERSION += 3
 
 BINARY ?= Wolf4SDL
 PREFIX ?= /usr/local
@@ -14,6 +14,9 @@ endif
 ifeq ($(SDL_MAJOR_VERSION),2)
 SDL_CONFIG ?= sdl2-config
 endif
+ifeq ($(SDL_MAJOR_VERSION),3)
+SDL_CONFIG ?= sdl3-config
+endif
 
 CFLAGS_SDL ?= $(shell $(SDL_CONFIG) --cflags)
 LDFLAGS_SDL ?= $(shell $(SDL_CONFIG) --libs)
@@ -26,6 +29,10 @@ LDFLAGS += -lSDL_mixer
 endif
 
 ifeq ($(SDL_MAJOR_VERSION),2)
+LDFLAGS += -lSDL2_mixer
+endif
+
+ifeq ($(SDL_MAJOR_VERSION),3)
 LDFLAGS += -lSDL2_mixer
 endif
 

@@ -110,7 +110,7 @@ void VW_MeasurePropString (const char *string, word *width, word *height)
 	VWL_MeasureString(string,width,height,(fontstruct *)grsegs[STARTFONT+fontnumber]);
 }
 
-#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
 void VH_RenderTextures(SDL_Surface *surface)
 {
     SDL_UpdateTexture(texture, NULL, screen->pixels, screenWidth * sizeof(Uint32));
@@ -134,7 +134,7 @@ void VH_UpdateScreen(SDL_Surface *surface)
     SDL_BlitSurface (surface,NULL,screen,NULL);
 #if SDL_MAJOR_VERSION == 1
     SDL_Flip(screen);
-#elif SDL_MAJOR_VERSION == 2
+#elif SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
     VH_RenderTextures(screen);
 #endif
 }

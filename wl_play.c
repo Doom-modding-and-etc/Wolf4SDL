@@ -82,7 +82,7 @@ int buttonscan[NUMBUTTONS] =
 };
 
 #ifndef SEGA_SATURN
-#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
 int buttongamecontroller[bt_Max] =
 {
     bt_use,
@@ -186,7 +186,7 @@ void   *demobuffer;
 // current user input
 //
 int controlx, controly;         // range from -100 to 100 per tic
-#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
 int gamecontrolstrafe;
 #endif
 bool buttonstate[NUMBUTTONS];
@@ -418,8 +418,8 @@ void PollJoystickButtons (void)
             buttonstate[buttonjoy[i]] = true;
     }
 }
-
-#if SDL_MAJOR_VERSION == 2
+ 
+#if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
 /*
 ===================
 =
@@ -483,7 +483,7 @@ void PollMouseMove (void)
 
     mousexmove -= screenWidth / 2;
     mouseymove -= screenHeight / 2;
-#else
+#elif SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
     SDL_GetRelativeMouseState(&mousexmove, &mouseymove);
 #endif
 
@@ -519,7 +519,7 @@ void PollJoystickMove (void)
 }
 
 
-#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
 /*
 ===================
 =
@@ -593,7 +593,7 @@ void PollControls (void)
 
     controlx = 0;
     controly = 0;
-#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
     gamecontrolstrafe = 0;
 #endif
     memcpy(buttonheld, buttonstate, sizeof(buttonstate));
@@ -628,7 +628,7 @@ void PollControls (void)
 // get button states
 //
     PollKeyboardButtons();
-#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
     PollGameControllerButtons();
 #endif
     if (mouseenabled && IN_IsInputGrabbed())
@@ -639,7 +639,7 @@ void PollControls (void)
 // get movements
 //
     PollKeyboardMove();
-#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
     PollGameControllerMove();
 #endif
 
@@ -664,7 +664,7 @@ void PollControls (void)
     else if (controly < min)
         controly = min;
 
-#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
     if (gamecontrolstrafe > max)
         gamecontrolstrafe = max;
 

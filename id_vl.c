@@ -83,7 +83,7 @@ SDL_Surface* screenBuffer = NULL;
 uint32_t screenPitch;
 uint32_t bufferPitch;
 
-#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
 SDL_Window *window;
 SDL_Renderer *renderer;
 SDL_Texture *texture;
@@ -138,7 +138,7 @@ CASSERT(lengthof(gamepal) == 256)
 void VL_Shutdown (void)
 {
     SDL_FreeSurface (screenBuffer);
-#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_DestroyTexture(texture);
@@ -265,7 +265,7 @@ void VL_SetVGAPlaneMode (void)
     }
     SDL_SetColors(screenBuffer, gamepal, 0, 256);
 #endif
-#elif SDL_MAJOR_VERSION == 2
+#elif SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
 #ifdef CRT
     //Fab's CRT Hack:
     //Adjust height so the screen is 4:3 aspect ratio
@@ -279,9 +279,12 @@ void VL_SetVGAPlaneMode (void)
     (fullscreen ? SDL_WINDOW_FULLSCREEN : 0 | SDL_WINDOW_OPENGL));
 #endif
     SDL_PixelFormatEnumToMasks (SDL_PIXELFORMAT_ARGB8888,&screenBits,&r,&g,&b,&a);
-
+   
+#if SDL_MAJOR_VERSION == 2
     screen = SDL_CreateRGBSurface(0,screenWidth,screenHeight,screenBits,r,g,b,a);
-
+#elif SDL_MAJOR_VERSION == 3
+    screen = SDL_CreateSurface(screenWidth, screenHeight, SDL_MasksToPixelFormatEnum(screenBits, r, g, b, a));
+#endif
     if(!screen)
     {
 #if defined(SCALE2X) 
@@ -305,8 +308,12 @@ void VL_SetVGAPlaneMode (void)
     //Fab's and Andr�s CRT Hack
     CRT_Init(screen);
 #endif
+#if SDL_MAJOR_VERSION == 2
     screenBuffer = SDL_CreateRGBSurface(0, screenWidth, screenHeight, 
     8, 0, 0, 0, 0);
+#elif SDL_MAJOR_VERSION == 3
+     screenBuffer = SDL_CreateSurface(screenWidth, screenHeight, SDL_MasksToPixelFormatEnum(8, 0, 0, 0, 0));
+#endif
     
     if(!screenBuffer)
     {
@@ -460,7 +467,7 @@ void VL_SetColor	(int color, int red, int green, int blue)
         VH_UpdateScreen(screen);
 #endif
 
-#elif SDL_MAJOR_VERSION == 2
+#elif SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
         SDL_SetPaletteColors(screen->format->palette, &col, color, 1);
     else
     {
@@ -525,7 +532,7 @@ void VL_SetPalette(SDL_Color* palette, bool forceupdate)
             SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
 
 	        SDL_Flip (screen);
-#else
+#elif SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
         SDL_SetPaletteColors(screen->format->palette, palette, 0, 256);
     else
     {

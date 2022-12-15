@@ -13,6 +13,8 @@ Global
 		Release|x86 = Release|x86
 		SDL|x64 = SDL|x64
 		SDL|x86 = SDL|x86
+		SDL2|x64 = SDL2|x64
+		SDL2|x86 = SDL2|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{411B026A-F58B-4E25-840B-4FE67710F762}.Debug|x64.ActiveCfg = Debug|x64
@@ -27,6 +29,10 @@ Global
 		{411B026A-F58B-4E25-840B-4FE67710F762}.SDL|x64.Build.0 = SDL|x64
 		{411B026A-F58B-4E25-840B-4FE67710F762}.SDL|x86.ActiveCfg = SDL|Win32
 		{411B026A-F58B-4E25-840B-4FE67710F762}.SDL|x86.Build.0 = SDL|Win32
+		{411B026A-F58B-4E25-840B-4FE67710F762}.SDL2|x64.ActiveCfg = SDL2|x64
+		{411B026A-F58B-4E25-840B-4FE67710F762}.SDL2|x64.Build.0 = SDL2|x64
+		{411B026A-F58B-4E25-840B-4FE67710F762}.SDL2|x86.ActiveCfg = SDL|Win32
+		{411B026A-F58B-4E25-840B-4FE67710F762}.SDL2|x86.Build.0 = SDL|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

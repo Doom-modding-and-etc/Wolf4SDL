@@ -74,3 +74,4 @@ Makefile.win
 ##############
 /.vscode
 /build
+/SDL/x64

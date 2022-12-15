@@ -70,7 +70,7 @@ void VH_UpdateScreen (SDL_Surface *surface);
 #ifndef SEGA_SATURN
 #define VW_UpdateScreen()   VH_UpdateScreen (screenBuffer)
 #endif
-#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
 void VH_RenderTextures(SDL_Surface* surface);
 #endif
 //

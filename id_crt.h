@@ -44,7 +44,7 @@ void CRT_Screenshot(void);
 
 void CRT_FreeScreenshot(SDL_Surface *surface1, SDL_Surface *surface2);
 
-#if !SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2
+#if !SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
 void CRT_DestroyTexture(SDL_Texture* texture1, SDL_Texture* texture2);
 #endif
 

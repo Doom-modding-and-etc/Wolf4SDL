@@ -60,7 +60,7 @@ void CRT_Init(int _width)
     glClear(GL_COLOR_BUFFER_BIT);
 
     SDL_GL_SwapBuffers(); 
-#elif SDL_MAJOR_VERSION == 2
+#elif SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
     texture = SDL_CreateTexture(renderer, NULL, 0, width, height);
     SDL_GetTextureColorMod(texture, 0xFF, 0xFF, 0xFF);
     SDL_UpdateTexture(texture, NULL, screen->pixels, screenWidth * sizeof(Uint32));
@@ -116,7 +116,7 @@ void CRT_DAC(void)
 
     //Flip buffer
     SDL_GL_SwapBuffers();
-#elif SDL_MAJOR_VERSION == 2
+#elif SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, screenBuffer);
     SDL_RenderCopy(renderer, texture, NULL, NULL);
     SDL_RenderPresent(renderer);
@@ -130,11 +130,13 @@ void CRT_FreeScreenshot(SDL_Surface* surface1, SDL_Surface *surface2)
     SDL_FreeSurface(surface2);
 }
 
-#ifndef SDL_MAJOR_VERSION == 1
+#if !SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3 
 void CRT_DestroyTexture(SDL_Texture* texture1, SDL_Texture* texture2) 
 {
     SDL_DestroyTexture(texture);
+#ifdef SCALE2X
     SDL_DestroyTexture(upscaledTexture);
+#endif
 }
 #endif
 
@@ -152,8 +154,13 @@ void CRT_Screenshot(void)
 
     printf("Screenshot.\n");
 
+#if SDL_MAJOR_VERSION == 2
     SDL_Surface* correctAspect = SDL_CreateRGBSurface(0, aspectWidth, aspectHeight, 32, 0, 0, 0, 0);
     SDL_Surface* incorrectAspect = SDL_CreateRGBSurface(0, screenBuffer->w, screenBuffer->h, 32, 0, 0, 0, 0);
+#elif SDL_MAJOR_VERSION == 3
+    SDL_Surface* correctAspect = SDL_CreateSurface(aspectWidth, aspectHeight, SDL_MasksToPixelFormatEnum(32, 0, 0, 0, 0));
+    SDL_Surface* incorrectAspect = SDL_CreateSurface(screenBuffer->w, screenBuffer->h, SDL_MasksToPixelFormatEnum(32, 0, 0, 0, 0));
+#endif
     CRT_BlitImage(screenBuffer, incorrectAspect, incorrectAspect, correctAspect);
     SDL_SaveBMP(correctAspect, filename);
     CRT_FreeScreenshot(correctAspect, incorrectAspect);

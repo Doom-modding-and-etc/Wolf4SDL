@@ -68,7 +68,7 @@ KeyboardDef KbdDefs[] = {
 static SDL_Joystick* Joystick;
 int JoyNumButtons;
 static int JoyNumHats;
-#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
 bool GameControllerButtons[GAMECONTROLLER_MAX];
 int GameControllerLeftStick[2];
 int GameControllerRightStick[2];
@@ -409,7 +409,7 @@ static bool ToggleFullScreenKeyShortcut(SDL_Keysym* sym)
 {
 #if SDL_MAJOR_VERSION == 1
     Uint16 flags = KMOD_ALT;
-#elif SDL_MAJOR_VERSION == 2
+#elif SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
     Uint16 flags = (KMOD_LALT | KMOD_RALT);
 #endif
 #if defined(__MACOSX__)
@@ -418,7 +418,7 @@ static bool ToggleFullScreenKeyShortcut(SDL_Keysym* sym)
 #if SDL_MAJOR_VERSION == 1
     return (sym->scancode == SDLK_RETURN ||
         sym->scancode == SDLK_KP_ENTER) && (sym->mod & flags) != 0;
-#elif SDL_MAJOR_VERSION == 2
+#elif SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
     return (sym->scancode == SDL_SCANCODE_RETURN ||
         sym->scancode == SDL_SCANCODE_KP_ENTER) && (sym->mod & flags) != 0;
 #endif
@@ -433,18 +433,18 @@ static void I_ToggleFullScreen(void)
     {
 #if SDL_MAJOR_VERSION == 1
         SDL_SetVideoMode(screenWidth, screenHeight, screenBits, SDL_RESIZABLE);
-#elif SDL_MAJOR_VERSION == 2
+#elif SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
         SDL_GetWindowSize(window, (int*)&screenWidth, (int*)&screenHeight);
 #endif
 #if SDL_MAJOR_VERSION == 1
         flags |= SDL_FULLSCREEN | SDL_RESIZABLE;
-#elif SDL_MAJOR_VERSION == 2
+#elif SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
         flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 #endif        
         GrabInput = true;
 #if SDL_MAJOR_VERSION == 1
         SDL_WM_GrabInput(SDL_GRAB_OFF);
-#elif SDL_MAJOR_VERSION == 2
+#elif SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
         SDL_SetWindowGrab(window, SDL_TRUE);
 #endif    
     }
@@ -457,7 +457,7 @@ static void I_ToggleFullScreen(void)
         SDL_SetVideoMode(screenWidth, screenHeight, screenBits, flags);
         SDL_WM_GrabInput(GrabInput ? SDL_GRAB_ON : SDL_GRAB_OFF);
     }
-#elif SDL_MAJOR_VERSION == 2
+#elif SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
     SDL_SetWindowFullscreen(window, flags);
 
     if (!fullscreen)
@@ -493,7 +493,7 @@ static void processEvent(SDL_Event *event)
 
 #if SDL_MAJOR_VERSION == 1
             SDL_WM_GrabInput(GrabInput ? SDL_GRAB_ON : SDL_GRAB_OFF);
-#elif SDL_MAJOR_VERSION == 2
+#elif SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
             SDL_SetRelativeMouseMode(GrabInput ? SDL_TRUE : SDL_FALSE);
 #endif
             return;
@@ -582,7 +582,7 @@ static void processEvent(SDL_Event *event)
         break;
 #endif
 
-#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
     // check for game controller events
     case SDL_CONTROLLERDEVICEADDED: {
         if (!GameController)
@@ -701,7 +701,7 @@ IN_Startup(void)
             if(param_joystickhat < -1 || param_joystickhat >= JoyNumHats)
                 Quit("The joystickhat param must be between 0 and %i!", JoyNumHats - 1);
         }
-#elif SDL_MAJOR_VERSION == 2
+#elif SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
         if (!SDL_IsGameController(param_joystickindex))
         {
         Joystick = SDL_JoystickOpen(param_joystickindex);
@@ -725,7 +725,7 @@ IN_Startup(void)
         GrabInput = true;
 #if SDL_MAJOR_VERSION == 1
         SDL_WM_GrabInput(SDL_GRAB_ON);
-    #elif SDL_MAJOR_VERSION == 2      
+    #elif SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3     
         SDL_SetRelativeMouseMode(SDL_TRUE);
 #endif
     }
@@ -757,7 +757,7 @@ IN_Shutdown(void)
 #if SDL_MAJOR_VERSION == 1
     if(Joystick)
         SDL_JoystickClose(Joystick);
-#elif SDL_MAJOR_VERSION == 2
+#elif SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
     if (GameController)
         SDL_GameControllerClose(GameController);
 #endif
@@ -821,7 +821,7 @@ IN_ReadControl(int player, ControlInfo* info)
     if (Keyboard(button1))
         buttons += 1 << 1;
 
-#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
     // read input from the game controller
     if (GameControllerButtons[bt_DpadUp])
         my = motion_Up;
@@ -921,7 +921,7 @@ void IN_StartAck(void)
     //
     IN_ClearKeysDown();
 #ifndef SEGA_SATURN
-#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
     memset(GameControllerButtons, 0, sizeof(bool));
 #endif
 
@@ -1052,7 +1052,7 @@ void IN_CenterMouse()
 {
 #if SDL_MAJOR_VERSION == 1
     SDL_WarpMouse(screenWidth / 2, screenHeight / 2);
-#elif SDL_MAJOR_VERSION == 2
+#elif SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
     SDL_WarpMouseGlobal(screenWidth / 2, screenHeight / 2);
 #endif
 }

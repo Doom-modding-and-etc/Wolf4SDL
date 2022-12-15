@@ -15,7 +15,7 @@ void Quit (const char *error,...);
 //===========================================================================
 
 extern SDL_Surface *screen, *screenBuffer;
-#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
 extern SDL_Texture *texture;

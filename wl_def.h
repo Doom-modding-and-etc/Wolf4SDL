@@ -67,7 +67,7 @@
 #endif
 
 #if defined(GP2X) || defined(GP2X_940)
-#include "Plataform/GP2X/gp2x.h"
+#include "Platform/GP2X/gp2x.h"
 #endif
 #ifdef PS2
 #include "Platform/PS2/ps2_main.h"
@@ -88,6 +88,7 @@ typedef ptr_t uintptr_t;
 #ifndef _WIN32
 #define O_BINARY 0
 #endif
+
 #ifdef SEGA_SATURN
 typedef unsigned char byte;
 typedef unsigned short int word;
@@ -1247,7 +1248,7 @@ extern  uint32_t    tics;
 extern  int         lastgamemusicoffset;
 #endif
 
-#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
 extern int gamecontrolstrafe;
 #endif
 

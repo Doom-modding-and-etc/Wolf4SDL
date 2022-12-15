@@ -391,7 +391,7 @@ typedef enum
 	sc_Z	=		SDLK_z,
 	KEYCOUNT,
 	
-#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
 	bt_None = SDL_CONTROLLER_BUTTON_INVALID,
 	bt_A = SDL_CONTROLLER_BUTTON_A,
 	bt_B = SDL_CONTROLLER_BUTTON_B,
@@ -423,14 +423,14 @@ typedef enum
 #endif
 #if SDL_MAJOR_VERSION == 1
 	KEYMAX = KEYCOUNT
-#elif SDL_MAJOR_VERSION == 2
+#elif SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
 	GAMECONTROLLER_MAX = bt_Max + gc_axis_max,
 
 	KEYMAX = KEYCOUNT + GAMECONTROLLER_MAX,
 #endif
 } ScanCode;
 #endif
-#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
 extern bool GameControllerButtons[GAMECONTROLLER_MAX];
 extern int GameControllerLeftStick[2];
 extern int GameControllerRightStick[2];

@@ -255,7 +255,6 @@ TODOs:
 ------
  - Add plataform readme.
  - Fix some versions of Wolfenstein 3d.
- - Prepare to SDL3 Support.
  - Support to sega saturn: wl_draw.c, wl_main.c and wl_menu.c
  - Support OpenBSD.
  
@@ -276,6 +275,7 @@ Credits:
 --------
  - Special thanks to id Software! Without the source code we would still have
    to pelt Wolfenstein 3D with hex editors and disassemblers ;D
+ - Special Thanks for Slouken for making the SDL itself
  - Special thanks to the DOSBox team for providing a GPL'ed OPL2/3 emulator!
  - Special thanks to the MAME developement team for providing the source code
    of the OPL2 emulator!
@@ -296,7 +296,7 @@ Credits:
  - Thanks to vbt for the port of sega saturn
  - Thanks to WayneCa for upgrade the original Wolf
  - Thanks to hax0kartik for the port of Wolf4SDL to Nintendo 3DS
-
+ 
 Licenses:
 ---------
  - The original source code of Wolfenstein 3D:
