@@ -31,8 +31,11 @@
 =
 ===================
 */
-
-void ScaleLine (int16_t x, int16_t toppix, fixed fracstep, byte *linesrc, byte *linecmds, byte *curshades)
+#ifdef USE_SHADING
+void ScaleLine(int16_t x, int16_t toppix, fixed fracstep, byte* linesrc, byte* linecmds, byte* curshades)
+#else
+void ScaleLine (int16_t x, int16_t toppix, fixed fracstep, byte *linesrc, byte *linecmds)
+#endif
 {
     byte    *src,*dest;
     byte    col;
@@ -263,7 +266,9 @@ void ScaleShape (int xcenter, int shapenum, int height, uint32_t flags)
     int         i;
     compshape_t *shape;
     byte        *linesrc,*linecmds;
+#ifdef USE_SHADING
     byte        *curshades;
+#endif
     int16_t     scale,toppix;
     int16_t     x1,x2,actx;
     fixed       frac,fracstep;
@@ -318,8 +323,11 @@ void ScaleShape (int xcenter, int shapenum, int height, uint32_t flags)
             if (wallheight[x1] < height)
             {
                 linecmds = &linesrc[shape->dataofs[i - shape->leftpix]];
-
-                ScaleLine (x1,toppix,fracstep,linesrc,linecmds,curshades);
+#ifdef USE_SHADING
+                ScaleLine(x1, toppix, fracstep, linesrc, linecmds, curshades);
+#else
+                ScaleLine (x1,toppix,fracstep,linesrc,linecmds);
+#endif
             }
 
             x1++;
@@ -375,9 +383,11 @@ void SimpleScaleShape (int xcenter, int shapenum, int height)
         while (x1 < x2)
         {
             linecmds = &linesrc[shape->dataofs[i - shape->leftpix]];
-
-            ScaleLine (x1,toppix,fracstep,linesrc,linecmds,NULL);
-
+#ifdef USE_SHADING
+            ScaleLine(x1, toppix, fracstep, linesrc, linecmds, NULL);
+#else
+            ScaleLine (x1,toppix,fracstep,linesrc,linecmds);
+#endif
             x1++;
         }
     }
@@ -484,8 +494,11 @@ void Scale3DShape (int x1, int x2, int shapenum, uint32_t flags, fixed ny1, fixe
                 toppix = centery - scale1;
 
                 linecmds = &linesrc[shape->dataofs[i]];
-
-                ScaleLine (slinex,toppix,fracstep,linesrc,linecmds,curshades);
+#ifdef USE_SHADING
+                ScaleLine(slinex, toppix, fracstep, linesrc, linecmds, curshades);
+#else
+                ScaleLine (slinex,toppix,fracstep,linesrc,linecmds);
+#endif
             }
         }
     }

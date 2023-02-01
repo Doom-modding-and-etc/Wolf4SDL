@@ -44,7 +44,7 @@ void AnyActor_Init(void)
     #undef NEXT
 }
 
-bool AnyActor_IsReg(int tile)
+boolean AnyActor_IsReg(int tile)
 {
     return tile > 0 && tile < ANYACTOR_MAXTILE &&
         m_tileToTableIndex[tile] != 0;

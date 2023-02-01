@@ -70,7 +70,7 @@ void SelectItem(void);
 
 //----------
 
-bool TryMove(objtype* ob);
+boolean TryMove(objtype* ob);
 void T_Player(objtype* ob);
 
 void ClipMove(objtype* ob, int32_t xmove, int32_t ymove);
@@ -426,7 +426,7 @@ static void LatchNumber(int x, int y, unsigned width, int32_t number)
     unsigned length, c;
     char    str[20];
 
-    ltoa(number, str, 10);
+    w3sltoa(number, str, 10);
 
     length = (unsigned)strlen(str);
 
@@ -892,7 +892,7 @@ void GetBonus(statobj_t* check)
 ===================
 */
 
-bool TryMove(objtype* ob)
+boolean TryMove(objtype* ob)
 {
     int         xl, yl, xh, yh, x, y;
     objtype* check;
@@ -1068,6 +1068,8 @@ void VictoryTile(void)
 static fixed FixedByFracOrig(fixed a, fixed b)
 {
     int sign = 0;
+    fixed res = (fixed)(((int64_t)a * b) >> 16);
+;
     if (b == 65536) b = 65535;
     else if (b == -65536) b = 65535, sign = 1;
     else if (b < 0) b = (-b), sign = 1;
@@ -1077,11 +1079,7 @@ static fixed FixedByFracOrig(fixed a, fixed b)
         a = -a;
         sign = !sign;
     }
-#ifdef _XBOX
-	fixed res = (fixed) (((int32_t)a * b) >> 16);
-#else
-    fixed res = (fixed)(((int64_t)a * b) >> 16);
-#endif
+    res = (fixed)(((int64_t)a * b) >> 16);
 	if (sign)
         res = -res;
     return res;
@@ -1176,7 +1174,7 @@ void Cmd_Fire(void)
 void Cmd_Use(void)
 {
     int     checkx, checky, doornum, dir;
-    bool elevatorok;
+    boolean elevatorok;
 
     //
     // find which cardinal direction the player is facing
@@ -1320,7 +1318,7 @@ void    KnifeAttack(objtype* ob)
     for (check = ob->next; check; check = check->next)
     {
         if ((check->flags & FL_SHOOTABLE) && (check->flags & FL_VISIBLE)
-            && abs(check->viewx - centerx) < shootdelta)
+            && abs((int)check->viewx - centerx) < shootdelta)
         {
             if (check->transx < dist)
             {
@@ -1377,7 +1375,7 @@ void    GunAttack(objtype* ob)
         for (check = ob->next; check; check = check->next)
         {
             if ((check->flags & FL_SHOOTABLE) && (check->flags & FL_VISIBLE)
-                && abs(check->viewx - centerx) < shootdelta)
+                && abs((int)check->viewx - centerx) < shootdelta)
             {
                 if (check->transx < viewdist)
                 {
@@ -1400,8 +1398,8 @@ void    GunAttack(objtype* ob)
     //
     // hit something
     //
-    dx = ABS(closest->tilex - player->tilex);
-    dy = ABS(closest->tiley - player->tiley);
+    dx = abs((int)closest->tilex - player->tilex);
+    dy = abs((int)closest->tiley - player->tiley);
     dist = dx > dy ? dx : dy;
     if (dist < 2)
         damage = US_RndT() / 4;

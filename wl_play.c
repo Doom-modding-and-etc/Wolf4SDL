@@ -23,7 +23,7 @@
 =============================================================================
 */
 
-bool madenoise;              // true when shooting or screaming
+boolean madenoise;              // true when shooting or screaming
 
 exit_t playstate;
 
@@ -36,17 +36,17 @@ int     DebugOk;
 objtype objlist[MAXACTORS];
 objtype *newobj, *obj, *player, *lastobj, *objfreelist, *killerobj;
 #ifdef SEGA_SATURN
-bool godmode;
+boolean godmode;
 #else
-bool singlestep,godmode,noclip,ammocheat,mapreveal;
+boolean singlestep,godmode,noclip,ammocheat,mapreveal;
 #endif
 int     extravbls;
 
 tiletype tilemap[MAPSIZE][MAPSIZE]; // wall values only
-bool     spotvis[MAPSIZE][MAPSIZE];
+boolean     spotvis[MAPSIZE][MAPSIZE];
 objtype *actorat[MAPSIZE][MAPSIZE];
 #ifdef REVEALMAP
-bool     mapseen[MAPSIZE][MAPSIZE];
+boolean     mapseen[MAPSIZE][MAPSIZE];
 #endif
 
 //
@@ -59,7 +59,7 @@ uint32_t tics;
 // control info
 //
 #ifndef SEGA_SATURN
-bool mouseenabled, joystickenabled;
+boolean mouseenabled, joystickenabled;
 #endif
 int dirscan[4] =
 {
@@ -175,9 +175,9 @@ int buttonjoy[32] =
 #endif
 int viewsize;
 
-bool buttonheld[NUMBUTTONS];
+boolean buttonheld[NUMBUTTONS];
 
-bool demorecord, demoplayback;
+boolean demorecord, demoplayback;
 int8_t *demoptr, *lastdemoptr;
 #ifndef SEGA_SATURN
 void   *demobuffer;
@@ -189,7 +189,7 @@ int controlx, controly;         // range from -100 to 100 per tic
 #if SDL_MAJOR_VERSION == 2
 int gamecontrolstrafe;
 #endif
-bool buttonstate[NUMBUTTONS];
+boolean buttonstate[NUMBUTTONS];
 
 int lastgamemusicoffset = 0;
 #if defined(USE_SPRITES) && defined(SEGA_SATURN)
@@ -429,7 +429,8 @@ void PollJoystickButtons (void)
 */
 void PollGameControllerButtons(void)
 {
-    for (int i = 0; i < bt_Max; i++)
+    int i;
+    for (i = 0; i < bt_Max; i++)
     {
         if (GameControllerButtons[i])
         {
@@ -503,10 +504,10 @@ void PollMouseMove (void)
 void PollJoystickMove (void)
 {
     int joyx, joyy;
-
+	int delta;
     IN_GetJoyDelta (&joyx, &joyy);
 
-    int delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
+    delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
 
     if (joyx > 64 || buttonstate[bt_turnright])
         controlx += delta;
@@ -578,8 +579,9 @@ void PollControls (void)
     {
         // wait up to DEMOTICS Wolf tics
         uint32_t curtime = SDL_GetTicks();
+		int32_t timediff;
         lasttimecount += DEMOTICS;
-        int32_t timediff = (lasttimecount * 100) / 7 - curtime;
+        timediff = (lasttimecount * 100) / 7 - curtime;
         if(timediff > 0)
             SDL_Delay(timediff);
 
@@ -739,7 +741,7 @@ void CenterWindow (word w, word h)
 void CheckKeys (void)
 {
     ScanCode scan;
-
+	static int wasPressed;
     if (screenfaded || demoplayback)    // don't do anything with a faded screen
         return;
 
@@ -781,7 +783,7 @@ void CheckKeys (void)
     }
 #endif
 
-    static int wasPressed = 0;
+    wasPressed = 0;
     if (Keyboard(sc_Tab) && Keyboard(sc_P)) //Fabien Sangalard + Ripper Picture Grabber.
     {
         if (!wasPressed)
@@ -1224,7 +1226,7 @@ SDL_Color redshifts[NUMREDSHIFTS][256];
 SDL_Color whiteshifts[NUMWHITESHIFTS][256];
 
 int damagecount, bonuscount;
-bool palshifted;
+boolean palshifted;
 
 /*
 =====================

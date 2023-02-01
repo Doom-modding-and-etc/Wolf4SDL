@@ -22,10 +22,6 @@
 
 #include "wl_def.h"
 
-#if _MSC_VER == 1200            // Visual C++ 6
-	#define vsnprintf _vsnprintf
-#endif
-
 //	Global variables
 		word		PrintX,PrintY;
 		word		WindowX,WindowY,WindowW,WindowH;
@@ -33,7 +29,7 @@
 //	Internal variables
 #define	ConfigVersion	1
 
-static	bool		US_Started;
+static	boolean		US_Started;
 
 		void		(*USL_MeasureString)(const char *,word *,word *) = VW_MeasurePropString;
 		void		(*USL_DrawString)(const char *) = VWB_DrawPropString;
@@ -138,7 +134,7 @@ void
 US_Print(const char *sorg)
 {
 	char c;
-	char *sstart = strdup(sorg);
+	char *sstart = w3sstrdup(sorg);
 	char *s = sstart;
 	char *se;
 	word w,h;
@@ -197,7 +193,7 @@ US_PrintSigned(int32_t n)
 {
 	char	buffer[32];
 
-	US_Print(ltoa(n,buffer,10));
+	US_Print(w3sltoa(n,buffer,10));
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -270,7 +266,7 @@ void
 US_CPrint(const char *sorg)
 {
 	char	c;
-	char *sstart = strdup(sorg);
+	char *sstart = w3sstrdup(sorg);
 	char *s = sstart;
 	char *se;
 
@@ -307,8 +303,9 @@ void US_Printf(const char *formatStr, ...)
 {
     char strbuf[256];
     va_list vlist;
+	int len;
     va_start(vlist, formatStr);
-    int len = vsnprintf(strbuf, sizeof(strbuf), formatStr, vlist);
+    len = w3svsnprintf(strbuf, sizeof(strbuf), formatStr, vlist);
     va_end(vlist);
     if(len <= -1 || len >= sizeof(strbuf))
         strbuf[sizeof(strbuf) - 1] = 0;
@@ -326,8 +323,9 @@ void US_CPrintf(const char *formatStr, ...)
 {
     char strbuf[256];
     va_list vlist;
+	int len;
     va_start(vlist, formatStr);
-    int len = vsnprintf(strbuf, sizeof(strbuf), formatStr, vlist);
+    len = w3svsnprintf(strbuf, sizeof(strbuf), formatStr, vlist);
     va_end(vlist);
     if(len <= -1 || len >= sizeof(strbuf))
         strbuf[sizeof(strbuf) - 1] = 0;
@@ -442,7 +440,7 @@ US_RestoreWindow(WindowRec *win)
 static void
 USL_XORICursor(int x,int y,const char *s,word cursor)
 {
-	static	bool	status;		// VGA doesn't XOR...
+	static	boolean	status;		// VGA doesn't XOR...
 	char	buf[MaxString];
 	int		temp;
 	word	w,h;
@@ -492,11 +490,11 @@ char USL_RotateChar(char ch, int dir)
 //		returned
 //
 ///////////////////////////////////////////////////////////////////////////
-bool
-US_LineInput(int x,int y,char *buf,const char *def,bool escok,
+boolean
+US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 				int maxchars,int maxwidth)
 {
-	bool		redraw,
+	boolean		redraw,
 				cursorvis,cursormoved,
 				done,result, checkkey;
 	ScanCode	sc;

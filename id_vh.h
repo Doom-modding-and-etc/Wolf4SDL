@@ -91,7 +91,7 @@ void VH_RenderTextures(SDL_Surface* surface);
 void	VW_MeasurePropString (const char *string, word *width, word *height);
 
 void    VH_Startup();
-bool FizzleFade (SDL_Surface *source, int x1, int y1,
-    unsigned width, unsigned height, unsigned frames, bool abortable);
+boolean FizzleFade (SDL_Surface *source, int x1, int y1,
+    unsigned width, unsigned height, unsigned frames, boolean abortable);
 
 #endif

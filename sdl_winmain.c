@@ -60,7 +60,7 @@
 #endif /* _WIN32_WCE < 300 */
 
 #ifdef VIEASM
-  bool allowwindow = true;
+  boolean allowwindow = true;
 #else
 
 /* Parse a command line buffer into arguments */

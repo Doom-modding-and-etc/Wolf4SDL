@@ -340,9 +340,10 @@ static int log2_ceil(uint32_t x)
 void VH_Startup()
 {
     int rndbits_x = log2_ceil(screenWidth);
+	int rndbits;
     rndbits_y = log2_ceil(screenHeight);
 
-    int rndbits = rndbits_x + rndbits_y;
+    rndbits = rndbits_x + rndbits_y;
     if(rndbits < 17)
         rndbits = 17;       // no problem, just a bit slower
     else if(rndbits > 25)
@@ -351,8 +352,8 @@ void VH_Startup()
     rndmask = rndmasks[rndbits - 17];
 }
 
-bool FizzleFade (SDL_Surface *source, int x1, int y1,
-    unsigned width, unsigned height, unsigned frames, bool abortable)
+boolean FizzleFade (SDL_Surface *source, int x1, int y1,
+    unsigned width, unsigned height, unsigned frames, boolean abortable)
 {
 #ifdef SEGA_SATURN
 #if 1
@@ -460,18 +461,19 @@ finished:
     unsigned x, y, p, frame, pixperframe;
     int32_t  rndval, lastrndval;
     int      i,first = 1;
-
+	byte *srcptr;
     lastrndval = 0;
     pixperframe = width * height / frames;
 
     IN_StartAck ();
 
     frame = GetTimeCount();
-    byte *srcptr = VL_LockSurface(source);
+    srcptr = VL_LockSurface(source);
     if(srcptr == NULL) return false;
 
     do
     {
+		byte *destptr;
         IN_ProcessEvents();
 
         if(abortable && IN_CheckAck ())
@@ -481,7 +483,7 @@ finished:
             return true;
         }
 
-        byte *destptr = VL_LockSurface(screen);
+        destptr = VL_LockSurface(screen);
 
         if(destptr != NULL)
         {

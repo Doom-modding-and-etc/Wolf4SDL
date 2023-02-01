@@ -137,7 +137,7 @@ extern globalsoundpos channelSoundPos[];
 #endif
 
 // Global variables
-extern  bool         
+extern  boolean         
 #ifndef SEGA_SATURN
                         AdLibPresent,
 #endif     
@@ -168,7 +168,7 @@ extern  int     SD_GetChannelForDigi(int which);
 #ifndef SEGA_SATURN
 extern  void    SD_PositionSound(int leftvol,int rightvol);
 #endif
-extern  bool SD_PlaySound(soundnames sound);
+extern  boolean SD_PlaySound(soundnames sound);
 #ifndef SEGA_SATURN
 extern  void    SD_SetPosition(int channel, int leftvol,int rightvol);
 #endif
@@ -181,10 +181,10 @@ extern  void    SD_MusicOn(void),
                 SD_FadeOutMusic(void);
 extern  int     SD_MusicOff(void);
 
-extern  bool SD_MusicPlaying(void);
+extern  boolean SD_MusicPlaying(void);
 #ifndef SEGA_SATURN
-extern  bool SD_SetSoundMode(SDMode mode);
-extern  bool SD_SetMusicMode(SMMode mode);
+extern  boolean SD_SetSoundMode(SDMode mode);
+extern  boolean SD_SetMusicMode(SMMode mode);
 #endif
 extern  word    SD_SoundPlaying(void);
 

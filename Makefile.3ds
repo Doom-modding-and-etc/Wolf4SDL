@@ -12,8 +12,8 @@ APP_AUTHOR := Wolf3s, hax0kartik, Aryan, Mortriz Ripper and The other contribuit
 APP_VERSION := 2.2
 ICON := icon/wolf4sdl.png
 WINDRES   = windres.exe
-OBJ       = aud_sys/mame/fmopl.o aud_sys/dosbox/dbopl.o id_ca.o id_crt.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vieasm.o id_vl.o signon.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
-LINKOBJ   = aud_sys/mame/fmopl.o aud_sys/dosbox/dbopl.o id_ca.o id_crt.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vieasm.o id_vl.o signon.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
+OBJ       = aud_sys/mame/fmopl.o aud_sys/dosbox/dbopl.o id_ca.o id_crt.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vieasm.o id_vl.o id_w3swrap.o psnprntf.o signon.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
+LINKOBJ   = aud_sys/mame/fmopl.o aud_sys/dosbox/dbopl.o id_ca.o id_crt.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vieasm.o id_vl.o id_w3swrap.o psnprntf.o signon.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
 CTRUINCS = -I$(DEVKITPRO)/libctru/include -I$(DEVKITPRO)/libctru/include/3ds
 INCS      = $(CTRUINCS) -I$(DEVKITPRO)/portlibs/3ds/include -I$(DEVKITPRO)/portlibs/3ds/include/SDL -I$(DEVKITPRO)/portlibs/3ds
 DEFINES   = -DN3DS -D__3DS__ 
@@ -106,7 +106,13 @@ id_vieasm.o: $(GLOBALDEPS) id_vieasm.c id_vieasm.h
 	
 id_vl.o: $(GLOBALDEPS) id_vl.c wl_def.h 
 	$(C) -c id_vl.c -o id_vl.o $(CFLAGS)	
+	
+id_w3swrap.o: $(GLOBALDEPS) id_w3swrap.c id_w3swrap.h wl_def.h 
+	$(C) -c id_w3swrap.c -o id_w3swrap.o $(CFLAGS)			
 		
+psnprntf.o: $(GLOBALDEPS) psnprntf.c psnprntf.h wl_def.h 
+	$(C) -c psnprntf.c -o psnprntf.o $(CFLAGS)		
+
 signon.o: $(GLOBALDEPS) signon.c wl_def.h
 	$(C) -c signon.c -o signon.o $(CFLAGS) 
 	

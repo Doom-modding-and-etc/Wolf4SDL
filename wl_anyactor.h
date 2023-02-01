@@ -30,26 +30,26 @@ typedef struct AnyActor_s
     void (*actorDeathScream)(objtype* ob);
     void (*actorLaunch)(objtype* ob, objtype* proj);
     void (*actorDoAttackState)(objtype* ob);
-    bool (*actorIsBetterShot)(objtype* ob);
+    boolean (*actorIsBetterShot)(objtype* ob);
     void (*actorPlayShootSound)(objtype* ob);
     void (*actorBiteTakeDamage)(objtype* ob);
     void (*actorDoShockState)(objtype* ob);
     void (*actorSpawn)(int x, int y);
     void (*actorKill)(objtype* ob);
-    bool (*actorDamageActor)(objtype* ob, int damage, int dmgtype);
+    boolean (*actorDamageActor)(objtype* ob, int damage, int dmgtype);
     void (*actorDoPainState)(objtype* ob);
     void (*actorDoChaseState)(objtype* ob);
     void (*actorReactionTime)(objtype* ob);
     void (*actorNewHealthBar)(objtype* ob);
     const char* actorLogFileAlias;
     int actorSprOffset;
-    bool actorIsHobo;
+    boolean actorIsHobo;
     classtype actorBaseObClass;
 } AnyActor_t;
 
 extern void AnyActor_Init(void);
 
-extern bool AnyActor_IsReg(int tile);
+extern boolean AnyActor_IsReg(int tile);
 
 extern AnyActor_t* AnyActor_Get(int tile);
 

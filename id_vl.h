@@ -25,7 +25,7 @@ extern SDL_Texture* upscaledTexture;
 #endif
 
 #ifndef SEGA_SATURN 
-extern  bool fullscreen, usedoublebuffering;
+extern  boolean fullscreen, usedoublebuffering;
 #endif
 
 extern uint32_t screenWidth, screenHeight, screenBits,
@@ -34,7 +34,7 @@ screenPitch, bufferPitch;
 #endif
 extern  int      scaleFactor;
 
-extern	bool  screenfaded;
+extern	boolean  screenfaded;
 #ifndef SEGA_SATURN
 extern	unsigned bordercolor;
 #endif
@@ -66,7 +66,7 @@ void VL_ConvertPalette(byte *srcpal, SDL_Color *destpal, int numColors);
 void VL_FillPalette (int red, int green, int blue);
 void VL_SetColor    (int color, int red, int green, int blue);
 void VL_GetColor    (int color, int *red, int *green, int *blue);
-void VL_SetPalette  (SDL_Color *palette, bool forceupdate);
+void VL_SetPalette  (SDL_Color *palette, boolean forceupdate);
 void VL_GetPalette  (SDL_Color *palette);
 void VL_FadeOut     (int start, int end, int red, int green, int blue, int steps);
 void VL_FadeIn      (int start, int end, SDL_Color *palette, int steps);

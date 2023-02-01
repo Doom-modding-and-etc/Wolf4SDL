@@ -1,8 +1,8 @@
 EE_BIN = Wolf4SDL.elf
 
 #Id Tech 0 files
-ID_ENGINE_OBJS = id_ca.o id_crt.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vl.o signon.o
-
+ID_ENGINE_OBJS = id_ca.o id_crt.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vl.o id_w3swrap.o psnprntf.o signon.o
+ 
 #LinuxWolf Library 
 LW_LIB_OBJS = 3rdparty/lw_lib/lw_ai_enemy.o 3rdparty/lw_lib/lw_bres.o 3rdparty/lw_lib/lw_ctx.o 3rdparty/lw_lib/lw_edit.o 3rdparty/lw_lib/lw_fs.o 3rdparty/lw_lib/lw_maptool.o 3rdparty/lw_lib/lw_misc.o 3rdparty/lw_lib/lw_protmsg.o 3rdparty/lw_lib/lw_pwscan.o 3rdparty/lw_lib/lw_vec.o
 #Wolf Rad 

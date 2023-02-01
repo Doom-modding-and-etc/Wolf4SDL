@@ -22,13 +22,7 @@ extern int lastgamemusicoffset;
 // PRIVATE PROTOTYPES
 //
 int  CP_ReadThis (int);
-#ifdef CRT
-#if !SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2
-extern void SetTextColor(CP_itemtype* items, int hlight);
-#endif
-#else
-extern void SetTextColor(CP_itemtype* items, int hlight);
-#endif
+extern void SetTheTextColor(CP_itemtype* items, int hlight);
 
 #ifdef SPEAR
 #define STARTITEM       newgame
@@ -486,6 +480,7 @@ US_ControlPanel (ScanCode scancode)
         //
         if (Keyboard(sc_I) && Keyboard(sc_D))
         {
+			SDL_Color pal[256];
             VW_FadeOut ();
             StartCPMusic (XJAZNAZI_MUS);
             ClearMemory ();
@@ -495,8 +490,7 @@ US_ControlPanel (ScanCode scancode)
             VWB_DrawPic (0, 80, IDGUYS2PIC);
 
             VW_UpdateScreen ();
-
-            SDL_Color pal[256];
+            
             VL_ConvertPalette(grsegs[IDGUYSPALETTE], pal, 256);
             VL_FadeIn (0, 255, pal, 30);
 
@@ -665,7 +659,6 @@ void
 BossKey (void)
 {
     int i,lastBlinkTime;
-    ControlInfo ci;
 
     SD_MusicOff ();
 
@@ -1145,7 +1138,7 @@ DrawSliderBox(int x, int y, int val, int valinc, int width, int height, byte col
 }
 
 void
-DrawSoundVols(bool curmode)
+DrawSoundVols(boolean curmode)
 {
     ClearMScreen();
     DrawWindow(40, 25, 240, 145, BKGDCOLOR);
@@ -1212,7 +1205,7 @@ int AdjustVolume(int vol)
 {
     ControlInfo ci;
     int exit = 0, oldSV = soundvol, oldMV = musicvol;
-    bool curmode = 0;
+    boolean curmode = 0;
 
     DrawSoundVols(curmode);
     MenuFadeIn();
@@ -1726,7 +1719,7 @@ CP_LoadGame (int quick)
 #endif
 
             if(configdir[0])
-                snprintf(loadpath, sizeof(loadpath), "%s/%s", configdir, name);
+                w3ssnprintf(loadpath, sizeof(loadpath), "%s/%s", configdir, name);
             else
                 strcpy(loadpath, name);
 
@@ -1765,7 +1758,7 @@ CP_LoadGame (int quick)
 #endif
 
             if(configdir[0])
-                snprintf(loadpath, sizeof(loadpath), "%s/%s", configdir, name);
+                w3ssnprintf(loadpath, sizeof(loadpath), "%s/%s", configdir, name);
             else
                 strcpy(loadpath, name);
 
@@ -1904,11 +1897,11 @@ CP_SaveGame (int quick)
             name[7] = which + '0';
 
             if(configdir[0])
-                snprintf(savepath, sizeof(savepath), "%s/%s", configdir, name);
+                w3ssnprintf(savepath, sizeof(savepath), "%s/%s", configdir, name);
             else
                 strcpy(savepath, name);
 
-            unlink (savepath);
+            w3sunlink (savepath);
             file = fopen (savepath, "wb");
 
             strcpy (input, &SaveGameNames[which][0]);
@@ -1974,11 +1967,11 @@ CP_SaveGame (int quick)
                 strcpy (&SaveGameNames[which][0], input);
 
                 if(configdir[0])
-                    snprintf(savepath, sizeof(savepath), "%s/%s", configdir, name);
+                    w3ssnprintf(savepath, sizeof(savepath), "%s/%s", configdir, name);
                 else
                     strcpy(savepath, name);
 
-                unlink (savepath);
+                w3sunlink (savepath);
                 file = fopen (savepath, "wb");
                 fwrite (input, 32, 1, file);
                 fseek (file, 32, SEEK_SET);
@@ -3315,6 +3308,7 @@ void SetupSaveGames()
     int i;
     char name[13];
     char savepath[300];
+	const int handle = w3sopen(savepath, O_RDONLY | O_BINARY);
 
     strcpy(name, SaveName);
     for(i = 0; i < 10; i++)
@@ -3326,23 +3320,22 @@ void SetupSaveGames()
         {
 #endif
             if(configdir[0])
-                snprintf(savepath, sizeof(savepath), "%s/%s", configdir, name);
+                w3ssnprintf(savepath, sizeof(savepath), "%s/%s", configdir, name);
             else
                 strcpy(savepath, name);
 
-            const int handle = open(savepath, O_RDONLY | O_BINARY);
             if(handle >= 0)
             {
                 char temp[32];
 
                 SaveGamesAvail[i] = 1;
-                if (read(handle, temp, 32) < 0)
+                if (w3sread(handle, temp, 32) < 0)
                 {
                     SaveGamesAvail[i] = 0;
-                    close(handle);
+                    w3sclose(handle);
                     continue;
                 }
-                close(handle);
+                w3sclose(handle);
                 strcpy(&SaveGameNames[i][0], temp);
             }
 #ifdef _arch_dreamcast
@@ -3386,13 +3379,7 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
     y = basey + which * 13;
 
     VWB_DrawPic (x, y, C_CURSOR1PIC);
-#ifdef CRT
-#if !SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2
-    SetTextColor(items + which, 1);
-#endif
-#else
-    SetTextColor (items + which, 1);
-#endif
+    SetTheTextColor (items + which, 1);
     if (redrawitem)
     {
         PrintX = item_i->x + item_i->indent;
@@ -3618,13 +3605,7 @@ void
 EraseGun (CP_iteminfo * item_i, CP_itemtype * items, int x, int y, int which)
 {
     VWB_Bar (x - 1, y, 25, 16, BKGDCOLOR);
-#ifdef CRT    
-#if !SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2
-    SetTextColor(items + which, 0);
-#endif
-#else
-    SetTextColor (items + which, 0);
-#endif
+    SetTheTextColor (items + which, 0);
     PrintX = item_i->x + item_i->indent;
     PrintY = item_i->y + which * 13;
     US_Print ((items + which)->string);
@@ -3655,13 +3636,7 @@ DrawGun (CP_iteminfo * item_i, CP_itemtype * items, int x, int *y, int which, in
     VWB_Bar (x - 1, *y, 25, 16, BKGDCOLOR);
     *y = basey + which * 13;
     VWB_DrawPic (x, *y, C_CURSOR1PIC);
-#ifdef CRT
-#if SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2
-    SetTextColor(items + which, 1);
-#endif
-#else
-    SetTextColor (items + which, 1);
-#endif
+    SetTheTextColor (items + which, 1);
     PrintX = item_i->x + item_i->indent;
     PrintY = item_i->y + which * 13;
     US_Print ((items + which)->string);
@@ -3713,13 +3688,7 @@ DrawMenu (CP_iteminfo * item_i, CP_itemtype * items)
 
     for (i = 0; i < item_i->amount; i++)
     {
-#ifdef CRT
-#if !SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2
-        SetTextColor(items + i, which == 1);
-#endif
-#else
-        SetTextColor (items + i, which == i);
-#endif
+        SetTheTextColor (items + i, which == i);
         PrintY = item_i->y + i * 13;
         if ((items + i)->active)
             US_Print ((items + i)->string);
@@ -3734,35 +3703,13 @@ DrawMenu (CP_iteminfo * item_i, CP_itemtype * items)
     }
 }
 
-#ifdef CRT
-#if !SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2
-
 ////////////////////////////////////////////////////////////////////
 //
 // SET TEXT COLOR (HIGHLIGHT OR NO)
 //
 ////////////////////////////////////////////////////////////////////
 void
-SetTextColor(CP_itemtype* items, int hlight)
-{
-    if (hlight)
-    {
-        SETFONTCOLOR(color_hlite[items->active], BKGDCOLOR);
-    }
-    else
-    {
-        SETFONTCOLOR(color_norml[items->active], BKGDCOLOR);
-    }
-}
-#endif
-#else
-////////////////////////////////////////////////////////////////////
-//
-// SET TEXT COLOR (HIGHLIGHT OR NO)
-//
-////////////////////////////////////////////////////////////////////
-void
-SetTextColor (CP_itemtype * items, int hlight)
+SetTheTextColor (CP_itemtype * items, int hlight)
 {
     if (hlight)
     {
@@ -3773,7 +3720,6 @@ SetTextColor (CP_itemtype * items, int hlight)
         SETFONTCOLOR (color_norml[items->active], BKGDCOLOR);
     }
 }
-#endif
 
 ////////////////////////////////////////////////////////////////////
 //
@@ -3808,6 +3754,8 @@ void ReadAnyControl(ControlInfo *ci)
     if (mouseenabled && IN_IsInputGrabbed())
     {
         int mousex, mousey, buttons;
+		int middlePressed;
+		int rightPressed;
 #if SDL_MAJOR_VERSION == 1
         buttons = SDL_GetMouseState(&mousex, &mousey);
         mousex -= screenWidth / 2;
@@ -3816,8 +3764,8 @@ void ReadAnyControl(ControlInfo *ci)
 #elif SDL_MAJOR_VERSION == 2
         buttons = SDL_GetRelativeMouseState(&mousex, &mousey);
 #endif
-        int middlePressed = buttons & SDL_BUTTON(SDL_BUTTON_MIDDLE);
-        int rightPressed = buttons & SDL_BUTTON(SDL_BUTTON_RIGHT);
+        middlePressed = buttons & SDL_BUTTON(SDL_BUTTON_MIDDLE);
+        rightPressed = buttons & SDL_BUTTON(SDL_BUTTON_RIGHT);
         buttons &= ~(SDL_BUTTON(SDL_BUTTON_MIDDLE) | SDL_BUTTON(SDL_BUTTON_RIGHT));
         if(middlePressed) buttons |= 1 << 2;
         if(rightPressed) buttons |= 1 << 1;
@@ -4405,7 +4353,7 @@ CheckForEpisodes (void)
         {
             Quit("Your $HOME directory path is too long. It cannot be used for saving games.");
         }
-        snprintf(configdir, sizeof(configdir), "%s" WOLFDIR, homedir);
+        w3ssnprintf(configdir, sizeof(configdir), "%s" WOLFDIR, homedir);
     }
 #endif
 

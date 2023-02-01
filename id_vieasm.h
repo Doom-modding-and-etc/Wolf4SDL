@@ -84,16 +84,16 @@ typedef struct
 #define ORIG_ADLIBSOUND_SIZE (ORIG_SOUNDCOMMON_SIZE + ORIG_INSTRUMENT_SIZE + 2)
 #endif
 
-extern bool switching;
+extern boolean switching;
 
 extern globalsoundpos channelSoundPos[];
 
 extern  SDMode          SoundMode;
 extern  SMMode          MusicMode;
 extern  SDSMode         DigiMode;
-extern  bool  		nosound;
+extern  boolean  		nosound;
 
-extern  bool         AdLibPresent, SoundBlasterPresent, SBProPresent, SoundPositioned;
+extern  boolean         AdLibPresent, SoundBlasterPresent, SBProPresent, SoundPositioned;
 
 /* defines for management */
 
@@ -156,14 +156,14 @@ extern  bool         AdLibPresent, SoundBlasterPresent, SBProPresent, SoundPosit
 
 extern sample ASM_Audiosegs[NUMSOUNDS];
 
-extern bool ASM_Open(int frequency, int channels, int maxchan, int buffersize, Uint8 sndvolume, Uint8 musvolume, bool reverse);
-extern bool ASM_IsOpen(void);
-extern bool ASM_PlayMusic(char* musfile);
-extern bool ASM_SwitchMus(char* loadmus, int fadems, bool fade);
-extern bool ASM_FadeInMus(char* loadmus, int fadems);
+extern boolean ASM_Open(int frequency, int channels, int maxchan, int buffersize, Uint8 sndvolume, Uint8 musvolume, bool reverse);
+extern boolean ASM_IsOpen(void);
+extern boolean ASM_PlayMusic(char* musfile);
+extern boolean ASM_SwitchMus(char* loadmus, int fadems, boolean fade);
+extern boolean ASM_FadeInMus(char* loadmus, int fadems);
 extern sample ASM_Cache(char* sndfile, const char* name);
 extern sample ASM_CacheFromMem(void* ptr, int size, const char* name);
-extern int ASM_PlaySound(sample sound, int angle, Uint8 distance, bool ambient);
+extern int ASM_PlaySound(sample sound, int angle, Uint8 distance, boolean ambient);
 extern void ASM_Uncache(sample chunk);
 extern void ASM_FadeOutMus(int fadems);
 extern void ASM_HaltSound(void);
@@ -175,7 +175,7 @@ extern void ASM_ReturnVolume(Uint8* retsnd, Uint8* retmus);
 extern void ASM_Close(void);
 extern void ASM_StopChannel(int channel);
 extern void ASM_SwitchStep(void);
-extern void ASM_ReverseStereo(bool reverse);
+extern void ASM_ReverseStereo(boolean reverse);
 extern void ASM_ChannelDone(int channel);
 extern int ASM_CurChannels(void);
 
@@ -219,11 +219,11 @@ extern  void    SD_MusicOn(void);                                           // D
 extern void SD_FadeOutMusic(int fade);                                  // DONE
 extern  int     SD_MusicOff(void);                                          // DONE, just pauses
 
-extern  bool    SD_MusicPlaying(void);                                      // DONE
-extern  bool    SD_SetSoundMode(SDMode mode);                               // DONE
-extern  bool    SD_SetMusicMode(SMMode mode);                               // DONE
+extern  boolean    SD_MusicPlaying(void);                                      // DONE
+extern  boolean    SD_SetSoundMode(SDMode mode);                               // DONE
+extern  boolean    SD_SetMusicMode(SMMode mode);                               // DONE
 extern void SD_SetDigiDevice(SDSMode mode);
-extern  int     SD_PlayDigitized(word which, int leftpos, int rightpos, bool amb);   // DONE
+extern  int     SD_PlayDigitized(word which, int leftpos, int rightpos, boolean amb);   // DONE
 extern  void    CA_LoadAllSounds(void);
 
 // Ambient sound prototypes

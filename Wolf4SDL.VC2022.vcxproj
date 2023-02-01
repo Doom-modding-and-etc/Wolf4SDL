@@ -189,7 +189,7 @@
       <DataExecutionPrevention>false</DataExecutionPrevention>
     </Link>
     <ClCompile>
-      <PreprocessorDefinitions>_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;WINDOWS_IGNORE_PACKING_MISMATCH;USE_FIXEDPTC;_WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WINDOWS_IGNORE_PACKING_MISMATCH;USE_FIXEDPTC;_WIN32;C89;PSNPRINTF;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard_C>Default</LanguageStandard_C>
       <OmitFramePointers>false</OmitFramePointers>
       <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -251,6 +251,8 @@
     <ClCompile Include="id_vh.c" />
     <ClCompile Include="id_vieasm.c" />
     <ClCompile Include="id_vl.c" />
+    <ClCompile Include="id_w3swrap.c" />
+    <ClCompile Include="psnprntf.c" />
     <ClCompile Include="sdl_winmain.c" />
     <ClCompile Include="signon.c" />
     <ClCompile Include="wl_act1.c" />
@@ -268,7 +270,7 @@
     <ClCompile Include="wl_ed.c" />
     <ClCompile Include="wl_firefly.c" />
     <ClCompile Include="wl_game.c" />
-    <ClCompile Include="wl_healthmeter.c" />
+    <ClCompile Include="wl_healthbar.c" />
     <ClCompile Include="wl_hooker.c" />
     <ClCompile Include="wl_inter.c" />
     <ClCompile Include="wl_led.c" />
@@ -349,6 +351,8 @@
     <ClInclude Include="id_vh.h" />
     <ClInclude Include="id_vieasm.h" />
     <ClInclude Include="id_vl.h" />
+    <ClInclude Include="id_w3swrap.h" />
+    <ClInclude Include="psnprntf.h" />
     <ClInclude Include="version.h" />
     <ClInclude Include="win\resource.h" />
     <ClInclude Include="wl_ai.h" />

@@ -31,7 +31,7 @@ void ConArtist_Spawn(int x, int y)
     newobj->flags |= FL_BLOCKING;
 }
 
-static bool ConArtist_AvailableToUse(objtype *ob)
+static boolean ConArtist_AvailableToUse(objtype *ob)
 {
     int dist;
     dist = Object_TileDist(player, ob);

@@ -17,7 +17,7 @@ typedef struct Led_s
     uint32_t inactiveEdgeColor;
     byte activeEdgeBlend;
     byte inactiveEdgeBlend;
-    bool showInactiveEdges;
+    boolean showInactiveEdges;
 } Led_t;
 
 static const char *LedCharEdges[] =
@@ -67,7 +67,7 @@ static void LedBar (float scx, float scy, float scwidth,
     FillConvexPolygonEx(8, ConvexShape, color, blend);
 }
 
-static void LedEdge(const Led_t *led, byte edge, bool active)
+static void LedEdge(const Led_t *led, byte edge, boolean active)
 {
     byte blend;
     uint32_t color;
@@ -306,7 +306,7 @@ void LedDraw(void)
     hundredths = (milli / 10) % 100;
     secs = milli / 1000;
 
-    snprintf(tmpStr, sizeof(tmpStr), "%d:%02d.%02d", 
+    w3ssnprintf(tmpStr, sizeof(tmpStr), "%d:%02d.%02d", 
         secs / 60, (secs % 60), hundredths);
 
     hscale = 1.0 / 10;

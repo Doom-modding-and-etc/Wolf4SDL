@@ -29,7 +29,7 @@ void WL_AI_DoKill(WL_AI_t* ai, objtype* ob);
 void WL_AI_MakeNoise(WL_AI_t* ai, double loudness, int noiseSpot,
     int noiseFlags);
 
-bool WL_AI_IsSuspicious(WL_AI_t* ai, objtype* ob);
+boolean WL_AI_IsSuspicious(WL_AI_t* ai, objtype* ob);
 
-bool WL_AI_SuspicionTargetIsPlayer(WL_AI_t* ai, objtype* ob);
+boolean WL_AI_SuspicionTargetIsPlayer(WL_AI_t* ai, objtype* ob);
 #endif

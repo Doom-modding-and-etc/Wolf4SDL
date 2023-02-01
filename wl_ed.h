@@ -23,10 +23,10 @@ void ED_ProcessInsertFloorCeil(ED_t ed, int insertFloorCeil);
 
 int ED_CheckInsertStatObj(ED_t ed, int x, int y, int tile);
 
-bool ED_SpawnActor(ED_t ed, int tile, int x, int y);
+boolean ED_SpawnActor(ED_t ed, int tile, int x, int y);
 
 int ED_CheckFloorCeil(ED_t ed, int x, int y, int spot);
 
-bool ED_WallPicIsSky(ED_t ed, int wallpic);
+boolean ED_WallPicIsSky(ED_t ed, int wallpic);
 #endif
 #endif

@@ -43,7 +43,7 @@ typedef struct Phys_Particle_s
     Phys_Vec3_t vel;
     fixed inv_mass;
     Phys_Vec3_t force;
-    bool rejitter;
+    boolean rejitter;
     Phys_Vec3_t jitterPos;
     Phys_Vec3_t jitterAmplitude;
     int32_t jitterTics;

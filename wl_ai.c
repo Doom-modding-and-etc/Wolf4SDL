@@ -14,7 +14,7 @@ typedef struct WL_AI_Enemy_s
 	objtype *obIterator;
 } WL_AI_Enemy_t;
 
-static bool WL_AI_ActorRaisesSuspicion(WL_AI_Enemy_t *enemy,
+static boolean WL_AI_ActorRaisesSuspicion(WL_AI_Enemy_t *enemy,
 	objtype *ob)
 {
 	if (ob == player && CheckSight(enemy->ob) && !notargetmode)
@@ -25,7 +25,7 @@ static bool WL_AI_ActorRaisesSuspicion(WL_AI_Enemy_t *enemy,
 	return false;
 }
 
-static bool WL_AI_EnemyDelegateActorIsPlayer(void *obj)
+static boolean WL_AI_EnemyDelegateActorIsPlayer(void *obj)
 {
 	WL_AI_Enemy_t *enemy;
 	enemy = (WL_AI_Enemy_t *)obj;
@@ -68,7 +68,7 @@ static void WL_AI_EnemyDelegateRewindActors(void *obj)
 	enemy->obIterator = ob;
 }
 
-static bool WL_AI_EnemyDelegateMoreActors(void *obj)
+static boolean WL_AI_EnemyDelegateMoreActors(void *obj)
 {
 	WL_AI_Enemy_t *enemy;
 	enemy = (WL_AI_Enemy_t *)obj;
@@ -245,7 +245,7 @@ void WL_AI_MakeNoise(WL_AI_t *ai, double loudness, int noiseSpot,
 	WL_AI_Enemy_t *enemy;
 	lwlib_IntMapIterDecl(it);
 	double enemyLoudness;
-	bool capEnable;
+	boolean capEnable;
 
 	capEnable = (noiseFlags & suspicionNotCapped) ? 
 		false : true;
@@ -276,13 +276,13 @@ void WL_AI_MakeNoise(WL_AI_t *ai, double loudness, int noiseSpot,
 	}
 }
 
-bool WL_AI_IsSuspicious(WL_AI_t *ai, objtype *ob)
+boolean WL_AI_IsSuspicious(WL_AI_t *ai, objtype *ob)
 {
 	return (ob->isAiEnemy && 
 		ob->aiEnemy.suspicionLevel == SUSPICION_ALERTED);
 }
 
-bool WL_AI_SuspicionTargetIsPlayer(WL_AI_t *ai, objtype *ob)
+boolean WL_AI_SuspicionTargetIsPlayer(WL_AI_t *ai, objtype *ob)
 {
 	return ob->aiEnemy.suspicionTargetIsPlayer;
 }

@@ -261,7 +261,7 @@ void BasicOverhead (void)
 
 void ShapeTest (void)
 {
-    bool    done;
+    boolean    done;
     ScanCode   scan;
     int        i,j,k,x;
     int        v2;
@@ -489,7 +489,7 @@ void ShapeTest (void)
 
 int DebugKeys (void)
 {
-    bool esc;
+    boolean esc;
     int level;
 
     if (Keyboard(sc_B))             // B = border color

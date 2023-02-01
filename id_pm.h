@@ -19,7 +19,7 @@ extern word ChunksInFile;
 extern word PMSpriteStart;
 #ifndef SEGA_SATURN
 extern word PMSoundStart;
-extern bool PMSoundInfoPagePadded;
+extern boolean PMSoundInfoPagePadded;
 #endif 
 extern word *pageLengths;
 extern byte **PMPages;

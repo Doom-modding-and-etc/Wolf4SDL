@@ -34,29 +34,29 @@ const char* ASM_Verstring = "v0.9.1 Beta";  // Version string
 
 Uint8 sndvol, musvol;                       // Volumes for sound
 int origchannels, maxchannels, lastchan;    // Channel variables
-bool chanused[ASM_ABSMAXCHANNELS];          // Is channel used?
+boolean chanused[ASM_ABSMAXCHANNELS];          // Is channel used?
 static Mix_Music* music = 0, * switchto = 0; // Music references
 int fadetime;                               // Milliseconds to fade in\out
-bool deviceopen = false;                    // Is device open?
-bool switching = false;                     // Is switching music tracks?
-bool reversemode = false;                   // Reverse stereomode
-bool nosound;
+boolean deviceopen = false;                    // Is device open?
+boolean switching = false;                     // Is switching music tracks?
+boolean reversemode = false;                   // Reverse stereomode
+boolean nosound;
 
 SDMode      	SoundMode;
 SMMode          MusicMode;
 SDSMode         DigiMode;
 static  int     LeftPosition;
 static  int     RightPosition;
-static  bool    ambience;
+static  boolean    ambience;
 
 sample ASM_Audiosegs[NUMSOUNDS];
 int ambientsnds[NUMAMBIENTS];
-bool         AdLibPresent, SoundBlasterPresent, SBProPresent, SoundPositioned;
+boolean         AdLibPresent, SoundBlasterPresent, SBProPresent, SoundPositioned;
 globalsoundpos channelSoundPos[ASM_ABSMAXCHANNELS];
 
 // ASM_IsOpen
 // Returns true if the device is open, false otherwise
-bool ASM_IsOpen(void)
+boolean ASM_IsOpen(void)
 {
     return (deviceopen) ? true : false;
 }
@@ -76,7 +76,8 @@ void ASM_AdjustChannels(int reqchan)
 
 int ASM_GetFreeChannel(void)
 {
-    for (int i = 0; i <= maxchannels - 1; i++)
+    int i;
+    for (i = 0; i <= maxchannels - 1; i++)
         if (chanused[i] == false)
         {
             chanused[i] = true;
@@ -102,7 +103,7 @@ void ASM_ChannelDone(int channel)
 // ASM_Open
 // Opens audio device at given specs, clears used
 
-bool ASM_Open(int frequency, int channels, int maxchan, int buffersize, Uint8 sndvolume, Uint8 musvolume, bool reverse)
+boolean ASM_Open(int frequency, int channels, int maxchan, int buffersize, Uint8 sndvolume, Uint8 musvolume, bool reverse)
 {
     if (ASM_IsOpen())       // Device is already open!
         return false;
@@ -230,7 +231,7 @@ void ASM_Halt(void)
 // ASM_PlayMusic
 // Plays a music sample from a file
 
-bool ASM_PlayMusic(char* musfile)
+boolean ASM_PlayMusic(char* musfile)
 {
     ASM_AbortIfClosed false;
 
@@ -295,7 +296,7 @@ void ASM_ReturnVolume(Uint8* retsnd, Uint8* retmus)
 // ASM_SwitchMus
 // Changes music to another track, either directly or via a fade-in/out
 
-bool ASM_SwitchMus(char* loadmus, int fadems, bool fade)
+boolean ASM_SwitchMus(char* loadmus, int fadems, boolean fade)
 {
     ASM_AbortIfClosed false;
 
@@ -335,7 +336,7 @@ bool ASM_SwitchMus(char* loadmus, int fadems, bool fade)
 // ASM_FadeInMus
 // Fades in a piece of music, stopping whatever was playing before it
 
-bool ASM_FadeInMus(char* loadmus, int fadems)
+boolean ASM_FadeInMus(char* loadmus, int fadems)
 {
     ASM_AbortIfClosed false;
 
@@ -450,7 +451,7 @@ void ASM_Uncache(sample sound)
 // Play a sound in memory loaded with ASM_Cache or Mix_LoadWAV
 // Returns -1 on errors or channel number
 
-int ASM_PlaySound(sample sound, int angle, Uint8 distance, bool ambient)
+int ASM_PlaySound(sample sound, int angle, Uint8 distance, boolean ambient)
 {
     ASM_AbortIfClosed - 1;
 
@@ -525,7 +526,7 @@ void ASM_SwitchStep(void)
 // ASM_ReverseStereo
 // Sets reverse stereo mode after initialization
 
-void ASM_ReverseStereo(bool reverse)
+void ASM_ReverseStereo(boolean reverse)
 {
     ASM_AbortIfClosed;
 
@@ -542,12 +543,12 @@ int ASM_CurChannels(void)
 
 // SD_MusIsOn
 // Returns true if music is on, false otherwise
-bool SD_MusIsOn(void)
+boolean SD_MusIsOn(void)
 {
     return (MusicMode == smm_AdLib) ? true : false;
 }
 
-bool SD_SndIsOn(void)
+boolean SD_SndIsOn(void)
 {
     return (SoundMode == sdm_AdLib) ? true : false;
 }
@@ -583,14 +584,15 @@ void SD_Startup(void)
 
 void SD_Shutdown(void)
 {
-    for (int i = 0; i < NUMSOUNDS; i++)
+    int i;
+    for (i = 0; i < NUMSOUNDS; i++)
         if (ASM_Audiosegs[i].chunk != NULL)
             UNCACHEAUDIOCHUNK(i);
 
     ASM_Close();
 }
 
-bool SD_MusicPlaying(void)
+boolean SD_MusicPlaying(void)
 {
     ASM_AbortIfClosed false;
     SD_AbortIfMusOff false;
@@ -622,7 +624,8 @@ int32_t CA_CacheAudioChunk(int chunk)
 
 void CA_LoadAllSounds(void)
 {
-    for (int i = 0; i < NUMSOUNDS; i++)
+    int i;
+    for (i = 0; i < NUMSOUNDS; i++)
     {
         if (ASM_Audiosegs[i].chunk != NULL)
             continue;
@@ -669,7 +672,7 @@ void SD_StartMusic(int chunk)
     ASM_PlayMusic(file);
 }
 
-bool SD_SetMusicMode(SMMode mode)
+boolean SD_SetMusicMode(SMMode mode)
 {
     if (mode == MusicMode)
         return true;
@@ -689,7 +692,7 @@ bool SD_SetMusicMode(SMMode mode)
     return true;
 }
 
-bool SD_SetSoundMode(SDMode mode)
+boolean SD_SetSoundMode(SDMode mode)
 {
     if (mode == SoundMode)
         return true;
@@ -734,7 +737,8 @@ void SD_SetPosition(int channel, int leftpos, int rightpos)
 
 int SD_GetAmbIndex(void)
 {
-    for (int i = 0; i < NUMAMBIENTS; i++)
+    int i;
+    for (i = 0; i < NUMAMBIENTS; i++)
         if (ambientsnds[i] != 0)
             return i;
     return -1;
@@ -746,7 +750,7 @@ byte SD_PlaySound(soundnames sound)
 
     int lp = LeftPosition;
     int rp = RightPosition;
-    bool amb = ambience;
+    boolean amb = ambience;
 
     LeftPosition = RightPosition = ambience = 0;
 
@@ -771,7 +775,7 @@ byte SD_PlaySound(soundnames sound)
     return channel;
 }
 
-int SD_PlayDigitized(word which, int leftpos, int rightpos, bool ambient)
+int SD_PlayDigitized(word which, int leftpos, int rightpos, boolean ambient)
 {
     SD_AbortIfSndOff 0;
 
@@ -801,7 +805,7 @@ void SD_StopAmbient(int ambindex)
 
 void SD_SetDigiDevice(SDSMode mode)
 {
-    bool devicenotpresent;
+    boolean devicenotpresent;
 
     if (mode == DigiMode)
         return;
@@ -820,7 +824,8 @@ void SD_SetDigiDevice(SDSMode mode)
             devicenotpresent = true;
         break;
     case sds_Off:
-        for (int i; i < DigiMode; i++)
+        int i;
+        for (i; i < DigiMode; i++)
         {
             SD_Shutdown();
         }

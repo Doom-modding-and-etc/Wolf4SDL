@@ -288,7 +288,7 @@ word            doorposition[MAXDOORS];             // leading edge of door 0=cl
 
 byte            areaconnect[NUMAREAS][NUMAREAS];
 
-bool         areabyplayer[NUMAREAS];
+boolean         areabyplayer[NUMAREAS];
 
 
 /*
@@ -359,7 +359,7 @@ void InitDoorList (void)
 ===============
 */
 #if defined(EMBEDDED) && defined(SEGA_SATURN)
-void SpawnDoor (int tilex, int tiley, bool vertical, int lock)
+void SpawnDoor (int tilex, int tiley, boolean vertical, int lock)
 {
     word *map;
 
@@ -477,7 +477,7 @@ void CloseDoor(int door)
 }
 
 #else
-void SpawnDoor(int tilex, int tiley, bool vertical, int lock)
+void SpawnDoor(int tilex, int tiley, boolean vertical, int lock)
 {
     word* map;
 
@@ -1049,6 +1049,7 @@ void MovePWalls (void)
 
     if (pwallstate/128 != oldblock)
     {
+		int dx, dy;
         // block crossed into a new block
         oldtile = pwalltile;
 
@@ -1059,7 +1060,9 @@ void MovePWalls (void)
         actorat[pwallx][pwally] = 0;
         MAPSPOT(pwallx,pwally,0) = player->areanumber+AREATILE;    // TODO: this is unnecessary, and makes a mess of mapsegs
 
-        int dx=dirs[pwalldir][0], dy=dirs[pwalldir][1];
+        dx=dirs[pwalldir][0];
+		dy=dirs[pwalldir][1];
+
         //
         // see if it should be pushed farther
         //

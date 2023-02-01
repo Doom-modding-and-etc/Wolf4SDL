@@ -59,7 +59,7 @@ uint32_t screenWidth = 400;
 uint32_t screenHeight = 240;
 uint32_t screenBits = 32;      // use "best" color depth according to libSDL  // ADDEDFIX 0
 #else
-bool usedoublebuffering = true;
+boolean usedoublebuffering = true;
 #if defined(SCALE2X) 
 uint32_t screenWidth = 320;
 uint32_t screenHeight = 200;
@@ -94,7 +94,7 @@ SDL_Texture* upscaledTexture = NULL;
 
 int      scaleFactor;
 
-bool	 screenfaded;
+boolean	 screenfaded;
 #ifndef SEGA_SATURN
 unsigned bordercolor;
 
@@ -510,7 +510,7 @@ void VL_GetColor	(int color, int *red, int *green, int *blue)
 =================
 */
 
-void VL_SetPalette(SDL_Color* palette, bool forceupdate)
+void VL_SetPalette(SDL_Color* palette, boolean forceupdate)
 {
     memcpy(curpal, palette, sizeof(SDL_Color) * 256);
 
@@ -628,7 +628,7 @@ void VL_FadeOut (int start, int end, int red, int green, int blue, int steps)
 void VL_FadeIn (int start, int end, SDL_Color *palette, int steps)
 {
 	int j,delta;
-
+    int i;
 	VL_WaitVBL(1);
 	VL_GetPalette(palette1);
 	memcpy(palette2, palette1, sizeof(SDL_Color) * 256);
@@ -636,7 +636,7 @@ void VL_FadeIn (int start, int end, SDL_Color *palette, int steps)
 //
 // fade through intermediate frames
 //
-	for (int i=0; i<steps; i++)
+	for (i=0; i<steps; i++)
 	{
 		for (j=start;j<=end;j++)
 		{

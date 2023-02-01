@@ -74,12 +74,12 @@ int32_t  heightnumerator;
 
 void    Quit (const char *error,...);
 
-bool startgame;
-bool loadedgame;
+boolean startgame;
+boolean loadedgame;
 int     mouseadjustment;
 #ifdef VIEASM
 byte    soundvol, musicvol;
-bool reversestereo;
+boolean reversestereo;
 #endif
 #if defined(SWITCH)
 char configdir[256] = "/switch/wolf4sdl/";
@@ -95,8 +95,8 @@ char    configname[13] = "config.";
 //
 // Command line parameter variables
 //
-bool param_debugmode = false;
-bool param_nowait = false;
+boolean param_debugmode = false;
+boolean param_nowait = false;
 int     param_difficulty = 1;           // default is "normal"
 int     param_tedlevel = -1;            // default is not to start a level
 int     param_joystickindex = 0;
@@ -124,8 +124,8 @@ int     param_audiobuffer = 2048;
 #endif
 
 int     param_mission = 0;
-bool param_goodtimes = false;
-bool param_ignorenumchunks = false;
+boolean param_goodtimes = false;
+boolean param_ignorenumchunks = false;
 
 /*
 =============================================================================
@@ -151,58 +151,61 @@ void ReadConfig(void)
     SDSMode sds;
 
     char configpath[300];
-
+	const int file = w3sopen(configpath, O_RDONLY | O_BINARY);
 #ifdef _arch_dreamcast
     DC_LoadFromVMU(configname);
 #endif
 
     if(configdir[0])
-        snprintf(configpath, sizeof(configpath), "%s/%s", configdir, configname);
+        w3ssnprintf(configpath, sizeof(configpath), "%s/%s", configdir, configname);
     else
         strcpy(configpath, configname);
 
-    const int file = open(configpath, O_RDONLY | O_BINARY);
+    
     if (file != -1)
     {
         //
         // valid config file
         //
         word tmp;
-        read(file,&tmp,sizeof(tmp));
+		boolean dummyJoypadEnabled;
+		boolean dummyJoystickProgressive;
+		int dummyJoystickPort = 0;
+        w3sread(file,&tmp,sizeof(tmp));
         if(tmp!=0xfefa)
         {
-            close(file);
+            w3sclose(file);
             goto noconfig;
         }
-        read(file,Scores,sizeof(HighScore) * MaxScores);
+        w3sread(file,Scores,sizeof(HighScore) * MaxScores);
 
-        read(file,&sd,sizeof(sd));
-        read(file,&sm,sizeof(sm));
-        read(file,&sds,sizeof(sds));
+        w3sread(file,&sd,sizeof(sd));
+        w3sread(file,&sm,sizeof(sm));
+        w3sread(file,&sds,sizeof(sds));
 
-        read(file,&mouseenabled,sizeof(mouseenabled));
-        read(file,&joystickenabled,sizeof(joystickenabled));
-        bool dummyJoypadEnabled;
-        read(file,&dummyJoypadEnabled,sizeof(dummyJoypadEnabled));
-        bool dummyJoystickProgressive;
-        read(file,&dummyJoystickProgressive,sizeof(dummyJoystickProgressive));
-        int dummyJoystickPort = 0;
-        read(file,&dummyJoystickPort,sizeof(dummyJoystickPort));
+        w3sread(file,&mouseenabled,sizeof(mouseenabled));
+        w3sread(file,&joystickenabled,sizeof(joystickenabled));
+        
+        w3sread(file,&dummyJoypadEnabled,sizeof(dummyJoypadEnabled));
+        
+        w3sread(file,&dummyJoystickProgressive,sizeof(dummyJoystickProgressive));
+        
+        w3sread(file,&dummyJoystickPort,sizeof(dummyJoystickPort));
 
-        read(file,dirscan,sizeof(dirscan));
-        read(file,buttonscan,sizeof(buttonscan));
-        read(file,buttonmouse,sizeof(buttonmouse));
-        read(file,buttonjoy,sizeof(buttonjoy));
+        w3sread(file,dirscan,sizeof(dirscan));
+        w3sread(file,buttonscan,sizeof(buttonscan));
+        w3sread(file,buttonmouse,sizeof(buttonmouse));
+        w3sread(file,buttonjoy,sizeof(buttonjoy));
 
-        read(file,&viewsize,sizeof(viewsize));
-        read(file,&mouseadjustment,sizeof(mouseadjustment));
+        w3sread(file,&viewsize,sizeof(viewsize));
+        w3sread(file,&mouseadjustment,sizeof(mouseadjustment));
 #ifdef VIEASM
-        read(file, &soundvol, sizeof(soundvol));
-        read(file, &musicvol, sizeof(musicvol));
-        read(file, &reversestereo, sizeof(reversestereo));
+        w3sread(file, &soundvol, sizeof(soundvol));
+        w3sread(file, &musicvol, sizeof(musicvol));
+        w3sread(file, &reversestereo, sizeof(reversestereo));
 #endif
 
-        close(file);
+        w3sclose(file);
 
         if ((sd == sdm_AdLib || sm == smm_AdLib) && !AdLibPresent
                 && !SoundBlasterPresent)
@@ -304,51 +307,54 @@ noconfig:
 void WriteConfig(void)
 {
     char configpath[300];
-
+	const int file = w3sopen(configpath, O_CREAT | O_WRONLY | O_BINARY, 0644);
 #ifdef _arch_dreamcast
     fs_unlink(configname);
 #endif
 
     if(configdir[0])
-        snprintf(configpath, sizeof(configpath), "%s/%s", configdir, configname);
+        w3ssnprintf(configpath, sizeof(configpath), "%s/%s", configdir, configname);
     else
         strcpy(configpath, configname);
 
-    const int file = open(configpath, O_CREAT | O_WRONLY | O_BINARY, 0644);
+   
     if (file != -1)
     {
         word tmp=0xfefa;
-        write(file,&tmp,sizeof(tmp));
-        write(file,Scores,sizeof(HighScore) * MaxScores);
+		boolean dummyJoypadEnabled = false;
+		boolean dummyJoystickProgressive = false;
+		int dummyJoystickPort = 0;
+        w3swrite(file,&tmp,sizeof(tmp));
+        w3swrite(file,Scores,sizeof(HighScore) * MaxScores);
 
-        write(file,&SoundMode,sizeof(SoundMode));
-        write(file,&MusicMode,sizeof(MusicMode));
-        write(file,&DigiMode,sizeof(DigiMode));
+        w3swrite(file,&SoundMode,sizeof(SoundMode));
+        w3swrite(file,&MusicMode,sizeof(MusicMode));
+        w3swrite(file,&DigiMode,sizeof(DigiMode));
 
-        write(file,&mouseenabled,sizeof(mouseenabled));
-        write(file,&joystickenabled,sizeof(joystickenabled));
-        bool dummyJoypadEnabled = false;
-        write(file,&dummyJoypadEnabled,sizeof(dummyJoypadEnabled));
-        bool dummyJoystickProgressive = false;
-        write(file,&dummyJoystickProgressive,sizeof(dummyJoystickProgressive));
-        int dummyJoystickPort = 0;
-        write(file,&dummyJoystickPort,sizeof(dummyJoystickPort));
+        w3swrite(file,&mouseenabled,sizeof(mouseenabled));
+        w3swrite(file,&joystickenabled,sizeof(joystickenabled));
+       
+        w3swrite(file,&dummyJoypadEnabled,sizeof(dummyJoypadEnabled));
 
-        write(file,dirscan,sizeof(dirscan));
-        write(file,buttonscan,sizeof(buttonscan));
-        write(file,buttonmouse,sizeof(buttonmouse));
-        write(file,buttonjoy,sizeof(buttonjoy));
+        w3swrite(file,&dummyJoystickProgressive,sizeof(dummyJoystickProgressive));
+        
+        w3swrite(file,&dummyJoystickPort,sizeof(dummyJoystickPort));
 
-        write(file,&viewsize,sizeof(viewsize));
-        write(file,&mouseadjustment,sizeof(mouseadjustment));
+        w3swrite(file,dirscan,sizeof(dirscan));
+        w3swrite(file,buttonscan,sizeof(buttonscan));
+        w3swrite(file,buttonmouse,sizeof(buttonmouse));
+        w3swrite(file,buttonjoy,sizeof(buttonjoy));
+
+        w3swrite(file,&viewsize,sizeof(viewsize));
+        w3swrite(file,&mouseadjustment,sizeof(mouseadjustment));
 
 #ifdef VIEASM
-        write(file, &soundvol, sizeof(soundvol));
-        write(file, &musicvol, sizeof(musicvol));
-        write(file, &reversestereo, sizeof(reversestereo));
+        w3swrite(file, &soundvol, sizeof(soundvol));
+        w3swrite(file, &musicvol, sizeof(musicvol));
+        w3swrite(file, &reversestereo, sizeof(reversestereo));
 #endif
 
-        close(file);
+        w3sclose(file);
     }
 #ifdef _arch_dreamcast
     DC_SaveToVMU(configname, NULL);
@@ -421,7 +427,7 @@ int32_t DoChecksum(byte *source,unsigned size,int32_t checksum)
 extern statetype s_grdstand;
 extern statetype s_player;
 
-bool SaveTheGame(FILE *file,int x,int y)
+boolean SaveTheGame(FILE *file,int x,int y)
 {
     int i,j;
     int checksum;
@@ -542,7 +548,7 @@ bool SaveTheGame(FILE *file,int x,int y)
 ==================
 */
 
-bool LoadTheGame(FILE *file,int x,int y)
+boolean LoadTheGame(FILE *file,int x,int y)
 {
     int i,j;
     int actnum = 0;
@@ -775,6 +781,8 @@ const float radtoint = (float)(FINEANGLES/2/PI);
 
 void BuildTables (void)
 {
+	float angle;
+    float anglestep;
     //
     // calculate fine tangents
     //
@@ -792,8 +800,8 @@ void BuildTables (void)
     // ANGLES is assumed to be divisable by four
     //
 
-    float angle=0;
-    float anglestep=(float)(PI/2/ANGLEQUAD);
+    angle=0;
+    anglestep=(float)(PI/2/ANGLEQUAD);
     for(i=0; i<ANGLEQUAD; i++)
     {
         fixed value=(int32_t)(GLOBAL1*sin(angle));
@@ -1266,8 +1274,9 @@ void DoJukebox(void)
 static void InitGame()
 {
 #ifndef SPEARDEMO
-    bool didjukebox=false;
+    boolean didjukebox=false;
 #endif
+	int numJoysticks;
 #if defined (SWITCH) || defined (N3DS) 
     printf("GAME START");
 #elif defined(PS2)
@@ -1302,7 +1311,7 @@ static void InitGame()
 #endif
 #endif
 
-    int numJoysticks = SDL_NumJoysticks();
+    numJoysticks = SDL_NumJoysticks();
     if(param_joystickindex && (param_joystickindex < -1 || param_joystickindex >= numJoysticks))
     {
         if(!numJoysticks)
@@ -1437,7 +1446,7 @@ static void InitGame()
 ==========================
 */
 
-bool SetViewSize (unsigned width, unsigned height)
+boolean SetViewSize (unsigned width, unsigned height)
 {
     viewwidth = width&~15;                  // must be divisable by 16
     viewheight = height&~1;                 // must be even
@@ -1748,8 +1757,8 @@ static void DemoLoop()
 
 void CheckParameters(int argc, char *argv[])
 {
-    bool hasError = false, showHelp = false;
-    bool sampleRateGiven = false, audioBufferGiven = false;
+    boolean hasError = false, showHelp = false;
+    boolean sampleRateGiven = false, audioBufferGiven = false;
     int i,defaultSampleRate = param_samplerate;
 
     for(i = 1; i < argc; i++)
@@ -1796,9 +1805,10 @@ void CheckParameters(int argc, char *argv[])
             }
             else
             {
+				unsigned factor;
                 screenWidth = atoi(argv[++i]);
                 screenHeight = atoi(argv[++i]);
-                unsigned factor = screenWidth / 320;
+                factor = screenWidth / 320;
                 if(screenWidth % 320 || screenHeight != 200 * factor && screenHeight != 240 * factor)
                     printf("Screen size must be a multiple of 320x200 or 320x240!\n"), hasError = true;
             }

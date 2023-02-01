@@ -24,8 +24,15 @@ typedef unsigned int	UINT32;  /* unsigned 32bit */
 typedef signed char		INT8;    /* signed  8bit   */
 typedef signed short	INT16;   /* signed 16bit   */
 typedef signed int		INT32;   /* signed 32bit   */
-
+#ifndef _WIN32
 typedef int BOOL;
+#else
+#ifdef _XBOX
+#include <xtl.h>
+#else
+#include <rpc.h>
+#endif
+#endif
 #endif
 
 #if (OPL_SAMPLE_BITS==16)

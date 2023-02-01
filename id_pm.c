@@ -8,7 +8,7 @@ word ChunksInFile;
 word PMSpriteStart;
 #ifndef SEGA_SATURN
 word PMSoundStart;
-bool PMSoundInfoPagePadded = false;
+boolean PMSoundInfoPagePadded = false;
 #endif
 word *pageLengths;
 
@@ -61,7 +61,7 @@ void PM_Startup (void)
     Sint32 fileId;
 #endif
 
-    strcat (fname,extension);
+    strcat (fname,(const char*)extension);
 
 #ifdef SEGA_SATURN
     fileId = GFS_NameToId((Sint8*)fname);
@@ -107,7 +107,7 @@ void PM_Startup (void)
     //
     pageOffsets = (uint32_t*)saturnChunk;
 #else
-    pageOffsets = SafeMalloc((ChunksInFile + 1) * sizeof(*pageOffsets));
+    pageOffsets = (uint32_t*)SafeMalloc((ChunksInFile + 1) * sizeof(*pageOffsets));
 #endif
 #ifndef SEGA_SATURN
     fread (pageOffsets,sizeof(*pageOffsets),ChunksInFile,file);
@@ -120,7 +120,7 @@ void PM_Startup (void)
 #ifdef SEGA_SATURN
     pageLengths = (word*)saturnChunk + (ChunksInFile + 1) * sizeof(int32_t);
 #else
-    pageLengths = SafeMalloc(ChunksInFile * sizeof(*pageLengths));
+    pageLengths = (word*)SafeMalloc(ChunksInFile * sizeof(*pageLengths));
 #endif
 #ifndef SEGA_SATURN
     fread (pageLengths,sizeof(*pageLengths),ChunksInFile,file);
@@ -176,13 +176,13 @@ void PM_Startup (void)
     //
     // allocate enough memory to hold the whole page file
     //
-    PMPageData = SafeMalloc(datasize + padding);
+    PMPageData = (byte*)SafeMalloc(datasize + padding);
 
     //
     // [ChunksInFile + 1] pointers to page starts
     // the last pointer points one byte after the last page
     //
-    PMPages = SafeMalloc((ChunksInFile + 1) * sizeof(*PMPages));
+    PMPages = (byte**)SafeMalloc((ChunksInFile + 1) * sizeof(*PMPages));
 
     //
     // load pages and initialize PMPages pointers

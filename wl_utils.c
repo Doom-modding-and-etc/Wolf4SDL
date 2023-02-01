@@ -1,7 +1,6 @@
 // WL_UTILS.C
 
 #include "wl_utils.h"
-
 #ifndef N3DS
 #ifndef SWITCH
 

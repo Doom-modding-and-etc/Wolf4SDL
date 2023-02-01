@@ -264,8 +264,8 @@ void CAL_GetGrChunkLength (int chunk)
     uint32_t pos = GRFILEPOS(chunk);
     readChunks(grhandle, sizeof(chunkexplen), &pos, saturnChunk, (uint8_t*)&chunkexplen);
 #else
-    lseek(grhandle, GRFILEPOS(chunk), SEEK_SET);
-    read(grhandle, &chunkexplen, sizeof(chunkexplen));
+    w3slseek(grhandle, GRFILEPOS(chunk), SEEK_SET);
+    w3sread(grhandle, &chunkexplen, sizeof(chunkexplen));
 #endif
     chunkcomplen = GRFILEPOS(chunk+1)-GRFILEPOS(chunk)-4;
 }
@@ -280,18 +280,18 @@ void CAL_GetGrChunkLength (int chunk)
 ==========================
 */
 
-bool CA_WriteFile (const char *filename, void *ptr, int32_t length)
+boolean CA_WriteFile (const char *filename, void *ptr, int32_t length)
 {
-    const int handle = open(filename, O_CREAT | O_WRONLY | O_BINARY, 0644);
+    const int handle = w3sopen(filename, O_CREAT | O_WRONLY | O_BINARY, 0644);
     if (handle == -1)
         return false;
 
-    if (!write (handle,ptr,length))
+    if (!w3swrite (handle,ptr,length))
     {
-        close (handle);
+        w3sclose (handle);
         return false;
     }
-    close (handle);
+    w3sclose (handle);
     return true;
 }
 
@@ -307,24 +307,24 @@ bool CA_WriteFile (const char *filename, void *ptr, int32_t length)
 ==========================
 */
 
-bool CA_LoadFile (const char *filename, void **ptr)
+boolean CA_LoadFile (const char *filename, void **ptr)
 {
     int32_t size;
 
-    const int handle = open(filename, O_RDONLY | O_BINARY);
+    const int handle = w3sopen(filename, O_RDONLY | O_BINARY);
     if (handle == -1)
         return false;
 
-    size = lseek(handle, 0, SEEK_END);
-    lseek(handle, 0, SEEK_SET);
+    size = w3slseek(handle, 0, SEEK_END);
+    w3slseek(handle, 0, SEEK_SET);
     *ptr = SafeMalloc(size);
 
-    if (!read (handle,*ptr,size))
+    if (!w3sread (handle,*ptr,size))
     {
-        close (handle);
+        w3sclose (handle);
         return false;
     }
-    close (handle);
+    w3sclose (handle);
     return true;
 }
 #endif
@@ -338,6 +338,10 @@ static void CAL_HuffExpand(byte *source, byte *dest, int32_t length, huffnode *h
 {
     byte *end;
     huffnode *headptr, *huffptr;
+	int written = 0;
+	byte val;
+	byte mask;
+	word nodeval;
 
     if(!length || !dest)
     {
@@ -347,13 +351,13 @@ static void CAL_HuffExpand(byte *source, byte *dest, int32_t length, huffnode *h
 
     headptr = hufftable+254;        // head node is always node 254
 
-    int written = 0;
+
 
     end=dest+length;
 
-    byte val = *source++;
-    byte mask = 1;
-    word nodeval;
+    val = *source++;
+    mask = 1;
+    
     huffptr = headptr;
     while(1)
     {
@@ -731,7 +735,11 @@ void CAL_SetupGrFile (void)
     char fname[13];
     int handle;
     byte *compseg;
-
+	long headersize;
+	int expectedsize;
+	byte data[lengthof(grstarts) * 3];
+	const byte* d;
+	int32_t* i;
 //
 // load ???dict.ext (huffman dictionary for graphics files)
 //
@@ -739,25 +747,25 @@ void CAL_SetupGrFile (void)
     strcpy(fname,gdictname);
     strcat(fname,graphext);
 
-    handle = open(fname, O_RDONLY | O_BINARY);
+    handle = w3sopen(fname, O_RDONLY | O_BINARY);
     if (handle == -1)
         CA_CannotOpen(fname);
 
-    read(handle, grhuffman, sizeof(grhuffman));
-    close(handle);
+    w3sread(handle, grhuffman, sizeof(grhuffman));
+    w3sclose(handle);
 
     // load the data offsets from ???head.ext
     strcpy(fname,gheadname);
     strcat(fname,graphext);
 
-    handle = open(fname, O_RDONLY | O_BINARY);
+    handle = w3sopen(fname, O_RDONLY | O_BINARY);
     if (handle == -1)
         CA_CannotOpen(fname);
 
-    long headersize = lseek(handle, 0, SEEK_END);
-    lseek(handle, 0, SEEK_SET);
+    headersize = w3slseek(handle, 0, SEEK_END);
+    w3slseek(handle, 0, SEEK_SET);
 
-	int expectedsize = lengthof(grstarts);
+	expectedsize = lengthof(grstarts);
 
     if(!param_ignorenumchunks && headersize / 3 != (long) expectedsize)
         Quit("Wolf4SDL was not compiled for these data files:\n"
@@ -766,12 +774,11 @@ void CAL_SetupGrFile (void)
             "(For mod developers: perhaps you forgot to update NUMCHUNKS?)",
             fname, headersize / 3, expectedsize);
 
-    byte data[lengthof(grstarts) * 3];
-    read(handle, data, sizeof(data));
-    close(handle);
 
-    const byte* d = data;
-    int32_t* i;
+    w3sread(handle, data, sizeof(data));
+    w3sclose(handle);
+
+    d = data;
     for (i = grstarts; i != endof(grstarts); ++i)
     {
         const int32_t val = d[0] | d[1] << 8 | d[2] << 16;
@@ -785,7 +792,7 @@ void CAL_SetupGrFile (void)
     strcpy(fname,gfilename);
     strcat(fname,graphext);
 
-    grhandle = open(fname, O_RDONLY | O_BINARY);
+    grhandle = w3sopen(fname, O_RDONLY | O_BINARY);
     if (grhandle == -1)
         CA_CannotOpen(fname);
 
@@ -796,13 +803,13 @@ void CAL_SetupGrFile (void)
     pictable = SafeMalloc(NUMPICS * sizeof(*pictable));
     CAL_GetGrChunkLength(STRUCTPIC);                // position file pointer
     compseg = SafeMalloc(chunkcomplen);
-    read (grhandle,compseg,chunkcomplen);
+    w3sread (grhandle,compseg,chunkcomplen);
     CAL_HuffExpand(compseg, (byte*)pictable, NUMPICS * sizeof(*pictable), grhuffman);
     free(compseg);
 
     CA_CacheGrChunks ();
 
-    close (grhandle);
+    w3sclose (grhandle);
 #endif
 }
 
@@ -953,14 +960,14 @@ void CAL_SetupMapFile (void)
     strcpy(fname,mheadname);
     strcat(fname,extension);
 
-    handle = open(fname, O_RDONLY | O_BINARY);
+    handle = w3sopen(fname, O_RDONLY | O_BINARY);
     if (handle == -1)
         CA_CannotOpen(fname);
 
     tinf = SafeMalloc(sizeof(*tinf));
 
-    read(handle, tinf, sizeof(*tinf));
-    close(handle);
+    w3sread(handle, tinf, sizeof(*tinf));
+    w3sclose(handle);
 
 //
 // open the data file
@@ -969,7 +976,7 @@ void CAL_SetupMapFile (void)
     strcpy(fname, mfilecama);    
     strcat(fname, extension);
 
-    maphandle = open(fname, O_RDONLY | O_BINARY);
+    maphandle = w3sopen(fname, O_RDONLY | O_BINARY);
     if (maphandle == -1)
         CA_CannotOpen(fname);
 #else
@@ -992,8 +999,8 @@ void CAL_SetupMapFile (void)
 
         mapheaderseg[i] = SafeMalloc(sizeof(*mapheaderseg[i]));
 
-        lseek(maphandle,pos,SEEK_SET);
-        read (maphandle,mapheaderseg[i],sizeof(*mapheaderseg[i]));
+        w3slseek(maphandle,pos,SEEK_SET);
+        w3sread (maphandle,mapheaderseg[i],sizeof(*mapheaderseg[i]));
     }
 
 //
@@ -1024,6 +1031,7 @@ void CAL_SetupAudioFile (void)
 #else    
     char fname[13];
 #endif
+	void* ptr;
 //
 // load audiohed.ext (offsets for audio file)
 //
@@ -1032,7 +1040,7 @@ void CAL_SetupAudioFile (void)
 #endif
     strcat(fname,audioext);
 
-    void* ptr;
+    
     if (!CA_LoadFile(fname, &ptr))
         CA_CannotOpen(fname);
     audiostarts = (int32_t*)ptr;
@@ -1043,7 +1051,7 @@ void CAL_SetupAudioFile (void)
     strcpy(fname,afilename);
     strcat(fname,audioext);
 
-    audiohandle = open(fname, O_RDONLY | O_BINARY);
+    audiohandle = w3sopen(fname, O_RDONLY | O_BINARY);
     if (audiohandle == -1)
         CA_CannotOpen(fname);
 }
@@ -1110,11 +1118,11 @@ void CA_Shutdown (void)
     int i,start;
 
     if (maphandle != -1)
-        close(maphandle);
+        w3sclose(maphandle);
     
 #ifndef VIEASM
     if (audiohandle != -1)
-        close(audiohandle);
+        w3sclose(audiohandle);
 #endif
     for (i=0; i<NUMCHUNKS; i++)
     {
@@ -1176,8 +1184,8 @@ int32_t CA_CacheAudioChunk (int chunk)
 
     audiosegs[chunk] = SafeMalloc(size);
 
-    lseek(audiohandle,pos,SEEK_SET);
-    read(audiohandle,audiosegs[chunk],size);
+    w3slseek(audiohandle,pos,SEEK_SET);
+    w3sread(audiohandle,audiosegs[chunk],size);
 
     return size;
 }
@@ -1189,18 +1197,19 @@ void CA_CacheAdlibSoundChunk (int chunk)
     byte    *ptr;
     int32_t pos = audiostarts[chunk];
     int32_t size = audiostarts[chunk+1]-pos;
+	AdLibSound *sound;
 
     if (audiosegs[chunk])
         return;                        // already in memory
 
-    lseek(audiohandle, pos, SEEK_SET);
+    w3slseek(audiohandle, pos, SEEK_SET);
 
-    bufferseg = SafeMalloc(ORIG_ADLIBSOUND_SIZE - 1);
+    bufferseg = (byte*)SafeMalloc(ORIG_ADLIBSOUND_SIZE - 1);
     ptr = bufferseg;
 
-    read(audiohandle, ptr, ORIG_ADLIBSOUND_SIZE - 1);   // without data[1]
+    w3sread(audiohandle, ptr, ORIG_ADLIBSOUND_SIZE - 1);   // without data[1]
 
-    AdLibSound *sound = SafeMalloc(size + sizeof(*sound) - ORIG_ADLIBSOUND_SIZE);
+    sound = (AdLibSound*)SafeMalloc(size + sizeof(*sound) - ORIG_ADLIBSOUND_SIZE);
 
     sound->common.length = READLONGWORD(ptr);
     ptr += 4;
@@ -1226,7 +1235,7 @@ void CA_CacheAdlibSoundChunk (int chunk)
     sound->inst.unused[2] = *ptr++;
     sound->block = *ptr++;
 
-    read(audiohandle, sound->data, size - ORIG_ADLIBSOUND_SIZE + 1);  // + 1 because of byte data[1]
+    w3sread(audiohandle, sound->data, size - ORIG_ADLIBSOUND_SIZE + 1);  // + 1 because of byte data[1]
 
     audiosegs[chunk]=(byte *) sound;
 
@@ -1465,12 +1474,12 @@ void CA_CacheGrChunks (void)
 
 #endif
 
-        lseek(grhandle,pos,SEEK_SET);
+        w3slseek(grhandle,pos,SEEK_SET);
 
         bufferseg = SafeMalloc(compressed);
         source = bufferseg;
 
-        read(grhandle,source,compressed);
+        w3sread(grhandle,source,compressed);
 
         CAL_ExpandGrChunk (chunk,source);
 
@@ -1538,14 +1547,14 @@ void CA_CacheMap (int mapnum)
         dest = mapsegs[plane];
 
 #ifndef SEGA_SATURN
-        lseek(maphandle,pos,SEEK_SET);
+        w3slseek(maphandle,pos,SEEK_SET);
 #endif
         bufferseg = SafeMalloc(compressed);
         source = bufferseg;
 #ifdef SEGA_SATURN
         memcpy(source, &Chunks[pos], compressed);
 #else
-        read(maphandle,source,compressed);
+        w3sread(maphandle,source,compressed);
 #endif
 #ifdef CARMACIZED
         //

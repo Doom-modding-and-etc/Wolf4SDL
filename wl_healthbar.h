@@ -6,7 +6,7 @@ void HealthMeter_DeleteBar(int barId);
 
 void HealthMeter_Reset(void);
 
-void HealthMeter_SetBarFlashing(int barId, bool flashing);
+void HealthMeter_SetBarFlashing(int barId, boolean flashing);
 
 void HealthMeter_Draw(void);
 

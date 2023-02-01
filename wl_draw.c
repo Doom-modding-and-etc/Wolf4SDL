@@ -28,7 +28,7 @@ byte     *vbuf;
 
 int32_t    lasttimecount;
 int32_t    frameon;
-bool fpscounter;
+boolean fpscounter;
 
 int fps_frames=0, fps_time=0, fps=0;
 
@@ -198,7 +198,7 @@ void TransformActor (objtype *ob)
 ========================
 */
 
-bool TransformTile (int tx, int ty, short *dispx, short *dispheight)
+boolean TransformTile (int tx, int ty, short *dispx, short *dispheight)
 {
     fixed gx,gy,gxt,gyt,nx,ny;
 
@@ -258,7 +258,7 @@ bool TransformTile (int tx, int ty, short *dispx, short *dispheight)
 int16_t CalcHeight (void)
 {
     int16_t height;
-    fixed   gx,gy,gxt,gyt,nx,ny;
+    fixed   gx,gy,gxt,gyt,nx;
 
 //
 // translate point to view centered coordinates
@@ -785,13 +785,8 @@ visobj_t *visptr,*visstep,*farthest;
 void DrawScaleds (void)
 {
     int      i,least,numvisable,height;
-#ifdef _XBOX
-	bool     *visspot;
-#else
     byte     *visspot;
-#endif
 	tiletype *tilespot;
-    unsigned spotloc;
 
     statobj_t *statptr;
     objtype   *obj;
@@ -973,13 +968,14 @@ void DrawPlayerWeapon (void)
 
 void CalcTics (void)
 {
+	uint32_t curtime;
 //
 // calculate tics since last refresh for adaptive timing
 //
     if (lasttimecount > (int32_t) GetTimeCount())
         lasttimecount = GetTimeCount();    // if the game was paused a LONG time
 
-    uint32_t curtime = SDL_GetTicks();
+    curtime = SDL_GetTicks();
     tics = (curtime * 7) / 100 - lasttimecount;
     if(!tics)
     {
@@ -1021,7 +1017,7 @@ void WallRefresh (void)
     longword  xpartial,ypartial;
     doorobj_t *door;
     int       pwallposnorm,pwallposinv,pwallposi;           // holds modified pwallpos
-    bool      passdoor;
+    boolean      passdoor;
 
     for (pixx = 0; pixx < viewwidth; pixx++)
     {

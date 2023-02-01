@@ -274,7 +274,7 @@ void A_Smoke (objtype *ob)
 
 #define PROJSIZE        0x2000
 
-bool ProjectileTryMove (objtype *ob)
+boolean ProjectileTryMove (objtype *ob)
 {
     int      xl,yl,xh,yh,x,y;
     objtype *check;
@@ -332,8 +332,8 @@ void T_Projectile (objtype *ob)
     ob->x += deltax;
     ob->y += deltay;
 
-    deltax = LABS(ob->x - player->x);
-    deltay = LABS(ob->y - player->y);
+    deltax = labs((int32_t)ob->x - player->x);
+    deltay = labs((int32_t)ob->y - player->y);
 
     if (!ProjectileTryMove (ob))
     {
@@ -1404,8 +1404,8 @@ void T_UShoot (objtype *ob)
 
     T_Shoot (ob);
 
-    dx = abs(ob->tilex - player->tilex);
-    dy = abs(ob->tiley - player->tiley);
+    dx = abs((int)ob->tilex - player->tilex);
+    dy = abs((int)ob->tiley - player->tiley);
     dist = dx>dy ? dx : dy;
     if (dist <= 1)
         TakeDamage (10,ob);
@@ -1501,11 +1501,11 @@ void T_Will (objtype *ob)
 {
     int32_t move;
     int     dx,dy,dist;
-    bool dodge;
+    boolean dodge;
 
     dodge = false;
-    dx = abs(ob->tilex - player->tilex);
-    dy = abs(ob->tiley - player->tiley);
+    dx = abs((int)ob->tilex - player->tilex);
+    dy = abs((int)ob->tiley - player->tiley);
     dist = dx>dy ? dx : dy;
 
     if (CheckLine(ob))                                              // got a shot at player?
@@ -2445,11 +2445,11 @@ void T_Schabb (objtype *ob)
 {
     int32_t move;
     int     dx,dy,dist;
-    bool dodge;
+    boolean dodge;
 
     dodge = false;
-    dx = abs(ob->tilex - player->tilex);
-    dy = abs(ob->tiley - player->tiley);
+    dx = abs((int)ob->tilex - player->tilex);
+    dy = abs((int)ob->tiley - player->tiley);
     dist = dx>dy ? dx : dy;
 
     if (CheckLine(ob))                                              // got a shot at player?
@@ -2537,11 +2537,11 @@ void T_Gift (objtype *ob)
 {
     int32_t move;
     int     dx,dy,dist;
-    bool dodge;
+    boolean dodge;
 
     dodge = false;
-    dx = abs(ob->tilex - player->tilex);
-    dy = abs(ob->tiley - player->tiley);
+    dx = abs((int)ob->tilex - player->tilex);
+    dy = abs((int)ob->tiley - player->tiley);
     dist = dx>dy ? dx : dy;
 
     if (CheckLine(ob))                                              // got a shot at player?
@@ -2629,11 +2629,11 @@ void T_Fat (objtype *ob)
 {
     int32_t move;
     int     dx,dy,dist;
-    bool dodge;
+    boolean dodge;
 
     dodge = false;
-    dx = abs(ob->tilex - player->tilex);
-    dy = abs(ob->tiley - player->tiley);
+    dx = abs((int)ob->tilex - player->tilex);
+    dy = abs((int)ob->tiley - player->tiley);
     dist = dx>dy ? dx : dy;
 
     if (CheckLine(ob))                                              // got a shot at player?
@@ -3140,7 +3140,7 @@ void T_Chase (objtype *ob)
 {
     int32_t move,target;
     int     dx,dy,dist,chance;
-    bool dodge;
+    boolean dodge;
 
     if (gamestate.victoryflag)
         return;
@@ -3149,8 +3149,8 @@ void T_Chase (objtype *ob)
     if (CheckLine(ob))      // got a shot at player?
     {
         ob->hidden = false;
-        dx = abs(ob->tilex - player->tilex);
-        dy = abs(ob->tiley - player->tiley);
+        dx = abs((int)ob->tilex - player->tilex);
+        dy = abs((int)ob->tiley - player->tiley);
         dist = dx>dy ? dx : dy;
 
 #ifdef PLAYDEMOLIKEORIGINAL
@@ -3171,10 +3171,10 @@ void T_Chase (objtype *ob)
 
             if (dist == 1)
             {
-                target = abs(ob->x - player->x);
+                target = abs((int)ob->x - player->x);
                 if (target < 0x14000l)
                 {
-                    target = abs(ob->y - player->y);
+                    target = abs((int)ob->y - player->y);
                     if (target < 0x14000l)
                         chance = 300;
                 }
@@ -3550,8 +3550,8 @@ void T_Shoot (objtype *ob)
 
     if (CheckLine (ob))                    // player is not behind a wall
     {
-        dx = abs(ob->tilex - player->tilex);
-        dy = abs(ob->tiley - player->tiley);
+        dx = abs((int)ob->tilex - player->tilex);
+        dy = abs((int)ob->tiley - player->tiley);
         dist = dx>dy ? dx:dy;
 
         if (ob->obclass == ssobj || ob->obclass == bossobj)
@@ -3819,7 +3819,7 @@ void T_BJDone (objtype *ob)
 ===============
 */
 
-bool CheckPosition (objtype *ob)
+boolean CheckPosition (objtype *ob)
 {
     int     x,y,xl,yl,xh,yh;
     objtype *check;

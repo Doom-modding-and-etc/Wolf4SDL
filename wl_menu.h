@@ -197,7 +197,7 @@ void DefineKeyMove(void);
 void EnterCtrlData(int index,CustomCtrls *cust,void (*DrawRtn)(int),void (*PrintRtn)(int),int type);
 
 #ifdef VIEASM
-extern void DrawSoundVols(bool curmode);
+extern void DrawSoundVols(boolean curmode);
 extern int AdjustVolume(int);
 #endif
 void DrawMainMenu(void);

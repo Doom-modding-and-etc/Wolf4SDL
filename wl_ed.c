@@ -48,13 +48,13 @@ typedef vec_t(ED_InsertStatObjActorPair_t) ED_InsertStatObjActorPairVec_t;
 typedef struct ED_ExtraStatInfo_s
 {
 	int actor;
-	bool blocking;
+	boolean blocking;
 	lwlib_String_t spriteFileName;
 	int radLightKey;
-	bool fullBright;
-	bool dirEnable;
-	bool dirVertical;
-	bool blockLine;
+	boolean fullBright;
+	boolean dirEnable;
+	boolean dirVertical;
+	boolean blockLine;
 	t_compshape *shape;
 } ED_ExtraStatInfo_t;
 
@@ -404,7 +404,7 @@ int ED_CheckInsertStatObj(ED_t ed, int x, int y, int tile)
 	return tile;
 }
 
-bool ED_SpawnActor(ED_t ed, int tile, int x, int y)
+boolean ED_SpawnActor(ED_t ed, int tile, int x, int y)
 {
 	ED_ExtraStatInfo_t *extraStatInfo;
 	lwlib_GetPrivAssert(ED_Priv_t, ed);
@@ -473,7 +473,7 @@ int ED_CheckFloorCeil(ED_t ed, int x, int y, int spot)
 	return spot;
 }
 
-bool ED_WallPicIsSky(ED_t ed, int wallpic)
+boolean ED_WallPicIsSky(ED_t ed, int wallpic)
 {
 	lwlib_GetPrivAssert(ED_Priv_t, ed);
 	return priv->skyPic == wallpic;

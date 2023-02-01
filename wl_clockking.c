@@ -73,8 +73,8 @@ void ClockKing_ProjectileThink (objtype *proj)
     proj->x += movex;
     proj->y += movey;
 
-    deltax = LABS(proj->x - player->x);
-    deltay = LABS(proj->y - player->y);
+    deltax = labs(int32_t)proj->x - player->x);
+    deltay = labs((int32_t)proj->y - player->y);
 
     if (deltax < PROJECTILESIZE && deltay < PROJECTILESIZE)
     {
@@ -125,7 +125,7 @@ void ClockKing_DoAttackState(objtype *ob)
 {
     int rnd;
     int starthp;
-    bool doshoot;
+    boolean doshoot;
 
     doshoot = true;
 
@@ -146,7 +146,7 @@ void ClockKing_DoAttackState(objtype *ob)
     }
 }
 
-bool ClockKing_DamageActor(objtype *ob, int damage, int dmgtype)
+boolean ClockKing_DamageActor(objtype *ob, int damage, int dmgtype)
 {
     return ob->state == &s_clockkingdefense;
 }

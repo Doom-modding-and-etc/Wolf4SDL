@@ -123,7 +123,7 @@
     <ClCompile Include="wl_ed.c" />
     <ClCompile Include="wl_firefly.c" />
     <ClCompile Include="wl_game.c" />
-    <ClCompile Include="wl_healthmeter.c" />
+    <ClCompile Include="wl_healthbar.c" />
     <ClCompile Include="wl_hooker.c" />
     <ClCompile Include="wl_inter.c" />
     <ClCompile Include="wl_led.c" />
@@ -145,6 +145,8 @@
     <ClCompile Include="aud_sys\nuked-opl3\opl3.c">
       <Filter>aud_sys\nuked-opl3</Filter>
     </ClCompile>
+    <ClCompile Include="id_w3swrap.c" />
+    <ClCompile Include="psnprntf.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="sodpal.inc" />
@@ -301,6 +303,8 @@
     <ClInclude Include="aud_sys\nuked-opl3\opl3.h">
       <Filter>aud_sys\nuked-opl3</Filter>
     </ClInclude>
+    <ClInclude Include="id_w3swrap.h" />
+    <ClInclude Include="psnprntf.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="win\Wolf4SDL.rc">

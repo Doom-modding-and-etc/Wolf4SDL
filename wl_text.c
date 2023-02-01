@@ -73,7 +73,7 @@ static int     picx;
 static int     picy;
 static int     picnum;
 static int     picdelay;
-static bool layoutdone;
+static boolean layoutdone;
 
 //===========================================================================
 
@@ -428,7 +428,7 @@ void HandleWord (void)
 =====================
 */
 
-void PageLayout (bool shownumber)
+void PageLayout (boolean shownumber)
 {
     int     i,oldfontcolor;
     char    ch;
@@ -648,7 +648,7 @@ void ShowArticle (char *article)
     };
 #endif
     unsigned    oldfontnumber;
-    bool     newpage,firstpage;
+    boolean     newpage,firstpage;
     ControlInfo ci;
 
 #ifdef JAPAN

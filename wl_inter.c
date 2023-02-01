@@ -253,15 +253,15 @@ Victory (void)
 #if !defined(SEGA_SATURN) && !defined(USE_SPRITES)
     VW_UpdateScreen();
 #endif
-    itoa (kr, tempstr, 10);
+    w3sitoa (kr, tempstr, 10);
     x = RATIOX + 24 - (int) strlen(tempstr) * 2;
     Write (x, RATIOY, tempstr);
 
-    itoa (sr, tempstr, 10);
+    w3sitoa (sr, tempstr, 10);
     x = RATIOX + 24 - (int) strlen(tempstr) * 2;
     Write (x, RATIOY + 2, tempstr);
 
-    itoa (tr, tempstr, 10);
+    w3sitoa (tr, tempstr, 10);
     x = RATIOX + 24 - (int) strlen(tempstr) * 2;
     Write (x, RATIOY + 4, tempstr);
 
@@ -658,7 +658,7 @@ LevelCompleted (void)
 #ifdef SEGA_SATURN
         Write(26 + SATURN_ADJUST / 8, 12, parTimes[gamestate.episode * 10 + mapon].timestr);
 #else
-        Write (26, 2, itoa (gamestate.mapon + 1, tempstr, 10));
+        Write (26, 2, w3sitoa (gamestate.mapon + 1, tempstr, 10));
 #endif
 #endif
 
@@ -746,7 +746,7 @@ LevelCompleted (void)
         {
             for (i = 0; i <= timeleft; i++)
             {
-                ltoa ((int32_t) i * PAR_AMOUNT, tempstr, 10);
+                w3sltoa ((int32_t) i * PAR_AMOUNT, tempstr, 10);
                 x = 36 - (int) strlen(tempstr) * 2;
                 Write (x, 7, tempstr);
                 if (!(i % (PAR_AMOUNT / 10)))
@@ -783,7 +783,7 @@ LevelCompleted (void)
         ratio = kr;
         for (i = 0; i <= ratio; i++)
         {
-            itoa (i, tempstr, 10);
+            w3sitoa (i, tempstr, 10);
             x = RATIOXX - (int) strlen(tempstr) * 2;
 #ifdef SEGA_SATURN
             Write(x + SATURN_ADJUST / 14, 7, tempstr);
@@ -808,7 +808,7 @@ LevelCompleted (void)
             VW_WaitVBL (VBLWAIT);
             SD_StopSound ();
             bonus += PERCENT100AMT;
-            ltoa (bonus, tempstr, 10);
+            w3sltoa (bonus, tempstr, 10);
             x = (RATIOXX - 1) - (int) strlen(tempstr) * 2;
 #ifdef SEGA_SATURN
             Write(x + SATURN_ADJUST / 8, 7, tempstr);
@@ -841,7 +841,7 @@ LevelCompleted (void)
         ratio = sr;
         for (i = 0; i <= ratio; i++)
         {
-            itoa (i, tempstr, 10);
+            w3sitoa (i, tempstr, 10);
             x = RATIOXX - (int) strlen(tempstr) * 2;
 #ifdef SEGA_SATURN
             Write(x + SATURN_ADJUST / 8, 16, tempstr);
@@ -865,7 +865,7 @@ LevelCompleted (void)
             VW_WaitVBL (VBLWAIT);
             SD_StopSound ();
             bonus += PERCENT100AMT;
-            ltoa (bonus, tempstr, 10);
+            w3sltoa (bonus, tempstr, 10);
             x = (RATIOXX - 1) - (int) strlen(tempstr) * 2;
 #ifdef SEGA_SATURN
             Write(x + SATURN_WIDTH / 8, 7, tempstr);
@@ -897,7 +897,7 @@ LevelCompleted (void)
         ratio = tr;
         for (i = 0; i <= ratio; i++)
         {
-            itoa (i, tempstr, 10);
+            w3sitoa (i, tempstr, 10);
             x = RATIOXX - (int) strlen(tempstr) * 2;
 #ifdef SEGA_SATURN
             Write(x + SATURN_ADJUST / 8, 18, tempstr);
@@ -920,7 +920,7 @@ LevelCompleted (void)
             VW_WaitVBL (VBLWAIT);
             SD_StopSound ();
             bonus += PERCENT100AMT;
-            ltoa (bonus, tempstr, 10);
+            w3sltoa (bonus, tempstr, 10);
             x = (RATIOXX - 1) - (int) strlen(tempstr) * 2;
 #ifdef SEGA_SATURN
             Write(x + SATURN_WIDTH / 8, 7, tempstr);
@@ -950,21 +950,21 @@ LevelCompleted (void)
         //
         // JUMP STRAIGHT HERE IF KEY PRESSED
         //
-done:   itoa (kr, tempstr, 10);
+done:   w3sitoa (kr, tempstr, 10);
         x = RATIOXX - (int) strlen(tempstr) * 2;
 #ifdef SEGA_SATURN
         Write(x + SATURN_WIDTH / 8, 14, tempstr);
 #else
         Write (x, 14, tempstr);
 #endif
-        itoa (sr, tempstr, 10);
+        w3sitoa (sr, tempstr, 10);
         x = RATIOXX - (int) strlen(tempstr) * 2;
 #ifdef SEGA_SATURN
         Write(x + SATURN_WIDTH / 8, 16, tempstr); 
 #else
         Write (x, 16, tempstr);
 #endif
-        itoa (tr, tempstr, 10);
+        w3sitoa (tr, tempstr, 10);
         x = RATIOXX - (int) strlen(tempstr) * 2;
 #ifdef SEGA_SATURN
         Write(x + SATURN_WIDTH / 8, 18, tempstr);
@@ -976,7 +976,7 @@ done:   itoa (kr, tempstr, 10);
             (PERCENT100AMT * (sr >= 100)) + (PERCENT100AMT * (tr >= 100));
 
         GivePoints (bonus);
-        ltoa (bonus, tempstr, 10);
+        w3sltoa (bonus, tempstr, 10);
         x = 36 - (int) strlen(tempstr) * 2;
 #ifdef SEGA_SATURN
         Write(x + SEGA_SATURN / 8, 7, tempstr);
@@ -1115,7 +1115,7 @@ done:   itoa (kr, tempstr, 10);
 =================
 */
 
-bool
+boolean
 PreloadUpdate (unsigned current, unsigned total)
 {
     unsigned w = WindowW - scaleFactor * 10;
@@ -1400,7 +1400,7 @@ DrawHighScores (void)
         //
         // level
         //
-        itoa (s->completed, buffer, 10);
+        w3sitoa (s->completed, buffer, 10);
 #ifndef SPEAR
         for (str = buffer; *str; str++)
             *str = *str + (129 - '0');  // Used fixed-width numbers (129...)
@@ -1422,7 +1422,7 @@ DrawHighScores (void)
 #ifndef UPLOAD
 #ifndef SPEAR
         PrintX -= 6;
-        itoa (s->episode + 1, buffer1, 10);
+        w3sitoa (s->episode + 1, buffer1, 10);
         US_Print ("E");
         US_Print (buffer1);
         US_Print ("/L");
@@ -1443,7 +1443,7 @@ DrawHighScores (void)
         //
         // score
         //
-        itoa (s->score, buffer, 10);
+        w3sitoa (s->score, buffer, 10);
 #ifndef SPEAR
         for (str = buffer; *str; str++)
             *str = *str + (129 - '0');  // Used fixed-width numbers (129...)
@@ -1782,7 +1782,7 @@ BackDoor (char *s)
 
     for (i = 0; i < 5; i++)
     {
-        if (!strcasecmp (s, BackDoorStrs[i]))
+        if (!w3sstrcasecmp (s, BackDoorStrs[i]))
         {
             SETFONTCOLOR (14, 15);
             fontnumber = 0;
@@ -1887,7 +1887,7 @@ CopyProtection (void)
                     size_t bosslen = strlen(bossstrs[whichboss]);
                     for (i = 0; i < bosslen; i++)
                     {
-                        if (!strncasecmp (inputbuffer, bossstrs[whichboss] + i, inputlen))
+                        if (!w3sstrncasecmp (inputbuffer, bossstrs[whichboss] + i, inputlen))
                         {
                             match = 1;
                             break;
@@ -1923,7 +1923,7 @@ CopyProtection (void)
                 PrintY = TYPEBOX_Y;
                 US_LineInput (PrintX, PrintY, inputbuffer, 0, true, 6, 100);
 
-                match = 1 - (strcasecmp (inputbuffer, WordCorrect[whichword]) != 0);
+                match = 1 - (w3sstrcasecmp (inputbuffer, WordCorrect[whichword]) != 0);
                 match += BackDoor (inputbuffer);
                 break;
             }
@@ -1957,7 +1957,7 @@ CopyProtection (void)
                     size_t memberlen = strlen(MemberCorrect[whichmem]);
                     for (i = 0; i < memberlen; i++)
                     {
-                        if (!strncasecmp (inputbuffer, MemberCorrect[whichmem] + i, inputlen))
+                        if (!w3sstrncasecmp (inputbuffer, MemberCorrect[whichmem] + i, inputlen))
                         {
                             match = 1;
                             break;
@@ -1992,7 +1992,7 @@ CopyProtection (void)
                 PrintY = TYPEBOX_Y;
                 US_LineInput (PrintX, PrintY, inputbuffer, 0, true, 6, 100);
 
-                match = 1 - (strcasecmp (inputbuffer, MiscCorrect[whichone]) != 0);
+                match = 1 - (w3sstrcasecmp (inputbuffer, MiscCorrect[whichone]) != 0);
                 match += BackDoor (inputbuffer);
                 break;
             }

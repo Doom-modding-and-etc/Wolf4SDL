@@ -38,7 +38,7 @@ void Hooker_Spawn(int x, int y)
     newobj->flags |= FL_BLOCKING;
 }
 
-static bool Hooker_AvailableToUse(objtype *ob)
+static boolean Hooker_AvailableToUse(objtype *ob)
 {
     int dist;
     hookerobjdata *hookerObjData = &ob->u.hooker;

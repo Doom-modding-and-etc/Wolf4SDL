@@ -41,14 +41,14 @@ uint8_t* PM_DecodeSprites2(unsigned int start, unsigned int endi, uint32_t* page
 =============================================================================
 */
 
-bool         ingame,fizzlein;
+boolean         ingame,fizzlein;
 gametype        gamestate;
 byte            bordercol=VIEWCOLOR;        // color of the Change View/Ingame border
 
 #ifdef SPEAR
 int32_t        spearx,speary;
 uint32_t        spearangle;
-bool         spearflag;
+boolean         spearflag;
 #endif
 
 #ifdef USE_FEATUREFLAGS
@@ -186,10 +186,11 @@ SetSoundLoc(fixed gx,fixed gy)
 */
 void PlaySoundLocGlobal(word s,fixed gx,fixed gy)
 {
+	int channel;
     SetSoundLoc(gx, gy);
     SD_PositionSound(leftchannel, rightchannel);
 
-    int channel = SD_PlaySound((soundnames) s);
+    channel = SD_PlaySound((soundnames) s);
     if(channel)
     {
         channelSoundPos[channel - 1].globalsoundx = gx;
@@ -946,8 +947,6 @@ void SetupGameLevel (void)
 */
 void DrawPlayBorderSides(void)
 {
-    if(viewsize == 21) return;
-
 	const int sw = screenWidth;
 	const int sh = screenHeight;
 	const int vw = viewwidth;
@@ -957,6 +956,8 @@ void DrawPlayBorderSides(void)
 	const int h  = sh - px * STATUSLINES;
 	const int xl = sw / 2 - vw / 2;
 	const int yl = (h - vh) / 2;
+
+    if(viewsize == 21) return;
 
     if(xl != 0)
     {
@@ -1031,8 +1032,10 @@ void DrawStatusBorder (byte color)
 void DrawPlayBorder (void)
 {
 	const int px = scaleFactor; // size of one "pixel"
-
-    if (bordercol != VIEWCOLOR)
+	const int xl = screenWidth/2-viewwidth/2;
+    const int yl = (screenHeight-px*STATUSLINES-viewheight)/2;
+    
+	if (bordercol != VIEWCOLOR)
         DrawStatusBorder(bordercol);
     else
     {
@@ -1064,8 +1067,7 @@ void DrawPlayBorder (void)
 
     VWB_BarScaledCoord (0,0,screenWidth,screenHeight-px*STATUSLINES,bordercol);
 
-    const int xl = screenWidth/2-viewwidth/2;
-    const int yl = (screenHeight-px*STATUSLINES-viewheight)/2;
+
     VWB_BarScaledCoord (xl,yl,viewwidth,viewheight,0);
 
     if(xl != 0)
@@ -1534,7 +1536,7 @@ void heapWalk();
 
 void GameLoop (void)
 {
-    bool died;
+    boolean died;
 #ifdef MYPROFILE
     clock_t start,end;
 #endif

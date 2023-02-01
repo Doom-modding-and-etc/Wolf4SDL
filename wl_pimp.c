@@ -29,7 +29,7 @@ void Pimp_Spawn(int x, int y)
     newobj->flags |= FL_BLOCKING;
 }
 
-static bool Pimp_OwnsWhore(objtype *ob, objtype *whore)
+static boolean Pimp_OwnsWhore(objtype *ob, objtype *whore)
 {
     return 
         (

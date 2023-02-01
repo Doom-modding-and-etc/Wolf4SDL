@@ -12,30 +12,6 @@
 
 #define ISPOINTER(x) ((((uintptr_t)(x)) & ~0xffff) != 0)
 
-#if _WIN32
-#define strcasecmp stricmp
-#define strncasecmp strnicmp
-#define snprintf _snprintf
-#elif defined(SWITCH) || defined(N3DS) || defined(PS2)
-static inline char* ltoa(long value, char* string, int radix)
-{
-    sprintf(string, "%ld", value);
-    return string;
-}
-
-#else	
-static inline char* ltoa(long value, char* string, int radix)
-{
-    sprintf(string, "%ld", value);
-    return string;
-}
-static inline char* itoa(int value, char* string, int radix)
-{
-    sprintf(string, "%d", value);
-    return string;
-}
-#endif
-
 extern void     *safe_malloc (size_t size, const char *fname, uint32_t line);
 extern fixed    FixedMul (fixed a, fixed b);
 extern fixed    FixedDiv (fixed a, fixed b);

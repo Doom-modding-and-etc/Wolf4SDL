@@ -51,8 +51,8 @@ void FireFly_ProjectileThink (objtype *proj)
     proj->x += movex;
     proj->y += movey;
 
-    deltax = LABS(proj->x - player->x);
-    deltay = LABS(proj->y - player->y);
+    deltax = labs((int32_t)proj->x - player->x);
+    deltay = labs((int32_t)proj->y - player->y);
 
     if (deltax < PROJECTILESIZE && deltay < PROJECTILESIZE)
     {

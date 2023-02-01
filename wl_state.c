@@ -45,15 +45,15 @@ void SpawnNewObj(unsigned tilex, unsigned tiley, statetype* state);
 #endif
 void    NewState (objtype *ob, statetype *state);
 
-bool TryWalk (objtype *ob);
+boolean TryWalk (objtype *ob);
 void    MoveObj (objtype *ob, int32_t move);
 
 void    KillActor (objtype *ob);
 void    DamageActor (objtype *ob, unsigned damage);
 
-bool CheckLine (objtype *ob);
+boolean CheckLine (objtype *ob);
 void    FirstSighting (objtype *ob);
-bool CheckSight (objtype *ob);
+boolean CheckSight (objtype *ob);
 
 /*
 =============================================================================
@@ -262,7 +262,7 @@ void NewState(objtype* ob, statetype* state)
 }
 #endif
 
-bool TryWalk (objtype *ob)
+boolean TryWalk (objtype *ob)
 {
     int       doornum = -1;
     uintptr_t temp;
@@ -1295,7 +1295,7 @@ void DamageActor (objtype *ob, unsigned damage)
 =====================
 */
 
-bool CheckLine (objtype *ob)
+boolean CheckLine (objtype *ob)
 {
     int         x1,y1,xt1,yt1,x2,y2,xt2,yt2;
     int         x,y;
@@ -1442,7 +1442,7 @@ bool CheckLine (objtype *ob)
 
 #define MINSIGHT        0x18000l
 
-bool CheckSight (objtype *ob)
+boolean CheckSight (objtype *ob)
 {
     int32_t deltax,deltay;
 
@@ -1741,11 +1741,7 @@ void FirstSighting (objtype *ob)
         ob->distance = 0;       // ignore the door opening command
 
     ob->flags |= FL_ATTACKMODE|FL_FIRSTATTACK;
-#ifdef _XBOX
-	ob->active = ac_yes;
-#else
     ob->active = true;	// wake up the guards! Wolf3s: HUH?
-#endif
 }
 
 
@@ -1764,7 +1760,7 @@ void FirstSighting (objtype *ob)
 ===============
 */
 
-bool SightPlayer (objtype *ob)
+boolean SightPlayer (objtype *ob)
 {
     if (ob->flags & FL_ATTACKMODE)
         Quit ("An actor in ATTACKMODE called SightPlayer!");
