@@ -39,7 +39,7 @@ typedef struct HealthMeter_Bar_s
     short full_hitpoints;
     int objindex;
     bool flashing;
-    int32_t flashtics;
+    int flashtics;
     int shapenum;
     int cropx, cropy;
     int cropw, croph;
@@ -538,13 +538,13 @@ int HealthMeter_NewBarEnemy(objtype *ob, int shapenum, int cropx,
     return barId;
 }
 
-int32_t HealthMeter_SaveTheGame(FILE *file, int32_t checksum)
+int HealthMeter_SaveTheGame(FILE *file, int checksum)
 {
     SAVE_FIELD(HealthMeter);
     return checksum;
 }
 
-int32_t HealthMeter_LoadTheGame(FILE *file, int32_t checksum)
+int HealthMeter_LoadTheGame(FILE *file, int checksum)
 {
     int i;
 

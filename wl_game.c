@@ -46,7 +46,7 @@ gametype        gamestate;
 unsigned char            bordercol=VIEWCOLOR;        // color of the Change View/Ingame border
 
 #ifdef SPEAR
-int32_t        spearx,speary;
+int             spearx,speary;
 uint32_t        spearangle;
 boolean         spearflag;
 #endif
@@ -1191,11 +1191,11 @@ void StartDemoRecord (int levelnumber)
 
 void FinishDemoRecord (void)
 {
-    int32_t    length,level;
+    int        length,level;
 
     demorecord = false;
 
-    length = (int32_t) (demoptr - (int8_t *)demobuffer);
+    length = (int) (demoptr - (int8_t *)demobuffer);
 
     demoptr = ((int8_t *)demobuffer)+1;
     demoptr[0] = (int8_t) length;
@@ -1381,7 +1381,7 @@ void PlayDemo (int demonumber)
 void Died (void)
 {
     float   fangle;
-    int32_t dx,dy;
+    int     dx,dy;
     int     iangle,curangle,clockwise,counter,change;
 
     if (screenfaded)

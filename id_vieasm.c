@@ -602,7 +602,7 @@ boolean SD_MusicPlaying(void)
 
 // This has changed slightly - it returns 0 on an error, 1 on a successful load
 
-int32_t CA_CacheAudioChunk(int chunk)
+int CA_CacheAudioChunk(int chunk)
 {
     if (chunk >= NUMSOUNDS)
     {

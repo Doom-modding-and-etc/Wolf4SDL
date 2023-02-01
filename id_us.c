@@ -50,7 +50,7 @@ static	boolean		US_Started;
 
 int rndindex = 0;
 
-static byte rndtable[] = {
+static unsigned char rndtable[] = {
       0,   8, 109, 220, 222, 241, 149, 107,  75, 248, 254, 140,  16,  66,
 	 74,  21, 211,  47,  80, 242, 154,  27, 205, 128, 161,  89,  77,  36,
 	 95, 110,  85,  48, 212, 140, 211, 249,  22,  79, 200,  50,  28, 188,
@@ -189,7 +189,7 @@ US_PrintUnsigned(unsigned int n)
 //
 ///////////////////////////////////////////////////////////////////////////
 void
-US_PrintSigned(int32_t n)
+US_PrintSigned(int n)
 {
 	char	buffer[32];
 
@@ -726,7 +726,7 @@ US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 			temp = fontcolor;
 			fontcolor = backcolor;
 			USL_DrawString(olds);
-			fontcolor = (byte) temp;
+			fontcolor = (unsigned char) temp;
 			strcpy(olds,s);
 
 			px = x;

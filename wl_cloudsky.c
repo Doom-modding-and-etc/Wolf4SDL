@@ -183,7 +183,7 @@ void InitSky (void)
     int             i,j,k,m,n,calcedCols;
     int             cloudskyid = GetCloudSkyDefID();
     int16_t         index;
-    int32_t         value;
+    int         value;
 
     if(cloudskyid >= lengthof(cloudSkys))
         Quit("Illegal cloud sky id: %u", cloudskyid);
@@ -329,7 +329,7 @@ void DrawCloudPlanes (void)
 {
     int     x,y;
     int16_t	height;
-    int32_t speed;
+    int speed;
 
     speed = curSky->speed * tics;
 

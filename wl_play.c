@@ -579,7 +579,7 @@ void PollControls (void)
     {
         // wait up to DEMOTICS Wolf tics
         uint32_t curtime = SDL_GetTicks();
-		int32_t timediff;
+		int timediff;
         lasttimecount += DEMOTICS;
         timediff = (lasttimecount * 100) / 7 - curtime;
         if(timediff > 0)
@@ -1623,7 +1623,7 @@ think:
 =
 ===================
 */
-int32_t funnyticount;
+int funnyticount;
 
 
 void PlayLoop (void)

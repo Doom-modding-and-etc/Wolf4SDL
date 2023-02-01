@@ -3,7 +3,7 @@
 #include "wl_def.h"
 
 LRstruct LevelRatios[LRpack];
-int32_t lastBreathTime = 0;
+int lastBreathTime = 0;
 
 #ifdef SEGA_SATURN
 extern uint8_t* wallData;
@@ -130,7 +130,7 @@ void
 Victory (void)
 {
 #ifndef SPEARDEMO
-    int32_t sec;
+    int sec;
     int i, min, kr, sr, tr, x;
     char tempstr[8];
 
@@ -429,7 +429,7 @@ BJ_Breathe (void)
 
     SDL_Delay(5);
 
-    if ((int32_t) GetTimeCount () - lastBreathTime > max)
+    if ((int) GetTimeCount () - lastBreathTime > max)
     {
         which ^= 1;
         VWB_DrawPic (0, 16, pics[which]);
@@ -473,7 +473,7 @@ LevelCompleted (void)
 
     int x, i, min, sec, ratio, kr, sr, tr;
     char tempstr[10];
-    int32_t bonus, timeleft = 0;
+    int bonus, timeleft = 0;
     times parTimes[] = {
 #ifndef SPEAR
         //
@@ -686,7 +686,7 @@ LevelCompleted (void)
             sec = 99 * 60;
 
         if (gamestate.TimeCount < parTimes[gamestate.episode * 10 + gamestate.mapon].time * 4200)
-            timeleft = (int32_t) ((parTimes[gamestate.episode * 10 + gamestate.mapon].time * 4200) / 70 - sec);
+            timeleft = (int) ((parTimes[gamestate.episode * 10 + gamestate.mapon].time * 4200) / 70 - sec);
 
         min = sec / 60;
         sec %= 60;
@@ -746,7 +746,7 @@ LevelCompleted (void)
         {
             for (i = 0; i <= timeleft; i++)
             {
-                w3sltoa ((int32_t) i * PAR_AMOUNT, tempstr, 10);
+                w3sltoa ((int) i * PAR_AMOUNT, tempstr, 10);
                 x = 36 - (int) strlen(tempstr) * 2;
                 Write (x, 7, tempstr);
                 if (!(i % (PAR_AMOUNT / 10)))
@@ -971,7 +971,7 @@ done:   w3sitoa (kr, tempstr, 10);
 #else
         Write (x, 18, tempstr);
 #endif
-        bonus = (int32_t) timeleft *PAR_AMOUNT +
+        bonus = (int) timeleft *PAR_AMOUNT +
             (PERCENT100AMT * (kr >= 100)) +
             (PERCENT100AMT * (sr >= 100)) + (PERCENT100AMT * (tr >= 100));
 
@@ -1122,7 +1122,7 @@ PreloadUpdate (unsigned current, unsigned total)
 
     VWB_BarScaledCoord (WindowX + scaleFactor * 5, WindowY + WindowH - scaleFactor * 3,
         w, scaleFactor * 2, BLACK);
-    w = ((int32_t) w * current) / total;
+    w = ((int) w * current) / total;
     if (w)
     {
         VWB_BarScaledCoord (WindowX + scaleFactor * 5, WindowY + WindowH - scaleFactor * 3,
@@ -1512,7 +1512,7 @@ DrawHighScores (void)
 */
 
 void
-CheckHighScore (int32_t score, unsigned short other)
+CheckHighScore (int score, unsigned short other)
 {
     unsigned short i, j;
     int n;

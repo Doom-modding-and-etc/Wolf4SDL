@@ -177,7 +177,7 @@ void Quit(const char* errorStr, ...);
 #define SIGN(x)         ((x) > 0 ? 1 : -1)
 #ifdef MATH
 #define abs(x)          ((int)(x) > 0 ? (x) : -(x))
-#define labs(x)         ((int32_t)(x) > 0 ? (x) : -(x))
+#define labs(x)         ((int)(x) > 0 ? (x) : -(x))
 #endif
 #define lengthof(x)     (sizeof((x)) / sizeof(*(x)))
 #define endof(x)        ((x) + lengthof((x)))
@@ -257,10 +257,9 @@ typedef unsigned char tiletype;
 #define PLAYERSIZE      MINDIST         // player radius
 #define MINACTORDIST    0x10000l        // minimum dist from player center
                                         // to any actor center
-
-#undef M_PI
-#define PI              3.141592657
-#define M_PI PI
+#ifdef MATH
+#define M_PI              3.141592657
+#endif
 #ifdef SPEARDEMO
 #define NUMDEMOS 1
 #else
@@ -945,7 +944,7 @@ typedef struct objstruct
 
     uint32_t    flags;              // FL_SHOOTABLE, etc
 
-    int32_t     distance;           // if negative, wait for that door to open
+    int     distance;           // if negative, wait for that door to open
     dirtype     dir;
 
     fixed       x, y;
@@ -958,7 +957,7 @@ typedef struct objstruct
 
     short       angle;
     short       hitpoints;
-    int32_t     speed;
+    int     speed;
 
     short       temp1, temp2, hidden;
     struct objstruct* next, * prev;
@@ -1017,7 +1016,7 @@ typedef struct
 {
     short       difficulty;
     short       mapon;
-    int32_t     oldscore, score, nextextra;
+    int     oldscore, score, nextextra;
     short       lives;
     short       health;
     short       ammo;
@@ -1029,8 +1028,8 @@ typedef struct
 
     short       episode, secretcount, treasurecount, killcount,
         secrettotal, treasuretotal, killtotal;
-    int32_t     TimeCount;
-    int32_t     killx, killy;
+    int     TimeCount;
+    int     killx, killy;
     boolean     victoryflag;            // set during victory animations
 } gametype;
 
@@ -1089,7 +1088,7 @@ extern  int      mouseadjustment;
 //
 // derived constants
 //
-extern  int32_t  heightnumerator;
+extern  int      heightnumerator;
 extern  fixed    scale;
 
 #ifndef SEGA_SATURN
@@ -1110,7 +1109,7 @@ extern  boolean  param_ignorenumchunks;
 #endif
 
 void            NewGame(int difficulty, int episode);
-void            CalcProjection(int32_t focal);
+void            CalcProjection(int focal);
 void            NewViewSize(int width);
 boolean         SetViewSize(unsigned width, unsigned height);
 boolean         LoadTheGame(FILE* file, int x, int y);
@@ -1135,7 +1134,7 @@ extern  char        demoname[13];
 #endif
 
 #ifdef SPEAR
-extern  int32_t     spearx, speary;
+extern  int     spearx, speary;
 extern  uint32_t    spearangle;
 extern  boolean     spearflag;
 #endif
@@ -1188,7 +1187,7 @@ void    UpdateSoundLoc(void);
 #define JOYSCALE    2
 
 #ifdef SPEAR
-extern  int32_t     funnyticount;           // FOR FUNNY BJ FACE
+extern  int     funnyticount;           // FOR FUNNY BJ FACE
 #endif
 
 extern  exit_t      playstate;
@@ -1283,7 +1282,7 @@ void    StartBonusFlash(void);
 void IntroScreen(void);
 void PG13(void);
 void DrawHighScores(void);
-void CheckHighScore(int32_t score, unsigned short other);
+void CheckHighScore(int score, unsigned short other);
 void Victory(void);
 void LevelCompleted(void);
 void ClearSplitVWB(void);
@@ -1313,8 +1312,8 @@ void PictureGrabber(void);
 
 extern  unsigned char* vbuf;
 
-extern  int32_t lasttimecount;
-extern  int32_t frameon;
+extern  int lasttimecount;
+extern  int frameon;
 extern  boolean fizzlein, fpscounter;
 
 #if defined(USE_FLOORCEILINGTEX) || defined(USE_CLOUDSKY)
@@ -1327,7 +1326,7 @@ extern  int16_t* wallheight;
 // math tables
 //
 extern  short* pixelangle;
-extern  int32_t finetangent[FINEANGLES / 4];
+extern  int finetangent[FINEANGLES / 4];
 extern  fixed   sintable[ANGLES + ANGLES / 4];
 extern  fixed* costable;
 
@@ -1394,7 +1393,7 @@ boolean TryWalk(objtype* ob);
 void    SelectChaseDir(objtype* ob);
 void    SelectDodgeDir(objtype* ob);
 void    SelectRunDir(objtype* ob);
-void    MoveObj(objtype* ob, int32_t move);
+void    MoveObj(objtype* ob, int move);
 boolean SightPlayer(objtype* ob);
 
 void    KillActor(objtype* ob);
@@ -1414,18 +1413,18 @@ boolean CheckSight(objtype* ob);
 //
 // player state info
 //
-extern  int32_t  thrustspeed;
+extern  int thrustspeed;
 extern  unsigned short     plux, pluy;         // player coordinates scaled to unsigned
 extern  objtype* LastAttacker;
 
 extern  short    anglefrac;
 extern  int      facecount, facetimes;
 
-void    Thrust(int angle, int32_t speed);
+void    Thrust(int angle, int speed);
 void    SpawnPlayer(int tilex, int tiley, int dir);
 void    TakeDamage(int points, objtype* attacker);
-void    GivePoints(int32_t points);
-void    GivePoints(int32_t points);
+void    GivePoints(int points);
+void    GivePoints(int points);
 void    GetBonus(statobj_t* check);
 void    GiveWeapon(int weapon);
 void    GiveAmmo(int ammo);

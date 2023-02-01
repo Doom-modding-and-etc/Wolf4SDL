@@ -459,7 +459,7 @@ finished:
 #endif
 #else
     unsigned x, y, p, frame, pixperframe;
-    int32_t  rndval = 0, lastrndval = 0;
+    int  rndval = 0, lastrndval = 0;
     int      i,first = 1;
 	unsigned char *srcptr;
     pixperframe = width * height / frames;

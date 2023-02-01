@@ -26,8 +26,8 @@
 
 unsigned char *vbuf;
 
-int32_t    lasttimecount;
-int32_t    frameon;
+int        lasttimecount;
+int        frameon;
 boolean fpscounter;
 
 int fps_frames=0, fps_time=0, fps=0;
@@ -42,7 +42,7 @@ int16_t *wallheight;
 // math tables
 //
 short *pixelangle;
-int32_t finetangent[FINEANGLES/4];
+int    finetangent[FINEANGLES/4];
 fixed sintable[ANGLES+ANGLES/4];
 fixed *costable = sintable+(ANGLES/4);
 
@@ -205,8 +205,8 @@ boolean TransformTile (int tx, int ty, short *dispx, short *dispheight)
 //
 // translate point to view centered coordinates
 //
-    gx = ((int32_t)tx<<TILESHIFT)+0x8000-viewx;
-    gy = ((int32_t)ty<<TILESHIFT)+0x8000-viewy;
+    gx = ((int)tx<<TILESHIFT)+0x8000-viewx;
+    gy = ((int)ty<<TILESHIFT)+0x8000-viewy;
 
 //
 // calculate newx
@@ -972,7 +972,7 @@ void CalcTics (void)
 //
 // calculate tics since last refresh for adaptive timing
 //
-    if (lasttimecount > (int32_t) GetTimeCount())
+    if (lasttimecount > (int) GetTimeCount())
         lasttimecount = GetTimeCount();    // if the game was paused a LONG time
 
     curtime = SDL_GetTicks();
@@ -1012,7 +1012,7 @@ void CalcTics (void)
 void WallRefresh (void)
 {
     int16_t   angle;
-    int32_t   xstep,ystep;
+    int       xstep,ystep;
     fixed     xinttemp,yinttemp;                            // holds temporary intercept position
     unsigned int  xpartial,ypartial;
     doorobj_t *door;
@@ -1266,8 +1266,8 @@ vertentry:
                         {
                             if (xtile == pwallx && yinttile == pwally)
                             {
-                                if (pwalldir == di_south && (int32_t)((unsigned short)yintercept) + ystep < (pwallposi << 10)
-                                 || pwalldir == di_north && (int32_t)((unsigned short)yintercept) + ystep > (pwallposi << 10))
+                                if (pwalldir == di_south && (int)((unsigned short)yintercept) + ystep < (pwallposi << 10)
+                                 || pwalldir == di_north && (int)((unsigned short)yintercept) + ystep > (pwallposi << 10))
                                     goto passvert;
 
                                 //
@@ -1305,8 +1305,8 @@ vertentry:
                             }
                             else
                             {
-                                if (pwalldir == di_south && (int32_t)((unsigned short)yintercept) + ystep > (pwallposi << 10)
-                                 || pwalldir == di_north && (int32_t)((unsigned short)yintercept) + ystep < (pwallposi << 10))
+                                if (pwalldir == di_south && (int)((unsigned short)yintercept) + ystep > (pwallposi << 10)
+                                 || pwalldir == di_north && (int)((unsigned short)yintercept) + ystep < (pwallposi << 10))
                                     goto passvert;
 
                                 //
@@ -1477,8 +1477,8 @@ horizentry:
                         {
                             if (xinttile == pwallx && ytile == pwally)
                             {
-                                if (pwalldir == di_east && (int32_t)((unsigned short)xintercept) + xstep < (pwallposi << 10)
-                                 || pwalldir == di_west && (int32_t)((unsigned short)xintercept) + xstep > (pwallposi << 10))
+                                if (pwalldir == di_east && (int)((unsigned short)xintercept) + xstep < (pwallposi << 10)
+                                 || pwalldir == di_west && (int)((unsigned short)xintercept) + xstep > (pwallposi << 10))
                                     goto passhoriz;
 
                                 //
@@ -1517,8 +1517,8 @@ horizentry:
                             }
                             else
                             {
-                                if (pwalldir == di_east && (int32_t)((unsigned short)xintercept) + xstep > (pwallposi << 10)
-                                 || pwalldir == di_west && (int32_t)((unsigned short)xintercept) + xstep < (pwallposi << 10))
+                                if (pwalldir == di_east && (int)((unsigned short)xintercept) + xstep > (pwallposi << 10)
+                                 || pwalldir == di_west && (int)((unsigned short)xintercept) + xstep < (pwallposi << 10))
                                     goto passhoriz;
 
                                 //

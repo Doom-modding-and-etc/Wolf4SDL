@@ -691,7 +691,7 @@ void DoorOpening (int door)
 {
     unsigned area1,area2;
     unsigned short *map;
-    int32_t position;
+    int position;
 
     position = doorposition[door];
     if (!position)
@@ -762,7 +762,7 @@ void DoorClosing (int door)
 {
     unsigned area1,area2;
     unsigned short *map;
-    int32_t position;
+    int position;
     int tilex,tiley;
 
     tilex = doorobjlist[door].tilex;

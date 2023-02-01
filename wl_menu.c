@@ -3369,7 +3369,7 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
     char key;
     static int redrawitem = 1, lastitem = -1;
     int i, x, y, basey, exit, which, shape;
-    int32_t lastBlinkTime, timer;
+    int lastBlinkTime, timer;
     ControlInfo ci;
 
 
@@ -3405,7 +3405,7 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
         //
         // CHANGE GUN SHAPE
         //
-        if ((int32_t)GetTimeCount () - lastBlinkTime > timer)
+        if ((int)GetTimeCount () - lastBlinkTime > timer)
         {
             lastBlinkTime = GetTimeCount ();
             if (shape == C_CURSOR1PIC)
@@ -3660,13 +3660,13 @@ TicDelay (int count)
 {
     ControlInfo ci;
 
-    int32_t startTime = GetTimeCount ();
+    int startTime = GetTimeCount ();
     do
     {
         SDL_Delay(5);
         ReadAnyControl (&ci);
     }
-    while ((int32_t) GetTimeCount () - startTime < count && ci.dir != dir_None);
+    while ((int) GetTimeCount () - startTime < count && ci.dir != dir_None);
 }
 
 

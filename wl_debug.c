@@ -69,7 +69,7 @@ void CountObjects (void)
     US_PrintUnsigned (total);
 
     char str[60];
-    sprintf(str,"\nlaststatobj=%.8X",(int32_t)(uintptr_t)laststatobj);
+    sprintf(str,"\nlaststatobj=%.8X",(int)(uintptr_t)laststatobj);
     US_Print(str);
 
     US_Print("\nIn use statics   :");

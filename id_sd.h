@@ -61,7 +61,7 @@ typedef struct
 typedef struct
 {
     SoundCommon     common;
-    byte            data[1];
+    unsigned char            data[1];
 } PCSound;
 #endif
 
@@ -82,7 +82,7 @@ typedef struct
 #ifndef SEGA_SATURN
 typedef struct
 {
-    byte    mChar,cChar,
+    unsigned char    mChar,cChar,
             mScale,cScale,
             mAttack,cAttack,
             mSus,cSus,
@@ -92,7 +92,7 @@ typedef struct
             // These are only for Muse - these bytes are really unused
             voice,
             mode;
-    byte    unused[3];
+    unsigned char    unused[3];
 } Instrument;
 #endif
 #define ORIG_INSTRUMENT_SIZE 16
@@ -102,8 +102,8 @@ typedef struct
 {
     SoundCommon     common;
     Instrument      inst;
-    byte            block;
-    byte            data[1];
+    unsigned char            block;
+    unsigned char            data[1];
 } AdLibSound;
 
 #define ORIG_ADLIBSOUND_SIZE (ORIG_SOUNDCOMMON_SIZE + ORIG_INSTRUMENT_SIZE + 2)
@@ -159,7 +159,7 @@ extern  int             DigiChannel[];
 #define GetTimeCount()  ((SDL_GetTicks()*7)/100)
 
 // Function prototypes
-void            Delay (int32_t wolfticks);
+void            Delay (int wolfticks);
 
 extern  void    SD_Startup(void),
                 SD_Shutdown(void);

@@ -130,7 +130,7 @@ typedef struct
 #if MAPPLANES >= 4
     unsigned short numplanes;       // unused, but WDC needs 2 bytes here for internal usage
 #endif
-    int32_t headeroffsets[NUMMAPS];
+    int headeroffsets[NUMMAPS];
 } mapfiletype;
 
 
@@ -206,10 +206,10 @@ static const char afilename[] = "audiot.";
 #ifndef SEGA_SATURN
 void CA_CannotOpen(const char *string);
 #endif 
-static int32_t  grstarts[NUMCHUNKS + 1];
+static int  grstarts[NUMCHUNKS + 1];
 
 #if !defined(VIEASM) || !defined(SEGA_SATURN)
-static int32_t* audiostarts; // array of offsets in audio / audiot
+static int* audiostarts; // array of offsets in audio / audiot
 #endif
 
 #ifdef GRHEADERLINKED
@@ -224,14 +224,14 @@ int    maphandle = -1;              // handle to MAPTEMP / GAMEMAPS
 #if !defined(VIEASM) || !defined(SEGA_SATURN)
 int    audiohandle = -1;            // handle to AUDIOT / AUDIO
 #endif
-int32_t   chunkcomplen,chunkexplen;
+int   chunkcomplen,chunkexplen;
 
 #ifndef VIEASM
 SDMode oldsoundmode;
 #endif
 
 
-static int32_t GRFILEPOS(const size_t idx)
+static int GRFILEPOS(const size_t idx)
 {
 #ifdef SEGA_SATURN
     #define assert8(x) if(!(x)) { slPrint((char *)"asset test failed8", slLocate(10,20));return;}
@@ -280,7 +280,7 @@ void CAL_GetGrChunkLength (int chunk)
 ==========================
 */
 
-boolean CA_WriteFile (const char *filename, void *ptr, int32_t length)
+boolean CA_WriteFile (const char *filename, void *ptr, int length)
 {
     const int handle = w3sopen(filename, O_CREAT | O_WRONLY | O_BINARY, 0644);
     if (handle == -1)
@@ -309,7 +309,7 @@ boolean CA_WriteFile (const char *filename, void *ptr, int32_t length)
 
 boolean CA_LoadFile (const char *filename, void **ptr)
 {
-    int32_t size;
+    int size;
 
     const int handle = w3sopen(filename, O_RDONLY | O_BINARY);
     if (handle == -1)
@@ -334,7 +334,7 @@ boolean CA_LoadFile (const char *filename, void **ptr)
 ============================================================================
 */
 
-static void CAL_HuffExpand(unsigned char *source, unsigned char *dest, int32_t length, huffnode *hufftable)
+static void CAL_HuffExpand(unsigned char *source, unsigned char *dest, int length, huffnode *hufftable)
 {
     unsigned char *end;
     huffnode *headptr, *huffptr;
@@ -470,7 +470,7 @@ void CAL_CarmackExpand (unsigned char *source, unsigned short *dest, int length)
 ======================
 */
 
-int32_t CA_RLEWCompress (unsigned short *source, int32_t length, unsigned short *dest, unsigned short rlewtag)
+int CA_RLEWCompress (unsigned short *source, int length, unsigned short *dest, unsigned short rlewtag)
 {
     unsigned short value,count;
     unsigned i;
@@ -512,7 +512,7 @@ int32_t CA_RLEWCompress (unsigned short *source, int32_t length, unsigned short 
 
     } while (source<end);
 
-    return (int32_t)(2*(dest-start));
+    return (int)(2*(dest-start));
 }
 
 #ifndef SEGA_SATURN
@@ -525,7 +525,7 @@ int32_t CA_RLEWCompress (unsigned short *source, int32_t length, unsigned short 
 ======================
 */
 
-void CA_RLEWexpand (unsigned short *source, unsigned short *dest, int32_t length, unsigned short rlewtag)
+void CA_RLEWexpand (unsigned short *source, unsigned short *dest, int length, unsigned short rlewtag)
 {
     unsigned short value,count,i;
     unsigned short *end=dest+length/2;
@@ -677,10 +677,10 @@ void CAL_SetupGrFile (void)
     //close(handle);
 
     const unsigned char* d = data;
-    for (int32_t* i = grstarts; i != endof(grstarts); ++i)
+    for (int* i = grstarts; i != endof(grstarts); ++i)
     {
         //	slPrint((char *)"CAL_SetupGrFile5     ",slLocate(10,12));	
-        const int32_t val = d[0] | d[1] << 8 | d[2] << 16;
+        const int val = d[0] | d[1] << 8 | d[2] << 16;
         *i = (val == 0x00FFFFFF ? -1 : val);
         d += 3;
     }
@@ -713,7 +713,7 @@ void CAL_SetupGrFile (void)
     //slPrint((char *)"CAL_SetupGrFile7     ",slLocate(10,12));
     pictable = (pictabletype*)malloc(NUMPICS * sizeof(pictabletype));
 
-    int32_t   chunkcomplen = CAL_GetGrChunkLength(STRUCTPIC);                // position file pointer
+    int   chunkcomplen = CAL_GetGrChunkLength(STRUCTPIC);                // position file pointer
     //	compseg =(byte*)malloc((chunkcomplen));
     compseg = (unsigned char*)saturnChunk;
     //	CHECKMALLOCRESULT(compseg);
@@ -739,7 +739,7 @@ void CAL_SetupGrFile (void)
 	int expectedsize;
 	unsigned char data[lengthof(grstarts) * 3];
 	const unsigned char* d;
-	int32_t* i;
+	int* i;
 //
 // load ???dict.ext (huffman dictionary for graphics files)
 //
@@ -781,7 +781,7 @@ void CAL_SetupGrFile (void)
     d = data;
     for (i = grstarts; i != endof(grstarts); ++i)
     {
-        const int32_t val = d[0] | d[1] << 8 | d[2] << 16;
+        const int val = d[0] | d[1] << 8 | d[2] << 16;
         *i = (val == 0x00FFFFFF ? -1 : val);
         d += 3;
     }
@@ -834,7 +834,7 @@ void CAL_SetupMapFile (void)
 #ifndef SEGA_SATURN
     int     i;
 #endif
-    int32_t length, pos;
+    int length, pos;
     char fname[13];
     long fileSize;
 
@@ -948,7 +948,7 @@ void CAL_SetupMapFile (void)
 #else
     int     i;
     int handle;
-    int32_t pos;
+    int pos;
 #if defined(SWITCH) || defined (N3DS) || defined(SATURN)
     char fname[13 + sizeof(DATADIR)];
 #else
@@ -1043,7 +1043,7 @@ void CAL_SetupAudioFile (void)
     
     if (!CA_LoadFile(fname, &ptr))
         CA_CannotOpen(fname);
-    audiostarts = (int32_t*)ptr;
+    audiostarts = (int*)ptr;
 
 //
 // open the data file
@@ -1174,10 +1174,10 @@ void CA_Shutdown (void)
 ======================
 */
 #ifndef VIEASM
-int32_t CA_CacheAudioChunk (int chunk)
+int CA_CacheAudioChunk (int chunk)
 {
-    int32_t pos = audiostarts[chunk];
-    int32_t size = audiostarts[chunk+1]-pos;
+    int pos = audiostarts[chunk];
+    int size = audiostarts[chunk+1]-pos;
 
     if (audiosegs[chunk])
         return size;                        // already in memory
@@ -1316,9 +1316,9 @@ cachein:
 ======================
 */
 
-void CAL_ExpandGrChunk (int chunk, int32_t *source)
+void CAL_ExpandGrChunk (int chunk, int *source)
 {
-    int32_t    expanded;
+    int    expanded;
 
     if (chunk >= STARTTILE8 && chunk < STARTEXTERNS)
     {
@@ -1401,9 +1401,9 @@ void CAL_DeplaneGrChunk (int chunk)
 
 void CA_CacheGrChunks (void)
 {
-    int32_t pos,compressed;
-    int32_t *bufferseg;
-    int32_t *source;
+    int pos,compressed;
+    int *bufferseg;
+    int *source;
     int     chunk,next;
 
     for (chunk = STRUCTPIC + 1; chunk < NUMCHUNKS; chunk++)
@@ -1451,7 +1451,7 @@ void CA_CacheGrChunks (void)
         }
         else
         {
-            source = (int32_t*)malloc(compressed);
+            source = (int*)malloc(compressed);
             CHECKMALLOCRESULT(source);
             //read(grhandle,source,compressed);
 
@@ -1507,7 +1507,7 @@ void CA_CacheGrChunks (void)
 
 void CA_CacheMap (int mapnum)
 {
-    int32_t  pos,compressed;
+    int  pos,compressed;
     int      plane;
     unsigned short *dest;
     unsigned size;
@@ -1515,7 +1515,7 @@ void CA_CacheMap (int mapnum)
     unsigned short *source;
 #ifdef CARMACIZED
     unsigned short *buffer2seg;
-    int32_t  expanded;
+    int  expanded;
 #endif
 #ifdef SEGA_SATURN
     long fileSize;

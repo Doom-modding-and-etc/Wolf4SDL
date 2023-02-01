@@ -45,7 +45,7 @@ void PM_Startup (void)
     unsigned char     *page;
     uint32_t *pageOffsets;
     uint32_t pagesize;
-    int32_t 
+    int 
 #ifndef SEGA_SATURN
     filesize,
 #endif
@@ -118,7 +118,7 @@ void PM_Startup (void)
     //
 
 #ifdef SEGA_SATURN
-    pageLengths = (unsigned short*)saturnChunk + (ChunksInFile + 1) * sizeof(int32_t);
+    pageLengths = (unsigned short*)saturnChunk + (ChunksInFile + 1) * sizeof(int);
 #else
     pageLengths = (unsigned short*)SafeMalloc(ChunksInFile * sizeof(*pageLengths));
 #endif

@@ -27,11 +27,11 @@ void FireFly_Launch(objtype *ob, objtype *proj)
 
 void FireFly_ProjectileThink (objtype *proj)
 {
-    int32_t deltax,deltay,movex,movey;
+    int deltax,deltay,movex,movey;
     int     damage;
-    int32_t speed;
+    int speed;
 
-    speed = (int32_t)proj->speed*tics;
+    speed = (int)proj->speed*tics;
 
     movex = FixedMul(speed,costable[proj->angle]);
     movey = -FixedMul(speed,sintable[proj->angle]);
@@ -51,8 +51,8 @@ void FireFly_ProjectileThink (objtype *proj)
     proj->x += movex;
     proj->y += movey;
 
-    deltax = labs((int32_t)proj->x - player->x);
-    deltay = labs((int32_t)proj->y - player->y);
+    deltax = labs((int)proj->x - player->x);
+    deltay = labs((int)proj->y - player->y);
 
     if (deltax < PROJECTILESIZE && deltay < PROJECTILESIZE)
     {

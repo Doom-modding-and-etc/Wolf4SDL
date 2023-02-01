@@ -13,7 +13,7 @@ void HealthMeter_Draw(void);
 int HealthMeter_NewBarEnemy(objtype* ob, int shapenum, int cropx,
     int cropy, int cropw, int croph);
 
-int32_t HealthMeter_SaveTheGame(FILE* file, int32_t checksum);
+int HealthMeter_SaveTheGame(FILE* file, int checksum);
 
-int32_t HealthMeter_LoadTheGame(FILE* file, int32_t checksum);
+int HealthMeter_LoadTheGame(FILE* file, int checksum);
 #endif

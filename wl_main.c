@@ -69,7 +69,7 @@ int      viewheight;
 short    centerx,centery;
 int      shootdelta;           // pixels away from centerx a target can be
 fixed    scale;
-int32_t  heightnumerator;
+int  heightnumerator;
 
 
 void    Quit (const char *error,...);
@@ -405,7 +405,7 @@ void DiskFlopAnim(int x,int y)
 }
 
 
-int32_t DoChecksum(unsigned char *source,unsigned size,int32_t checksum)
+int DoChecksum(unsigned char *source,unsigned size,int checksum)
 {
     unsigned i;
 
@@ -553,7 +553,7 @@ boolean LoadTheGame(FILE *file,int x,int y)
     int i,j;
     int actnum = 0;
     unsigned short laststatobjnum;
-    int32_t checksum,oldchecksum;
+    int checksum,oldchecksum;
     objtype nullobj;
     statobj_t nullstat;
 
@@ -777,7 +777,7 @@ void ShutdownId (void)
 ==================
 */
 
-const float radtoint = (float)(FINEANGLES/2/PI);
+const float radtoint = (float)(FINEANGLES/2/M_PI);
 
 void BuildTables (void)
 {
@@ -791,8 +791,8 @@ void BuildTables (void)
     for(i=0;i<FINEANGLES/8;i++)
     {
         double tang=tan((i+0.5)/radtoint);
-        finetangent[i]=(int32_t)(tang*GLOBAL1);
-        finetangent[FINEANGLES/4-1-i]=(int32_t)((1/tang)*GLOBAL1);
+        finetangent[i]=(int)(tang*GLOBAL1);
+        finetangent[FINEANGLES/4-1-i]=(int)((1/tang)*GLOBAL1);
     }
 
     //
@@ -801,10 +801,10 @@ void BuildTables (void)
     //
 
     angle=0;
-    anglestep=(float)(PI/2/ANGLEQUAD);
+    anglestep=(float)(M_PI/2/ANGLEQUAD);
     for(i=0; i<ANGLEQUAD; i++)
     {
-        fixed value=(int32_t)(GLOBAL1*sin(angle));
+        fixed value=(int)(GLOBAL1*sin(angle));
         sintable[i]=sintable[i+ANGLES]=sintable[ANGLES/2-i]=value;
         sintable[ANGLES-i]=sintable[ANGLES/2+i]=-value;
         angle+=anglestep;
@@ -830,7 +830,7 @@ void BuildTables (void)
 ====================
 */
 
-void CalcProjection (int32_t focal)
+void CalcProjection (int focal)
 {
     int     i;
     int    intang;
@@ -862,7 +862,7 @@ void CalcProjection (int32_t focal)
     for (i=0;i<halfview;i++)
     {
         // start 1/2 pixel over, so viewangle bisects two middle pixels
-        tang = (int32_t)i*VIEWGLOBAL/viewwidth/facedist;
+        tang = (int)i*VIEWGLOBAL/viewwidth/facedist;
         angle = (float) atan(tang);
         intang = (int) (angle*radtoint);
         pixelangle[halfview-1-i] = intang;

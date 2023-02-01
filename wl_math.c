@@ -134,7 +134,7 @@ vec3f_t mat3f_mult_point(mat3f_t a, vec3f_t b)
         );
 }
 
-vec3fixed_t vec3fixed_anglevec(int32_t angle)
+vec3fixed_t vec3fixed_anglevec(int angle)
 {
     fixed cosv, sinv;
 
@@ -203,7 +203,7 @@ vec3fixed_t mat3fixed_mult_point(mat3fixed_t a, vec3fixed_t b)
         );
 }
 
-mat3fixed_t mat3fixed_rot(int32_t angle)
+mat3fixed_t mat3fixed_rot(int angle)
 {
     mat3fixed_t rotmat;
     fixed cosv, sinv;

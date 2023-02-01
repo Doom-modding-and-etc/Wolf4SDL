@@ -26,7 +26,7 @@
 //
 // player state info
 //
-int32_t        thrustspeed;
+int        thrustspeed;
 
 unsigned short            plux, pluy;          // player coordinates scaled to unsigned
 
@@ -73,7 +73,7 @@ void SelectItem(void);
 boolean TryMove(objtype* ob);
 void T_Player(objtype* ob);
 
-void ClipMove(objtype* ob, int32_t xmove, int32_t ymove);
+void ClipMove(objtype* ob, int xmove, int ymove);
 
 /*
 =============================================================================
@@ -154,7 +154,7 @@ void CheckWeaponChange(void)
 
 void ControlMovement(objtype* ob)
 {
-    int32_t oldx, oldy;
+    int oldx, oldy;
     int     angle;
     int     angleunits;
 
@@ -229,22 +229,24 @@ void ControlMovement(objtype* ob)
 #if SDL_MAJOR_VERSION == 2
     if (gamecontrolstrafe < 0)
     {
+        int speed;
         angle = ob->angle + ANGLES / 4;
         if (angle >= ANGLES)
             angle -= ANGLES;
 
-        int32_t speed = -gamecontrolstrafe * MOVESCALE;
+        speed = -gamecontrolstrafe * MOVESCALE;
         if (controly != 0)
             speed = (speed * 70) / 100; // correct faster diagonal movement
         Thrust(angle, speed);           // move to left
     }
     else if (gamecontrolstrafe > 0)
     {
+        int speed;
         angle = ob->angle - ANGLES / 4;
         if (angle < 0)
             angle += ANGLES;
 
-        int32_t speed = gamecontrolstrafe * MOVESCALE;
+        speed = gamecontrolstrafe * MOVESCALE;
         if (controly != 0)
             speed = (speed * 70) / 100; // correct faster diagonal movement
         Thrust(angle, speed);           // move to right
@@ -256,7 +258,7 @@ void ControlMovement(objtype* ob)
     //
     if (controly < 0)
     {
-        int32_t speed = -controly * MOVESCALE;
+        int speed = -controly * MOVESCALE;
 #if SDL_MAJOR_VERSION == 2        
         if (gamecontrolstrafe != 0)
             speed = (speed * 70) / 100; // correct faster diagonal movement
@@ -265,7 +267,7 @@ void ControlMovement(objtype* ob)
     }
     else if (controly > 0)
     {
-        int32_t speed = controly * BACKMOVESCALE;
+        int speed = controly * BACKMOVESCALE;
         angle = ob->angle + ANGLES / 2;
         if (angle >= ANGLES)
             angle -= ANGLES;
@@ -421,7 +423,7 @@ void UpdateFace(void)
 ===============
 */
 
-static void LatchNumber(int x, int y, unsigned width, int32_t number)
+static void LatchNumber(int x, int y, unsigned width, int number)
 {
     unsigned length, c;
     char    str[20];
@@ -607,7 +609,7 @@ void DrawScore(void)
 ===============
 */
 
-void GivePoints(int32_t points)
+void GivePoints(int points)
 {
     gamestate.score += points;
     while (gamestate.score >= gamestate.nextextra)
@@ -896,7 +898,7 @@ boolean TryMove(objtype* ob)
 {
     int         xl, yl, xh, yh, x, y;
     objtype* check;
-    int32_t     deltax, deltay;
+    int     deltax, deltay;
 
     xl = (ob->x - PLAYERSIZE) >> TILESHIFT;
     yl = (ob->y - PLAYERSIZE) >> TILESHIFT;
@@ -1001,9 +1003,9 @@ boolean TryMove(objtype* ob)
 ===================
 */
 
-void ClipMove(objtype* ob, int32_t xmove, int32_t ymove)
+void ClipMove(objtype* ob, int xmove, int ymove)
 {
-    int32_t    basex, basey;
+    int    basex, basey;
 
     basex = ob->x;
     basey = ob->y;
@@ -1015,8 +1017,8 @@ void ClipMove(objtype* ob, int32_t xmove, int32_t ymove)
 
 #if !defined(REMDEBUG) || !defined(SEGA_SATURN)
     if (noclip && ob->x > 2 * TILEGLOBAL && ob->y > 2 * TILEGLOBAL
-        && ob->x < (((int32_t)(mapwidth - 1)) << TILESHIFT)
-        && ob->y < (((int32_t)(mapheight - 1)) << TILESHIFT))
+        && ob->x < (((int)(mapwidth - 1)) << TILESHIFT)
+        && ob->y < (((int)(mapheight - 1)) << TILESHIFT))
         return;         // walk through walls
 #endif
 
@@ -1085,9 +1087,9 @@ static fixed FixedByFracOrig(fixed a, fixed b)
     return res;
 }
 
-void Thrust(int angle, int32_t speed)
+void Thrust(int angle, int speed)
 {
-    int32_t xmove, ymove;
+    int xmove, ymove;
 
     //
     // ZERO FUNNY COUNTER IF MOVED!
@@ -1277,8 +1279,8 @@ void SpawnPlayer(int tilex, int tiley, int dir)
 #else
     player->areanumber = MAPSPOT(tilex, tiley, 0) - AREATILE;
 #endif
-    player->x = ((int32_t)tilex << TILESHIFT) + TILEGLOBAL / 2;
-    player->y = ((int32_t)tiley << TILESHIFT) + TILEGLOBAL / 2;
+    player->x = ((int)tilex << TILESHIFT) + TILEGLOBAL / 2;
+    player->y = ((int)tiley << TILESHIFT) + TILEGLOBAL / 2;
 #if defined(EMBEDDED) && defined(SEGA_SATURN)
     player->state = s_player;
 #else
@@ -1309,7 +1311,7 @@ void SpawnPlayer(int tilex, int tiley, int dir)
 void    KnifeAttack(objtype* ob)
 {
     objtype* check, * closest;
-    int32_t  dist;
+    int  dist;
 
     SD_PlaySound(ATKKNIFESND);
     // actually fire
@@ -1345,7 +1347,7 @@ void    GunAttack(objtype* ob)
     objtype* check, * closest, * oldclosest;
     int      damage;
     int      dx, dy, dist;
-    int32_t  viewdist;
+    int  viewdist;
 
     switch (gamestate.weapon)
     {
@@ -1426,7 +1428,7 @@ void    GunAttack(objtype* ob)
 
 void VictorySpin(void)
 {
-    int32_t    desty;
+    int    desty;
 
     if (player->angle > 270)
     {
@@ -1441,7 +1443,7 @@ void VictorySpin(void)
             player->angle = 270;
     }
 
-    desty = (((int32_t)player->tiley - 5) << TILESHIFT) - 0x3000;
+    desty = (((int)player->tiley - 5) << TILESHIFT) - 0x3000;
 
     if (player->y > desty)
     {

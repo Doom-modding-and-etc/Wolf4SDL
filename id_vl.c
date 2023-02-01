@@ -107,9 +107,9 @@ SDL_Color curpal[256];
 
 #define CASSERT(x) extern int ASSERT_COMPILE[((x) != 0) * 2 - 1];
 #ifdef SEGA_SATURN
-#define RGB(r, g, b) {(r)*255/63, (g)*255/63, 0x100(b)*255/63, 0}
+#define WRGB(r, g, b) {(r)*255/63, (g)*255/63, 0x100(b)*255/63, 0}
 #else
-#define RGB(r, g, b) {(r)*255/63, (g)*255/63, (b)*255/63, 0}
+#define WRGB(r, g, b) {(r)*255/63, (g)*255/63, (b)*255/63, 0}
 #endif
 SDL_Color gamepal[] =
 {
@@ -279,7 +279,7 @@ void VL_SetVGAPlaneMode (void)
     window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight,
     (fullscreen ? SDL_WINDOW_FULLSCREEN : 0 | SDL_WINDOW_OPENGL));
 #endif
-    SDL_PixelFormatEnumToMasks (SDL_PIXELFORMAT_ARGB8888,&screenBits,&r,&g,&b,&a);
+    SDL_PixelFormatEnumToMasks (SDL_PIXELFORMAT_ARGB8888, &screenBits, &r, &g, &b, &a);
 
     screen = SDL_CreateRGBSurface(0,screenWidth,screenHeight,screenBits,r,g,b,a);
 

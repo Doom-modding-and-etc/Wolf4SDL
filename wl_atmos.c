@@ -177,7 +177,7 @@ void DrawRain (void)
     int       i;
     point3d_t *pt;
     byte      shade;
-    int32_t   ax,az,x,y,z,xx,yy,height,actheight;
+    int       ax,az,x,y,z,xx,yy,height,actheight;
     fixed     px,pz;
 
     px = (player->y + FixedMul(0x7900, viewsin)) >> 6;
@@ -280,7 +280,7 @@ void DrawSnow (void)
     int       i;
     point3d_t *pt;
     byte      shade;
-    int32_t   ax,az,x,y,z,xx,yy,height,actheight;
+    int       ax,az,x,y,z,xx,yy,height,actheight;
     fixed     px,pz;
     
     px = (player->y + FixedMul(0x7900, viewsin)) >> 6;

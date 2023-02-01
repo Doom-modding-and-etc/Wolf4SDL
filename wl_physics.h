@@ -28,7 +28,7 @@ typedef struct Phys_ForceGenerator_s
     struct
     {
         Phys_Vec3_t initialAmplitude;
-        int32_t idleTics;
+        int idleTics;
         Phys_Vec3_t amplitudeFallRate;
     } jitter;
     struct
@@ -46,7 +46,7 @@ typedef struct Phys_Particle_s
     boolean rejitter;
     Phys_Vec3_t jitterPos;
     Phys_Vec3_t jitterAmplitude;
-    int32_t jitterTics;
+    int jitterTics;
     Phys_ForceGenerator_t forceGenerators[PHYS_MAX_FORCEGENS];
     int numForceGenerators;
 } Phys_Particle_t;

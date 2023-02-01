@@ -112,7 +112,7 @@ static inline vec3fixed_t vec3fixed_div(vec3fixed_t a, fixed b)
     return vec3fixed(fixedpt_div(X(a), b), fixedpt_div(Y(a), b), fixedpt_div(Z(a), b));
 }
 
-vec3fixed_t vec3fixed_anglevec(int32_t angle);
+vec3fixed_t vec3fixed_anglevec(int angle);
 
 static inline fixed vec3fixed_length(vec3fixed_t a)
 {
