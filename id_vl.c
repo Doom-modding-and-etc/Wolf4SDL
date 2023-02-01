@@ -35,11 +35,11 @@
 #endif
 
 #if defined(_arch_dreamcast)
-bool usedoublebuffering = false;
+boolean usedoublebuffering = false;
 uint32_t screenWidth = 640;
 uint32_t screenHeight = 400;
 #elif defined(GP2X)
-bool usedoublebuffering = true;
+boolean usedoublebuffering = true;
 uint32_t screenWidth = 320;
 uint32_t screenHeight = 240;
 #if defined(GP2X_940)
@@ -49,12 +49,12 @@ uint32_t      screenBits = 16;
 #endif
 //WIP:
 #elif defined(PS2)
-bool usedoublebuffering = true;
+boolean usedoublebuffering = true;
 uint32_t screenWidth = 640;
 uint32_t screenHeight = 448;
 uint32_t screenBits = 8;
 #elif defined(N3DS)
-bool usedoublebuffering = true;
+boolean usedoublebuffering = true;
 uint32_t screenWidth = 400;
 uint32_t screenHeight = 240;
 uint32_t screenBits = 32;      // use "best" color depth according to libSDL  // ADDEDFIX 0

@@ -193,7 +193,7 @@ US_PrintSigned(int n)
 {
 	char	buffer[32];
 
-	US_Print(w3sltoa(n,buffer,10));
+	US_Print(w3sitoa(n,buffer,10));
 }
 
 ///////////////////////////////////////////////////////////////////////////

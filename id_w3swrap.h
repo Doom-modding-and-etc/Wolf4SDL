@@ -75,7 +75,6 @@ typedef unsigned char boolean;
 #define w3sstrncasecmp _strnicmp
 #define w3sstrlwr _strlwr
 #define w3slseek _lseek
-#define w3sltoa _ltoa
 #define w3sitoa _itoa
 #define w3sunlink _unlink
 #else
@@ -93,8 +92,11 @@ char* w3sstrlwr(char* str);
 #define w3sstrncasecmp strncasecmp
 #define w3slseek lseek
 #define w3sunlink unlink
-#define w3sltoa ltoa
+#ifdef OLD
+#define w3sitoa ltoa
+#else
 #define w3sitoa itoa
+#endif
 #endif
 
 #define w3svsprintf(buf, format, arg) vsprintf(buf, format, arg)

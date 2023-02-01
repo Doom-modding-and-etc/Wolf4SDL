@@ -746,7 +746,7 @@ LevelCompleted (void)
         {
             for (i = 0; i <= timeleft; i++)
             {
-                w3sltoa ((int) i * PAR_AMOUNT, tempstr, 10);
+                w3sitoa ((int) i * PAR_AMOUNT, tempstr, 10);
                 x = 36 - (int) strlen(tempstr) * 2;
                 Write (x, 7, tempstr);
                 if (!(i % (PAR_AMOUNT / 10)))
@@ -808,7 +808,7 @@ LevelCompleted (void)
             VW_WaitVBL (VBLWAIT);
             SD_StopSound ();
             bonus += PERCENT100AMT;
-            w3sltoa (bonus, tempstr, 10);
+            w3sitoa (bonus, tempstr, 10);
             x = (RATIOXX - 1) - (int) strlen(tempstr) * 2;
 #ifdef SEGA_SATURN
             Write(x + SATURN_ADJUST / 8, 7, tempstr);
@@ -865,7 +865,7 @@ LevelCompleted (void)
             VW_WaitVBL (VBLWAIT);
             SD_StopSound ();
             bonus += PERCENT100AMT;
-            w3sltoa (bonus, tempstr, 10);
+            w3sitoa (bonus, tempstr, 10);
             x = (RATIOXX - 1) - (int) strlen(tempstr) * 2;
 #ifdef SEGA_SATURN
             Write(x + SATURN_WIDTH / 8, 7, tempstr);
@@ -920,7 +920,7 @@ LevelCompleted (void)
             VW_WaitVBL (VBLWAIT);
             SD_StopSound ();
             bonus += PERCENT100AMT;
-            w3sltoa (bonus, tempstr, 10);
+            w3sitoa (bonus, tempstr, 10);
             x = (RATIOXX - 1) - (int) strlen(tempstr) * 2;
 #ifdef SEGA_SATURN
             Write(x + SATURN_WIDTH / 8, 7, tempstr);
@@ -976,7 +976,7 @@ done:   w3sitoa (kr, tempstr, 10);
             (PERCENT100AMT * (sr >= 100)) + (PERCENT100AMT * (tr >= 100));
 
         GivePoints (bonus);
-        w3sltoa (bonus, tempstr, 10);
+        w3sitoa (bonus, tempstr, 10);
         x = 36 - (int) strlen(tempstr) * 2;
 #ifdef SEGA_SATURN
         Write(x + SEGA_SATURN / 8, 7, tempstr);

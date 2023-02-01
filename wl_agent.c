@@ -428,7 +428,7 @@ static void LatchNumber(int x, int y, unsigned width, int number)
     unsigned length, c;
     char    str[20];
 
-    w3sltoa(number, str, 10);
+    w3sitoa(number, str, 10);
 
     length = (unsigned)strlen(str);
 
