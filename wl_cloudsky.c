@@ -77,7 +77,7 @@ cloudsky_t cloudSkys[] =
     { 4,     1200, 290, 0 },
 };
 
-byte       skyc[65536L];
+unsigned char       skyc[65536L];
 
 fixed      cloudx,cloudy;
 cloudsky_t *curSky;
@@ -130,31 +130,31 @@ void SplitS(unsigned size,unsigned x1,unsigned y1,unsigned x2,unsigned y2)
    if(size==1) return;
    if(!skyc[((x1+size/2)*256+y1)])
    {
-      skyc[((x1+size/2)*256+y1)]=(byte)(((int)skyc[(x1*256+y1)]
+      skyc[((x1+size/2)*256+y1)]=(unsigned char)(((int)skyc[(x1*256+y1)]
             +(int)skyc[((x2&0xff)*256+y1)])/2)+rand()%(size*2)-size;
       if(!skyc[((x1+size/2)*256+y1)]) skyc[((x1+size/2)*256+y1)]=1;
    }
    if(!skyc[((x1+size/2)*256+(y2&0xff))])
    {
-      skyc[((x1+size/2)*256+(y2&0xff))]=(byte)(((int)skyc[(x1*256+(y2&0xff))]
+      skyc[((x1+size/2)*256+(y2&0xff))]=(unsigned char)(((int)skyc[(x1*256+(y2&0xff))]
             +(int)skyc[((x2&0xff)*256+(y2&0xff))])/2)+rand()%(size*2)-size;
       if(!skyc[((x1+size/2)*256+(y2&0xff))])
          skyc[((x1+size/2)*256+(y2&0xff))]=1;
    }
    if(!skyc[(x1*256+y1+size/2)])
    {
-      skyc[(x1*256+y1+size/2)]=(byte)(((int)skyc[(x1*256+y1)]
+      skyc[(x1*256+y1+size/2)]=(unsigned char)(((int)skyc[(x1*256+y1)]
             +(int)skyc[(x1*256+(y2&0xff))])/2)+rand()%(size*2)-size;
       if(!skyc[(x1*256+y1+size/2)]) skyc[(x1*256+y1+size/2)]=1;
    }
    if(!skyc[((x2&0xff)*256+y1+size/2)])
    {
-      skyc[((x2&0xff)*256+y1+size/2)]=(byte)(((int)skyc[((x2&0xff)*256+y1)]
+      skyc[((x2&0xff)*256+y1+size/2)]=(unsigned char)(((int)skyc[((x2&0xff)*256+y1)]
             +(int)skyc[((x2&0xff)*256+(y2&0xff))])/2)+rand()%(size*2)-size;
       if(!skyc[((x2&0xff)*256+y1+size/2)]) skyc[((x2&0xff)*256+y1+size/2)]=1;
    }
 
-   skyc[((x1+size/2)*256+y1+size/2)]=(byte)(((int)skyc[(x1*256+y1)]
+   skyc[((x1+size/2)*256+y1+size/2)]=(unsigned char)(((int)skyc[(x1*256+y1)]
          +(int)skyc[((x2&0xff)*256+y1)]+(int)skyc[(x1*256+(y2&0xff))]
          +(int)skyc[((x2&0xff)*256+(y2&0xff))])/4)+rand()%(size*2)-size;
 
@@ -179,7 +179,7 @@ void InitSky (void)
 {
     colormapentry_t *curEntry;
     colormap_t      *curMap;
-    byte            colormap[256];
+    unsigned char            colormap[256];
     int             i,j,k,m,n,calcedCols;
     int             cloudskyid = GetCloudSkyDefID();
     int16_t         index;
@@ -217,7 +217,7 @@ void InitSky (void)
                         value += skyc[(((j + n - 1) & 0xff) << 8) + ((i + m - 1) & 0xff)];
                 }
 
-                skyc[(j << 8) + i] = (byte)(value >> 3);
+                skyc[(j << 8) + i] = (unsigned char)(value >> 3);
             }
         }
     }
@@ -280,8 +280,8 @@ void InitSky (void)
 
 void DrawCloudSpan (int16_t x1, int16_t x2, int16_t height)
 {
-    byte     *dest;
-    word     texture;
+    unsigned char*dest;
+    unsigned short     texture;
     int16_t  count,prestep;
     fixed    basedist;
     fixed    stepscale;

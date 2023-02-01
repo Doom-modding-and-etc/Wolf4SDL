@@ -7,7 +7,7 @@
 #include "wl_def.h"
 #include "wl_shade.h"
 
-byte    *ceilingsource,*floorsource;
+unsigned char *ceilingsource,*floorsource;
 
 #ifndef USE_MULTIFLATS
 void GetFlatTextures (void)
@@ -37,10 +37,10 @@ void GetFlatTextures (void)
 #ifdef USE_MULTIFLATS
 void DrawSpan (int16_t x1, int16_t x2, int16_t height)
 {
-    byte      tilex,tiley,lasttilex,lasttiley;
-    byte      *dest;
-    byte      *shade;
-    word      texture,spot;
+    unsigned char      tilex,tiley,lasttilex,lasttiley;
+    unsigned char      *dest;
+    unsigned char      *shade;
+    unsigned short      texture,spot;
     uint32_t  rowofs;
     int16_t   ceilingpage,floorpage,lastceilingpage,lastfloorpage;
     int16_t   count,prestep;
@@ -166,9 +166,9 @@ void DrawSpan (int16_t x1, int16_t x2, int16_t height)
 
 void DrawSpan (int16_t x1, int16_t x2, int16_t height)
 {
-    byte     *dest;
-    byte     *shade;
-    word     texture;
+    unsigned char *dest;
+    unsigned char *shade;
+    unsigned short     texture;
     uint32_t rowofs;                                    
     int16_t  count,prestep;
     fixed    basedist,stepscale;

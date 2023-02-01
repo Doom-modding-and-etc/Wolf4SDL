@@ -1126,9 +1126,9 @@ DrawNewGameDiff (int w)
 ////////////////////////////////////////////////////////////////////
 #ifdef VIEASM
 void
-DrawSliderBox(int x, int y, int val, int valinc, int width, int height, byte colour)
+DrawSliderBox(int x, int y, int val, int valinc, int width, int height, unsigned char colour)
 {
-    byte usecolour;
+    unsigned char usecolour;
     if (colour == READCOLOR)
         usecolour = READHCOLOR;
     else
@@ -1229,7 +1229,7 @@ int AdjustVolume(int vol)
                 {
                     musicvol--;
                     DrawSoundVols(curmode);
-                    SD_ChangeVolume((byte)(soundvol * 1.28), (byte)(musicvol * 1.28));
+                    SD_ChangeVolume((unsigned char)(soundvol * 1.28), (unsigned char)(musicvol * 1.28));
                     TicDelay(2);
                 }
             }
@@ -1239,7 +1239,7 @@ int AdjustVolume(int vol)
                 {
                     soundvol--;
                     DrawSoundVols(curmode);
-                    SD_ChangeVolume((byte)(soundvol * 1.28), (byte)(musicvol * 1.28));
+                    SD_ChangeVolume((unsigned char)(soundvol * 1.28), (unsigned char)(musicvol * 1.28));
                     TicDelay(2);
                 }
             }
@@ -1251,7 +1251,7 @@ int AdjustVolume(int vol)
                 {
                     musicvol++;
                     DrawSoundVols(curmode);
-                    SD_ChangeVolume((byte)(soundvol * 1.28), (byte)(musicvol * 1.28));
+                    SD_ChangeVolume((unsigned char)(soundvol * 1.28), (unsigned char)(musicvol * 1.28));
                     TicDelay(2);
                 }
             }
@@ -1261,7 +1261,7 @@ int AdjustVolume(int vol)
                 {
                     soundvol++;
                     DrawSoundVols(curmode);
-                    SD_ChangeVolume((byte)(soundvol * 1.28), (byte)(musicvol * 1.28));
+                    SD_ChangeVolume((unsigned char)(soundvol * 1.28), (unsigned char)(musicvol * 1.28));
                     TicDelay(2);
                 }
             }

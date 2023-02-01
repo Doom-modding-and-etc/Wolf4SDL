@@ -32,13 +32,13 @@
 ===================
 */
 #ifdef USE_SHADING
-void ScaleLine(int16_t x, int16_t toppix, fixed fracstep, byte* linesrc, byte* linecmds, byte* curshades)
+void ScaleLine(int16_t x, int16_t toppix, fixed fracstep, unsigned char* linesrc, unsigned char* linecmds, unsigned char* curshades)
 #else
-void ScaleLine (int16_t x, int16_t toppix, fixed fracstep, byte *linesrc, byte *linecmds)
+void ScaleLine (int16_t x, int16_t toppix, fixed fracstep, unsigned char* linesrc, unsigned char *linecmds)
 #endif
 {
-    byte    *src,*dest;
-    byte    col;
+    unsigned char   *src,*dest;
+    unsigned char    col;
     int16_t start,end,top;
     int16_t startpix,endpix;
     fixed   frac;
@@ -127,7 +127,7 @@ inline void ScaleShape(int xcenter, int shapenum, unsigned width)
     unsigned scalel, pixwidth;
 
 #ifdef USE_SHADING
-    byte* curshades;
+    unsigned char* curshades;
     if (flags & FL_FULLBRIGHT)
         curshades = shadetable[0];
     else
@@ -172,16 +172,16 @@ inline void ScaleShape(int xcenter, int shapenum, unsigned width)
     slSetSprite(&user_sprite, toFIXED(0 + (SATURN_SORT_VALUE - pixwidth / 2)));	// à remettre // ennemis et objets
     //--------------------------------------------------------------------------------------------	
 #else
-    byte* vbuf = LOCK() + screenofs;
+    unsigned char* vbuf = LOCK() + screenofs;
     t_compshape* shape;
 
     unsigned starty, endy;
-    word* cmdptr;
-    byte* cline;
-    byte* line;
-    byte* vmem;
+    unsigned short* cmdptr;
+    unsigned char* cline;
+    unsigned char* line;
+    unsigned char* vmem;
     unsigned j;
-    byte col;
+    unsigned char col;
     int actx, i, upperedge;
     short newstart;
     int scrstarty, screndy, lpix, rpix, pixcnt, ycnt;
@@ -191,7 +191,7 @@ inline void ScaleShape(int xcenter, int shapenum, unsigned width)
 
     shape = (t_compshape*)PM_GetSprite(shapenum);
 
-    cmdptr = (word*)shape->dataofs;
+    cmdptr = (unsigned short*)shape->dataofs;
 
     for (i = shape->leftpix, pixcnt = i * pixwidth, rpix = (pixcnt >> 6) + actx; i <= shape->rightpix; i++, cmdptr++)
     {
@@ -203,7 +203,7 @@ inline void ScaleShape(int xcenter, int shapenum, unsigned width)
         {
             if (lpix < 0) lpix = 0;
             if (rpix > viewwidth) rpix = viewwidth, i = shape->rightpix + 1;
-            cline = (byte*)shape + *cmdptr;
+            cline = (unsigned char*)shape + *cmdptr;
             while (lpix < rpix)
             {
                 if (wallwidth[lpix] <= (int)width)
@@ -227,9 +227,9 @@ inline void ScaleShape(int xcenter, int shapenum, unsigned width)
                             if (scrstarty != screndy && screndy > 0)
                             {
 #ifdef USE_SHADING
-                                col = curshades[((byte*)shape)[newstart + j]];
+                                col = curshades[((unsigned char*)shape)[newstart + j]];
 #else
-                                col = ((byte*)shape)[newstart + j];
+                                col = ((unsigned char*)shape)[newstart + j];
 #endif
                                 if (scrstarty < 0) scrstarty = 0;
                                 if (screndy > viewwidth) screndy = viewwidth, j = endy;
@@ -265,9 +265,9 @@ void ScaleShape (int xcenter, int shapenum, int height, uint32_t flags)
 {
     int         i;
     compshape_t *shape;
-    byte        *linesrc,*linecmds;
+    unsigned char *linesrc,*linecmds;
 #ifdef USE_SHADING
-    byte        *curshades;
+    unsigned char *curshades;
 #endif
     int16_t     scale,toppix;
     int16_t     x1,x2,actx;
@@ -352,7 +352,7 @@ void SimpleScaleShape (int xcenter, int shapenum, int height)
 {
     int         i;
     compshape_t *shape;
-    byte        *linesrc,*linecmds;
+    unsigned char *linesrc,*linecmds;
     int16_t     scale,toppix;
     int16_t     x1,x2,actx;
     fixed       frac,fracstep;
@@ -411,8 +411,8 @@ void Scale3DShape (int x1, int x2, int shapenum, uint32_t flags, fixed ny1, fixe
 {
     int         i;
     compshape_t *shape;
-    byte        *linesrc,*linecmds;
-    byte        *curshades;
+    unsigned char *linesrc,*linecmds;
+    unsigned char *curshades;
     int16_t     scale1,toppix;
     int16_t     dx,len,slinex;
     int16_t     xpos[TEXTURESIZE + 1];

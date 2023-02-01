@@ -23,15 +23,15 @@
 #include "wl_def.h"
 
 //	Global variables
-		word		PrintX,PrintY;
-		word		WindowX,WindowY,WindowW,WindowH;
+		unsigned short		PrintX,PrintY;
+		unsigned short		WindowX,WindowY,WindowW,WindowH;
 
 //	Internal variables
 #define	ConfigVersion	1
 
 static	boolean		US_Started;
 
-		void		(*USL_MeasureString)(const char *,word *,word *) = VW_MeasurePropString;
+		void		(*USL_MeasureString)(const char *, unsigned short *, unsigned short *) = VW_MeasurePropString;
 		void		(*USL_DrawString)(const char *) = VWB_DrawPropString;
 
 #ifndef SEGA_SATURN
@@ -116,7 +116,7 @@ US_Shutdown(void)
 //
 ///////////////////////////////////////////////////////////////////////////
 void
-US_SetPrintRoutines(void (*measure)(const char *,word *,word *),
+US_SetPrintRoutines(void (*measure)(const char *, unsigned short *, unsigned short *),
     void (*print)(const char *))
 {
 	USL_MeasureString = measure;
@@ -137,7 +137,7 @@ US_Print(const char *sorg)
 	char *sstart = w3sstrdup(sorg);
 	char *s = sstart;
 	char *se;
-	word w,h;
+	unsigned short w,h;
 
 	while (*s)
 	{
@@ -175,7 +175,7 @@ US_Print(const char *sorg)
 //
 ///////////////////////////////////////////////////////////////////////////
 void
-US_PrintUnsigned(longword n)
+US_PrintUnsigned(unsigned int n)
 {
 	char	buffer[32];
 	sprintf(buffer, "%lu", n);
@@ -204,7 +204,7 @@ US_PrintSigned(int32_t n)
 void
 USL_PrintInCenter(const char *s,Rect r)
 {
-	word	w,h,
+	unsigned short	w,h,
 			rw,rh;
 
 	USL_MeasureString(s,&w,&h);
@@ -244,7 +244,7 @@ US_PrintCentered(const char *s)
 void
 US_CPrintLine(const char *s)
 {
-	word	w,h;
+	unsigned short	w,h;
 
 	USL_MeasureString(s,&w,&h);
 
@@ -353,9 +353,9 @@ US_ClearWindow(void)
 //
 ///////////////////////////////////////////////////////////////////////////
 void
-US_DrawWindow(word x,word y,word w,word h)
+US_DrawWindow(unsigned short x, unsigned short y, unsigned short w, unsigned short h)
 {
-	word	i,
+	unsigned short	i,
 			sx,sy,sw,sh;
 
 	WindowX = x * 8;
@@ -389,7 +389,7 @@ US_DrawWindow(word x,word y,word w,word h)
 //
 ///////////////////////////////////////////////////////////////////////////
 void
-US_CenterWindow(word w,word h)
+US_CenterWindow(unsigned short w, unsigned short h)
 {
 	US_DrawWindow(((MaxX / 8) - w) / 2,((MaxY / 8) - h) / 2,w,h);
 }
@@ -438,12 +438,12 @@ US_RestoreWindow(WindowRec *win)
 //
 ///////////////////////////////////////////////////////////////////////////
 static void
-USL_XORICursor(int x,int y,const char *s,word cursor)
+USL_XORICursor(int x,int y,const char *s, unsigned short cursor)
 {
 	static	boolean	status;		// VGA doesn't XOR...
 	char	buf[MaxString];
 	int		temp;
-	word	w,h;
+	unsigned short	w,h;
 
 	strcpy(buf,s);
 	buf[cursor] = '\0';
@@ -501,10 +501,10 @@ US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 	char		c;
 	char		s[MaxString],olds[MaxString];
 	int         cursor,len;
-	word		i,
+	unsigned short		i,
 				w,h,
 				temp;
-	longword	curtime, lasttime, lastdirtime, lastbuttontime, lastdirmovetime;
+	unsigned int	curtime, lasttime, lastdirtime, lastbuttontime, lastdirmovetime;
 	ControlInfo ci;
 	Direction   lastdir = dir_None;
 

@@ -49,8 +49,8 @@ typedef struct
 #ifndef SEGA_SATURN
 typedef struct
 {
-    longword        length;
-    word            priority;
+    unsigned int        length;
+    unsigned short            priority;
 } SoundCommon;
 #endif
 #define ORIG_SOUNDCOMMON_SIZE 6
@@ -58,7 +58,7 @@ typedef struct
 #ifndef SEGA_SATURN
 typedef struct
 {
-    byte    mChar, cChar,
+    unsigned char    mChar, cChar,
         mScale, cScale,
         mAttack, cAttack,
         mSus, cSus,
@@ -68,7 +68,7 @@ typedef struct
         // These are only for Muse - these bytes are really unused
         voice,
         mode;
-    byte    unused[3];
+    unsigned char    unused[3];
 } Instrument;
 #endif
 
@@ -77,8 +77,8 @@ typedef struct
 {
     SoundCommon     common;
     Instrument      inst;
-    byte            block;
-    byte            data[1];
+    unsigned char            block;
+    unsigned char            data[1];
 } AdLibSound;
 #define ORIG_INSTRUMENT_SIZE 16
 #define ORIG_ADLIBSOUND_SIZE (ORIG_SOUNDCOMMON_SIZE + ORIG_INSTRUMENT_SIZE + 2)
@@ -209,7 +209,7 @@ extern  void    SD_Startup(void);                                           // D
 extern  void    SD_Shutdown(void);                                          // DONE
 
 extern  void    SD_PositionSound(int leftvol, int rightvol);                // DONE, basically the same
-extern  byte    SD_PlaySound(soundnames sound);                             // DONE, just calls SD_PlayDigitized
+extern  unsigned char    SD_PlaySound(soundnames sound);                             // DONE, just calls SD_PlayDigitized
 extern  void    SD_SetPosition(int channel, int leftpos, int rightpos);     // DONE, basically the same
 extern  void    SD_StopSound(void);                                         // DONE, just calls ASM_HaltSound()
 

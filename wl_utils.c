@@ -70,9 +70,9 @@ fixed FixedDiv (fixed a, fixed b)
 =
 ===================
 */
-word READWORD (byte *ptr)
+unsigned short READWORD (unsigned char *ptr)
 {
-    word val = ptr[0] | ptr[1] << 8;
+    unsigned short val = ptr[0] | ptr[1] << 8;
 #ifdef SEGA_SATURN
     ptr += 2;
 #endif
@@ -88,9 +88,9 @@ word READWORD (byte *ptr)
 =
 ===================
 */
-longword READLONGWORD (byte *ptr)
+unsigned int READLONGWORD (unsigned char *ptr)
 {
-    longword val = ptr[0] | ptr[1] << 8 | ptr[2] << 16 | ptr[3] << 24;
+    unsigned int val = ptr[0] | ptr[1] << 8 | ptr[2] << 16 | ptr[3] << 24;
 
     return val;
 }

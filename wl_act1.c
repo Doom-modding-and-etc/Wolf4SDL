@@ -283,10 +283,10 @@ Every time a door opens or closes the areabyplayer matrix gets recalculated.
 doorobj_t       doorobjlist[MAXDOORS],*lastdoorobj;
 short           doornum;
 
-word            doorposition[MAXDOORS];             // leading edge of door 0=closed
+unsigned short            doorposition[MAXDOORS];             // leading edge of door 0=closed
                                                     // 0xffff = fully open
 
-byte            areaconnect[NUMAREAS][NUMAREAS];
+unsigned char            areaconnect[NUMAREAS][NUMAREAS];
 
 boolean         areabyplayer[NUMAREAS];
 
@@ -479,7 +479,7 @@ void CloseDoor(int door)
 #else
 void SpawnDoor(int tilex, int tiley, boolean vertical, int lock)
 {
-    word* map;
+    unsigned short* map;
 
     if (doornum == MAXDOORS)
         Quit("64+ doors on level!");
@@ -690,7 +690,7 @@ void DoorOpen (int door)
 void DoorOpening (int door)
 {
     unsigned area1,area2;
-    word *map;
+    unsigned short *map;
     int32_t position;
 
     position = doorposition[door];
@@ -746,7 +746,7 @@ void DoorOpening (int door)
 #endif
     }
 
-    doorposition[door] = (word) position;
+    doorposition[door] = (unsigned short) position;
 }
 
 
@@ -761,7 +761,7 @@ void DoorOpening (int door)
 void DoorClosing (int door)
 {
     unsigned area1,area2;
-    word *map;
+    unsigned short *map;
     int32_t position;
     int tilex,tiley;
 
@@ -820,7 +820,7 @@ void DoorClosing (int door)
         }
     }
 
-    doorposition[door] = (word) position;
+    doorposition[door] = (unsigned short) position;
 }
 
 
@@ -869,10 +869,10 @@ void MoveDoors (void)
 =============================================================================
 */
 
-word pwallstate;
-word pwallpos;                  // amount a pushable wall has been moved (0-63)
-word pwallx,pwally;
-byte pwalldir;
+unsigned short pwallstate;
+unsigned short pwallpos;                  // amount a pushable wall has been moved (0-63)
+unsigned short pwallx,pwally;
+unsigned char pwalldir;
 tiletype pwalltile;
 int dirs[4][2]={{0,-1},{1,0},{0,1},{-1,0}};
 
@@ -1045,7 +1045,7 @@ void MovePWalls (void)
 
     oldblock = pwallstate/128;
 
-    pwallstate += (word)tics;
+    pwallstate += (unsigned short)tics;
 
     if (pwallstate/128 != oldblock)
     {

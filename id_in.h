@@ -488,12 +488,12 @@ typedef	struct
 
 typedef	struct
 {
-	word joyMinX, joyMinY;
-	word threshMinX, threshMinY;
-	word threshMaxX, threshMaxY;
-	word joyMaxX, joyMaxY;
-	word joyMultXL, joyMultYL;
-	word joyMultXH, joyMultYH;
+	unsigned short joyMinX, joyMinY;
+	unsigned short threshMinX, threshMinY;
+	unsigned short threshMaxX, threshMaxY;
+	unsigned short joyMaxX, joyMaxY;
+	unsigned short joyMultXL, joyMultYL;
+	unsigned short joyMultXH, joyMultYH;
 } JoystickDef;
 
 //Global variables
@@ -519,15 +519,15 @@ int KeyboardLookup(int key);
 extern	void		IN_Startup(void), IN_Shutdown(void);
 extern	void		IN_ClearKeysDown(void);
 extern	void		IN_ReadControl(int, ControlInfo*);
-extern	void		IN_GetJoyAbs(word joy, word* xp, word* yp);
-extern	void		IN_SetupJoy(word joy, word minx, word maxx,
-	word miny, word maxy);
+extern	void		IN_GetJoyAbs(unsigned short joy, unsigned short* xp, unsigned short* yp);
+extern	void		IN_SetupJoy(unsigned short joy, unsigned short minx, unsigned short maxx,
+	unsigned short miny, unsigned short maxy);
 extern	void		IN_StopDemo(void), IN_FreeDemoBuffer(void),
 IN_Ack(void);
-extern	boolean		IN_UserInput(longword delay);
+extern	boolean		IN_UserInput(unsigned int delay);
 extern	char		IN_WaitForASCII(void);
 extern	ScanCode	IN_WaitForKey(void);
-extern	word		IN_GetJoyButtonsDB(word joy);
+extern	unsigned short		IN_GetJoyButtonsDB(unsigned short joy);
 extern	const char* IN_GetScanName(ScanCode);
 
 void    IN_WaitAndProcessEvents();

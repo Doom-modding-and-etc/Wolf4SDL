@@ -14,20 +14,20 @@
 typedef struct
 {
     int32_t planestart[MAPPLANES];
-    word    planelength[MAPPLANES];
-    word    width,height;
+    unsigned short    planelength[MAPPLANES];
+    unsigned short    width,height;
     char    name[16];
 } maptype;
 
 //===========================================================================
 
-extern  word    *mapsegs[MAPPLANES];
+extern  unsigned short *mapsegs[MAPPLANES];
 extern  maptype *mapheaderseg[NUMMAPS];
 
 #if !defined(SEGA_SATURN) || !defined(VIEASM)
-extern  byte    *audiosegs[NUMSNDCHUNKS];
+extern  unsigned char    *audiosegs[NUMSNDCHUNKS];
 #endif
-extern  byte    *grsegs[NUMCHUNKS];
+extern  unsigned char    *grsegs[NUMCHUNKS];
 
 extern  char  extension[5];
 #ifndef SEGA_SATURN
@@ -42,9 +42,9 @@ extern  char  audioext[5];
 boolean CA_LoadFile (const char *filename, void **ptr);
 boolean CA_WriteFile (const char *filename, void *ptr, int32_t length);
 
-int32_t CA_RLEWCompress (word *source, int32_t length, word *dest, word rlewtag);
+int32_t CA_RLEWCompress (unsigned short *source, int32_t length, unsigned short *dest, unsigned short rlewtag);
 
-void CA_RLEWexpand (word *source, word *dest, int32_t length, word rlewtag);
+void CA_RLEWexpand (unsigned short *source, unsigned short *dest, int32_t length, unsigned short rlewtag);
 
 void CA_Startup (void);
 void CA_Shutdown (void);

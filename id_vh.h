@@ -36,7 +36,7 @@ typedef struct
 extern	pictabletype	*pictable;
 extern	pictabletype	*picmtable;
 
-extern  byte            fontcolor,backcolor;
+extern  unsigned char            fontcolor,backcolor;
 extern	int             fontnumber;
 extern	int             px,py;
 
@@ -88,7 +88,7 @@ void VH_RenderTextures(SDL_Surface* surface);
 #define VW_FadeIn()		    VL_FadeIn(0,255,gamepal,30);
 #define VW_FadeOut()	    VL_FadeOut(0,255,0,0,0,30);
 #define VW_ScreenToScreen	VL_ScreenToScreen
-void	VW_MeasurePropString (const char *string, word *width, word *height);
+void	VW_MeasurePropString (const char *string, unsigned short *width, unsigned short *height);
 
 void    VH_Startup();
 boolean FizzleFade (SDL_Surface *source, int x1, int y1,

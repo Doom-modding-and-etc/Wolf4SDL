@@ -43,7 +43,7 @@ uint8_t* PM_DecodeSprites2(unsigned int start, unsigned int endi, uint32_t* page
 
 boolean         ingame,fizzlein;
 gametype        gamestate;
-byte            bordercol=VIEWCOLOR;        // color of the Change View/Ingame border
+unsigned char            bordercol=VIEWCOLOR;        // color of the Change View/Ingame border
 
 #ifdef SPEAR
 int32_t        spearx,speary;
@@ -91,7 +91,7 @@ void GameLoop (void);
 
 int leftchannel, rightchannel;
 #define ATABLEMAX 15
-byte righttable[ATABLEMAX][ATABLEMAX * 2] = {
+unsigned char righttable[ATABLEMAX][ATABLEMAX * 2] = {
 { 8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 6, 0, 0, 0, 0, 0, 1, 3, 5, 8, 8, 8, 8, 8, 8, 8, 8},
 { 8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 6, 4, 0, 0, 0, 0, 0, 2, 4, 6, 8, 8, 8, 8, 8, 8, 8, 8},
 { 8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 6, 6, 4, 1, 0, 0, 0, 1, 2, 4, 6, 8, 8, 8, 8, 8, 8, 8, 8},
@@ -108,7 +108,7 @@ byte righttable[ATABLEMAX][ATABLEMAX * 2] = {
 { 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8},
 { 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8}
 };
-byte lefttable[ATABLEMAX][ATABLEMAX * 2] = {
+unsigned char lefttable[ATABLEMAX][ATABLEMAX * 2] = {
 { 8, 8, 8, 8, 8, 8, 8, 8, 5, 3, 1, 0, 0, 0, 0, 0, 6, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8},
 { 8, 8, 8, 8, 8, 8, 8, 8, 6, 4, 2, 0, 0, 0, 0, 0, 4, 6, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8},
 { 8, 8, 8, 8, 8, 8, 8, 8, 6, 4, 2, 1, 0, 0, 0, 1, 4, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8},
@@ -184,7 +184,7 @@ SetSoundLoc(fixed gx,fixed gy)
 =
 ==========================
 */
-void PlaySoundLocGlobal(word s,fixed gx,fixed gy)
+void PlaySoundLocGlobal(unsigned short s,fixed gx,fixed gy)
 {
 	int channel;
     SetSoundLoc(gx, gy);
@@ -242,7 +242,7 @@ static void ScanInfoPlane(void)
 {
     unsigned x,y;
     int      tile;
-    word     *start;
+    unsigned short *start;
 
 #ifdef SEGA_SATURN
     //-----------------------------------------------------------------------------------
@@ -690,8 +690,8 @@ void SetupGameLevel (void)
 {
     int  x,y;
     int  mapnum;
-    word *map;
-    word tile;
+    unsigned short *map;
+    unsigned short  tile;
 
 #ifndef SEGA_SATURN
     if (!loadedgame)
@@ -754,7 +754,7 @@ void SetupGameLevel (void)
             if (tile<AREATILE)
             {
                 // solid wall
-                tilemap[x][y] = (byte) tile;
+                tilemap[x][y] = (unsigned char) tile;
                 actorat[x][y] = (objtype *)(uintptr_t) tile;
             }
             else
@@ -795,7 +795,7 @@ void SetupGameLevel (void)
     ChunksInFile = Chunks[4] | Chunks[5] << 8;
 
     uint32_t* pageOffsets = (uint32_t*)saturnChunk + 0x2000;
-    word* pageLengths = (word*)saturnChunk + (ChunksInFile + 1) * sizeof(int32_t);
+    unsigned short* pageLengths = (unsigned short*)saturnChunk + (ChunksInFile + 1) * sizeof(int32_t);
 
     for (int i = 0; i < ChunksInFile; i++)
     {
@@ -996,7 +996,7 @@ void DrawPlayBorderSides(void)
 ===================
 */
 
-void DrawStatusBorder (byte color)
+void DrawStatusBorder (unsigned char color)
 {
 #ifndef SEGA_SATURN
     int statusborderw = (screenWidth-scaleFactor*320)/2;
@@ -1132,7 +1132,7 @@ void DrawPlayScreen (void)
 void ShowActStatus()
 {
     // Draw status bar without borders
-    byte *source = grsegs[STATUSBARPIC];
+    unsigned char *source = grsegs[STATUSBARPIC];
     int	picnum = STATUSBARPIC - STARTPICS;
     int width = pictable[picnum].width;
     int height = pictable[picnum].height;

@@ -43,7 +43,7 @@ typedef struct HealthMeter_Bar_s
     int shapenum;
     int cropx, cropy;
     int cropw, croph;
-    byte *facepic;
+    unsigned char *facepic;
 } HealthMeter_Bar_t;
 
 typedef struct HealthMeter_s
@@ -74,7 +74,7 @@ static const HealthMeter_BarLook_t HealthMeter_BarLook =
 extern VBuf_t vbuf;
 
 static void HealthMeter_DrawRect(int x, int y, int width, int height,
-    uint32_t color, byte blend)
+    uint32_t color, unsigned char blend)
 {
     VBuf_t bufp;
     int scx, scy, scwidth, scheight;
@@ -132,18 +132,18 @@ static void HealthMeter_DrawImage(int x, int y, int width, int height,
     }
 }
 
-static void HealthMeter_ShapeToImage(int shapenum, byte *image)
+static void HealthMeter_ShapeToImage(int shapenum, unsigned char *image)
 {
     int x, y, i;
-    word *cmdptr;
+    unsigned short *cmdptr;
     t_compshape *shape;
-    byte *sprite;
+    unsigned char *sprite;
     short *linecmds;
 
     memset(image, 0, TEXTURESIZE * TEXTURESIZE);
 
     shape = (t_compshape *)PM_GetSprite(shapenum);
-    sprite = (byte *)shape;
+    sprite = (unsigned char *)shape;
 
     cmdptr = shape->dataofs;
     for (x = shape->leftpix; x <= shape->rightpix; x++)
@@ -168,8 +168,8 @@ static void HealthMeter_InitBarFacePic(int barId)
     int fx, fy;
     int size;
     uint32_t *faceptr;
-    byte col;
-    byte shapeImage[TEXTURESIZE * TEXTURESIZE];
+    unsigned char col;
+    unsigned char shapeImage[TEXTURESIZE * TEXTURESIZE];
     const HealthMeter_BarLook_t *bl;
     HealthMeter_Bar_t *bar;
     fixed u, v, du, dv;
@@ -190,7 +190,7 @@ static void HealthMeter_InitBarFacePic(int barId)
     scwidth = bl->faceWidth * scaleFactor;
     scheight = bl->faceHeight * scaleFactor;
     size = scwidth * scheight * sizeof(uint32_t);
-    bar->facepic = (byte *)malloc(size);
+    bar->facepic = (unsigned char *)malloc(size);
     CHECKMALLOCRESULT(bar->facepic);
     memset(bar->facepic, 0, size);
 
@@ -287,7 +287,7 @@ void HealthMeter_Reset(void)
 
 static void HealthMeter_DrawBar(int barId)
 {
-    byte blend;
+    unsigned char blend;
     int x, y;
     int hp, yused;
     int index;

@@ -201,7 +201,7 @@ void BasicOverhead (void)
     for (y = 0; y < mapheight; y++)
     {
         for (x = 0; x < mapwidth; x++)
-            VWB_Bar ((x * zoom) + offx,(y * zoom) + offy,zoom,zoom,(byte)(uintptr_t)actorat[x][y]);
+            VWB_Bar ((x * zoom) + offx,(y * zoom) + offy,zoom,zoom,(unsigned char)(uintptr_t)actorat[x][y]);
     }
 
     //
@@ -266,9 +266,9 @@ void ShapeTest (void)
     int        i,j,k,x;
     int        v2;
     int        oldviewheight;
-    longword   l;
-    byte       v;
-    byte       *addr;
+    unsigned int   l;
+    unsigned char       v;
+    unsigned char *addr;
     soundnames sound;
 
     CenterWindow (20,16);
@@ -623,7 +623,7 @@ int DebugKeys (void)
     }
     else if (Keyboard(sc_L))        // L = level ratios
     {
-        byte x,start,end=LRpack;
+        unsigned char x,start,end=LRpack;
 
         if (end == 8)   // wolf3d
         {
@@ -856,7 +856,7 @@ int16_t tilesize;
 ===================
 */
 
-void DrawMapFloor (int16_t sx, int16_t sy, byte color)
+void DrawMapFloor (int16_t sx, int16_t sy, unsigned char color)
 {
     int x,y;
 
@@ -879,8 +879,8 @@ void DrawMapFloor (int16_t sx, int16_t sy, byte color)
 void DrawMapWall (int16_t sx, int16_t sy, int16_t wallpic)
 {
     int  x,y;
-    byte *src;
-    word texturemask;
+    unsigned char *src;
+    unsigned short texturemask;
 
     src = PM_GetPage(wallpic);
 
@@ -940,8 +940,8 @@ void DrawMapSprite (int16_t sx, int16_t sy, int16_t shapenum)
 {
     int         x;
     compshape_t *shape;
-    byte        *linesrc,*linecmds;
-    byte        *src;
+    unsigned char *linesrc,*linecmds;
+    unsigned char *src;
     int16_t     end,start,top;
 
     linesrc = PM_GetSpritePage(shapenum);
@@ -1007,7 +1007,7 @@ void DrawMapBorder (void)
 void OverheadRefresh (void)
 {
     int       x,y;
-    byte      rotate[9] = {6,5,4,3,2,1,0,7,0};
+    unsigned char      rotate[9] = {6,5,4,3,2,1,0,7,0};
     int16_t   endx,endy;
     int16_t   sx,sy,shapenum;
     uintptr_t tile;
@@ -1062,7 +1062,7 @@ void OverheadRefresh (void)
                     {
                         obj = (objtype *)tile;
 
-                        if (spotvis[(byte)(obj->x >> TILESHIFT)][(byte)(obj->y >> TILESHIFT)])
+                        if (spotvis[(unsigned char)(obj->x >> TILESHIFT)][(unsigned char)(obj->y >> TILESHIFT)])
                         {
                             shapenum = obj->state->shapenum;
 

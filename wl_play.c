@@ -52,7 +52,7 @@ boolean     mapseen[MAPSIZE][MAPSIZE];
 //
 // replacing refresh manager
 //
-word     mapwidth,mapheight;
+unsigned short     mapwidth,mapheight;
 uint32_t tics;
 
 //
@@ -203,7 +203,7 @@ extern char texture_list[SPR_NULLSPRITE];
 //===========================================================================
 
 
-void CenterWindow (word w, word h);
+void CenterWindow (unsigned short w, unsigned short h);
 void InitObjList (void);
 void RemoveObj (objtype * gone);
 void PollControls (void);
@@ -568,7 +568,7 @@ void PollGameControllerMove(void)
 void PollControls (void)
 {
     int max, min, i;
-    byte buttonbits;
+    unsigned char buttonbits;
 
     IN_ProcessEvents();
 
@@ -722,7 +722,7 @@ void PollControls (void)
 #define MAXX    320
 #define MAXY    160
 
-void CenterWindow (word w, word h)
+void CenterWindow (unsigned short w, unsigned short h)
 {
     US_DrawWindow (((MAXX / 8) - w) / 2, ((MAXY / 8) - h) / 2, w, h);
 }

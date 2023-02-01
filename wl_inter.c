@@ -1328,7 +1328,7 @@ DrawHighScores (void)
     char buffer1[5];
 #endif
 #endif
-    word i, w, h;
+    unsigned short i, w, h;
     HighScore *s;
 
 #ifndef SPEAR
@@ -1512,9 +1512,9 @@ DrawHighScores (void)
 */
 
 void
-CheckHighScore (int32_t score, word other)
+CheckHighScore (int32_t score, unsigned short other)
 {
-    word i, j;
+    unsigned short i, j;
     int n;
     HighScore myscore;
 

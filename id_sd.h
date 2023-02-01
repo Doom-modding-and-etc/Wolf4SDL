@@ -44,8 +44,8 @@ typedef enum
 #ifndef SEGA_SATURN
 typedef struct
 {
-    longword        length;
-    word            priority;
+    unsigned int        length;
+    unsigned short            priority;
 } SoundCommon;
 #endif
 #define ORIG_SOUNDCOMMON_SIZE 6
@@ -116,8 +116,8 @@ typedef struct
 #ifndef SEGA_SATURN
 typedef struct
 {
-    word    length;
-    word    values[1];
+    unsigned short    length;
+    unsigned short    values[1];
 } MusicGroup;
 
 typedef struct
@@ -148,7 +148,7 @@ extern  SDSMode         DigiMode;
 #ifndef SEGA_SATURN
 extern  SMMode          MusicMode;
 #endif
-extern  word            NumDigi;
+extern  unsigned short            NumDigi;
 extern  digiinfo        *DigiList;
 #if !defined(USE_ADX) && !defined(SEGA_SATURN)
 extern  int             DigiMap[];
@@ -186,13 +186,13 @@ extern  boolean SD_MusicPlaying(void);
 extern  boolean SD_SetSoundMode(SDMode mode);
 extern  boolean SD_SetMusicMode(SMMode mode);
 #endif
-extern  word    SD_SoundPlaying(void);
+extern  unsigned short    SD_SoundPlaying(void);
 
 #ifndef SEGA_SATURN
 extern  void    SD_SetDigiDevice(SDSMode);
 #endif
 extern  void	SD_PrepareSound(int which);
-extern  int     SD_PlayDigitized(word which,int leftpos,int rightpos);
+extern  int     SD_PlayDigitized(unsigned short which,int leftpos,int rightpos);
 extern  void    SD_StopDigitized(void);
 #endif
 #endif

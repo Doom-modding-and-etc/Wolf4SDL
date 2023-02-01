@@ -3,7 +3,7 @@
 pictabletype	*pictable;
 
 int	    px,py;
-byte	fontcolor,backcolor;
+unsigned char	fontcolor,backcolor;
 int	    fontnumber;
 
 //==========================================================================
@@ -13,10 +13,10 @@ void VWB_DrawPropString(const char* string)
 #ifdef SEGA_SATURN
     fontstruct* font;
     int		    width, step, height;
-    byte* source, * dest;
-    byte	    ch;
+    unsigned char* source, * dest;
+    unsigned char	    ch;
 
-    byte* vbuf = LOCK();
+    unsigned char* vbuf = LOCK();
 
     font = (fontstruct*)grsegs[STARTFONT + fontnumber];
     font->height = SWAP_BYTES_16(font->height);
@@ -24,10 +24,10 @@ void VWB_DrawPropString(const char* string)
 
     dest = vbuf + scaleFactor * (py * curPitch + px);
 
-    while ((ch = (byte)*string++) != 0)
+    while ((ch = (unsigned char)*string++) != 0)
     {
         width = step = font->width[ch];
-        source = ((byte*)font) + SWAP_BYTES_16(font->location[ch]);
+        source = ((unsigned char*)font) + SWAP_BYTES_16(font->location[ch]);
 
         while (width--)
         {
@@ -53,8 +53,8 @@ void VWB_DrawPropString(const char* string)
 #else
 	fontstruct  *font;
 	int		    width, step, height;
-	byte	    *source, *dest;
-	byte	    ch;
+	unsigned char	    *source, *dest;
+	unsigned char 	    ch;
 	int i;
 	unsigned sx, sy;
 
@@ -65,18 +65,18 @@ void VWB_DrawPropString(const char* string)
 	height = font->height;
 	dest += scaleFactor * (ylookup[py] + px);
 
-	while ((ch = (byte)*string++)!=0)
+	while ((ch = (unsigned char)*string++)!=0)
 	{
 		width = step = font->width[ch];
-		source = ((byte *)font)+font->location[ch];
+		source = ((unsigned char *)font)+font->location[ch];
 		while (width--)
 		{
 			for(i=0; i<height; i++)
 			{
 				if(source[i*step])
 				{
-					for(sy=0; sy<scaleFactor; sy++)
-						for(sx=0; sx<scaleFactor; sx++)
+					for(sy=0; sy<(unsigned int)scaleFactor; sy++)
+						for(sx=0; sx<(unsigned int)scaleFactor; sx++)
 							dest[ylookup[scaleFactor*i+sy]+sx]=fontcolor;
 				}
 			}
@@ -92,7 +92,7 @@ void VWB_DrawPropString(const char* string)
 }
 
 
-void VWL_MeasureString (const char *string, word *width, word *height, fontstruct *font)
+void VWL_MeasureString (const char *string, unsigned short *width, unsigned short *height, fontstruct *font)
 {
 #ifdef SEGA_SATURN
     *height = SWAP_BYTES_16(font->height);
@@ -101,11 +101,11 @@ void VWL_MeasureString (const char *string, word *width, word *height, fontstruc
 	*height = font->height;
 #endif
     for (*width = 0;*string;string++)
-		*width += font->width[*((byte *)string)];	// proportional width
+		*width += font->width[*((unsigned char *)string)];	// proportional width
 
 }
 
-void VW_MeasurePropString (const char *string, word *width, word *height)
+void VW_MeasurePropString (const char *string, unsigned short *width, unsigned short *height)
 {
 	VWL_MeasureString(string,width,height,(fontstruct *)grsegs[STARTFONT+fontnumber]);
 }
@@ -230,7 +230,7 @@ void VWB_Vlin (int y1, int y2, int x, int color)
 void LoadLatchMem(void)
 {
     int	i, width, height, start, end;
-    byte* src;
+    unsigned char* src;
     SDL_Surface* surf; //,*surf1;
 #if 0
     //
@@ -367,8 +367,8 @@ boolean FizzleFade (SDL_Surface *source, int x1, int y1,
     IN_StartAck();
 
     frame = GetTimeCount();
-    byte* srcptr = (byte*)source->pixels;
-    byte color = (srcptr[x1 + (y1 * width)] ? 0 : 4);
+    unsigned char* srcptr = (unsigned char*)source->pixels;
+    unsigned char color = (srcptr[x1 + (y1 * width)] ? 0 : 4);
 
     SDL_Rect rect = { x1,y1,width,height };
 
@@ -400,7 +400,7 @@ boolean FizzleFade (SDL_Surface *source, int x1, int y1,
         }
 
 
-        byte* destptr = (byte*)dest->pixels;
+        unsigned char* destptr = (unsigned char*)dest->pixels;
 
         rndval = lastrndval;
 
@@ -459,10 +459,9 @@ finished:
 #endif
 #else
     unsigned x, y, p, frame, pixperframe;
-    int32_t  rndval, lastrndval;
+    int32_t  rndval = 0, lastrndval = 0;
     int      i,first = 1;
-	byte *srcptr;
-    lastrndval = 0;
+	unsigned char *srcptr;
     pixperframe = width * height / frames;
 
     IN_StartAck ();
@@ -473,7 +472,7 @@ finished:
 
     do
     {
-		byte *destptr;
+		unsigned char *destptr;
         IN_ProcessEvents();
 
         if(abortable && IN_CheckAck ())
@@ -527,7 +526,7 @@ finished:
                     }
                     else
                     {
-                        byte col = *(srcptr + (y1 + y) * source->pitch + x1 + x);
+                        unsigned char col = *(srcptr + (y1 + y) * source->pitch + x1 + x);
                         uint32_t fullcol = SDL_MapRGB(screen->format, curpal[col].r, curpal[col].g, curpal[col].b);
                         memcpy(destptr + (y1 + y) * screen->pitch + (x1 + x) * screen->format->BytesPerPixel,
                             &fullcol, screen->format->BytesPerPixel);

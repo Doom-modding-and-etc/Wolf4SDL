@@ -23,7 +23,7 @@
 extern VBuf_t vbuf;
 
 static void DrawHorizontalLineList(struct HLineList * HLineListPtr,
-      int Color, byte Blend)
+      int Color, unsigned char Blend)
 {
     struct HLine *HLinePtr;
     int Y, X;
@@ -169,7 +169,7 @@ static void ScanEdge(int X1, int Y1, int X2, int Y2, int SetXStart,
 }
 
 int FillConvexPolygon(struct PointListHeader * VertexList, int Color,
-    int XOffset, int YOffset, byte Blend)
+    int XOffset, int YOffset, unsigned char Blend)
 {
     int i, MinIndexL, MaxIndex, MinIndexR, SkipFirst, Temp;
     int MinPoint_Y, MaxPoint_Y, TopIsFlat, LeftEdgeDir;
@@ -302,7 +302,7 @@ int FillConvexPolygon(struct PointListHeader * VertexList, int Color,
 }
 
 int FillConvexPolygonEx(int Length, struct PolyPoint *PointPtr,
-    int Color, byte Blend)
+    int Color, unsigned char Blend)
 {
     struct PointListHeader VertexList;
     VertexList.Length = Length;

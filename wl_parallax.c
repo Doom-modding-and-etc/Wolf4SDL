@@ -48,8 +48,8 @@ int GetParallaxStartTexture (void)
 void DrawParallax (void)
 {
     int     x,y;
-    byte    *dest,*skysource;
-    word    texture;
+    unsigned char *dest,*skysource;
+    unsigned short    texture;
     int16_t angle;
     int16_t skypage,curskypage;
     int16_t lastskypage;

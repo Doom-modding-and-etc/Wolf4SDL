@@ -28,7 +28,7 @@
 //
 int32_t        thrustspeed;
 
-word            plux, pluy;          // player coordinates scaled to unsigned
+unsigned short            plux, pluy;          // player coordinates scaled to unsigned
 
 short           anglefrac;
 
@@ -1484,8 +1484,8 @@ void    T_Attack(objtype* ob)
     if (gamestate.victoryflag)              // watching the BJ actor
         return;
 
-    plux = (word)(player->x >> UNSIGNEDSHIFT);                     // scale to fit in unsigned
-    pluy = (word)(player->y >> UNSIGNEDSHIFT);
+    plux = (unsigned short)(player->x >> UNSIGNEDSHIFT);                     // scale to fit in unsigned
+    pluy = (unsigned short)(player->y >> UNSIGNEDSHIFT);
     player->tilex = (short)(player->x >> TILESHIFT);                // scale to tile values
     player->tiley = (short)(player->y >> TILESHIFT);
 
@@ -1590,8 +1590,8 @@ void    T_Player(objtype* ob)
     if (gamestate.victoryflag)              // watching the BJ actor
         return;
 
-    plux = (word)(player->x >> UNSIGNEDSHIFT);                     // scale to fit in unsigned
-    pluy = (word)(player->y >> UNSIGNEDSHIFT);
+    plux = (unsigned short)(player->x >> UNSIGNEDSHIFT);                     // scale to fit in unsigned
+    pluy = (unsigned short)(player->y >> UNSIGNEDSHIFT);
     player->tilex = (short)(player->x >> TILESHIFT);                // scale to tile values
     player->tiley = (short)(player->y >> TILESHIFT);
 }

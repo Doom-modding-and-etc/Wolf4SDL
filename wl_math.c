@@ -256,15 +256,15 @@ int Math_Log2(int x)
     return res;
 }
 
-uint32_t Math_FixedLerpRgba(uint32_t a, uint32_t b, byte blend)
+uint32_t Math_FixedLerpRgba(uint32_t a, uint32_t b, unsigned char blend)
 {
     int i;
     uint32_t c = RGBA(0,0,0,255);
-    byte *pa, *pb, *pc;
+    unsigned char *pa, *pb, *pc;
 
-    pa = (byte *)&a;
-    pb = (byte *)&b;
-    pc = (byte *)&c;
+    pa = (unsigned char *)&a;
+    pb = (unsigned char *)&b;
+    pc = (unsigned char *)&c;
 
     for (i = 0; i < 3; i++)
     {

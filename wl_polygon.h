@@ -34,8 +34,8 @@ struct HLineList {
 };
 
 extern int FillConvexPolygon(struct PointListHeader* VertexList,
-    int Color, int XOffset, int YOffset, byte Blend);
+    int Color, int XOffset, int YOffset, unsigned char Blend);
 
 extern int FillConvexPolygonEx(int Length,
-    struct PolyPoint* PointPtr, int Color, byte Blend);
+    struct PolyPoint* PointPtr, int Color, unsigned char Blend);
 #endif

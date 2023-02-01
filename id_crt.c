@@ -85,11 +85,11 @@ void CRT_DAC(void)
     SDL_Surface* screen = screenBuffer;
     int i;
     //Convert palette based framebuffer to RGB for OpenGL
-    byte* pixelPointer = coloredFrameBuffer;
+    unsigned char* pixelPointer = coloredFrameBuffer;
     
     for (i = 0; i < 320 * 200; i++) {
         uint8_t paletteIndex;
-        paletteIndex = ((byte*)screen->pixels)[i];
+        paletteIndex = ((unsigned char*)screen->pixels)[i];
         *pixelPointer++ = curpal[paletteIndex].r;
         *pixelPointer++ = curpal[paletteIndex].g;
         *pixelPointer++ = curpal[paletteIndex].b;

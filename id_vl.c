@@ -169,8 +169,9 @@ void VL_Shutdown (void)
 void VL_SetVGAPlaneMode (void)
 {
     int i;
+#if SDL_MAJOR_VERSION == 2
     uint32_t a,r,g,b;
-
+#endif
 #ifdef SPEAR
     const char* title = "Spear of Destiny";
 #else
@@ -348,7 +349,7 @@ void VL_SetVGAPlaneMode (void)
     bufferPitch = screenBuffer->pitch;
 
     scaleFactor = screenWidth/320;
-    if(screenHeight/200 < scaleFactor) scaleFactor = screenHeight/200;
+    if(screenHeight/200 < (unsigned int)scaleFactor) scaleFactor = screenHeight/200;
 
     ylookup = SafeMalloc(screenHeight * sizeof(*ylookup));
     pixelangle = SafeMalloc(screenWidth * sizeof(*pixelangle));
@@ -357,7 +358,7 @@ void VL_SetVGAPlaneMode (void)
     spanstart = SafeMalloc((screenHeight / 2) * sizeof(*spanstart));
 #endif
 
-    for (i = 0; i < screenHeight; i++)
+    for (i = 0; i < (int)screenHeight; i++)
         ylookup[i] = i * bufferPitch;
 }
 
@@ -379,7 +380,7 @@ void VL_SetVGAPlaneMode (void)
 =================
 */
 
-void VL_ConvertPalette(byte *srcpal, SDL_Color *destpal, int numColors)
+void VL_ConvertPalette(unsigned char *srcpal, SDL_Color *destpal, int numColors)
 {
     int i;
 
@@ -667,7 +668,7 @@ void VL_FadeIn (int start, int end, SDL_Color *palette, int steps)
 =============================================================================
 */
 
-byte *VL_LockSurface(SDL_Surface *surface)
+unsigned char *VL_LockSurface(SDL_Surface *surface)
 {
 #ifndef SEGA_SATURN
     if(SDL_MUSTLOCK(surface))
@@ -676,7 +677,7 @@ byte *VL_LockSurface(SDL_Surface *surface)
             return NULL;
     }
 #endif
-    return (byte *) surface->pixels;
+    return (unsigned char *) surface->pixels;
 }
 
 #ifndef SEGA_SATURN
@@ -698,7 +699,7 @@ void VL_UnlockSurface(SDL_Surface *surface)
 
 void VL_Plot (int x, int y, int color)
 {
-    byte *dest;
+    unsigned char *dest;
 
     assert(x >= 0 && (unsigned) x < screenWidth
             && y >= 0 && (unsigned) y < screenHeight
@@ -720,21 +721,21 @@ void VL_Plot (int x, int y, int color)
 =================
 */
 
-byte VL_GetPixel (int x, int y)
+unsigned char VL_GetPixel (int x, int y)
 {
-    byte col;
+    unsigned char col;
 
     assert_ret(x >= 0 && (unsigned) x < screenWidth
             && y >= 0 && (unsigned) y < screenHeight
             && "VL_GetPixel: Pixel out of bounds!");
 #ifdef SEGA_SATURN
-    return ((byte*)surface->pixels)[y * pitch + x];
+    return ((unsigned char*)surface->pixels)[y * pitch + x];
 #else
 
     if (!VL_LockSurface(screenBuffer))
         return 0;
 
-    col = ((byte *) screenBuffer->pixels)[ylookup[y] + x];
+    col = ((unsigned char *) screenBuffer->pixels)[ylookup[y] + x];
 
     VL_UnlockSurface(screenBuffer);
 
@@ -753,7 +754,7 @@ byte VL_GetPixel (int x, int y)
 
 void VL_Hlin (unsigned x, unsigned y, unsigned width, int color)
 {
-    byte *dest;
+    unsigned char *dest;
 
     assert(x >= 0 && x + width <= screenWidth
             && y >= 0 && y < screenHeight
@@ -780,7 +781,7 @@ void VL_Hlin (unsigned x, unsigned y, unsigned width, int color)
 
 void VL_Vlin (int x, int y, int height, int color)
 {
-	byte *dest;
+    unsigned char *dest;
 
 	assert(x >= 0 && (unsigned) x < screenWidth
 			&& y >= 0 && (unsigned) y + height <= screenHeight
@@ -818,7 +819,7 @@ void VL_Bar (int x, int y, int width, int height, int color)
 
 void VL_BarScaledCoord (int scx, int scy, int scwidth, int scheight, int color)
 {
-	byte *dest;
+    unsigned char *dest;
 
 #ifndef SEGA_SATURN
 	assert(scx >= 0 && (unsigned) scx + scwidth <= screenWidth
@@ -857,11 +858,11 @@ void VL_BarScaledCoord (int scx, int scy, int scwidth, int scheight, int color)
 ===================
 */
 
-void VL_DePlaneVGA (byte *source, int width, int height)
+void VL_DePlaneVGA (unsigned char *source, int width, int height)
 {
     int  x,y,plane;
-    word size,pwidth;
-    byte *temp,*dest,*srcline;
+    unsigned short size,pwidth;
+    unsigned char *temp,*dest,*srcline;
 
     size = width * height;
 
@@ -908,12 +909,12 @@ void VL_DePlaneVGA (byte *source, int width, int height)
 =================
 */
 
-void VL_MemToScreen (byte *source, int width, int height, int x, int y)
+void VL_MemToScreen (unsigned char *source, int width, int height, int x, int y)
 {
     VL_MemToScreenScaledCoord(source, width, height, scaleFactor*x, scaleFactor*y);
 }
 
-void VL_MemToScreenScaledCoord (byte *source, int width, int height, int destx, int desty)
+void VL_MemToScreenScaledCoord (unsigned char *source, int width, int height, int destx, int desty)
 {
 #ifdef SEGA_SATURN
     //    assert5(destx >= 0 && destx + width * scaleFactor <= screenWidth
@@ -921,7 +922,7 @@ void VL_MemToScreenScaledCoord (byte *source, int width, int height, int destx, 
     //            && "VL_MemToScreenScaledCoord: Destination rectangle out of bounds!");
 
     //    VL_LockSurface(curSurface);
-    byte* vbuf = (byte*)curSurface->pixels + (desty * curPitch) + destx;
+    unsigned char* vbuf = (unsigned char*)curSurface->pixels + (desty * curPitch) + destx;
     unsigned char w2 = width >> 2;
     unsigned int mul = w2 * height;
 
@@ -957,12 +958,12 @@ void VL_MemToScreenScaledCoord (byte *source, int width, int height, int destx, 
     VL_UnlockSurface(surface); // vbt utile pour signon screen
 
 #else
-    byte *dest;
+    unsigned char *dest;
     int i, j, sci, scj;
     unsigned m, n;
 
-    assert(destx >= 0 && destx + width * scaleFactor <= screenWidth
-            && desty >= 0 && desty + height * scaleFactor <= screenHeight
+    assert(destx >= 0 && destx + width * (int)scaleFactor <= (int)screenWidth
+            && desty >= 0 && desty + height * (int)scaleFactor <= (int)screenHeight
             && "VL_MemToScreenScaledCoord: Destination rectangle out of bounds!");
 
     dest = VL_LockSurface(screenBuffer);
@@ -972,10 +973,10 @@ void VL_MemToScreenScaledCoord (byte *source, int width, int height, int destx, 
     {
         for(i = 0, sci = 0; i < width; i++, sci += scaleFactor)
         {
-            byte col = source[(j * width) + i];
-            for(m = 0; m < scaleFactor; m++)
+            unsigned char col = source[(j * width) + i];
+            for(m = 0; m < (unsigned int)scaleFactor; m++)
             {
-                for(n = 0; n < scaleFactor; n++)
+                for(n = 0; n < (unsigned int)scaleFactor; n++)
                 {
                     dest[ylookup[scj + m + desty] + sci + n + destx] = col;
                 }
@@ -999,15 +1000,15 @@ void VL_MemToScreenScaledCoord (byte *source, int width, int height, int destx, 
 =================
 */
 
-void VL_MemToScreenScaledCoord2 (byte *source, int origwidth, int origheight, int srcx, int srcy,
+void VL_MemToScreenScaledCoord2 (unsigned char *source, int origwidth, int origheight, int srcx, int srcy,
                                 int destx, int desty, int width, int height)
 {
-    byte *dest;
+    unsigned char *dest;
     int i, j, sci, scj;
     unsigned m, n;
 
-    assert(destx >= 0 && destx + width * scaleFactor <= screenWidth
-            && desty >= 0 && desty + height * scaleFactor <= screenHeight
+    assert(destx >= 0 && destx + width * (int)scaleFactor <= (int)screenWidth
+            && desty >= 0 && desty + height * (int)scaleFactor <= (int)screenHeight
             && "VL_MemToScreenScaledCoord: Destination rectangle out of bounds!");
 
     dest = VL_LockSurface(screenBuffer);
@@ -1017,11 +1018,11 @@ void VL_MemToScreenScaledCoord2 (byte *source, int origwidth, int origheight, in
     {
         for(i = 0, sci = 0; i < width; i++, sci += scaleFactor)
         {
-            byte col = source[((j + srcy) * origwidth) + (i + srcx)];
+            unsigned char col = source[((j + srcy) * origwidth) + (i + srcx)];
 
-            for(m = 0; m < scaleFactor; m++)
+            for(m = 0; m < (unsigned int)scaleFactor; m++)
             {
-                for(n = 0; n < scaleFactor; n++)
+                for(n = 0; n < (unsigned int)scaleFactor; n++)
                 {
                     dest[ylookup[scj + m + desty] + sci + n + destx] = col;
                 }

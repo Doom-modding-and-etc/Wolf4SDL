@@ -3,19 +3,19 @@
 #include "wl_def.h"
 
 #ifndef SEGA_SATURN
-word ChunksInFile;
+unsigned short ChunksInFile;
 #endif
-word PMSpriteStart;
+unsigned short PMSpriteStart;
 #ifndef SEGA_SATURN
-word PMSoundStart;
+unsigned short PMSoundStart;
 boolean PMSoundInfoPagePadded = false;
 #endif
-word *pageLengths;
+unsigned short *pageLengths;
 
-byte *PMPageData;
-byte **PMPages;
+unsigned char *PMPageData;
+unsigned char **PMPages;
 #ifdef SEGA_SATURN
-byte* PM_DecodeSprites2(unsigned int start, unsigned int endi, uint32_t* pageOffsets, word* pageLengths, uint8_t* ptr, Sint32 fileId);
+unsigned char* PM_DecodeSprites2(unsigned int start, unsigned int endi, uint32_t* pageOffsets, word* pageLengths, uint8_t* ptr, Sint32 fileId);
 #endif
 
 #ifdef SEGA_SATURN
@@ -42,7 +42,7 @@ void PM_Startup (void)
 {
     int      i;
     int      padding;
-    byte     *page;
+    unsigned char     *page;
     uint32_t *pageOffsets;
     uint32_t pagesize;
     int32_t 
@@ -118,9 +118,9 @@ void PM_Startup (void)
     //
 
 #ifdef SEGA_SATURN
-    pageLengths = (word*)saturnChunk + (ChunksInFile + 1) * sizeof(int32_t);
+    pageLengths = (unsigned short*)saturnChunk + (ChunksInFile + 1) * sizeof(int32_t);
 #else
-    pageLengths = (word*)SafeMalloc(ChunksInFile * sizeof(*pageLengths));
+    pageLengths = (unsigned short*)SafeMalloc(ChunksInFile * sizeof(*pageLengths));
 #endif
 #ifndef SEGA_SATURN
     fread (pageLengths,sizeof(*pageLengths),ChunksInFile,file);
@@ -152,7 +152,7 @@ void PM_Startup (void)
         if (!pageOffsets[i])
             continue;           // sparse page
 
-        if (pageOffsets[i] < pageOffsets[0] || pageOffsets[i] >= filesize)
+        if (pageOffsets[i] < pageOffsets[0] || pageOffsets[i] >= (unsigned int)filesize)
             Quit ("PM_Startup: Illegal page offset for page %i: %u (filesize: %u)",i,pageOffsets[i],filesize);
     }
 
@@ -176,13 +176,13 @@ void PM_Startup (void)
     //
     // allocate enough memory to hold the whole page file
     //
-    PMPageData = (byte*)SafeMalloc(datasize + padding);
+    PMPageData = (unsigned char*)SafeMalloc(datasize + padding);
 
     //
     // [ChunksInFile + 1] pointers to page starts
     // the last pointer points one byte after the last page
     //
-    PMPages = (byte**)SafeMalloc((ChunksInFile + 1) * sizeof(*PMPages));
+    PMPages = (unsigned char**)SafeMalloc((ChunksInFile + 1) * sizeof(*PMPages));
 
     //
     // load pages and initialize PMPages pointers
@@ -240,7 +240,7 @@ void PM_Startup (void)
 }
 
 #ifdef SEGA_SATURN
-byte* PM_DecodeSprites2(unsigned int start, unsigned int endi, uint32_t* pageOffsets, word* pageLengths, uint8_t* ptr, Sint32 fileId)
+unsigned char* PM_DecodeSprites2(unsigned int start, unsigned int endi, uint32_t* pageOffsets, word* pageLengths, uint8_t* ptr, Sint32 fileId)
 {
     uint8_t* Chunks = (uint8_t*)saturnChunk + 0x9000;
     uint8_t* bmpbuff = (uint8_t*)saturnChunk + 0xA000;	//0x00202000;
@@ -276,7 +276,7 @@ byte* PM_DecodeSprites2(unsigned int start, unsigned int endi, uint32_t* pageOff
         shape->leftpix = SWAP_BYTES_16(shape->leftpix);
         shape->rightpix = SWAP_BYTES_16(shape->rightpix);
 
-        byte* bmpptr, * sprdata8;
+        unsigned char* bmpptr, * sprdata8;
         unsigned short* cmdptr;
 
         // set the texel index to the first texel
@@ -316,7 +316,7 @@ byte* PM_DecodeSprites2(unsigned int start, unsigned int endi, uint32_t* pageOff
         for (int x = (shape->leftpix); x <= (shape->rightpix); x++)
         {
             sprdata8 = ((unsigned char*)shape + *cmdptr);
-            bmpptr = (byte*)bmpbuff + x;
+            bmpptr = (unsigned char*)bmpbuff + x;
 
             while ((sprdata8[0] | sprdata8[1] << 8) != 0)
             {
@@ -385,7 +385,7 @@ uint32_t PM_GetPageSize (int page)
 ==================
 */
 
-byte *PM_GetPage (int page)
+unsigned char *PM_GetPage (int page)
 {
 #ifndef SEGA_SATURN
     if (page < 0 || page >= ChunksInFile)
@@ -405,14 +405,14 @@ byte *PM_GetPage (int page)
 ==================
 */
 #ifndef SEGA_SATURN
-byte *PM_GetPageEnd (void)
+unsigned char *PM_GetPageEnd (void)
 {
     return PMPages[ChunksInFile];
 }
 #endif
 
 #ifdef SEGA_SATURN
-static inline byte* PM_GetTexture(int wallpic)
+static inline unsigned char* PM_GetTexture(int wallpic)
 {
     return PM_GetPage(wallpic);
 }

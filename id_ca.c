@@ -120,15 +120,15 @@ void heapWalk(void)
 
 typedef struct
 {
-    word bit0,bit1;       // 0-255 is a character, > is a pointer to a node
+    unsigned short bit0,bit1;       // 0-255 is a character, > is a pointer to a node
 } huffnode;
 
 
 typedef struct
 {
-    word RLEWtag;
+    unsigned short RLEWtag;
 #if MAPPLANES >= 4
-    word numplanes;       // unused, but WDC needs 2 bytes here for internal usage
+    unsigned short numplanes;       // unused, but WDC needs 2 bytes here for internal usage
 #endif
     int32_t headeroffsets[NUMMAPS];
 } mapfiletype;
@@ -140,7 +140,7 @@ typedef struct
 =============================================================================
 */
 
-word *mapsegs[MAPPLANES];
+unsigned short *mapsegs[MAPPLANES];
 #if defined(EMBEDDED) && defined(SEGA_SATURN)
 static maptype mapheaderseg;
 #else
@@ -148,9 +148,9 @@ maptype *mapheaderseg[NUMMAPS];
 #endif
 
 #if !defined(VIEASM) || !defined(SEGA_SATURN)
-byte *audiosegs[NUMSNDCHUNKS];
+unsigned char *audiosegs[NUMSNDCHUNKS];
 #endif
-byte *grsegs[NUMCHUNKS];
+unsigned char *grsegs[NUMCHUNKS];
 
 mapfiletype *tinf;
 
@@ -334,14 +334,14 @@ boolean CA_LoadFile (const char *filename, void **ptr)
 ============================================================================
 */
 
-static void CAL_HuffExpand(byte *source, byte *dest, int32_t length, huffnode *hufftable)
+static void CAL_HuffExpand(unsigned char *source, unsigned char *dest, int32_t length, huffnode *hufftable)
 {
-    byte *end;
+    unsigned char *end;
     huffnode *headptr, *huffptr;
 	int written = 0;
-	byte val;
-	byte mask;
-	word nodeval;
+	unsigned char val;
+	unsigned char mask;
+    unsigned short nodeval;
 
     if(!length || !dest)
     {
@@ -374,7 +374,7 @@ static void CAL_HuffExpand(byte *source, byte *dest, int32_t length, huffnode *h
 
         if(nodeval<256)
         {
-            *dest++ = (byte) nodeval;
+            *dest++ = (unsigned char) nodeval;
             written++;
             huffptr = headptr;
             if(dest>=end) break;
@@ -399,15 +399,15 @@ static void CAL_HuffExpand(byte *source, byte *dest, int32_t length, huffnode *h
 #define NEARTAG 0xa7
 #define FARTAG  0xa8
 
-void CAL_CarmackExpand (byte *source, word *dest, int length)
+void CAL_CarmackExpand (unsigned char *source, unsigned short *dest, int length)
 {
-    word ch,chhigh,count,offset;
-    byte *inptr;
-    word *copyptr, *outptr;
+    unsigned short ch,chhigh,count,offset;
+    unsigned char *inptr;
+    unsigned short *copyptr, *outptr;
 
     length/=2;
 
-    inptr = (byte *) source;
+    inptr = (unsigned char *) source;
     outptr = dest;
 
     while (length>0)
@@ -470,11 +470,11 @@ void CAL_CarmackExpand (byte *source, word *dest, int length)
 ======================
 */
 
-int32_t CA_RLEWCompress (word *source, int32_t length, word *dest, word rlewtag)
+int32_t CA_RLEWCompress (unsigned short *source, int32_t length, unsigned short *dest, unsigned short rlewtag)
 {
-    word value,count;
+    unsigned short value,count;
     unsigned i;
-    word *start,*end;
+    unsigned short *start,*end;
 
     start = dest;
 
@@ -525,10 +525,10 @@ int32_t CA_RLEWCompress (word *source, int32_t length, word *dest, word rlewtag)
 ======================
 */
 
-void CA_RLEWexpand (word *source, word *dest, int32_t length, word rlewtag)
+void CA_RLEWexpand (unsigned short *source, unsigned short *dest, int32_t length, unsigned short rlewtag)
 {
-    word value,count,i;
-    word *end=dest+length/2;
+    unsigned short value,count,i;
+    unsigned short *end=dest+length/2;
 
 //
 // expand it
@@ -577,7 +577,7 @@ void CAL_SetupGrFile (void)
     char fname[13];
     //int handle;
 //	unsigned int j=0;
-    byte* compseg;
+    unsigned char* compseg;
     long fileSize;
     Sint32 fileId;
 
@@ -671,12 +671,12 @@ void CAL_SetupGrFile (void)
     }
 #endif	
     //slPrint((char *)"CAL_SetupGrFile4     ",slLocate(10,12));
-    byte data[lengthof(grstarts) * 3];
+    unsigned char data[lengthof(grstarts) * 3];
     GFS_Load(fileId, 0, (void*)data, sizeof(data)); // lecture de VGAHEAD full
     //read(handle, data, sizeof(data));
     //close(handle);
 
-    const byte* d = data;
+    const unsigned char* d = data;
     for (int32_t* i = grstarts; i != endof(grstarts); ++i)
     {
         //	slPrint((char *)"CAL_SetupGrFile5     ",slLocate(10,12));	
@@ -715,12 +715,12 @@ void CAL_SetupGrFile (void)
 
     int32_t   chunkcomplen = CAL_GetGrChunkLength(STRUCTPIC);                // position file pointer
     //	compseg =(byte*)malloc((chunkcomplen));
-    compseg = (byte*)saturnChunk;
+    compseg = (unsigned char*)saturnChunk;
     //	CHECKMALLOCRESULT(compseg);
     GFS_Load(grhandle, 0, (void*)compseg, (chunkcomplen));
     //    CAL_HuffExpand(&compseg[4], (byte*)pictable, NUMPICS * sizeof(pictabletype), grhuffman);
     //slPrint((char *)"CAL_SetupGrFile8     ",slLocate(10,12));
-    CAL_HuffExpand(&compseg[4], (byte*)pictable, NUMPICS * sizeof(pictabletype), grhuffman);
+    CAL_HuffExpand(&compseg[4], (unsigned char*)pictable, NUMPICS * sizeof(pictabletype), grhuffman);
     //slPrint((char *)"CAL_SetupGrFile9     ",slLocate(10,12));
     for (unsigned long k = 0; k < NUMPICS; k++)
     {
@@ -734,11 +734,11 @@ void CAL_SetupGrFile (void)
 #else
     char fname[13];
     int handle;
-    byte *compseg;
+    unsigned char *compseg;
 	long headersize;
 	int expectedsize;
-	byte data[lengthof(grstarts) * 3];
-	const byte* d;
+	unsigned char data[lengthof(grstarts) * 3];
+	const unsigned char* d;
 	int32_t* i;
 //
 // load ???dict.ext (huffman dictionary for graphics files)
@@ -804,7 +804,7 @@ void CAL_SetupGrFile (void)
     CAL_GetGrChunkLength(STRUCTPIC);                // position file pointer
     compseg = SafeMalloc(chunkcomplen);
     w3sread (grhandle,compseg,chunkcomplen);
-    CAL_HuffExpand(compseg, (byte*)pictable, NUMPICS * sizeof(*pictable), grhuffman);
+    CAL_HuffExpand(compseg, (unsigned char*)pictable, NUMPICS * sizeof(*pictable), grhuffman);
     free(compseg);
 
     CA_CacheGrChunks ();
@@ -908,7 +908,7 @@ void CAL_SetupMapFile (void)
     {
         mapheaderseg[mapnum]->planestart[i] = SWAP_BYTES_32(mapheaderseg[mapnum]->planestart[i]);
         mapheaderseg[mapnum]->planelength[i] = SWAP_BYTES_16(mapheaderseg[mapnum]->planelength[i]);
-        mapsegs[i] = (word*)SATURN_MAPSEG_ADDR + (0x2000 * i);
+        mapsegs[i] = (unsigned short*)SATURN_MAPSEG_ADDR + (0x2000 * i);
         //		mapsegs[i]=(word *) malloc(maparea*2);
     }
     mapheaderseg[mapnum]->width = SWAP_BYTES_16(mapheaderseg[mapnum]->width);
@@ -1193,8 +1193,8 @@ int32_t CA_CacheAudioChunk (int chunk)
 
 void CA_CacheAdlibSoundChunk (int chunk)
 {
-    byte    *bufferseg;
-    byte    *ptr;
+    unsigned char    *bufferseg;
+    unsigned char    *ptr;
     int32_t pos = audiostarts[chunk];
     int32_t size = audiostarts[chunk+1]-pos;
 	AdLibSound *sound;
@@ -1204,7 +1204,7 @@ void CA_CacheAdlibSoundChunk (int chunk)
 
     w3slseek(audiohandle, pos, SEEK_SET);
 
-    bufferseg = (byte*)SafeMalloc(ORIG_ADLIBSOUND_SIZE - 1);
+    bufferseg = (unsigned char*)SafeMalloc(ORIG_ADLIBSOUND_SIZE - 1);
     ptr = bufferseg;
 
     w3sread(audiohandle, ptr, ORIG_ADLIBSOUND_SIZE - 1);   // without data[1]
@@ -1237,7 +1237,7 @@ void CA_CacheAdlibSoundChunk (int chunk)
 
     w3sread(audiohandle, sound->data, size - ORIG_ADLIBSOUND_SIZE + 1);  // + 1 because of byte data[1]
 
-    audiosegs[chunk]=(byte *) sound;
+    audiosegs[chunk]=(unsigned char *) sound;
 
     free (bufferseg);
 }
@@ -1353,9 +1353,9 @@ void CAL_ExpandGrChunk (int chunk, int32_t *source)
     //
     // allocate final space and decompress it
     //
-    grsegs[chunk] = SafeMalloc(expanded);
+    grsegs[chunk] = (unsigned char*)SafeMalloc(expanded);
 
-    CAL_HuffExpand((byte *) source, grsegs[chunk], expanded, grhuffman);
+    CAL_HuffExpand((unsigned char *) source, grsegs[chunk], expanded, grhuffman);
 }
 
 
@@ -1509,12 +1509,12 @@ void CA_CacheMap (int mapnum)
 {
     int32_t  pos,compressed;
     int      plane;
-    word     *dest;
+    unsigned short *dest;
     unsigned size;
-    word     *bufferseg;
-    word     *source;
+    unsigned short *bufferseg;
+    unsigned short *source;
 #ifdef CARMACIZED
-    word     *buffer2seg;
+    unsigned short *buffer2seg;
     int32_t  expanded;
 #endif
 #ifdef SEGA_SATURN
@@ -1571,7 +1571,7 @@ void CA_CacheMap (int mapnum)
         source++;
 #endif
         buffer2seg = SafeMalloc(expanded);
-        CAL_CarmackExpand((byte *) source, buffer2seg,expanded);
+        CAL_CarmackExpand((unsigned char *) source, buffer2seg,expanded);
         CA_RLEWexpand(buffer2seg+1,dest,size,tinf->RLEWtag);
         free(buffer2seg);
 #ifdef SEGA_SATURN

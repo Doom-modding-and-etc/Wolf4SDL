@@ -16,8 +16,8 @@ extern void     *safe_malloc (size_t size, const char *fname, uint32_t line);
 extern fixed    FixedMul (fixed a, fixed b);
 extern fixed    FixedDiv (fixed a, fixed b);
 
-extern word     READWORD (byte *ptr);
-extern longword READLONGWORD (byte *ptr);
+extern unsigned short     READWORD (unsigned char *ptr);
+extern unsigned int READLONGWORD (unsigned char *ptr);
 
 #if defined(SEGA_SATURN)
 extern Sint16* LoadFile(char* filename, long* fileSize);

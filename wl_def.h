@@ -14,8 +14,6 @@
 
 #ifdef N3DS
 #include <3ds.h>
-#elif defined(_XBOX)
-#include <xtl.h>
 #endif
 #if defined(_arch_dreamcast)
 #include <kos.h>
@@ -87,17 +85,7 @@ typedef ptr_t uintptr_t;
 #define O_BINARY 0
 #endif
 
-#ifdef SEGA_SATURN
-typedef unsigned char byte;
-typedef unsigned short int word;
-#else
-#ifndef _WIN32
-typedef uint8_t byte;
-#endif
-typedef uint16_t word;
-#endif
 typedef fixedpt fixed;
-typedef uint32_t longword;
 
 typedef struct
 {
@@ -227,9 +215,9 @@ void Quit(const char* errorStr, ...);
 #endif
 
 #if WALLSHIFT >= 7
-typedef uint16_t tiletype;
+typedef unsigned short tiletype;
 #else
-typedef uint8_t tiletype;
+typedef unsigned char tiletype;
 #endif
 
 //
@@ -905,11 +893,11 @@ typedef struct statestruct
 
 typedef struct statstruct
 {
-    byte      tilex, tiley;
+    unsigned char      tilex, tiley;
     short     shapenum;           // if shapenum == -1 the obj has been removed
-    byte* visspot;
+    unsigned char* visspot;
     uint32_t flags;
-    byte      itemnumber;
+    unsigned char      itemnumber;
 } statobj_t;
 
 
@@ -929,9 +917,9 @@ typedef enum
 
 typedef struct doorstruct
 {
-    byte     tilex, tiley;
+    unsigned char     tilex, tiley;
     boolean  vertical;
-    byte     lock;
+    unsigned char     lock;
     doortype action;
     short    ticcount;
 } doorobj_t;
@@ -961,11 +949,11 @@ typedef struct objstruct
     dirtype     dir;
 
     fixed       x, y;
-    word        tilex, tiley;
-    byte        areanumber;
+    unsigned short        tilex, tiley;
+    unsigned char        areanumber;
 
     short       viewx;
-    word        viewheight;
+    unsigned short        viewheight;
     fixed       transx, transy;      // in global coord
 
     short       angle;
@@ -1093,7 +1081,7 @@ extern  boolean  startgame,
 loadedgame;
 #endif
 #ifdef  VIEASM
-extern byte soundvol, musicvol;
+extern unsigned char soundvol, musicvol;
 extern boolean reversestereo;
 extern boolean allowwindow;
 #endif
@@ -1114,7 +1102,7 @@ extern  int      param_difficulty;
 extern  int      param_tedlevel;
 extern  int      param_joystickindex;
 extern  int      param_joystickhat;
-extern  longword param_samplerate;
+extern  unsigned int param_samplerate;
 extern  int      param_audiobuffer;
 extern  int      param_mission;
 extern  boolean  param_goodtimes;
@@ -1140,7 +1128,7 @@ void            ShutdownId(void);
 */
 
 extern  gametype    gamestate;
-extern  byte        bordercol;
+extern  unsigned char        bordercol;
 
 #ifndef SEGA_SATURN
 extern  char        demoname[13];
@@ -1160,7 +1148,7 @@ inline void DrawPlayBorder(void);
 #else
 void    DrawPlayBorder(void);
 #endif
-void    DrawStatusBorder(byte color);
+void    DrawStatusBorder(unsigned char color);
 void    DrawPlayScreen(void);
 void    DrawPlayBorderSides(void);
 #ifndef SEGA_SATURN
@@ -1179,7 +1167,7 @@ void    RecordDemo(void);
 #endif
 #define PlaySoundLocActor(s,ob)   PlaySoundLocGlobal(s,(ob)->x,(ob)->y)
 #ifndef SEGA_SATURN
-void    PlaySoundLocGlobal(word s, fixed gx, fixed gy);
+void    PlaySoundLocGlobal(unsigned short s, fixed gx, fixed gy);
 #endif
 void    UpdateSoundLoc(void);
 
@@ -1231,7 +1219,7 @@ extern  boolean  singlestep, godmode, noclip, ammocheat, mapreveal;
 #ifndef SEGA_SATURN
 extern  int  extravbls;
 #endif
-extern  word        mapwidth, mapheight;
+extern  unsigned short        mapwidth, mapheight;
 extern  uint32_t    tics;
 #ifndef SEGA_SATURN
 extern  int         lastgamemusicoffset;
@@ -1272,7 +1260,7 @@ extern  void* demobuffer;
 void    InitActorList(void);
 void    GetNewActor(void);
 void    PlayLoop(void);
-void    CenterWindow(word w, word h);
+void    CenterWindow(unsigned short w, unsigned short h);
 void    InitRedShifts(void);
 void    FinishPaletteShifts(void);
 void    RemoveObj(objtype* gone);
@@ -1295,7 +1283,7 @@ void    StartBonusFlash(void);
 void IntroScreen(void);
 void PG13(void);
 void DrawHighScores(void);
-void CheckHighScore(int32_t score, word other);
+void CheckHighScore(int32_t score, unsigned short other);
 void Victory(void);
 void LevelCompleted(void);
 void ClearSplitVWB(void);
@@ -1323,7 +1311,7 @@ void PictureGrabber(void);
 =============================================================================
 */
 
-extern  byte* vbuf;
+extern  unsigned char* vbuf;
 
 extern  int32_t lasttimecount;
 extern  int32_t frameon;
@@ -1350,11 +1338,11 @@ extern  fixed   viewx, viewy;                    // the focal point
 extern  fixed   viewsin, viewcos;
 
 extern  int     postx;
-extern  byte* postsource;
+extern  unsigned char* postsource;
 
 extern  short   midangle;
 
-extern  word    horizwall[MAXWALLTILES], vertwall[MAXWALLTILES];
+extern  unsigned short    horizwall[MAXWALLTILES], vertwall[MAXWALLTILES];
 
 
 void    ScalePost(void);
@@ -1372,8 +1360,8 @@ void    CalcTics(void);
 
 typedef struct
 {
-    word leftpix, rightpix;
-    word dataofs[64];
+    unsigned short leftpix, rightpix;
+    unsigned short dataofs[64];
     // table data after dataofs[rightpix-leftpix+1]
 } compshape_t;
 
@@ -1427,7 +1415,7 @@ boolean CheckSight(objtype* ob);
 // player state info
 //
 extern  int32_t  thrustspeed;
-extern  word     plux, pluy;         // player coordinates scaled to unsigned
+extern  unsigned short     plux, pluy;         // player coordinates scaled to unsigned
 extern  objtype* LastAttacker;
 
 extern  short    anglefrac;
@@ -1472,16 +1460,16 @@ extern  doorobj_t* lastdoorobj;
 extern  short       doornum;
 #endif
 
-extern  word      doorposition[MAXDOORS];
+extern  unsigned short      doorposition[MAXDOORS];
 
-extern  byte      areaconnect[NUMAREAS][NUMAREAS];
+extern  unsigned char      areaconnect[NUMAREAS][NUMAREAS];
 
 extern  boolean   areabyplayer[NUMAREAS];
 
-extern word     pwallstate;
-extern word     pwallpos;        // amount a pushable wall has been moved (0-63)
-extern word     pwallx, pwally;
-extern byte     pwalldir;
+extern unsigned short     pwallstate;
+extern unsigned short     pwallpos;        // amount a pushable wall has been moved (0-63)
+extern unsigned short     pwallx, pwally;
+extern unsigned char     pwalldir;
 extern tiletype pwalltile;
 
 void InitDoorList(void);
@@ -1653,7 +1641,7 @@ extern int ffDataTopLeft, ffDataTopRight, ffDataBottomLeft, ffDataBottomRight;
  *************************************************************/
 
  // The feature flags are stored as a wall in the upper right corner of each level
-static inline word GetFeatureFlags(void)
+static inline unsigned short GetFeatureFlags(void)
 {
     return ffDataTopRight;
 }
@@ -1661,7 +1649,7 @@ static inline word GetFeatureFlags(void)
 #endif
 
 #ifdef USE_FLOORCEILINGTEX
-extern byte* ceilingsource, * floorsource;
+extern unsigned char* ceilingsource, * floorsource;
 
 void DrawPlanes(void);
 #ifndef USE_MULTIFLATS

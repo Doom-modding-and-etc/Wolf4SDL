@@ -744,7 +744,7 @@ int SD_GetAmbIndex(void)
     return -1;
 }
 
-byte SD_PlaySound(soundnames sound)
+unsigned char SD_PlaySound(soundnames sound)
 {
     SD_AbortIfSndOff 0;
 
@@ -775,7 +775,7 @@ byte SD_PlaySound(soundnames sound)
     return channel;
 }
 
-int SD_PlayDigitized(word which, int leftpos, int rightpos, boolean ambient)
+int SD_PlayDigitized(unsigned short which, int leftpos, int rightpos, boolean ambient)
 {
     SD_AbortIfSndOff 0;
 

@@ -31,7 +31,7 @@ static AnyActor_t m_table[] =
     }, // ANYACTOR_TILE_NONE
 };
 
-static byte m_tileToTableIndex[ANYACTOR_MAXTILE];
+static unsigned char m_tileToTableIndex[ANYACTOR_MAXTILE];
 
 void AnyActor_Init(void)
 {

@@ -413,7 +413,7 @@ boolean ED_SpawnActor(ED_t ed, int tile, int x, int y)
 	if (extraStatInfo != NULL)
 	{
 		laststatobj->shapenum = 0;
-		laststatobj->sprite = (byte *)extraStatInfo->shape;
+		laststatobj->sprite = (unsigned char *)extraStatInfo->shape;
 		laststatobj->tilex = x;
 		laststatobj->tiley = y;
 		laststatobj->visspot = &spotvis[x][y];

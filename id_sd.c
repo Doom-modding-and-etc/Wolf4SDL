@@ -172,22 +172,22 @@ static const int oplChip = 0;
 typedef struct
 {
 	char RIFF[4];
-	longword filelenminus8;
+	unsigned int filelenminus8;
 	char WAVE[4];
 	char fmt_[4];
-	longword formatlen;
-	word val0x0001;
-	word channels;
-	longword samplerate;
-	longword bytespersec;
-	word bytespersample;
-	word bitspersample;
+    unsigned int formatlen;
+    unsigned short val0x0001;
+    unsigned short channels;
+    unsigned int samplerate;
+    unsigned int bytespersec;
+    unsigned short bytespersample;
+    unsigned short bitspersample;
 } headchunk;
 
 typedef struct
 {
 	char chunkid[4];
-	longword chunklength;
+    unsigned int chunklength;
 } wavechunk;
 #endif
 
@@ -228,34 +228,34 @@ static  boolean                 SD_Started;
 static  boolean                 nextsoundpos;
 static  soundnames              SoundNumber;
 static  soundnames              DigiNumber;
-static  word                    SoundPriority;
-static  word                    DigiPriority;
+static  unsigned short                    SoundPriority;
+static  unsigned short                    DigiPriority;
 static  int                     LeftPosition;
 static  int                     RightPosition;
 
-        word                    NumDigi;
+        unsigned short                    NumDigi;
         digiinfo                *DigiList;
 static  boolean                 DigiPlaying;
 
 //      PC Sound variables
 static  volatile byte           pcLastSample;
 static  byte * volatile         pcSound;
-static  longword                pcLengthLeft;
+static  unsigned int                pcLengthLeft;
 
 //      AdLib variables
 static  byte * volatile         alSound;
 static  byte                    alBlock;
-static  longword                alLengthLeft;
-static  longword                alTimeCount;
+static  unsigned int                alLengthLeft;
+static  unsigned int                alTimeCount;
 static  Instrument              alZeroInst;
 
 //      Sequencer variables
 static  volatile boolean        sqActive;
-static  word                   *sqHack;
-static  word                   *sqHackPtr;
+static  unsigned short         *sqHack;
+static  unsigned short         *sqHackPtr;
 static  int                     sqHackLen;
 static  int                     sqHackSeqLen;
-static  longword                sqHackTime;
+static  unsigned int                sqHackTime;
 #endif
 
 #ifdef SEGA_SATURN
@@ -568,31 +568,28 @@ void SD_PrepareSound(int which)
     }
 #endif	
 #else
-    longword i;
-	int page;
-	int size;
+    unsigned int i;
+	int page = DigiList[which].startpage;
+	int size = DigiList[which].length;
 	byte *origsamples;
-	int destsamples;
+	int destsamples = (int)((float)size * (float)param_samplerate
+        / (float)ORIGSAMPLERATE);
 	byte *wavebuffer;
 	Sint16 *newsamples;
 	float cursample;
 	float samplestep;
 	headchunk head = {{'R','I','F','F'}, 0, {'W','A','V','E'},
-        {'f','m','t',' '}, 0x10, 0x0001, 1, (longword) param_samplerate, (longword) (param_samplerate*2), 2, 16};
-    wavechunk dhead = {{'d', 'a', 't', 'a'}, (longword) (destsamples*2)};
+        {'f','m','t',' '}, 0x10, 0x0001, 1, (unsigned int) param_samplerate, (unsigned int) (param_samplerate*2), 2, 16};
+    wavechunk dhead = {{'d', 'a', 't', 'a'}, (unsigned int) (destsamples*2)};
 	SDL_RWops* temp;
     if(DigiList == NULL)
         Quit("SD_PrepareSound(%i): DigiList not initialized!\n", which);
-
-    page = DigiList[which].startpage;
-    size = DigiList[which].length;
 
     origsamples = PM_GetSoundPage(page);
     if(origsamples + size >= PM_GetPageEnd())
         Quit("SD_PrepareSound(%i): Sound reaches out of page file!\n", which);
 
-    destsamples = (int) ((float) size * (float) param_samplerate
-        / (float) ORIGSAMPLERATE);
+    
 
     wavebuffer = (byte*)SafeMalloc(sizeof(headchunk) + sizeof(wavechunk)
         + destsamples * 2);     // dest are 16-bit samples
@@ -608,7 +605,7 @@ void SD_PrepareSound(int which)
         + sizeof(wavechunk));
     cursample = 0.F;
     samplestep = (float) ORIGSAMPLERATE / (float) param_samplerate;
-    for(i=0; i<destsamples; i++, cursample+=samplestep)
+    for(i=0; i<(unsigned int)destsamples; i++, cursample+=samplestep)
     {
         newsamples[i] = GetSample((float)size * (float)i / (float)destsamples,
             origsamples, size);
@@ -624,7 +621,7 @@ void SD_PrepareSound(int which)
 }
 
 #ifndef SEGA_SATURN
-int SD_PlayDigitized(word which,int leftpos,int rightpos)
+int SD_PlayDigitized(unsigned short which,int leftpos,int rightpos)
 {
 	Mix_Chunk *sample;
 	int channel;
@@ -692,8 +689,8 @@ SDL_SetupDigi(void)
 {
     // Correct padding enforced by PM_Startup()
 	int i,page;
-    word *soundInfoPage = (word *) (void *) PM_GetPage(ChunksInFile-1);
-    NumDigi = (word) PM_GetPageSize(ChunksInFile - 1) / 4;
+    unsigned short *soundInfoPage = (unsigned short *) (void *) PM_GetPage(ChunksInFile-1);
+    NumDigi = (unsigned short) PM_GetPageSize(ChunksInFile - 1) / 4;
 
     DigiList = (digiinfo*)SafeMalloc(NumDigi * sizeof(*DigiList));
     
@@ -929,7 +926,7 @@ boolean
 SD_SetSoundMode(SDMode mode)
 {
     boolean result = false;
-    word    tableoffset;
+    unsigned short    tableoffset;
 
     SD_StopSound();
 
@@ -1002,7 +999,7 @@ SD_SetMusicMode(SMMode mode)
 int numreadysamples = 0;
 byte *curAlSound = 0;
 byte *curAlSoundPtr = 0;
-longword curAlLengthLeft = 0;
+unsigned int curAlLengthLeft = 0;
 int soundTimeCounter = 5;
 int samplesPerMusicTick;
 
@@ -1329,7 +1326,7 @@ SD_PlaySound(soundnames sound)
 //              no sound is playing
 //
 ///////////////////////////////////////////////////////////////////////////
-word
+unsigned short
 SD_SoundPlaying(void)
 {
 #ifdef SEGA_SATURN
@@ -1435,7 +1432,7 @@ int
 SD_MusicOff(void)
 {
 #ifndef SEGA_SATURN
-    word    i;
+    unsigned short    i;
 
     sqActive = false;
     switch (MusicMode)
@@ -1466,7 +1463,7 @@ SD_StartMusic(int chunk)
     if (MusicMode == smm_AdLib)
     {
         int32_t chunkLen = CA_CacheAudioChunk(chunk);
-        sqHack = (word *)(void *) audiosegs[chunk];     // alignment is correct
+        sqHack = (unsigned short *)(void *) audiosegs[chunk];     // alignment is correct
         if(*sqHack == 0) sqHackLen = sqHackSeqLen = chunkLen;
         else sqHackLen = sqHackSeqLen = *sqHack++;
         sqHackPtr = sqHack;
@@ -1487,7 +1484,7 @@ SD_ContinueMusic(int chunk, int startoffs)
     if (MusicMode == smm_AdLib)
     {
         int32_t chunkLen = CA_CacheAudioChunk(chunk);
-        sqHack = (word *)(void *) audiosegs[chunk];     // alignment is correct
+        sqHack = (unsigned short*)(void *) audiosegs[chunk];     // alignment is correct
         if(*sqHack == 0) sqHackLen = sqHackSeqLen = chunkLen;
         else sqHackLen = sqHackSeqLen = *sqHack++;
         sqHackPtr = sqHack;

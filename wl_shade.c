@@ -55,10 +55,10 @@ static int GetShadeDefID()
 
 // Returns the palette index of the nearest matching color of the
 // given RGB color in given palette
-byte GetColor(byte red, byte green, byte blue, SDL_Color *palette)
+unsigned char GetColor(unsigned char red, unsigned char green, unsigned char blue, SDL_Color *palette)
 {
     int col;
-    byte mincol = 0;
+    unsigned char mincol = 0;
     double mindist = 200000.F, curdist, DRed, DGreen, DBlue;
 
     SDL_Color *palPtr = palette;
@@ -72,7 +72,7 @@ byte GetColor(byte red, byte green, byte blue, SDL_Color *palette)
         if(curdist < mindist)
         {
             mindist = curdist;
-            mincol = (byte) col;
+            mincol = (unsigned char) col;
         }
     }
     return mincol;
@@ -80,7 +80,7 @@ byte GetColor(byte red, byte green, byte blue, SDL_Color *palette)
 
 // Fade all colors in 32 steps down to the destination-RGB
 // (use gray for fogging, black for standard shading)
-void GenerateShadeTable(byte destRed, byte destGreen, byte destBlue,
+void GenerateShadeTable(unsigned char destRed, unsigned char destGreen, unsigned char destBlue,
                         SDL_Color *palette, int fog)
 {
     int i,shade;
@@ -106,7 +106,7 @@ void GenerateShadeTable(byte destRed, byte destGreen, byte destBlue,
         // Calc color for each shade of the current color
         for (shade = 0; shade < SHADE_COUNT; shade++)
         {
-            shadetable[shade][i] = GetColor((byte) curRed, (byte) curGreen, (byte) curBlue, palette);
+            shadetable[shade][i] = GetColor((unsigned char) curRed, (unsigned char) curGreen, (unsigned char) curBlue, palette);
 
             // Inc to next shade
             curRed   += redStep;

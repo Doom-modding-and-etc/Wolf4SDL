@@ -24,7 +24,7 @@
 =============================================================================
 */
 
-byte     *vbuf;
+unsigned char *vbuf;
 
 int32_t    lasttimecount;
 int32_t    frameon;
@@ -66,36 +66,36 @@ void    ScaleSkyPost();
 #endif
 
 int     postx;
-byte    *postsource;
+unsigned char *postsource;
 #ifdef USE_SKYWALLPARALLAX
-byte    *postsourcesky;
+unsigned char *postsourcesky;
 #endif
 
 //
 // wall optimization variables
 //
 int     lastside;               // true for vertical
-word    lasttilehit;
+unsigned short    lasttilehit;
 int     lasttexture;
 
 //
 // ray tracing variables
 //
 short    focaltx,focalty;
-longword xpartialup,xpartialdown,ypartialup,ypartialdown;
+unsigned int xpartialup,xpartialdown,ypartialup,ypartialdown;
 
 short   midangle;
 
-word    tilehit;
+unsigned short    tilehit;
 int     pixx;
 
 short   xtile,ytile;
 short   xtilestep,ytilestep;
 fixed   xintercept,yintercept;
 fixed   xinttile,yinttile;
-word    texdelta;
+unsigned short    texdelta;
 
-word    horizwall[MAXWALLTILES],vertwall[MAXWALLTILES];
+unsigned short    horizwall[MAXWALLTILES],vertwall[MAXWALLTILES];
 
 
 /*
@@ -167,12 +167,12 @@ void TransformActor (objtype *ob)
         return;
     }
 
-    ob->viewx = (word)(centerx + ny*scale/nx);
+    ob->viewx = (unsigned short)(centerx + ny*scale/nx);
 
 //
 // calculate height (heightnumerator/(nx>>8))
 //
-    ob->viewheight = (word)(heightnumerator/(nx>>8));
+    ob->viewheight = (unsigned short)(heightnumerator/(nx>>8));
 }
 
 //==========================================================================
@@ -307,7 +307,7 @@ int16_t CalcHeight (void)
 void ScalePost (void)
 {
     int ywcount, yoffs, yw, yd, yendoffs;
-    byte col;
+    unsigned char col;
 
 #ifdef USE_SKYWALLPARALLAX
     if (tilehit == 16)
@@ -318,7 +318,7 @@ void ScalePost (void)
 #endif
 
 #ifdef USE_SHADING
-    byte *curshades = shadetable[GetShade(wallheight[postx])];
+    unsigned char *curshades = shadetable[GetShade(wallheight[postx])];
 #endif
 
     ywcount = yd = wallheight[postx] >> 3;
@@ -376,7 +376,7 @@ void ScalePost (void)
 void ScaleSkyPost (void)
 {
     int ywcount, yoffs, yendoffs, texoffs;
-    byte col;
+    unsigned char col;
     int midy, y, skyheight;
 
     skyheight = viewheight;
@@ -670,7 +670,7 @@ void HitVertDoor (void)
 
 //==========================================================================
 
-byte vgaCeiling[]=
+unsigned char vgaCeiling[]=
 {
 #ifndef SPEAR
  0x1d,0x1d,0x1d,0x1d,0x1d,0x1d,0x1d,0x1d,0x1d,0xbf,
@@ -696,10 +696,10 @@ byte vgaCeiling[]=
 
 void VGAClearScreen (void)
 {
-    byte ceiling=vgaCeiling[gamestate.episode*10+gamestate.mapon];
+    unsigned char ceiling=vgaCeiling[gamestate.episode*10+gamestate.mapon];
 
     int y;
-    byte *dest = vbuf;
+    unsigned char *dest = vbuf;
 #ifdef USE_SHADING
     for(y = 0; y < viewheight / 2; y++, dest += bufferPitch)
         memset(dest, shadetable[GetShade((viewheight / 2 - y) << 3)][ceiling], viewwidth);
@@ -785,7 +785,7 @@ visobj_t *visptr,*visstep,*farthest;
 void DrawScaleds (void)
 {
     int      i,least,numvisable,height;
-    byte     *visspot;
+    unsigned char *visspot;
 	tiletype *tilespot;
 
     statobj_t *statptr;
@@ -1014,7 +1014,7 @@ void WallRefresh (void)
     int16_t   angle;
     int32_t   xstep,ystep;
     fixed     xinttemp,yinttemp;                            // holds temporary intercept position
-    longword  xpartial,ypartial;
+    unsigned int  xpartial,ypartial;
     doorobj_t *door;
     int       pwallposnorm,pwallposinv,pwallposi;           // holds modified pwallpos
     boolean      passdoor;
@@ -1197,7 +1197,7 @@ vertentry:
                         // the trace hit the door plane at pixel position yintercept, see if the door is
                         // closed that much
                         //
-                        if ((word)yinttemp < doorposition[tilehit & ~BIT_DOOR])
+                        if ((unsigned short)yinttemp < doorposition[tilehit & ~BIT_DOOR])
                             goto passvert;
                     }
 
@@ -1261,13 +1261,13 @@ vertentry:
                         else
                             pwallposi = pwallpos;
 
-                        if (pwalldir == di_south && (word)yintercept < (pwallposi << 10)
-                         || pwalldir == di_north && (word)yintercept > (pwallposi << 10))
+                        if (pwalldir == di_south && (unsigned short)yintercept < (pwallposi << 10)
+                         || pwalldir == di_north && (unsigned short)yintercept > (pwallposi << 10))
                         {
                             if (xtile == pwallx && yinttile == pwally)
                             {
-                                if (pwalldir == di_south && (int32_t)((word)yintercept) + ystep < (pwallposi << 10)
-                                 || pwalldir == di_north && (int32_t)((word)yintercept) + ystep > (pwallposi << 10))
+                                if (pwalldir == di_south && (int32_t)((unsigned short)yintercept) + ystep < (pwallposi << 10)
+                                 || pwalldir == di_north && (int32_t)((unsigned short)yintercept) + ystep > (pwallposi << 10))
                                     goto passvert;
 
                                 //
@@ -1305,8 +1305,8 @@ vertentry:
                             }
                             else
                             {
-                                if (pwalldir == di_south && (int32_t)((word)yintercept) + ystep > (pwallposi << 10)
-                                 || pwalldir == di_north && (int32_t)((word)yintercept) + ystep < (pwallposi << 10))
+                                if (pwalldir == di_south && (int32_t)((unsigned short)yintercept) + ystep > (pwallposi << 10)
+                                 || pwalldir == di_north && (int32_t)((unsigned short)yintercept) + ystep < (pwallposi << 10))
                                     goto passvert;
 
                                 //
@@ -1408,7 +1408,7 @@ horizentry:
                         // the trace hit the door plane at pixel position xintercept, see if the door is
                         // closed that much
                         //
-                        if ((word)xinttemp < doorposition[tilehit & ~BIT_DOOR])
+                        if ((unsigned short)xinttemp < doorposition[tilehit & ~BIT_DOOR])
                             goto passhoriz;
                     }
 
@@ -1472,13 +1472,13 @@ horizentry:
                         else
                             pwallposi = pwallpos;
 
-                        if (pwalldir == di_east && (word)xintercept < (pwallposi << 10)
-                         || pwalldir == di_west && (word)xintercept > (pwallposi << 10))
+                        if (pwalldir == di_east && (unsigned short)xintercept < (pwallposi << 10)
+                         || pwalldir == di_west && (unsigned short)xintercept > (pwallposi << 10))
                         {
                             if (xinttile == pwallx && ytile == pwally)
                             {
-                                if (pwalldir == di_east && (int32_t)((word)xintercept) + xstep < (pwallposi << 10)
-                                 || pwalldir == di_west && (int32_t)((word)xintercept) + xstep > (pwallposi << 10))
+                                if (pwalldir == di_east && (int32_t)((unsigned short)xintercept) + xstep < (pwallposi << 10)
+                                 || pwalldir == di_west && (int32_t)((unsigned short)xintercept) + xstep > (pwallposi << 10))
                                     goto passhoriz;
 
                                 //
@@ -1517,8 +1517,8 @@ horizentry:
                             }
                             else
                             {
-                                if (pwalldir == di_east && (int32_t)((word)xintercept) + xstep > (pwallposi << 10)
-                                 || pwalldir == di_west && (int32_t)((word)xintercept) + xstep < (pwallposi << 10))
+                                if (pwalldir == di_east && (int32_t)((unsigned short)xintercept) + xstep > (pwallposi << 10)
+                                 || pwalldir == di_west && (int32_t)((unsigned short)xintercept) + xstep < (pwallposi << 10))
                                     goto passhoriz;
 
                                 //
