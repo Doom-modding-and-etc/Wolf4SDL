@@ -148,7 +148,11 @@ typedef	__uint128_t fixedptud;
 static inline fixedpt
 fixedpt_mul(fixedpt A, fixedpt B)
 {
+#ifdef OLD
 	return (((fixedptd)A * (fixedptd)B) >> FIXEDPT_FBITS);
+#else
+	return (((fixedpt)A * (fixedpt)B) >> FIXEDPT_FBITS);
+#endif
 }
 
 
@@ -156,7 +160,11 @@ fixedpt_mul(fixedpt A, fixedpt B)
 static inline fixedpt
 fixedpt_div(fixedpt A, fixedpt B)
 {
+#ifdef OLD
 	return (((fixedptd)A << FIXEDPT_FBITS) / (fixedptd)B);
+#else
+	return (((fixedpt)A << FIXEDPT_FBITS) / (fixedpt)B);
+#endif
 }
 
 /*

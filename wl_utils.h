@@ -5,14 +5,14 @@
 
 #include "wl_def.h"
 
-#define SafeMalloc(s)    safe_malloc ((s),__FILE__,__LINE__)
+#define SafeMalloc(s)    wsafe_malloc ((s),__FILE__,__LINE__)
 #define FRACBITS         16
 
 #define GetTicks() ((SDL_GetTicks()*7)/100)
 
 #define ISPOINTER(x) ((((uintptr_t)(x)) & ~0xffff) != 0)
 
-extern void     *safe_malloc (size_t size, const char *fname, unsigned int line);
+extern void     *wsafe_malloc (size_t size, const char *fname, unsigned int line);
 extern fixed    FixedMul (fixed a, fixed b);
 extern fixed    FixedDiv (fixed a, fixed b);
 

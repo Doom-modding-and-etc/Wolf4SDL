@@ -100,12 +100,14 @@ int buttongamecontroller[bt_Max] =
     bt_nobutton,
     bt_nobutton,
     bt_nobutton,
+#ifndef XBOX
     bt_nobutton,
     bt_nobutton,
     bt_nobutton,
     bt_nobutton,
     bt_nobutton,
     bt_nobutton
+#endif
 };
 #endif
 

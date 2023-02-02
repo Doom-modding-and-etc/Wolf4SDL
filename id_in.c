@@ -853,9 +853,12 @@ IN_ReadControl(int player, ControlInfo* info)
 
     if (GameControllerButtons[bt_Start] || GameControllerButtons[bt_A])
         buttons += 1 << 0;
-
+#ifdef XBOX
+	else if (GameControllerButtons[bt_A])
+#else
     else if (GameControllerButtons[bt_touchpad] || GameControllerButtons[bt_A])
-        buttons += 1 << 0;
+#endif
+		buttons += 1 << 0;
 
     if (GameControllerButtons[bt_Back] || GameControllerButtons[bt_B])
         buttons += 1 << 1;

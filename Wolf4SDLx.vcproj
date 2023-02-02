@@ -175,8 +175,8 @@
 				FavorSizeOrSpeed="2"
 				OmitFramePointers="TRUE"
 				OptimizeForProcessor="2"
-				AdditionalIncludeDirectories="&quot;C:\Documents and Settings\WOLF3S\SDL2\include&quot;"
-				PreprocessorDefinitions="NDEBUG;_XBOX;_CRT_SECURE_NO_WARNINGS;XBOX;USE_INLINE_C89;OLD_BOOL"
+				AdditionalIncludeDirectories="&quot;C:\Documents and Settings\WOLF3S\SDL2\SDL2&quot;"
+				PreprocessorDefinitions="NDEBUG;_XBOX;_CRT_SECURE_NO_WARNINGS;C89;USE_INLINE_C89;_USE_MATH_DEFINES;XBOX"
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
 				BufferSecurityCheck="TRUE"
@@ -184,11 +184,11 @@
 				EnableEnhancedInstructionSet="1"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderFile="$(OutDir)/$(ProjectName).pch"
-				WarningLevel="0"
+				WarningLevel="3"
 				WarnAsError="FALSE"
 				Detect64BitPortabilityProblems="FALSE"
 				DebugInformationFormat="3"
-				CompileAs="2"/>
+				CompileAs="1"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -196,7 +196,7 @@
 				AdditionalDependencies="xapilib.lib d3d8.lib d3dx8.lib xgraphics.lib dsound.lib dmusic.lib xacteng.lib xsndtrk.lib xvoice.lib xonlines.lib xboxkrnl.lib libSDL2x.lib libSDL2x_mixer.lib"
 				OutputFile="$(OutDir)/$(ProjectName).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;C:\Documents and Settings\WOLF3S\SDL2\libs&quot;"
+				AdditionalLibraryDirectories="&quot;C:\Documents and Settings\WOLF3S\SDL2&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
 				SubSystem="2"
@@ -279,7 +279,7 @@
 				OmitFramePointers="TRUE"
 				OptimizeForProcessor="2"
 				AdditionalIncludeDirectories="&quot;C:\Documents and Settings\WOLF3S\SDL1.2\include&quot;"
-				PreprocessorDefinitions="NDEBUG;_XBOX;OLD_BOOL"
+				PreprocessorDefinitions="NDEBUG;_XBOX;C89;USE_INLINE_C89;_USE_MATH_DEFINES"
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
 				BufferSecurityCheck="TRUE"
@@ -295,7 +295,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xapilib.lib d3d8.lib d3dx8.lib xgraphics.lib dsound.lib dmusic.lib xacteng.lib xsndtrk.lib xvoice.lib xonlines.lib xboxkrnl.lib SDLx.lib SDL_mixer.lib"
+				AdditionalDependencies="xapilib.lib d3d8.lib d3dx8.lib xgraphics.lib dsound.lib dmusic.lib xacteng.lib xsndtrk.lib xvoice.lib xonlines.lib xboxkrnl.lib libSDLx.lib SDL_mixer.lib"
 				OutputFile="$(OutDir)/$(ProjectName).exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;C:\Documents and Settings\WOLF3S\SDL1.2\&quot;"
@@ -344,6 +344,28 @@
 				</File>
 				<File
 					RelativePath=".\aud_sys\mame\fmopl.h">
+				</File>
+			</Filter>
+			<Filter
+				Name="opl3"
+				Filter="">
+				<File
+					RelativePath=".\aud_sys\nuked-opl3\opl3.c">
+					<FileConfiguration
+						Name="Release|Xbox"
+						ExcludedFromBuild="TRUE">
+						<Tool
+							Name="VCCLCompilerTool"/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\aud_sys\nuked-opl3\opl3.h">
+					<FileConfiguration
+						Name="Release|Xbox"
+						ExcludedFromBuild="TRUE">
+						<Tool
+							Name="VCCustomBuildTool"/>
+					</FileConfiguration>
 				</File>
 			</Filter>
 		</Filter>
@@ -539,180 +561,72 @@
 		</File>
 		<File
 			RelativePath=".\id_ca.c">
-			<FileConfiguration
-				Name="Release|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="SDL1.2|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
 		</File>
 		<File
 			RelativePath=".\id_ca.h">
 		</File>
 		<File
 			RelativePath=".\id_crt.c">
-			<FileConfiguration
-				Name="Release|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="SDL1.2|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
 		</File>
 		<File
 			RelativePath=".\id_crt.h">
 		</File>
 		<File
 			RelativePath=".\id_in.c">
-			<FileConfiguration
-				Name="Release|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="SDL1.2|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
 		</File>
 		<File
 			RelativePath=".\id_in.h">
 		</File>
 		<File
 			RelativePath=".\id_pm.c">
-			<FileConfiguration
-				Name="Release|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="SDL1.2|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
 		</File>
 		<File
 			RelativePath=".\id_pm.h">
 		</File>
 		<File
 			RelativePath=".\id_sd.c">
-			<FileConfiguration
-				Name="Release|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="SDL1.2|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
 		</File>
 		<File
 			RelativePath=".\id_sd.h">
 		</File>
 		<File
 			RelativePath=".\id_us.c">
-			<FileConfiguration
-				Name="Release|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="SDL1.2|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
 		</File>
 		<File
 			RelativePath=".\id_us.h">
 		</File>
 		<File
 			RelativePath=".\id_vh.c">
-			<FileConfiguration
-				Name="Release|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="SDL1.2|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
 		</File>
 		<File
 			RelativePath=".\id_vh.h">
 		</File>
 		<File
 			RelativePath=".\id_vieasm.c">
-			<FileConfiguration
-				Name="Release|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="SDL1.2|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
 		</File>
 		<File
 			RelativePath=".\id_vieasm.h">
 		</File>
 		<File
 			RelativePath=".\id_vl.c">
-			<FileConfiguration
-				Name="Release|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="SDL1.2|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
 		</File>
 		<File
 			RelativePath=".\id_vl.h">
 		</File>
 		<File
+			RelativePath=".\id_w3swrap.c">
+		</File>
+		<File
+			RelativePath=".\id_w3swrap.h">
+		</File>
+		<File
+			RelativePath=".\psnprntf.c">
+		</File>
+		<File
+			RelativePath=".\psnprntf.h">
+		</File>
+		<File
 			RelativePath=".\signon.c">
-			<FileConfiguration
-				Name="Release|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="SDL1.2|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
 		</File>
 		<File
 			RelativePath=".\sodpal.inc">
@@ -722,303 +636,144 @@
 		</File>
 		<File
 			RelativePath=".\wl_act1.c">
-			<FileConfiguration
-				Name="Release|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="SDL1.2|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
 		</File>
 		<File
 			RelativePath=".\wl_act2.c">
-			<FileConfiguration
-				Name="Release|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="SDL1.2|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
 		</File>
 		<File
 			RelativePath=".\wl_agent.c">
-			<FileConfiguration
-				Name="Release|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="SDL1.2|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\wl_ai.c">
+		</File>
+		<File
+			RelativePath=".\wl_ai.h">
+		</File>
+		<File
+			RelativePath=".\wl_anyactor.c">
+		</File>
+		<File
+			RelativePath=".\wl_anyactor.h">
 		</File>
 		<File
 			RelativePath=".\wl_atmos.c">
-			<FileConfiguration
-				Name="Release|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="SDL1.2|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
 		</File>
 		<File
 			RelativePath=".\wl_atmos.h">
 		</File>
 		<File
+			RelativePath=".\wl_benchhobo.c">
+		</File>
+		<File
+			RelativePath=".\wl_clockking.c">
+		</File>
+		<File
 			RelativePath=".\wl_cloudsky.c">
-			<FileConfiguration
-				Name="Release|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="SDL1.2|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
 		</File>
 		<File
 			RelativePath=".\wl_cloudsky.h">
 		</File>
 		<File
+			RelativePath=".\wl_conartist.c">
+		</File>
+		<File
 			RelativePath=".\wl_debug.c">
-			<FileConfiguration
-				Name="Release|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="SDL1.2|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
 		</File>
 		<File
 			RelativePath=".\wl_def.h">
 		</File>
 		<File
 			RelativePath=".\wl_draw.c">
-			<FileConfiguration
-				Name="Release|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="SDL1.2|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\wl_ed.c">
+		</File>
+		<File
+			RelativePath=".\wl_ed.h">
+		</File>
+		<File
+			RelativePath=".\wl_firefly.c">
 		</File>
 		<File
 			RelativePath=".\wl_game.c">
-			<FileConfiguration
-				Name="Release|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="SDL1.2|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\wl_healthbar.c">
+		</File>
+		<File
+			RelativePath=".\wl_healthbar.h">
+		</File>
+		<File
+			RelativePath=".\wl_hooker.c">
 		</File>
 		<File
 			RelativePath=".\wl_inter.c">
-			<FileConfiguration
-				Name="Release|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="SDL1.2|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\wl_led.c">
+		</File>
+		<File
+			RelativePath=".\wl_led.h">
 		</File>
 		<File
 			RelativePath=".\wl_main.c">
-			<FileConfiguration
-				Name="Release|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="SDL1.2|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\wl_math.c">
+		</File>
+		<File
+			RelativePath=".\wl_math.h">
 		</File>
 		<File
 			RelativePath=".\wl_menu.c">
-			<FileConfiguration
-				Name="Release|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="SDL1.2|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
 		</File>
 		<File
 			RelativePath=".\wl_menu.h">
 		</File>
 		<File
 			RelativePath=".\wl_parallax.c">
-			<FileConfiguration
-				Name="Release|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="SDL1.2|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\wl_physics.c">
+		</File>
+		<File
+			RelativePath=".\wl_physics.h">
+		</File>
+		<File
+			RelativePath=".\wl_pimp.c">
 		</File>
 		<File
 			RelativePath=".\wl_plane.c">
-			<FileConfiguration
-				Name="Release|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="SDL1.2|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
 		</File>
 		<File
 			RelativePath=".\wl_play.c">
-			<FileConfiguration
-				Name="Release|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="SDL1.2|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\wl_polygon.c">
+		</File>
+		<File
+			RelativePath=".\wl_polygon.h">
 		</File>
 		<File
 			RelativePath=".\wl_scale.c">
-			<FileConfiguration
-				Name="Release|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="SDL1.2|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
 		</File>
 		<File
 			RelativePath=".\wl_shade.c">
-			<FileConfiguration
-				Name="Release|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="SDL1.2|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
 		</File>
 		<File
 			RelativePath=".\wl_shade.h">
 		</File>
 		<File
+			RelativePath=".\wl_sleephobo.c">
+		</File>
+		<File
 			RelativePath=".\wl_state.c">
-			<FileConfiguration
-				Name="Release|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="SDL1.2|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
 		</File>
 		<File
 			RelativePath=".\wl_text.c">
-			<FileConfiguration
-				Name="Release|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="SDL1.2|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
 		</File>
 		<File
 			RelativePath=".\wl_utils.c">
-			<FileConfiguration
-				Name="Release|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="SDL1.2|Xbox">
-				<Tool
-					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
-			</FileConfiguration>
 		</File>
 		<File
 			RelativePath=".\wl_utils.h">

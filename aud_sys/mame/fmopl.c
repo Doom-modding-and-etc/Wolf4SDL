@@ -88,12 +88,6 @@ Revision History:
 
 //#include "ymdeltat.h"
 
-#if _MSC_VER == 1200            // Visual C++ 6
-inline void logerror(...) {}
-#else
-#define logerror(...)
-#endif
-
 #include "fmopl.h"
 
 #ifndef PI
@@ -1202,10 +1196,10 @@ static int init_tables(void)
 			tl_tab[ x*2+1 + i*2*TL_RES_LEN ] = -tl_tab[ x*2+0 + i*2*TL_RES_LEN ];
 		}
 	#if 0
-			logerror("tl %04i", x*2);
+			printf("tl %04i", x*2);
 			for (i=0; i<12; i++)
-				logerror(", [%02i] %5i", i*2, tl_tab[ x*2 /*+1*/ + i*2*TL_RES_LEN ] );
-			logerror("\n");
+				printf(", [%02i] %5i", i*2, tl_tab[ x*2 /*+1*/ + i*2*TL_RES_LEN ] );
+			printf("\n");
 	#endif
 	}
 	/*logerror("FMOPL.C: TL_TAB_LEN = %i elements (%i bytes)\n",TL_TAB_LEN, (int)sizeof(tl_tab));*/
@@ -1307,7 +1301,7 @@ static void OPL_initalize(FM_OPL *OPL)
 		/* opn phase increment counter = 20bit */
 		OPL->fn_tab[i] = (UINT32)( (double)i * 64 * OPL->freqbase * (1<<(FREQ_SH-10)) ); /* -10 because chip works with 10.10 fixed point, while we use 16.16 */
 #if 0
-		logerror("FMOPL.C: fn_tab[%4i] = %08x (dec=%8i)\n",
+		printf("FMOPL.C: fn_tab[%4i] = %08x (dec=%8i)\n",
 				 i, OPL->fn_tab[i]>>6, OPL->fn_tab[i]>>6 );
 #endif
 	}
@@ -1315,18 +1309,18 @@ static void OPL_initalize(FM_OPL *OPL)
 #if 0
 	for( i=0 ; i < 16 ; i++ )
 	{
-		logerror("FMOPL.C: sl_tab[%i] = %08x\n",
+		printf("FMOPL.C: sl_tab[%i] = %08x\n",
 			i, sl_tab[i] );
 	}
 	for( i=0 ; i < 8 ; i++ )
 	{
 		int j;
-		logerror("FMOPL.C: ksl_tab[oct=%2i] =",i);
+		printf("FMOPL.C: ksl_tab[oct=%2i] =",i);
 		for (j=0; j<16; j++)
 		{
-			logerror("%08x ", ksl_tab[i*16+j] );
+			printf("%08x ", ksl_tab[i*16+j] );
 		}
-		logerror("\n");
+		printf("\n");
 	}
 #endif
 
@@ -1548,7 +1542,7 @@ static void OPLWriteReg(FM_OPL *OPL, int r, int v)
 				if(OPL->keyboardhandler_w)
 					OPL->keyboardhandler_w(OPL->keyboard_param,v);
 				else
-					logerror("Y8950: write unmapped KEYBOARD port\n");
+					printf("Y8950: write unmapped KEYBOARD port\n");
 			}
 			break;
 		case 0x07:	/* DELTA-T control 1 : START,REC,MEMDATA,REPT,SPOFF,x,x,RST */
@@ -1582,7 +1576,7 @@ static void OPLWriteReg(FM_OPL *OPL, int r, int v)
 		case 0x15:		/* DAC data high 8 bits (F7,F6...F2) */
 		case 0x16:		/* DAC data low 2 bits (F1, F0 in bits 7,6) */
 		case 0x17:		/* DAC data shift (S2,S1,S0 in bits 2,1,0) */
-			logerror("FMOPL.C: DAC data register written, but not implemented reg=%02x val=%02x\n",r,v);
+			printf("FMOPL.C: DAC data register written, but not implemented reg=%02x val=%02x\n",r,v);
 			break;
 
 		case 0x18:		/* I/O CTRL (Direction) */
@@ -1597,11 +1591,13 @@ static void OPLWriteReg(FM_OPL *OPL, int r, int v)
 					OPL->porthandler_w(OPL->port_param,v&OPL->portDirection);
 			}
 			break;
-#endif
+
 		default:
-			logerror("FMOPL.C: write to unknown register: %02x\n",r);
+			printf("FMOPL.C: write to unknown register: %02x\n",r);
 			break;
+#endif
 		}
+
 		break;
 	case 0x20:	/* am ON, vib ON, ksr, eg_type, mul */
 		slot = slot_array[r&0x1f];
@@ -1815,7 +1811,7 @@ static int OPL_LockTable(void)
 	if (cymfile)
 		timer_pulse ( TIME_IN_HZ(110), 0, cymfile_callback); /*110 Hz pulse timer*/
 	else
-		logerror("Could not create file 3812_.cym\n");
+		printf("Could not create file 3812_.cym\n");
 #endif
 
 	return 0;
@@ -2002,7 +1998,7 @@ static unsigned char OPLRead(FM_OPL *OPL,int a)
 			if(OPL->keyboardhandler_r)
 				return OPL->keyboardhandler_r(OPL->keyboard_param);
 			else
-				logerror("Y8950: read unmapped KEYBOARD port\n");
+				printf("Y8950: read unmapped KEYBOARD port\n");
 		}
 		return 0;
 
@@ -2023,13 +2019,13 @@ static unsigned char OPLRead(FM_OPL *OPL,int a)
 			if(OPL->porthandler_r)
 				return OPL->porthandler_r(OPL->port_param);
 			else
-				logerror("Y8950:read unmapped I/O port\n");
+				printf("Y8950:read unmapped I/O port\n");
 		}
 		return 0;
 	case 0x1a: /* PCM-DATA    */
 		if(OPL->type&OPL_TYPE_ADPCM)
 		{
-			logerror("Y8950 A/D convertion is accessed but not implemented !\n");
+			printf("Y8950 A/D convertion is accessed but not implemented !\n");
 			return 0x80; /* 2's complement PCM data - result from A/D convertion */
 		}
 		return 0;
