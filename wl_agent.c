@@ -49,7 +49,7 @@ statetype   s_attack = { false,0,0,(statefunc)T_Attack,NULL,NULL };
 
 struct atkinf
 {
-    int8_t    tics, attack, frame;   //Attack is for: 1 Gun, 2 Knife, 3 for Machine Gun, 4 Chain Gun
+    char    tics, attack, frame;   //Attack is for: 1 Gun, 2 Knife, 3 for Machine Gun, 4 Chain Gun
 } attackinfo[4][4] =
 {
     { {6,0,1},{6,2,2},{6,0,3},{6,-1,4} },
@@ -331,7 +331,7 @@ inline void StatusDrawPicIndirect(unsigned x, unsigned y, unsigned picnum)
 }
 #endif
 
-void StatusDrawFace(uint32_t picnum)
+void StatusDrawFace(unsigned int picnum)
 {
     StatusDrawPic(17, 4, picnum);
 
@@ -1070,7 +1070,7 @@ void VictoryTile(void)
 static fixed FixedByFracOrig(fixed a, fixed b)
 {
     int sign = 0;
-    fixed res = (fixed)(((int64_t)a * b) >> 16);
+    fixed res = (fixed)(((long long)a * b) >> 16);
 ;
     if (b == 65536) b = 65535;
     else if (b == -65536) b = 65535, sign = 1;
@@ -1081,7 +1081,7 @@ static fixed FixedByFracOrig(fixed a, fixed b)
         a = -a;
         sign = !sign;
     }
-    res = (fixed)(((int64_t)a * b) >> 16);
+    res = (fixed)(((long long)a * b) >> 16);
 	if (sign)
         res = -res;
     return res;

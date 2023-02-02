@@ -15,14 +15,14 @@ unsigned short *pageLengths;
 unsigned char *PMPageData;
 unsigned char **PMPages;
 #ifdef SEGA_SATURN
-unsigned char* PM_DecodeSprites2(unsigned int start, unsigned int endi, uint32_t* pageOffsets, word* pageLengths, uint8_t* ptr, Sint32 fileId);
+unsigned char* PM_DecodeSprites2(unsigned int start, unsigned int endi, unsigned int* pageOffsets, unsigned int* pageLengths, unsigned char* ptr, int fileId);
 #endif
 
 #ifdef SEGA_SATURN
-void readChunks(Sint32 fileId, uint32_t size, uint32_t* pageOffsets, Uint8* Chunks, uint8_t* ptr)
+void readChunks(int fileId, unsigned int size, unsigned int* pageOffsets, unsigned char* Chunks, unsigned char* ptr)
 {
-    uint16_t delta = (uint16_t)(*pageOffsets / 2048);
-    uint32_t delta2 = (*pageOffsets - delta * 2048);
+    unsigned short delta = (unsigned short)(*pageOffsets / 2048);
+    unsigned int delta2 = (*pageOffsets - delta * 2048);
 
     GFS_Load(fileId, delta, (void*)Chunks, size + delta2);
 
@@ -43,8 +43,8 @@ void PM_Startup (void)
     int      i;
     int      padding;
     unsigned char     *page;
-    uint32_t *pageOffsets;
-    uint32_t pagesize;
+    unsigned int*pageOffsets;
+    unsigned int pagesize;
     int 
 #ifndef SEGA_SATURN
     filesize,
@@ -57,19 +57,19 @@ void PM_Startup (void)
     char fname[13] = "vswap.";
 #endif 
 #ifdef SEGA_SATURN
-    Uint8 Chunks;
+    unsigned char Chunks;
     Sint32 fileId;
 #endif
 
     strcat (fname,(const char*)extension);
 
 #ifdef SEGA_SATURN
-    fileId = GFS_NameToId((Sint8*)fname);
+    fileId = GFS_NameToId((char*)fname);
 #ifndef SEGA_SATURN
     filesize = GetFileSize(fileId);
 #endif
     int ChunksInFile = 0;
-    Chunks = (Uint8*)saturnChunk;
+    Chunks = (unsigned char*)saturnChunk;
     //	CHECKMALLOCRESULT(Chunks);
     GFS_Load(fileId, 0, (void*)Chunks, 0x80);
     ChunksInFile = Chunks[0] | Chunks[1] << 8;
@@ -97,7 +97,7 @@ void PM_Startup (void)
     // vbt : on ne charge pas les sons !	
     ChunksInFile = PMSoundStart;
 
-    PMPages = (uint8_t**)SafeMalloc((ChunksInFile + 1) * sizeof(uint8_t*));
+    PMPages = (unsigned char**)SafeMalloc((ChunksInFile + 1) * sizeof(unsigned char*));
     SafeMalloc(PMPages);
 #endif
    
@@ -105,9 +105,9 @@ void PM_Startup (void)
     //
     // read in the chunk offsets
     //
-    pageOffsets = (uint32_t*)saturnChunk;
+    pageOffsets = (unsigned int*)saturnChunk;
 #else
-    pageOffsets = (uint32_t*)SafeMalloc((ChunksInFile + 1) * sizeof(*pageOffsets));
+    pageOffsets = (unsigned int*)SafeMalloc((ChunksInFile + 1) * sizeof(*pageOffsets));
 #endif
 #ifndef SEGA_SATURN
     fread (pageOffsets,sizeof(*pageOffsets),ChunksInFile,file);
@@ -240,11 +240,11 @@ void PM_Startup (void)
 }
 
 #ifdef SEGA_SATURN
-unsigned char* PM_DecodeSprites2(unsigned int start, unsigned int endi, uint32_t* pageOffsets, word* pageLengths, uint8_t* ptr, Sint32 fileId)
+unsigned char* PM_DecodeSprites2(unsigned int start, unsigned int endi, unsigned int* pageOffsets, word* pageLengths, uint8_t* ptr, Sint32 fileId)
 {
-    uint8_t* Chunks = (uint8_t*)saturnChunk + 0x9000;
-    uint8_t* bmpbuff = (uint8_t*)saturnChunk + 0xA000;	//0x00202000;
-    uint32_t size;
+    unsigned char* Chunks = (unsigned char*)saturnChunk + 0x9000;
+    unsigned char* bmpbuff = (unsigned char*)saturnChunk + 0xA000;	//0x00202000;
+    unsigned int size;
 
     for (unsigned int i = start; i < endi; i++)
     {
@@ -366,12 +366,12 @@ void PM_Shutdown (void)
 ==================
 */
 
-uint32_t PM_GetPageSize (int page)
+unsigned int PM_GetPageSize (int page)
 {
     if (page < 0 || page >= ChunksInFile)
         Quit ("PM_GetPageSize: Invalid page request: %i",page);
 
-    return (uint32_t)(PMPages[page + 1] - PMPages[page]);
+    return (unsigned int)(PMPages[page + 1] - PMPages[page]);
 }
 #endif
 
@@ -417,9 +417,9 @@ static inline unsigned char* PM_GetTexture(int wallpic)
     return PM_GetPage(wallpic);
 }
 
-static inline uint16_t* PM_GetSprite(int shapenum)
+static inline unsigned short* PM_GetSprite(int shapenum)
 {
     // correct alignment is enforced by PM_Startup()
-    return (uint16_t*)(void*)PM_GetPage(PMSpriteStart + shapenum);
+    return (unsigned short*)(void*)PM_GetPage(PMSpriteStart + shapenum);
 }
 #endif

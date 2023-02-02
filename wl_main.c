@@ -62,7 +62,7 @@ int     dirangle[9] = {0,ANGLES/8,2*ANGLES/8,3*ANGLES/8,4*ANGLES/8,
 // proejection variables
 //
 fixed    focallength;
-uint32_t screenofs;
+unsigned int screenofs;
 int      viewscreenx, viewscreeny;
 int      viewwidth;
 int      viewheight;
@@ -396,7 +396,7 @@ void NewGame (int difficulty,int episode)
 
 void DiskFlopAnim(int x,int y)
 {
-    static int8_t which=0;
+    static char which=0;
     if (!x && !y)
         return;
     VWB_DrawPic(x,y,C_DISKLOADING1PIC+which);

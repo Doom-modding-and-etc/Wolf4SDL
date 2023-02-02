@@ -20,8 +20,8 @@ extern TEXTURE tex_spr[SPR_NULLSPRITE + SATURN_WIDTH];
 unsigned char texture_list[SPR_NULLSPRITE];
 #endif
 
-void readChunks(Sint32 fileId, uint32_t size, uint32_t* pageOffsets, Uint8* Chunks, uint8_t* ptr);
-uint8_t* PM_DecodeSprites2(unsigned int start, unsigned int endi, uint32_t* pageOffsets, word* pageLengths, uint8_t* ptr, Sint32 fileId);
+void readChunks(Sint32 fileId, unsigned int size, unsigned int* pageOffsets, unsigned char* Chunks, unsigned char* ptr);
+unsigned char* PM_DecodeSprites2(unsigned int start, unsigned int endi, unsigned int* pageOffsets, word* pageLengths, unsigned char* ptr, int fileId);
 
 #undef atan2
 //#define atan2(a,b) slAtan(a,b)
@@ -47,7 +47,7 @@ unsigned char            bordercol=VIEWCOLOR;        // color of the Change View
 
 #ifdef SPEAR
 int             spearx,speary;
-uint32_t        spearangle;
+unsigned int        spearangle;
 boolean         spearflag;
 #endif
 
@@ -246,7 +246,7 @@ static void ScanInfoPlane(void)
 
 #ifdef SEGA_SATURN
     //-----------------------------------------------------------------------------------
-    uint8_t* itemmap = (uint8_t*)saturnChunk + 0x4000; // ne pas toucher
+    unsigned char* itemmap = (unsigned char*)saturnChunk + 0x4000; // ne pas toucher
     //-----------------------------------------------------------------------------------
 #endif
 
@@ -675,7 +675,7 @@ static void ScanInfoPlane(void)
 #ifdef SEGA_SATURN
 void VblIn(void);
 
-uint8_t* wallData = NULL;
+unsigned char* wallData = NULL;
 #endif
 
 /*
@@ -776,17 +776,17 @@ void SetupGameLevel (void)
 #if defined(SEGA_SATURN)
     char fname[13] = "VSWAP.";
     //	Uint32 i=0;
-    Uint8* Chunks;
+    unsigned char* Chunks;
     long fileSize;
 
     strcat(fname, extension);
 
     Sint32 fileId;
 
-    fileId = GFS_NameToId((Sint8*)fname);
+    fileId = GFS_NameToId((char*)fname);
     fileSize = GetFileSize(fileId);
 
-    Chunks = (Uint8*)saturnChunk;
+    Chunks = (unsigned char*)saturnChunk;
     GFS_Load(fileId, 0, (void*)Chunks, 0x2000);
     ChunksInFile = Chunks[0] | Chunks[1] << 8;
     PMSpriteStart = Chunks[2] | Chunks[3] << 8;
@@ -794,7 +794,7 @@ void SetupGameLevel (void)
     // vbt : on ne charge pas les sons !	
     ChunksInFile = Chunks[4] | Chunks[5] << 8;
 
-    uint32_t* pageOffsets = (uint32_t*)saturnChunk + 0x2000;
+    unsigned int* pageOffsets = (unsigned int*)saturnChunk + 0x2000;
     unsigned short* pageLengths = (unsigned short*)saturnChunk + (ChunksInFile + 1) * sizeof(int32_t);
 
     for (int i = 0; i < ChunksInFile; i++)
@@ -816,7 +816,7 @@ void SetupGameLevel (void)
 
     pageOffsets[ChunksInFile] = fileSize;
 
-    uint8_t* itemmap = (uint8_t*)saturnChunk + 0x4000;
+    unsigned char* itemmap = (unsigned char*)saturnChunk + 0x4000;
     memset(itemmap, 0x00, 0x2000); // itemmap et itemmap communs, ne pas toucher � la taille du memset
 #endif
 
@@ -1172,7 +1172,7 @@ char    demoname[13] = "DEMO?.";
 void StartDemoRecord (int levelnumber)
 {
     demobuffer = SafeMalloc(MAXDEMOSIZE);
-    demoptr = (int8_t *) demobuffer;
+    demoptr = (char *) demobuffer;
     lastdemoptr = demoptr+MAXDEMOSIZE;
 
     *demoptr = levelnumber;
@@ -1195,11 +1195,11 @@ void FinishDemoRecord (void)
 
     demorecord = false;
 
-    length = (int) (demoptr - (int8_t *)demobuffer);
+    length = (int) (demoptr - (char *)demobuffer);
 
-    demoptr = ((int8_t *)demobuffer)+1;
-    demoptr[0] = (int8_t) length;
-    demoptr[1] = (int8_t) (length >> 8);
+    demoptr = ((char *)demobuffer)+1;
+    demoptr[0] = (char) length;
+    demoptr[1] = (char) (length >> 8);
     demoptr[2] = 0;
 
     VW_FadeIn();
@@ -1327,17 +1327,17 @@ void PlayDemo (int demonumber)
     int dems[NUMDEMOS]={T_DEMO0};
 #endif
 
-    demoptr = (int8_t *) grsegs[dems[demonumber]];
+    demoptr = (char *) grsegs[dems[demonumber]];
 #else
     demoname[4] = '0'+demonumber;
     CA_LoadFile (demoname,&demobuffer);
-    demoptr = (int8_t *)demobuffer;
+    demoptr = (char *)demobuffer;
 #endif
 
     NewGame (1,0);
     gamestate.mapon = *demoptr++;
     gamestate.difficulty = gd_hard;
-    length = READWORD((uint8_t *)demoptr);
+    length = READWORD((unsigned char *)demoptr);
     // TODO: Seems like the original demo format supports 16 MB demos
     //       But T_DEM00 and T_DEM01 of Wolf have a 0xd8 as third length size...
     demoptr += 3;

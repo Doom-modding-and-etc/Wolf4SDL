@@ -18,10 +18,10 @@
 static int width;
 static int height;
 
-uint8_t coloredFrameBuffer[320 * 200 * 3];
+unsigned char coloredFrameBuffer[320 * 200 * 3];
 
 #if SDL_MAJOR_VERSION == 1
-GLuint crtTexture;
+unsigned int crtTexture;
 #endif
 
 void CRT_Init(int _width) 

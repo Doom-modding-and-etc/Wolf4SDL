@@ -6,7 +6,7 @@
 typedef struct
 {
     unsigned char    length;
-    int16_t startAndDir;
+    short startAndDir;
 } colormapentry_t;
 
 typedef struct
@@ -40,9 +40,9 @@ typedef struct
 
 typedef struct
 {
-    uint32_t seed;
-    uint16_t speed;
-    uint16_t angle;
+    unsigned int seed;
+    unsigned short speed;
+    unsigned short angle;
     unsigned char     colorMapIndex;
 } cloudsky_t;
 

@@ -53,7 +53,7 @@ boolean     mapseen[MAPSIZE][MAPSIZE];
 // replacing refresh manager
 //
 unsigned short     mapwidth,mapheight;
-uint32_t tics;
+unsigned int tics;
 
 //
 // control info
@@ -178,7 +178,7 @@ int viewsize;
 boolean buttonheld[NUMBUTTONS];
 
 boolean demorecord, demoplayback;
-int8_t *demoptr, *lastdemoptr;
+char *demoptr, *lastdemoptr;
 #ifndef SEGA_SATURN
 void   *demobuffer;
 #endif
@@ -578,7 +578,7 @@ void PollControls (void)
     if (demoplayback || demorecord)   // demo recording and playback needs to be constant
     {
         // wait up to DEMOTICS Wolf tics
-        uint32_t curtime = SDL_GetTicks();
+        unsigned int curtime = SDL_GetTicks();
 		int timediff;
         lasttimecount += DEMOTICS;
         timediff = (lasttimecount * 100) / 7 - curtime;

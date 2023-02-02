@@ -26,11 +26,11 @@ typedef struct HealthMeter_BarLook_s
     int faceHeight;
     int borderWidth;
     int borderLineWidth;
-    uint32_t fullHealthColor;
-    uint32_t mediumHealthColor;
-    uint32_t lowHealthColor;
-    uint32_t backgroundColor;
-    uint32_t flashingColor;
+    unsigned int fullHealthColor;
+    unsigned int mediumHealthColor;
+    unsigned int lowHealthColor;
+    unsigned int backgroundColor;
+    unsigned int flashingColor;
 } HealthMeter_BarLook_t;
 
 typedef struct HealthMeter_Bar_s
@@ -74,7 +74,7 @@ static const HealthMeter_BarLook_t HealthMeter_BarLook =
 extern VBuf_t vbuf;
 
 static void HealthMeter_DrawRect(int x, int y, int width, int height,
-    uint32_t color, unsigned char blend)
+    unsigned int color, unsigned char blend)
 {
     VBuf_t bufp;
     int scx, scy, scwidth, scheight;
@@ -112,7 +112,7 @@ static void HealthMeter_DrawRect(int x, int y, int width, int height,
 }
 
 static void HealthMeter_DrawImage(int x, int y, int width, int height,
-    uint32_t *pic)
+    unsigned int *pic)
 {
     VBuf_t bufp;
     int scx, scy, scwidth, scheight;
@@ -126,7 +126,7 @@ static void HealthMeter_DrawImage(int x, int y, int width, int height,
 
     while (scheight--)
     {
-        memcpy(bufp.pix, pic, scwidth * sizeof(uint32_t));
+        memcpy(bufp.pix, pic, scwidth * sizeof(unsigned int));
         pic += scwidth;
         bufp = VBufOffset(bufp, screen.pitch);
     }
@@ -167,7 +167,7 @@ static void HealthMeter_InitBarFacePic(int barId)
     int k;
     int fx, fy;
     int size;
-    uint32_t *faceptr;
+    unsigned int *faceptr;
     unsigned char col;
     unsigned char shapeImage[TEXTURESIZE * TEXTURESIZE];
     const HealthMeter_BarLook_t *bl;
@@ -189,7 +189,7 @@ static void HealthMeter_InitBarFacePic(int barId)
 
     scwidth = bl->faceWidth * scaleFactor;
     scheight = bl->faceHeight * scaleFactor;
-    size = scwidth * scheight * sizeof(uint32_t);
+    size = scwidth * scheight * sizeof(unsigned int);
     bar->facepic = (unsigned char *)malloc(size);
     CHECKMALLOCRESULT(bar->facepic);
     memset(bar->facepic, 0, size);
@@ -197,7 +197,7 @@ static void HealthMeter_InitBarFacePic(int barId)
     du = fixedpt_fromint(bar->cropw) / scwidth;
     dv = fixedpt_fromint(bar->croph) / scheight;
 
-    faceptr = (uint32_t *)bar->facepic;
+    faceptr = (unsigned int *)bar->facepic;
 
     v = fixedpt_fromint(bar->cropy);
     for (fy = 0; fy < scheight; fy++)
@@ -294,7 +294,7 @@ static void HealthMeter_DrawBar(int barId)
     HealthMeter_Bar_t *bar;
     const HealthMeter_BarLook_t *bl;
     int fullBorderWidth;
-    uint32_t color;
+    unsigned int color;
     objtype *ob;
 
     assert(barId != 0);
@@ -485,7 +485,7 @@ static void HealthMeter_DrawBar(int barId)
     // face
     HealthMeter_InitBarFacePic(barId);
     HealthMeter_DrawImage(x + fullBorderWidth, y + fullBorderWidth, 
-        bl->faceWidth, bl->faceHeight, (uint32_t *)bar->facepic);
+        bl->faceWidth, bl->faceHeight, (unsigned int *)bar->facepic);
 }
 
 void HealthMeter_Draw(void)

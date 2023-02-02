@@ -113,7 +113,7 @@ void VW_MeasurePropString (const char *string, unsigned short *width, unsigned s
 #if SDL_MAJOR_VERSION == 2
 void VH_RenderTextures(SDL_Surface *surface)
 {
-    SDL_UpdateTexture(texture, NULL, screen->pixels, screenWidth * sizeof(Uint32));
+    SDL_UpdateTexture(texture, NULL, screen->pixels, screenWidth * sizeof(unsigned int));
     SDL_RenderClear(renderer);
     SDL_RenderCopy(renderer, texture, NULL, NULL);
     SDL_RenderPresent(renderer);
@@ -306,7 +306,7 @@ void LoadLatchMem(void)
 */
 
 // XOR masks for the pseudo-random number sequence starting with n=17 bits
-static const uint32_t rndmasks[] = {
+static const unsigned int rndmasks[] = {
                     // n    XNOR from (starting at 1, not 0 as usual)
     0x00012000,     // 17   17,14
     0x00020400,     // 18   18,11
@@ -325,10 +325,10 @@ static unsigned int rndmask;
 extern SDL_Color curpal[256];
 
 // Returns the number of bits needed to represent the given value
-static int log2_ceil(uint32_t x)
+static int log2_ceil(unsigned int x)
 {
     int n = 0;
-    uint32_t v = 1;
+    unsigned int v = 1;
     while(v < x)
     {
         n++;
@@ -527,7 +527,7 @@ finished:
                     else
                     {
                         unsigned char col = *(srcptr + (y1 + y) * source->pitch + x1 + x);
-                        uint32_t fullcol = SDL_MapRGB(screen->format, curpal[col].r, curpal[col].g, curpal[col].b);
+                        unsigned int fullcol = SDL_MapRGB(screen->format, curpal[col].r, curpal[col].g, curpal[col].b);
                         memcpy(destptr + (y1 + y) * screen->pitch + (x1 + x) * screen->format->BytesPerPixel,
                             &fullcol, screen->format->BytesPerPixel);
                     }

@@ -154,5 +154,5 @@ mat3fixed_t mat3fixed_rot(fixed angle);
 
 mat3fixed_t mat3fixed_transpose(mat3fixed_t a);
 
-uint32_t Math_FixedLerpRgba(uint32_t a, uint32_t b, unsigned char blend);
+unsigned int Math_FixedLerpRgba(unsigned int a, unsigned int b, unsigned char blend);
 #endif

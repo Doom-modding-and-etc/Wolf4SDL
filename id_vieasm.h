@@ -156,22 +156,22 @@ extern  boolean         AdLibPresent, SoundBlasterPresent, SBProPresent, SoundPo
 
 extern sample ASM_Audiosegs[NUMSOUNDS];
 
-extern boolean ASM_Open(int frequency, int channels, int maxchan, int buffersize, Uint8 sndvolume, Uint8 musvolume, bool reverse);
+extern boolean ASM_Open(int frequency, int channels, int maxchan, int buffersize, unsigned char sndvolume, unsigned char musvolume, boolean reverse);
 extern boolean ASM_IsOpen(void);
 extern boolean ASM_PlayMusic(char* musfile);
 extern boolean ASM_SwitchMus(char* loadmus, int fadems, boolean fade);
 extern boolean ASM_FadeInMus(char* loadmus, int fadems);
 extern sample ASM_Cache(char* sndfile, const char* name);
 extern sample ASM_CacheFromMem(void* ptr, int size, const char* name);
-extern int ASM_PlaySound(sample sound, int angle, Uint8 distance, boolean ambient);
+extern int ASM_PlaySound(sample sound, int angle, unsigned char distance, boolean ambient);
 extern void ASM_Uncache(sample chunk);
 extern void ASM_FadeOutMus(int fadems);
 extern void ASM_HaltSound(void);
 extern void ASM_Pause(void);
 extern void ASM_Resume(void);
 extern void ASM_Halt(void);
-extern void ASM_ChangeVolume(Uint8 sndvolume, Uint8 musvolume);
-extern void ASM_ReturnVolume(Uint8* retsnd, Uint8* retmus);
+extern void ASM_ChangeVolume(unsigned char sndvolume, unsigned char musvolume);
+extern void ASM_ReturnVolume(unsigned char* retsnd, unsigned char* retmus);
 extern void ASM_Close(void);
 extern void ASM_StopChannel(int channel);
 extern void ASM_SwitchStep(void);

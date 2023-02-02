@@ -2261,7 +2261,7 @@ DrawCtlScreen (void)
 enum
 { FIRE, STRAFE, RUN, OPEN };
 char mbarray[4][3] = { "b0", "b1", "b2", "b3" };
-int8_t order[4] = { RUN, OPEN, FIRE, STRAFE };
+char order[4] = { RUN, OPEN, FIRE, STRAFE };
 
 
 int

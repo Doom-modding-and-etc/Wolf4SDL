@@ -28,7 +28,7 @@ extern SDL_Texture* upscaledTexture;
 extern  boolean fullscreen, usedoublebuffering;
 #endif
 
-extern uint32_t screenWidth, screenHeight, screenBits,
+extern unsigned int screenWidth, screenHeight, screenBits,
 #ifndef SEGA_SATURN
 screenPitch, bufferPitch;   
 #endif
@@ -39,7 +39,7 @@ extern	boolean  screenfaded;
 extern	unsigned bordercolor;
 #endif
 
-extern  uint32_t *ylookup;
+extern  unsigned int *ylookup;
 
 extern SDL_Color gamepal[256];
 

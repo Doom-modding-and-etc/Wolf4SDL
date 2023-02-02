@@ -37,7 +37,7 @@ struct iovec
 #include "wl_def.h"
 
 #ifdef SEGA_SATURN
-void readChunks(Sint32 fileId, uint32_t size, uint32_t* pageOffsets, Uint8* Chunks, uint8_t* ptr);
+void readChunks(Sint32 fileId, unsigned int size, unsigned int* pageOffsets, unsigned char* Chunks, unsigned char* ptr);
 #define BUFFERSIZE  0x800
 #endif
 
@@ -261,8 +261,8 @@ static int GRFILEPOS(const size_t idx)
 void CAL_GetGrChunkLength (int chunk)
 {
 #ifdef SEGA_SATURN
-    uint32_t pos = GRFILEPOS(chunk);
-    readChunks(grhandle, sizeof(chunkexplen), &pos, saturnChunk, (uint8_t*)&chunkexplen);
+    unsigned int pos = GRFILEPOS(chunk);
+    readChunks(grhandle, sizeof(chunkexplen), &pos, saturnChunk, (unsigned char*)&chunkexplen);
 #else
     w3slseek(grhandle, GRFILEPOS(chunk), SEEK_SET);
     w3sread(grhandle, &chunkexplen, sizeof(chunkexplen));
@@ -607,9 +607,9 @@ void CAL_SetupGrFile (void)
         //	if(stat(fname, NULL))
         //        CA_CannotOpen(fname);
 
-    fileId = GFS_NameToId((Sint8*)fname);
+    fileId = GFS_NameToId((char*)fname);
     //	fileSize = GetFileSize(fileId);
-    compseg = (Uint8*)saturnChunk + 0x8000;
+    compseg = (unsigned char*)saturnChunk + 0x8000;
     //	CHECKMALLOCRESULT(vbtHuff);
     //slPrint((char *)"CAL_SetupGrFile1     ",slLocate(10,12));
     GFS_Load(fileId, 0, (void*)compseg, sizeof(grhuffman)); // lecture VGADICT full
@@ -645,7 +645,7 @@ void CAL_SetupGrFile (void)
     //        CA_CannotOpen(fname);
     //slSynch();
     //slPrint((char *)"CAL_SetupGrFile3     ",slLocate(10,12));
-    fileId = GFS_NameToId((Sint8*)fname);
+    fileId = GFS_NameToId((char*)fname);
     fileSize = GetFileSize(fileId);
     long headersize = fileSize;//lseek(handle, 0, SEEK_END);
     //lseek(handle, 0, SEEK_SET);
@@ -705,7 +705,7 @@ void CAL_SetupGrFile (void)
     //	if(stat(fname, NULL))
     //        CA_CannotOpen(fname);
 
-    grhandle = GFS_NameToId((Sint8*)fname);
+    grhandle = GFS_NameToId((char*)fname);
     //	fileSize = GetFileSize(grhandle);
     //
     // load the pic and sprite headers into the arrays in the data segment
@@ -800,9 +800,9 @@ void CAL_SetupGrFile (void)
 //
 // load the pic and sprite headers into the arrays in the data segment
 //
-    pictable = SafeMalloc(NUMPICS * sizeof(*pictable));
+    pictable = (pictabletype*)SafeMalloc(NUMPICS * sizeof(*pictable));
     CAL_GetGrChunkLength(STRUCTPIC);                // position file pointer
-    compseg = SafeMalloc(chunkcomplen);
+    compseg = (unsigned char*)SafeMalloc(chunkcomplen);
     w3sread (grhandle,compseg,chunkcomplen);
     CAL_HuffExpand(compseg, (unsigned char*)pictable, NUMPICS * sizeof(*pictable), grhuffman);
     free(compseg);
@@ -846,7 +846,7 @@ void CAL_SetupMapFile (void)
 
     Sint32 fileId;
 
-    fileId = GFS_NameToId((Sint8*)fname);
+    fileId = GFS_NameToId((char*)fname);
     //	fileSize = GetFileSize(fileId); // utile
     length = NUMMAPS * 4 + 2; // used to be "filelength(handle);"
     //    mapfiletype *tinf=(mapfiletype *) malloc(sizeof(mapfiletype));
@@ -866,7 +866,7 @@ void CAL_SetupMapFile (void)
             fname[i]= toupper(fname[i]);
             i++;
         }*/
-    maphandle = GFS_NameToId((Sint8*)fname);
+    maphandle = GFS_NameToId((char*)fname);
     fileSize = GetFileSize(maphandle);
 #else
     strcpy(fname, mfilename);
@@ -890,14 +890,14 @@ void CAL_SetupMapFile (void)
 
     slPrintHex(pos, slLocate(10, 2));
 
-    uint8_t* maphandleptr = (uint8_t*)(((int)saturnChunk + length + (4 - 1)) & -4);
+    unsigned char* maphandleptr = (unsigned char*)(((int)saturnChunk + length + (4 - 1)) & -4);
 
-    readChunks(maphandle, sizeof(maptype), &pos, maphandleptr, (uint8_t*)&mapheaderseg);
+    readChunks(maphandle, sizeof(maptype), &pos, maphandleptr, (unsigned char*)&mapheaderseg);
     //	memcpy((memptr)&mapheaderseg,saturnChunk+0x500,sizeof(maptype));
 #ifndef EMBEDDED
     mapheaderseg[mapnum] = (maptype*)((saturnChunk + sizeof(mapfiletype) + fileSize + (8 - 1)) & -4);
     //	CHECKMALLOCRESULT(mapheaderseg[mapnum]);
-    safe_malloc(mapheaderseg[mapnum]);
+    Safe_Malloc(mapheaderseg[mapnum]);
         //read (maphandle,(memptr)mapheaderseg[i],sizeof(maptype));
     memcpy((memptr)mapheaderseg[mapnum], maphandleptr, sizeof(maptype));
 
@@ -964,7 +964,7 @@ void CAL_SetupMapFile (void)
     if (handle == -1)
         CA_CannotOpen(fname);
 
-    tinf = SafeMalloc(sizeof(*tinf));
+    tinf = (mapfiletype*)SafeMalloc(sizeof(*tinf));
 
     w3sread(handle, tinf, sizeof(*tinf));
     w3sclose(handle);
@@ -997,7 +997,7 @@ void CAL_SetupMapFile (void)
         if (pos<0)                          // $FFFFFFFF start is a sparse map
             continue;
 
-        mapheaderseg[i] = SafeMalloc(sizeof(*mapheaderseg[i]));
+        mapheaderseg[i] = (maptype*)SafeMalloc(sizeof(*mapheaderseg[i]));
 
         w3slseek(maphandle,pos,SEEK_SET);
         w3sread (maphandle,mapheaderseg[i],sizeof(*mapheaderseg[i]));
@@ -1008,7 +1008,7 @@ void CAL_SetupMapFile (void)
 //
     for (i = 0; i < MAPPLANES; i++)
     {
-        mapsegs[i] = SafeMalloc(MAPAREA * sizeof(*mapsegs[i]));
+        mapsegs[i] = (unsigned short*)SafeMalloc(MAPAREA * sizeof(*mapsegs[i]));
     }
 #endif
 }
@@ -1182,7 +1182,7 @@ int CA_CacheAudioChunk (int chunk)
     if (audiosegs[chunk])
         return size;                        // already in memory
 
-    audiosegs[chunk] = SafeMalloc(size);
+    audiosegs[chunk] = (unsigned char*)SafeMalloc(size);
 
     w3slseek(audiohandle,pos,SEEK_SET);
     w3sread(audiohandle,audiosegs[chunk],size);
@@ -1427,14 +1427,14 @@ void CA_CacheGrChunks (void)
         compressed = GRFILEPOS(next)-pos;
 
 #ifdef SEGA_SATURN
-        uint8_t* Chunks;
+        unsigned char* Chunks;
         uint16_t delta;
-        uint32_t delta2;
+        unsigned int delta2;
         Uint16 i, j = 0;
         delta = (uint16_t)(pos / 2048);
         delta2 = (pos - delta * 2048);
 
-        Chunks = (uint8_t*)saturnChunk;  // d?plac? pour pas ?craser de son
+        Chunks = (unsigned char*)saturnChunk;  // d?plac? pour pas ?craser de son
         //	CHECKMALLOCRESULT(Chunks);
         GFS_Load(grhandle, delta, (void*)Chunks, compressed + delta2); // lecture partielle ok
         Chunks += delta2;
@@ -1476,7 +1476,7 @@ void CA_CacheGrChunks (void)
 
         w3slseek(grhandle,pos,SEEK_SET);
 
-        bufferseg = SafeMalloc(compressed);
+        bufferseg = (int*)SafeMalloc(compressed);
         source = bufferseg;
 
         w3sread(grhandle,source,compressed);
@@ -1531,7 +1531,7 @@ void CA_CacheMap (int mapnum)
 #ifdef SEGA_SATURN
     //TODO: Adapt this...
     uint32_t pos = GRFILEPOS(chunk);
-    readChunks(grhandle, sizeof(chunkexplen), &pos, saturnChunk, (uint8_t*)&chunkexplen);
+    readChunks(grhandle, sizeof(chunkexplen), &pos, saturnChunk, (unsigned char*)&chunkexplen);
 #else
     size = MAPAREA * sizeof(*dest);
 #endif
@@ -1549,7 +1549,7 @@ void CA_CacheMap (int mapnum)
 #ifndef SEGA_SATURN
         w3slseek(maphandle,pos,SEEK_SET);
 #endif
-        bufferseg = SafeMalloc(compressed);
+        bufferseg = (unsigned short*)SafeMalloc(compressed);
         source = bufferseg;
 #ifdef SEGA_SATURN
         memcpy(source, &Chunks[pos], compressed);
@@ -1570,7 +1570,7 @@ void CA_CacheMap (int mapnum)
         expanded = *source;
         source++;
 #endif
-        buffer2seg = SafeMalloc(expanded);
+        buffer2seg = (unsigned short*)SafeMalloc(expanded);
         CAL_CarmackExpand((unsigned char *) source, buffer2seg,expanded);
         CA_RLEWexpand(buffer2seg+1,dest,size,tinf->RLEWtag);
         free(buffer2seg);

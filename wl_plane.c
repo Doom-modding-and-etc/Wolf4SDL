@@ -35,15 +35,15 @@ void GetFlatTextures (void)
 ===================
 */
 #ifdef USE_MULTIFLATS
-void DrawSpan (int16_t x1, int16_t x2, int16_t height)
+void DrawSpan (short x1, short x2, short height)
 {
     unsigned char      tilex,tiley,lasttilex,lasttiley;
     unsigned char      *dest;
     unsigned char      *shade;
     unsigned short      texture,spot;
-    uint32_t  rowofs;
-    int16_t   ceilingpage,floorpage,lastceilingpage,lastfloorpage;
-    int16_t   count,prestep;
+    unsigned int  rowofs;
+    short   ceilingpage,floorpage,lastceilingpage,lastfloorpage;
+    short   count,prestep;
     fixed     basedist,stepscale;
     fixed     xfrac,yfrac;
     fixed     xstep,ystep;
@@ -164,13 +164,13 @@ void DrawSpan (int16_t x1, int16_t x2, int16_t height)
 ===================
 */
 
-void DrawSpan (int16_t x1, int16_t x2, int16_t height)
+void DrawSpan (short x1, short x2, short height)
 {
     unsigned char *dest;
     unsigned char *shade;
     unsigned short     texture;
-    uint32_t rowofs;                                    
-    int16_t  count,prestep;
+    unsigned int rowofs;
+    short    count,prestep;
     fixed    basedist,stepscale;
     fixed    xfrac,yfrac;
     fixed    xstep,ystep;
@@ -228,7 +228,7 @@ void DrawSpan (int16_t x1, int16_t x2, int16_t height)
 void DrawPlanes (void)
 {
     int     x,y;
-    int16_t	height;
+    short	height;
 
 //
 // loop over all columns

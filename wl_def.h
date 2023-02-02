@@ -70,15 +70,10 @@
 #include "3rdparty/fixedptc.h"
 #include "id_w3swrap.h"
 
-#ifdef _arch_dreamcast
-typedef uint8 uint8_t;
-typedef uint16 uint16_t;
-typedef uint32 uint32_t;
-typedef int8 int8_t;
-typedef int16 int16_t;
-typedef int32 int32_t;
-typedef int64 int64_t;
-typedef ptr_t uintptr_t;
+#ifdef _WIN64
+typedef unsigned long long uintptr_t;
+#else
+typedef unsigned int uintptr_t;
 #endif
 
 #ifndef _WIN32
@@ -314,7 +309,7 @@ enum
 #define STARTAMMO       8
 
 #ifdef SEGA_SATURN
-typedef uint64_t mapbitmap[MAPSIZE];
+typedef unsigned long long mapbitmap[MAPSIZE];
 static inline boolean getmapbit(mapbitmap m, int x, int y)
 {
     return (m[x] & (1ull << y)) != 0;
@@ -895,7 +890,7 @@ typedef struct statstruct
     unsigned char      tilex, tiley;
     short     shapenum;           // if shapenum == -1 the obj has been removed
     unsigned char* visspot;
-    uint32_t flags;
+    unsigned int flags;
     unsigned char      itemnumber;
 } statobj_t;
 
@@ -942,7 +937,7 @@ typedef struct objstruct
     int		state; /* stateenum */
 #endif
 
-    uint32_t    flags;              // FL_SHOOTABLE, etc
+    unsigned int    flags;              // FL_SHOOTABLE, etc
 
     int     distance;           // if negative, wait for that door to open
     dirtype     dir;
@@ -1065,7 +1060,7 @@ extern  char     configname[13];
 
 extern  fixed    focallength;
 #ifndef SEGA_SATURN
-extern  uint32_t screenofs;
+extern  unsigned int screenofs;
 #endif
 extern  int      viewscreenx, viewscreeny;
 extern  int      viewwidth;
@@ -1135,7 +1130,7 @@ extern  char        demoname[13];
 
 #ifdef SPEAR
 extern  int     spearx, speary;
-extern  uint32_t    spearangle;
+extern  unsigned int    spearangle;
 extern  boolean     spearflag;
 #endif
 
@@ -1219,7 +1214,7 @@ extern  boolean  singlestep, godmode, noclip, ammocheat, mapreveal;
 extern  int  extravbls;
 #endif
 extern  unsigned short        mapwidth, mapheight;
-extern  uint32_t    tics;
+extern  unsigned int    tics;
 #ifndef SEGA_SATURN
 extern  int         lastgamemusicoffset;
 #endif
@@ -1250,7 +1245,7 @@ extern  int         controlx, controly;              // range from -100 to 100
 extern  boolean     buttonstate[NUMBUTTONS];
 
 extern  boolean     demorecord, demoplayback;
-extern  int8_t* demoptr, * lastdemoptr;
+extern  char* demoptr, * lastdemoptr;
 #ifndef SEGA_SATURN
 extern  void* demobuffer;
 #endif
@@ -1365,7 +1360,7 @@ typedef struct
 } compshape_t;
 
 
-void ScaleShape(int xcenter, int shapenum, int height, uint32_t flags);
+void ScaleShape(int xcenter, int shapenum, int height, unsigned int flags);
 void SimpleScaleShape(int xcenter, int shapenum, int height);
 #ifdef USE_DIR3DSPR
 void Transform3DShape(statobj_t* statptr);
@@ -1429,7 +1424,7 @@ void    GetBonus(statobj_t* check);
 void    GiveWeapon(int weapon);
 void    GiveAmmo(int ammo);
 void    GiveKey(int key);
-void    StatusDrawFace(uint32_t picnum);
+void    StatusDrawFace(unsigned int picnum);
 void    DrawFace(void);
 void    DrawHealth(void);
 void    HealSelf(int points);

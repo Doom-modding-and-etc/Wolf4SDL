@@ -182,7 +182,7 @@ void InitSky (void)
     unsigned char            colormap[256];
     int             i,j,k,m,n,calcedCols;
     int             cloudskyid = GetCloudSkyDefID();
-    int16_t         index;
+    short         index;
     int         value;
 
     if(cloudskyid >= lengthof(cloudSkys))
@@ -278,11 +278,11 @@ void InitSky (void)
 ===================
 */
 
-void DrawCloudSpan (int16_t x1, int16_t x2, int16_t height)
+void DrawCloudSpan (short x1, short x2, short height)
 {
     unsigned char*dest;
     unsigned short     texture;
-    int16_t  count,prestep;
+    short  count,prestep;
     fixed    basedist;
     fixed    stepscale;
     fixed    xfrac,yfrac;
@@ -328,7 +328,7 @@ void DrawCloudSpan (int16_t x1, int16_t x2, int16_t height)
 void DrawCloudPlanes (void)
 {
     int     x,y;
-    int16_t	height;
+    short	height;
     int speed;
 
     speed = curSky->speed * tics;

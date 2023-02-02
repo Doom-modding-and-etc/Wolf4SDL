@@ -33,10 +33,10 @@ boolean fpscounter;
 int fps_frames=0, fps_time=0, fps=0;
 
 #if defined(USE_FLOORCEILINGTEX) || defined(USE_CLOUDSKY)
-int16_t *spanstart;
+short *spanstart;
 #endif
 
-int16_t *wallheight;
+short *wallheight;
 
 //
 // math tables
@@ -968,7 +968,7 @@ void DrawPlayerWeapon (void)
 
 void CalcTics (void)
 {
-	uint32_t curtime;
+    unsigned int curtime;
 //
 // calculate tics since last refresh for adaptive timing
 //

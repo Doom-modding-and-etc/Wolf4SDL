@@ -26,7 +26,7 @@ typedef struct
 {
 	int16_t height;
 	int16_t location[256];
-	int8_t width[256];
+	char width[256];
 } fontstruct;
 
 

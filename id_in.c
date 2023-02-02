@@ -326,7 +326,7 @@ void IN_GetJoyDelta(int* dx, int* dy)
 
     if (param_joystickhat != -1)
     {
-        uint8_t hatState = SDL_JoystickGetHat(Joystick, param_joystickhat);
+        unsigned char hatState = SDL_JoystickGetHat(Joystick, param_joystickhat);
         if (hatState & SDL_HAT_RIGHT)
             x += 127;
         else if (hatState & SDL_HAT_LEFT)
@@ -427,7 +427,7 @@ static boolean ToggleFullScreenKeyShortcut(SDL_Keysym* sym)
 
 static void I_ToggleFullScreen(void)
 {
-    uint32_t flags;
+    unsigned int flags;
     fullscreen = !fullscreen;
 
     if (fullscreen)

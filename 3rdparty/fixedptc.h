@@ -91,10 +91,10 @@ typedef signed __int64 int64_t;
 #endif
 
 #if FIXEDPT_BITS == 32
-typedef int32_t fixedpt;
-typedef	int64_t	fixedptd;
-typedef	uint32_t fixedptu;
-typedef	uint64_t fixedptud;
+typedef int		fixedpt;
+typedef	long long	fixedptd;
+typedef	unsigned int fixedptu;
+typedef	unsigned long long fixedptud;
 #elif FIXEDPT_BITS == 64
 typedef int64_t fixedpt;
 typedef	__int128_t fixedptd;

@@ -6,10 +6,10 @@ LRstruct LevelRatios[LRpack];
 int lastBreathTime = 0;
 
 #ifdef SEGA_SATURN
-extern uint8_t* wallData;
+extern unsigned char* wallData;
 
-uint8_t* PM_DecodeSprites2(unsigned int start, unsigned int endi, uint32_t* pageOffsets, word* pageLengths, uint8_t* ptr, Sint32 fileId);
-void readChunks(Sint32 fileId, uint32_t size, uint32_t* pageOffsets, Uint8* Chunks, uint8_t* ptr);
+unsigned char* PM_DecodeSprites2(unsigned int start, unsigned int endi, unsigned int* pageOffsets, unsigned short* pageLengths, unsigned char* ptr, int fileId);
+void readChunks(int fileId, unsigned int size, unsigned int* pageOffsets, unsigned char* Chunks, unsigned char* ptr);
 #endif
 
 void Write (int x, int y, const char *string);
@@ -1173,7 +1173,7 @@ PreloadGraphics (void)
 #if 0
     //----------------------------------------------------------------------
     char fname[13] = "VSWAP.";
-    Uint32 y;
+    unsigned int y;
     extern int ChunksInFile;
 
     strcat(fname, extension);
@@ -1183,12 +1183,12 @@ PreloadGraphics (void)
     fileId = GFS_NameToId((Sint8*)fname);
 
     word* pageLengths = (word*)saturnChunk + (ChunksInFile + 1) * sizeof(int32_t);
-    uint32_t* pageOffsets = (uint32_t*)saturnChunk + 0x2000;
-    uint8_t* itemmap = (uint8_t*)saturnChunk + 0x4000;
-    Uint8* Chunks = (uint8_t*)saturnChunk + 0xC000;
+    unsigned int* pageOffsets = (unsigned int*)saturnChunk + 0x2000;
+    unsigned char* itemmap = (unsigned char*)saturnChunk + 0x4000;
+    unsigned char* Chunks = (unsigned char*)saturnChunk + 0xC000;
 
-    if (wallData == NULL) wallData = (uint8_t*)malloc(((NB_WALL_HWRAM * 2) + 8) * 0x1000);
-    uint8_t* ptr = (uint8_t*)wallData;
+    if (wallData == NULL) wallData = (unsigned char*)malloc(((NB_WALL_HWRAM * 2) + 8) * 0x1000);
+    unsigned char* ptr = (unsigned char*)wallData;
     loaded += (12 + (SPR_NULLSPRITE - SPR_KNIFEREADY));
     for (y = 1; y < 64; y++)
     {
@@ -1239,7 +1239,7 @@ PreloadGraphics (void)
     int* val = (int*)ptr;
     slPrintHex((int)val, slLocate(10, 21));
 
-    ptr = (uint8_t*)0x00202000;
+    ptr = (unsigned char*)0x00202000;
 
     for (y = NB_WALL_HWRAM / 2; y < 64; y++)
     {

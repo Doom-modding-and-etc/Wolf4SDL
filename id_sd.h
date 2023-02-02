@@ -128,8 +128,8 @@ typedef struct
 #endif
 typedef struct
 {
-    uint32_t startpage;
-    uint32_t length;
+    unsigned int startpage;
+    unsigned int length;
 } digiinfo;
 
 #ifndef SEGA_SATURN

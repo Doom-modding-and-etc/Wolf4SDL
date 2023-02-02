@@ -13,8 +13,8 @@ typedef struct Led_s
     float thickness;
     float edgeGap;
     float charGap;
-    uint32_t activeEdgeColor;
-    uint32_t inactiveEdgeColor;
+    unsigned int activeEdgeColor;
+    unsigned int inactiveEdgeColor;
     unsigned char activeEdgeBlend;
     unsigned char inactiveEdgeBlend;
     boolean showInactiveEdges;
@@ -37,7 +37,7 @@ static const char *LedCharEdges[] =
 };
 
 static void LedBar (float scx, float scy, float scwidth, 
-    float scheight, float thickness, uint32_t color, unsigned char blend)
+    float scheight, float thickness, unsigned int color, unsigned char blend)
 {
     assert(scx >= 0 && (unsigned) scx + scwidth <= screen.w
             && scy >= 0 && (unsigned) scy + scheight <= screen.h
@@ -70,7 +70,7 @@ static void LedBar (float scx, float scy, float scwidth,
 static void LedEdge(const Led_t *led, unsigned char edge, boolean active)
 {
     unsigned char blend;
-    uint32_t color;
+    unsigned int color;
     float scx, scy, scwidth, scheight;
 
     scx = scy = scwidth = scheight = 0;

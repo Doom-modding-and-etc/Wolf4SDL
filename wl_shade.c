@@ -5,8 +5,8 @@
 #include "wl_shade.h"
 
 typedef struct {
-    uint8_t destRed, destGreen, destBlue;   // values between 0 and 255
-    uint8_t fogStrength;
+    unsigned char destRed, destGreen, destBlue;   // values between 0 and 255
+    unsigned char fogStrength;
 } shadedef_t;
 
 shadedef_t shadeDefs[] = {
@@ -17,7 +17,7 @@ shadedef_t shadeDefs[] = {
     {  60,  60,  60, LSHADE_FOG }
 };
 
-uint8_t shadetable[SHADE_COUNT][256];
+unsigned char shadetable[SHADE_COUNT][256];
 int LSHADE_flag;
 
 #ifdef USE_FEATUREFLAGS

@@ -13,7 +13,7 @@
 =
 ===================
 */
-void *safe_malloc (size_t size, const char *fname, uint32_t line)
+void *safe_malloc (size_t size, const char *fname, unsigned int line)
 {
     void *ptr;
 
@@ -41,7 +41,7 @@ fixed FixedMul (fixed a, fixed b)
 #ifdef SEGA_SATURN
     return MTH_Mul2(a, b);
 #else
-	return (fixed)(((int64_t)a * b + 0x8000) >> FRACBITS);
+	return (fixed)(((long long)a * b + 0x8000) >> FRACBITS);
 #endif
 }
 
@@ -56,7 +56,7 @@ fixed FixedMul (fixed a, fixed b)
 */
 fixed FixedDiv (fixed a, fixed b)
 {
-	int64_t c = ((int64_t)a << FRACBITS) / (int64_t)b;
+	long long c = ((long long)a << FRACBITS) / (long long)b;
 
 	return (fixed)c;
 }

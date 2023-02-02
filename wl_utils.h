@@ -12,7 +12,7 @@
 
 #define ISPOINTER(x) ((((uintptr_t)(x)) & ~0xffff) != 0)
 
-extern void     *safe_malloc (size_t size, const char *fname, uint32_t line);
+extern void     *safe_malloc (size_t size, const char *fname, unsigned int line);
 extern fixed    FixedMul (fixed a, fixed b);
 extern fixed    FixedDiv (fixed a, fixed b);
 
@@ -20,10 +20,10 @@ extern unsigned short     READWORD (unsigned char *ptr);
 extern unsigned int READLONGWORD (unsigned char *ptr);
 
 #if defined(SEGA_SATURN)
-extern Sint16* LoadFile(char* filename, long* fileSize);
-extern Sint32 GetFileSize(int file_id);
-extern Uint16 SWAP_BYTES_16(Uint16 a);
-extern Uint32 SWAP_BYTES_32(Uint32 a);
+extern short* LoadFile(char* filename, long* fileSize);
+extern int GetFileSize(int file_id);
+extern unsigned short SWAP_BYTES_16(unsigned short a);
+extern unsigned int SWAP_BYTES_32(unsigned int a);
 extern fixed MTH_Mul2(fixed a, fixed b);
 extern void memcpyl(void* dst, void* src, int size);
 extern void* memset4_fast(void*, long, size_t);

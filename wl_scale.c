@@ -32,15 +32,15 @@
 ===================
 */
 #ifdef USE_SHADING
-void ScaleLine(int16_t x, int16_t toppix, fixed fracstep, unsigned char* linesrc, unsigned char* linecmds, unsigned char* curshades)
+void ScaleLine(short x, short toppix, fixed fracstep, unsigned char* linesrc, unsigned char* linecmds, unsigned char* curshades)
 #else
-void ScaleLine (int16_t x, int16_t toppix, fixed fracstep, unsigned char* linesrc, unsigned char *linecmds)
+void ScaleLine (short x, short toppix, fixed fracstep, unsigned char* linesrc, unsigned char *linecmds)
 #endif
 {
     unsigned char   *src,*dest;
     unsigned char    col;
-    int16_t start,end,top;
-    int16_t startpix,endpix;
+    short start,end,top;
+    short startpix,endpix;
     fixed   frac;
 
     for (end = READWORD(linecmds) >> 1; end; end = READWORD(linecmds) >> 1)
@@ -261,7 +261,7 @@ inline void ScaleShape(int xcenter, int shapenum, unsigned width)
 ===================
 */
 
-void ScaleShape (int xcenter, int shapenum, int height, uint32_t flags)
+void ScaleShape (int xcenter, int shapenum, int height, unsigned int flags)
 {
     int         i;
     compshape_t *shape;
@@ -269,8 +269,8 @@ void ScaleShape (int xcenter, int shapenum, int height, uint32_t flags)
 #ifdef USE_SHADING
     unsigned char *curshades;
 #endif
-    int16_t     scale,toppix;
-    int16_t     x1,x2,actx;
+    short     scale,toppix;
+    short     x1,x2,actx;
     fixed       frac,fracstep;
 
     scale = height >> 3;        // low three bits are fractional
@@ -353,8 +353,8 @@ void SimpleScaleShape (int xcenter, int shapenum, int height)
     int         i;
     compshape_t *shape;
     unsigned char *linesrc,*linecmds;
-    int16_t     scale,toppix;
-    int16_t     x1,x2,actx;
+    short     scale,toppix;
+    short     x1,x2,actx;
     fixed       frac,fracstep;
 
     scale = height >> 1;
@@ -407,15 +407,15 @@ void SimpleScaleShape (int xcenter, int shapenum, int height)
 ===================
 */
 
-void Scale3DShape (int x1, int x2, int shapenum, uint32_t flags, fixed ny1, fixed ny2, fixed nx1, fixed nx2)
+void Scale3DShape (int x1, int x2, int shapenum, unsigned int flags, fixed ny1, fixed ny2, fixed nx1, fixed nx2)
 {
     int         i;
     compshape_t *shape;
     unsigned char *linesrc,*linecmds;
     unsigned char *curshades;
-    int16_t     scale1,toppix;
-    int16_t     dx,len,slinex;
-    int16_t     xpos[TEXTURESIZE + 1];
+    short     scale1,toppix;
+    short     dx,len,slinex;
+    short     xpos[TEXTURESIZE + 1];
     fixed       height,dheight,height1,height2;
     fixed       fracstep;
     fixed       dxx,dzz;

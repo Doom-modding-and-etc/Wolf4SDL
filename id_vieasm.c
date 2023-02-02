@@ -32,7 +32,7 @@ IF YOU FIND ANY, PLEASE TELL ME SO I CAN FIX THEM!
 
 const char* ASM_Verstring = "v0.9.1 Beta";  // Version string
 
-Uint8 sndvol, musvol;                       // Volumes for sound
+unsigned char sndvol, musvol;                       // Volumes for sound
 int origchannels, maxchannels, lastchan;    // Channel variables
 boolean chanused[ASM_ABSMAXCHANNELS];          // Is channel used?
 static Mix_Music* music = 0, * switchto = 0; // Music references
@@ -103,12 +103,12 @@ void ASM_ChannelDone(int channel)
 // ASM_Open
 // Opens audio device at given specs, clears used
 
-boolean ASM_Open(int frequency, int channels, int maxchan, int buffersize, Uint8 sndvolume, Uint8 musvolume, bool reverse)
+boolean ASM_Open(int frequency, int channels, int maxchan, int buffersize, unsigned char sndvolume, unsigned char musvolume, boolean reverse)
 {
     if (ASM_IsOpen())       // Device is already open!
         return false;
 #ifdef VERBOSE
-    Uint16 null;
+    unsigned short null;
     SDL_version compile_version;
 
     printf("----------\n"
@@ -269,7 +269,7 @@ boolean ASM_PlayMusic(char* musfile)
 //      Sound - iterates through each channel and sets volume accordingly
 //      Music - just calls Mix_VolumeMusic
 
-void ASM_ChangeVolume(Uint8 sndvolume, Uint8 musvolume)
+void ASM_ChangeVolume(unsigned char sndvolume, unsigned char musvolume)
 {
     ASM_AbortIfClosed;
 
@@ -282,7 +282,7 @@ void ASM_ChangeVolume(Uint8 sndvolume, Uint8 musvolume)
 // ASM_ReturnVolume
 // Takes two byte pointers and returns the internal sound and music volumes using them
 
-void ASM_ReturnVolume(Uint8* retsnd, Uint8* retmus)
+void ASM_ReturnVolume(unsigned char* retsnd, unsigned char* retmus)
 {
     *retsnd = 0;
     *retmus = 0;
@@ -451,7 +451,7 @@ void ASM_Uncache(sample sound)
 // Play a sound in memory loaded with ASM_Cache or Mix_LoadWAV
 // Returns -1 on errors or channel number
 
-int ASM_PlaySound(sample sound, int angle, Uint8 distance, boolean ambient)
+int ASM_PlaySound(sample sound, int angle, unsigned char distance, boolean ambient)
 {
     ASM_AbortIfClosed - 1;
 

@@ -469,17 +469,17 @@ int pvsnfmt_int(pvsnfmt_vars *info, pvsnfmt_intparm_t *ip) {
         switch(fmt) {
         case 'd':
         case 'i':
-            number = (signed short int) ip->i;
+            number = (int) ip->i;
             break;
         case 'u':
         case 'o':
         case 'x':
         case 'X':
-            unumber = (unsigned short int) ip->i;
+            unumber = (unsigned int)ip->i;
             numbersigned = 0;
             break;
         case 'p':
-            unumber = (unsigned short int)(ip->p); // FIXME: Not x64 friendly
+            unumber = (unsigned int)ip->p; // FIXME: Not x64 friendly
             numbersigned = 0;
         }
         break;
@@ -497,7 +497,7 @@ int pvsnfmt_int(pvsnfmt_vars *info, pvsnfmt_intparm_t *ip) {
             numbersigned = 0;
             break;
         case 'p':
-            unumber = (unsigned short int)(ip->p); // FIXME: Not x64 friendly
+            unumber = (unsigned int)(ip->p); // FIXME: Not x64 friendly
             numbersigned = numbersigned;
         }
         break;
@@ -511,11 +511,11 @@ int pvsnfmt_int(pvsnfmt_vars *info, pvsnfmt_intparm_t *ip) {
         case 'o':
         case 'x':
         case 'X':
-            unumber = (unsigned short int) ip->i;
+            unumber = (unsigned int) ip->i;
             numbersigned = 0;
             break;
         case 'p':
-            unumber = (unsigned short int)(ip->p); // FIXME: Not x64 friendly
+            unumber = (unsigned int)(ip->p); // FIXME: Not x64 friendly
             numbersigned = 0;
         }
     } /* switch fmt to retrieve number */

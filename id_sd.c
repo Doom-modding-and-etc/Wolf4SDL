@@ -115,7 +115,7 @@ static boolean YM3812Init(int numChips, int clock, int rate)
     return false;
 }
 
-static void YM3812Write(opl3_chip which, uint32_t reg, uint8_t val)
+static void YM3812Write(opl3_chip which, unsigned int reg, unsigned char val)
 {
     OPL3_WriteReg(&which, reg, val);
 }
@@ -265,10 +265,10 @@ extern PCM m_dat[4];
 static Mix_Chunk* SoundChunks[STARTMUSIC - STARTDIGISOUNDS];
 uintptr_t lowsound = (uintptr_t)0x002C0000;
 #endif
-extern void	satPlayMusic(Uint8 track);
+extern void	satPlayMusic(unsigned char track);
 extern void	satStopMusic(void);
 extern 	void sound_cdda(int track, int loop);
-short	load_adx(Sint8* filename);
+short	load_adx(char* filename);
 #endif
 
 void Delay (int wolfticks)
@@ -322,15 +322,15 @@ SDL_ShutPC(void)
 // Adapted from Chocolate Doom (chocolate-doom/pcsound/pcsound_sdl.c)
 #define SQUARE_WAVE_AMP 0x2000
 
-static void SDL_PCMixCallback(void *udata, Uint8 *stream, int len)
+static void SDL_PCMixCallback(void *udata, unsigned char*stream, int len)
 {
     static int current_remaining = 0;
     static int current_freq = 0;
     static int phase_offset = 0;
 
-    Sint16 *leftptr;
-    Sint16 *rightptr;
-    Sint16 this_value;
+    short *leftptr;
+    short *rightptr;
+    short this_value;
     int oldfreq;
     int i;
     int nsamples;
@@ -339,8 +339,8 @@ static void SDL_PCMixCallback(void *udata, Uint8 *stream, int len)
 
     nsamples = len / 4;
 
-    leftptr = (Sint16 *) stream;
-    rightptr = ((Sint16 *) stream) + 1;
+    leftptr = (short *) stream;
+    rightptr = ((short *) stream) + 1;
 
     // Fill the output buffer
 
@@ -480,7 +480,7 @@ void SD_SetPosition(int channel, int leftpos, int rightpos)
 }
 
 
-Sint16 GetSample(float csample, unsigned char *samples, int size)
+short GetSample(float csample, unsigned char *samples, int size)
 {
     float s0=0, s1=0, s2=0;
     int cursample = (int) csample;
@@ -495,7 +495,7 @@ Sint16 GetSample(float csample, unsigned char *samples, int size)
     intval = (int) (val * 256);
     if(intval < -32768) intval = -32768;
     else if(intval > 32767) intval = 32767;
-    return (Sint16) intval;
+    return (short) intval;
 }
 #endif
 
@@ -522,7 +522,7 @@ void SD_PrepareSound(int which)
 #ifndef USE_ADX				
             //			load_8bit_pcm((Sint8*)filename, ORIGSAMPLERATE);
 #else
-            load_adx((Sint8*)filename);
+            load_adx((char*)filename);
 #endif			
         }
     }
@@ -530,7 +530,7 @@ void SD_PrepareSound(int which)
     Sint32 fileId;
     long fileSize;
 
-    fileId = GFS_NameToId((Sint8*)filename);
+    fileId = GFS_NameToId((char*)filename);
 
     fileSize = GetFileSize(fileId);
 
@@ -575,7 +575,7 @@ void SD_PrepareSound(int which)
 	int destsamples = (int)((float)size * (float)param_samplerate
         / (float)ORIGSAMPLERATE);
 	unsigned char *wavebuffer;
-	Sint16 *newsamples;
+	short *newsamples;
 	float cursample;
 	float samplestep;
 	headchunk head = {{'R','I','F','F'}, 0, {'W','A','V','E'},
@@ -601,7 +601,7 @@ void SD_PrepareSound(int which)
 
     // alignment is correct, as wavebuffer comes from malloc
     // and sizeof(headchunk) % 4 == 0 and sizeof(wavechunk) % 4 == 0
-    newsamples = (Sint16 *)(void *) (wavebuffer + sizeof(headchunk)
+    newsamples = (short *)(void *) (wavebuffer + sizeof(headchunk)
         + sizeof(wavechunk));
     cursample = 0.F;
     samplestep = (float) ORIGSAMPLERATE / (float) param_samplerate;
@@ -1003,7 +1003,7 @@ unsigned int curAlLengthLeft = 0;
 int soundTimeCounter = 5;
 int samplesPerMusicTick;
 
-void SDL_IMFMusicPlayer(void *udata, Uint8 *stream, int len)
+void SDL_IMFMusicPlayer(void *udata, unsigned char *stream, int len)
 {
     int stereolen = len>>1;
     int sampleslen = stereolen>>1;

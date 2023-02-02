@@ -50,11 +50,11 @@ void DrawParallax (void)
     int     x,y;
     unsigned char *dest,*skysource;
     unsigned short    texture;
-    int16_t angle;
-    int16_t skypage,curskypage;
-    int16_t lastskypage;
-    int16_t xtex;
-    int16_t toppix;
+    short angle;
+    short skypage,curskypage;
+    short lastskypage;
+    short xtex;
+    short toppix;
 
     skypage = GetParallaxStartTexture();
     skypage += USE_PARALLAX - 1;

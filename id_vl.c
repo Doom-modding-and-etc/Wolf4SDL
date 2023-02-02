@@ -36,52 +36,52 @@
 
 #if defined(_arch_dreamcast)
 boolean usedoublebuffering = false;
-uint32_t screenWidth = 640;
-uint32_t screenHeight = 400;
+unsigned int screenWidth = 640;
+unsigned int screenHeight = 400;
 #elif defined(GP2X)
 boolean usedoublebuffering = true;
-uint32_t screenWidth = 320;
-uint32_t screenHeight = 240;
+unsigned int screenWidth = 320;
+unsigned int screenHeight = 240;
 #if defined(GP2X_940)
-uint32_t      screenBits = 8;
+unsigned int     screenBits = 8;
 #else
-uint32_t      screenBits = 16;
+unsigned int      screenBits = 16;
 #endif
 //WIP:
 #elif defined(PS2)
 boolean usedoublebuffering = true;
-uint32_t screenWidth = 640;
-uint32_t screenHeight = 448;
-uint32_t screenBits = 8;
+unsigned int screenWidth = 640;
+unsigned int screenHeight = 448;
+unsigned int screenBits = 8;
 #elif defined(N3DS)
 boolean usedoublebuffering = true;
-uint32_t screenWidth = 400;
-uint32_t screenHeight = 240;
-uint32_t screenBits = 32;      // use "best" color depth according to libSDL  // ADDEDFIX 0
+unsigned int screenWidth = 400;
+unsigned int screenHeight = 240;
+unsigned int screenBits = 32;      // use "best" color depth according to libSDL  // ADDEDFIX 0
 #else
 boolean usedoublebuffering = true;
 #if defined(SCALE2X) 
-uint32_t screenWidth = 320;
-uint32_t screenHeight = 200;
-static uint32_t scaledScreenWidth = 640;
-static uint32_t scaledScreenHeight = 405;
+unsigned int screenWidth = 320;
+unsigned int screenHeight = 200;
+static unsigned int scaledScreenWidth = 640;
+static unsigned int scaledScreenHeight = 405;
 #else
 #ifdef SEGA_SATURN
-uint32_t screenWidth = SATURN_WIDTH;
-uint32_t screenHeight = SATURN_HEIGHT;
+unsigned int screenWidth = SATURN_WIDTH;
+unsigned int screenHeight = SATURN_HEIGHT;
 #else
-uint32_t screenWidth = 640;
-uint32_t screenHeight = 405;
+unsigned int screenWidth = 640;
+unsigned int screenHeight = 405;
 #endif
 #endif
-uint32_t screenBits = 8;      // use "best" color depth according to libSDL
+unsigned int screenBits = 8;      // use "best" color depth according to libSDL
 #endif
 
 SDL_Surface *screen = NULL;
 SDL_Surface* screenBuffer = NULL;
 
-uint32_t screenPitch;
-uint32_t bufferPitch;
+unsigned int screenPitch;
+unsigned int bufferPitch;
 
 #if SDL_MAJOR_VERSION == 2
 SDL_Window *window;
@@ -98,7 +98,7 @@ boolean	 screenfaded;
 #ifndef SEGA_SATURN
 unsigned bordercolor;
 
-uint32_t *ylookup;
+unsigned int *ylookup;
 
 SDL_Color palette1[256], palette2[256];
 #endif
@@ -170,7 +170,7 @@ void VL_SetVGAPlaneMode (void)
 {
     int i;
 #if SDL_MAJOR_VERSION == 2
-    uint32_t a,r,g,b;
+    unsigned int a,r,g,b;
 #endif
 #ifdef SPEAR
     const char* title = "Spear of Destiny";
@@ -279,7 +279,7 @@ void VL_SetVGAPlaneMode (void)
     window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight,
     (fullscreen ? SDL_WINDOW_FULLSCREEN : 0 | SDL_WINDOW_OPENGL));
 #endif
-    SDL_PixelFormatEnumToMasks (SDL_PIXELFORMAT_ARGB8888, &screenBits, &r, &g, &b, &a);
+    SDL_PixelFormatEnumToMasks (SDL_PIXELFORMAT_ARGB8888, (int*)&screenBits, &r, &g, &b, &a);
 
     screen = SDL_CreateRGBSurface(0,screenWidth,screenHeight,screenBits,r,g,b,a);
 
@@ -351,9 +351,9 @@ void VL_SetVGAPlaneMode (void)
     scaleFactor = screenWidth/320;
     if(screenHeight/200 < (unsigned int)scaleFactor) scaleFactor = screenHeight/200;
 
-    ylookup = SafeMalloc(screenHeight * sizeof(*ylookup));
-    pixelangle = SafeMalloc(screenWidth * sizeof(*pixelangle));
-    wallheight = SafeMalloc(screenWidth * sizeof(*wallheight));
+    ylookup = (unsigned int*)SafeMalloc(screenHeight * sizeof(*ylookup));
+    pixelangle = (short*)SafeMalloc(screenWidth * sizeof(*pixelangle));
+    wallheight = (short*)SafeMalloc(screenWidth * sizeof(*wallheight));
 #if defined(USE_FLOORCEILINGTEX) || defined(USE_CLOUDSKY)
     spanstart = SafeMalloc((screenHeight / 2) * sizeof(*spanstart));
 #endif
@@ -440,9 +440,9 @@ void VL_SetColor	(int color, int red, int green, int blue)
    
     SDL_Color col = 
     { 
-        (Uint8) red, 
-        (Uint8) green, 
-        (Uint8) blue 
+        (unsigned char) red,
+        (unsigned char) green,
+        (unsigned char) blue
     };
     
     curpal[color] = col;
@@ -869,7 +869,7 @@ void VL_DePlaneVGA (unsigned char *source, int width, int height)
     if (width & 3)
         Quit ("DePlaneVGA: width not divisible by 4!");
 
-    temp = SafeMalloc(size);
+    temp = (unsigned char*)SafeMalloc(size);
 
 //
 // munge pic into the temp buffer
