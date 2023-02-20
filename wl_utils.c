@@ -13,7 +13,7 @@
 =
 ===================
 */
-void *wsafe_malloc (size_t size, const char *fname, unsigned int line)
+void *safe_malloc (size_t size, const char *fname, unsigned int line)
 {
     void *ptr;
 

@@ -69,13 +69,13 @@
 #endif
 #include "3rdparty/fixedptc.h"
 #include "id_w3swrap.h"
-
+#ifndef __GNUC__
 #ifdef _WIN64
 typedef unsigned long long uintptr_t;
 #else
 typedef unsigned int uintptr_t;
 #endif
-
+#endif
 #ifndef _WIN32
 #define O_BINARY 0
 #endif

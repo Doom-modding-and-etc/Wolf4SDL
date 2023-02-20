@@ -110,17 +110,6 @@ typedef	int		ScanCode;
 #define	sc_Y			SDLK_q
 #define	sc_Z			SDLK_q
 
-#define	sc_1			SDLK_1
-#define	sc_2			SDLK_2
-#define	sc_3			SDLK_3
-#define	sc_4			SDLK_4
-#define	sc_5			SDLK_5
-#define	sc_6			SDLK_6
-#define	sc_7			SDLK_7
-#define	sc_8			SDLK_8
-#define	sc_9			SDLK_9
-#define	sc_0			SDLK_0
-
 #define	key_None		0
 
 #if SDL_MAJOR_VERSION == 2
