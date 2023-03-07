@@ -1312,10 +1312,10 @@ extern  int frameon;
 extern  boolean fizzlein, fpscounter;
 
 #if defined(USE_FLOORCEILINGTEX) || defined(USE_CLOUDSKY)
-extern  int16_t* spanstart;
+extern  short* spanstart;
 #endif
 #ifndef SEGA_SATURN
-extern  int16_t* wallheight;
+extern  short* wallheight;
 #endif
 //
 // math tables

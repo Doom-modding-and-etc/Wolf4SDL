@@ -181,7 +181,6 @@ int  Confirm(const char *string);
 void Message(const char *string);
 void CheckPause(void);
 void ShootSnd(void);
-void CheckSecretMissions(void);
 void BossKey(void);
 
 void DrawGun(CP_iteminfo *item_i,CP_itemtype *items,int x,int *y,int which,int basey,void (*routine)(int w));
@@ -230,7 +229,6 @@ int  CP_LoadGame(int quick);
 int  CP_SaveGame(int quick);
 int CP_Control(int);
 int CP_ChangeView(int);
-int CP_ExitOptions(int);
 int CP_Quit(int);
 int CP_ViewScores(int);
 int  CP_EndGame(int);

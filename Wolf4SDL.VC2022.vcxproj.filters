@@ -157,9 +157,6 @@
     <None Include="docs\README-Switch.md">
       <Filter>docs</Filter>
     </None>
-    <None Include="docs\Makefile.3ds">
-      <Filter>docs</Filter>
-    </None>
     <None Include="docs\README-3DS.md">
       <Filter>docs</Filter>
     </None>

@@ -66,9 +66,6 @@ extern	HighScore	Scores[];
 
 void            US_Startup(void);
 void            US_Shutdown(void);
-void			US_TextScreen(void),
-				US_UpdateTextScreen(void),
-				US_FinishTextScreen(void);
 void			US_DrawWindow(unsigned short x, unsigned short y, unsigned short w, unsigned short h);
 void			US_CenterWindow(unsigned short, unsigned short);
 void			US_SaveWindow(WindowRec *win),
@@ -85,16 +82,10 @@ void			US_CPrintf(const char *formatStr, ...);
 
 void			US_PrintUnsigned(unsigned int n);
 void			US_PrintSigned(int n);
-void			US_StartCursor(void),
-				US_ShutCursor(void);
-void			US_CheckHighScore(int score, unsigned short other);
-void			US_DisplayHighScores(int which);
-extern	boolean	US_UpdateCursor(void);
 boolean         US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
                              int maxchars,int maxwidth);
 
 void	        USL_PrintInCenter(const char *s,Rect r);
-char 	        *USL_GiveSaveName(unsigned short game);
 
 void            US_InitRndT(int randomize);
 int             US_RndT();

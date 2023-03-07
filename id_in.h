@@ -508,15 +508,10 @@ int KeyboardLookup(int key);
 extern	void		IN_Startup(void), IN_Shutdown(void);
 extern	void		IN_ClearKeysDown(void);
 extern	void		IN_ReadControl(int, ControlInfo*);
-extern	void		IN_GetJoyAbs(unsigned short joy, unsigned short* xp, unsigned short* yp);
-extern	void		IN_SetupJoy(unsigned short joy, unsigned short minx, unsigned short maxx,
-	unsigned short miny, unsigned short maxy);
-extern	void		IN_StopDemo(void), IN_FreeDemoBuffer(void),
-IN_Ack(void);
+extern  void        IN_Ack(void);
 extern	boolean		IN_UserInput(unsigned int delay);
 extern	char		IN_WaitForASCII(void);
 extern	ScanCode	IN_WaitForKey(void);
-extern	unsigned short		IN_GetJoyButtonsDB(unsigned short joy);
 extern	const char* IN_GetScanName(ScanCode);
 
 void    IN_WaitAndProcessEvents();
@@ -525,7 +520,6 @@ void    IN_ProcessEvents();
 int     IN_MouseButtons(void);
 
 boolean IN_JoyPresent();
-void    IN_SetJoyCurrent(int joyIndex);
 int     IN_JoyButtons(void);
 void    IN_GetJoyDelta(int* dx, int* dy);
 void    IN_GetJoyFineDelta(int* dx, int* dy);

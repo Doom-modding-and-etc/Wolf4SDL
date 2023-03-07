@@ -59,12 +59,10 @@ extern SDL_Color gamepal[256];
 
 void VL_DePlaneVGA (unsigned char *source, int width, int height);
 void VL_SetVGAPlaneMode (void);
-void VL_SetTextMode (void);
 void VL_Shutdown (void);
 
 void VL_ConvertPalette(unsigned char *srcpal, SDL_Color *destpal, int numColors);
 void VL_FillPalette (int red, int green, int blue);
-void VL_SetColor    (int color, int red, int green, int blue);
 void VL_GetColor    (int color, int *red, int *green, int *blue);
 void VL_SetPalette  (SDL_Color *palette, boolean forceupdate);
 void VL_GetPalette  (SDL_Color *palette);
@@ -84,7 +82,6 @@ void VL_Vlin            (int x, int y, int height, int color);
 void VL_BarScaledCoord  (int scx, int scy, int scwidth, int scheight, int color);
 void VL_Bar             (int x, int y, int width, int height, int color);
 
-void VL_DrawPicBare             (int x, int y, unsigned char *pic, int width, int height);
 void VL_ScreenToScreen          (SDL_Surface *source, SDL_Surface *dest);
 void VL_MemToScreenScaledCoord  (unsigned char *source, int width, int height, int scx, int scy);
 void VL_MemToScreenScaledCoord2  (unsigned char *source, int origwidth, int origheight, int srcx, int srcy,

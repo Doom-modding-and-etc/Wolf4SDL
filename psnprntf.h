@@ -1,6 +1,7 @@
 #ifndef PSNPRINTF_H
 #define PSNPRINTF_H
 
+#ifdef PSNPRNTF
 int psnprintf(char* str, unsigned int n, const char* format, ...);
 int pvsnprintf(char* str, unsigned int n, const char* format, va_list ap);
 
@@ -46,5 +47,5 @@ enum
 };
  /* Portable strnlen function (doesn't exist on all systems!) */
 unsigned int pstrnlen(const char* s, unsigned int count);
-
+#endif
 #endif /* ifdef PSNPRINTF_H */

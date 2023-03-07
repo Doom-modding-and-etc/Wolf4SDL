@@ -18,14 +18,14 @@
 
 typedef struct
 {
-	int16_t width,height;
+	short width,height;
 } pictabletype;
 
 
 typedef struct
 {
-	int16_t height;
-	int16_t location[256];
+	short height;
+	short location[256];
 	char width[256];
 } fontstruct;
 
@@ -51,12 +51,8 @@ extern	int             px,py;
 void VWB_DrawPropString	 (const char *string);
 
 void VWB_DrawTile8 (int x, int y, int tile);
-void VWB_DrawTile8M (int x, int y, int tile);
-void VWB_DrawTile16 (int x, int y, int tile);
-void VWB_DrawTile16M (int x, int y, int tile);
 void VWB_DrawPic (int x, int y, int chunknum);
 void VWB_DrawPicScaledCoord (int x, int y, int chunknum);
-void VWB_DrawMPic(int x, int y, int chunknum);
 void VWB_Bar (int x, int y, int width, int height, int color);
 #define VWB_BarScaledCoord VL_BarScaledCoord
 void VWB_Plot (int x, int y, int color);
