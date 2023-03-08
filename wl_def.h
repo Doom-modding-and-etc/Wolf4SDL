@@ -62,7 +62,7 @@
 #endif
 
 #if defined(GP2X) || defined(GP2X_940)
-#include "Plataform/GP2X/gp2x.h"
+#include "Platform/GP2X/gp2x.h"
 #endif
 #ifdef PS2
 #include "Platform/PS2/ps2_main.h"
@@ -70,10 +70,12 @@
 #include "3rdparty/fixedptc.h"
 #include "id_w3swrap.h"
 #ifndef __GNUC__
+#ifndef _MSC_VER
 #ifdef _WIN64
 typedef unsigned long long uintptr_t;
 #else
 typedef unsigned int uintptr_t;
+#endif
 #endif
 #endif
 #ifndef _WIN32

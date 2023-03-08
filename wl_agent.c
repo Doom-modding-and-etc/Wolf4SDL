@@ -60,15 +60,6 @@ struct atkinf
 
 //===========================================================================
 
-//----------
-
-void Attack(void);
-void Use(void);
-void Search(objtype* ob);
-void SelectWeapon(void);
-void SelectItem(void);
-
-//----------
 
 boolean TryMove(objtype* ob);
 void T_Player(objtype* ob);

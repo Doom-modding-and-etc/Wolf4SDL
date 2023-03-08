@@ -206,7 +206,6 @@ extern char texture_list[SPR_NULLSPRITE];
 
 
 void CenterWindow (unsigned short w, unsigned short h);
-void InitObjList (void);
 void RemoveObj (objtype * gone);
 void PollControls (void);
 int StopMusic (void);

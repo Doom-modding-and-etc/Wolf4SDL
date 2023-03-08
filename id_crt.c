@@ -88,7 +88,7 @@ void CRT_DAC(void)
     unsigned char* pixelPointer = coloredFrameBuffer;
     
     for (i = 0; i < 320 * 200; i++) {
-        uint8_t paletteIndex;
+        unsigned char paletteIndex;
         paletteIndex = ((unsigned char*)screen->pixels)[i];
         *pixelPointer++ = curpal[paletteIndex].r;
         *pixelPointer++ = curpal[paletteIndex].g;
