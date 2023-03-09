@@ -793,7 +793,7 @@ IN_ClearKeysDown(void)
 //
 ///////////////////////////////////////////////////////////////////////////
 void
-IN_ReadControl(int player, ControlInfo* info)
+IN_ReadControl(ControlInfo* info)
 {
     unsigned short		buttons;
     int			dx, dy;

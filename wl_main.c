@@ -150,7 +150,7 @@ void ReadConfig(void)
     SMMode  sm;
     SDSMode sds;
 
-    char configpath[300];
+    const char* configpath[300];
 	const int file = w3sopen(configpath, O_RDONLY | O_BINARY);
 #ifdef _arch_dreamcast
     DC_LoadFromVMU(configname);
@@ -306,7 +306,7 @@ noconfig:
 
 void WriteConfig(void)
 {
-    char configpath[300];
+    const char *configpath[300];
 	const int file = w3sopen(configpath, O_CREAT | O_WRONLY | O_BINARY, 0644);
 #ifdef _arch_dreamcast
     fs_unlink(configname);

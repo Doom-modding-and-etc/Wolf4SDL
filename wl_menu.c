@@ -3307,7 +3307,7 @@ void SetupSaveGames()
 {
     int i;
     char name[13];
-    char savepath[300];
+    const char* savepath[300];
 	const int handle = w3sopen(savepath, O_RDONLY | O_BINARY);
 
     strcpy(name, SaveName);
@@ -3749,7 +3749,7 @@ void ReadAnyControl(ControlInfo *ci)
 {
     int mouseactive = 0;
     static int totalMousex = 0, totalMousey = 0;
-    IN_ReadControl (0, ci);
+    IN_ReadControl(ci);
 
     if (mouseenabled && IN_IsInputGrabbed())
     {

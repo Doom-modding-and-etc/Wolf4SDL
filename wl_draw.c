@@ -908,7 +908,12 @@ void DrawScaleds (void)
             Transform3DShape(farthest->transsprite);
         else
 #endif
+#ifdef USE_SHADING
             ScaleShape(farthest->viewx, farthest->shapenum, farthest->viewheight, farthest->flags);
+#else
+            ScaleShape(farthest->viewx, farthest->shapenum, farthest->viewheight);
+#endif
+
 
         farthest->viewheight = 32000;
     }

@@ -1361,8 +1361,11 @@ typedef struct
     // table data after dataofs[rightpix-leftpix+1]
 } compshape_t;
 
-
+#ifdef USE_SHADING
 void ScaleShape(int xcenter, int shapenum, int height, unsigned int flags);
+#else
+void ScaleShape(int xcenter, int shapenum, int height);
+#endif
 void SimpleScaleShape(int xcenter, int shapenum, int height);
 #ifdef USE_DIR3DSPR
 void Transform3DShape(statobj_t* statptr);

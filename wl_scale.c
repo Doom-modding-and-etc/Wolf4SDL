@@ -119,7 +119,7 @@ inline void ScaleShapeDemo(int xcenter, int shapenum, unsigned width)
     user_sprite.XB = width;
     user_sprite.YB = width * height / 64;
     user_sprite.GRDA = 0;
-    slSetSprite(&user_sprite, toFIXED(10));	// à remettre // ennemis et objets
+    slSetSprite(&user_sprite, toFIXED(10));	// ï¿½ remettre // ennemis et objets
     //--------------------------------------------------------------------------------------------	
 }
 inline void ScaleShape(int xcenter, int shapenum, unsigned width)
@@ -169,7 +169,7 @@ inline void ScaleShape(int xcenter, int shapenum, unsigned width)
     user_sprite.XB = pixwidth;
     user_sprite.YB = pixwidth * height / 64;
     user_sprite.GRDA = 0;
-    slSetSprite(&user_sprite, toFIXED(0 + (SATURN_SORT_VALUE - pixwidth / 2)));	// à remettre // ennemis et objets
+    slSetSprite(&user_sprite, toFIXED(0 + (SATURN_SORT_VALUE - pixwidth / 2)));	// ï¿½ remettre // ennemis et objets
     //--------------------------------------------------------------------------------------------	
 #else
     unsigned char* vbuf = LOCK() + screenofs;
@@ -261,7 +261,11 @@ inline void ScaleShape(int xcenter, int shapenum, unsigned width)
 ===================
 */
 
+#ifdef USE_SHADING
 void ScaleShape (int xcenter, int shapenum, int height, unsigned int flags)
+#else
+void ScaleShape (int xcenter, int shapenum, int height)
+#endif
 {
     int         i;
     compshape_t *shape;

@@ -507,7 +507,7 @@ int KeyboardLookup(int key);
 // DEBUG - put names in prototypes
 extern	void		IN_Startup(void), IN_Shutdown(void);
 extern	void		IN_ClearKeysDown(void);
-extern	void		IN_ReadControl(int, ControlInfo*);
+extern	void		IN_ReadControl(ControlInfo*);
 extern  void        IN_Ack(void);
 extern	boolean		IN_UserInput(unsigned int delay);
 extern	char		IN_WaitForASCII(void);

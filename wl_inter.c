@@ -1565,7 +1565,8 @@ CheckHighScore (int score, unsigned short other)
         VWB_Bar (PrintX - 2, PrintY - 2, 145, 15, 0x9c);
 #if !defined(USE_SPRITES) && !defined(SEGA_SATURN)            
         VW_UpdateScreen();
-#endif        backcolor = 0x9c;
+#endif        
+        backcolor = 0x9c;
         fontcolor = 15;
 #ifndef SEGA_SATURN
         US_LineInput (PrintX, PrintY, Scores[n].name, 0, true, MaxHighName, 130);

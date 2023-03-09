@@ -17,7 +17,7 @@ typedef struct
 {
     short      picnum;
     wl_stat_t  type;
-    uint32_t   specialFlags;    // they are ORed to the statobj_t flags
+    unsigned int   specialFlags;    // they are ORed to the statobj_t flags
 } statinfo_t;
 
 statinfo_t statinfo[] =
