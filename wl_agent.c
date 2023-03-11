@@ -172,6 +172,35 @@ void ControlMovement(objtype* ob)
         else
             Thrust(angle, BASEMOVE * MOVESCALE * tics);
     }
+#ifdef EXTRACONTROLS
+    if (buttonstate[bt_moveforward])
+    {
+        int delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
+        controly = delta;
+        angle = ob->angle - ANGLES;
+        if (angle < 0)
+            angle += ANGLES;
+
+        if (controly)
+            Thrust(angle, RUNMOVE * MOVESCALE * tics);
+        else
+            Thrust(angle, BASEMOVE * MOVESCALE * tics);
+    }
+
+    if (buttonstate[bt_movebackward])
+    {
+        int delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
+        controly = delta;
+        angle = ob->angle - ANGLES;
+        if (angle < 0)
+            angle =- ANGLES;
+
+        if (controly)
+            Thrust(angle, RUNMOVE * MOVESCALE * tics);
+        else
+            Thrust(angle, BASEMOVE * MOVESCALE * tics);
+    }
+#endif
 
     //
     // side to side move

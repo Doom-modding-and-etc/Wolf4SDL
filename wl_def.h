@@ -939,14 +939,22 @@ enum
     bt_readypistol,
     bt_readymachinegun,
     bt_readychaingun,
+#ifdef EXTRACONTROLS
+    bt_moveforward,
+    bt_movebackward,
+    bt_strafeleft,
+    bt_straferight,
+#endif
     bt_nextweapon,
     bt_prevweapon,
     bt_esc,
     bt_pause,
+#ifndef EXTRACONTROLS
     bt_strafeleft,
     bt_straferight,
     bt_moveforward,
     bt_movebackward,
+#endif
     bt_turnleft,
     bt_turnright,
     NUMBUTTONS
@@ -1186,6 +1194,9 @@ extern  boolean        mapseen[MAPSIZE][MAPSIZE];
 #endif
 //todo saturn: noclip does not affect anything...
 extern  boolean  singlestep, godmode, noclip, ammocheat, mapreveal;
+#ifdef EXTRACONTROLS
+extern  int         controlstrafe;
+#endif
 #ifndef SEGA_SATURN
 extern  int  extravbls;
 #endif
@@ -1204,6 +1215,9 @@ extern int gamecontrolstrafe;
 //
 #ifndef SEGA_SATURN
 extern  boolean     mouseenabled, joystickenabled;
+#endif
+#ifdef EXTRACONTROLS
+extern  boolean     mousemoveenabled;
 #endif
 extern  int         dirscan[4];
 extern  int         buttonscan[NUMBUTTONS];

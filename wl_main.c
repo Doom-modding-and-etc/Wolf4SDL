@@ -53,6 +53,9 @@ extern unsigned char signon[];
 
 =============================================================================
 */
+#ifdef EXTRACONTROLS
+boolean     mousemoveenabled;
+#endif // EXTRACONTROLS
 
 char    str[80];
 int     dirangle[9] = {0,ANGLES/8,2*ANGLES/8,3*ANGLES/8,4*ANGLES/8,
@@ -168,9 +171,14 @@ void ReadConfig(void)
         // valid config file
         //
         unsigned short tmp;
+#ifndef EXTRACONTROLS
 		boolean dummyJoypadEnabled;
-		boolean dummyJoystickProgressive;
-		int dummyJoystickPort = 0;
+        boolean dummyJoystickProgressive;
+        int dummyJoystickPort = 0;
+#else 
+        boolean dummyMouseMoveEnabled;
+#endif
+
         w3sread(file,&tmp,sizeof(tmp));
         if(tmp!=0xfefa)
         {
@@ -184,21 +192,24 @@ void ReadConfig(void)
         w3sread(file,&sds,sizeof(sds));
 
         w3sread(file,&mouseenabled,sizeof(mouseenabled));
+#ifndef EXTRACONTROLS
         w3sread(file,&joystickenabled,sizeof(joystickenabled));
-        
         w3sread(file,&dummyJoypadEnabled,sizeof(dummyJoypadEnabled));
-        
         w3sread(file,&dummyJoystickProgressive,sizeof(dummyJoystickProgressive));
-        
         w3sread(file,&dummyJoystickPort,sizeof(dummyJoystickPort));
-
+#endif
         w3sread(file,dirscan,sizeof(dirscan));
         w3sread(file,buttonscan,sizeof(buttonscan));
         w3sread(file,buttonmouse,sizeof(buttonmouse));
+#ifndef EXTRACONTROLS
         w3sread(file,buttonjoy,sizeof(buttonjoy));
-
+#endif
         w3sread(file,&viewsize,sizeof(viewsize));
         w3sread(file,&mouseadjustment,sizeof(mouseadjustment));
+#ifdef EXTRACONTROLS
+        w3sread(file, &mousemoveenabled, sizeof(mousemoveenabled));
+        w3sread(file, &dummyMouseMoveEnabled, sizeof(dummyMouseMoveEnabled));
+#endif
 #ifdef VIEASM
         w3sread(file, &soundvol, sizeof(soundvol));
         w3sread(file, &musicvol, sizeof(musicvol));
@@ -228,10 +239,18 @@ void ReadConfig(void)
         {
             joystickenabled = true;
         }
-
+#ifdef EXTRACONTROLS
+        if (mousemoveenabled)
+        {
+            mousemoveenabled = true;
+        }
+#endif // EXTRACONTROLS
         if (!MousePresent)
         {
             mouseenabled = false;
+#ifdef EXTRACONTROLS
+            mousemoveenabled = false;
+#endif
         }
         if (!IN_JoyPresent())
             joystickenabled = false;
@@ -273,7 +292,9 @@ noconfig:
         if (MousePresent)
         {
             mouseenabled = true;
-
+#ifdef EXTRACONTROLS
+            mousemoveenabled = true;
+#endif
         }
         if (IN_JoyPresent())
             joystickenabled = true;
@@ -321,9 +342,11 @@ void WriteConfig(void)
     if (file != -1)
     {
         unsigned short tmp=0xfefa;
+#ifndef EXTRACONTROLS
 		boolean dummyJoypadEnabled = false;
 		boolean dummyJoystickProgressive = false;
 		int dummyJoystickPort = 0;
+#endif
         w3swrite(file,&tmp,sizeof(tmp));
         w3swrite(file,Scores,sizeof(HighScore) * MaxScores);
 
@@ -332,22 +355,23 @@ void WriteConfig(void)
         w3swrite(file,&DigiMode,sizeof(DigiMode));
 
         w3swrite(file,&mouseenabled,sizeof(mouseenabled));
+#ifndef EXTRACONTROLS
         w3swrite(file,&joystickenabled,sizeof(joystickenabled));
-       
         w3swrite(file,&dummyJoypadEnabled,sizeof(dummyJoypadEnabled));
-
-        w3swrite(file,&dummyJoystickProgressive,sizeof(dummyJoystickProgressive));
-        
+        w3swrite(file,&dummyJoystickProgressive,sizeof(dummyJoystickProgressive));  
         w3swrite(file,&dummyJoystickPort,sizeof(dummyJoystickPort));
-
+#endif
         w3swrite(file,dirscan,sizeof(dirscan));
         w3swrite(file,buttonscan,sizeof(buttonscan));
         w3swrite(file,buttonmouse,sizeof(buttonmouse));
+#ifndef EXTRACONTROLS
         w3swrite(file,buttonjoy,sizeof(buttonjoy));
-
+#endif
         w3swrite(file,&viewsize,sizeof(viewsize));
         w3swrite(file,&mouseadjustment,sizeof(mouseadjustment));
-
+#ifdef EXTRACONTROLS
+        w3swrite(file, &mousemoveenabled, sizeof(mousemoveenabled));
+#endif // EXTRACONTROLS
 #ifdef VIEASM
         w3swrite(file, &soundvol, sizeof(soundvol));
         w3swrite(file, &musicvol, sizeof(musicvol));

@@ -86,7 +86,13 @@ int buttonscan[NUMBUTTONS] =
     sc_1, 
     sc_2, 
     sc_3, 
-    sc_4 
+    sc_4, 
+#ifdef EXTRACONTROLS
+    sc_W,
+    sc_S,
+    sc_A, 
+    sc_D, 
+#endif
 };
 
 #ifndef SEGA_SATURN
@@ -199,6 +205,10 @@ int controlx, controly;         // range from -100 to 100 per tic
 #if SDL_MAJOR_VERSION == 2
 int gamecontrolstrafe;
 #endif
+
+#ifdef EXTRACONTROLS
+int controlstrafe;
+#endif // EXTRACONTROLS
 boolean buttonstate[NUMBUTTONS];
 
 int lastgamemusicoffset = 0;
@@ -424,7 +434,7 @@ void PollMouseButtons (void)
     if (buttons & 4)
         buttonstate[buttonmouse[2]] = true;
 }
-
+#ifndef EXTRACONTROLS
 /*
 ===================
 =
@@ -443,7 +453,7 @@ void PollJoystickButtons (void)
             buttonstate[buttonjoy[i]] = true;
     }
 }
-
+#endif
 #if SDL_MAJOR_VERSION == 2
 /*
 ===================
@@ -465,6 +475,7 @@ void PollGameControllerButtons(void)
     }
 }
 #endif
+
 
 
 /*
@@ -514,7 +525,14 @@ void PollMouseMove (void)
 #endif
 
     controlx += mousexmove * 10 / (13 - mouseadjustment);
+#ifndef EXTRACONTROLS
     controly += mouseymove * 20 / (13 - mouseadjustment);
+#else
+    if (mousemoveenabled)
+    {
+        controly += mouseymove * 20 / (13 - mouseadjustment);
+    }
+#endif
 }
 
 
@@ -660,8 +678,10 @@ void PollControls (void)
 #endif
     if (mouseenabled && IN_IsInputGrabbed())
         PollMouseButtons();
+#ifndef EXTRACONTROLS
     if (joystickenabled)
         PollJoystickButtons();
+#endif
 //
 // get movements
 //
