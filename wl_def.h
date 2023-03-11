@@ -113,42 +113,6 @@ void Quit(const char* errorStr, ...);
 #include "wl_menu.h"
 #include "wl_utils.h"
 
-#ifdef LWLIB
-#include "lw_ai_enemy.h"
-#include "lw_bres.h"
-#include "lw_ctx.h"
-#include "lw_dict.h"
-#include "lw_edit.h"
-#include "lw_fs.h"
-#include "lw_img.h"
-#include "lw_intmap.h"
-#include "lw_maptool.h"
-#include "lw_misc.h"
-#include "lw_protmsg.h"
-#include "lw_pwscan.h"
-#include "lw_strmap.h"
-#include "lw_vec.h"
-#include "wl_ai.h"
-#include "wl_anyactor.h"
-#include "wl_ed.h"
-#include "wl_healthbar.h"
-#include "wl_led.h"
-#include "wl_math.h"
-#include "wl_physics.h"
-#include "wl_polygon.h"
-#endif
-
-#ifdef WOLFRAD
-#include "wolfrad.h"
-#include "wr_level.h"
-#include "wr_lightinfo.h"
-#include "wr_lightmap.h"
-#include "wr_rad.h"
-#include "wr_radmap.h"
-#include "wr_raycaster.h"
-#include "wr_room.h"
-#include "wr_scene.h"
-#endif
 
 /*
 =============================================================================
