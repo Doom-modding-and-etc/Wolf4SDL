@@ -465,15 +465,48 @@ LevelCompleted (void)
 #define VBLWAIT 30
 #define PAR_AMOUNT      500
 #define PERCENT100AMT   10000
+#ifdef MAPCONTROLPARTIME
+    float times_time;
+    int t;
+#else
     typedef struct
     {
         float time;
         char timestr[6];
     } times;
-
+#endif
     int x, i, min, sec, ratio, kr, sr, tr;
     char tempstr[10];
     int bonus, timeleft = 0;
+#ifdef MAPCONTROLPARTIME
+    char   times_timestr[6] = "02:00 ";
+    times_time = 2.0;
+    t = 2;
+    if (tilemap[61][0] >= 1 && tilemap[61][0] <= 20)
+    {
+        t = tilemap[61][0];
+        times_time = t;
+        times_timestr[0] = '0' + t / 10;
+        times_timestr[1] = '0' + t % 10;
+    }
+    switch (tilemap[62][0] >= 1 && tilemap[62][0] <= 3)
+    {
+    case 1: // 15
+        times_time += .25;
+        times_timestr[3] = '1';
+        times_timestr[4] = '5';
+        break;
+    case 2: // 30
+        times_time += .5;
+        times_timestr[3] = '3';
+        break;
+    case 3: // 45
+        times_time += .75;
+        times_timestr[3] = '4';
+        times_timestr[4] = '5';
+        break;
+    }
+#else
     times parTimes[] = {
 #ifndef SPEAR
         //
@@ -585,6 +618,7 @@ LevelCompleted (void)
         {0, "??:??"},           // Secret level 2
 #endif
     };
+#endif
     ClearSplitVWB ();           // set up for double buffering in split screen
 #ifdef SEGA_SATURN   
     slScrTransparent(2);
@@ -612,164 +646,204 @@ LevelCompleted (void)
 #endif
     VWB_DrawPic (0, 16, L_GUYPIC);
 
-#ifndef SPEAR
-    if (gamestate.mapon < 8)
-#else
-    if (gamestate.mapon != 4 && gamestate.mapon != 9 && gamestate.mapon != 15 && gamestate.mapon < 17)
+#ifdef MAPCONTROLLEDLTIME
+    if (tilemap[63][4] >= 1) {
+        Write(14, 2, "Level\ncompleted");
+
+        if (gamestate.health <= 0) {
+            Write(8, 15, "Sorry you died!");
+            Write(8, 18, "50 bonus!");
+            GivePoints(50);
+        }
+        else {
+            Write(8, 15, "Congratulations");
+            Write(8, 18, "15000 bonus!");
+            GivePoints(15000);
+        }
+
+        gamestate.health = 100;
+        VW_UpdateScreen();
+        VW_FadeIn();
+
+    }
+    else {
 #endif
-    {
+#ifndef SPEAR
+        if (gamestate.mapon < 8)
+#else
+        if (gamestate.mapon != 4 && gamestate.mapon != 9 && gamestate.mapon != 15 && gamestate.mapon < 17)
+#endif
+        {
 #ifndef JAPAN
 #ifdef SPANISH
-        Write (14, 2, "piso\ncompletado");
+            Write(14, 2, "piso\ncompletado");
 #else
-        Write (14, 2, "floor\ncompleted");
+            Write(14, 2, "floor\ncompleted");
 #endif
 #ifdef SEGA_SATURN
-        Write(14 + SATURN_ADJUST / 8, 7, STR_BONUS "     0");
-        Write(16 + SATURN_ADJUST / 8, 10, STR_TIME);
-        Write(16 + SATURN_ADJUST / 8, 12, STR_PAR);
+            Write(14 + SATURN_ADJUST / 8, 7, STR_BONUS "     0");
+            Write(16 + SATURN_ADJUST / 8, 10, STR_TIME);
+            Write(16 + SATURN_ADJUST / 8, 12, STR_PAR);
 #else
-        Write (14, 7, STR_BONUS "     0");
-        Write (16, 10, STR_TIME);
-        Write (16, 12, STR_PAR);
+            Write(14, 7, STR_BONUS "     0");
+            Write(16, 10, STR_TIME);
+            Write(16, 12, STR_PAR);
 #endif
 #ifdef SPANISH
 #ifdef SEGA_SATURN
-        Write(11 + SATURN_ADJUST / 8, 14, STR_RAT2KILL);
-        Write(11 + SATURN_ADJUST / 8, 16, STR_RAT2SECRET);
-        Write(11 + SATURN_ADJUST / 8, 18, STR_RAT2TREASURE);
+            Write(11 + SATURN_ADJUST / 8, 14, STR_RAT2KILL);
+            Write(11 + SATURN_ADJUST / 8, 16, STR_RAT2SECRET);
+            Write(11 + SATURN_ADJUST / 8, 18, STR_RAT2TREASURE);
 #else
-        Write (11, 14, STR_RAT2KILL);
-        Write (11, 16, STR_RAT2SECRET);
-        Write (11, 18, STR_RAT2TREASURE);
+            Write(11, 14, STR_RAT2KILL);
+            Write(11, 16, STR_RAT2SECRET);
+            Write(11, 18, STR_RAT2TREASURE);
 #endif
 #else
 #ifdef SEGA_SATURN
-        Write(9 + SATURN_ADJUST / 8, 14, STR_RAT2KILL);
-        Write(5 + SATURN_ADJUST / 8, 16, STR_RAT2SECRET);
-        Write(1 + SATURN_ADJUST / 8, 18, STR_RAT2TREASURE);
+            Write(9 + SATURN_ADJUST / 8, 14, STR_RAT2KILL);
+            Write(5 + SATURN_ADJUST / 8, 16, STR_RAT2SECRET);
+            Write(1 + SATURN_ADJUST / 8, 18, STR_RAT2TREASURE);
 #else
-        Write (9, 14, STR_RAT2KILL);
-        Write (5, 16, STR_RAT2SECRET);
-        Write (1, 18, STR_RAT2TREASURE);
+            Write(9, 14, STR_RAT2KILL);
+            Write(5, 16, STR_RAT2SECRET);
+            Write(1, 18, STR_RAT2TREASURE);
 #endif
 #endif
 
 #ifdef SEGA_SATURN
-        Write(26 + SATURN_ADJUST / 8, 12, parTimes[gamestate.episode * 10 + mapon].timestr);
+            Write(26 + SATURN_ADJUST / 8, 12, parTimes[gamestate.episode * 10 + mapon].timestr);
 #else
-        Write (26, 2, w3sitoa (gamestate.mapon + 1, tempstr, 10));
+            Write(26, 2, w3sitoa(gamestate.mapon + 1, tempstr, 10));
 #endif
 #endif
-
+#ifdef MAPCONTROLPARTIME
+#ifdef SPANISH
+#ifdef SEGA_SATURN
+            Write(30 + SATURN_ADJUST / 8, 12, times_timestr);
+#else
+            Write(30, 12, times_timestr);
+#endif
+#else
+#ifdef SEGA_SATURN
+            Write(26 + SATURN_ADJUST / 8, 12, times_timestr);
+#else
+            Write(26, 12, times_timestr);
+#endif
+#endif
+#else
 #ifdef SPANISH
 #ifdef SEGA_SATURN        
-        Write(30 + SATURN_ADJUST / 8, 12, parTimes[gamestate.episode * 10 + gamestate.mapon].timestr);
+            Write(30 + SATURN_ADJUST / 8, 12, parTimes[gamestate.episode * 10 + gamestate.mapon].timestr);
 #else
-        Write (30, 12, parTimes[gamestate.episode * 10 + gamestate.mapon].timestr);
+            Write(30, 12, parTimes[gamestate.episode * 10 + gamestate.mapon].timestr);
 #endif
 #else
 #ifdef SEGA_SATURN
-        Write(26 + SATURN_ADJUST / 8, 12, parTimes[gamestate.episode * 10 + mapon].timestr);
+            Write(26 + SATURN_ADJUST / 8, 12, parTimes[gamestate.episode * 10 + mapon].timestr);
 
 #else
-        Write (26, 12, parTimes[gamestate.episode * 10 + gamestate.mapon].timestr);
+            Write(26, 12, parTimes[gamestate.episode * 10 + gamestate.mapon].timestr);
 #endif
 #endif
+#endif
 
-        //
-        // PRINT TIME
-        //
-        sec = gamestate.TimeCount / 70;
+            //
+            // PRINT TIME
+            //
+            sec = gamestate.TimeCount / 70;
 
-        if (sec > 99 * 60)      // 99 minutes max
-            sec = 99 * 60;
-
-        if (gamestate.TimeCount < parTimes[gamestate.episode * 10 + gamestate.mapon].time * 4200)
-            timeleft = (int) ((parTimes[gamestate.episode * 10 + gamestate.mapon].time * 4200) / 70 - sec);
-
-        min = sec / 60;
-        sec %= 60;
+            if (sec > 99 * 60)      // 99 minutes max
+                sec = 99 * 60;
+#ifdef MAPCONTROLPARTIME
+            if (gamestate.TimeCount < times_time * 4200)
+                timeleft = (fixed)(times_time * 4200) / 70 - sec;
+#else   
+            if (gamestate.TimeCount < parTimes[gamestate.episode * 10 + gamestate.mapon].time * 4200)
+                timeleft = (fixed)((parTimes[gamestate.episode * 10 + gamestate.mapon].time * 4200) / 70 - sec);
+#endif
+            min = sec / 60;
+            sec %= 60;
 
 #ifdef SPANISH
-        i = 30 * 8;
+            i = 30 * 8;
 #else
-        i = 26 * 8;
+            i = 26 * 8;
 #endif
 #ifdef SEGA_SATURN
-        VWB_DrawPic(i + SATURN_ADJUST, 10 * 8, L_NUM0PIC + (min / 10));
-        i += 2 * 8;
-        VWB_DrawPic(i + SATURN_ADJUST, 10 * 8, L_NUM0PIC + (min % 10));
-        i += 2 * 8;
-        Write(i / 8 + SATURN_ADJUST / 8, 10, ":");
-        i += 1 * 8;
-        VWB_DrawPic(i + SATURN_ADJUST, 10 * 8, L_NUM0PIC + (sec / 10));
-        i += 2 * 8;
-        VWB_DrawPic(i + SATURN_ADJUST, 10 * 8, L_NUM0PIC + (sec % 10));
+            VWB_DrawPic(i + SATURN_ADJUST, 10 * 8, L_NUM0PIC + (min / 10));
+            i += 2 * 8;
+            VWB_DrawPic(i + SATURN_ADJUST, 10 * 8, L_NUM0PIC + (min % 10));
+            i += 2 * 8;
+            Write(i / 8 + SATURN_ADJUST / 8, 10, ":");
+            i += 1 * 8;
+            VWB_DrawPic(i + SATURN_ADJUST, 10 * 8, L_NUM0PIC + (sec / 10));
+            i += 2 * 8;
+            VWB_DrawPic(i + SATURN_ADJUST, 10 * 8, L_NUM0PIC + (sec % 10));
 #else
-        VWB_DrawPic (i, 10 * 8, L_NUM0PIC + (min / 10));
-        i += 2 * 8;
-        VWB_DrawPic (i, 10 * 8, L_NUM0PIC + (min % 10));
-        i += 2 * 8;
-        Write (i / 8, 10, ":");
-        i += 1 * 8;
-        VWB_DrawPic (i, 10 * 8, L_NUM0PIC + (sec / 10));
-        i += 2 * 8;
-        VWB_DrawPic (i, 10 * 8, L_NUM0PIC + (sec % 10));
+            VWB_DrawPic(i, 10 * 8, L_NUM0PIC + (min / 10));
+            i += 2 * 8;
+            VWB_DrawPic(i, 10 * 8, L_NUM0PIC + (min % 10));
+            i += 2 * 8;
+            Write(i / 8, 10, ":");
+            i += 1 * 8;
+            VWB_DrawPic(i, 10 * 8, L_NUM0PIC + (sec / 10));
+            i += 2 * 8;
+            VWB_DrawPic(i, 10 * 8, L_NUM0PIC + (sec % 10));
 #endif
 
 #if !defined(USE_SPRITES) && !defined(SEGA_SATURN)
-        VW_UpdateScreen ();
-#endif
-        VW_FadeIn ();
-#ifdef SEGA_SATURN
-        DrawStatusBar(); // vbt : ajout
-#endif
-
-        //
-        // FIGURE RATIOS OUT BEFOREHAND
-        //
-        kr = sr = tr = 0;
-        if (gamestate.killtotal)
-            kr = (gamestate.killcount * 100) / gamestate.killtotal;
-        if (gamestate.secrettotal)
-            sr = (gamestate.secretcount * 100) / gamestate.secrettotal;
-        if (gamestate.treasuretotal)
-            tr = (gamestate.treasurecount * 100) / gamestate.treasuretotal;
-
-
-        //
-        // PRINT TIME BONUS
-        //
-        bonus = timeleft * PAR_AMOUNT;
-        if (bonus)
-        {
-            for (i = 0; i <= timeleft; i++)
-            {
-                w3sitoa ((int) i * PAR_AMOUNT, tempstr, 10);
-                x = 36 - (int) strlen(tempstr) * 2;
-                Write (x, 7, tempstr);
-                if (!(i % (PAR_AMOUNT / 10)))
-                    SD_PlaySound (ENDBONUS1SND);
-                if(!usedoublebuffering || !(i % (PAR_AMOUNT / 50))) 
-#if !defined(USE_SPRITES) && !defined(SEGA_SATURN)                    
-                    VW_UpdateScreen ();
-#endif
-                while(SD_SoundPlaying ())
-                    BJ_Breathe ();
-                if (IN_CheckAck ())
-                    goto done;
-            }
-#if !defined(USE_SPRITES) && !defined(SEGA_SATURN)				
             VW_UpdateScreen();
-#else
-            //		DrawStatusBar(); // vbt ajout				
+#endif
+            VW_FadeIn();
+#ifdef SEGA_SATURN
+            DrawStatusBar(); // vbt : ajout
 #endif
 
-            SD_PlaySound (ENDBONUS2SND);
-            while (SD_SoundPlaying ())
-                BJ_Breathe ();
-        }
+            //
+            // FIGURE RATIOS OUT BEFOREHAND
+            //
+            kr = sr = tr = 0;
+            if (gamestate.killtotal)
+                kr = (gamestate.killcount * 100) / gamestate.killtotal;
+            if (gamestate.secrettotal)
+                sr = (gamestate.secretcount * 100) / gamestate.secrettotal;
+            if (gamestate.treasuretotal)
+                tr = (gamestate.treasurecount * 100) / gamestate.treasuretotal;
+
+
+            //
+            // PRINT TIME BONUS
+            //
+            bonus = timeleft * PAR_AMOUNT;
+            if (bonus)
+            {
+                for (i = 0; i <= timeleft; i++)
+                {
+                    w3sitoa((int)i * PAR_AMOUNT, tempstr, 10);
+                    x = 36 - (int)strlen(tempstr) * 2;
+                    Write(x, 7, tempstr);
+                    if (!(i % (PAR_AMOUNT / 10)))
+                        SD_PlaySound(ENDBONUS1SND);
+                    if (!usedoublebuffering || !(i % (PAR_AMOUNT / 50)))
+#if !defined(USE_SPRITES) && !defined(SEGA_SATURN)                    
+                        VW_UpdateScreen();
+#endif
+                    while (SD_SoundPlaying())
+                        BJ_Breathe();
+                    if (IN_CheckAck())
+                        goto done;
+                }
+#if !defined(USE_SPRITES) && !defined(SEGA_SATURN)				
+                VW_UpdateScreen();
+#else
+                //		DrawStatusBar(); // vbt ajout				
+#endif
+
+                SD_PlaySound(ENDBONUS2SND);
+                while (SD_SoundPlaying())
+                    BJ_Breathe();
+            }
 
 
 #ifdef SPANISH
@@ -777,280 +851,282 @@ LevelCompleted (void)
 #else
 #define RATIOXX                37
 #endif
-        //
-        // KILL RATIO
-        //
-        ratio = kr;
-        for (i = 0; i <= ratio; i++)
-        {
-            w3sitoa (i, tempstr, 10);
-            x = RATIOXX - (int) strlen(tempstr) * 2;
+            //
+            // KILL RATIO
+            //
+            ratio = kr;
+            for (i = 0; i <= ratio; i++)
+            {
+                w3sitoa(i, tempstr, 10);
+                x = RATIOXX - (int)strlen(tempstr) * 2;
 #ifdef SEGA_SATURN
-            Write(x + SATURN_ADJUST / 14, 7, tempstr);
+                Write(x + SATURN_ADJUST / 14, 7, tempstr);
 #else
-            Write (x, 14, tempstr);
+                Write(x, 14, tempstr);
 #endif
-            if (!(i % 10))
-                SD_PlaySound (ENDBONUS1SND);
-            if(!usedoublebuffering || !(i & 1)) 
+                if (!(i % 10))
+                    SD_PlaySound(ENDBONUS1SND);
+                if (!usedoublebuffering || !(i & 1))
 #if !defined(USE_SPRITES) && !defined(SEGA_SATURN)            
-                VW_UpdateScreen ();
+                    VW_UpdateScreen();
 #endif
 
-            while (SD_SoundPlaying ())
-                BJ_Breathe ();
+                while (SD_SoundPlaying())
+                    BJ_Breathe();
 
-            if (IN_CheckAck ())
-                goto done;
-        }
-        if (ratio >= 100)
-        {
-            VW_WaitVBL (VBLWAIT);
-            SD_StopSound ();
-            bonus += PERCENT100AMT;
-            w3sitoa (bonus, tempstr, 10);
-            x = (RATIOXX - 1) - (int) strlen(tempstr) * 2;
+                if (IN_CheckAck())
+                    goto done;
+            }
+            if (ratio >= 100)
+            {
+                VW_WaitVBL(VBLWAIT);
+                SD_StopSound();
+                bonus += PERCENT100AMT;
+                w3sitoa(bonus, tempstr, 10);
+                x = (RATIOXX - 1) - (int)strlen(tempstr) * 2;
 #ifdef SEGA_SATURN
-            Write(x + SATURN_ADJUST / 8, 7, tempstr);
+                Write(x + SATURN_ADJUST / 8, 7, tempstr);
 #else
-            Write (x, 7, tempstr);
+                Write(x, 7, tempstr);
 #endif
-#if !defined(USE_SPRITES) && !defined(SEGA_SATURN)            
-            VW_UpdateScreen();
-#endif
-            SD_PlaySound (PERCENT100SND);
-        }
-        else if (!ratio)
-        {
-            VW_WaitVBL (VBLWAIT);
-            SD_StopSound ();
-            SD_PlaySound (NOBONUSSND);
-        }
-        else
-            SD_PlaySound (ENDBONUS2SND);
-
-#if !defined(USE_SPRITES) && !defined(SEGA_SATURN)            
-        VW_UpdateScreen();
-#endif
-        while (SD_SoundPlaying ())
-            BJ_Breathe ();
-
-        //
-        // SECRET RATIO
-        //
-        ratio = sr;
-        for (i = 0; i <= ratio; i++)
-        {
-            w3sitoa (i, tempstr, 10);
-            x = RATIOXX - (int) strlen(tempstr) * 2;
-#ifdef SEGA_SATURN
-            Write(x + SATURN_ADJUST / 8, 16, tempstr);
-#else
-            Write (x, 16, tempstr);
-#endif
-            if (!(i % 10))
-                SD_PlaySound (ENDBONUS1SND);
-            if(!usedoublebuffering || !(i & 1)) 
-#if !defined(USE_SPRITES) && !defined(SEGA_SATURN)                
-                VW_UpdateScreen ();
-#endif
-            while (SD_SoundPlaying ())
-                BJ_Breathe ();
-
-            if (IN_CheckAck ())
-                goto done;
-        }
-        if (ratio >= 100)
-        {
-            VW_WaitVBL (VBLWAIT);
-            SD_StopSound ();
-            bonus += PERCENT100AMT;
-            w3sitoa (bonus, tempstr, 10);
-            x = (RATIOXX - 1) - (int) strlen(tempstr) * 2;
-#ifdef SEGA_SATURN
-            Write(x + SATURN_WIDTH / 8, 7, tempstr);
-#else
-            Write (x, 7, tempstr);
-#endif
-#if !defined(USE_SPRITES) && !defined(SEGA_SATURN)            
-            VW_UpdateScreen();
-#endif
-            SD_PlaySound (PERCENT100SND);
-        }
-        else if (!ratio)
-        {
-            VW_WaitVBL (VBLWAIT);
-            SD_StopSound ();
-            SD_PlaySound (NOBONUSSND);
-        }
-        else
-            SD_PlaySound (ENDBONUS2SND);
-#if !defined(USE_SPRITES) && !defined(SEGA_SATURN)            
-        VW_UpdateScreen();
-#endif
-        while (SD_SoundPlaying ())
-            BJ_Breathe ();
-
-        //
-        // TREASURE RATIO
-        //
-        ratio = tr;
-        for (i = 0; i <= ratio; i++)
-        {
-            w3sitoa (i, tempstr, 10);
-            x = RATIOXX - (int) strlen(tempstr) * 2;
-#ifdef SEGA_SATURN
-            Write(x + SATURN_ADJUST / 8, 18, tempstr);
-#else
-            Write (x, 18, tempstr);
-#endif
-            if (!(i % 10))
-                SD_PlaySound (ENDBONUS1SND);
-            if(!usedoublebuffering || !(i & 1)) 
 #if !defined(USE_SPRITES) && !defined(SEGA_SATURN)            
                 VW_UpdateScreen();
 #endif
-            while (SD_SoundPlaying ())
-                BJ_Breathe ();
-            if (IN_CheckAck ())
-                goto done;
-        }
-        if (ratio >= 100)
-        {
-            VW_WaitVBL (VBLWAIT);
-            SD_StopSound ();
-            bonus += PERCENT100AMT;
-            w3sitoa (bonus, tempstr, 10);
-            x = (RATIOXX - 1) - (int) strlen(tempstr) * 2;
-#ifdef SEGA_SATURN
-            Write(x + SATURN_WIDTH / 8, 7, tempstr);
-#else
-            Write (x, 7, tempstr);
-#endif
+                SD_PlaySound(PERCENT100SND);
+            }
+            else if (!ratio)
+            {
+                VW_WaitVBL(VBLWAIT);
+                SD_StopSound();
+                SD_PlaySound(NOBONUSSND);
+            }
+            else
+                SD_PlaySound(ENDBONUS2SND);
+
 #if !defined(USE_SPRITES) && !defined(SEGA_SATURN)            
             VW_UpdateScreen();
 #endif
-            SD_PlaySound (PERCENT100SND);
-        }
-        else if (!ratio)
-        {
-            VW_WaitVBL (VBLWAIT);
-            SD_StopSound ();
-            SD_PlaySound (NOBONUSSND);
+            while (SD_SoundPlaying())
+                BJ_Breathe();
+
+            //
+            // SECRET RATIO
+            //
+            ratio = sr;
+            for (i = 0; i <= ratio; i++)
+            {
+                w3sitoa(i, tempstr, 10);
+                x = RATIOXX - (int)strlen(tempstr) * 2;
+#ifdef SEGA_SATURN
+                Write(x + SATURN_ADJUST / 8, 16, tempstr);
+#else
+                Write(x, 16, tempstr);
+#endif
+                if (!(i % 10))
+                    SD_PlaySound(ENDBONUS1SND);
+                if (!usedoublebuffering || !(i & 1))
+#if !defined(USE_SPRITES) && !defined(SEGA_SATURN)                
+                    VW_UpdateScreen();
+#endif
+                while (SD_SoundPlaying())
+                    BJ_Breathe();
+
+                if (IN_CheckAck())
+                    goto done;
+            }
+            if (ratio >= 100)
+            {
+                VW_WaitVBL(VBLWAIT);
+                SD_StopSound();
+                bonus += PERCENT100AMT;
+                w3sitoa(bonus, tempstr, 10);
+                x = (RATIOXX - 1) - (int)strlen(tempstr) * 2;
+#ifdef SEGA_SATURN
+                Write(x + SATURN_WIDTH / 8, 7, tempstr);
+#else
+                Write(x, 7, tempstr);
+#endif
+#if !defined(USE_SPRITES) && !defined(SEGA_SATURN)            
+                VW_UpdateScreen();
+#endif
+                SD_PlaySound(PERCENT100SND);
+            }
+            else if (!ratio)
+            {
+                VW_WaitVBL(VBLWAIT);
+                SD_StopSound();
+                SD_PlaySound(NOBONUSSND);
+            }
+            else
+                SD_PlaySound(ENDBONUS2SND);
+#if !defined(USE_SPRITES) && !defined(SEGA_SATURN)            
+            VW_UpdateScreen();
+#endif
+            while (SD_SoundPlaying())
+                BJ_Breathe();
+
+            //
+            // TREASURE RATIO
+            //
+            ratio = tr;
+            for (i = 0; i <= ratio; i++)
+            {
+                w3sitoa(i, tempstr, 10);
+                x = RATIOXX - (int)strlen(tempstr) * 2;
+#ifdef SEGA_SATURN
+                Write(x + SATURN_ADJUST / 8, 18, tempstr);
+#else
+                Write(x, 18, tempstr);
+#endif
+                if (!(i % 10))
+                    SD_PlaySound(ENDBONUS1SND);
+                if (!usedoublebuffering || !(i & 1))
+#if !defined(USE_SPRITES) && !defined(SEGA_SATURN)            
+                    VW_UpdateScreen();
+#endif
+                while (SD_SoundPlaying())
+                    BJ_Breathe();
+                if (IN_CheckAck())
+                    goto done;
+            }
+            if (ratio >= 100)
+            {
+                VW_WaitVBL(VBLWAIT);
+                SD_StopSound();
+                bonus += PERCENT100AMT;
+                w3sitoa(bonus, tempstr, 10);
+                x = (RATIOXX - 1) - (int)strlen(tempstr) * 2;
+#ifdef SEGA_SATURN
+                Write(x + SATURN_WIDTH / 8, 7, tempstr);
+#else
+                Write(x, 7, tempstr);
+#endif
+#if !defined(USE_SPRITES) && !defined(SEGA_SATURN)            
+                VW_UpdateScreen();
+#endif
+                SD_PlaySound(PERCENT100SND);
+            }
+            else if (!ratio)
+            {
+                VW_WaitVBL(VBLWAIT);
+                SD_StopSound();
+                SD_PlaySound(NOBONUSSND);
+            }
+            else
+                SD_PlaySound(ENDBONUS2SND);
+#if !defined(USE_SPRITES) && !defined(SEGA_SATURN)            
+            VW_UpdateScreen();
+#endif
+            while (SD_SoundPlaying())
+                BJ_Breathe();
+
+
+            //
+            // JUMP STRAIGHT HERE IF KEY PRESSED
+            //
+        done:   w3sitoa(kr, tempstr, 10);
+            x = RATIOXX - (int)strlen(tempstr) * 2;
+#ifdef SEGA_SATURN
+            Write(x + SATURN_WIDTH / 8, 14, tempstr);
+#else
+            Write(x, 14, tempstr);
+#endif
+            w3sitoa(sr, tempstr, 10);
+            x = RATIOXX - (int)strlen(tempstr) * 2;
+#ifdef SEGA_SATURN
+            Write(x + SATURN_WIDTH / 8, 16, tempstr);
+#else
+            Write(x, 16, tempstr);
+#endif
+            w3sitoa(tr, tempstr, 10);
+            x = RATIOXX - (int)strlen(tempstr) * 2;
+#ifdef SEGA_SATURN
+            Write(x + SATURN_WIDTH / 8, 18, tempstr);
+#else
+            Write(x, 18, tempstr);
+#endif
+            bonus = (int)timeleft * PAR_AMOUNT +
+                (PERCENT100AMT * (kr >= 100)) +
+                (PERCENT100AMT * (sr >= 100)) + (PERCENT100AMT * (tr >= 100));
+
+            GivePoints(bonus);
+            w3sitoa(bonus, tempstr, 10);
+            x = 36 - (int)strlen(tempstr) * 2;
+#ifdef SEGA_SATURN
+            Write(x + SEGA_SATURN / 8, 7, tempstr);
+#else
+            Write(x, 7, tempstr);
+#endif
+            //
+            // SAVE RATIO INFORMATION FOR ENDGAME
+            //
+            LevelRatios[gamestate.mapon].kill = kr;
+            LevelRatios[gamestate.mapon].secret = sr;
+            LevelRatios[gamestate.mapon].treasure = tr;
+            LevelRatios[gamestate.mapon].time = min * 60 + sec;
         }
         else
-            SD_PlaySound (ENDBONUS2SND);
-#if !defined(USE_SPRITES) && !defined(SEGA_SATURN)            
-        VW_UpdateScreen();
-#endif
-        while (SD_SoundPlaying ())
-            BJ_Breathe ();
-
-
-        //
-        // JUMP STRAIGHT HERE IF KEY PRESSED
-        //
-done:   w3sitoa (kr, tempstr, 10);
-        x = RATIOXX - (int) strlen(tempstr) * 2;
-#ifdef SEGA_SATURN
-        Write(x + SATURN_WIDTH / 8, 14, tempstr);
-#else
-        Write (x, 14, tempstr);
-#endif
-        w3sitoa (sr, tempstr, 10);
-        x = RATIOXX - (int) strlen(tempstr) * 2;
-#ifdef SEGA_SATURN
-        Write(x + SATURN_WIDTH / 8, 16, tempstr); 
-#else
-        Write (x, 16, tempstr);
-#endif
-        w3sitoa (tr, tempstr, 10);
-        x = RATIOXX - (int) strlen(tempstr) * 2;
-#ifdef SEGA_SATURN
-        Write(x + SATURN_WIDTH / 8, 18, tempstr);
-#else
-        Write (x, 18, tempstr);
-#endif
-        bonus = (int) timeleft *PAR_AMOUNT +
-            (PERCENT100AMT * (kr >= 100)) +
-            (PERCENT100AMT * (sr >= 100)) + (PERCENT100AMT * (tr >= 100));
-
-        GivePoints (bonus);
-        w3sitoa (bonus, tempstr, 10);
-        x = 36 - (int) strlen(tempstr) * 2;
-#ifdef SEGA_SATURN
-        Write(x + SEGA_SATURN / 8, 7, tempstr);
-#else
-        Write (x, 7, tempstr);
-#endif
-        //
-        // SAVE RATIO INFORMATION FOR ENDGAME
-        //
-        LevelRatios[gamestate.mapon].kill = kr;
-        LevelRatios[gamestate.mapon].secret = sr;
-        LevelRatios[gamestate.mapon].treasure = tr;
-        LevelRatios[gamestate.mapon].time = min * 60 + sec;
-    }
-    else
-    {
+        {
 #ifdef SPEAR
 #ifndef SPEARDEMO
-        switch (gamestate.mapon)
-        {
+            switch (gamestate.mapon)
+            {
 #ifdef SEGA_SATURN
-        case 4:
-            Write(14 + SATURN_ADJUST / 8, 4, " trans\n" " grosse\n" STR_DEFEATED);
-            break;
-        case 9:
-            Write(14 + SATURN_ADJUST / 8, 4, "barnacle\n" "wilhelm\n" STR_DEFEATED);
-            break;
-        case 15:
-            Write(14 + SATURN_ADJUST / 8, 4, "ubermutant\n" STR_DEFEATED);
-            break;
-        case 17:
-            Write(14 + SATURN_ADJUST / 8, 4, " death\n" " knight\n" STR_DEFEATED);
-            break;
-        case 18:
-            Write(13 + SATURN_ADJUST / 8, 4, "secret tunnel\n" "    area\n" "  completed!");
-            break;
-        case 19:
-            Write(13 + SATURN_ADJUST / 8, 4, "secret castle\n" "    area\n" "  completed!");
-            break;
-#else
             case 4:
-                Write (14, 4, " trans\n" " grosse\n" STR_DEFEATED);
+                Write(14 + SATURN_ADJUST / 8, 4, " trans\n" " grosse\n" STR_DEFEATED);
                 break;
             case 9:
-                Write (14, 4, "barnacle\n" "wilhelm\n" STR_DEFEATED);
+                Write(14 + SATURN_ADJUST / 8, 4, "barnacle\n" "wilhelm\n" STR_DEFEATED);
                 break;
             case 15:
-                Write (14, 4, "ubermutant\n" STR_DEFEATED);
+                Write(14 + SATURN_ADJUST / 8, 4, "ubermutant\n" STR_DEFEATED);
                 break;
             case 17:
-                Write (14, 4, " death\n" " knight\n" STR_DEFEATED);
+                Write(14 + SATURN_ADJUST / 8, 4, " death\n" " knight\n" STR_DEFEATED);
                 break;
             case 18:
-                Write (13, 4, "secret tunnel\n" "    area\n" "  completed!");
+                Write(13 + SATURN_ADJUST / 8, 4, "secret tunnel\n" "    area\n" "  completed!");
                 break;
             case 19:
-                Write (13, 4, "secret castle\n" "    area\n" "  completed!");
+                Write(13 + SATURN_ADJUST / 8, 4, "secret castle\n" "    area\n" "  completed!");
+                break;
+#else
+            case 4:
+                Write(14, 4, " trans\n" " grosse\n" STR_DEFEATED);
+                break;
+            case 9:
+                Write(14, 4, "barnacle\n" "wilhelm\n" STR_DEFEATED);
+                break;
+            case 15:
+                Write(14, 4, "ubermutant\n" STR_DEFEATED);
+                break;
+            case 17:
+                Write(14, 4, " death\n" " knight\n" STR_DEFEATED);
+                break;
+            case 18:
+                Write(13, 4, "secret tunnel\n" "    area\n" "  completed!");
+                break;
+            case 19:
+                Write(13, 4, "secret castle\n" "    area\n" "  completed!");
                 break;
 #endif
-        }
+            }
 #endif
 #else
-        Write (14, 4, "secret floor\n completed!");
+            Write(14, 4, "secret floor\n completed!");
 #endif
 
-        Write (10, 16, "15000 bonus!");
+            Write(10, 16, "15000 bonus!");
 #if !defined(USE_SPRITES) && !defined(SEGA_SATURN)            
-        VW_UpdateScreen();
+            VW_UpdateScreen();
 #endif
-        VW_FadeIn ();
+            VW_FadeIn();
 
-        GivePoints (15000);
+            GivePoints(15000);
+        }
+#ifdef MAPCONTROLLEDLTIME
     }
-
+#endif
 
     DrawScore ();
 #if !defined(USE_SPRITES) && !defined(SEGA_SATURN)            

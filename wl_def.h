@@ -919,6 +919,9 @@ typedef struct doorstruct
     unsigned char     lock;
     doortype action;
     short    ticcount;
+#ifdef BLAKEDOORS
+    boolean doubledoor;
+#endif
 } doorobj_t;
 
 
@@ -1029,6 +1032,9 @@ typedef struct
     int     TimeCount;
     int     killx, killy;
     boolean     victoryflag;            // set during victory animations
+#ifdef MAPCONTROLPARTIME
+    float       partime;
+#endif
 } gametype;
 
 
@@ -1107,6 +1113,9 @@ extern  boolean  param_ignorenumchunks;
 #endif
 
 void            NewGame(int difficulty, int episode);
+#ifdef MAPCONTROLLEDPLSETT
+void            ResetPlayer(void);
+#endif
 void            CalcProjection(int focal);
 void            NewViewSize(int width);
 boolean         SetViewSize(unsigned width, unsigned height);
@@ -1472,8 +1481,11 @@ extern  doorobj_t* lastdoorobj;
 extern  short       doornum;
 #endif
 
+#ifdef BLAKEDOORS
+extern  unsigned short      ldoorposition[MAXDOORS], rdoorposition[MAXDOORS];   // leading edge of door 0=closed
+#else
 extern  unsigned short      doorposition[MAXDOORS];
-
+#endif
 extern  unsigned char      areaconnect[NUMAREAS][NUMAREAS];
 
 extern  boolean   areabyplayer[NUMAREAS];

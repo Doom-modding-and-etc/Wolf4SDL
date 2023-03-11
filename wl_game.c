@@ -1575,6 +1575,13 @@ restartgame:
         if (!loadedgame)
 #endif            
             SetupGameLevel ();
+#ifdef MAPCONTROLLEDPLSETT
+        if (!loadedgame) {
+            if (tilemap[63][0]) {
+                ResetPlayer();
+            }
+        }
+#endif
 
 #ifdef SPEAR
         if (gamestate.mapon == 20)      // give them the key allways
@@ -1582,6 +1589,23 @@ restartgame:
             gamestate.keys |= 1;
             DrawKeys ();
         }
+#endif
+#ifdef MAPCONTROLPARTIME
+        gamestate.partime = 2.0;
+        if (tilemap[61][0] >= 1 && tilemap[61][0] <= 20)
+        {
+            gamestate.partime = tilemap[62][0];
+            if (tilemap[62][0] >= 1 && tilemap[62][0] <= 3)
+            {
+                switch (tilemap[62][0])
+                {
+                case 1: gamestate.partime += .25; break;
+                case 2: gamestate.partime += .5; break;
+                case 3: gamestate.partime += .75; break;
+                }
+            }
+        }
+        gamestate.partime = (gamestate.partime * 4200) / 70;
 #endif
 
         DrawLevel ();                        // ADDEDFIX 5 -  Chris Chokan

@@ -19,7 +19,7 @@ shadedef_t shadeDefs[] = {
 
 unsigned char shadetable[SHADE_COUNT][256];
 int LSHADE_flag;
-
+#ifndef MAPCONTROLLEDSHADE
 #ifdef USE_FEATUREFLAGS
 
 // The lower 8-bit of the upper left tile of every map determine
@@ -51,7 +51,7 @@ static int GetShadeDefID()
 }
 
 #endif
-
+#endif
 
 // Returns the palette index of the nearest matching color of the
 // given RGB color in given palette
@@ -126,16 +126,38 @@ void NoShading()
 
 void InitLevelShadeTable()
 {
+#ifdef MAPCONTROLLEDSHADE
+    int rlevel, glevel, blevel;
+    int fstrength;
+    fstrength = tilemap[3][0];
+    rlevel = tilemap[4][0];
+    glevel = tilemap[5][0];
+    blevel = tilemap[6][0];
+    if (fstrength == 0) {
+        NoShading();
+    }
+    else if (fstrength == 1) {
+        GenerateShadeTable(rlevel, glevel, blevel, gamepal, LSHADE_NORMAL);
+    }
+    else if (fstrength >= 2) {
+        GenerateShadeTable(rlevel, glevel, blevel, gamepal, LSHADE_FOG);
+    }
+#else
     shadedef_t *shadeDef = &shadeDefs[GetShadeDefID()];
     if(shadeDef->fogStrength == LSHADE_NOSHADING)
         NoShading();
     else
         GenerateShadeTable(shadeDef->destRed, shadeDef->destGreen, shadeDef->destBlue, gamepal, shadeDef->fogStrength);
+#endif
 }
 
 int GetShade(int scale)
 {
-    int shade = (scale >> 1) / (((viewwidth * 3) >> 8) + 1 + LSHADE_flag);  // TODO: reconsider this...
+    int shade;
+#ifdef MAPCONTROLLEDSHADE
+    if (tilemap[2][0]) return 0; // Turns shading or fog off
+#endif
+    shade = (scale >> 1) / (((viewwidth * 3) >> 8) + 1 + LSHADE_flag);  // TODO: reconsider this...
     if(shade > 32) shade = 32;
     else if(shade < 1) shade = 1;
     shade = 32 - shade;

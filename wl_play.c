@@ -27,8 +27,11 @@ boolean madenoise;              // true when shooting or screaming
 
 exit_t playstate;
 
+#ifdef MAPCONTROLLEDMUSIC
+static musicnames lastmusicchunk;
+#else
 static musicnames lastmusicchunk = (musicnames) 0;
-
+#endif
 #ifndef SEGA_SATURN
 int     DebugOk;
 #endif
@@ -1214,13 +1217,26 @@ void RemoveObj (objtype * gone)
 =
 =================
 */
-int StopMusic (void)
+int StopMusic(void)
 {
-    int lastoffs = SD_MusicOff ();
+#ifdef MAPCONTROLLEDMUSIC
+    int lastoffs = SD_MusicOff();
+    int holder;
+
+    holder = tilemap[1][0];
+    if (holder < 0 || holder >LASTMUSIC)
+        holder = 0;
 #ifndef SEGA_SATURN
-    UNCACHEAUDIOCHUNK (STARTMUSIC + lastmusicchunk);
+    UNCACHEAUDIOCHUNK(STARTMUSIC + holder);
 #endif
     return lastoffs;
+#else
+    int lastoffs = SD_MusicOff();
+#ifndef SEGA_SATURN
+    UNCACHEAUDIOCHUNK(STARTMUSIC + lastmusicchunk);
+#endif
+    return lastoffs;
+#endif
 }
 
 //==========================================================================
@@ -1236,15 +1252,37 @@ int StopMusic (void)
 
 void StartMusic ()
 {
-    SD_MusicOff ();
-    lastmusicchunk = (musicnames) songs[gamestate.mapon + gamestate.episode * 10];
+#ifdef MAPCONTROLLEDMUSIC
+    int holder;
+    //static musicnames lastmusicchunk;
+#endif
+    SD_MusicOff();
+#ifdef MAPCONTROLLEDMUSIC
+    holder = tilemap[1][0];
+    if (holder < 0 || holder >LASTMUSIC)
+        holder = 0;
+    lastmusicchunk = (musicnames)songs[holder];
+#else
+    lastmusicchunk = (musicnames)songs[gamestate.mapon + gamestate.episode * 10];
+#endif
     SD_StartMusic(STARTMUSIC + lastmusicchunk);
 }
 
 void ContinueMusic (int offs)
 {
-    SD_MusicOff ();
-    lastmusicchunk = (musicnames) songs[gamestate.mapon + gamestate.episode * 10];
+#ifdef MAPCONTROLLEDMUSIC
+    int holder;
+    //static musicnames lastmusicchunk;
+#endif
+    SD_MusicOff();
+#ifdef MAPCONTROLLEDMUSIC
+    holder = tilemap[1][0];
+    if (holder < 0 || holder >LASTMUSIC)
+        holder = 0;
+    lastmusicchunk = (musicnames)songs[holder];
+#else
+    lastmusicchunk = (musicnames)songs[gamestate.mapon + gamestate.episode * 10];
+#endif
     SD_ContinueMusic(STARTMUSIC + lastmusicchunk, offs);
 }
 
@@ -1724,6 +1762,12 @@ void LagSimulator(void)
 #endif
 #endif
 
+#ifdef MAPCONTROLLEDLTIME
+float leveltime;
+int scoreticcount;
+int scorebonusAmount;
+#endif
+
 void PlayLoop (void)
 {
 #if defined (SWITCH) || defined (N3DS)
@@ -1806,6 +1850,41 @@ void PlayLoop (void)
                 if (viewsize != 21)
                     StatusDrawFace(BJWAITING1PIC + (US_RndT() & 1));
                 facecount = 0;
+            }
+#endif
+#ifdef MAPCONTROLLEDLTIME
+            if (tilemap[63][4]) {
+                leveltime = 2.0;
+                if (tilemap[63][5] >= 1 && tilemap[63][5] <= 5) {
+                    leveltime = tilemap[63][5];
+                    if (tilemap[63][6] >= 1 && tilemap[63][6] <= 3) {
+                        switch (tilemap[63][6]) {
+                        case 1:
+                            leveltime += .25;
+                            break;
+                        case 2:
+                            leveltime += .50;
+                            break;
+                        case 3:
+                            leveltime += .75;
+                            break;
+                        }
+                    }
+                }
+                leveltime = (leveltime * 4200) / 70;
+                if (tilemap[63][7] <= 1) {
+                    scorebonusAmount = (tilemap[63][7]) * 1000;
+                }
+                else if (tilemap[63][7] == 0) {
+                    scorebonusAmount = 500;
+                }
+                scoreticcount += tics;
+                if (scoreticcount > 1l * 70) {
+                    GivePoints(scorebonusAmount);
+                    scoreticcount = 0;
+                }
+                if (gamestate.TimeCount == leveltime * 70)
+                    playstate = ex_completed;
             }
 #endif
             // Abort demo?

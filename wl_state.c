@@ -1363,7 +1363,11 @@ boolean CheckLine (objtype *ob)
             value &= ~BIT_DOOR;
             intercept = yfrac-ystep/2;
 
-            if (intercept>doorposition[value])
+#ifdef BLAKEDOORS
+            if (intercept<ldoorposition[value] || intercept>rdoorposition[value])
+#else
+            if (intercept > doorposition[value])
+#endif
                 return false;
 
         } while (x != xt2);
@@ -1417,7 +1421,11 @@ boolean CheckLine (objtype *ob)
             value &= ~BIT_DOOR;
             intercept = xfrac-xstep/2;
 
-            if (intercept>doorposition[value])
+#ifdef BLAKEDOORS
+            if (intercept<ldoorposition[value] || intercept>rdoorposition[value])
+#else
+            if (intercept > doorposition[value])
+#endif
                 return false;
         } while (y != yt2);
     }

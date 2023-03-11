@@ -394,6 +394,51 @@ void NewGame (int difficulty,int episode)
     startgame = true;
 }
 
+#ifdef MAPCONTROLLEDPLSETT
+/********
+**
+** ResetPlayer
+**
+***************/
+
+void ResetPlayer(void)
+{
+    int ammoAmount, healthAmount;
+    if (tilemap[63][1] == 0) { // Start with a specific weapon
+        gamestate.weapon = gamestate.bestweapon = gamestate.chosenweapon = wp_knife;
+    }
+    else if (tilemap[63][1] == 1) {
+        gamestate.weapon = gamestate.bestweapon = gamestate.chosenweapon = wp_pistol;
+    }
+    else if (tilemap[63][1] == 2) {
+        gamestate.weapon = gamestate.bestweapon = gamestate.chosenweapon = wp_machinegun;
+    }
+    else if (tilemap[63][1] >= 3) {
+        gamestate.weapon = gamestate.bestweapon = gamestate.chosenweapon = wp_chaingun;
+    }
+    ammoAmount = tilemap[63][2]; //Start with a specific amount of ammo
+    if (ammoAmount > 99) {
+        gamestate.ammo = 99;
+    }
+    else {
+        gamestate.ammo = ammoAmount;
+    }
+    if (tilemap[63][3] == 0) {   // Start with a certain percentage of health
+        healthAmount = 25;
+    }
+    else if (tilemap[63][3] == 1) {
+        healthAmount = 50;
+    }
+    else if (tilemap[63][3] == 2) {
+        healthAmount = 75;
+    }
+    else if (tilemap[63][3] >= 3) {
+        healthAmount = 100;
+    }
+    gamestate.health = healthAmount;
+}
+#endif
+
 //===========================================================================
 
 void DiskFlopAnim(int x,int y)
@@ -514,8 +559,16 @@ boolean SaveTheGame(FILE *file,int x,int y)
     }
 
     DiskFlopAnim(x,y);
-    fwrite (doorposition,sizeof(doorposition),1,file);
-    checksum = DoChecksum((unsigned char *)doorposition,sizeof(doorposition),checksum);
+#ifdef BLAKEDOORS
+    fwrite(ldoorposition, sizeof(ldoorposition), 1, file);
+    checksum = DoChecksum((unsigned char*)ldoorposition, sizeof(ldoorposition), checksum);
+    DiskFlopAnim(x, y);
+    fwrite(rdoorposition, sizeof(rdoorposition), 1, file);
+    checksum = DoChecksum((unsigned char*)rdoorposition, sizeof(rdoorposition), checksum);
+#else
+    fwrite(doorposition, sizeof(doorposition), 1, file);
+    checksum = DoChecksum((unsigned char*)doorposition, sizeof(doorposition), checksum);
+#endif
     DiskFlopAnim(x,y);
     fwrite (doorobjlist,sizeof(doorobjlist),1,file);
     checksum = DoChecksum((unsigned char *)doorobjlist,sizeof(doorobjlist),checksum);
@@ -634,8 +687,16 @@ boolean LoadTheGame(FILE *file,int x,int y)
     }
 
     DiskFlopAnim(x,y);
-    fread (doorposition,sizeof(doorposition),1,file);
-    checksum = DoChecksum((unsigned char *)doorposition,sizeof(doorposition),checksum);
+#ifdef BLAKEDOORS
+    fread(ldoorposition, sizeof(ldoorposition), 1, file);
+    checksum = DoChecksum((unsigned char*)ldoorposition, sizeof(ldoorposition), checksum);
+    DiskFlopAnim(x, y);
+    fread(rdoorposition, sizeof(rdoorposition), 1, file);
+    checksum = DoChecksum((unsigned char*)rdoorposition, sizeof(rdoorposition), checksum);
+#else
+    fread(doorposition, sizeof(doorposition), 1, file);
+    checksum = DoChecksum((unsigned char*)doorposition, sizeof(doorposition), checksum);
+#endif
     DiskFlopAnim(x,y);
     fread (doorobjlist,sizeof(doorobjlist),1,file);
     checksum = DoChecksum((unsigned char *)doorobjlist,sizeof(doorobjlist),checksum);

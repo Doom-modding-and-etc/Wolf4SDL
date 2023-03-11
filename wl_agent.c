@@ -473,11 +473,22 @@ void TakeDamage(int points, objtype* attacker)
     if (!godmode)
         gamestate.health -= points;
 
-    if (gamestate.health <= 0)
+    if (gamestate.health <= 0) 
     {
-        gamestate.health = 0;
-        playstate = ex_died;
-        killerobj = attacker;
+#ifdef MAPCONTROLLEDLTIME
+        if (tilemap[63][4]) {
+            gamestate.health = 0;
+            playstate = ex_completed;
+        }
+        else 
+        {
+#endif
+            gamestate.health = 0;
+            playstate = ex_died;
+            killerobj = attacker;
+#ifdef MAPCONTROLLEDLTIME
+        }
+#endif
     }
 
     if (godmode != 2)

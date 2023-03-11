@@ -395,6 +395,19 @@ void ScalePost (void)
     }
 }
 
+#ifdef BLAKEDOORS
+boolean   leftside;
+
+void SetLeftDoorSide(void)
+{
+    leftside = true;
+}
+void SetRightDoorSide(void)
+{
+    leftside = false;
+}
+#endif
+
 #ifdef USE_SKYWALLPARALLAX
 void ScaleSkyPost (void)
 {
@@ -421,7 +434,7 @@ void ScaleSkyPost (void)
         curang += FINEANGLES;
     else if(curang >= FINEANGLES)
         curang -= FINEANGLES;
-    int xtex = curang * USE_SKYWALLPARALLAX * TEXTURESIZE / FINEANGLES;
+    int xtex = curang * 16 * TEXTURESIZE / FINEANGLES;
     texoffs = TEXTUREMASK - ((xtex & (TEXTURESIZE - 1)) << TEXTURESHIFT);
 
     y = yendoffs;
@@ -584,7 +597,20 @@ void HitHorizDoor (void)
     int texture;
 
     doornum = tilehit & ~BIT_DOOR;
+#ifdef BLAKEDOORS
+    if (doorobjlist[doornum].doubledoor)
+    {
+        if (leftside)//left
+            texture = ((xintercept + 0x7fff - ldoorposition[doornum]) >> FIXED2TEXSHIFT) & TEXTUREMASK;
+        else
+            texture = ((xintercept + 0x8000 + ldoorposition[doornum]) >> FIXED2TEXSHIFT) & TEXTUREMASK;
+    }
+    else
+        texture = ((xintercept - rdoorposition[doornum]) >> FIXED2TEXSHIFT) & TEXTUREMASK;
+#else
     texture = ((xintercept - doorposition[doornum]) >> FIXED2TEXSHIFT) & TEXTUREMASK;
+#endif
+
 
     wallheight[pixx] = CalcHeight();
     postx = pixx;
@@ -644,9 +670,22 @@ void HitVertDoor (void)
     int doorpage;
     int doornum;
     int texture;
-
     doornum = tilehit & ~BIT_DOOR;
+#ifdef BLAKEDOORS
+    if (doorobjlist[doornum].doubledoor)
+    {
+        if (leftside)//left
+            texture = ((yintercept + 0x7fff - ldoorposition[doornum]) >> FIXED2TEXSHIFT) & TEXTUREMASK;
+        else
+            //texture = ( (yintercept+0x8000+ldoorposition[doornum]) >> TEXTUREFROMFIXEDSHIFT) &TEXTUREMASK;
+            texture = ((yintercept + 0x8000 + ldoorposition[doornum]) >> FIXED2TEXSHIFT) & TEXTUREMASK;
+    }
+    else
+        texture = ((yintercept - rdoorposition[doornum]) >> FIXED2TEXSHIFT) & TEXTUREMASK;
+#else
     texture = ((yintercept - doorposition[doornum]) >> FIXED2TEXSHIFT) & TEXTUREMASK;
+#endif
+
 
     wallheight[pixx] = CalcHeight();
     postx = pixx;
@@ -719,20 +758,36 @@ unsigned char vgaCeiling[]=
 
 void VGAClearScreen (void)
 {
-    unsigned char ceiling=vgaCeiling[gamestate.episode*10+gamestate.mapon];
-
+#ifdef MAPCONTROLLEDFLOOR
+    unsigned char floor;
+    floor = tilemap[9][0];
+#endif
+    unsigned char ceiling;
     int y;
     unsigned char *dest = vbuf;
+#ifdef MAPCONTROLLEDCEILING
+    ceiling = tilemap[8][0];
+#else
+    ceiling = vgaCeiling[gamestate.episode * 10 + gamestate.mapon];
+#endif
 #ifdef USE_SHADING
     for(y = 0; y < viewheight / 2; y++, dest += bufferPitch)
         memset(dest, shadetable[GetShade((viewheight / 2 - y) << 3)][ceiling], viewwidth);
     for(; y < viewheight; y++, dest += bufferPitch)
+#ifndef MAPCONTROLLEDFLOOR
         memset(dest, shadetable[GetShade((y - viewheight / 2) << 3)][0x19], viewwidth);
+#else
+        memset(dest, shadetable[GetShade((y - viewheight / 2) << 3)][floor], viewwidth);
+#endif
 #else
     for(y = 0; y < viewheight / 2; y++, dest += bufferPitch)
         memset(dest, ceiling, viewwidth);
     for(; y < viewheight; y++, dest += bufferPitch)
+#ifndef MAPCONTROLLEDFLOOR
         memset(dest, 0x19, viewwidth);
+#else
+        memset(dest, floor, viewwidth);
+#endif
 #endif
 }
 
@@ -1234,13 +1289,25 @@ vertentry:
                         // the trace hit the door plane at pixel position yintercept, see if the door is
                         // closed that much
                         //
+#ifdef BLAKEDOORS
+                        SetLeftDoorSide();
+                        if ((unsigned short)yinttemp <= ldoorposition[tilehit & ~BIT_DOOR])
+                            goto drawvdoor;
+                        SetRightDoorSide();
+                        if ((unsigned short)yinttemp < rdoorposition[tilehit & ~BIT_DOOR])
+                            goto passvert;
+#else
                         if ((unsigned short)yinttemp < doorposition[tilehit & ~BIT_DOOR])
                             goto passvert;
+#endif
                     }
+
+#ifdef BLAKEDOORS
+drawvdoor:
+#endif
 
                     yintercept = yinttemp;
                     xintercept = ((fixed)xtile << TILESHIFT) + (TILEGLOBAL/2);
-
                     HitVertDoor();
                 }
                 else if (tilehit == BIT_WALL)
@@ -1436,6 +1503,7 @@ horizentry:
                     //
                     // midpoint is outside tile, so it hit the side of the wall before a door
                     //
+
                     if (xinttemp >> TILESHIFT != xinttile && passdoor)
                         goto passhoriz;
 
@@ -1445,13 +1513,25 @@ horizentry:
                         // the trace hit the door plane at pixel position xintercept, see if the door is
                         // closed that much
                         //
+#ifdef BLAKEDOORS
+                        SetLeftDoorSide();
+                        if ((unsigned short)xinttemp <= ldoorposition[tilehit & ~BIT_DOOR])
+                            goto drawhdoor;
+
+                        SetRightDoorSide();
+                        if ((unsigned short)xinttemp < rdoorposition[tilehit & ~BIT_DOOR])
+                            goto passhoriz;
+#else
                         if ((unsigned short)xinttemp < doorposition[tilehit & ~BIT_DOOR])
                             goto passhoriz;
+#endif
                     }
+#ifdef BLAKEDOORS
+     drawhdoor:
+#endif
 
                     xintercept = xinttemp;
                     yintercept = ((fixed)ytile << TILESHIFT) + (TILEGLOBAL/2);
-
                     HitHorizDoor();
                 }
                 else if (tilehit == BIT_WALL)
@@ -1675,10 +1755,13 @@ void ThreeDRefresh (void)
 #endif
 
     WallRefresh ();
-
+#if defined(MAPCONTROLLEDSKY) && defined(USE_PARALLAX)
+    DrawParallax();
+#else
 #if defined(USE_FEATUREFLAGS) && defined(USE_PARALLAX)
     if(GetFeatureFlags() & FF_PARALLAXSKY)
         DrawParallax();
+#endif
 #endif
 
 #if defined(USE_FEATUREFLAGS) && defined(USE_CLOUDSKY)
@@ -1874,10 +1957,15 @@ void DrawFullmap(void)
                     DrawTile(sx + dx, sy + dy, ts, ts, EMPTYCOLOUR);
                 else if (tilemap[x][y] >= 128)
                 {
+#ifdef BLAKEDOORS
+
+
+#else
                     if (!doorposition[tilemap[x][y] - 128])
                         DrawTile(sx + dx, sy + dy, ts, ts, DOORCOLOUR);
                     else
                         DrawTile(sx + dx, sy + dy, ts, ts, OPNDRCOLOUR);
+#endif
                 }
                 else
                     DrawTile(sx + dx, sy + dy, ts, ts, WALLCOLOUR);

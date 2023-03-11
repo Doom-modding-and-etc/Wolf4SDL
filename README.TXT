@@ -56,10 +56,6 @@ Main features:
  - Toggle Screen Feature:
     Wolf4SDL can toggle into fullscreen if you press ALT+ENTER
  
- - Linux Wolf Library + WolfRad incorporation
-	Wolf4SDL Has Linux Wolf Library + WolfRad incorporated pure wip but still useful
-	for modding development
-	
 Additional features:
 --------------------
 
@@ -93,7 +89,7 @@ Additional features:
 
 The following versions of Wolfenstein 3D data files are currently supported
 by the source code (choose the version by commenting/uncommenting lines in
-version.h as described in that file):
+version.h as described on that file):
 
  - Wolfenstein 3D v1.1 full Apogee
  - Wolfenstein 3D v1.4 full Apogee
@@ -105,8 +101,8 @@ version.h as described in that file):
  - Wolfenstein 3D v1.4 shareware
  - Spear of Destiny full
  - Spear of Destiny demo
- - Spear of Destiny - Mission 2: Return to Danger (not tested)
- - Spear of Destiny - Mission 3: Ultimate Challenge (not tested)
+ - Spear of Destiny - Mission 2: Return to Danger 
+ - Spear of Destiny - Mission 3: Ultimate Challenge
 
 
 How to play:
@@ -139,10 +135,10 @@ https://github.com/wolfysdl/SDL-Archive/raw/main/SDL2-2.26.0-win32-x86.zip and d
 SDL2 2.26.0 64 bit Runtimes can be acquired at:
 https://github.com/wolfysdl/SDL-Archive/raw/main/SDL2-2.26.0-win32-x64.zip and download "SDL_mixer-2.26.0-win32-x64.zip"
 
-SDL2_mixer 2.0.4 32 bit Runtimes can be acquired at:
+SDL2_mixer 2.6.2 32 bit Runtimes can be acquired at:
 https://github.com/wolfysdl/SDL_mixer-archive/raw/main/SDL2_mixer-2.6.2-win32-x86.zip and download "SDL2_mixer-2.0.4-win32-x86.zip"
 
-SDL2_mixer 2.0.4 64 bit Runtimes can be acquired at:
+SDL2_mixer 2.6.2 64 bit Runtimes can be acquired at:
 https://github.com/wolfysdl/SDL_mixer-archive/raw/main/SDL2_mixer-2.6.2-win32-x64.zip and download "SDL2_mixer-2.0.4-win32-x64.zip"
 
 deprecated links:
@@ -207,18 +203,18 @@ The current version of the source code is available on GitHub at:
 The following ways of compiling the source code are supported:
  - Makefile for Linux, BSD variants, MinGW/MSYS, dreamcast(see README.dc), Nintendo Switch(See README.md), 
 Nintendo 3DS and Sony Playstation 2. see README-dc.txt for more details
- - Visual C++ (Wolf4SDL.VC2022.sln and Wolf4SDL.VC2022.vcproj) (see README-VC.txt)
+ - Visual C++ (Wolf4SDL.VC2022.sln (see README-VC.txt)
  - Special compiling for Dreamcast (see README-dc.txt)
  - Xcode (for Mac OS X, macosx/Wolf4SDL.xcodeproj/project.pbxproj)
  - Special compiling for GP2X (see README-GP2X.txt)
 
-- Deprecated:
+- Deprecated but updated:
  - Visual C++ 2008 (Wolf4SDL.VC9.sln and Wolf4SDL.VC9.vcproj)
  - Visual C++ 2005 (Wolf4SDL.sln and Wolf4SDL.vcproj)
  - Visual C++ 6 (Wolf4SDL.dsw and Wolf4SDL.dsp)
  - Code::Blocks 8.02 (Wolf4SDL.cbp)
  - Dev-C++ 5.0 Beta 9.2 (4.9.9.2) (Wolf4SDL.dev) (see README-devcpp.txt)
- - Visual C++ 2019 (Wolf4SDL.VC2019.sln and Wolf4SDL.VC2019.vcproj) (see README-VC.txt)
+ - Visual C++ 2019 (Wolf4SDL.VC2019.sln (see README-VC.txt)
  
 To compile the source code you need the development libraries of
  
