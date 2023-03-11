@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="Changes.txt" />
+    <None Include="README.txt" />
+    <None Include="win\Wolf4SDL.ico">
+      <Filter>win</Filter>
+    </None>
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
+    <None Include="license-gpl.txt" />
+    <None Include="license-id.txt" />
+    <None Include="Makefile" />
+    <None Include="Makefile.3ds" />
+    <None Include="Makefile.dc" />
+    <None Include="Makefile.ns" />
+    <None Include="Makefile.ps2" />
+    <None Include="Makefile.saturn" />
+    <None Include="sodpal.inc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="win">
+      <UniqueIdentifier>{729f684d-6ced-4d83-8422-9156ddb80f9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="aud_sys">
+      <UniqueIdentifier>{d51a048a-00c2-45ec-b0ac-0e95b1942fab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="aud_sys\mame">
+      <UniqueIdentifier>{150a1f7e-cfb6-4e74-a2c8-7b09841e7ccf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="aud_sys\dbopl">
+      <UniqueIdentifier>{98fc9c19-a0e7-4cdb-ae7c-26498c76a90a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="win\resource.h">
+      <Filter>win</Filter>
+    </ClInclude>
+    <ClInclude Include="asmcref.h" />
+    <ClInclude Include="audiosod.h" />
+    <ClInclude Include="audiowl6.h" />
+    <ClInclude Include="f_spear.h" />
+    <ClInclude Include="foreign.h" />
+    <ClInclude Include="gfxv_apo.h" />
+    <ClInclude Include="gfxv_jap.h" />
+    <ClInclude Include="gfxv_sod.h" />
+    <ClInclude Include="gfxv_wl6.h" />
+    <ClInclude Include="gp2x.h" />
+    <ClInclude Include="id_ca.h" />
+    <ClInclude Include="id_crt.h" />
+    <ClInclude Include="id_in.h" />
+    <ClInclude Include="id_pm.h" />
+    <ClInclude Include="id_sd.h" />
+    <ClInclude Include="id_us.h" />
+    <ClInclude Include="id_vh.h" />
+    <ClInclude Include="id_vieasm.h" />
+    <ClInclude Include="id_vl.h" />
+    <ClInclude Include="id_w3swrap.h" />
+    <ClInclude Include="psnprntf.h" />
+    <ClInclude Include="version.h" />
+    <ClInclude Include="wl_ai.h" />
+    <ClInclude Include="wl_anyactor.h" />
+    <ClInclude Include="wl_atmos.h" />
+    <ClInclude Include="wl_cloudsky.h" />
+    <ClInclude Include="wl_def.h" />
+    <ClInclude Include="wl_ed.h" />
+    <ClInclude Include="wl_healthbar.h" />
+    <ClInclude Include="wl_led.h" />
+    <ClInclude Include="wl_math.h" />
+    <ClInclude Include="wl_menu.h" />
+    <ClInclude Include="wl_physics.h" />
+    <ClInclude Include="wl_polygon.h" />
+    <ClInclude Include="wl_shade.h" />
+    <ClInclude Include="wl_utils.h" />
+    <ClInclude Include="aud_sys\mame\fmopl.h">
+      <Filter>aud_sys\mame</Filter>
+    </ClInclude>
+    <ClInclude Include="aud_sys\dosbox\dbopl.h">
+      <Filter>aud_sys\dbopl</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="win\Wolf4SDL.rc">
+      <Filter>win</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="id_ca.c" />
+    <ClCompile Include="id_crt.c" />
+    <ClCompile Include="id_in.c" />
+    <ClCompile Include="id_pm.c" />
+    <ClCompile Include="id_sd.c" />
+    <ClCompile Include="id_us.c" />
+    <ClCompile Include="id_vh.c" />
+    <ClCompile Include="id_vieasm.c" />
+    <ClCompile Include="id_vl.c" />
+    <ClCompile Include="id_w3swrap.c" />
+    <ClCompile Include="psnprntf.c" />
+    <ClCompile Include="sdl_winmain.c" />
+    <ClCompile Include="signon.c" />
+    <ClCompile Include="wl_act1.c" />
+    <ClCompile Include="wl_act2.c" />
+    <ClCompile Include="wl_agent.c" />
+    <ClCompile Include="wl_ai.c" />
+    <ClCompile Include="wl_anyactor.c" />
+    <ClCompile Include="wl_atmos.c" />
+    <ClCompile Include="wl_benchhobo.c" />
+    <ClCompile Include="wl_clockking.c" />
+    <ClCompile Include="wl_cloudsky.c" />
+    <ClCompile Include="wl_conartist.c" />
+    <ClCompile Include="wl_debug.c" />
+    <ClCompile Include="wl_draw.c" />
+    <ClCompile Include="wl_ed.c" />
+    <ClCompile Include="wl_firefly.c" />
+    <ClCompile Include="wl_game.c" />
+    <ClCompile Include="wl_healthbar.c" />
+    <ClCompile Include="wl_hooker.c" />
+    <ClCompile Include="wl_inter.c" />
+    <ClCompile Include="wl_led.c" />
+    <ClCompile Include="wl_main.c" />
+    <ClCompile Include="wl_math.c" />
+    <ClCompile Include="wl_menu.c" />
+    <ClCompile Include="wl_parallax.c" />
+    <ClCompile Include="wl_physics.c" />
+    <ClCompile Include="wl_pimp.c" />
+    <ClCompile Include="wl_plane.c" />
+    <ClCompile Include="wl_play.c" />
+    <ClCompile Include="wl_polygon.c" />
+    <ClCompile Include="wl_scale.c" />
+    <ClCompile Include="wl_shade.c" />
+    <ClCompile Include="wl_sleephobo.c" />
+    <ClCompile Include="wl_state.c" />
+    <ClCompile Include="wl_text.c" />
+    <ClCompile Include="wl_utils.c" />
+    <ClCompile Include="aud_sys\mame\fmopl.c">
+      <Filter>aud_sys\mame</Filter>
+    </ClCompile>
+    <ClCompile Include="aud_sys\dosbox\dbopl.c">
+      <Filter>aud_sys\dbopl</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
