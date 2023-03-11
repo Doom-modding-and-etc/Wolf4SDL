@@ -24,6 +24,25 @@
 =============================================================================
 */
 
+#ifdef AUTOMAP
+boolean automap[MAPSIZE][MAPSIZE];
+
+#define AUTOSCALE 1         // The scale of the automap view
+#define FULLSCALE 2         // The scale of the enlarged automap view
+#define AUTORANGE 20        // The range (in tiles) of the automap view from the player in each direction
+#define AUTOOFFSET 5        // The distance from the corner of the screen to draw the automap
+
+#define WALLCOLOUR 145      // The colour used to draw walls and unexplored areas
+#define EMPTYCOLOUR 154     // The colour used to draw empty space
+#define DOORCOLOUR 95       // The colour used to draw a closed door
+#define OPNDRCOLOUR 104     // The colour used to draw an open door
+#define PLAYERCOLOUR 120    // The colour used to draw the player
+
+#define DRAWENEMIES       // Have the automap draw visible, active enemies
+#define ENEMYCOLOUR 32      // The colour to draw visible, active enemies
+unsigned char* scr = NULL;
+#endif
+
 unsigned char *vbuf;
 
 int        lasttimecount;
@@ -60,6 +79,10 @@ int     CalcRotate (objtype *ob);
 void    DrawScaleds (void);
 void    CalcTics (void);
 void    ThreeDRefresh (void);
+#ifdef AUTOMAP
+void DrawAutomap(void);
+void DrawFullmap(void);
+#endif
 
 #ifdef USE_SKYWALLPARALLAX
 void    ScaleSkyPost();
@@ -973,12 +996,20 @@ void DrawPlayerWeapon (void)
 
 void CalcTics (void)
 {
+#ifndef FIXEDLOGICRATE
     unsigned int curtime;
+#endif
 //
 // calculate tics since last refresh for adaptive timing
 //
     if (lasttimecount > (int) GetTimeCount())
         lasttimecount = GetTimeCount();    // if the game was paused a LONG time
+
+#ifdef FIXEDLOGICRATE
+    // The logic rate is always fixed
+    tics = 1;
+    lasttimecount += tics;
+#else
 
     curtime = SDL_GetTicks();
     tics = (curtime * 7) / 100 - lasttimecount;
@@ -993,6 +1024,7 @@ void CalcTics (void)
 
     if (tics>MAXTICS)
         tics = MAXTICS;
+#endif
 }
 
 
@@ -1609,6 +1641,9 @@ void Setup3DView (void)
 
 void ThreeDRefresh (void)
 {
+#ifdef AUTOMAP
+    int x, y;
+#endif
 //
 // clear out the traced array
 //
@@ -1670,6 +1705,14 @@ void ThreeDRefresh (void)
 #endif
 
     DrawPlayerWeapon ();    // draw player's hands
+#ifdef AUTOMAP
+    for (x = 0; x < MAPSIZE; x++)
+        for (y = 0; y < MAPSIZE; y++)
+            if (spotvis[x][y])
+                automap[x][y] = true;
+    DrawAutomap();
+#endif
+
 
     if(Keyboard(sc_Tab) && viewsize == 21 && gamestate.weapon != -1)
         ShowActStatus();
@@ -1708,6 +1751,14 @@ void ThreeDRefresh (void)
     if (fpscounter)
     {
         fps_frames++;
+#ifdef FIXEDLOGICRATE
+    if (SDL_GetTicks() - fps_time > 500)
+    {
+        fps_time = SDL_GetTicks();
+        fps = fps_frames << 1;
+        fps_frames = 0;
+    }
+#else
         fps_time+=tics;
 
         if(fps_time>35)
@@ -1716,6 +1767,140 @@ void ThreeDRefresh (void)
             fps=fps_frames<<1;
             fps_frames=0;
         }
+#endif
     }
+#ifdef FIXEDLOGICRATE
+    // When using fixed game logic, this must be elsewhere
+    frameon += tics;
+#endif
 #endif
 }
+
+#ifdef AUTOMAP
+
+void DrawTile(int scx, int scy, int scwidth, int scheight, int color)
+{
+    unsigned char* ptr = scr + scy * bufferPitch + scx;
+
+    while (scheight--)
+    {
+        memset(ptr, color, scwidth);
+        ptr += bufferPitch;
+    }
+}
+
+void DrawAutomap(void)
+{
+    int x1 = player->tilex - AUTORANGE, x2 = player->tilex + AUTORANGE;
+    int y1 = player->tiley - AUTORANGE, y2 = player->tiley + AUTORANGE;
+    int ts = AUTOSCALE * scaleFactor;
+    int sx = (320 - ((AUTORANGE * 2) + 1) * AUTOSCALE - AUTOOFFSET) * scaleFactor, sy = AUTOOFFSET * scaleFactor;
+    int dx = 0, dy;
+    int x, y;
+    objtype* ob;
+
+    scr = VL_LockSurface(screenBuffer);
+
+    for (x = x1; x <= x2; x++)
+    {
+        dy = 0;
+        for (y = y1; y <= y2; y++)
+        {
+            if (player->tilex == x && player->tiley == y)
+                DrawTile(sx + dx, sy + dy, ts, ts, PLAYERCOLOUR);
+            else if (x < 0 || y < 0 || x > MAPSIZE - 1 || y > MAPSIZE - 1 || !automap[x][y])
+                DrawTile(sx + dx, sy + dy, ts, ts, WALLCOLOUR);
+            else
+            {
+                if (!tilemap[x][y])
+                    DrawTile(sx + dx, sy + dy, ts, ts, EMPTYCOLOUR);
+                else if (tilemap[x][y] >= BIT_DOOR)
+                {
+                    if (!doorposition[tilemap[x][y] - BIT_DOOR])
+                        DrawTile(sx + dx, sy + dy, ts, ts, DOORCOLOUR);
+                    else
+                        DrawTile(sx + dx, sy + dy, ts, ts, OPNDRCOLOUR);
+                }
+                else
+                    DrawTile(sx + dx, sy + dy, ts, ts, WALLCOLOUR);
+            }
+            dy += ts;
+        }
+        dx += ts;
+    }
+
+#ifdef DRAWENEMIES
+    for (ob = objlist; ob; ob = ob->next)
+    {
+        if (ob->flags & FL_SHOOTABLE && ob->flags & FL_VISIBLE && ob->flags & FL_ATTACKMODE
+            && spotvis[ob->tilex][ob->tiley] && ob != player)
+        {
+            dx = (ob->tilex - player->tilex) * ts;
+            dy = (ob->tiley - player->tiley) * ts;
+            if (abs(dx) >= (AUTORANGE + 1) * ts
+                || abs(dy) >= AUTORANGE * ts)
+                continue;
+            DrawTile(sx + dx, sy + dy, ts, ts, ENEMYCOLOUR);
+        }
+    }
+#endif
+
+    VL_UnlockSurface(screenBuffer);
+    scr = NULL;
+}
+
+void DrawFullmap(void)
+{
+    int ts = FULLSCALE * scaleFactor;
+    int sx = viewwidth / 2 - (MAPSIZE / 2) * ts;
+    int sy = viewheight / 2 - (MAPSIZE / 2) * ts;
+    int dx = 0, dy;
+    int x, y;
+    objtype* ob;
+    scr = VL_LockSurface(screenBuffer);
+
+    for (x = 0; x < MAPSIZE; x++)
+    {
+        dy = 0;
+        for (y = 0; y < MAPSIZE; y++)
+        {
+            if (player->tilex == x && player->tiley == y)
+                DrawTile(sx + dx, sy + dy, ts, ts, PLAYERCOLOUR);
+            else if (x < 0 || y < 0 || x > MAPSIZE - 1 || y > MAPSIZE - 1 || !automap[x][y])
+                DrawTile(sx + dx, sy + dy, ts, ts, WALLCOLOUR);
+            else
+            {
+                if (!tilemap[x][y])
+                    DrawTile(sx + dx, sy + dy, ts, ts, EMPTYCOLOUR);
+                else if (tilemap[x][y] >= 128)
+                {
+                    if (!doorposition[tilemap[x][y] - 128])
+                        DrawTile(sx + dx, sy + dy, ts, ts, DOORCOLOUR);
+                    else
+                        DrawTile(sx + dx, sy + dy, ts, ts, OPNDRCOLOUR);
+                }
+                else
+                    DrawTile(sx + dx, sy + dy, ts, ts, WALLCOLOUR);
+            }
+            dy += ts;
+        }
+        dx += ts;
+    }
+
+#ifdef DRAWENEMIES
+    for (ob = objlist; ob; ob = ob->next)
+    {
+        if (ob->flags & FL_SHOOTABLE && ob->flags & FL_VISIBLE && ob->flags & FL_ATTACKMODE
+            && spotvis[ob->tilex][ob->tiley] && ob != player)
+        {
+            dx = ob->tilex * ts;
+            dy = ob->tiley * ts;
+            DrawTile(sx + dx, sy + dy, ts, ts, ENEMYCOLOUR);
+        }
+    }
+#endif
+
+    VL_UnlockSurface(screenBuffer);
+    scr = NULL;
+}
+#endif

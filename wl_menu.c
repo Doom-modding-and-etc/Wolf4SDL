@@ -1140,6 +1140,8 @@ DrawSliderBox(int x, int y, int val, int valinc, int width, int height, unsigned
 void
 DrawSoundVols(boolean curmode)
 {
+    char soundstr[4];
+    char musicstr[4];
     ClearMScreen();
     DrawWindow(40, 25, 240, 145, BKGDCOLOR);
 
@@ -1157,8 +1159,6 @@ DrawSoundVols(boolean curmode)
 
     PrintY = 108;
     US_CPrint("Music");
-
-    char soundstr[4], musicstr[4];
 
     sprintf(soundstr, "%d", soundvol);
     sprintf(musicstr, "%d", musicvol);
@@ -3307,8 +3307,8 @@ void SetupSaveGames()
 {
     int i;
     char name[13];
-    const char* savepath[300];
-	const int handle = w3sopen(savepath, O_RDONLY | O_BINARY);
+    char* savepath[300];
+	const int handle = w3sopen((char*)savepath, O_RDONLY | O_BINARY);
 
     strcpy(name, SaveName);
     for(i = 0; i < 10; i++)
@@ -3320,9 +3320,9 @@ void SetupSaveGames()
         {
 #endif
             if(configdir[0])
-                w3ssnprintf(savepath, sizeof(savepath), "%s/%s", configdir, name);
+                w3ssnprintf((char*)savepath, sizeof(savepath), "%s/%s", configdir, name);
             else
-                strcpy(savepath, name);
+                strcpy((char*)savepath, name);
 
             if(handle >= 0)
             {

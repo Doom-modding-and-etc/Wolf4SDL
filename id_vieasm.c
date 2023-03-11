@@ -380,12 +380,13 @@ void ASM_FadeOutMus(int fadems)
 sample ASM_Cache(char* sndfile, const char* name)
 {
     sample sound;
+	Mix_Chunk* chunk;
     sound.chunk = NULL;
     sound.name = NULL;
 
     ASM_AbortIfClosed sound;
 
-    Mix_Chunk* chunk = Mix_LoadWAV(sndfile);
+    chunk = Mix_LoadWAV(sndfile);
 
     if (chunk == NULL)
     {
@@ -409,12 +410,13 @@ sample ASM_Cache(char* sndfile, const char* name)
 sample ASM_CacheFromMem(void* ptr, int size, const char* name)
 {
     sample sound;
+	Mix_Chunk* chunk;
     sound.chunk = NULL;
     sound.name = NULL;
 
     ASM_AbortIfClosed sound;
 
-    Mix_Chunk* chunk = Mix_LoadWAV_RW(SDL_RWFromMem(ptr, size), 1);
+    chunk = Mix_LoadWAV_RW(SDL_RWFromMem(ptr, size), 1);
     if (chunk == NULL)
     {
 #ifdef VERBOSE
@@ -453,6 +455,7 @@ void ASM_Uncache(sample sound)
 
 int ASM_PlaySound(sample sound, int angle, unsigned char distance, boolean ambient)
 {
+	int chanon;
     ASM_AbortIfClosed - 1;
 
     if (sound.chunk == NULL)
@@ -463,7 +466,7 @@ int ASM_PlaySound(sample sound, int angle, unsigned char distance, boolean ambie
         return -1;
     }
 
-    int chanon = ASM_GetFreeChannel();
+    chanon = ASM_GetFreeChannel();
 
     if (chanon == -1)
     {
@@ -604,6 +607,7 @@ boolean SD_MusicPlaying(void)
 
 int CA_CacheAudioChunk(int chunk)
 {
+	char* file;
     if (chunk >= NUMSOUNDS)
     {
 #ifdef VERBOSE
@@ -612,7 +616,7 @@ int CA_CacheAudioChunk(int chunk)
         return 0;
     }
 
-    char* file = (char*)malloc((size_t)(strlen(sounddir) + strlen(ASM_Soundnames[chunk])) + 1);
+    file = (char*)malloc((size_t)(strlen(sounddir) + strlen(ASM_Soundnames[chunk])) + 1);
     strcpy(file, sounddir);
     strcat(file, ASM_Soundnames[chunk]);
 
@@ -653,6 +657,7 @@ int SD_MusicOff(void)
 
 void SD_StartMusic(int chunk)
 {
+	char* file;
     ASM_AbortIfClosed;
 
     SD_AbortIfMusOff;
@@ -665,7 +670,7 @@ void SD_StartMusic(int chunk)
         return;
     }
 
-    char* file = (char*)malloc((size_t)(strlen(musicdir) + strlen(ASM_Musicnames[chunk])) + 1);
+    file = (char*)malloc((size_t)(strlen(musicdir) + strlen(ASM_Musicnames[chunk])) + 1);
     strcpy(file, musicdir);
     strcat(file, ASM_Musicnames[chunk]);
 
@@ -746,11 +751,11 @@ int SD_GetAmbIndex(void)
 
 unsigned char SD_PlaySound(soundnames sound)
 {
-    SD_AbortIfSndOff 0;
-
-    int lp = LeftPosition;
+	int lp = LeftPosition;
     int rp = RightPosition;
     boolean amb = ambience;
+    int channel;
+	SD_AbortIfSndOff 0;
 
     LeftPosition = RightPosition = ambience = 0;
 
@@ -771,15 +776,16 @@ unsigned char SD_PlaySound(soundnames sound)
     }
 
 
-    int channel = SD_PlayDigitized(sound, lp, rp, amb);
+    channel = SD_PlayDigitized(sound, lp, rp, amb);
     return channel;
 }
 
 int SD_PlayDigitized(unsigned short which, int leftpos, int rightpos, boolean ambient)
 {
+	int channel;
     SD_AbortIfSndOff 0;
 
-    int channel = ASM_PlayDirect(ASM_Audiosegs[which], ambient);
+    channel = ASM_PlayDirect(ASM_Audiosegs[which], ambient);
     if (ambient)
         ambientsnds[SD_GetAmbIndex()] = channel;
     ambient = false;
@@ -806,7 +812,7 @@ void SD_StopAmbient(int ambindex)
 void SD_SetDigiDevice(SDSMode mode)
 {
     boolean devicenotpresent;
-
+    int i;
     if (mode == DigiMode)
         return;
 
@@ -824,8 +830,7 @@ void SD_SetDigiDevice(SDSMode mode)
             devicenotpresent = true;
         break;
     case sds_Off:
-        int i;
-        for (i; i < DigiMode; i++)
+        for (i = 0; i < DigiMode; i++)
         {
             SD_Shutdown();
         }

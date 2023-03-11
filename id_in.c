@@ -41,6 +41,7 @@ boolean MousePresent;
 boolean forcegrabmouse;
 
 volatile boolean KeyboardState[129];
+volatile int WheelPos=0;
 #endif
 
 // 	Global variables
@@ -480,6 +481,20 @@ static void processEvent(SDL_Event* event)
         // exit if the window is closed
     case SDL_QUIT:
         Quit(NULL);
+
+    case SDL_MOUSEBUTTONDOWN:
+    {
+        if (event->button.button == 4)
+        {
+            WheelPos++;
+        }
+
+        if (event->button.button == 5)
+        {
+            WheelPos--;
+        }
+    }
+    break;
 
         // check for keypresses
     case SDL_KEYDOWN:

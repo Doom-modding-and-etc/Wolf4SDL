@@ -493,16 +493,17 @@ extern volatile char LastASCII;
 extern volatile ScanCode LastScan;
 extern int JoyNumButtons;
 extern boolean forcegrabmouse;
-
-#define	IN_KeyDown(code)	(Keyboard((code)))
-#define	IN_ClearKey(code)	{ KeyboardSet(code, false);\
-						      if (code == LastScan) LastScan = sc_None;}
+extern volatile int WheelPos;
 
 
 boolean Keyboard(int key);
 void KeyboardSet(int key, boolean state);
 int KeyboardLookup(int key);
 
+// Function prototypes
+#define	IN_KeyDown(code)	(Keyboard((code)))
+#define	IN_ClearKey(code)	{KeyboardSet(code, false);\
+							if (code == LastScan) LastScan = sc_None;}
 
 // DEBUG - put names in prototypes
 extern	void		IN_Startup(void), IN_Shutdown(void);

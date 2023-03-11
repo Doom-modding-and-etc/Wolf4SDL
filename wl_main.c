@@ -150,16 +150,16 @@ void ReadConfig(void)
     SMMode  sm;
     SDSMode sds;
 
-    const char* configpath[300];
-	const int file = w3sopen(configpath, O_RDONLY | O_BINARY);
+    char* configpath[300];
+	const int file = w3sopen((const char*)configpath, O_RDONLY | O_BINARY);
 #ifdef _arch_dreamcast
     DC_LoadFromVMU(configname);
 #endif
 
     if(configdir[0])
-        w3ssnprintf(configpath, sizeof(configpath), "%s/%s", configdir, configname);
+        w3ssnprintf((char*)configpath, sizeof(configpath), "%s/%s", configdir, configname);
     else
-        strcpy(configpath, configname);
+        strcpy((char*)configpath, configname);
 
     
     if (file != -1)
@@ -306,16 +306,16 @@ noconfig:
 
 void WriteConfig(void)
 {
-    const char *configpath[300];
-	const int file = w3sopen(configpath, O_CREAT | O_WRONLY | O_BINARY, 0644);
+    char *configpath[300];
+	const int file = w3sopen((const char*)configpath, O_CREAT | O_WRONLY | O_BINARY, 0644);
 #ifdef _arch_dreamcast
     fs_unlink(configname);
 #endif
 
     if(configdir[0])
-        w3ssnprintf(configpath, sizeof(configpath), "%s/%s", configdir, configname);
+        w3ssnprintf((char*)configpath, sizeof(configpath), "%s/%s", configdir, configname);
     else
-        strcpy(configpath, configname);
+        strcpy((char*)configpath, configname);
 
    
     if (file != -1)
@@ -388,7 +388,9 @@ void NewGame (int difficulty,int episode)
     gamestate.lives = 3;
     gamestate.nextextra = EXTRAPOINTS;
     gamestate.episode=episode;
-
+#ifdef AUTOMAP
+    memset(automap, 0, sizeof(automap));
+#endif
     startgame = true;
 }
 
@@ -453,6 +455,10 @@ boolean SaveTheGame(FILE *file,int x,int y)
     DiskFlopAnim(x,y);
     fwrite(mapseen,sizeof(mapseen),1,file);
     checksum = DoChecksum((unsigned char *)mapseen,sizeof(mapseen),checksum);
+#endif
+#ifdef AUTOMAP
+    fwrite(automap, sizeof(automap), 1, file);
+    checksum = DoChecksum((byte*)automap, sizeof(automap), checksum);
 #endif
     DiskFlopAnim(x,y);
 

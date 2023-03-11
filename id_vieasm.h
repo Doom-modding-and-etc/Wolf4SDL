@@ -223,7 +223,7 @@ extern  boolean    SD_MusicPlaying(void);                                      /
 extern  boolean    SD_SetSoundMode(SDMode mode);                               // DONE
 extern  boolean    SD_SetMusicMode(SMMode mode);                               // DONE
 extern void SD_SetDigiDevice(SDSMode mode);
-extern  int     SD_PlayDigitized(word which, int leftpos, int rightpos, boolean amb);   // DONE
+extern  int     SD_PlayDigitized(unsigned short which, int leftpos, int rightpos, boolean amb);   // DONE
 extern  void    CA_LoadAllSounds(void);
 
 // Ambient sound prototypes

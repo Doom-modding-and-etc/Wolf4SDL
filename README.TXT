@@ -292,6 +292,8 @@ Credits:
  - Thanks to Terraformer9x and Nexion for the advice and help for the Mixer sound problem
  - Thanks to Fabian greffrath for the patches on the code 
  - Thanks to keeganatorr for the Nintendo Switch support
+ - Thanks to Codetech84 for the tutorials about SDL and the fixed logic rate code.
+ - Thanks to AlumiuN for the code of HUD Automap and Vieasm(Aka: VODKA-INDUCED ENTERTAINMENT ADVANCED SOUND MANAGER)
  - Thanks to Fabian Sangalard for the awesoeme crt feature used on Chocolate Wolfenstein 3d. 
  - Thanks to vbt for the port of sega saturn
  - Thanks to WayneCa for upgrade the original Wolf

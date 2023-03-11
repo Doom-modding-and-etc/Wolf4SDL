@@ -78,9 +78,11 @@
 //#define VIEASM //Activates: VODKA-INDUCED ENTERTAINMENT ADVANCED SOUND MANAGER v0.9.2(Warning: only works with .wav and .ogg placed in sounds/ follow the asmcref.h for more details).
 //#define BANDEDHOLOWALLS     // Use the old DOS-style "banded" wall drawing behaviour when inside walls
 //#define USE_DOSBOX //Replaces fmopl sound and uses DOSBOX Sound instead.
-//#define USE_OPL3 //Replaces fmopl sound and uses nuked opl3 sound instead[WIP]
 //#define GOD_MODE //Use godmode
-
+#define FIXEDLOGICRATE       // Enables framerate independent game logic, aka uncapped refreshrate. (by Codetech84)
+//#define LAGSIMULATOR          // Enables lag simulator debug option, depends on fixed logic rate (by Codetech84)
+//#define AUTOMAP //Enables the HUD automap feature by AlumiuN
+//#define VANILLA //Deactivates some features that Wolf3d or Sod doesn´t have on orignial game
 #if defined(SWITCH) 
 #define DATADIR "/switch/wolf4sdl/wolf3d/"
 #elif defined(N3DS)

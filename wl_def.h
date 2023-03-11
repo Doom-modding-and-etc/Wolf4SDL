@@ -281,6 +281,7 @@ typedef unsigned char tiletype;
 
 #define MINDIST         0x5800l
 
+
 #define MAPSHIFT        6
 #define MAPSIZE         (1 << MAPSHIFT)
 #define MAPAREA         (MAPSIZE * MAPSIZE)
@@ -1054,7 +1055,7 @@ typedef enum
 =============================================================================
 */
 
-#ifndef SEGA_SATURN //No config, no dir haha!
+#ifndef SEGA_SATURN
 extern  char     str[80];
 extern  char     configdir[256];
 extern  char     configname[13];
@@ -1299,6 +1300,12 @@ int DebugKeys(void);
 void ViewMap(void);
 void PictureGrabber(void);
 
+#ifdef FIXEDLOGICRATE
+#ifdef LAGSIMULATOR
+extern boolean lagging;
+#endif
+#endif
+
 /*
 =============================================================================
 
@@ -1312,6 +1319,9 @@ extern  unsigned char* vbuf;
 extern  int lasttimecount;
 extern  int frameon;
 extern  boolean fizzlein, fpscounter;
+#ifdef AUTOMAP
+extern boolean automap[MAPSIZE][MAPSIZE];
+#endif
 
 #if defined(USE_FLOORCEILINGTEX) || defined(USE_CLOUDSKY)
 extern  short* spanstart;
@@ -1344,7 +1354,10 @@ extern  unsigned short    horizwall[MAXWALLTILES], vertwall[MAXWALLTILES];
 void    ScalePost(void);
 void    ThreeDRefresh(void);
 void    CalcTics(void);
-
+#ifdef AUTOMAP
+void DrawAutomap(void);
+void DrawFullmap(void);
+#endif
 
 /*
 =============================================================================

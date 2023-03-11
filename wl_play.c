@@ -48,6 +48,11 @@ objtype *actorat[MAPSIZE][MAPSIZE];
 #ifdef REVEALMAP
 boolean     mapseen[MAPSIZE][MAPSIZE];
 #endif
+#ifdef FIXEDLOGICRATE
+#ifdef LAGSIMULATOR
+boolean lagging = true;
+#endif
+#endif
 
 //
 // replacing refresh manager
@@ -388,11 +393,27 @@ void PollKeyboardButtons (void)
 =
 ===================
 */
+#ifndef VANILLA
+int LastWheelPos=0;
+#endif
 
 void PollMouseButtons (void)
 {
     int buttons = IN_MouseButtons ();
+#ifndef VANILLA
+    if (WheelPos < LastWheelPos)
+    {
+        buttonstate[bt_prevweapon] = true;
+    } 
+     
+    if (WheelPos > LastWheelPos)
+    {
+        buttonstate[bt_nextweapon] = true;
+    }
 
+    LastWheelPos = WheelPos;
+
+#endif
     if (buttons & 1)
         buttonstate[buttonmouse[0]] = true;
     if (buttons & 2)
@@ -1002,6 +1023,28 @@ void CheckKeys (void)
             IN_CenterMouse();     // Clear accumulated mouse movement
 
         lasttimecount = GetTimeCount();
+    }
+#endif
+#ifdef AUTOMAP
+//
+// Display full automap
+//
+    if (Keyboard(sc_M))
+    {
+        ScanCode key;
+        DrawFullmap();
+        VH_UpdateScreen(screen);
+
+        IN_ClearKeysDown();
+        key = IN_WaitForKey();
+        while (key != sc_Tab && key != sc_Escape)
+            key = IN_WaitForKey();
+        IN_ClearKeysDown();
+
+        if (MousePresent && IN_IsInputGrabbed())
+            IN_CenterMouse();     // Clear accumulated mouse movement
+        lasttimecount = GetTimeCount();
+        return;
     }
 #endif
 }
@@ -1625,6 +1668,62 @@ think:
 int funnyticount;
 
 
+#ifdef FIXEDLOGICRATE
+double accumulator, frametime_spent = 0;
+double dt = 1.0f / 70.0f; // 70 FPS
+unsigned int oldtime = 0;
+
+
+void ClockGameLogic(void)
+{
+    unsigned int curtime;
+    unsigned int deltatime;
+    double time_to_pass;
+    if (demorecord || demoplayback)
+    {
+        accumulator = dt;
+        return;
+    }
+
+    curtime = SDL_GetTicks();
+    deltatime = curtime - oldtime;
+    if (oldtime == 0)
+        deltatime = 0;
+    oldtime = curtime;
+    time_to_pass = (double)(deltatime / 1000.0f);
+
+    // Choking, do not overload the timestep
+    // to avoid grinding to a halt
+    if (time_to_pass > dt * 10)
+    {
+        time_to_pass = dt * 10;
+    }
+
+    // Add some frametime to spend
+    accumulator += time_to_pass;
+}
+
+#ifdef LAGSIMULATOR
+unsigned int next_lag_spike = -1;
+
+
+void LagSimulator(void)
+{
+    if (demorecord || demoplayback)
+        return;
+
+    if (lagging)
+    {
+        if (next_lag_spike == -1 || SDL_GetTicks() >= next_lag_spike)
+        {
+            SDL_Delay(80 + (rand() % 200));
+            next_lag_spike = SDL_GetTicks() + 200 + rand() % 350;
+        }
+    }
+}
+#endif
+#endif
+
 void PlayLoop (void)
 {
 #if defined (SWITCH) || defined (N3DS)
@@ -1661,6 +1760,95 @@ void PlayLoop (void)
 #ifdef SEGA_SATURN
     DrawStatusBar(); // vbt : ajout
 #endif
+#ifdef FIXEDLOGICRATE
+    do
+    {
+        // Break from the playloop if starting game
+        if (startgame || loadedgame)
+            break;
+
+#ifdef LAGSIMULATOR
+        // Do some lagging
+        LagSimulator();
+#endif
+        // Clock the logictime that has stacked up
+        ClockGameLogic();
+
+        // Loop while there is time left to simulate
+        while (accumulator >= dt)
+        {
+            //
+            // start a logic frame
+            //
+            PollControls();
+
+            //
+            // actor thinking
+            //
+            madenoise = false;
+
+            MoveDoors();
+            MovePWalls();
+
+            for (obj = player; obj; obj = obj->next)
+                DoActor(obj);
+
+            UpdatePaletteShifts();
+
+            //
+            // MAKE FUNNY FACE IF BJ DOESN'T MOVE FOR AWHILE
+            //
+#ifdef SPEAR
+            funnyticount += tics;
+            if (funnyticount > 30l * 70)
+            {
+                funnyticount = 0;
+                if (viewsize != 21)
+                    StatusDrawFace(BJWAITING1PIC + (US_RndT() & 1));
+                facecount = 0;
+            }
+#endif
+            // Abort demo?
+            if (demoplayback)
+            {
+                if (IN_CheckAck())
+                {
+                    IN_ClearKeysDown();
+                    playstate = ex_abort;
+                }
+            }
+
+            // Advance timer
+            gamestate.TimeCount += tics;
+
+            // Debug keys
+            CheckKeys();
+
+            // End of one frame
+            frametime_spent += dt;
+            accumulator -= dt;
+            frameon += tics;
+        }
+
+        // Only refresh screen once per frame, instead of once per logic frame
+        ThreeDRefresh();
+
+        UpdateSoundLoc();      // JAB
+        if (screenfaded)
+            VW_FadeIn();
+
+        // Do single stepping outside of the game logic loop
+        if (singlestep)
+        {
+            VW_WaitVBL(singlestep);
+            lasttimecount = GetTimeCount();
+        }
+
+        // Extra vbls left outside of game logic
+        if (extravbls)
+            VW_WaitVBL(extravbls);
+    }
+#else
     do
     {
         PollControls ();
@@ -1724,6 +1912,7 @@ void PlayLoop (void)
             }
         }
     }
+#endif
     while (!playstate && !startgame);
 
     if (playstate != ex_died)

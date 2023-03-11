@@ -42,8 +42,6 @@
 #else
 #ifdef USE_DOSBOX
 #include "aud_sys/dosbox/dbopl.h"
-#elif defined(USE_OPL3)
-#include "aud_sys/nuked-opl3/opl3.h"
 #else
 #include "aud_sys/mame/fmopl.h"
 #endif
@@ -57,8 +55,8 @@ Chip chip;
 
 static boolean YM3812Init(int numChips, int clock, int rate)
 {
-    Chip__Setup(&numChips, rate);
-    return false;
+    Chip__Setup(&chip, clock);
+    return true;
 }
 
 static void YM3812Write(Chip which, Bit32u reg, Bit8u val)
@@ -71,14 +69,18 @@ static void YM3812UpdateOne(Chip which, int16_t* stream, int length)
     Bit32s buffer[512 * 2];
     int i;
 
+    Chip__Chip(&which);
+
     // length is at maximum samplesPerMusicTick = param_samplerate / 700
     // so 512 is sufficient for a sample rate of 358.4 kHz (default 44.1 kHz)
     if (length > 512)
         length = 512;
 
     if (which.opl3Active)
-    {       
+    {
+        DBOPL_InitTables();
         Chip__GenerateBlock3(&which, length, buffer);
+
         // GenerateBlock3 generates a number of "length" 32-bit stereo samples
         // so we only need to convert them to 16-bit samples
         for (i = 0; i < length * 2; i++)  // * 2 for left/right channel
@@ -93,6 +95,7 @@ static void YM3812UpdateOne(Chip which, int16_t* stream, int length)
     else
     {
         Chip__GenerateBlock2(&which, length, buffer);
+
         // GenerateBlock3 generates a number of "length" 32-bit mono samples
         // so we need to convert them to 32-bit stereo samples
         for (i = 0; i < length; i++)
@@ -102,63 +105,7 @@ static void YM3812UpdateOne(Chip which, int16_t* stream, int length)
             Bit32s sample = buffer[i] << 2;
             if (sample > 32767) sample = 32767;
             else if (sample < -32768) sample = -32768;
-            stream[i * 2] = stream[i * 2 + 1] = (int16_t)sample;
-        }
-    }
-}
-
-#elif defined(USE_OPL3)
-opl3_chip chip;
-static boolean YM3812Init(int numChips, int clock, int rate)
-{
-    OPL3_Generate(&numChips, rate);
-    return false;
-}
-
-static void YM3812Write(opl3_chip which, unsigned int reg, unsigned char val)
-{
-    OPL3_WriteReg(&which, reg, val);
-}
-
-static void YM3812UpdateOne(opl3_chip which, int16_t* stream, int length)
-{
-    int buffer[512 * 2];
-    int i;
-
-    // length is at maximum samplesPerMusicTick = param_samplerate / 700
-    // so 512 is sufficient for a sample rate of 358.4 kHz (default 44.1 kHz)
-    if (length > 512)
-        length = 512;
-
-    if(which.samples[i])
-    {
-        //Chip__GenerateBlock3(&which, length, buffer);
-        OPL3_Generate4ChResampled(&which, buffer);
-        // GenerateBlock3 generates a number of "length" 32-bit stereo samples
-        // so we only need to convert them to 16-bit samples
-        for (i = 0; i < length * 2; i++)  // * 2 for left/right channel
-        {
-            // Multiply by 4 to match loudness of MAME emulator.
-            int sample = buffer[i] << 2;
-            if (sample > 32767) sample = 32767;
-            else if (sample < -32768) sample = -32768;
-            stream[i] = sample;
-        }
-    }
-    else
-    {
-        //Chip__GenerateBlock2(&which, length, buffer);
-        OPL3_GenerateResampled(&which, length);
-        // GenerateBlock3 generates a number of "length" 32-bit mono samples
-        // so we need to convert them to 32-bit stereo samples
-        for (i = 0; i < length; i++)
-        {
-            // Multiply by 4 to match loudness of MAME emulator.
-            // Then upconvert to stereo.
-            int sample = buffer[i] << 2;
-            if (sample > 32767) sample = 32767;
-            else if (sample < -32768) sample = -32768;
-            stream[i * 2] = stream[i * 2 + 1] = (int16_t)sample;
+            stream[i * 2] = stream[i * 2 + 1] = (short)sample;
         }
     }
 }
