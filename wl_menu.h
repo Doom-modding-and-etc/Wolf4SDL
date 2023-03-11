@@ -193,6 +193,9 @@ void DefineMouseBtns(void);
 void DefineJoyBtns(void);
 void DefineKeyBtns(void);
 void DefineKeyMove(void);
+#ifdef EXTRACONTROLS
+void DefineKeyExtra(void);
+#endif
 void EnterCtrlData(int index,CustomCtrls *cust,void (*DrawRtn)(int),void (*PrintRtn)(int),int type);
 
 #ifdef VIEASM
@@ -213,10 +216,16 @@ void DrawCustMouse(int hilight);
 void DrawCustJoy(int hilight);
 void DrawCustKeybd(int hilight);
 void DrawCustKeys(int hilight);
+#ifdef EXTRACONTROLS
+void DrawCustExtra(int hilight);
+
+void PrintCustExtra(int i);
+#endif // EXTRACONTROLS
 void PrintCustMouse(int i);
 void PrintCustJoy(int i);
 void PrintCustKeybd(int i);
 void PrintCustKeys(int i);
+
 
 void PrintLSEntry(int w,int color);
 void TrackWhichGame(int w);
@@ -243,8 +252,11 @@ void CheckForEpisodes(void);
 void FreeMusic(void);
 
 
-enum {MOUSE,JOYSTICK,KEYBOARDBTNS,KEYBOARDMOVE};        // FOR INPUT TYPES
-
+#ifndef EXTRACONTROLS
+enum { MOUSE, JOYSTICK, KEYBOARDBTNS, KEYBOARDMOVE };        // FOR INPUT TYPES
+#else
+enum { MOUSE, JOYSTICK, KEYBOARDBTNS, KEYBOARDMOVE, KEYBOARDEXTRA };        // FOR INPUT TYPES
+#endif
 enum menuitems
 {
         newgame,

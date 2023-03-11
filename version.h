@@ -4,7 +4,7 @@
 #ifndef VERSIONALREADYCHOSEN              // used for batch compiling
 
 /* Defines used for different versions */
-#define SPEAR
+//#define SPEAR
 //#define SPEARDEMO
 //#define UPLOAD
 #define GOODTIMES
@@ -73,6 +73,8 @@
 //#define MAPCONTROLLEDCEILING// Map Controlled Ceiling colour (8,0)
 //#define MAPCONTROLLEDFLOOR    // Map Controlled Floor colour (9,0)
 //#define BLAKEDOORS     // Blake Stone style Double doors - original code by: Adam Biser
+#define EXTRACONTROLS // switches out to Joystick controls for WASD and mouse movement toggles instead 
+
 
 #if defined(SWITCH) 
 #define DATADIR "/switch/wolf4sdl/wolf3d/"

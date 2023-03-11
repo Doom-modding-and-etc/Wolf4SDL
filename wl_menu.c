@@ -134,7 +134,11 @@ CP_itemtype SndMenu[] = {
 #ifdef JAPAN
 enum { CTL_MOUSEENABLE, CTL_JOYENABLE, CTL_JOY2BUTTONUNKNOWN, CTL_GAMEPADUNKONWN, CTL_MOUSESENS, CTL_CUSTOMIZE };
 #else
+#ifndef EXTRACONTROLS
 enum { CTL_MOUSEENABLE, CTL_MOUSESENS, CTL_JOYENABLE, CTL_CUSTOMIZE };
+#else
+enum { CTL_MOUSEENABLE, CTL_MOUSESENS, CTL_MOUSEMOVEENABLE, CTL_CUSTOMIZE };
+#endif // EXTRACONTROLS
 #endif
 
 CP_itemtype CtlMenu[] = {
@@ -148,7 +152,11 @@ CP_itemtype CtlMenu[] = {
 #else
     {0, STR_MOUSEEN, 0},
     {0, STR_SENS, MouseSensitivity},
+#ifdef EXTRACONTROLS
+    {0, STR_MOUSEMVN, 0},
+#else
     {0, STR_JOYEN, 0},
+#endif
     {1, STR_CUSTOM, CustomControls}
 #endif
 };
@@ -247,10 +255,17 @@ CP_itemtype CusMenu[] = {
     {0, "", 0},
     {1, "", 0},
     {0, "", 0},
+#ifdef EXTRACONTROLS
+    {1, "", 0},
+    {0, "", 0},
+    {0, "", 0},
+    {1, "", 0}
+#else
     {0, "", 0},
     {1, "", 0},
     {0, "", 0},
     {1, "", 0}
+#endif
 };
 
 // CP_iteminfo struct format: short x, y, amount, curpos, indent;
@@ -2038,12 +2053,22 @@ CP_Control (int blank)
                 ShootSnd ();
                 break;
 
+#ifndef EXTRACONTROLS
             case CTL_JOYENABLE:
                 joystickenabled ^= 1;
-                DrawCtlScreen ();
+                DrawCtlScreen();
                 CusItems.curpos = -1;
-                ShootSnd ();
+                ShootSnd();
                 break;
+#else
+            case CTL_MOUSEMOVEENABLE:
+                mousemoveenabled ^= 1;
+                DrawCtlScreen();
+                CusItems.curpos = -1;
+                ShootSnd();
+                break;
+#endif
+
 
             case CTL_MOUSESENS:
             case CTL_CUSTOMIZE:
@@ -2206,15 +2231,24 @@ DrawCtlScreen (void)
     WindowW = 320;
     SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
 
+#ifndef EXTRACONTROLS
     if (IN_JoyPresent())
         CtlMenu[CTL_JOYENABLE].active = 1;
+#endif
 
     if (MousePresent)
     {
         CtlMenu[CTL_MOUSESENS].active = CtlMenu[CTL_MOUSEENABLE].active = 1;
+#ifdef EXTRACONTROLS
+        CtlMenu[CTL_MOUSEMOVEENABLE].active = 1;
+#endif
     }
 
+#ifdef EXTRACONTROLS
+    CtlMenu[CTL_MOUSESENS].active = CtlMenu[CTL_MOUSEMOVEENABLE].active = mouseenabled;
+#else
     CtlMenu[CTL_MOUSESENS].active = mouseenabled;
+#endif
 
 
     DrawMenu (&CtlItems, CtlMenu);
@@ -2228,10 +2262,18 @@ DrawCtlScreen (void)
         VWB_DrawPic (x, y, C_NOTSELECTEDPIC);
 
     y = CTL_Y + 29;
+#ifndef EXTRACONTROLS
     if (joystickenabled)
-        VWB_DrawPic (x, y, C_SELECTEDPIC);
+        VWB_DrawPic(x, y, C_SELECTEDPIC);
     else
-        VWB_DrawPic (x, y, C_NOTSELECTEDPIC);
+        VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+#else
+    if (mousemoveenabled)
+        VWB_DrawPic(x, y, C_SELECTEDPIC);
+    else
+        VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+#endif
+
 
     //
     // PICK FIRST AVAILABLE SPOT
@@ -2259,10 +2301,19 @@ DrawCtlScreen (void)
 //
 ////////////////////////////////////////////////////////////////////
 enum
-{ FIRE, STRAFE, RUN, OPEN };
+{ 
+    FIRE, 
+    STRAFE, 
+    RUN, 
+    OPEN 
+};
 char mbarray[4][3] = { "b0", "b1", "b2", "b3" };
 char order[4] = { RUN, OPEN, FIRE, STRAFE };
 
+#ifdef EXTRACONTROLS
+enum { STRAFELEFT, STRAFERIGHT, NEXTWEAP, PREVWEAP };
+char extraorder[4] = { STRAFELEFT, STRAFERIGHT, NEXTWEAP, PREVWEAP };
+#endif // EXTRACONTROLS
 
 int
 CustomControls (int blank)
@@ -2279,17 +2330,31 @@ CustomControls (int blank)
                 DefineMouseBtns ();
                 DrawCustMouse (1);
                 break;
+#ifndef EXTRACONTROLS
             case 3:
-                DefineJoyBtns ();
-                DrawCustJoy (0);
+                DefineJoyBtns();
+                DrawCustJoy(0);
                 break;
             case 6:
+#else
+            case 3:
+#endif
                 DefineKeyBtns ();
                 DrawCustKeybd (0);
                 break;
+#ifndef EXTRACONTROLS
             case 8:
+#else
+            case 5:
+#endif
                 DefineKeyMove ();
                 DrawCustKeys (0);
+#ifdef EXTRACONTROLS
+            case 8:
+                DefineKeyExtra();
+                DrawCustExtra(0);
+                break;
+#endif
         }
     }
     while (which >= 0);
@@ -2298,7 +2363,6 @@ CustomControls (int blank)
 
     return 0;
 }
-
 
 ////////////////////////
 //
@@ -2310,7 +2374,6 @@ DefineMouseBtns (void)
     CustomCtrls mouseallowed = { 0, 1, 1, 1 };
     EnterCtrlData (2, &mouseallowed, DrawCustMouse, PrintCustMouse, MOUSE);
 }
-
 
 ////////////////////////
 //
@@ -2332,7 +2395,11 @@ void
 DefineKeyBtns (void)
 {
     CustomCtrls keyallowed = { 1, 1, 1, 1 };
-    EnterCtrlData (8, &keyallowed, DrawCustKeybd, PrintCustKeybd, KEYBOARDBTNS);
+#ifndef EXTRACONTROLS
+    EnterCtrlData(8, &keyallowed, DrawCustKeybd, PrintCustKeybd, KEYBOARDBTNS);
+#else
+    EnterCtrlData(5, &keyallowed, DrawCustKeybd, PrintCustKeybd, KEYBOARDBTNS);
+#endif
 }
 
 
@@ -2344,8 +2411,25 @@ void
 DefineKeyMove (void)
 {
     CustomCtrls keyallowed = { 1, 1, 1, 1 };
-    EnterCtrlData (10, &keyallowed, DrawCustKeys, PrintCustKeys, KEYBOARDMOVE);
+#ifndef EXTRACONTROLS
+    EnterCtrlData(10, &keyallowed, DrawCustKeys, PrintCustKeys, KEYBOARDMOVE);
+#else
+    EnterCtrlData(7, &keyallowed, DrawCustKeys, PrintCustKeys, KEYBOARDMOVE);
+#endif
 }
+
+#ifdef EXTRACONTROLS
+////////////////////////
+//
+// DEFINE THE KEYBOARD BUTTONS
+//
+void
+DefineKeyExtra(void)
+{
+    CustomCtrls keyallowed = { 1, 1, 1, 1 };
+    EnterCtrlData(10, &keyallowed, DrawCustExtra, PrintCustExtra, KEYBOARDEXTRA);
+}
+#endif // EXTRACONTROLS
 
 
 ////////////////////////
@@ -2411,14 +2495,23 @@ EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*Prin
         //
         // CHANGE BUTTON VALUE?
         //
+#ifndef EXTRACONTROLS
         if ((type != KEYBOARDBTNS && type != KEYBOARDMOVE) && (ci.button0 | ci.button1 | ci.button2 | ci.button3) ||
             ((type == KEYBOARDBTNS || type == KEYBOARDMOVE) && LastScan == sc_Enter))
+#else
+        if ((type != KEYBOARDBTNS && type != KEYBOARDMOVE && type != KEYBOARDEXTRA) && (ci.button0 | ci.button1 | ci.button2 | ci.button3) ||
+            ((type == KEYBOARDBTNS || type == KEYBOARDMOVE || type == KEYBOARDEXTRA) && LastScan == sc_Enter))
+#endif
         {
             lastFlashTime = GetTimeCount();
             tick = picked = 0;
             SETFONTCOLOR (0, TEXTCOLOR);
 
+#ifndef EXTRACONTROLS
             if (type == KEYBOARDBTNS || type == KEYBOARDMOVE)
+#else
+            if (type == KEYBOARDBTNS || type == KEYBOARDMOVE || type == KEYBOARDEXTRA)
+#endif
                 IN_ClearKeysDown ();
 
             while(1)
@@ -2480,7 +2573,7 @@ EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*Prin
                             SD_PlaySound (SHOOTDOORSND);
                         }
                         break;
-
+#ifndef EXTRACONTROLS
                     case JOYSTICK:
                         if (ci.button0)
                             result = 1;
@@ -2507,11 +2600,15 @@ EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*Prin
                             SD_PlaySound (SHOOTDOORSND);
                         }
                         break;
-
+#endif
                     case KEYBOARDBTNS:
                         if (LastScan && LastScan != sc_Escape)
                         {
+#ifdef EXTRACONTROLS
+                            buttonscan[extraorder[which] + 8] = LastScan;
+#else
                             buttonscan[order[which]] = LastScan;
+#endif
                             picked = 1;
                             ShootSnd ();
                             IN_ClearKeysDown ();
@@ -2527,6 +2624,18 @@ EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*Prin
                             IN_ClearKeysDown ();
                         }
                         break;
+#ifdef EXTRACONTROLS
+                    case KEYBOARDEXTRA:
+                        if (LastScan && LastScan != sc_Escape)
+                        {
+                            buttonscan[extraorder[which] + 8] = LastScan;
+                            picked = 1;
+                            ShootSnd();
+                            IN_ClearKeysDown();
+                        }
+                        break;
+#endif // EXTRACONTROLS
+
                 }
 
                 //
@@ -2623,14 +2732,26 @@ FixupCustom (int w)
         case 0:
             DrawCustMouse (1);
             break;
+#ifndef EXTRACONTROLS
         case 3:
-            DrawCustJoy (1);
+            DrawCustJoy(1);
             break;
         case 6:
+#else
+        case 3:
+#endif
             DrawCustKeybd (1);
             break;
+#ifndef EXTRACONTROLS
         case 8:
+#else
+        case 5:
+#endif
             DrawCustKeys (1);
+#ifdef EXTRACONTROLS
+        case 8:
+            DrawCustExtra(1);
+#endif // EXTRACONTROLS
     }
 
 
@@ -2653,14 +2774,28 @@ FixupCustom (int w)
                 case 0:
                     DrawCustMouse (0);
                     break;
+#ifndef EXTRACONTROLS
                 case 3:
-                    DrawCustJoy (0);
+                    DrawCustJoy(0);
                     break;
                 case 6:
+#else
+                case 3:
+#endif
                     DrawCustKeybd (0);
                     break;
+
+#ifndef EXTRACONTROLS
                 case 8:
+#else
+                case 5:
+#endif
                     DrawCustKeys (0);
+#ifdef EXTRACONTROLS
+                case 8:
+                    DrawCustExtra(0);
+                    break;
+#endif // EXTRACONTROLS
             }
     }
 
@@ -2745,7 +2880,7 @@ DrawCustomScreen (void)
     DrawCustMouse (0);
     US_Print ("\n");
 
-
+#ifndef EXTRACONTROLS
     //
     // JOYSTICK/PAD
     //
@@ -2784,7 +2919,19 @@ DrawCustomScreen (void)
     DrawWindow (5, PrintY - 1, 310, 13, BKGDCOLOR);
     DrawCustJoy (0);
     US_Print ("\n");
-
+#else
+    PrintX = CST_START;
+    US_Print(STR_CRUN);
+    PrintX = CST_START + CST_SPC * 1;
+    US_Print(STR_COPEN);
+    PrintX = CST_START + CST_SPC * 2;
+    US_Print(STR_CFIRE);
+    PrintX = CST_START + CST_SPC * 3;
+    US_Print(STR_CSTRAFE "\n");
+#endif
+    DrawWindow(5, PrintY - 1, 310, 13, BKGDCOLOR);
+    DrawCustJoy(0);
+    US_Print("\n");
 
     //
     // KEYBOARD
@@ -2845,7 +2992,31 @@ DrawCustomScreen (void)
 #endif
     DrawWindow (5, PrintY - 1, 310, 13, BKGDCOLOR);
     DrawCustKeys (0);
+#ifdef EXTRACONTROLS
+    US_Print("\n");
 #endif
+#endif
+
+#ifdef EXTRACONTROLS
+    SETFONTCOLOR(READCOLOR, BKGDCOLOR);
+    PrintX = CST_START;
+    US_Print("Strafe Keys");
+    PrintX = CST_START + CST_SPC * 2;
+    US_Print("Weap Switch \n");
+
+    SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
+    PrintX = CST_START;
+    US_Print("Left");
+    PrintX = CST_START + CST_SPC * 1;
+    US_Print("Right");
+    PrintX = CST_START + CST_SPC * 2;
+    US_Print("Prev");
+    PrintX = CST_START + CST_SPC * 3;
+    US_Print("Next \n");
+    DrawWindow(5, PrintY - 1, 310, 13, BKGDCOLOR);
+    DrawCustExtra(0);
+#endif // EXTRACONTROLS
+
     //
     // PICK STARTING POINT IN MENU
     //
@@ -2940,7 +3111,6 @@ DrawCustJoy (int hilight)
         PrintCustJoy (i);
 }
 
-
 void
 PrintCustKeybd (int i)
 {
@@ -2959,7 +3129,11 @@ DrawCustKeybd (int hilight)
         color = HIGHLIGHT;
     SETFONTCOLOR (color, BKGDCOLOR);
 
+#ifndef EXTRACONTROLS
     PrintY = CST_Y + 13 * 8;
+#else
+    PrintY = CST_Y + 13 * 5;
+#endif
     for (i = 0; i < 4; i++)
         PrintCustKeybd (i);
 }
@@ -2982,11 +3156,38 @@ DrawCustKeys (int hilight)
         color = HIGHLIGHT;
     SETFONTCOLOR (color, BKGDCOLOR);
 
+#ifndef EXTRACONTROLS
     PrintY = CST_Y + 13 * 10;
+#else
+    PrintY = CST_Y + 13 * 7;
+#endif
     for (i = 0; i < 4; i++)
         PrintCustKeys (i);
 }
 
+#ifdef EXTRACONTROLS
+void
+PrintCustExtra(int i)
+{
+    PrintX = CST_START + CST_SPC * i;
+    US_Print((const char*)IN_GetScanName(buttonscan[extraorder[i] + 8]));
+}
+
+void DrawCustExtra(int hilight)
+{
+    int i, color;
+
+
+    color = TEXTCOLOR;
+    if (hilight)
+        color = HIGHLIGHT;
+    SETFONTCOLOR(color, BKGDCOLOR);
+
+    PrintY = CST_Y + 13 * 10;
+    for (i = 0; i < 4; i++)
+        PrintCustExtra(i);
+}
+#endif // EXTRACONTROLS
 
 ////////////////////////////////////////////////////////////////////
 //
