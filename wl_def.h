@@ -79,11 +79,11 @@
 #ifdef _WIN64
 typedef unsigned long long uintptr_t;
 #else
-typedef unsigned int uintptr_t;
+typedef unsigned int intptr_t;
 #endif
 #endif
 #endif
-#ifndef _WIN32
+#if !defined O_BINARY
 #define O_BINARY 0
 #endif
 
