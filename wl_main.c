@@ -1618,6 +1618,7 @@ void NewViewSize (int width)
 
 void Quit (const char *errorStr, ...)
 {
+#ifndef SEGA_SATURN
     unsigned char *screen;
     char error[256];
     if(errorStr != NULL)
@@ -1680,6 +1681,9 @@ void Quit (const char *errorStr, ...)
     }
 
     exit(0);
+#else
+    SYS_Exit(0);
+#endif
 }
 
 //===========================================================================

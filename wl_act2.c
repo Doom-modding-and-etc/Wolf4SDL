@@ -3861,6 +3861,9 @@ void    A_StartDeathCam (objtype *ob)
     float   fangle;
     int xmove,ymove;
     int dist;
+#ifndef SEGA_SATURN
+	unsigned fadeheight;
+#endif
 
     FinishPaletteShifts ();
 
@@ -3876,7 +3879,7 @@ void    A_StartDeathCam (objtype *ob)
 
     gamestate.victoryflag = true;
 #ifndef SEGA_SATURN
-    unsigned fadeheight = viewsize != 21 ? screenHeight-scaleFactor*STATUSLINES : screenHeight;
+    fadeheight = viewsize != 21 ? screenHeight-scaleFactor*STATUSLINES : screenHeight;
 #endif
 #ifdef SEGA_SATURN
     slTVOff();

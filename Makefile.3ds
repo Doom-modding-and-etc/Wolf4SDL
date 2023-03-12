@@ -18,21 +18,21 @@ CTRUINCS = -I$(DEVKITPRO)/libctru/include -I$(DEVKITPRO)/libctru/include/3ds
 INCS      = $(CTRUINCS) -I$(DEVKITPRO)/portlibs/3ds/include -I$(DEVKITPRO)/portlibs/3ds/include/SDL -I$(DEVKITPRO)/portlibs/3ds
 DEFINES   = -DN3DS -D__3DS__ 
 LIBDIR    = -L$(DEVKITPRO)/libctru/lib -L$(DEVKITPRO)/portlibs/3ds/lib
-LIBS      = $(LIBDIR) -lSDL_mixer -lvorbisidec -lmikmod -lmad -logg -lSDL_ttf -lSDL_image -lSDL_gfx -lSDL -lfreetype -lpng -ljpeg -lz -lm -lcitro3d -lctru `sdl-config --libs` -lstdc++ 
+LIBS      = $(LIBDIR) -lSDL_mixer -lvorbisidec -lmikmod -lmad -logg -lSDL_ttf -lSDL_image -lSDL_gfx -lSDL -lfreetype -lpng -ljpeg -lz -lm -lctru `sdl-config --libs` -lstdc++ 
 BIN       = Wolf4SDL.elf
 BUILD	  =	build
-ARCH 	  = -march=armv6k -mtune=mpcore -mfloat-abi=hard -mtp=soft -marm -mthumb-interwork
+ARCH 	  = -march=armv6k -mtune=mpcore -mfloat-abi=hard -mtp=soft
 CFLAGS    = $(ARCH) $(INCS) $(DEFINES) \
 			-Wno-narrowing -Ofast -mword-relocations \
 			-fomit-frame-pointer -ffunction-sections \
-			-std=gnu99 -Wall `sdl-config --libs` -Wall -W -g \
+			-std=gnu99 -Wall -W -g \
 			-Wpointer-arith -Wreturn-type -Wwrite-strings \
 			-Wcast-align -Wimplicit-int -Wsequence-point
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=3dsx.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map) 
 RM        = rm -f
-LINK      = arm-none-eabi-gcc-12.2.0
-C		  = arm-none-eabi-gcc-12.2.0
+LINK      = arm-none-eabi-gcc
+C		  = arm-none-eabi-gcc
 OUTPUT    = $(APP_TITLE)
 
 #--------------------------------------------------------------------------------------------------------------------------------------

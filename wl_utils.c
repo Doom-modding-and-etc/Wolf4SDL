@@ -1,19 +1,17 @@
 // WL_UTILS.C
 
 #include "wl_utils.h"
-#ifndef N3DS
-#ifndef SWITCH
 
 /*
 ===================
 =
-= safe_malloc
+= wsafe_malloc
 =
 = Wrapper for malloc with a NULL check
 =
 ===================
 */
-void *safe_malloc (size_t size, const char *fname, unsigned int line)
+void *wsafe_malloc (size_t size, const char *fname, unsigned int line)
 {
     void *ptr;
 
@@ -24,9 +22,6 @@ void *safe_malloc (size_t size, const char *fname, unsigned int line)
 
     return ptr;
 }
-#endif
-#endif
-
 /*
 ===================
 =

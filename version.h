@@ -74,7 +74,7 @@
 //#define MAPCONTROLLEDFLOOR    // Map Controlled Floor colour (9,0)
 //#define BLAKEDOORS     // Blake Stone style Double doors - original code by: Adam Biser
 //#define EXTRACONTROLS // switches out to Joystick controls for WASD and mouse movement toggles instead 
-
+//#define AUTOINTER //Enables the automatic intermission screen
 
 #if defined(SWITCH) 
 #define DATADIR "/switch/wolf4sdl/wolf3d/"

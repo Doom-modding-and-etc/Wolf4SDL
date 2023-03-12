@@ -341,6 +341,14 @@ static void ScanInfoPlane(void)
 #endif
                         gamestate.secrettotal++;
                     break;
+#ifdef SEGA_SATURN
+#ifndef SPEAR
+                case 99:
+                    loaded += PRELOAD_ITEMS(SPR_DEATHCAM, SPR_DEATHCAM);
+                    loaded += PRELOAD_ITEMS(SPR_BJ_W1, SPR_BJ_JUMP4);
+                    break;
+#endif
+#endif
 
 //
 // guard
@@ -1560,6 +1568,11 @@ restartgame:
     ClearMemory ();
     SETFONTCOLOR(0,15);
     VW_FadeOut();
+#ifdef AUTOINTER
+    ClearMScreen();
+    IntermissionScreens(); // Intermission Text - Shown when starting new game
+    ClearMemory();
+#endif
     DrawPlayScreen ();
     died = false;
     do
@@ -1772,6 +1785,11 @@ startplayloop:
                         // GOING TO NEXT LEVEL
                         //
                         gamestate.mapon++;
+#ifdef AUTOINTER
+                IntermissionScreens(); // Intermission Screen If file exists
+                ClearMemory();
+                DrawPlayScreen();
+#endif
                 break;
 
             case ex_died:
@@ -1779,7 +1797,19 @@ startplayloop:
                 died = true;                    // don't "get psyched!"
 
                 if (gamestate.lives > -1)
+#ifdef AUTOINTER
+                {
+                    VW_FadeOut();
+                    ClearMScreen();
+                    ClearMemory();
+                    IntermissionScreens(); // Intermission Text
+                    ClearMemory();
+                    DrawPlayScreen();
+#endif
                     break;                          // more lives left
+#ifdef AUTOINTER
+                }
+#endif
 
                 VW_FadeOut ();
                 if(screenHeight % 200 != 0)

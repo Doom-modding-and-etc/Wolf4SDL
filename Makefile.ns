@@ -26,8 +26,8 @@ ARCH 	  = -march=armv8-a -mtune=cortex-a57 -mtp=soft -fPIE -fPIC -O3 -O2
 DEFINES   = -DSWITCH -D__SWITCH__
 CFLAGS    = $(INCS) $(DEFINES) $(ARCH) -Wall -W -g -Wpointer-arith -Wreturn-type -Wwrite-strings -Wcast-align -std=gnu89 -Wimplicit-int -Wsequence-point -Wswitch
 RM        = rm -f
-LINK      = aarch64-none-elf-gcc-12.2.0
-C		  = aarch64-none-elf-gcc-12.2.0
+LINK      = aarch64-none-elf
+C		  = aarch64-none-elf
 OUTPUT    = $(APP_TITLE)
 
 ifeq ($(strip $(ICON)),)
@@ -160,7 +160,7 @@ wl_state.o: $(GLOBALDEPS) wl_state.c wl_def.h
 wl_text.o: $(GLOBALDEPS) wl_text.c wl_def.h
 	$(C) -c wl_text.c -o wl_text.o $(CFLAGS)
 	
-wl_utils.o: $(GLOBALDEPS) wl_utils.c wl_def.h 
+wl_utils.o: $(GLOBALDEPS) wl_utils.c wl_utils.h wl_def.h 
 	$(C) -c wl_utils.c -o wl_utils.o $(CFLAGS)
 
 #---------------------------------------------------------------------------------

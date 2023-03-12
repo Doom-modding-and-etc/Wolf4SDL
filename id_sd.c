@@ -976,8 +976,6 @@ void SDL_IMFMusicPlayer(void *udata, unsigned char *stream, int len)
             {
 #ifdef USE_DOSBOX
                 YM3812UpdateOne(chip, stream16, sampleslen);
-#elif defined(USE_OPL3)
-                YM3812UpdateOne(chip, stream16, sampleslen);
 #else
                 YM3812UpdateOne(oplChip, stream16, sampleslen);
 #endif
@@ -1090,15 +1088,11 @@ SD_Startup(void)
     for(i=1;i<0xf6;i++)
 #ifdef USE_DOSBOX
         YM3812Write(chip, i, 0);
-#elif defined(USE_OPL3)
-        YM3812Write(chip, i, 0);
 #else
         YM3812Write(oplChip,i,0);
 #endif
 #ifdef USE_DOSBOX
     YM3812Write(chip, i, 0x20);
-#elif defined(USE_OPL3)
-    YM3812Write(chip, i, 0);
 #else
     YM3812Write(oplChip,1,0x20); // Set WSE=1
 //    YM3812Write(0,8,0); // Set CSM=0 & SEL=0		 // already set in for statement

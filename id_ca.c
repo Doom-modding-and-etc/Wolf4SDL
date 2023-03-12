@@ -1182,7 +1182,7 @@ int CA_CacheAudioChunk (int chunk)
     if (audiosegs[chunk])
         return size;                        // already in memory
 
-    audiosegs[chunk] = (unsigned char*)SafeMalloc(size);
+    audiosegs[chunk] = SafeMalloc(size);
 
     w3slseek(audiohandle,pos,SEEK_SET);
     w3sread(audiohandle,audiosegs[chunk],size);
@@ -1204,12 +1204,12 @@ void CA_CacheAdlibSoundChunk (int chunk)
 
     w3slseek(audiohandle, pos, SEEK_SET);
 
-    bufferseg = (unsigned char*)SafeMalloc(ORIG_ADLIBSOUND_SIZE - 1);
+    bufferseg = SafeMalloc(ORIG_ADLIBSOUND_SIZE - 1);
     ptr = bufferseg;
 
     w3sread(audiohandle, ptr, ORIG_ADLIBSOUND_SIZE - 1);   // without data[1]
 
-    sound = (AdLibSound*)SafeMalloc(size + sizeof(*sound) - ORIG_ADLIBSOUND_SIZE);
+    sound = SafeMalloc(size + sizeof(*sound) - ORIG_ADLIBSOUND_SIZE);
 
     sound->common.length = READLONGWORD(ptr);
     ptr += 4;
@@ -1353,7 +1353,7 @@ void CAL_ExpandGrChunk (int chunk, int *source)
     //
     // allocate final space and decompress it
     //
-    grsegs[chunk] = (unsigned char*)SafeMalloc(expanded);
+    grsegs[chunk] = SafeMalloc(expanded);
 
     CAL_HuffExpand((unsigned char *) source, grsegs[chunk], expanded, grhuffman);
 }

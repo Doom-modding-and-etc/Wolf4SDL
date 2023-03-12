@@ -650,6 +650,7 @@ void ShowArticle (char *article)
     unsigned    oldfontnumber;
     boolean     newpage,firstpage;
     ControlInfo ci;
+	Direction dir;
 
 #ifdef JAPAN
     pagenum = 1;
@@ -698,7 +699,7 @@ void ShowArticle (char *article)
 
         LastScan = 0;
         ReadAnyControl(&ci);
-        Direction dir = ci.dir;
+        dir = ci.dir;
         switch(dir)
         {
             case dir_North:
@@ -877,5 +878,43 @@ void EndText (void)
     FreeMusic ();
 #endif
 #endif
+}
+#endif
+
+#ifdef AUTOINTER
+/*
+======================
+=
+= Intermission Screens by BrotherTank
+=
+======================
+*/
+void IntermissionScreens(void)
+{
+    void*      layout;
+
+    char intfilename[13] = "INTART00.";
+    strcat(intfilename, extension);
+
+#ifndef SPEAR
+#ifndef SEAMLESS
+    intfilename[6] = '0' + (gamestate.episode + 1);
+    intfilename[7] = '0' + (gamestate.mapon + 1);
+#else
+    intfilename[6] = '0' + ((gamestate.mapon + 1) / 10);
+    intfilename[7] = '0' + ((gamestate.mapon + 1) % 10);
+#endif
+#else
+    intfilename[6] = '0' + ((gamestate.mapon + 1) / 10);
+    intfilename[7] = '0' + ((gamestate.mapon + 1) % 10);
+#endif
+
+    if (CA_LoadFile(intfilename, &layout))
+    {
+        ShowArticle((char*)layout);
+        VW_FadeOut();
+        free(layout);
+        FreeMusic();
+    }
 }
 #endif

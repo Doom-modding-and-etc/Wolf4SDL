@@ -27,7 +27,7 @@ unsigned int crtTexture;
 void CRT_Init(int _width) 
 {
     width = _width;
-    height = _width * 3.0 / 4.0;
+    height = _width * 3 / 4;
 
 #if SDL_MAJOR_VERSION == 1  
     //Alloc the OpenGL texture where the screen will be uploaded each frame.
@@ -131,7 +131,7 @@ void CRT_FreeScreenshot(SDL_Surface* surface1, SDL_Surface *surface2)
     SDL_FreeSurface(surface2);
 }
 
-#ifndef SDL_MAJOR_VERSION == 1
+#if !SDL_MAJOR_VERSION == 1
 void CRT_DestroyTexture(SDL_Texture* texture1, SDL_Texture* texture2) 
 {
     SDL_DestroyTexture(texture);

@@ -2118,10 +2118,10 @@ CopyProtection (void)
     }
 
     ClearMemory ();
-    ShutdownId ();
+ //   ShutdownId ();
 
-    printf ("%s\n", DosMessages[US_RndT () % 9]);
-    exit (1);
+ //   printf ("%s\n", DosMessages[US_RndT () % 9]);
+ //   exit (1);
 }
 #endif //SEGA_SATURN
 #endif // SPEARDEMO

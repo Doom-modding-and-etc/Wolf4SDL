@@ -67,7 +67,12 @@
 #ifdef PS2
 #include "Platform/PS2/ps2_main.h"
 #endif
-#include "3rdparty/fixedptc.h"
+#ifdef USE_HEADER
+#include <fixedptc.h>
+#else
+#include "3rdparty/fixedptc.h"	
+#endif
+
 #include "id_w3swrap.h"
 #ifndef __GNUC__
 #ifndef _MSC_VER
@@ -112,6 +117,7 @@ void Quit(const char* errorStr, ...);
 #include "id_ca.h"
 #include "wl_menu.h"
 #include "wl_utils.h"
+#include "id_w3swrap.h"
 
 
 /*
@@ -172,7 +178,11 @@ void Quit(const char* errorStr, ...);
 #define MAXWALLTILES    70          // max number of wall tiles
 
 #ifdef SEGA_SATURN
-#define NB_WALL_HWRAM 50/2
+#ifndef SPEAR
+#define NB_WALL_HWRAM 25
+#else
+#define NB_WALL_HWRAM 27
+#endif
 #endif
 
 #if WALLSHIFT >= 7
@@ -1336,9 +1346,12 @@ extern  unsigned char* postsource;
 extern  short   midangle;
 
 extern  unsigned short    horizwall[MAXWALLTILES], vertwall[MAXWALLTILES];
-
-
+//todo saturn:
+#ifdef SEGA_SATURN
+void ScalePost(int postx, int texture, byte* postsource, byte* tilemapaddr, ray_struc* ray);
+#else
 void    ScalePost(void);
+#endif
 void    ThreeDRefresh(void);
 void    CalcTics(void);
 #ifdef AUTOMAP
@@ -1592,7 +1605,9 @@ extern  char    helpfilename[], endfilename[];
 
 extern  void    HelpScreens(void);
 extern  void    EndText(void);
-
+#ifdef AUTOINTER
+extern  void    IntermissionScreens(void);
+#endif
 
 /*
 =============================================================================
