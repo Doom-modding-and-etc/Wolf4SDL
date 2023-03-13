@@ -74,15 +74,30 @@
 #endif
 
 #include "id_w3swrap.h"
-#ifndef __GNUC__
-#ifndef _MSC_VER
-#ifdef _WIN64
+#if !defined(_MSC_VER) || defined(__GNUC__)
+#ifdef X64_ARCH
 typedef unsigned long long uintptr_t;
-#else
 typedef unsigned int intptr_t;
+#else
+typedef long long uintptr_t;
+typedef int intptr_t;
 #endif
 #endif
+
+#ifdef HAVE_SIZE_T
+#ifdef X64_ARCH
+typedef unsigned long long size_t;
+#else
+typedef unsigned int size_t;
 #endif
+#endif
+
+#ifdef OLD_MSVC
+typedef __int64 int64_t;
+#else
+typedef long long int64_t;
+#endif
+
 #if !defined O_BINARY
 #define O_BINARY 0
 #endif

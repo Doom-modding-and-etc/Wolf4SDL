@@ -11,7 +11,7 @@
 =
 ===================
 */
-void *wsafe_malloc (size_t size, const char *fname, unsigned int line)
+void *wsafe_malloc(size_t size, const char *fname, unsigned int line)
 {
     void *ptr;
 
@@ -36,7 +36,7 @@ fixed FixedMul (fixed a, fixed b)
 #ifdef SEGA_SATURN
     return MTH_Mul2(a, b);
 #else
-	return (fixed)(((long long)a * b + 0x8000) >> FRACBITS);
+	return (fixed)(((int64_t)a * b + 0x8000) >> FRACBITS);
 #endif
 }
 
@@ -51,7 +51,7 @@ fixed FixedMul (fixed a, fixed b)
 */
 fixed FixedDiv (fixed a, fixed b)
 {
-	long long c = ((long long)a << FRACBITS) / (long long)b;
+	int64_t c = ((int64_t)a << FRACBITS) / (int64_t)b;
 
 	return (fixed)c;
 }
@@ -103,7 +103,7 @@ unsigned int READLONGWORD (unsigned char *ptr)
 short atan2fix(fixed x, fixed y)
 {
     boolean negative;
-    long long quot;
+    int64_t quot;
     fixed tang;
     int offset;
     int res;
@@ -126,7 +126,7 @@ short atan2fix(fixed x, fixed y)
         return negative ? 270 : 90;
     if (y == 0)
         return offset;
-    quot = ((long long)y << 32) / x;
+    quot = ((int64_t)y << 32) / x;
     tang = (fixed)quot;
     if (quot != tang) {
         /* Overflow.  */
