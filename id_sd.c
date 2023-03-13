@@ -33,7 +33,7 @@
 #ifndef SEGA_SATURN
 #include <SDL_mixer.h>
 #else
-#include "Plataform/Sega/Saturn/pcmsys.h"
+#include "Platform/Sega/Saturn/pcmsys.h"
 #include <string.h>
 #endif
 
