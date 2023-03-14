@@ -76,6 +76,10 @@
 //#define EXTRACONTROLS // switches out to Joystick controls for WASD and mouse movement toggles instead 
 //#define AUTOINTER //Enables the automatic intermission screen
 
+//By: WSJ
+//#define BURN_ANIM //Add the burn animation
+//end
+
 #if defined(SWITCH) 
 #define DATADIR "/switch/wolf4sdl/wolf3d/"
 #elif defined(N3DS)

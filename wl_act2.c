@@ -167,8 +167,9 @@ extern fixed MTH_Atan(fixed y, fixed x);
 #endif
 
 void    A_StartDeathCam (objtype *ob);
-
-
+#ifdef BURN_ANIM
+void    T_Burn (objtype *ob);
+#endif
 void    T_Path (objtype *ob);
 void    T_Shoot (objtype *ob);
 void    T_Bite (objtype *ob);
@@ -470,9 +471,13 @@ extern  statetype s_pinkychase2;
 extern  statetype s_clydechase1;
 extern  statetype s_clydechase2;
 
+#ifdef BURN_ANIM
+statetype s_blinkychase1        = {false,SPR_BLINKY_W1,10,(statefunc)T_Burn,NULL,&s_blinkychase2};
+statetype s_blinkychase2        = {false,SPR_BLINKY_W2,10,(statefunc)T_Burn,NULL,&s_blinkychase1};
+#else
 statetype s_blinkychase1        = {false,SPR_BLINKY_W1,10,(statefunc)T_Ghosts,NULL,&s_blinkychase2};
 statetype s_blinkychase2        = {false,SPR_BLINKY_W2,10,(statefunc)T_Ghosts,NULL,&s_blinkychase1};
-
+#endif
 statetype s_inkychase1          = {false,SPR_INKY_W1,10,(statefunc)T_Ghosts,NULL,&s_inkychase2};
 statetype s_inkychase2          = {false,SPR_INKY_W2,10,(statefunc)T_Ghosts,NULL,&s_inkychase1};
 
@@ -3526,6 +3531,46 @@ void T_Path (objtype *ob)
 
 =============================================================================
 */
+
+/*
+===============
+=
+= T_Burn
+=
+===============
+*/
+
+void T_Burn (objtype *ob)
+{
+#if 0
+    int    dx,dy;
+
+    dx = player->x - ob->x;
+    if (dx<0)
+        dx = -dx;
+    dx -= TILEGLOBAL;
+    if (dx <= MINACTORDIST)
+    {
+        dy = player->y - ob->y;
+        if (dy<0)
+            dy = -dy;
+        dy -= TILEGLOBAL;
+        if (dy <= MINBURNDIST)
+        {
+            if (US_RndT()<180)
+            {
+                TakeDamage (US_RndT()>>4,ob);
+                return;
+            }
+        }
+    }
+#else
+  if (player->tilex==ob->tilex && player->tiley==ob->tiley)
+{
+	TakeDamage (US_RndT()>>4,ob);
+}
+#endif
+}
 
 
 /*
