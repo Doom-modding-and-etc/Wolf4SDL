@@ -156,7 +156,6 @@ void Quit(const char* errorStr, ...);
 
 #define MAPSPOT(x,y,plane) (mapsegs[(plane)][((y) << MAPSHIFT) + (x)])
 
-#define SIGN(x)         ((x) > 0 ? 1 : -1)
 #ifdef MATH
 #define abs(x)          ((int)(x) > 0 ? (x) : -(x))
 #define labs(x)         ((int)(x) > 0 ? (x) : -(x))
