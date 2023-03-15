@@ -168,7 +168,7 @@ extern fixed MTH_Atan(fixed y, fixed x);
 
 void    A_StartDeathCam (objtype *ob);
 #ifdef BURN_ANIM
-void    T_Burn (objtype *ob);
+void T_Burn(objtype* ob);
 #endif
 void    T_Path (objtype *ob);
 void    T_Shoot (objtype *ob);
@@ -472,8 +472,8 @@ extern  statetype s_clydechase1;
 extern  statetype s_clydechase2;
 
 #ifdef BURN_ANIM
-statetype s_blinkychase1        = {false,SPR_BLINKY_W1,10,(statefunc)T_Burn,NULL,&s_blinkychase2};
-statetype s_blinkychase2        = {false,SPR_BLINKY_W2,10,(statefunc)T_Burn,NULL,&s_blinkychase1};
+statetype s_blinkychase1 = { false,SPR_BLINKY_W1,10,(statefunc)T_Burn,NULL,&s_blinkychase2 };
+statetype s_blinkychase2 = { false,SPR_BLINKY_W2,10,(statefunc)T_Burn,NULL,&s_blinkychase1 };
 #else
 statetype s_blinkychase1        = {false,SPR_BLINKY_W1,10,(statefunc)T_Ghosts,NULL,&s_blinkychase2};
 statetype s_blinkychase2        = {false,SPR_BLINKY_W2,10,(statefunc)T_Ghosts,NULL,&s_blinkychase1};
@@ -3565,10 +3565,8 @@ void T_Burn (objtype *ob)
         }
     }
 #else
-  if (player->tilex==ob->tilex && player->tiley==ob->tiley)
-{
+  if(player->tilex==ob->tilex && player->tiley==ob->tiley)
 	TakeDamage (US_RndT()>>4,ob);
-}
 #endif
 }
 #endif
