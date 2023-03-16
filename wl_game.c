@@ -713,6 +713,9 @@ void SetupGameLevel (void)
             = gamestate.killcount
             = gamestate.treasurecount
             = pwallstate = pwallpos = facetimes = 0;
+#if defined(BOSS_MUSIC) && defined(VIEASM)
+        SetLevelMusic();
+#endif
         LastAttacker = NULL;
         killerobj = NULL;
     }

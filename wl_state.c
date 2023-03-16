@@ -1595,6 +1595,10 @@ void FirstSighting (objtype *ob)
 #ifndef SPEAR
         case bossobj:
             SD_PlaySound(GUTENTAGSND);
+#if defined(BOSS_MUSIC) && defined(VIEASM)
+            ChangeGameMusic(ULTIMATE_MUS);
+#endif
+
 #if defined(EMBEDDED) && defined(SEGA_SATURN)
             NewState(ob, s_bosschase1);
 #else

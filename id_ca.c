@@ -983,7 +983,7 @@ void CAL_SetupMapFile (void)
     strcpy(fname,mfilename);
     strcat(fname,extension);
 
-    maphandle = open(fname, O_RDONLY | O_BINARY);
+    maphandle = w3sopen(fname, O_RDONLY | O_BINARY);
     if (maphandle == -1)
         CA_CannotOpen(fname);
 #endif

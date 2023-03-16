@@ -685,8 +685,7 @@ again:
         return 1;
     }
 #endif
-#ifdef FIXEDLOGICRATE
-#ifdef LAGSIMULATOR
+#if defined(FIXEDLOGICRATE) && defined(LAGSIMULATOR)
     else if (Keyboard(sc_M))        // M = lag simulator
     {
         lagging ^= 1;
@@ -699,7 +698,6 @@ again:
         IN_Ack();
         return 1;
     }
-#endif
 #endif
 
 #if 0
@@ -824,7 +822,8 @@ again:
         char defstr[15];
         int seedpx;
 	    int mappx;
-	    unsigned int mewInd;
+		int seedpy, mappy;
+	    unsigned int newInd;
         CenterWindow(34,4);
         PrintY+=6;
         US_Print("  Recalculate sky with seed: ");

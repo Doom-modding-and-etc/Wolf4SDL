@@ -786,8 +786,10 @@ char helpfilename[13] = "HELPART.", endfilename[13] = "ENDART1.";
 #if !defined(SPEAR) || !defined(SEGA_SATURN)
 void HelpScreens (void)
 {
+#ifdef ARTSEXTERN
     int     artnum;
-    char    *text;
+	char    *text;
+#endif
 #ifndef ARTSEXTERN
     void    *layout;
 #endif

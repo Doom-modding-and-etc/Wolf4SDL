@@ -1933,6 +1933,7 @@ CopyProtection (void)
             //
             case debriefing:
             {
+				size_t inputlen;
                 PrintX = 0;
                 US_Print (STR_DEBRIEF);
                 SETFONTCOLOR (PRINTCOLOR, 15);
@@ -1958,7 +1959,7 @@ CopyProtection (void)
                 US_LineInput (PrintX, PrintY, inputbuffer, 0, true, 20, 100);
 
                 match = 0;
-                size_t inputlen = strlen(inputbuffer);
+                inputlen = strlen(inputbuffer);
                 if(inputlen > 3)
                 {
                     size_t bosslen = strlen(bossstrs[whichboss]);
@@ -2010,6 +2011,7 @@ CopyProtection (void)
             //
             case staffquiz:
             {
+				size_t inputlen;
                 while (memberpicked[whichmem = US_RndT () % 5]);
                 memberpicked[whichmem] = 1;
                 US_CPrint (STR_ID1);
@@ -2028,7 +2030,7 @@ CopyProtection (void)
                 US_LineInput (PrintX, PrintY, inputbuffer, 0, true, 20, 120);
 
                 match = 0;
-                size_t inputlen = strlen(inputbuffer);
+                inputlen = strlen(inputbuffer);
                 if(inputlen > 2)
                 {
                     size_t memberlen = strlen(MemberCorrect[whichmem]);

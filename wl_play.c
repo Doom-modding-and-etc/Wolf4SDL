@@ -33,7 +33,11 @@ static musicnames lastmusicchunk;
 static musicnames lastmusicchunk = (musicnames) 0;
 #endif
 #ifndef SEGA_SATURN
-int     DebugOk;
+boolean     DebugOk;
+#endif
+
+#ifdef COMPASS
+boolean compass;
 #endif
 
 objtype objlist[MAXACTORS];
@@ -51,10 +55,8 @@ objtype *actorat[MAPSIZE][MAPSIZE];
 #ifdef REVEALMAP
 boolean     mapseen[MAPSIZE][MAPSIZE];
 #endif
-#ifdef FIXEDLOGICRATE
-#ifdef LAGSIMULATOR
+#if defined(FIXEDLOGICRATE) && defined(LAGSIMULATOR)
 boolean lagging = true;
-#endif
 #endif
 
 //
@@ -924,7 +926,7 @@ void CheckKeys (void)
         IN_Ack ();
 
         DrawPlayBorderSides ();
-        DebugOk = 1;
+        DebugOk = true;
     }
 #endif
 
@@ -1067,6 +1069,16 @@ void CheckKeys (void)
         if (MousePresent && IN_IsInputGrabbed())
             IN_CenterMouse();     // Clear accumulated mouse movement
         lasttimecount = GetTimeCount();
+        return;
+    }
+#endif
+#ifdef COMPASS
+    //------------------
+    // Compass
+    if (Keyboard(sc_C))
+    {
+        compass ^= true;
+        Keyboard(sc_C) | false;
         return;
     }
 #endif
@@ -1269,7 +1281,59 @@ int StopMusic(void)
 =
 =================
 */
+#if defined(BOSS_MUSIC) && defined(VIEASM)
+void StartMusic()
+{
+#ifdef MAPPEDCONTROLLEDMUSIC
+    int holder;
+    //static musicnames lastmusicchunk;
+#endif
+    SD_MusicOff();
 
+#ifdef MAPPEDCONTROLLEDMUSIC
+    holder = tilemap[1][0];
+    if (holder < 0 || holder >LASTMUSIC)
+        holder = 0;
+    lastmusicchunk = (musicnames)(gamestate.music[songs[holder]]);
+#else
+    lastmusicchunk = (musicnames)(gamestate.music);
+#endif
+    SD_StartMusic(STARTMUSIC + lastmusicchunk);
+}
+
+void ContinueMusic(int offs)
+{
+#ifdef MAPCONTROLLEDMUSIC
+    int holder;
+    //static musicnames lastmusicchunk;
+#endif
+    SD_MusicOff();
+#ifdef MAPCONTROLLEDMUSIC
+    holder = tilemap[1][0];
+    if (holder < 0 || holder >LASTMUSIC)
+        holder = 0;
+    lastmusicchunk = (musicnames)(gamestate.music[songs[holder]]);
+#else
+    lastmusicchunk = (musicnames)(gamestate.music);
+#endif
+    SD_ContinueMusic(STARTMUSIC + lastmusicchunk, offs);
+}
+
+void ChangeGameMusic(int song)
+{
+    if (gamestate.music == song || song >= LASTMUSIC)
+        return;
+
+    StopMusic();
+    gamestate.music = song;
+    StartMusic();
+}
+
+void SetLevelMusic(void)
+{
+    gamestate.music = songs[gamestate.mapon + gamestate.episode * 10];
+}
+#else
 void StartMusic ()
 {
 #ifdef MAPCONTROLLEDMUSIC
@@ -1305,7 +1369,7 @@ void ContinueMusic (int offs)
 #endif
     SD_ContinueMusic(STARTMUSIC + lastmusicchunk, offs);
 }
-
+#endif
 /*
 =============================================================================
 

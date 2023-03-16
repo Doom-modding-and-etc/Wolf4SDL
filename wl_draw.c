@@ -331,6 +331,9 @@ void ScalePost (void)
 {
     int ywcount, yoffs, yw, yd, yendoffs;
     unsigned char col;
+#ifdef USE_SHADING
+	unsigned char *curshades;
+#endif
 
 #ifdef USE_SKYWALLPARALLAX
     if (tilehit == 16)
@@ -341,7 +344,7 @@ void ScalePost (void)
 #endif
 
 #ifdef USE_SHADING
-    unsigned char *curshades = shadetable[GetShade(wallheight[postx])];
+    curshades = shadetable[GetShade(wallheight[postx])];
 #endif
 
     ywcount = yd = wallheight[postx] >> 3;
@@ -412,8 +415,9 @@ void SetRightDoorSide(void)
 void ScaleSkyPost (void)
 {
     int ywcount, yoffs, yendoffs, texoffs;
-    unsigned char col;
     int midy, y, skyheight;
+	int curang;
+	int xtex;
 
     skyheight = viewheight;
     ywcount = wallheight[postx] >> 3;
@@ -429,12 +433,12 @@ void ScaleSkyPost (void)
     if (yendoffs >= viewheight)
         yendoffs = viewheight - 1;
 
-    int curang = pixelangle[postx] + midangle;
+    curang = pixelangle[postx] + midangle;
     if(curang < 0)
         curang += FINEANGLES;
     else if(curang >= FINEANGLES)
         curang -= FINEANGLES;
-    int xtex = curang * 16 * TEXTURESIZE / FINEANGLES;
+    xtex = curang * 16 * TEXTURESIZE / FINEANGLES;
     texoffs = TEXTUREMASK - ((xtex & (TEXTURESIZE - 1)) << TEXTURESHIFT);
 
     y = yendoffs;
@@ -1015,7 +1019,9 @@ int weaponscale[NUMWEAPONS] = {SPR_KNIFEREADY, SPR_PISTOLREADY,
 void DrawPlayerWeapon (void)
 {
     int shapenum;
-
+#if defined(CHRIS) && defined(COMPASS)
+    short compass_dir = ((player->angle * 2 + 45) / 90) % 8;
+#endif
 #ifndef SPEAR
     if (gamestate.victoryflag)
     {
@@ -1035,6 +1041,55 @@ void DrawPlayerWeapon (void)
 
     if (demorecord || demoplayback)
         SimpleScaleShape(viewwidth/2,SPR_DEMO,viewheight+1);
+#ifdef COMPASS
+//
+// Check direction and draw compass (if enabled)
+// Scale the compass as half of the normal size
+// and place it to the right (top of everything)...
+// 
+#ifdef CHRIS
+    if (compass)
+    {
+        SimpleScaleShape(viewwidth - 100, SPR_DIR_E + compass_dir, (viewheight + 64) / 2);
+    }
+#else
+    if (compass) {
+        if (player->angle < 110 && player->angle >= 70)      //NORTH:      70 - 110 deg
+        {
+            SimpleScaleShape(viewwidth - 100, SPR_DIR_N, (viewheight + 64) / 2);
+        }
+        else if (player->angle < 70 && player->angle >= 20)   //NORTHEAST:  20 - 70 deg
+        {
+            SimpleScaleShape(viewwidth - 100, SPR_DIR_NE, (viewheight + 64) / 2);
+        }
+        else if (player->angle < 340 && player->angle >= 290) //SOUTHEAST:  290 - 340 deg
+        {
+            SimpleScaleShape(viewwidth - 100, SPR_DIR_SE, (viewheight + 64) / 2);
+        }
+        else if (player->angle < 290 && player->angle >= 250) //SOUTH:      250 - 290 deg
+        {
+            SimpleScaleShape(viewwidth - 100, SPR_DIR_S, (viewheight + 64) / 2);
+        }
+        else if (player->angle < 250 && player->angle >= 200) //SOUTHWEST:  200 - 250 deg
+        {
+            SimpleScaleShape(viewwidth - 100, SPR_DIR_SW, (viewheight + 64) / 2);
+        }
+        else if (player->angle < 160 && player->angle >= 110)  //NORTHWEST: 110 - 160 deg
+        {
+            SimpleScaleShape(viewwidth - 100, SPR_DIR_NW, (viewheight + 64) / 2);
+        }
+        else if (player->angle < 200 && player->angle >= 160) //WEST:       160 - 200 deg
+        {
+            SimpleScaleShape(viewwidth - 100, SPR_DIR_W, (viewheight + 64) / 2);
+        }
+        else                                             //EAST:       0 - 20 & 340 - 360 deg
+        {
+            SimpleScaleShape(viewwidth - 100, SPR_DIR_E, (viewheight + 64) / 2);
+        }
+    }
+#endif
+#endif
+    //---
 }
 
 

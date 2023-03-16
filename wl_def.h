@@ -709,7 +709,11 @@ enum
     SPR_MACHINEGUNATK4,
 
     SPR_CHAINREADY, SPR_CHAINATK1, SPR_CHAINATK2, SPR_CHAINATK3,
-    SPR_CHAINATK4
+    SPR_CHAINATK4,
+#ifdef COMPASS
+    SPR_DIR_N, SPR_DIR_NE, SPR_DIR_E, SPR_DIR_SE,      //Directions N-SE
+    SPR_DIR_S, SPR_DIR_SW, SPR_DIR_W, SPR_DIR_NW,      //Directions S-NW
+#endif
 };
 
 
@@ -1031,6 +1035,9 @@ typedef struct
 #ifdef MAPCONTROLPARTIME
     float       partime;
 #endif
+#if defined(BOSS_MUSIC) && defined(VIEASM)
+    short       music;
+#endif
 } gametype;
 
 
@@ -1195,9 +1202,13 @@ extern  int     funnyticount;           // FOR FUNNY BJ FACE
 
 extern  exit_t      playstate;
 
-extern  int         DebugOk;
+extern  boolean         DebugOk;
 
 extern  boolean     madenoise;
+
+#ifdef COMPASS
+extern boolean compass;
+#endif
 
 extern  objtype     objlist[MAXACTORS];
 extern  objtype* newobj, * player, * objfreelist, * killerobj;
@@ -1276,6 +1287,10 @@ void    PollControls(void);
 int     StopMusic(void);
 void    StartMusic(void);
 void    ContinueMusic(int offs);
+#if defined(BOSS_MUSIC) && defined(VIEASM)
+void    ChangeGameMusic(int song);
+void    SetLevelMusic(void);
+#endif
 void    StartDamageFlash(int damage);
 void    StartBonusFlash(void);
 
@@ -1311,10 +1326,8 @@ int DebugKeys(void);
 void ViewMap(void);
 void PictureGrabber(void);
 
-#ifdef FIXEDLOGICRATE
-#ifdef LAGSIMULATOR
+#if defined(FIXEDLOGICRATE) && defined(LAGSIMULATOR)
 extern boolean lagging;
-#endif
 #endif
 
 /*

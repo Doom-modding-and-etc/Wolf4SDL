@@ -130,6 +130,12 @@ int     param_mission = 0;
 boolean param_goodtimes = false;
 boolean param_ignorenumchunks = false;
 
+#ifndef GOODTIMES
+#ifndef SPEARDEMO
+extern void CopyProtection(void);
+#endif
+#endif
+
 /*
 =============================================================================
 
@@ -1741,7 +1747,6 @@ static void DemoLoop()
         #else
             #ifndef GOODTIMES
             #ifndef SPEARDEMO
-            extern void CopyProtection(void);
             if(!param_goodtimes)
                 CopyProtection();
             #endif
