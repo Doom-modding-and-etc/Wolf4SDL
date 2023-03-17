@@ -249,9 +249,8 @@ IMPORTANT: Do not forget to take care of version.h!
 
 TODOs:
 ------
- - Add plataform readme.
- - Fix some versions of Wolfenstein 3d.
- - Prepare to SDL3 Support.
+ - Add platform readme.
+ - Prepare SDL3 Support.
  - Support to sega saturn: wl_draw.c, wl_main.c and wl_menu.c
  - Support OpenBSD.
  - Add more features from: http://dhw.wolfenstein3d.com/viewtopic.php?t=6310
@@ -261,7 +260,7 @@ Known bugs:
 -----------
 Severe: Bug on the changed key controls keys like: w a s d or something on the Wolf3d part.
 Spear of destiny works file atleast.
-Keyboard on menu screen won´t work after cleanup the kbrd defs.
+Keyboard on menu screen wonÂ´t work after cleanup the kbrd defs.
 
 Troubleshooting:
 ----------------
