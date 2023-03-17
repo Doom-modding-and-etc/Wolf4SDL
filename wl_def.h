@@ -887,9 +887,22 @@ typedef struct statstruct
     unsigned char* visspot;
     unsigned int flags;
     unsigned char      itemnumber;
+#ifdef PUSHOBJECT // Objects that can be pushed
+    unsigned char      pushable;
+#endif   
+
 } statobj_t;
 
+#ifdef PUSHOBJECT // Objects that can be pushed
+// Place this value on the floor below an item that you want to be pushable
+#define PUSHITEMMARKER    145   // Add this value to your mapdata defines - change value if required
 
+
+extern  void ResetFloorCode(int tilex, int tiley);
+// Arrays for quick checking locations on the map
+extern  char            dx4dir[4];
+extern  char            dy4dir[4];
+#endif
 //---------------------
 //
 // door actor structure
@@ -1227,8 +1240,12 @@ extern  objtype* actorat[MAPSIZE][MAPSIZE];
 #ifdef REVEALMAP
 extern  boolean        mapseen[MAPSIZE][MAPSIZE];
 #endif
+#ifdef HIGHLIGHTPUSHWALLS
 //todo saturn: noclip does not affect anything...
+extern  boolean  singlestep, godmode, noclip, ammocheat, mapreveal, highlightmode;
+#else
 extern  boolean  singlestep, godmode, noclip, ammocheat, mapreveal;
+#endif
 #ifdef EXTRACONTROLS
 extern  int         controlstrafe;
 #endif
@@ -1635,7 +1652,9 @@ extern  void    EndText(void);
 #ifdef AUTOINTER
 extern  void    IntermissionScreens(void);
 #endif
-
+#ifdef LOGFILE
+extern  void    LogDiscScreens(char* choice);
+#endif
 /*
 =============================================================================
 

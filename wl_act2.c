@@ -304,7 +304,140 @@ boolean ProjectileTryMove (objtype *ob)
         return true;
 }
 
+#ifdef SEEKER_MISSILES
+/*
+=======================================================
+=  ClipAngle:
+=
+=  Keeps angle in range
+=======================================================
+*/
+int ClipAngle(int angle)
+{
+    while (angle >= ANGLES) { angle -= ANGLES; }
+    while (angle < 0) { angle += ANGLES; }
 
+    return angle;
+}
+
+
+/*
+=======================================================
+=  ObjAngle:
+=
+=  Returns angle from ob1 to ob2
+=======================================================
+*/
+int ObjAngle(objtype* ob1, objtype* ob2)
+{
+    int deltax, deltay;
+    float   angle;
+    int     iangle;
+
+    deltax = ob2->x - ob1->x;
+    deltay = ob1->y - ob2->y;
+
+    if (deltax == 0 && deltay == 0)
+        return 0;
+
+    angle = (float)atan2((float)deltay, (float)deltax);
+    if (angle < 0)
+        angle = (float)(M_PI * 2 + angle);
+
+    iangle = ClipAngle((int)(angle / (M_PI * 2) * ANGLES));
+
+    return iangle;
+}
+
+/*
+=======================================================
+=  TurnToAngle:
+=
+=  Rotates an actor towards desired angle, as efficiently
+=  as possible
+=
+=  dest     = Destination angle
+=  turnrate = Turning speed
+=======================================================
+*/
+void TurnToAngle(objtype* ob, int dest, int turnrate)
+{
+    long   deltax, deltay;
+    int   iangle;
+    int   countercw, clockwise, change, curangle;
+
+    // No need to turn we are heading at the desired direction
+    if (ob->angle == dest) return;
+
+    //
+    // Check most efficient turning angle
+    //
+
+    // Check which way we should turn
+    if (ob->angle > dest)
+    {
+        countercw = ob->angle - dest;
+        clockwise = ANGLES - ob->angle + dest;
+    }
+    else
+    {
+        clockwise = dest - ob->angle;
+        countercw = ob->angle + ANGLES - dest;
+    }
+
+    curangle = ob->angle;
+
+    if (clockwise < countercw)
+    {
+        //
+       // Rotate clockwise
+       //
+
+        if (curangle > dest)
+            curangle -= ANGLES;
+
+        change = tics * turnrate;
+        if (curangle + change > dest)
+            change = dest - curangle;
+
+        curangle += change;
+        ob->angle += change;
+
+        ob->angle = ClipAngle(ob->angle);
+    }
+    else
+    {
+        //
+        // Rotate counterclockwise
+        //
+
+        if (curangle < dest)
+            curangle += ANGLES;
+
+        change = -tics * turnrate;
+        if (curangle + change < dest)
+            change = dest - curangle;
+
+        curangle += change;
+        ob->angle += change;
+
+        ob->angle = ClipAngle(ob->angle);
+    }
+}
+
+/*
+=======================================================
+=  HomeToPlayer:
+=
+=  Rocket homing in to player
+=======================================================
+*/
+void HomeToPlayer(objtype* ob)
+{
+    int a = ObjAngle(ob, player);
+    TurnToAngle(ob, a, 1);
+}
+#endif
 
 /*
 =================
@@ -319,7 +452,10 @@ void T_Projectile (objtype *ob)
     int deltax,deltay;
     int     damage;
     int speed;
-
+#ifdef SEEKER_MISSILES
+    if (ob->obclass == rocketobj || ob->obclass == hrocketobj)
+        HomeToPlayer(ob);
+#endif
     speed = (int)ob->speed*tics;
 
     deltax = FixedMul(speed,costable[ob->angle]);

@@ -374,6 +374,10 @@ void ScalePost (void)
 #else
     col = postsource[yw];
 #endif
+#ifdef HIGHLIGHTPUSHWALLS
+    if (highlightmode && MAPSPOT(xtile, ytile, 1) == PUSHABLETILE)
+        col = col << 2;
+#endif
     yendoffs = yendoffs * bufferPitch + postx;
     while(yoffs <= yendoffs)
     {
@@ -392,6 +396,10 @@ void ScalePost (void)
             col = curshades[postsource[yw]];
 #else
             col = postsource[yw];
+#endif
+#ifdef HIGHLIGHTPUSHWALLS
+            if (highlightmode && MAPSPOT(xtile, ytile, 1) == PUSHABLETILE)
+                col = col << 2;
 #endif
         }
         yendoffs -= bufferPitch;

@@ -1189,6 +1189,7 @@ void Cmd_Fire(void)
         attackinfo[gamestate.weapon][gamestate.attackframe].tics;
     gamestate.weaponframe =
         attackinfo[gamestate.weapon][gamestate.attackframe].frame;
+
 }
 
 //===========================================================================
@@ -1205,7 +1206,9 @@ void Cmd_Use(void)
 {
     int     checkx, checky, doornum, dir;
     boolean elevatorok;
-
+#if defined(PUSHOBJECT) || defined(LOGFILE) 
+    statobj_t* statptr;
+#endif
     //
     // find which cardinal direction the player is facing
     //
@@ -1237,7 +1240,43 @@ void Cmd_Use(void)
         dir = di_south;
         elevatorok = false;
     }
+#ifdef LOGFILE
+    // Added by Havoc for interactive objects
+    for (statptr = &statobjlist[0]; statptr != laststatobj; statptr++)
+    {
+        if (statptr->tilex == checkx && statptr->tiley == checky &&
+            (statptr->shapenum == SPR_STAT_4 || statptr->shapenum == SPR_STAT_9 || statptr->shapenum == SPR_STAT_19) &&
+            !buttonheld[bt_use])
+        {
+            buttonheld[bt_use] = true;
 
+            ClearMemory();
+
+            VW_FadeOut();
+
+            switch (statptr->shapenum)
+            {
+            case SPR_STAT_4:
+                LogDiscScreens("1");
+                break;
+
+            case SPR_STAT_9:
+                LogDiscScreens("2");
+                break;
+
+            case SPR_STAT_19:
+                LogDiscScreens("3");
+                break;
+            }
+
+            ClearMemory();
+
+            IN_ClearKeysDown();
+
+            DrawPlayScreen();
+        }
+    }
+#endif
     doornum = tilemap[checkx][checky];
 #if defined(EMBEDDED) && defined(SEGA_SATURN)
     if (*(mapsegs[1] + farmapylookup[checky] + checkx) == PUSHABLETILE)
@@ -1278,6 +1317,43 @@ void Cmd_Use(void)
     }
     else
         SD_PlaySound(DONOTHINGSND);
+#ifdef PUSHOBJECT
+    // Static Object/Items manipulation routines
+    for (statptr = statobjlist; statptr != laststatobj; statptr++)
+    {
+        if (statptr->tilex == checkx && statptr->tiley == checky && !buttonheld[bt_use])
+        {
+            buttonheld[bt_use] = true;        // that must react to spacebar
+
+#ifdef PUSHOBJECT // Pushable Items or Objects that can be pushed
+
+            if (statptr->pushable) // Is the item Pushable
+            {
+                if (actorat[checkx][checky])
+                {
+                    if (actorat[checkx + dx4dir[dir]][checky + dy4dir[dir]] > 0) { return; } // Is Tile to move to Free?
+                    SD_PlaySound(TAKEDAMAGESND);                                 // Make a Ugh pushing sound
+                    statptr->tilex = statptr->tilex + dx4dir[dir];                // Free to move object
+                    statptr->tiley = statptr->tiley + dy4dir[dir];                // to it's new location
+                    statptr->visspot = &spotvis[statptr->tilex][statptr->tiley];  // Make it visible
+                    actorat[checkx][checky] = (objtype*)(uintptr_t)0;
+                    actorat[statptr->tilex][statptr->tiley] = (objtype*)(uintptr_t)64;
+                }
+            }
+#endif
+            // Other routines for static objects can be inserted here
+
+            // End of static object check loop
+        }
+    }
+#endif
+#ifdef PUSHOBJECT // Pushable Static Object Item
+    if (MAPSPOT(tilex, tiley, 0) == PUSHITEMMARKER)
+    {
+        laststatobj->pushable = 1;     // Make Item Pushable or True
+        ResetFloorCode(tilex, tiley);  // Reset the Floor code to a valid Floor code value
+    }
+#endif
 }
 
 /*
@@ -1368,8 +1444,111 @@ void    KnifeAttack(objtype* ob)
     DamageActor(closest, US_RndT() >> 4);
 }
 
+#ifdef BULLET_CALC
+#define COLSIZE 0x4000l
+#define STEPDIST 0x800l
+
+void    GunAttack(objtype* ob)
+{
+    int             bulletx, bullety;
+    short           bangle, damage, accuracy, numshots;
+    boolean         hit;
+    objtype* check;
+    int i;
+    switch (gamestate.weapon)
+    {
+    case wp_pistol:
+        SD_PlaySound(ATKPISTOLSND);
+        break;
+    case wp_machinegun:
+        SD_PlaySound(ATKMACHINEGUNSND);
+        break;
+    case wp_chaingun:
+        SD_PlaySound(ATKGATLINGSND);
+        break;
+    }
+
+    madenoise = true;
 
 
+
+    //
+    // AlumiuN's new weaponry code - trace bullets
+    //
+    switch (gamestate.weapon)
+    {
+    case wp_pistol: accuracy = 4; numshots = 1; break;
+    case wp_machinegun: accuracy = 5; numshots = 1; break;
+    case wp_chaingun: accuracy = 9; numshots = 1; break;
+    }
+
+    for (i = 0; i < numshots; i++)
+    {
+        bulletx = player->x;
+        bullety = player->y;
+        bangle = player->angle;
+
+        if (accuracy)
+        {
+            if (US_RndT() > 127)
+                bangle -= US_RndT() % (accuracy + 1);
+            else
+                bangle += US_RndT() % (accuracy + 1);
+        }
+
+        hit = false;    // Assume the worst! Oh, and reset the variable. :)
+
+        while (1)
+        {
+            bulletx += FixedMul(STEPDIST, costable[bangle]);
+            bullety -= FixedMul(STEPDIST, sintable[bangle]);
+
+            //
+            // check for solid walls
+            //
+            check = actorat[bulletx >> TILESHIFT][bullety >> TILESHIFT];
+            if (check && !ISPOINTER(check) && (uintptr_t)check != 64)
+            {
+                if ((uintptr_t)check < 128)      // Hit a wall
+                {
+                    // Add any effects that you want to happen when the bullet hits a wall
+                }
+                else if (doorobjlist[(uintptr_t)check - 128].action < 0xdfff / 2)   // Cheap hack - improve later?
+                {
+                    // Add any effects that you want to happen when the bullet hits a door
+                }
+                hit = true;
+            }
+
+            if (hit)
+                break;
+
+            check = objlist;
+            while (check)
+            {
+                if (check->flags & FL_SHOOTABLE)
+                {
+                    if (labs(bulletx - check->x) < COLSIZE && labs(bullety - check->y) < COLSIZE)
+                    {
+                        hit = true;
+                        switch (gamestate.weapon)
+                        {
+                        case wp_pistol: damage = 10 + US_RndT() % 25; break;
+                        case wp_machinegun: damage = 8 + US_RndT() % 22; break;
+                        case wp_chaingun: damage = 6 + US_RndT() % 20; break;
+                        }
+                        DamageActor(check, damage);
+                    }
+                }
+                check = check->next;
+            }
+
+            if (hit)
+                break;
+        }
+    }
+}
+#else
 void    GunAttack(objtype* ob)
 {
     objtype* check, * closest, * oldclosest;
@@ -1443,7 +1622,7 @@ void    GunAttack(objtype* ob)
     }
     DamageActor(closest, damage);
 }
-
+#endif
 //===========================================================================
 
 /*

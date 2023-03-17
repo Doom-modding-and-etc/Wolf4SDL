@@ -1,5 +1,4 @@
 // WL_TEXT.C
-
 #include "wl_def.h"
 
 /*
@@ -917,6 +916,45 @@ void IntermissionScreens(void)
         VW_FadeOut();
         free(layout);
         FreeMusic();
+    }
+}
+#endif
+#ifdef LOGFILE
+/*
+======================
+=
+= Log Disc Screens
+=
+= By Havoc
+=
+======================
+*/
+void LogDiscScreens(char* choice)
+{
+    char* text;
+    void *layout;
+    char  logfilename[13] = "LOG000.";
+
+    strcat(logfilename, extension);
+
+#ifndef SPEAR
+    logfilename[3] = '0' + (gamestate.episode + 1);
+    logfilename[4] = '0' + (gamestate.mapon + 1);
+#else
+    logfilename[3] = '0' + ((gamestate.mapon + 1) / 10);
+    logfilename[4] = '0' + ((gamestate.mapon + 1) % 10);
+#endif
+    logfilename[5] = *choice;
+
+    if (!CA_LoadFile(logfilename, &layout))
+    {
+        text = (char*)layout;
+#ifndef SPEAR
+        ShowArticle(text);
+#endif
+        free(layout);
+
+        VW_FadeOut();
     }
 }
 #endif

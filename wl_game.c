@@ -63,7 +63,11 @@ int ElevatorBackTo[]={1,1,7,3,5,3};
 void SetupGameLevel (void);
 void DrawPlayScreen (void);
 void GameLoop (void);
-
+#ifdef PUSHOBJECT // Objects that can be pushed
+// Arrays for quick checking cardinal direction locations on the map
+char dx4dir[4] = { 0, 1, 0, -1 };  // dx & dy based on direction
+char dy4dir[4] = { -1, 0, 1,  0 };
+#endif
 /*
 =============================================================================
                              LOCAL VARIABLES

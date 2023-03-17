@@ -757,6 +757,9 @@ int CP_CheckQuick(ScanCode scancode)
         // QUICKSAVE
         //
         case sc_F8:
+#ifdef SAVE_GAME_SCREENSHOT
+            VL_SetSaveGameSlot();
+#endif
             if (SaveGamesAvail[LSItems.curpos] && pickquick)
             {
                 fontnumber = 1;
@@ -1844,6 +1847,9 @@ DrawLoadSaveScreen (int loadsave)
     fontnumber = 1;
     VWB_DrawPic (112, 184, C_MOUSELBACKPIC);
     DrawWindow (LSM_X - 10, LSM_Y - 5, LSM_W, LSM_H, BKGDCOLOR);
+#ifdef SAVE_GAME_SCREENSHOT
+    DrawWindow(LSP_X - 1, LSP_Y - 1, LSP_W + 1, LSP_H + 1, 0x00);
+#endif
     DrawStripes (10);
 
     if (!loadsave)
@@ -1883,6 +1889,117 @@ PrintLSEntry (int w, int color)
     fontnumber = 1;
 }
 
+#ifdef SAVE_GAME_SCREENSHOT
+/*
+=================
+=
+= VL_LatchToScreen
+=
+=================
+*/
+
+void VL_LatchToScreenScaledCoord(SDL_Surface* source, int xsrc, int ysrc,
+    int width, int height, int scxdest, int scydest)
+{
+    unsigned curPitch;
+    assert(scxdest >= 0 && scxdest + width * scaleFactor <= screenWidth
+        && scydest >= 0 && scydest + height * scaleFactor <= screenHeight
+        && "VL_LatchToScreenScaledCoord: Destination rectangle out of bounds!");
+
+    if (scaleFactor == 1)
+    {
+        // HACK: If screenBits is not 8 and the screen is faded out, the
+        //       result will be black when using SDL_BlitSurface. The reason
+        //       is that the logical palette needed for the transformation
+        //       to the screen color depth is not equal to the logical
+        //       palette of the latch (the latch is not faded). Therefore,
+        //       SDL tries to map the colors...
+        //       The result: All colors are mapped to black.
+        //       So, we do the blit on our own...
+        if (screenBits != 8)
+        {
+            byte* src, * dest;
+            unsigned srcPitch;
+            int i, j;
+
+            src = VL_LockSurface(source);
+            if (src == NULL) return;
+
+            srcPitch = source->pitch;
+
+            dest = VL_LockSurface(screen);
+            if (dest == NULL) return;
+
+            for (j = 0; j < height; j++)
+            {
+                for (i = 0; i < width; i++)
+                {
+                    byte col = src[(ysrc + j) * srcPitch + xsrc + i];
+                    dest[(scydest + j) * curPitch + scxdest + i] = col;
+                }
+            }
+            VL_UnlockSurface(screen);
+            VL_UnlockSurface(source);
+        }
+        else
+        {
+            SDL_Rect srcrect = { xsrc, ysrc, width, height };
+            SDL_Rect destrect = { scxdest, scydest, 0, 0 }; // width and height are ignored
+            SDL_BlitSurface(source, &srcrect, screen, &destrect);
+        }
+    }
+    else
+    {
+        byte* src, * dest;
+        unsigned srcPitch;
+        int i, j, sci, scj;
+        unsigned m, n;
+
+        src = VL_LockSurface(source);
+        if (src == NULL) return;
+
+        srcPitch = source->pitch;
+
+        dest = VL_LockSurface(screen);
+        if (dest == NULL) return;
+
+        for (j = 0, scj = 0; j < height; j++, scj += scaleFactor)
+        {
+            for (i = 0, sci = 0; i < width; i++, sci += scaleFactor)
+            {
+                byte col = src[(ysrc + j) * srcPitch + xsrc + i];
+                for (m = 0; m < scaleFactor; m++)
+                {
+                    for (n = 0; n < scaleFactor; n++)
+                    {
+                        dest[(scydest + scj + m) * curPitch + scxdest + sci + n] = col;
+                    }
+                }
+            }
+        }
+        VL_UnlockSurface(screen);
+        VL_UnlockSurface(source);
+    }
+}
+
+
+void VL_LatchToScreen(SDL_Surface* source, int xsrc, int ysrc,
+    int width, int height, int xdest, int ydest)
+{
+    VL_LatchToScreenScaledCoord(source, xsrc, ysrc, width, height,
+        scaleFactor * xdest, scaleFactor * ydest);
+}
+void VL_LatchToScreenScaledCoord2(SDL_Surface* source, int scx, int scy)
+{
+    VL_LatchToScreenScaledCoord(source, 0, 0, source->w, source->h, scx, scy);
+}
+
+void VL_LatchToScreen2(SDL_Surface* source, int x, int y)
+{
+    VL_LatchToScreenScaledCoord(source, 0, 0, source->w, source->h,
+        scaleFactor * x, scaleFactor * y);
+}
+#endif
 
 ////////////////////////////////////////////////////////////////////
 //
@@ -1897,7 +2014,10 @@ CP_SaveGame (int quick)
     char name[13];
     char savepath[300];
     char input[32];
-
+#ifdef SAVE_GAME_SCREENSHOT
+    char picpath[300];
+    char bmpName[13] = BMP_SAVE;
+#endif
     strcpy (name, SaveName);
 
     //
@@ -1924,6 +2044,18 @@ CP_SaveGame (int quick)
             fwrite (input, 1, 32, file);
             fseek (file, 32, SEEK_SET);
             SaveTheGame (file, 0, 0);
+#ifdef SAVE_GAME_SCREENSHOT
+            bmpName[7] = which + '0';
+            if (configdir[0]) {
+                snprintf(picpath, sizeof(picpath), "%s/%s", configdir, bmpName);
+            }
+            else {
+                strcpy(picpath, bmpName);
+        }
+
+            unlink(picpath);
+            SDL_SaveBMP(lastGameSurface, picpath);
+#endif
             fclose (file);
 
 #ifdef _arch_dreamcast
@@ -1957,8 +2089,28 @@ CP_SaveGame (int quick)
                 }
                 else
                 {
+#ifdef SAVE_GAME_SCREENSHOT
+                    char loadpath[300];
+                    char bmpName[13] = BMP_SAVE;
+#endif
                     DrawLoadSaveScreen (1);
                     PrintLSEntry (which, HIGHLIGHT);
+#ifdef SAVE_GAME_SCREENSHOT
+                    bmpName[7] = which + '0';
+
+                    if (configdir[0]) {
+                        snprintf(loadpath, sizeof(loadpath), "%s/%s", configdir, bmpName);
+                    }
+                    else {
+                        strcpy(loadpath, bmpName);
+                    }
+
+                    DrawWindow(LSP_X - 1, LSP_Y - 1, LSP_W + 1, LSP_H + 1, 0x00);
+                    SDL_Surface* bmpSurface = SDL_LoadBMP(bmpName);
+                    if (bmpSurface != NULL) {
+                        VL_LatchToScreenScaledCoord(bmpSurface, 0, 0, LSP_W, LSP_H, LSP_X * scaleFactor, LSP_Y * scaleFactor);
+                    }
+#endif
                     VW_UpdateScreen ();
                 }
             }
@@ -2005,9 +2157,29 @@ CP_SaveGame (int quick)
             }
             else
             {
+#ifdef SAVE_GAME_SCREENSHOT
+                char loadpath[300];
+                char bmpName[13] = BMP_SAVE;
+#endif
                 VWB_Bar (LSM_X + LSItems.indent + 1, LSM_Y + which * 13 + 1,
                          LSM_W - LSItems.indent - 16, 10, BKGDCOLOR);
                 PrintLSEntry (which, HIGHLIGHT);
+#ifdef SAVE_GAME_SCREENSHOT
+                bmpName[7] = which + '0';
+
+                if (configdir[0]) {
+                    snprintf(loadpath, sizeof(loadpath), "%s/%s", configdir, bmpName);
+                }
+                else {
+                    strcpy(loadpath, bmpName);
+                }
+
+                DrawWindow(LSP_X - 1, LSP_Y - 1, LSP_W + 1, LSP_H + 1, 0x00);
+                SDL_Surface* bmpSurface = SDL_LoadBMP(bmpName);
+                if (bmpSurface != NULL) {
+                    VL_LatchToScreenScaledCoord(bmpSurface, 0, 0, LSP_W, LSP_H, LSP_X * scaleFactor, LSP_Y * scaleFactor);
+                }
+#endif
                 VW_UpdateScreen ();
                 SD_PlaySound (ESCPRESSEDSND);
                 continue;

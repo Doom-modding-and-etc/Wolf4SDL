@@ -816,6 +816,23 @@ again:
         IN_Ack ();
         return 1;
     }
+#ifdef HIGHLIGHTPUSHWALLS
+    else if (Keyboard(sc_Y)) {   // Y = highlight pushwalls
+        CenterWindow(15, 2);
+        if (highlightmode == 0) {
+            US_PrintCentered("Glow Pushwalls ON");
+            highlightmode = 1;
+        }
+        else {
+            US_PrintCentered("Glow Pushwalls OFF");
+            highlightmode = 0;
+        }
+
+        VW_UpdateScreen();
+        IN_Ack();
+        return 1;
+}
+#endif
 #ifdef USE_CLOUDSKY
     else if(Keyboard(sc_Z) && curSky)
     {

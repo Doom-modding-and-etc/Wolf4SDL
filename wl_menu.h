@@ -104,11 +104,22 @@
 #endif
 #define CTL_W   284
 #define CTL_H   60
-
+#ifdef SAVE_GAME_SCREENSHOT
+#define LSM_X   10
+#else
 #define LSM_X   85
+#endif
 #define LSM_Y   55
 #define LSM_W   175
 #define LSM_H   10*13+10
+
+#ifdef SAVE_GAME_SCREENSHOT
+#define LSP_X   184
+#define LSP_Y   80
+#define LSP_W   128
+#define LSP_H   80
+#define BMP_SAVE "savegam?.svg"
+#endif
 
 #ifdef SEGA_SATURN
 #define NM_X    50 + SATURN_ADJUST

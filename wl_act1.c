@@ -193,6 +193,13 @@ void SpawnStatic (int tilex, int tiley, int type)
             laststatobj->flags = FL_BONUS;
             break;
     }
+#ifdef PUSHOBJECT // Pushable Static Object Item
+    if (MAPSPOT(tilex, tiley, 0) == PUSHITEMMARKER)
+    {
+        laststatobj->pushable = 1;     // Make Item Pushable or True
+        ResetFloorCode(tilex, tiley);  // Reset the Floor code to a valid Floor code value
+    }
+#endif
 
     laststatobj->flags |= statinfo[type].specialFlags;
 
@@ -202,6 +209,22 @@ void SpawnStatic (int tilex, int tiley, int type)
         Quit ("Too many static objects!\n");
 }
 
+#ifdef PUSHOBJECT // Objects that can be pushed
+/* ============ Reset Floor Code ================ */
+// Replace Any Map Modifier Code with a valid Floor Code Value
+void ResetFloorCode(int tilex, int tiley)
+{
+    int x, y;
+    for (x = di_north; x <= di_west; x++)
+    {
+        y = MAPSPOT(tilex + dx4dir[x], tiley + dy4dir[x], 0);
+        if (y >= AREATILE && y <= (AREATILE + NUMAREAS - 1))
+        {
+            MAPSPOT(tilex, tiley, 0) = y; return;
+        }
+    }
+}
+#endif
 
 /*
 ===============

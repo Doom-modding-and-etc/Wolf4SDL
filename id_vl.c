@@ -78,6 +78,9 @@ unsigned int screenBits = 8;      // use "best" color depth according to libSDL
 #endif
 
 SDL_Surface *screen = NULL;
+#ifdef SAVE_GAME_SCREENSHOT
+SDL_Surface* lastGameSurface = NULL;
+#endif
 SDL_Surface* screenBuffer = NULL;
 
 unsigned int screenPitch;
@@ -113,10 +116,120 @@ SDL_Color curpal[256];
 #endif
 SDL_Color gamepal[] =
 {
+#ifdef HEADER
 #ifdef SPEAR
     #include "sodpal.inc"
 #else
     #include "wolfpal.inc"
+#endif
+#else
+#ifdef SPEAR
+WRGB(0,  0,  0),WRGB(0,  0, 42),WRGB(0, 42,  0),WRGB(0, 42, 42),WRGB(42,  0,  0),
+WRGB(42,  0, 42),WRGB(42, 21,  0),WRGB(42, 42, 42),WRGB(21, 21, 21),WRGB(21, 21, 63),
+WRGB(21, 63, 21),WRGB(21, 63, 63),WRGB(63, 21, 21),WRGB(63, 21, 63),WRGB(63, 63, 21),
+WRGB(63, 63, 63),WRGB(59, 59, 59),WRGB(55, 55, 55),WRGB(52, 52, 52),WRGB(48, 48, 48),
+WRGB(45, 45, 45),WRGB(42, 42, 42),WRGB(38, 38, 38),WRGB(35, 35, 35),WRGB(31, 31, 31),
+WRGB(28, 28, 28),WRGB(25, 25, 25),WRGB(21, 21, 21),WRGB(18, 18, 18),WRGB(14, 14, 14),
+WRGB(11, 11, 11),WRGB(8,  8,  8),WRGB(63,  0,  0),WRGB(59,  0,  0),WRGB(56,  0,  0),
+WRGB(53,  0,  0),WRGB(50,  0,  0),WRGB(47,  0,  0),WRGB(44,  0,  0),WRGB(41,  0,  0),
+WRGB(38,  0,  0),WRGB(34,  0,  0),WRGB(31,  0,  0),WRGB(28,  0,  0),WRGB(25,  0,  0),
+WRGB(22,  0,  0),WRGB(19,  0,  0),WRGB(16,  0,  0),WRGB(63, 54, 54),WRGB(63, 46, 46),
+WRGB(63, 39, 39),WRGB(63, 31, 31),WRGB(63, 23, 23),WRGB(63, 16, 16),WRGB(63,  8,  8),
+WRGB(63,  0,  0),WRGB(63, 42, 23),WRGB(63, 38, 16),WRGB(63, 34,  8),WRGB(63, 30,  0),
+WRGB(57, 27,  0),WRGB(51, 24,  0),WRGB(45, 21,  0),WRGB(39, 19,  0),WRGB(63, 63, 54),
+WRGB(63, 63, 46),WRGB(63, 63, 39),WRGB(63, 63, 31),WRGB(63, 62, 23),WRGB(63, 61, 16),
+WRGB(63, 61,  8),WRGB(63, 61,  0),WRGB(57, 54,  0),WRGB(51, 49,  0),WRGB(45, 43,  0),
+WRGB(39, 39,  0),WRGB(33, 33,  0),WRGB(28, 27,  0),WRGB(22, 21,  0),WRGB(16, 16,  0),
+WRGB(52, 63, 23),WRGB(49, 63, 16),WRGB(45, 63,  8),WRGB(40, 63,  0),WRGB(36, 57,  0),
+WRGB(32, 51,  0),WRGB(29, 45,  0),WRGB(24, 39,  0),WRGB(54, 63, 54),WRGB(47, 63, 46),
+WRGB(39, 63, 39),WRGB(32, 63, 31),WRGB(24, 63, 23),WRGB(16, 63, 16),WRGB(8, 63,  8),
+WRGB(0, 63,  0),WRGB(0, 63,  0),WRGB(0, 59,  0),WRGB(0, 56,  0),WRGB(0, 53,  0),
+WRGB(1, 50,  0),WRGB(1, 47,  0),WRGB(1, 44,  0),WRGB(1, 41,  0),WRGB(1, 38,  0),
+WRGB(1, 34,  0),WRGB(1, 31,  0),WRGB(1, 28,  0),WRGB(1, 25,  0),WRGB(1, 22,  0),
+WRGB(1, 19,  0),WRGB(1, 16,  0),WRGB(54, 63, 63),WRGB(46, 63, 63),WRGB(39, 63, 63),
+WRGB(31, 63, 62),WRGB(23, 63, 63),WRGB(16, 63, 63),WRGB(8, 63, 63),WRGB(0, 63, 63),
+WRGB(0, 57, 57),WRGB(0, 51, 51),WRGB(0, 45, 45),WRGB(0, 39, 39),WRGB(0, 33, 33),
+WRGB(0, 28, 28),WRGB(0, 22, 22),WRGB(0, 16, 16),WRGB(23, 47, 63),WRGB(16, 44, 63),
+WRGB(8, 42, 63),WRGB(0, 39, 63),WRGB(0, 35, 57),WRGB(0, 31, 51),WRGB(0, 27, 45),
+WRGB(0, 23, 39),WRGB(54, 54, 63),WRGB(46, 47, 63),WRGB(39, 39, 63),WRGB(31, 32, 63),
+WRGB(23, 24, 63),WRGB(16, 16, 63),WRGB(8,  9, 63),WRGB(0,  1, 63),WRGB(0,  0, 63),
+WRGB(0,  0, 59),WRGB(0,  0, 56),WRGB(0,  0, 53),WRGB(0,  0, 50),WRGB(0,  0, 47),
+WRGB(0,  0, 44),WRGB(0,  0, 41),WRGB(0,  0, 38),WRGB(0,  0, 34),WRGB(0,  0, 31),
+WRGB(0,  0, 28),WRGB(0,  0, 25),WRGB(0,  0, 22),WRGB(0,  0, 19),WRGB(0,  0, 16),
+WRGB(10, 10, 10),WRGB(63, 56, 13),WRGB(63, 53,  9),WRGB(63, 51,  6),WRGB(63, 48,  2),
+WRGB(63, 45,  0),WRGB(0, 14,  0),WRGB(0, 10,  0),WRGB(38,  0, 57),WRGB(32,  0, 51),
+WRGB(29,  0, 45),WRGB(24,  0, 39),WRGB(20,  0, 33),WRGB(17,  0, 28),WRGB(13,  0, 22),
+WRGB(10,  0, 16),WRGB(63, 54, 63),WRGB(63, 46, 63),WRGB(63, 39, 63),WRGB(63, 31, 63),
+WRGB(63, 23, 63),WRGB(63, 16, 63),WRGB(63,  8, 63),WRGB(63,  0, 63),WRGB(56,  0, 57),
+WRGB(50,  0, 51),WRGB(45,  0, 45),WRGB(39,  0, 39),WRGB(33,  0, 33),WRGB(27,  0, 28),
+WRGB(22,  0, 22),WRGB(16,  0, 16),WRGB(63, 58, 55),WRGB(63, 56, 52),WRGB(63, 54, 49),
+WRGB(63, 53, 47),WRGB(63, 51, 44),WRGB(63, 49, 41),WRGB(63, 47, 39),WRGB(63, 46, 36),
+WRGB(63, 44, 32),WRGB(63, 41, 28),WRGB(63, 39, 24),WRGB(60, 37, 23),WRGB(58, 35, 22),
+WRGB(55, 34, 21),WRGB(52, 32, 20),WRGB(50, 31, 19),WRGB(47, 30, 18),WRGB(45, 28, 17),
+WRGB(42, 26, 16),WRGB(40, 25, 15),WRGB(39, 24, 14),WRGB(36, 23, 13),WRGB(34, 22, 12),
+WRGB(32, 20, 11),WRGB(29, 19, 10),WRGB(27, 18,  9),WRGB(23, 16,  8),WRGB(21, 15,  7),
+WRGB(18, 14,  6),WRGB(16, 12,  6),WRGB(14, 11,  5),WRGB(10,  8,  3),WRGB(24,  0, 25),
+WRGB(0, 25, 25),WRGB(0, 24, 24),WRGB(0,  0,  7),WRGB(0,  0, 11),WRGB(12,  9,  4),
+WRGB(18,  0, 18),WRGB(20,  0, 20),WRGB(0,  0, 13),WRGB(7,  7,  7),WRGB(19, 19, 19),
+WRGB(23, 23, 23),WRGB(16, 16, 16),WRGB(12, 12, 12),WRGB(13, 13, 13),WRGB(54, 61, 61),
+WRGB(46, 58, 58),WRGB(39, 55, 55),WRGB(29, 50, 50),WRGB(18, 48, 48),WRGB(8, 45, 45),
+WRGB(8, 44, 44),WRGB(0, 41, 41),WRGB(0, 38, 38),WRGB(0, 35, 35),WRGB(0, 33, 33),
+WRGB(0, 31, 31),WRGB(0, 30, 30),WRGB(0, 29, 29),WRGB(0, 28, 28),WRGB(0, 27, 27),
+WRGB(38,  0, 34)
+#else
+WRGB(0,  0,  0),WRGB(0,  0, 42),WRGB(0, 42,  0),WRGB(0, 42, 42),WRGB(42,  0,  0),
+WRGB(42,  0, 42),WRGB(42, 21,  0),WRGB(42, 42, 42),WRGB(21, 21, 21),WRGB(21, 21, 63),
+WRGB(21, 63, 21),WRGB(21, 63, 63),WRGB(63, 21, 21),WRGB(63, 21, 63),WRGB(63, 63, 21),
+WRGB(63, 63, 63),WRGB(59, 59, 59),WRGB(55, 55, 55),WRGB(52, 52, 52),WRGB(48, 48, 48),
+WRGB(45, 45, 45),WRGB(42, 42, 42),WRGB(38, 38, 38),WRGB(35, 35, 35),WRGB(31, 31, 31),
+WRGB(28, 28, 28),WRGB(25, 25, 25),WRGB(21, 21, 21),WRGB(18, 18, 18),WRGB(14, 14, 14),
+WRGB(11, 11, 11),WRGB(8,  8,  8),WRGB(63,  0,  0),WRGB(59,  0,  0),WRGB(56,  0,  0),
+WRGB(53,  0,  0),WRGB(50,  0,  0),WRGB(47,  0,  0),WRGB(44,  0,  0),WRGB(41,  0,  0),
+WRGB(38,  0,  0),WRGB(34,  0,  0),WRGB(31,  0,  0),WRGB(28,  0,  0),WRGB(25,  0,  0),
+WRGB(22,  0,  0),WRGB(19,  0,  0),WRGB(16,  0,  0),WRGB(63, 54, 54),WRGB(63, 46, 46),
+WRGB(63, 39, 39),WRGB(63, 31, 31),WRGB(63, 23, 23),WRGB(63, 16, 16),WRGB(63,  8,  8),
+WRGB(63,  0,  0),WRGB(63, 42, 23),WRGB(63, 38, 16),WRGB(63, 34,  8),WRGB(63, 30,  0),
+WRGB(57, 27,  0),WRGB(51, 24,  0),WRGB(45, 21,  0),WRGB(39, 19,  0),WRGB(63, 63, 54),
+WRGB(63, 63, 46),WRGB(63, 63, 39),WRGB(63, 63, 31),WRGB(63, 62, 23),WRGB(63, 61, 16),
+WRGB(63, 61,  8),WRGB(63, 61,  0),WRGB(57, 54,  0),WRGB(51, 49,  0),WRGB(45, 43,  0),
+WRGB(39, 39,  0),WRGB(33, 33,  0),WRGB(28, 27,  0),WRGB(22, 21,  0),WRGB(16, 16,  0),
+WRGB(52, 63, 23),WRGB(49, 63, 16),WRGB(45, 63,  8),WRGB(40, 63,  0),WRGB(36, 57,  0),
+WRGB(32, 51,  0),WRGB(29, 45,  0),WRGB(24, 39,  0),WRGB(54, 63, 54),WRGB(47, 63, 46),
+WRGB(39, 63, 39),WRGB(32, 63, 31),WRGB(24, 63, 23),WRGB(16, 63, 16),WRGB(8, 63,  8),
+WRGB(0, 63,  0),WRGB(0, 63,  0),WRGB(0, 59,  0),WRGB(0, 56,  0),WRGB(0, 53,  0),
+WRGB(1, 50,  0),WRGB(1, 47,  0),WRGB(1, 44,  0),WRGB(1, 41,  0),WRGB(1, 38,  0),
+WRGB(1, 34,  0),WRGB(1, 31,  0),WRGB(1, 28,  0),WRGB(1, 25,  0),WRGB(1, 22,  0),
+WRGB(1, 19,  0),WRGB(1, 16,  0),WRGB(54, 63, 63),WRGB(46, 63, 63),WRGB(39, 63, 63),
+WRGB(31, 63, 62),WRGB(23, 63, 63),WRGB(16, 63, 63),WRGB(8, 63, 63),WRGB(0, 63, 63),
+WRGB(0, 57, 57),WRGB(0, 51, 51),WRGB(0, 45, 45),WRGB(0, 39, 39),WRGB(0, 33, 33),
+WRGB(0, 28, 28),WRGB(0, 22, 22),WRGB(0, 16, 16),WRGB(23, 47, 63),WRGB(16, 44, 63),
+WRGB(8, 42, 63),WRGB(0, 39, 63),WRGB(0, 35, 57),WRGB(0, 31, 51),WRGB(0, 27, 45),
+WRGB(0, 23, 39),WRGB(54, 54, 63),WRGB(46, 47, 63),WRGB(39, 39, 63),WRGB(31, 32, 63),
+WRGB(23, 24, 63),WRGB(16, 16, 63),WRGB(8,  9, 63),WRGB(0,  1, 63),WRGB(0,  0, 63),
+WRGB(0,  0, 59),WRGB(0,  0, 56),WRGB(0,  0, 53),WRGB(0,  0, 50),WRGB(0,  0, 47),
+WRGB(0,  0, 44),WRGB(0,  0, 41),WRGB(0,  0, 38),WRGB(0,  0, 34),WRGB(0,  0, 31),
+WRGB(0,  0, 28),WRGB(0,  0, 25),WRGB(0,  0, 22),WRGB(0,  0, 19),WRGB(0,  0, 16),
+WRGB(10, 10, 10),WRGB(63, 56, 13),WRGB(63, 53,  9),WRGB(63, 51,  6),WRGB(63, 48,  2),
+WRGB(63, 45,  0),WRGB(45,  8, 63),WRGB(42,  0, 63),WRGB(38,  0, 57),WRGB(32,  0, 51),
+WRGB(29,  0, 45),WRGB(24,  0, 39),WRGB(20,  0, 33),WRGB(17,  0, 28),WRGB(13,  0, 22),
+WRGB(10,  0, 16),WRGB(63, 54, 63),WRGB(63, 46, 63),WRGB(63, 39, 63),WRGB(63, 31, 63),
+WRGB(63, 23, 63),WRGB(63, 16, 63),WRGB(63,  8, 63),WRGB(63,  0, 63),WRGB(56,  0, 57),
+WRGB(50,  0, 51),WRGB(45,  0, 45),WRGB(39,  0, 39),WRGB(33,  0, 33),WRGB(27,  0, 28),
+WRGB(22,  0, 22),WRGB(16,  0, 16),WRGB(63, 58, 55),WRGB(63, 56, 52),WRGB(63, 54, 49),
+WRGB(63, 53, 47),WRGB(63, 51, 44),WRGB(63, 49, 41),WRGB(63, 47, 39),WRGB(63, 46, 36),
+WRGB(63, 44, 32),WRGB(63, 41, 28),WRGB(63, 39, 24),WRGB(60, 37, 23),WRGB(58, 35, 22),
+WRGB(55, 34, 21),WRGB(52, 32, 20),WRGB(50, 31, 19),WRGB(47, 30, 18),WRGB(45, 28, 17),
+WRGB(42, 26, 16),WRGB(40, 25, 15),WRGB(39, 24, 14),WRGB(36, 23, 13),WRGB(34, 22, 12),
+WRGB(32, 20, 11),WRGB(29, 19, 10),WRGB(27, 18,  9),WRGB(23, 16,  8),WRGB(21, 15,  7),
+WRGB(18, 14,  6),WRGB(16, 12,  6),WRGB(14, 11,  5),WRGB(10,  8,  3),WRGB(24,  0, 25),
+WRGB(0, 25, 25),WRGB(0, 24, 24),WRGB(0,  0,  7),WRGB(0,  0, 11),WRGB(12,  9,  4),
+WRGB(18,  0, 18),WRGB(20,  0, 20),WRGB(0,  0, 13),WRGB(7,  7,  7),WRGB(19, 19, 19),
+WRGB(23, 23, 23),WRGB(16, 16, 16),WRGB(12, 12, 12),WRGB(13, 13, 13),WRGB(54, 61, 61),
+WRGB(46, 58, 58),WRGB(39, 55, 55),WRGB(29, 50, 50),WRGB(18, 48, 48),WRGB(8, 45, 45),
+WRGB(8, 44, 44),WRGB(0, 41, 41),WRGB(0, 38, 38),WRGB(0, 35, 35),WRGB(0, 33, 33),
+WRGB(0, 31, 31),WRGB(0, 30, 30),WRGB(0, 29, 29),WRGB(0, 28, 28),WRGB(0, 27, 27),
+WRGB(38,  0, 34)
+#endif
 #endif
 };
 
@@ -722,7 +835,11 @@ void VL_Plot (int x, int y, int color)
 =================
 */
 
-unsigned char VL_GetPixel (int x, int y)
+#ifdef SAVE_GAME_SCREENSHOT
+unsigned char VL_GetPixel(SDL_Surface* surface, int x, int y)
+#else
+unsigned char VL_GetPixel(int x, int y)
+#endif
 {
     unsigned char col;
 
@@ -732,18 +849,140 @@ unsigned char VL_GetPixel (int x, int y)
 #ifdef SEGA_SATURN
     return ((unsigned char*)surface->pixels)[y * pitch + x];
 #else
+#ifdef SAVE_GAME_SCREENSHOT
+    if (!VL_LockSurface(surface))
+        return 0;
 
+    col = ((unsigned char*)screen->pixels)[ylookup[y] + x];
+
+    VL_UnlockSurface(screen);
+#else
     if (!VL_LockSurface(screenBuffer))
         return 0;
 
     col = ((unsigned char *) screenBuffer->pixels)[ylookup[y] + x];
 
     VL_UnlockSurface(screenBuffer);
-
+#endif
     return col;
 #endif
 }
 
+#ifdef SAVE_GAME_SCREENSHOT
+/*
+==============================
+=
+= SDL_DuplicateSurface
+=
+= Deep copies SDL_Surface
+=
+==============================
+*/
+SDL_Surface* SDL_DuplicateSurface(SDL_Surface* surf)
+{
+    SDL_Surface* cpy;
+    size_t size;
+    cpy = (SDL_Surface*)malloc(sizeof(SDL_Surface));
+    memcpy((SDL_Surface*)cpy, (SDL_Surface*)surf, sizeof(SDL_Surface));
+    cpy->format = (SDL_PixelFormat*)malloc(sizeof(SDL_PixelFormat));
+    memcpy((SDL_PixelFormat*)cpy->format, (SDL_PixelFormat*)surf->format,
+        sizeof(SDL_PixelFormat));
+    size = surf->pitch * surf->h;
+    cpy->pixels = malloc(size);
+    memcpy((Uint8*)cpy->pixels, (Uint8*)surf->pixels, size * sizeof(Uint8));
+    return cpy;
+}
+
+/*
+==============================
+=
+= DrawPixel
+=
+= Draws the pixel onto the surface
+=
+==============================
+*/
+void DrawPixel(SDL_Surface* surface, int x, int y, Uint32 pixel)
+{
+    int bpp = surface->format->BytesPerPixel;
+    /* Here p is the address to the pixel we want to set */
+    Uint8* p = (Uint8*)surface->pixels + y * surface->pitch + x * bpp;
+
+    switch (bpp) {
+    case 1:
+        *p = pixel;
+        break;
+
+    case 2:
+        *(Uint16*)p = pixel;
+        break;
+
+    case 3:
+        if (SDL_BYTEORDER == SDL_BIG_ENDIAN) {
+            p[0] = (pixel >> 16) & 0xff;
+            p[1] = (pixel >> 8) & 0xff;
+            p[2] = pixel & 0xff;
+        }
+        else {
+            p[0] = pixel & 0xff;
+            p[1] = (pixel >> 8) & 0xff;
+            p[2] = (pixel >> 16) & 0xff;
+        }
+        break;
+
+    case 4:
+        *(Uint32*)p = pixel;
+        break;
+    }
+}
+
+/*
+=================================
+=
+= SDL_ScaleSurface
+=
+= Creates a surface to scaled width, then scales it accordingly
+= Width and Height can be any size, not multiples of 320x200
+=
+=================================
+*/
+SDL_Surface* SDL_ScaleSurface(SDL_Surface* Surface, Uint16 Width, Uint16 Height)
+{
+    SDL_Surface* _ret;
+    double _stretch_factor_x, _stretch_factor_y;
+    Sint32 y, x, o_y, o_x;
+
+    if (!Surface || !Width || !Height)
+        return 0;
+    _ret = SDL_CreateRGBSurface(Surface->flags, Width, Height, 8, 0, 0, 0, 0);
+#if SDL_MAJOR_VERSION == 2
+    SDL_SetPaletteColors(_ret, gamepal, 0, 256);
+#else
+    SDL_SetColors(_ret, gamepal, 0, 256);
+#endif
+    _stretch_factor_x = (double)Width  / (double)Surface->w;
+    _stretch_factor_y = (double)Height / (double)Surface->h;
+
+    for (y = 0; y < Surface->h; y++)
+        for (x = 0; x < Surface->w; x++)
+            for (o_y = 0; o_y < _stretch_factor_y; ++o_y)
+                for (o_x = 0; o_x < _stretch_factor_x; ++o_x)
+                    DrawPixel(_ret, (Sint32)_stretch_factor_x * x + o_x,
+                        (Sint32)_stretch_factor_y * y + o_y, VL_GetPixel(Surface, x, y));
+    return _ret;
+}
+
+/*
+=================
+=
+= VL_SetSaveGameSlot
+=
+=================
+*/
+void VL_SetSaveGameSlot() {
+    lastGameSurface = SDL_ScaleSurface(SDL_DuplicateSurface(screen), 128, 80);
+}
+#endif
 
 /*
 =================

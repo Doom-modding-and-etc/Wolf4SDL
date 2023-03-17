@@ -15,6 +15,9 @@ void Quit (const char *error,...);
 //===========================================================================
 
 extern SDL_Surface *screen, *screenBuffer;
+#ifdef SAVE_GAME_SCREENSHOT
+extern SDL_Surface* lastGameSurface;
+#endif
 #if SDL_MAJOR_VERSION == 2
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
@@ -75,7 +78,12 @@ void VL_UnlockSurface(SDL_Surface *surface);
 #else
 #define VL_UnlockSurface(surface) SDL_UnlockSurface(surface)
 #endif
+#ifdef SAVE_GAME_SCREENSHOT
+unsigned char VL_GetPixel(SDL_Surface* surface, int x, int y);
+void VL_SetSaveGameSlot();
+#else
 unsigned char VL_GetPixel        (int x, int y);
+#endif
 void VL_Plot            (int x, int y, int color);
 void VL_Hlin            (unsigned x, unsigned y, unsigned width, int color);
 void VL_Vlin            (int x, int y, int height, int color);

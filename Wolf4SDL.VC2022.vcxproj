@@ -259,8 +259,6 @@
     <None Include="docs\README-CRT.md" />
     <None Include="docs\README-PS2.md" />
     <None Include="docs\README-Switch.md" />
-    <None Include="sodpal.inc" />
-    <None Include="wolfpal.inc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3rdparty\fixedptc.h" />

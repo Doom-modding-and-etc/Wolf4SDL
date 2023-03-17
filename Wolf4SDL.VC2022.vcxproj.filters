@@ -65,8 +65,6 @@
     <ClCompile Include="psnprntf.c" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="sodpal.inc" />
-    <None Include="wolfpal.inc" />
     <None Include="docs\README-PS2.md">
       <Filter>docs</Filter>
     </None>

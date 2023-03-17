@@ -72,15 +72,20 @@
 //#define MAPCONTROLLEDSKY //Activates the sky control
 //#define MAPCONTROLLEDCEILING// Map Controlled Ceiling colour (8,0)
 //#define MAPCONTROLLEDFLOOR    // Map Controlled Floor colour (9,0)
+//#define SEEKER_MISSILES //Add Seeker Missiles
+//end
 //#define BLAKEDOORS     // Blake Stone style Double doors - original code by: Adam Biser
 //#define EXTRACONTROLS // switches out to Joystick controls for WASD and mouse movement toggles instead 
 //#define AUTOINTER //Enables the automatic intermission screen
 //#define CHRIS //Enables the chris chokan patches.
+//#define BULLET_CALC //Enable the Bullet Calculation
+//#define LOGFILE //Activate the log file feature, Credits: Havoc
 //By: WSJ
 //#define BURN_ANIM //Add the burn animation
 //#define BOSS_MUSIC //Add some boss music it needs VIEASM defined
 //end
-
+//#define HIGHLIGHTPUSHWALLS //Enables the "highlight" pushwalls by: Merthsoft
+//#define SAVE_GAME_SCREENSHOT //Add screenshot save support.
 //By: WallHack
 //#define COMPASS //Add the compass 
 //end

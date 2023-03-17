@@ -45,7 +45,11 @@ objtype *newobj, *obj, *player, *lastobj, *objfreelist, *killerobj;
 #ifdef SEGA_SATURN
 boolean godmode;
 #else
-boolean singlestep,godmode,noclip,ammocheat,mapreveal;
+#ifdef HIGHLIGHTPUSHWALLS
+boolean singlestep,godmode,noclip,ammocheat,mapreveal,highlightmode;
+#else
+boolean singlestep, godmode, noclip, ammocheat, mapreveal;
+#endif
 #endif
 int     extravbls;
 
@@ -994,6 +998,9 @@ void CheckKeys (void)
 #endif
     {
         int lastoffs = StopMusic ();
+#ifdef SAVE_GAME_SCREENSHOT
+        VL_SetSaveGameSlot();
+#endif
         ClearMemory ();
         VW_FadeOut ();
 
