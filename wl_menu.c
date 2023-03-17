@@ -944,7 +944,8 @@ CP_ViewScores (int blank)
 int
 CP_NewGame (int blank)
 {
-    int which, episode;
+    int which;
+    int episode;
 
 #ifndef SPEAR
   firstpart:

@@ -1704,7 +1704,7 @@ extern int ffDataTopLeft, ffDataTopRight, ffDataBottomLeft, ffDataBottomRight;
  *************************************************************/
 
  // The feature flags are stored as a wall in the upper right corner of each level
-static inline unsigned short GetFeatureFlags(void)
+static unsigned short GetFeatureFlags(void)
 {
     return ffDataTopRight;
 }

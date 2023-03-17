@@ -90,8 +90,8 @@ Revision History:
 
 #include "fmopl.h"
 
-#ifndef PI
-#define PI 3.14159265358979323846
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
 #endif
 
 /* output final shift */
@@ -1208,7 +1208,7 @@ static int init_tables(void)
 	for (i=0; i<SIN_LEN; i++)
 	{
 		/* non-standard sinus */
-		m = sin( ((i*2)+1) * PI / SIN_LEN ); /* checked against the real chip */
+		m = sin( ((i*2)+1) * M_PI / SIN_LEN ); /* checked against the real chip */
 
 		/* we never reach zero here due to ((i*2)+1) */
 

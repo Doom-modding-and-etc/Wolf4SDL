@@ -24,7 +24,7 @@ int LSHADE_flag;
 
 // The lower 8-bit of the upper left tile of every map determine
 // the used shading definition of shadeDefs.
-static inline int GetShadeDefID()
+static int GetShadeDefID()
 {
     int shadeID = ffDataTopLeft & 0x00ff;
     assert(shadeID >= 0 && shadeID < lengthof(shadeDefs));
