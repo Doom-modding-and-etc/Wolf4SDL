@@ -44,9 +44,9 @@ Main features:
       Aside from the original 320x200 resolution, Wolf4SDL currently
       supports any resolutions being multiples of 320x200 or 320x240,
       the default being 640x400.
-      Unlike some other ports, Wolf4SDL does NOT apply any bilinear
-      or similar filtering, so the graphics are NOT blurred but
-      pixelated just as we love it.
+      Wolf4SDL applies bilinear
+      or similar filtering using the crt and scaling feature(SDL2) through version.h, 
+      so you can feel the "vanilla moment", but if you want no filter just disable using version.h
 
  - Fully playable with only a game controller:
       Wolf4SDL can be played completely without a keyboard. At least two
@@ -108,9 +108,9 @@ version.h as described on that file):
 How to play:
 ------------
 
-To play Wolfenstein 3D with Wolf4SDL, you just have to copy the original data
+To play Wolfenstein 3D with Wolf4SDL, you must have to copy the original data
 files (e.g. *.WL6) into the same directory as the Wolf4SDL executable.
-Please make sure, that you use the correct version of the executable with the
+Please make sure, that you should use the correct version of the executable with the
 according data files version as the differences are hardcoded into the binary!
 
 SDL1.2:
