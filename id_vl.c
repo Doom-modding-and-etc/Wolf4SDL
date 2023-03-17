@@ -383,7 +383,7 @@ void VL_SetVGAPlaneMode (void)
 #ifdef CRT
     //Fab's CRT Hack:
     //Adjust height so the screen is 4:3 aspect ratio
-    screenHeight = screenWidth * 3.0 / 4.0;
+    screenHeight = screenWidth * 3 / 4;
 #endif     
 #if defined(SCALE2X) 
     window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, scaledScreenWidth, scaledScreenHeight,
