@@ -155,7 +155,7 @@ typedef struct {
 typedef struct {
                 short active;
                 char string[36];
-                int (* routine)(int temp1);
+                int (* routine)();
                 } CP_itemtype;
 
 typedef struct {

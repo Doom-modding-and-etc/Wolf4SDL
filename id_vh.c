@@ -111,7 +111,7 @@ void VW_MeasurePropString (const char *string, unsigned short *width, unsigned s
 }
 
 #if SDL_MAJOR_VERSION == 2
-void VH_RenderTextures(SDL_Surface *surface)
+void VH_RenderTextures()
 {
     SDL_UpdateTexture(texture, NULL, screen->pixels, screenWidth * sizeof(unsigned int));
     SDL_RenderClear(renderer);
@@ -135,7 +135,7 @@ void VH_UpdateScreen(SDL_Surface *surface)
 #if SDL_MAJOR_VERSION == 1
     SDL_Flip(screen);
 #elif SDL_MAJOR_VERSION == 2
-    VH_RenderTextures(screen);
+    VH_RenderTextures();
 #endif
 }
 #endif

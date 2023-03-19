@@ -67,7 +67,7 @@ void VH_UpdateScreen (SDL_Surface *surface);
 #define VW_UpdateScreen()   VH_UpdateScreen (screenBuffer)
 #endif
 #if SDL_MAJOR_VERSION == 2
-void VH_RenderTextures(SDL_Surface* surface);
+void VH_RenderTextures();
 #endif
 //
 // wolfenstein EGA compatbility stuff

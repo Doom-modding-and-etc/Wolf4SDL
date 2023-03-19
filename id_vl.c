@@ -649,7 +649,7 @@ void VL_SetPalette(SDL_Color* palette, boolean forceupdate)
         {
             SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
 
-            VH_RenderTextures(screen);
+            VH_RenderTextures();
 #endif
         }
     }
