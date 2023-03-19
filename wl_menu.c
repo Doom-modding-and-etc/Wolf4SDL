@@ -881,7 +881,7 @@ int CP_CheckQuick(ScanCode scancode)
 //
 ////////////////////////////////////////////////////////////////////
 int
-CP_EndGame (int blank)
+CP_EndGame ()
 {
     int res;
 #ifdef JAPAN
@@ -912,7 +912,7 @@ CP_EndGame (int blank)
 //
 ////////////////////////////////////////////////////////////////////
 int
-CP_ViewScores (int blank)
+CP_ViewScores ()
 {
     fontnumber = 0;
 
@@ -942,7 +942,7 @@ CP_ViewScores (int blank)
 //
 ////////////////////////////////////////////////////////////////////
 int
-CP_NewGame (int blank)
+CP_NewGame ()
 {
     int which;
     int episode;
@@ -1458,7 +1458,7 @@ DrawSoundMenu(void)
 }
 #else
 int
-CP_Sound (int blank)
+CP_Sound ()
 {
     int which;
 
@@ -2204,7 +2204,7 @@ CP_SaveGame (int quick)
 //
 ////////////////////////////////////////////////////////////////////
 int
-CP_Control (int blank)
+CP_Control ()
 {
     int which;
 
@@ -3368,7 +3368,7 @@ void DrawCustExtra(int hilight)
 //
 ////////////////////////////////////////////////////////////////////
 int
-CP_ChangeView (int blank)
+CP_ChangeView ()
 {
     int exit = 0, oldview, newview;
     ControlInfo ci;
@@ -3479,7 +3479,7 @@ DrawChangeView (int view)
 //
 ////////////////////////////////////////////////////////////////////
 int
-CP_Quit (int blank)
+CP_Quit ()
 {
 #ifdef JAPAN
     if (GetYorN (7, 11, C_QUITMSGPIC))

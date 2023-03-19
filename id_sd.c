@@ -278,7 +278,7 @@ static void SDL_PCMixCallback(void *udata, unsigned char*stream, int len)
     short *leftptr;
     short *rightptr;
     short this_value;
-    int oldfreq;
+    
     int i;
     int nsamples;
 
@@ -297,7 +297,7 @@ static void SDL_PCMixCallback(void *udata, unsigned char*stream, int len)
 
         while (current_remaining == 0) 
         {
-            oldfreq = current_freq;
+            int oldfreq = current_freq;
             phase_offset = 0;
 
             // Get the next frequency to play

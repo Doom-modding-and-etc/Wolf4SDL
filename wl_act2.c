@@ -3848,7 +3848,7 @@ void T_Bite (objtype *ob)
 
 void T_BJRun (objtype *ob);
 void T_BJJump (objtype *ob);
-void T_BJDone (objtype *ob);
+void T_BJDone ();
 void T_BJYell (objtype *ob);
 
 void T_DeathCam (objtype *ob);
@@ -3980,7 +3980,7 @@ void T_BJYell (objtype *ob)
 ===============
 */
 
-void T_BJDone (objtype *ob)
+void T_BJDone ()
 {
     playstate = ex_victorious;                              // exit castle tile
 }

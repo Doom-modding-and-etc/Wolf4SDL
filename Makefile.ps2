@@ -4,8 +4,8 @@ EE_BIN = Wolf4SDL.elf
 ID_ENGINE_OBJS = id_ca.o id_crt.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vl.o id_w3swrap.o psnprntf.o signon.o
  
 #Wolf Files
-WL_OBJS = wl_ai.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_benchhobo.o wl_cloudsky.o wl_conartist.o wl_clockking.o wl_debug.o wl_draw.o \
-wl_ed.o wl_firefly.o wl_hooker.o wl_healthbar.o wl_math.o wl_physics.o wl_pimp.o wl_polygon.o wl_sleephobo.o wl_game.o wl_inter.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o \
+WL_OBJS = wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o \
+ wl_game.o wl_inter.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o \
 wl_shade.o wl_state.o wl_text.o wl_utils.o 
 
 PS2_OBJS = Platform/PS2/ps2_modules.o Platform/PS2/ps2_mc.o Platform/PS2/ps2_main.o Platform/PS2/ps2_data_loader.o
@@ -17,7 +17,7 @@ EE_LDFLAGS = -L$(PS2SDK)/ports/lib -L$(PS2SDK)/iop/lib/ -L$(PS2SDK)/ee/lib/ -L$(
 SDL2_LIBS = -lSDL2main -lSDL2_mixer -lSDL2 -lmodplug -lmikmod -logg -lopusfile -lopus -lstdc++ 
 EE_LIBS = $(SDL2_LIBS) -lcdvd -lm -lkernel -lps2_printf -ldebug -lmc -lc -lhdd -lpoweroff -lps2_drivers -lgskit -ldmakit -lpadx -lmtap -laudsrv -lfileXio -linput -lpatches
 EE_DEFINES = -DPS2
-EE_CFLAGS = $(EE_DEFINES) -Wall -W -g -Wwrite-strings -Wcast-align -std=gnu99 -Wimplicit-int -Wsequence-point 
+EE_CFLAGS = $(EE_DEFINES) -Wall -W -g -Wwrite-strings -Wcast-align -std=gnu89 -Wimplicit-int -Wsequence-point 
 
 EE_OBJS_DIR = obj/
 
@@ -30,10 +30,10 @@ BIN2S = $(PS2SDK)/bin/bin2s
 $(EE_ASM_DIR):
 	@mkdir -p $@
 
-all: $(EE_BIN) $(EE_OBJS_DIR)
+all: $(EE_BIN) $(EE_OBJS) $(EE_OBJS_DIR)
 
 clean: 
-	rm -fr $(EE_BIN) #$(EE_OBJS)
+	rm -fr $(EE_BIN) $(EE_OBJS) obj/
 	
 run:
 	cd bin; ps2client -h $(PS2LINK_IP) execee host$(EE_BIN)

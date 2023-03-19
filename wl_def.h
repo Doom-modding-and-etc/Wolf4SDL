@@ -74,7 +74,7 @@
 #endif
 
 #include "id_w3swrap.h"
-#if !defined(_MSC_VER) || defined(__GNUC__)
+#if defined(_MSC_VER) && defined(__GNUC__)
 #ifdef X64_ARCH
 typedef unsigned long long uintptr_t;
 typedef unsigned int intptr_t;

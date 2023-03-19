@@ -243,15 +243,15 @@ void TrackWhichGame(int w);
 void DrawNewGameDiff(int w);
 void FixupCustom(int w);
 
-int CP_NewGame(int);
-int CP_Sound(int);
+int CP_NewGame();
+int CP_Sound();
 int  CP_LoadGame(int quick);
 int  CP_SaveGame(int quick);
-int CP_Control(int);
-int CP_ChangeView(int);
-int CP_Quit(int);
-int CP_ViewScores(int);
-int  CP_EndGame(int);
+int CP_Control();
+int CP_ChangeView();
+int CP_Quit();
+int CP_ViewScores();
+int  CP_EndGame();
 
 int  CP_CheckQuick(ScanCode scancode);
 
