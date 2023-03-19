@@ -243,7 +243,7 @@ typedef	int		ScanCode;
 
 #define	key_None		0
 #define key_unknown SDLK_UNKNOWN
-
+#if SDL_MAJOR_VERSION == 2
 #define bt_None SDL_CONTROLLER_BUTTON_INVALID
 #define bt_A SDL_CONTROLLER_BUTTON_A
 #define bt_B SDL_CONTROLLER_BUTTON_B
@@ -272,11 +272,6 @@ typedef	int		ScanCode;
 #define gc_trigger_left SDL_CONTROLLER_AXIS_TRIGGERLEFT
 #define gc_trigger_right SDL_CONTROLLER_AXIS_TRIGGERRIGHT
 #define gc_axis_max SDL_CONTROLLER_AXIS_MAX
-#if SDL_MAJOR_VERSION == 2
-extern boolean GameControllerButtons[bt_Max];
-extern int GameControllerLeftStick[2];
-extern int GameControllerRightStick[2];
-extern SDL_GameController* GameController;
 #endif
 #else
 #if SDL_MAJOR_VERSION == 1
@@ -378,7 +373,7 @@ typedef	int		ScanCode;
 
 #define	key_None		0
 #define key_unknown SDLK_UNKNOWN
-
+#if SDL_MAJOR_VERSION == 2
 #define bt_None SDL_CONTROLLER_BUTTON_INVALID
 #define bt_A SDL_CONTROLLER_BUTTON_A
 #define bt_B SDL_CONTROLLER_BUTTON_B
@@ -407,6 +402,7 @@ typedef	int		ScanCode;
 #define gc_trigger_left SDL_CONTROLLER_AXIS_TRIGGERLEFT
 #define gc_trigger_right SDL_CONTROLLER_AXIS_TRIGGERRIGHT
 #define gc_axis_max SDL_CONTROLLER_AXIS_MAX
+#endif
 
 #if SDL_MAJOR_VERSION == 2
 extern boolean GameControllerButtons[bt_Max];

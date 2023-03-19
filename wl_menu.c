@@ -4752,7 +4752,7 @@ CheckForEpisodes (void)
 //
 #ifdef JAPAN
 #ifdef JAPDEMO
-#if defined(SWITCH) || defined (N3DS) || defined(PS2) 
+#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN)
     if(!stat(DATADIR "vswap.wj1", &statbuf))
 #else    
     if (!stat("vswap.wj1", &statbuf))
@@ -4761,7 +4761,7 @@ CheckForEpisodes (void)
         strcpy (extension, "wj1");
 #else
 
-#if defined(SWITCH) || defined (N3DS) || defined(PS2) 
+#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN)
     if(!stat(DATADIR "vswap.wj6", &statbuf))
 #else
     if(!stat("vswap.wj6", &statbuf))
@@ -4785,7 +4785,7 @@ CheckForEpisodes (void)
 // ENGLISH
 //
 #ifdef UPLOAD
-#if defined(SWITCH) || defined (N3DS) || defined(PS2) 
+#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN)
     if (!stat(DATADIR "vswap.wl1", &statbuf)) 
     {
     
@@ -4801,7 +4801,7 @@ CheckForEpisodes (void)
 
 #else
 #ifndef SPEAR
-#if defined(SWITCH) || defined (N3DS) || defined(PS2) 
+#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) 
     if(!stat(DATADIR "vswap.wl6", &statbuf))
 #else
     if(!stat("vswap.wl6", &statbuf))
@@ -4818,7 +4818,7 @@ CheckForEpisodes (void)
     }
     else
     {
-#if defined(SWITCH) || defined (N3DS) || defined(PS2)  
+#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN)  
         if(!stat(DATADIR "vswap.wl3", &statbuf))
 #else 
         if (!stat("vswap.wl3", &statbuf))
@@ -4829,7 +4829,7 @@ CheckForEpisodes (void)
         }
         else
         {
-#if defined(SWITCH) || defined (N3DS) || defined(PS2)          
+#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN)          
             if (!stat(DATADIR "vswap.wl1", &statbuf))
 #else
             if (!stat("vswap.wl1", &statbuf))
@@ -4848,7 +4848,7 @@ CheckForEpisodes (void)
 #ifndef SPEARDEMO
     if(param_mission == 0)
     {
-#if defined(SWITCH) || defined (N3DS) || defined(PS2)  
+#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN)  
         if(!stat(DATADIR"vswap.sod", &statbuf))
 #else
         if(!stat("vswap.sod", &statbuf))
@@ -4859,7 +4859,7 @@ CheckForEpisodes (void)
     }
     else if(param_mission == 1)
     {
-#if defined(SWITCH) || defined (N3DS) || defined(PS2)  
+#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN)  
         if(!stat(DATADIR"vswap.sd1", &statbuf))
 #else
         if(!stat("vswap.sd1", &statbuf))
@@ -4870,7 +4870,7 @@ CheckForEpisodes (void)
     }
     else if(param_mission == 2)
     {
-#if defined(SWITCH) || defined (N3DS) || defined(PS2)  
+#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN)  
         if(!stat(DATADIR"vswap.sd2", &statbuf))
 #else
         if(!stat("vswap.sd2", &statbuf))
@@ -4881,7 +4881,7 @@ CheckForEpisodes (void)
     }
     else if(param_mission == 3)
     {
-#if defined(SWITCH) || defined (N3DS) || defined(PS2)  
+#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN)  
         if(!stat(DATADIR"vswap.sd3", &statbuf))
 #else        
         if(!stat("vswap.sd3", &statbuf))
@@ -4897,7 +4897,7 @@ CheckForEpisodes (void)
     strcpy (audioext, "sod");
 #endif
 #else
-#if defined(SWITCH) || defined (N3DS) || defined(PS2) 
+#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN)
     if(!stat(DATADIR "vswap.sdm", &statbuf))
 #else
     if(!stat("vswap.sdm", &statbuf))

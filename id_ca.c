@@ -949,7 +949,7 @@ void CAL_SetupMapFile (void)
     int     i;
     int handle;
     int pos;
-#if defined(SWITCH) || defined (N3DS) || defined(SATURN)
+#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN)
     char fname[13 + sizeof(DATADIR)];
 #else
     char fname[13];
@@ -1026,7 +1026,7 @@ void CAL_SetupMapFile (void)
 #if !defined(VIEASM) || !defined(SEGA_SATURN)
 void CAL_SetupAudioFile (void)
 {
-#if defined(SWITCH) || defined(N3DS) || defined(PS2)
+#if defined(SWITCH) || defined(N3DS) || defined(PS2) || defined(SEGA_SATURN)
     char fname[13 + sizeof(DATADIR)];
 #else    
     char fname[13];

@@ -249,7 +249,6 @@ IMPORTANT: Do not forget to take care of version.h!
 
 TODOs:
 ------
- - Add platform readme.
  - Prepare SDL3 Support.
  - Support to sega saturn: wl_draw.c, wl_main.c and wl_menu.c
  - Support OpenBSD.
