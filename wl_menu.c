@@ -2314,7 +2314,7 @@ DrawMouseSens (void)
 // ADJUST MOUSE SENSITIVITY
 //
 int
-MouseSensitivity (int blank)
+MouseSensitivity ()
 {
     ControlInfo ci;
     int exit = 0, oldMA;
@@ -2489,7 +2489,7 @@ char extraorder[4] = { STRAFELEFT, STRAFERIGHT, NEXTWEAP, PREVWEAP };
 #endif // EXTRACONTROLS
 
 int
-CustomControls (int blank)
+CustomControls ()
 {
     int which;
 

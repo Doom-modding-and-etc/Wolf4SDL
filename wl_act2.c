@@ -230,7 +230,7 @@ void    T_Fake (objtype *ob);
 void    T_FakeFire (objtype *ob);
 void    T_Ghosts (objtype *ob);
 
-void A_Slurpie (objtype *ob);
+void A_Slurpie ();
 void A_HitlerMorph (objtype *ob);
 void A_MechaSound (objtype *ob);
 
@@ -3122,7 +3122,7 @@ void A_MechaSound (objtype *ob)
         PlaySoundLocActor (MECHSTEPSND,ob);
 }
 
-void A_Slurpie (objtype *ob)
+void A_Slurpie ()
 {
     SD_PlaySound(SLURPIESND);
 }
