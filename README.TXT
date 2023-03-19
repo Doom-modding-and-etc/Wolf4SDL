@@ -256,9 +256,7 @@ TODOs:
 
 Known bugs:
 -----------
-Severe: Bug on the changed key controls keys like: w a s d or something on the Wolf3d part.
-Spear of destiny works file atleast.
-Keyboard on menu screen won´t work after cleanup the kbrd defs.
+ - None! ;D
 
 Troubleshooting:
 ----------------
