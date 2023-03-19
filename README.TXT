@@ -254,7 +254,6 @@ TODOs:
  - Support to sega saturn: wl_draw.c, wl_main.c and wl_menu.c
  - Support OpenBSD.
  - Add more features from: http://dhw.wolfenstein3d.com/viewtopic.php?t=6310
- 
 
 Known bugs:
 -----------
@@ -302,4 +301,4 @@ Licenses:
      - license-id.txt or
      - license-gpl.txt
  - The OPL2 emulator:
-     - license-mame.txt (fmopl.c)
+     - license-mame.txt

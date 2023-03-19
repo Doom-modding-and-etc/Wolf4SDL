@@ -3473,8 +3473,8 @@ void T_Ghosts (objtype *ob)
         //
         // fix position to account for round off during moving
         //
-        ob->x = ((int)ob->tilex<<TILESHIFT)+TILEGLOBAL/2;
-        ob->y = ((int)ob->tiley<<TILESHIFT)+TILEGLOBAL/2;
+        ob->x = ((fixed)ob->tilex<<TILESHIFT)+TILEGLOBAL/2;
+        ob->y = ((fixed)ob->tiley<<TILESHIFT)+TILEGLOBAL/2;
 
         move -= ob->distance;
 

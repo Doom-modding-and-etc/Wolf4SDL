@@ -64,7 +64,7 @@ static void YM3812Write(Chip which, Bit32u reg, Bit8u val)
     Chip__WriteReg(&which, reg, val);
 }
 
-static void YM3812UpdateOne(Chip which, int16_t* stream, int length)
+static void YM3812UpdateOne(Chip which, short* stream, int length)
 {
     Bit32s buffer[512 * 2];
     int i;
@@ -954,7 +954,7 @@ void SDL_IMFMusicPlayer(void *udata, unsigned char *stream, int len)
 {
     int stereolen = len>>1;
     int sampleslen = stereolen>>1;
-    int16_t *stream16 = (int16_t *) (void *) stream;    // expect correct alignment
+    short *stream16 = (short *) (void *) stream;    // expect correct alignment
 
     while(1)
     {

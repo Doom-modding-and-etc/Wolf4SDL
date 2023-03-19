@@ -1195,8 +1195,8 @@ void CA_CacheAdlibSoundChunk (int chunk)
 {
     unsigned char    *bufferseg;
     unsigned char    *ptr;
-    int32_t pos = audiostarts[chunk];
-    int32_t size = audiostarts[chunk+1]-pos;
+    int pos = audiostarts[chunk];
+    int size = audiostarts[chunk+1]-pos;
 	AdLibSound *sound;
 
     if (audiosegs[chunk])
@@ -1370,7 +1370,7 @@ void CAL_ExpandGrChunk (int chunk, int *source)
 void CAL_DeplaneGrChunk (int chunk)
 {
     int     i;
-    int16_t width,height;
+    short width,height;
 
     if (chunk == STARTTILE8)
     {
@@ -1428,10 +1428,10 @@ void CA_CacheGrChunks (void)
 
 #ifdef SEGA_SATURN
         unsigned char* Chunks;
-        uint16_t delta;
+        unsigned short delta;
         unsigned int delta2;
         Uint16 i, j = 0;
-        delta = (uint16_t)(pos / 2048);
+        delta = (unsigned short)(pos / 2048);
         delta2 = (pos - delta * 2048);
 
         Chunks = (unsigned char*)saturnChunk;  // d?plac? pour pas ?craser de son

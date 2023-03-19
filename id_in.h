@@ -407,14 +407,13 @@ typedef	int		ScanCode;
 #define gc_trigger_left SDL_CONTROLLER_AXIS_TRIGGERLEFT
 #define gc_trigger_right SDL_CONTROLLER_AXIS_TRIGGERRIGHT
 #define gc_axis_max SDL_CONTROLLER_AXIS_MAX
-#endif
-#if SDL_MAJOR_VERSION == 2
+
+
 extern boolean GameControllerButtons[bt_Max];
 extern int GameControllerLeftStick[2];
 extern int GameControllerRightStick[2];
 extern SDL_GameController* GameController;
 #endif
-
 
 typedef	enum
 {

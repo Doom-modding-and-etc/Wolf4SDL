@@ -278,9 +278,9 @@ boolean TransformTile (int tx, int ty, short *dispx, short *dispheight)
 ====================
 */
 
-int16_t CalcHeight (void)
+short CalcHeight (void)
 {
-    int16_t height;
+    short height;
     fixed   gx,gy,gxt,gyt,nx;
 
 //
@@ -303,7 +303,7 @@ int16_t CalcHeight (void)
     if (nx < MINDIST)
         nx = MINDIST - ((nx / 36) & 3);
 
-    height = (int16_t)(heightnumerator / (nx >> 8));
+    height = (short)(heightnumerator / (nx >> 8));
 
     if (nx < MINDIST)
         height = 0;
@@ -311,7 +311,7 @@ int16_t CalcHeight (void)
     if (nx < MINDIST)
         nx = MINDIST;             // don't let divide overflow
 
-    height = (int16_t)(heightnumerator / (nx >> 8));
+    height = (short)(heightnumerator / (nx >> 8));
 #endif
 
     return height;
@@ -1166,7 +1166,7 @@ void CalcTics (void)
 
 void WallRefresh (void)
 {
-    int16_t   angle;
+    short   angle;
     int       xstep,ystep;
     fixed     xinttemp,yinttemp;                            // holds temporary intercept position
     unsigned int  xpartial,ypartial;

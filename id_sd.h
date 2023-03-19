@@ -12,8 +12,6 @@
 #ifndef VIEASM
 #ifdef USE_DOSBOX
 #define alOut(n,b) YM3812Write(chip, n, b)
-#elif defined(USE_OPL3)
-#define alOut(n, b) YM3812Write(chip, n, b)
 #else
 #define alOut(n,b) YM3812Write(oplChip, n, b)
 #endif

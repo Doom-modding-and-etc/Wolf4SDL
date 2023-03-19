@@ -155,342 +155,221 @@
 				Name="dosbox"
 				Filter="">
 				<File
-					RelativePath=".\aud_sys\dosbox\dbopl.c">
+					RelativePath="..\aud_sys\dosbox\dbopl.c">
 				</File>
 				<File
-					RelativePath=".\aud_sys\dosbox\dbopl.h">
+					RelativePath="..\aud_sys\dosbox\dbopl.h">
 				</File>
 			</Filter>
 			<Filter
 				Name="mame"
 				Filter="">
 				<File
-					RelativePath=".\aud_sys\mame\fmopl.c">
+					RelativePath="..\aud_sys\mame\fmopl.c">
 				</File>
 				<File
-					RelativePath=".\aud_sys\mame\fmopl.h">
+					RelativePath="..\aud_sys\mame\fmopl.h">
 				</File>
 			</Filter>
-		</Filter>
-		<Filter
-			Name="docs"
-			Filter="">
-			<File
-				RelativePath=".\docs\Changes-dc.txt">
-			</File>
-			<File
-				RelativePath=".\docs\Changes.txt">
-			</File>
-			<File
-				RelativePath=".\docs\license-mame.txt">
-			</File>
-			<File
-				RelativePath=".\docs\LICENSE.nkopl3">
-			</File>
-			<File
-				RelativePath=".\docs\README-3DS.md">
-			</File>
-			<File
-				RelativePath=".\docs\README-codeblocks.txt">
-			</File>
-			<File
-				RelativePath=".\docs\README-CRT.md">
-			</File>
-			<File
-				RelativePath=".\docs\README-dc.txt">
-			</File>
-			<File
-				RelativePath=".\docs\README-devcpp.txt">
-			</File>
-			<File
-				RelativePath=".\docs\README-GP2X.txt">
-			</File>
-			<File
-				RelativePath=".\docs\README-PS2.md">
-			</File>
-			<File
-				RelativePath=".\docs\README-Switch.md">
-			</File>
-			<File
-				RelativePath=".\docs\README-VC.txt">
-			</File>
-			<File
-				RelativePath=".\docs\Svnlog.txt">
-			</File>
-			<File
-				RelativePath=".\docs\VIEASM Beta readme.txt">
-			</File>
-			<File
-				RelativePath=".\docs\wolfinst.txt">
-			</File>
 		</Filter>
 		<Filter
 			Name="win"
 			Filter="">
 			<File
-				RelativePath=".\win\resource.h">
+				RelativePath="..\win\resource.h">
 			</File>
 			<File
-				RelativePath=".\win\Wolf4SDL.ico">
+				RelativePath="..\win\Wolf4SDL.ico">
 			</File>
 			<File
-				RelativePath=".\win\Wolf4SDL.rc">
+				RelativePath="..\win\Wolf4SDL.rc">
 			</File>
 		</Filter>
 		<File
-			RelativePath=".\asmcref.h">
+			RelativePath="..\asmcref.h">
 		</File>
 		<File
-			RelativePath=".\audiosod.h">
+			RelativePath="..\audiosod.h">
 		</File>
 		<File
-			RelativePath=".\audiowl6.h">
+			RelativePath="..\audiowl6.h">
 		</File>
 		<File
-			RelativePath=".\f_spear.h">
+			RelativePath="..\f_spear.h">
 		</File>
 		<File
-			RelativePath=".\foreign.h">
+			RelativePath="..\foreign.h">
 		</File>
 		<File
-			RelativePath=".\gfxv_apo.h">
+			RelativePath="..\gfxv_apo.h">
 		</File>
 		<File
-			RelativePath=".\gfxv_jap.h">
+			RelativePath="..\gfxv_jap.h">
 		</File>
 		<File
-			RelativePath=".\gfxv_sod.h">
+			RelativePath="..\gfxv_sod.h">
 		</File>
 		<File
-			RelativePath=".\gfxv_wl6.h">
+			RelativePath="..\gfxv_wl6.h">
 		</File>
 		<File
-			RelativePath=".\gp2x.h">
+			RelativePath="..\gp2x.h">
 		</File>
 		<File
-			RelativePath=".\id_ca.c">
+			RelativePath="..\id_ca.c">
 		</File>
 		<File
-			RelativePath=".\id_ca.h">
+			RelativePath="..\id_ca.h">
 		</File>
 		<File
-			RelativePath=".\id_crt.c">
+			RelativePath="..\id_crt.c">
 		</File>
 		<File
-			RelativePath=".\id_crt.h">
+			RelativePath="..\id_crt.h">
 		</File>
 		<File
-			RelativePath=".\id_in.c">
+			RelativePath="..\id_in.c">
 		</File>
 		<File
-			RelativePath=".\id_in.h">
+			RelativePath="..\id_in.h">
 		</File>
 		<File
-			RelativePath=".\id_pm.c">
+			RelativePath="..\id_pm.c">
 		</File>
 		<File
-			RelativePath=".\id_pm.h">
+			RelativePath="..\id_pm.h">
 		</File>
 		<File
-			RelativePath=".\id_sd.c">
+			RelativePath="..\id_sd.c">
 		</File>
 		<File
-			RelativePath=".\id_sd.h">
+			RelativePath="..\id_sd.h">
 		</File>
 		<File
-			RelativePath=".\id_us.c">
+			RelativePath="..\id_us.c">
 		</File>
 		<File
-			RelativePath=".\id_us.h">
+			RelativePath="..\id_us.h">
 		</File>
 		<File
-			RelativePath=".\id_vh.c">
+			RelativePath="..\id_vh.c">
 		</File>
 		<File
-			RelativePath=".\id_vh.h">
+			RelativePath="..\id_vh.h">
 		</File>
 		<File
-			RelativePath=".\id_vieasm.c">
+			RelativePath="..\id_vieasm.c">
 		</File>
 		<File
-			RelativePath=".\id_vieasm.h">
+			RelativePath="..\id_vieasm.h">
 		</File>
 		<File
-			RelativePath=".\id_vl.c">
+			RelativePath="..\id_vl.c">
 		</File>
 		<File
-			RelativePath=".\id_vl.h">
+			RelativePath="..\id_vl.h">
 		</File>
 		<File
-			RelativePath=".\id_w3swrap.c">
+			RelativePath="..\id_w3swrap.c">
 		</File>
 		<File
-			RelativePath=".\id_w3swrap.h">
+			RelativePath="..\id_w3swrap.h">
 		</File>
 		<File
-			RelativePath=".\psnprntf.c">
+			RelativePath="..\psnprntf.c">
 		</File>
 		<File
-			RelativePath=".\psnprntf.h">
+			RelativePath="..\psnprntf.h">
 		</File>
 		<File
-			RelativePath=".\sdl_winmain.c">
+			RelativePath="..\sdl_winmain.c">
 		</File>
 		<File
-			RelativePath=".\signon.c">
+			RelativePath="..\signon.c">
 		</File>
 		<File
-			RelativePath=".\sodpal.inc">
+			RelativePath="..\sodpal.inc">
 		</File>
 		<File
-			RelativePath=".\version.h">
+			RelativePath="..\version.h">
 		</File>
 		<File
-			RelativePath=".\wl_act1.c">
+			RelativePath="..\wl_act1.c">
 		</File>
 		<File
-			RelativePath=".\wl_act2.c">
+			RelativePath="..\wl_act2.c">
 		</File>
 		<File
-			RelativePath=".\wl_agent.c">
+			RelativePath="..\wl_agent.c">
 		</File>
 		<File
-			RelativePath=".\wl_ai.c">
+			RelativePath="..\wl_atmos.c">
 		</File>
 		<File
-			RelativePath=".\wl_ai.h">
+			RelativePath="..\wl_atmos.h">
 		</File>
 		<File
-			RelativePath=".\wl_anyactor.c">
+			RelativePath="..\wl_cloudsky.c">
 		</File>
 		<File
-			RelativePath=".\wl_anyactor.h">
+			RelativePath="..\wl_cloudsky.h">
 		</File>
 		<File
-			RelativePath=".\wl_atmos.c">
+			RelativePath="..\wl_debug.c">
 		</File>
 		<File
-			RelativePath=".\wl_atmos.h">
+			RelativePath="..\wl_def.h">
 		</File>
 		<File
-			RelativePath=".\wl_benchhobo.c">
+			RelativePath="..\wl_draw.c">
 		</File>
 		<File
-			RelativePath=".\wl_clockking.c">
+			RelativePath="..\wl_game.c">
 		</File>
 		<File
-			RelativePath=".\wl_cloudsky.c">
+			RelativePath="..\wl_inter.c">
 		</File>
 		<File
-			RelativePath=".\wl_cloudsky.h">
+			RelativePath="..\wl_main.c">
 		</File>
 		<File
-			RelativePath=".\wl_conartist.c">
+			RelativePath="..\wl_menu.c">
 		</File>
 		<File
-			RelativePath=".\wl_debug.c">
+			RelativePath="..\wl_menu.h">
 		</File>
 		<File
-			RelativePath=".\wl_def.h">
+			RelativePath="..\wl_parallax.c">
 		</File>
 		<File
-			RelativePath=".\wl_draw.c">
+			RelativePath="..\wl_plane.c">
 		</File>
 		<File
-			RelativePath=".\wl_ed.c">
+			RelativePath="..\wl_play.c">
 		</File>
 		<File
-			RelativePath=".\wl_ed.h">
+			RelativePath="..\wl_scale.c">
 		</File>
 		<File
-			RelativePath=".\wl_firefly.c">
+			RelativePath="..\wl_shade.c">
 		</File>
 		<File
-			RelativePath=".\wl_game.c">
+			RelativePath="..\wl_shade.h">
 		</File>
 		<File
-			RelativePath=".\wl_healthbar.c">
+			RelativePath="..\wl_state.c">
 		</File>
 		<File
-			RelativePath=".\wl_healthbar.h">
+			RelativePath="..\wl_text.c">
 		</File>
 		<File
-			RelativePath=".\wl_hooker.c">
+			RelativePath="..\wl_utils.c">
 		</File>
 		<File
-			RelativePath=".\wl_inter.c">
+			RelativePath="..\wl_utils.h">
 		</File>
 		<File
-			RelativePath=".\wl_led.c">
-		</File>
-		<File
-			RelativePath=".\wl_led.h">
-		</File>
-		<File
-			RelativePath=".\wl_main.c">
-		</File>
-		<File
-			RelativePath=".\wl_math.c">
-		</File>
-		<File
-			RelativePath=".\wl_math.h">
-		</File>
-		<File
-			RelativePath=".\wl_menu.c">
-		</File>
-		<File
-			RelativePath=".\wl_menu.h">
-		</File>
-		<File
-			RelativePath=".\wl_parallax.c">
-		</File>
-		<File
-			RelativePath=".\wl_physics.c">
-		</File>
-		<File
-			RelativePath=".\wl_physics.h">
-		</File>
-		<File
-			RelativePath=".\wl_pimp.c">
-		</File>
-		<File
-			RelativePath=".\wl_plane.c">
-		</File>
-		<File
-			RelativePath=".\wl_play.c">
-		</File>
-		<File
-			RelativePath=".\wl_polygon.c">
-		</File>
-		<File
-			RelativePath=".\wl_polygon.h">
-		</File>
-		<File
-			RelativePath=".\wl_scale.c">
-		</File>
-		<File
-			RelativePath=".\wl_shade.c">
-		</File>
-		<File
-			RelativePath=".\wl_shade.h">
-		</File>
-		<File
-			RelativePath=".\wl_sleephobo.c">
-		</File>
-		<File
-			RelativePath=".\wl_state.c">
-		</File>
-		<File
-			RelativePath=".\wl_text.c">
-		</File>
-		<File
-			RelativePath=".\wl_utils.c">
-		</File>
-		<File
-			RelativePath=".\wl_utils.h">
-		</File>
-		<File
-			RelativePath=".\wolfpal.inc">
+			RelativePath="..\wolfpal.inc">
 		</File>
 	</Files>
 	<Globals>

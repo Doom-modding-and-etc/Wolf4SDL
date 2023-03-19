@@ -68,6 +68,12 @@
  * SUCH DAMAGE.
  */
 
+#if defined(_WIN32)
+#define FIXEDPT_BITS	32
+#elif defined(_WIN64)
+#define FIXEDPT_BITS	64
+#endif
+
 #ifndef FIXEDPT_BITS
 #define FIXEDPT_BITS	32
 #endif
@@ -75,7 +81,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
-#if !defined(_WIN32)
+#if !defined(_MSC_VER)
 #	include <stdint.h>
 #	include <string.h>
 #	include <stdarg.h>

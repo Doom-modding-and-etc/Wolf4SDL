@@ -1,8 +1,7 @@
 /*
 VODKA-INDUCED ENTERTAINMENT ADVANCED SOUND MANAGER v0.9.1
 BY GERARD 'ALUMIUN' WATSON
-MODIFICATION By: Wolf3s
-
+MODIFICATION BY: André "WOLF3S" Guilherme
 
 Provides high quality sound and music using SDL_MIXER AND SDL2_MIXER 2.6.1
 Built on SDL_MIXER 1.2.5 and SDL2_MIXER 2.6.1
@@ -30,7 +29,7 @@ IF YOU FIND ANY, PLEASE TELL ME SO I CAN FIX THEM!
 #ifdef VIEASM
 #include "asmcref.h"// Duh.
 
-const char* ASM_Verstring = "v0.9.1 Beta";  // Version string
+const char* ASM_Verstring = "v0.9.2 Beta";  // Version string
 
 unsigned char sndvol, musvol;                       // Volumes for sound
 int origchannels, maxchannels, lastchan;    // Channel variables
@@ -114,6 +113,7 @@ boolean ASM_Open(int frequency, int channels, int maxchan, int buffersize, unsig
     printf("----------\n"
         "Vodka-Induced Entertainment Advanced Sound Manager %s\n"
         "Developed for WolfSDL v1.6\n"
+		"And Updated to use on Wolf4SDL v2.2\n"
         "By Gerard 'AlumiuN' Watson\n"
         "\n"
         , ASM_Verstring);
