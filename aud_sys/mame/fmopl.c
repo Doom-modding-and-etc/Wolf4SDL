@@ -94,6 +94,8 @@ Revision History:
 #define M_PI 3.14159265358979323846
 #endif
 
+#define INLINE inline
+
 /* output final shift */
 #if (OPL_SAMPLE_BITS==16)
 	#define FINAL_SH	(0)
@@ -663,7 +665,7 @@ static INT32 output_deltat[4];		/* for Y8950 DELTA-T, chip is mono, that 4 here 
 static UINT32	LFO_AM;
 static INT32	LFO_PM;
 
-#define INLINE static inline
+
 
 INLINE int limit( int val, int max, int min ) {
 	if ( val > max )

@@ -5,9 +5,10 @@
 #ifdef _MSC_VER
 #define inline __inline
 #else
-#define inline 
+#define inline static
 #endif
 #endif
+
 #define HAS_YM3812 1
 
 /* --- select emulation chips --- */

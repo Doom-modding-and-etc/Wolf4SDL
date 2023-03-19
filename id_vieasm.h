@@ -186,7 +186,7 @@ extern int ASM_CurChannels(void);
 
 #define GetTimeCount()  ((SDL_GetTicks()*TickBase)/1000)
 
-inline void Delay(int wolfticks)
+void Delay(int wolfticks)
 {
     if (wolfticks > 0)
         SDL_Delay(wolfticks * 1000 / TickBase);
