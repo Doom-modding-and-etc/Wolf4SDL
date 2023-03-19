@@ -21,7 +21,7 @@ void DC_StatusDrawLCD(int lcd) {
     int x, y;
     int xi, xb;
     int i = 0;
-    uint8 bitmap[48 * 32 / 8];
+    unsigned char bitmap[48 * 32 / 8];
     maple_device_t *vmu_lcd_addr;
 
     memset(bitmap, 0, sizeof(bitmap));
@@ -47,7 +47,7 @@ void DC_StatusClearLCD() {
     int x, y;
     int xi;
     int i = 0;
-    uint8 bitmap[48 * 32 / 8];
+    unsigned char bitmap[48 * 32 / 8];
     maple_device_t *vmu_lcd_addr;
 
     memset(bitmap, 0, sizeof(bitmap));

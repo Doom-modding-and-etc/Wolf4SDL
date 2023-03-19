@@ -10,7 +10,7 @@
 #include "dc/biosfont.h"
 #include "dc/video.h"
 
-static uint16 *bbuffer;
+static unsigned short *bbuffer;
 
 void DC_VideoInit() {
     bbuffer = (uint16 *)malloc(640 * 480 * 2);
