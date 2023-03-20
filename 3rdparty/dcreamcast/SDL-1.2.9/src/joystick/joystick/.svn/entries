@@ -1,0 +1,70 @@
+8
+
+dir
+561
+https://cadcdev.svn.sourceforge.net/svnroot/cadcdev/kos-ports/SDL/base/src/joystick
+https://cadcdev.svn.sourceforge.net/svnroot/cadcdev
+
+
+
+2008-02-17T01:23:00.696020Z
+559
+c99koder
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+cdfb0c48-74c9-0310-bf96-eb916a5bdf39
+
+SDL_joystick.c
+file
+
+
+
+
+2008-03-13T06:21:43.000000Z
+f21f4d31a3b474f83fa31aa92dcccc31
+2003-10-12T02:54:11.467264Z
+2
+bard
+has-props
+
+dc
+dir
+
+SDL_sysjoystick.h
+file
+
+
+
+
+2008-03-13T06:21:43.000000Z
+5cf5a3b5bcca4301c395c45787363636
+2003-10-12T02:54:11.467264Z
+2
+bard
+has-props
+
+SDL_joystick_c.h
+file
+
+
+
+
+2008-03-13T06:21:43.000000Z
+386d43c79ce9b8b75c57d4b03d0011c0
+2003-10-12T02:54:11.467264Z
+2
+bard
+has-props
+

@@ -67,6 +67,10 @@
 #ifdef PS2
 #include "Platform/PS2/ps2_main.h"
 #endif
+#ifdef _arch_dreamcast
+#include "Platform/dc/dc_main.h"
+#include "Platform/dc/dc_vmu.h"
+#endif
 #ifdef USE_HEADER
 #include <fixedptc.h>
 #else

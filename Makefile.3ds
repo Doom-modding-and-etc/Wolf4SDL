@@ -18,9 +18,9 @@ CTRUINCS = -I$(DEVKITPRO)/libctru/include -I$(DEVKITPRO)/libctru/include/3ds
 INCS      = $(CTRUINCS) -I$(DEVKITPRO)/portlibs/3ds/include -I$(DEVKITPRO)/portlibs/3ds/include/SDL -I$(DEVKITPRO)/portlibs/3ds
 DEFINES   = -DN3DS -D__3DS__ 
 LIBDIR    = -L$(DEVKITPRO)/libctru/lib -L$(DEVKITPRO)/portlibs/3ds/lib
-LIBS      = $(LIBDIR) -lSDL_mixer -lvorbisidec -lmikmod -lmad -logg -lSDL_ttf -lSDL_image -lSDL_gfx -lSDL -lfreetype -lpng -ljpeg -lz -lm -lctru `sdl-config --libs` -lstdc++ 
+LIBS      = $(LIBDIR) -lSDL_mixer -lvorbisidec -lmikmod -lmad -logg -lSDL_ttf -lSDL_image -lSDL_gfx -lSDL -lfreetype -lpng -ljpeg -lz -lcitro3d -lctru -lm `sdl-config --libs` -lstdc++ 
 BIN       = Wolf4SDL.elf
-BUILD	  =	build
+BUILD	  =	build_n3ds
 ARCH 	  = -march=armv6k -mtune=mpcore -mfloat-abi=hard -mtp=soft
 CFLAGS    = $(ARCH) $(INCS) $(DEFINES) \
 			-Wno-narrowing -Ofast -mword-relocations \
