@@ -253,6 +253,7 @@ TODOs:
  - Support to sega saturn: wl_draw.c, wl_main.c and wl_menu.c
  - Support OpenBSD.
  - Add more features from: http://dhw.wolfenstein3d.com/viewtopic.php?t=6310
+ - Port LWLIB to C
 
 Known bugs:
 -----------
