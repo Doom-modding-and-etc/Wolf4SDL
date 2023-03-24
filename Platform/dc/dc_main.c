@@ -8,8 +8,6 @@
 	Cyle Terry <cyle.terry@gmail.com>
 */
 
-#ifdef _arch_dreamcast
-
 #include <kos.h>
 #include "wl_def.h"
 #include "dc_main.h"
@@ -372,8 +370,8 @@ void DC_CheckParameters()	{
 	FILE 	*fp;
 	char 	*buf;
 	char 	*result = NULL;
-    bool 	sampleRateGiven = false;
-    bool 	audioBufferGiven = false;
+    boolean 	sampleRateGiven = false;
+    boolean 	audioBufferGiven = false;
 	int		length = 0;
 
 	fp = fopen(DCROOT "/params.txt", "r");
@@ -465,4 +463,3 @@ int DC_MousePresent() {
 	return maple_first_mouse() != 0;
 }
 
-#endif // _arch_dreamcast

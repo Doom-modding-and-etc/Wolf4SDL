@@ -2190,7 +2190,7 @@ void YM3812UpdateOne(int which, INT16 *buffer, int length)
 		output[0] = 0;
 
 		advance_lfo(OPL);
-
+#ifndef WIP_N3DS	
 		/* FM part */
 		OPL_CALC_CH(&OPL->P_CH[0]);
 		OPL_CALC_CH(&OPL->P_CH[1]);
@@ -2207,9 +2207,10 @@ void YM3812UpdateOne(int which, INT16 *buffer, int length)
 		}
 		else		/* Rhythm part */
 		{
+
 			OPL_CALC_RH(&OPL->P_CH[0], (OPL->noise_rng>>0)&1 );
 		}
-
+#endif
 		lt = output[0];
 
 //		lt >>= FINAL_SH;
@@ -2236,8 +2237,9 @@ void YM3812UpdateOne(int which, INT16 *buffer, int length)
 
 		buf[i*2] = lt;          // stereo version
 		buf[i*2+1] = lt;
-
+#ifndef WIP_N3DS
 		advance(OPL);
+#endif
 	}
 
 }
@@ -2351,7 +2353,7 @@ void YM3526UpdateOne(int which, INT16 *buffer, int length)
 		output[0] = 0;
 
 		advance_lfo(OPL);
-
+#ifndef WIP_N3DS
 		/* FM part */
 		OPL_CALC_CH(&OPL->P_CH[0]);
 		OPL_CALC_CH(&OPL->P_CH[1]);
@@ -2370,7 +2372,7 @@ void YM3526UpdateOne(int which, INT16 *buffer, int length)
 		{
 			OPL_CALC_RH(&OPL->P_CH[0], (OPL->noise_rng>>0)&1 );
 		}
-
+#endif
 		lt = output[0];
 
 		lt >>= FINAL_SH;
@@ -2387,8 +2389,9 @@ void YM3526UpdateOne(int which, INT16 *buffer, int length)
 
 		/* store to sound buffer */
 		buf[i] = lt;
-
+#ifndef WIP_N3DS
 		advance(OPL);
+#endif
 	}
 
 }
@@ -2532,7 +2535,7 @@ void Y8950UpdateOne(int which, INT16 *buffer, int length)
 		/* deltaT ADPCM */
 		if( DELTAT->portstate&0x80 )
 			YM_DELTAT_ADPCM_CALC(DELTAT);
-
+#ifndef WIP_N3DS
 		/* FM part */
 		OPL_CALC_CH(&OPL->P_CH[0]);
 		OPL_CALC_CH(&OPL->P_CH[1]);
@@ -2548,10 +2551,10 @@ void Y8950UpdateOne(int which, INT16 *buffer, int length)
 			OPL_CALC_CH(&OPL->P_CH[8]);
 		}
 		else		/* Rhythm part */
-		{
+		{		
 			OPL_CALC_RH(&OPL->P_CH[0], (OPL->noise_rng>>0)&1 );
 		}
-
+#endif
 		lt = output[0] + (output_deltat[0]>>11);
 
 		lt >>= FINAL_SH;
@@ -2568,8 +2571,9 @@ void Y8950UpdateOne(int which, INT16 *buffer, int length)
 
 		/* store to sound buffer */
 		buf[i] = lt;
-
+#ifndef WIP_N3DS
 		advance(OPL);
+#endif
 	}
 
 }

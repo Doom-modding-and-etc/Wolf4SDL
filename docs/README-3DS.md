@@ -25,7 +25,7 @@ Download and copy `wolf4sdl.3dsx` or `wolf4sdl-shareware.3dsx` from the [release
 Building requires latest `ctrulib` and `sdl1.2` 3ds port. You can install them using dkp-pacman
 and then you hit:
 ```
-make -f Makefile.3ds
+make clean -f Makefile.3ds
 ```
 
 ## Credits

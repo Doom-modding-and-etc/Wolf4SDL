@@ -4,11 +4,9 @@
 // by Pickle
 //
 
-#if defined(GP2X)
-
 #include "gp2x.h"
 
-static bool volume_init = false;
+static boolean volume_init = false;
 static unsigned int screenshot_count = 0;
 
 #if defined(GP2X_940)
@@ -324,4 +322,3 @@ void SetKeyboard( unsigned int key, int press )
 	}
 }
 
-#endif // GP2X

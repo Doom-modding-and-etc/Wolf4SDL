@@ -24,9 +24,9 @@
 #	include <string.h>
 #	include <stdarg.h>
 #endif
-
+#ifndef WIP_N3DS
 #pragma pack(1)
-
+#endif
 #if defined(_arch_dreamcast)
 #define YESBUTTONNAME "A"
 #define NOBUTTONNAME  "B"
@@ -894,7 +894,6 @@ typedef struct statstruct
 #ifdef PUSHOBJECT // Objects that can be pushed
     unsigned char      pushable;
 #endif   
-
 } statobj_t;
 
 #ifdef PUSHOBJECT // Objects that can be pushed

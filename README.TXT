@@ -25,7 +25,7 @@ Main features:
        - KallistiOS (used for Dreamcast)
        Only little endian platforms like x86, ARM and SH-4 are currently supported.
        - Nintendo Switch
-       - Nintendo 3DS(WIP On Makefile part)
+       - Nintendo 3DS
        - GP2X
        - Sega Saturn.
        - Sony Playstation 2

@@ -9,8 +9,6 @@
     Cyle Terry <cyle.terry@gmail.com>
 */
 
-#ifdef _arch_dreamcast
-
 #include <kos.h>
 #include <zlib/zlib.h>
 #include "wl_def.h"
@@ -145,4 +143,3 @@ int DC_LoadFromVMU(char *dst) {
     return 0;
 }
 
-#endif // _arch_dreamcast
