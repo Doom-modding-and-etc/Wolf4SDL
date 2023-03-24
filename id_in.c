@@ -23,6 +23,9 @@
 #include "SDL_keysym.h"
 #endif
 #endif
+#ifdef HAKCHI
+#include <SDL_scancode.h>
+#endif
 #include "id_in.h"
 /*
 =============================================================================
@@ -367,7 +370,17 @@ void IN_GetJoyFineDelta(int* dx, int* dy)
     SDL_JoystickUpdate();
     x = SDL_JoystickGetAxis(Joystick, 0);
     y = SDL_JoystickGetAxis(Joystick, 1);
-
+#if defined(HAKCHI)
+    int bt=IN_JoyButtons();
+    if(bt & (1<<12))
+        x += 127;
+    else if(bt & (1<<11))
+        x -= 127;
+    if(bt & (1<<14))
+        y += 127;
+    else if(bt & (1<<13))
+        y -= 127;
+#endif
     if (x < -128) x = -128;
     else if (x > 127) x = 127;
 

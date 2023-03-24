@@ -17,7 +17,7 @@ https://discord.gg/YNTdx5dXF6
 Main features:
 --------------
  - Cross-platform:
-      Supported operating systems are at least:
+      Supported operating systems/consoles are at least:
        - Windows 98, Windows ME, Windows 2000, Windows XP(32 and 64 bit), Windows Vista(32 and 64 bit), Windows 7 (32 and 64 bit), Windows 8(32 and 64 bit) Windows 10 (32 and 64 bit) and Windows 11(64 Bits only)
        - Linux
        - BSD variants
@@ -30,7 +30,8 @@ Main features:
        - Sega Saturn.
        - Sony Playstation 2
        - Xbox/Xbox 360(W.I.P)
-
+	   - Hakchi 
+	   
  - AdLib sounds and music:
       This port includes the OPL2 emulator from MAME, so you can not only
       hear the AdLib sounds but also music without any AdLib-compatible

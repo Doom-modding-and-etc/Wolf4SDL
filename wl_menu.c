@@ -4747,6 +4747,43 @@ CheckForEpisodes (void)
         }
     }
 
+#ifdef HAKCHI
+//
+// Hakchi additions ~ Ryan 'Swingflip' Hamlin
+//
+  printf("echo \"===Hakchi Wolfenstein3D (Wolf4SDL)======================\"");
+  printf("echo \"Hakchi Wolfensein3D additions by Ryan 'Swingflip' Hamlin and adoption by Wolf3s\"");
+  printf("echo \"Wolf4SDL by Moritz 'Ripper' Kroll\"");
+  printf("echo \"Wolfenstein3D by John Romero (C) 1992 Id Software, Inc.\"");
+  printf("echo \"========================================================\"");
+
+
+#ifdef SPEAR
+  printf("Detected: Spear of Destiny");
+#ifdef SPEARDEMO
+  printf("echo SHAREWARE DEMO build");
+#else
+  printf("echo FULL RETAIL build");
+#endif 
+#else
+  printf("echo Detected: Standard Wolfenstein3D");
+#ifdef UPLOAD
+  printf("echo SHAREWARE DEMO build");
+#else
+  printf("echo FULL RETAIL build");
+#endif
+#endif
+
+printf("\"========================================================\"");
+
+const char datadir_string = DATADIR;
+const check_string = "echo Checking for game files in: "+datadir_string;
+
+printf(check_string, "%s");
+
+printf("e\"========================================================\"");
+#endif
+
 //
 // JAPANESE VERSION
 //
