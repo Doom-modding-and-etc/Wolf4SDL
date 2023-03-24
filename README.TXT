@@ -30,7 +30,7 @@ Main features:
        - Sega Saturn.
        - Sony Playstation 2
        - Xbox/Xbox 360(W.I.P)
-	   - Hakchi 
+       - Hakchi 
 	   
  - AdLib sounds and music:
       This port includes the OPL2 emulator from MAME, so you can not only
