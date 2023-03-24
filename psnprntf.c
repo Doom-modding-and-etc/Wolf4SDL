@@ -41,7 +41,7 @@
 #define FCVT M_Fcvt
 #endif
 
-int psnprintf(char *str, unsigned int n, const char *format, ...) {
+int psnprintf(char *str, size_t n, const char *format, ...) {
     va_list args;
     int ret;
 
@@ -178,7 +178,7 @@ enum
     } \
     ncount++;
 
-int pvsnprintf(char *str, unsigned int nmax, const char *format, va_list ap) {
+int pvsnprintf(char *str, size_t n, const char *format, va_list ap) {
     /* nmax gives total size of buffer including null
      * null is ALWAYS added, even if buffer too small for format
      * (contrary to C99)
@@ -310,7 +310,7 @@ int pvsnfmt_char(pvsnfmt_vars *info, char c) {
 }
 
 /* strnlen not available on all platforms.. maybe autoconf it? */
-unsigned int pstrnlen(const char *s, unsigned int count) {
+unsigned int pstrnlen(const char *s, size_t count) {
     const char *p = s;
     while(*p && count-- > 0) {
         p++;
@@ -477,11 +477,11 @@ int pvsnfmt_int(pvsnfmt_vars *info, pvsnfmt_intparm_t *ip) {
         case 'o':
         case 'x':
         case 'X':
-            unumber = (unsigned int)(ip->i);
+            unumber = (size_t)(ip->i);
             numbersigned = 0;
             break;
         case 'p':
-            unumber = (unsigned int)(ip->p); // FIXME: Not x64 friendly
+            unumber = (size_t)(ip->p); // FIXME: Not x64 friendly
             numbersigned = 0;
         }
         break;
@@ -495,11 +495,11 @@ int pvsnfmt_int(pvsnfmt_vars *info, pvsnfmt_intparm_t *ip) {
         case 'o':
         case 'x':
         case 'X':
-            unumber = (unsigned int)(ip->i);
+            unumber = (size_t)(ip->i);
             numbersigned = 0;
             break;
         case 'p':
-            unumber = (unsigned int)(ip->p); // FIXME: Not x64 friendly
+            unumber = (size_t)(ip->p); // FIXME: Not x64 friendly
             numbersigned = numbersigned;
         }
         break;
@@ -513,11 +513,11 @@ int pvsnfmt_int(pvsnfmt_vars *info, pvsnfmt_intparm_t *ip) {
         case 'o':
         case 'x':
         case 'X':
-            unumber = (unsigned int)(ip->i);
+            unumber = (size_t)(ip->i);
             numbersigned = 0;
             break;
         case 'p':
-            unumber = (unsigned int)(ip->p); // FIXME: Not x64 friendly
+            unumber = (size_t)(ip->p); // FIXME: Not x64 friendly
             numbersigned = 0;
         }
     } /* switch fmt to retrieve number */
