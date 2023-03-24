@@ -96,10 +96,12 @@ typedef unsigned int size_t;
 #endif
 #endif
 
+#ifndef __GNUC__
 #ifdef OLD_MSVC
 typedef __int64 int64_t;
 #else
 typedef long long int64_t;
+#endif
 #endif
 
 #if !defined O_BINARY
