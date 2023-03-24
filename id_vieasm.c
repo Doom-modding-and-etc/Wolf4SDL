@@ -841,4 +841,11 @@ void SD_SetDigiDevice(SDSMode mode)
         DigiMode = mode;
     }
 }
+
+void Delay(int wolfticks)
+{
+    if (wolfticks > 0)
+        SDL_Delay(wolfticks * 1000 / TickBase);
+}
+
 #endif

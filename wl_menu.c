@@ -4912,7 +4912,9 @@ CheckForEpisodes (void)
 #endif
 #else
     strcpy (graphext, extension);
+#ifndef VIEASM
     strcpy (audioext, extension);
+#endif
 #endif
 
     strcat (configname, extension);

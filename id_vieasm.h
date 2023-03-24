@@ -186,11 +186,7 @@ extern int ASM_CurChannels(void);
 
 #define GetTimeCount()  ((SDL_GetTicks()*TickBase)/1000)
 
-void Delay(int wolfticks)
-{
-    if (wolfticks > 0)
-        SDL_Delay(wolfticks * 1000 / TickBase);
-}
+void Delay(int wolfticks);
 
 #define SD_SoundPlaying() 0
 #define UNCACHEAUDIOCHUNK(chunk) ASM_Uncache(ASM_Audiosegs[chunk]);
