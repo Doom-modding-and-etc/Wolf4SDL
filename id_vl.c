@@ -356,7 +356,7 @@ void VL_SetVGAPlaneMode (void)
 
     if(!screen)
     {
-        printf("Unable to set %ux%lux%li video mode: %s\n", screenWidth,
+        printf("Unable to set %ux%ux%ux video mode: %s\n", screenWidth,
             screenHeight, screenBits, SDL_GetError());
         exit(1);
     }

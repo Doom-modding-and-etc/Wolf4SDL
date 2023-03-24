@@ -5,7 +5,7 @@
 #ifdef _MSC_VER
 #define inline __inline
 #else
-#define inline static
+#define inline __inline__
 #endif
 #endif
 

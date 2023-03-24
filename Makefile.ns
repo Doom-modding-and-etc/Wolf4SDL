@@ -10,7 +10,7 @@ TOPDIR ?= $(CURDIR)
 include $(DEVKITPRO)/libnx/switch_rules
 
 APP_TITLE = Wolf4SDL
-APP_DESCRIPTION := Cross Plataform Source Port Of Wolfenstein 3d for Nintendo Switch by: keeganatorr and Adopted by: Wolf3s
+APP_DESCRIPTION := Cross Plataform Source Port Of Wolfenstein 3d for Nintendo Switch by: keeganatorr and Adopted by: André "Wolf3s" Guilherme
 APP_AUTHOR := Wolf3s, keeganatorr, Aryan, Mortriz Ripper and The other contribuitors
 APP_VERSION := 2.2
 ICON := icon/wolf4sdl.png

@@ -10,7 +10,7 @@ include $(DEVKITARM)/3ds_rules
 PORTLIBS    := $(DEVKITPRO)/portlibs/3ds
 TARGET		:=	$(notdir $(CURDIR))
 APP_TITLE := Wolf4SDL
-APP_DESCRIPTION := Cross Plataform Source Port Of Wolfenstein 3d for Nintendo 3ds by: hax0kartik and Adopted by: Wolf3s
+APP_DESCRIPTION := Cross Plataform Source Port Of Wolfenstein 3d for Nintendo 3ds by: hax0kartik and Adopted by: André "Wolf3s" Guilherme
 APP_AUTHOR := Wolf3s, hax0kartik, Aryan, Mortriz Ripper and The other contribuitors
 APP_VERSION := 2.2
 ICON := icon_3ds/wolf4sdl.png
@@ -23,9 +23,9 @@ LINKOBJ   += obj/id_ca.o obj/id_in.o obj/id_pm.o obj/id_sd.o obj/id_us.o obj/id_
 LINKOBJ   += obj/psnprntf.o obj/signon.o
 #Wolf Files
 LINKOBJ   += obj/wl_act1.o obj/wl_act2.o obj/wl_atmos.o obj/wl_agent.o obj/wl_cloudsky.o obj/wl_debug.o obj/wl_draw.o obj/wl_game.o \
-obj/wl_inter.o obj/wl_main.o obj/wl_menu.o obj/wl_parallax.o obj/wl_plane.o obj/wl_play.o obj/wl_scale.o obj/wl_shade.o wl_state.o \
+obj/wl_inter.o obj/wl_main.o obj/wl_menu.o obj/wl_parallax.o obj/wl_plane.o obj/wl_play.o obj/wl_scale.o obj/wl_shade.o obj/wl_state.o \
 obj/wl_text.o obj/wl_utils.o
-DEFINES   = -D__3DS__ -DN3DS -DMATH -DWIP_N3DS
+DEFINES   = -D__3DS__ -DN3DS -DMATH -DWIP_N3DS -DUSE_INLINE_C89
 ARCH = -march=armv6k -mfloat-abi=hard -mtune=mpcore -mtp=soft -fPIE
 ARCH_LIBS      = -g -mword-relocations -ffunction-sections -march=armv6k -mfloat-abi=hard -mtune=mpcore -mtp=soft -fPIE
 LIBS      = -specs=$(DEVKITPRO)/devkitARM/arm-none-eabi/lib/3dsx.specs $(ARCH_LIBS) -L$(DEVKITPRO)/libctru/lib -L$(DEVKITPRO)/portlibs/3ds/lib -lSDL_mixer -lmpg123 -lmodplug -lmad -lmikmod -lvorbisidec -logg -lopusfile -lopus `sdl-config --libs` -lm  -lstdc++
@@ -35,7 +35,7 @@ BIN       = release/Wolf4SDL.elf
 BINDIR	  = release
 CFLAGS    = $(INCS) $(DEFINES) -Wno-narrowing -Ofast -mword-relocations \
 			-fomit-frame-pointer -ffunction-sections \
-			-std=c99 -Wall -W -g \
+			-std=gnu89 -Wall -W -g \
 			-Wpointer-arith -Wreturn-type -Wwrite-strings \
 			-Wcast-align -Wimplicit-int -Wsequence-point $(ARCH)
 GPROF     = gprof.exe

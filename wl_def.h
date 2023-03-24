@@ -24,7 +24,7 @@
 #	include <string.h>
 #	include <stdarg.h>
 #endif
-#ifndef WIP_N3DS
+#ifndef N3DS
 #pragma pack(1)
 #endif
 #if defined(_arch_dreamcast)
@@ -248,7 +248,7 @@ typedef unsigned char tiletype;
 #define PLAYERSIZE      MINDIST         // player radius
 #define MINACTORDIST    0x10000l        // minimum dist from player center
                                         // to any actor center
-#ifdef MATH
+#ifndef M_PI
 #define M_PI              3.141592657
 #endif
 #ifdef SPEARDEMO

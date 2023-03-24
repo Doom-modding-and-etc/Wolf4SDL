@@ -178,7 +178,7 @@ void
 US_PrintUnsigned(unsigned int n)
 {
 	char	buffer[32];
-	sprintf(buffer, "%lu", n);
+	sprintf(buffer, "%u", n);
 
 	US_Print(buffer);
 }

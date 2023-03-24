@@ -297,7 +297,6 @@ static void SDL_PCMixCallback(void *udata, unsigned char*stream, int len)
 
         while (current_remaining == 0) 
         {
-            int oldfreq = current_freq;
             phase_offset = 0;
 
             // Get the next frequency to play
@@ -767,21 +766,6 @@ SDL_ShutAL(void)
 
 ///////////////////////////////////////////////////////////////////////////
 //
-//      SDL_CleanAL() - Totally shuts down the AdLib card
-//
-///////////////////////////////////////////////////////////////////////////
-static void
-SDL_CleanAL(void)
-{
-    int     i;
-
-    alOut(alEffects,0);
-    for (i = 1; i < 0xf5; i++)
-        alOut(i, 0);
-}
-
-///////////////////////////////////////////////////////////////////////////
-//
 //      SDL_StartAL() - Starts up the AdLib card for sound effects
 //
 ///////////////////////////////////////////////////////////////////////////
@@ -790,26 +774,6 @@ SDL_StartAL(void)
 {
     alOut(alEffects, 0);
     SDL_AlSetFXInst(&alZeroInst);
-}
-
-///////////////////////////////////////////////////////////////////////////
-//
-//      SDL_DetectAdLib() - Determines if there's an AdLib (or SoundBlaster
-//              emulating an AdLib) present
-//
-///////////////////////////////////////////////////////////////////////////
-static boolean
-SDL_DetectAdLib(void)
-{
-    int i;
-
-    for (i = 1; i <= 0xf5; i++)       // Zero all the registers
-        alOut(i, 0);
-
-    alOut(1, 0x20);             // Set WSE=1
-//    alOut(8, 0);                // Set CSM=0 & SEL=0
-
-    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -830,18 +794,6 @@ SDL_ShutDevice(void)
             break;
     }
     SoundMode = sdm_Off;
-}
-
-///////////////////////////////////////////////////////////////////////////
-//
-//      SDL_CleanDevice() - totally shuts down all sound devices
-//
-///////////////////////////////////////////////////////////////////////////
-static void
-SDL_CleanDevice(void)
-{
-    if ((SoundMode == sdm_AdLib) || (MusicMode == smm_AdLib))
-        SDL_CleanAL();
 }
 
 ///////////////////////////////////////////////////////////////////////////

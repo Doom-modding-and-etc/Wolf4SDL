@@ -7,8 +7,6 @@
 // terminated, which some implementations do not do.
 //=============================================================================
 
-#ifdef PSNPRNTF
-
 #include <string.h> /* for memset */
 #include <stdarg.h> /* for va_list */
 #include <stdlib.h> /* for fcvt */
@@ -171,10 +169,10 @@ enum
         break;
 
 #define PUTCHAR(ch) \
-    if (nmax > 1) \
+    if (n > 1) \
     { \
         *info.pinsertion++ = ch;  \
-        nmax--; \
+        n--; \
     } \
     ncount++;
 
@@ -192,7 +190,7 @@ int pvsnprintf(char *str, size_t n, const char *format, va_list ap) {
     pvsnfmt_intparm_t ip;
 
     info.pinsertion = str;
-    info.nmax       = nmax;
+    info.nmax       = n;
     info.fmt        = format;
     info.flags      = 0;
     info.width      = 0;
@@ -293,7 +291,7 @@ int pvsnprintf(char *str, size_t n, const char *format, va_list ap) {
      * nmax initially passed in as 0.  fmt functions take care to
      * always leave at least one free byte at end.
      */
-    if(nmax > 0) {
+    if(n > 0) {
         *info.pinsertion = '\0';
     }
 
@@ -310,7 +308,7 @@ int pvsnfmt_char(pvsnfmt_vars *info, char c) {
 }
 
 /* strnlen not available on all platforms.. maybe autoconf it? */
-unsigned int pstrnlen(const char *s, size_t count) {
+size_t pstrnlen(const char *s, size_t count) {
     const char *p = s;
     while(*p && count-- > 0) {
         p++;
@@ -350,7 +348,7 @@ int pvsnfmt_str(pvsnfmt_vars *info, const char *s) {
         len = (int)strlen(str);
     }
     else {
-        len = pstrnlen(str, info->precision);
+        len = (int)pstrnlen(str, info->precision);
     }
 
     /* Determine padding length */
@@ -374,7 +372,7 @@ int pvsnfmt_str(pvsnfmt_vars *info, const char *s) {
         }
 
         if((int) info->nmax - 1 < pad) {
-            nprinted = info->nmax - 1;
+            nprinted = (int)info->nmax - 1;
         }
         else {
             nprinted = pad;
@@ -390,7 +388,7 @@ int pvsnfmt_str(pvsnfmt_vars *info, const char *s) {
         nprinted = 0;
     }
     else if((int) info->nmax - 1 < len) {
-        nprinted = info->nmax - 1;
+        nprinted = (int)info->nmax - 1;
     }
     else {
         nprinted = len;
@@ -406,7 +404,7 @@ int pvsnfmt_str(pvsnfmt_vars *info, const char *s) {
             nprinted = 0;
         }
         else if((int)info->nmax - 1 < pad) {
-            nprinted = info->nmax - 1;
+            nprinted = (int)info->nmax - 1;
         }
         else {
             nprinted = pad;
@@ -434,7 +432,7 @@ int pvsnfmt_str(pvsnfmt_vars *info, const char *s) {
 
 int pvsnfmt_int(pvsnfmt_vars *info, pvsnfmt_intparm_t *ip) {
     int number = 0;
-    unsigned int unumber = 0;
+    size_t unumber = 0;
     char numbersigned = 1;
     char iszero = 0; /* bool */
     int base = 10;   /* haleyjd: default to something valid */
@@ -647,7 +645,7 @@ int pvsnfmt_int(pvsnfmt_vars *info, pvsnfmt_intparm_t *ip) {
             widthpad = 0;
         }
         else if((int) info->nmax - 1 < widthpad) {
-            widthpad = info->nmax - 1;
+            widthpad = (int)info->nmax - 1;
         }
 
         if(flags & FLAG_ZERO_PAD) {
@@ -690,7 +688,7 @@ int pvsnfmt_int(pvsnfmt_vars *info, pvsnfmt_intparm_t *ip) {
         len = 0;
     }
     else if((int) info->nmax - 1 < len) {
-        len = info->nmax - 1;
+        len = (int)info->nmax - 1;
     }
 
     /* haleyjd 07/19/03: bug fix: Do NOT use len as the counter
@@ -718,7 +716,7 @@ int pvsnfmt_int(pvsnfmt_vars *info, pvsnfmt_intparm_t *ip) {
             widthpad = 0;
         }
         else if((int) info->nmax - 1 < widthpad) {
-            widthpad = info->nmax - 1;
+            widthpad = (int)info->nmax - 1;
         }
 
         memset(info->pinsertion, ' ', widthpad);
@@ -857,7 +855,7 @@ int pvsnfmt_double(pvsnfmt_vars *info, double d) {
                 pad  = 0;
             }
             else if((int) info->nmax - 1 < pad) {
-                pad  = info->nmax - 1;
+                pad  = (int)info->nmax - 1;
             }
 
             if(flags & FLAG_ZERO_PAD) {
@@ -883,7 +881,7 @@ int pvsnfmt_double(pvsnfmt_vars *info, double d) {
             len = 0;
         }
         else if((int) info->nmax - 1 < len) {
-            len = info->nmax - 1;
+            len = (int)info->nmax - 1;
         }
         memcpy(info->pinsertion, special, len);
         info->pinsertion += len;
@@ -895,7 +893,7 @@ int pvsnfmt_double(pvsnfmt_vars *info, double d) {
                 pad  = 0;
             }
             else if((int) info->nmax - 1 < pad) {
-                pad  = info->nmax - 1;
+                pad = (int)info->nmax - 1;
             }
 
             memset(info->pinsertion, ' ', pad);
@@ -988,7 +986,7 @@ int pvsnfmt_double(pvsnfmt_vars *info, double d) {
                 pad = 0;
             }
             else if((int) info->nmax - 1 < pad) {
-                pad = info->nmax - 1;
+                pad = (int)info->nmax - 1;
             }
 
             if(flags & FLAG_ZERO_PAD) {
@@ -1043,7 +1041,7 @@ int pvsnfmt_double(pvsnfmt_vars *info, double d) {
                 leadingzeros = 0;
             }
             else if((int) info->nmax /* - 1 */ < leadingzeros /* -1 */) {
-                leadingzeros = info->nmax;    /* -1 */
+                leadingzeros = (int)info->nmax;    /* -1 */
             }
 
             leadingzeros--;
@@ -1058,7 +1056,7 @@ int pvsnfmt_double(pvsnfmt_vars *info, double d) {
                 printdigits = 0;
             }
             else if((int) info->nmax - 1 < dec) {
-                printdigits = info->nmax - 1;
+                printdigits = (int)info->nmax - 1;
             }
             else {
                 printdigits = dec;
@@ -1098,7 +1096,7 @@ int pvsnfmt_double(pvsnfmt_vars *info, double d) {
             printdigits = 0;
         }
         else if((int) info->nmax - 1 < len) {
-            printdigits = info->nmax - 1;
+            printdigits = (int)info->nmax - 1;
         }
         else {
             printdigits = len;
@@ -1114,7 +1112,7 @@ int pvsnfmt_double(pvsnfmt_vars *info, double d) {
                 pad = 0;
             }
             else if((int) info->nmax - 1 < pad) {
-                pad = info->nmax - 1;
+                pad = (int)info->nmax - 1;
             }
 
             memset(info->pinsertion, ' ', pad);
@@ -1127,5 +1125,3 @@ int pvsnfmt_double(pvsnfmt_vars *info, double d) {
     return 0;
 }
 
-// EOF
-#endif

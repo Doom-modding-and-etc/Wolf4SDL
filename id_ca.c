@@ -179,7 +179,9 @@ static const char gdictname[] = DATADIR "vgadict.";
 static const char mheadname[] = DATADIR "maphead.";
 #endif
 #ifndef SEGA_SATURN
+#ifndef CARMACIZED
 static const char mfilename[] = DATADIR "maptemp.";
+#endif
 #ifdef CARMACIZED
 static const char mfilecama[] = DATADIR "gamemaps.";
 #endif
@@ -196,7 +198,9 @@ static const char mheadname[] = "maphead.";
 #ifdef CARMACIZED
 static const char mfilecama[] = "gamemaps.";
 #endif
+#ifndef CARMACIZED
 static const char mfilename[] = "maptemp.";
+#endif
 #ifndef VIEASM
 static const char aheadname[] = "audiohed.";
 #endif

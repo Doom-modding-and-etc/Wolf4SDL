@@ -1,25 +1,13 @@
 #ifndef PSNPRINTF_H
 #define PSNPRINTF_H
 
-#ifdef PSNPRNTF
-
-#ifdef HAVE_SIZE_T
-#ifdef _MSC_VER
-typedef unsigned long __int64 size_t;
-#else
-typedef unsigned long long size_t;
-#endif
-#else
-typedef unsigned int size_t;
-#endif
-
 int psnprintf(char* str, size_t n, const char* format, ...);
 int pvsnprintf(char* str, size_t n, const char* format, va_list ap);
 
 /* haleyjd 08/01/09: rewritten to use a structure */
 typedef struct psvnfmt_vars_s {
 	char* pinsertion;
-	unsigned int      nmax;
+	size_t      nmax;
 	const char* fmt;
 	int         flags;
 	int         width;
@@ -57,6 +45,6 @@ enum
 	FLAG_HASH = 0x10 // #
 };
  /* Portable strnlen function (doesn't exist on all systems!) */
-unsigned int pstrnlen(const char* s, size_t count);
-#endif
+size_t pstrnlen(const char* s, size_t count);
+
 #endif /* ifdef PSNPRINTF_H */
