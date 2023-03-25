@@ -107,7 +107,6 @@ boolean ASM_Open(int frequency, int channels, int maxchan, int buffersize, unsig
     if (ASM_IsOpen())       // Device is already open!
         return false;
 #ifdef VERBOSE
-    unsigned short null;
     SDL_version compile_version;
 
     printf("----------\n"

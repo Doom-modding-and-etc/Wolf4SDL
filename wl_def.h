@@ -191,6 +191,8 @@ void Quit(const char* errorStr, ...);
 
 // the door is the last picture before the sprites
 #define DOORWALL        (PMSpriteStart - 8)
+#define DOORSTART       90          // WALL - first door code
+#define DOOREND         101         // WALL - last door code
 
 #define MAXACTORS       150         // max number of nazis, etc / map
 #define MAXSTATS        400         // max number of lamps, bonus, etc
@@ -742,11 +744,11 @@ typedef enum
 typedef enum
 {
     dr_normal,
+    dr_elevator,
     dr_lock1,
     dr_lock2,
     dr_lock3,
-    dr_lock4,
-    dr_elevator
+    dr_lock4
 } door_t;
 
 typedef enum

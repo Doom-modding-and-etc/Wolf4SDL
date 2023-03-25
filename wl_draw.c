@@ -510,7 +510,7 @@ void HitVertWall (void)
             // check for adjacent doors
             //
             if (tilemap[xtile - xtilestep][yinttile] & BIT_DOOR)
-                wallpic = DOORWALL+3;
+                wallpic = DOORWALL + 3;
             else
                 wallpic = vertwall[tilehit & ~BIT_WALL];
         }
@@ -643,24 +643,7 @@ void HitHorizDoor (void)
         lasttilehit = tilehit;
         lasttexture = texture;
 
-        switch (doorobjlist[doornum].lock)
-        {
-            case dr_normal:
-                doorpage = DOORWALL;
-                break;
-
-            case dr_lock1:
-            case dr_lock2:
-            case dr_lock3:
-            case dr_lock4:
-                doorpage = DOORWALL + 6;
-                break;
-
-            case dr_elevator:
-                doorpage = DOORWALL + 4;
-                break;
-        }
-
+        doorpage = DOORWALL + (2 * (doorobjlist[doornum].lock - dr_normal));
         postsource = PM_GetPage(doorpage) + texture;
     }
 
@@ -717,25 +700,7 @@ void HitVertDoor (void)
     {
         lasttilehit = tilehit;
         lasttexture = texture;
-
-        switch (doorobjlist[doornum].lock)
-        {
-            case dr_normal:
-                doorpage = DOORWALL + 1;
-                break;
-
-            case dr_lock1:
-            case dr_lock2:
-            case dr_lock3:
-            case dr_lock4:
-                doorpage = DOORWALL + 7;
-                break;
-
-            case dr_elevator:
-                doorpage = DOORWALL + 5;
-                break;
-        }
-    
+        doorpage = DOORWALL + (2 * (doorobjlist[doornum].lock - dr_normal)) + 1;
         postsource = PM_GetPage(doorpage) + texture;
     }
 

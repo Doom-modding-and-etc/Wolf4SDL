@@ -1190,7 +1190,11 @@ DrawSoundVols(boolean curmode)
     {
         SETFONTCOLOR(READCOLOR, BKGDCOLOR);
     }
+#ifdef VIEASM
+    PrintX = 65 + soundvol * 2 - (unsigned short)strlen(soundstr) * 4;
+#else
     PrintX = 65 + soundvol * 2 - strlen(soundstr) * 4;
+#endif
     PrintY = 84;
     US_Print(soundstr);
 
@@ -1202,7 +1206,11 @@ DrawSoundVols(boolean curmode)
     {
         SETFONTCOLOR(READCOLOR, BKGDCOLOR);
     }
+#ifdef VIEASM
+    PrintX = 65 + musicvol * 2 - (unsigned short)strlen(musicstr) * 4;
+#else
     PrintX = 65 + musicvol * 2 - strlen(musicstr) * 4;
+#endif
     PrintY = 134;
     US_Print(musicstr);
 
