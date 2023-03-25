@@ -13,7 +13,7 @@ APP_TITLE = Wolf4SDL
 APP_DESCRIPTION := Cross Plataform Source Port Of Wolfenstein 3d for Nintendo Switch by: keeganatorr and Adopted by: André "Wolf3s" Guilherme
 APP_AUTHOR := Wolf3s, keeganatorr, Aryan, Mortriz Ripper and The other contribuitors
 APP_VERSION := 2.2
-ICON := icon/wolf4sdl.png
+ICON := icon_switch/wolf4sdl.png
 WINDRES   = windres.exe
 OBJ       = aud_sys/mame/fmopl.o aud_sys/dosbox/dbopl.o id_ca.o id_crt.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vieasm.o id_w3swrap.o id_vl.o signon.o psnprntf.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
 LINKOBJ   = aud_sys/mame/fmopl.o aud_sys/dosbox/dbopl.o id_ca.o id_crt.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vieasm.o id_w3swrap.o id_vl.o signon.o psnprntf.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
@@ -26,8 +26,8 @@ ARCH 	  = -march=armv8-a -mtune=cortex-a57 -mtp=soft -fPIE -fPIC -O3 -O2
 DEFINES   = -DSWITCH -D__SWITCH__
 CFLAGS    = $(INCS) $(DEFINES) $(ARCH) -Wall -W -g -Wpointer-arith -Wreturn-type -Wwrite-strings -Wcast-align -std=gnu89 -Wimplicit-int -Wsequence-point -Wswitch
 RM        = rm -f
-LINK      = aarch64-none-elf
-C		  = aarch64-none-elf
+LINK      = aarch64-none-elf-gcc
+C		  = aarch64-none-elf-gcc
 OUTPUT    = $(APP_TITLE)
 
 ifeq ($(strip $(ICON)),)
