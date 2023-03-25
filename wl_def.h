@@ -744,11 +744,11 @@ typedef enum
 typedef enum
 {
     dr_normal,
-    dr_elevator,
     dr_lock1,
     dr_lock2,
     dr_lock3,
-    dr_lock4
+    dr_lock4,
+    dr_elevator,
 } door_t;
 
 typedef enum
@@ -1729,6 +1729,21 @@ void GetFlatTextures(void);
 
 #ifdef USE_PARALLAX
 void DrawParallax(void);
+#endif
+#ifndef _MSC_VER
+#ifdef NOT_ANSI_C
+static char* itoa(int value, char* string, int radix)
+{
+    sprintf(string, "%d", value);
+    return string;
+}
+
+static char* ltoa(long value, char* string, int radix)
+{
+    sprintf(string, "%ld", value);
+    return string;
+}
+#endif
 #endif
 
 #endif

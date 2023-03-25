@@ -192,8 +192,11 @@ void
 US_PrintSigned(int n)
 {
 	char	buffer[32];
-
-	US_Print(w3sitoa(n,buffer,10));
+#ifdef NOT_ANSI_C
+	US_Print(w3sltoa(n,buffer,10));
+#else
+	US_Print((const char*)sprintf(buffer, "%ld", n));
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////

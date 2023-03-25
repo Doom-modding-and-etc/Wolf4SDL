@@ -958,7 +958,25 @@ void DrawMapWall (short sx, short sy, short wallpic)
 
 void DrawMapDoor (short sx, short sy, short doornum)
 {
-    int doorpage = DOORWALL + 2 * (doorobjlist[doornum].lock - dr_normal);
+    int doorpage;
+
+    switch (doorobjlist[doornum].lock)
+    {
+    case dr_normal:
+        doorpage = DOORWALL;
+        break;
+
+    case dr_lock1:
+    case dr_lock2:
+    case dr_lock3:
+    case dr_lock4:
+        doorpage = DOORWALL + 6;
+        break;
+
+    case dr_elevator:
+        doorpage = DOORWALL + 4;
+        break;
+    }
   
     DrawMapWall (sx,sy,doorpage);
 }

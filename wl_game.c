@@ -846,7 +846,26 @@ void SetupGameLevel (void)
             tile = *map++;
             if (tile >= DOORSTART && tile <= DOOREND)
             {
-               SpawnDoor(x,y,1-(tile%2),(tile-DOORSTART)/2);
+                // door
+                switch (tile)
+                {
+                case 90:
+                case 92:
+                case 94:
+                case 96:
+                case 98:
+                case 100:
+                    SpawnDoor(x, y, 1, (tile - 90) / 2);
+                    break;
+                case 91:
+                case 93:
+                case 95:
+                case 97:
+                case 99:
+                case 101:
+                    SpawnDoor(x, y, 0, (tile - 91) / 2);
+                    break;
+                }
             }
         }
     }
