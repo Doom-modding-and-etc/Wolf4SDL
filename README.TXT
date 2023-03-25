@@ -255,6 +255,7 @@ TODOs:
  - Support OpenBSD.
  - Add more features from: http://dhw.wolfenstein3d.com/viewtopic.php?t=6310
  - Port LWLIB to C
+ - Fix Nintendo Switch event movement
 
 Known bugs:
 -----------
