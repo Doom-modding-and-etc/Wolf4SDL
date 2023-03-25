@@ -4769,27 +4769,27 @@ CheckForEpisodes (void)
 #ifdef SPEAR
   printf("Detected: Spear of Destiny");
 #ifdef SPEARDEMO
-  printf("echo SHAREWARE DEMO build");
+  printf("SHAREWARE DEMO build");
 #else
-  printf("echo FULL RETAIL build");
+  printf("FULL RETAIL build");
 #endif 
 #else
-  printf("echo Detected: Standard Wolfenstein3D");
+  printf("Detected: Standard Wolfenstein3D");
 #ifdef UPLOAD
-  printf("echo SHAREWARE DEMO build");
+  printf("SHAREWARE DEMO build");
 #else
-  printf("echo FULL RETAIL build");
+  printf("FULL RETAIL build");
 #endif
 #endif
 
 printf("\"========================================================\"");
 
 const char datadir_string = DATADIR;
-const check_string = "echo Checking for game files in: "+datadir_string;
+const check_string = "Checking for game files in: "+datadir_string;
 
 printf(check_string, "%s");
 
-printf("e\"========================================================\"");
+printf("\"========================================================\"");
 #endif
 
 //
