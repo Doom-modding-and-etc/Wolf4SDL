@@ -9,16 +9,11 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
-#ifndef OLD_BOOL 
-#include <stdbool.h>
-#endif
 
 #include <SDL.h>
 
 #ifdef N3DS
 #include <3ds.h>
-#elif defined(_XBOX)
-#include <xtl.h>
 #endif
 #if defined(_arch_dreamcast)
 #include <kos.h>
@@ -29,9 +24,9 @@
 #	include <string.h>
 #	include <stdarg.h>
 #endif
-
+#ifndef N3DS
 #pragma pack(1)
-
+#endif
 #if defined(_arch_dreamcast)
 #define YESBUTTONNAME "A"
 #define NOBUTTONNAME  "B"
@@ -72,42 +67,48 @@
 #ifdef PS2
 #include "Platform/PS2/ps2_main.h"
 #endif
-#include "3rdparty/fixedptc.h"
-
 #ifdef _arch_dreamcast
-typedef uint8 uint8_t;
-typedef uint16 uint16_t;
-typedef uint32 uint32_t;
-typedef int8 int8_t;
-typedef int16 int16_t;
-typedef int32 int32_t;
-typedef int64 int64_t;
-typedef ptr_t uintptr_t;
+#include "Platform/dc/dc_main.h"
+#include "Platform/dc/dc_vmu.h"
+#endif
+#ifdef USE_HEADER
+#include <fixedptc.h>
+#else
+#include "3rdparty/fixedptc.h"	
 #endif
 
-#ifndef _WIN32
+#include "id_w3swrap.h"
+#if defined(_MSC_VER) && defined(__GNUC__)
+#ifdef X64_ARCH
+typedef unsigned long long uintptr_t;
+typedef unsigned int intptr_t;
+#else
+typedef long long uintptr_t;
+typedef int intptr_t;
+#endif
+#endif
+
+#ifdef HAVE_SIZE_T
+#ifdef X64_ARCH
+typedef unsigned long long size_t;
+#else
+typedef unsigned int size_t;
+#endif
+#endif
+
+#ifndef __GNUC__
+#ifdef OLD_MSVC
+typedef __int64 int64_t;
+#else
+typedef long long int64_t;
+#endif
+#endif
+
+#if !defined O_BINARY
 #define O_BINARY 0
 #endif
 
-#ifdef SEGA_SATURN
-typedef unsigned char byte;
-typedef unsigned short int word;
-#else
-#ifndef _XBOX
-typedef uint8_t byte;
-#endif
-typedef uint16_t word;
-#endif
 typedef fixedpt fixed;
-typedef uint32_t longword;
-
-#ifdef OLD_BOOL
-typedef enum
-{
-    false,
-    true
-} bool;
-#endif
 
 typedef struct
 {
@@ -137,43 +138,8 @@ void Quit(const char* errorStr, ...);
 #include "id_ca.h"
 #include "wl_menu.h"
 #include "wl_utils.h"
+#include "id_w3swrap.h"
 
-#ifdef LWLIB
-#include "lw_ai_enemy.h"
-#include "lw_bres.h"
-#include "lw_ctx.h"
-#include "lw_dict.h"
-#include "lw_edit.h"
-#include "lw_fs.h"
-#include "lw_img.h"
-#include "lw_intmap.h"
-#include "lw_maptool.h"
-#include "lw_misc.h"
-#include "lw_protmsg.h"
-#include "lw_pwscan.h"
-#include "lw_strmap.h"
-#include "lw_vec.h"
-#include "wl_ai.h"
-#include "wl_anyactor.h"
-#include "wl_ed.h"
-#include "wl_healthbar.h"
-#include "wl_led.h"
-#include "wl_math.h"
-#include "wl_physics.h"
-#include "wl_polygon.h"
-#endif
-
-#ifdef WOLFRAD
-#include "wolfrad.h"
-#include "wr_level.h"
-#include "wr_lightinfo.h"
-#include "wr_lightmap.h"
-#include "wr_rad.h"
-#include "wr_radmap.h"
-#include "wr_raycaster.h"
-#include "wr_room.h"
-#include "wr_scene.h"
-#endif
 
 /*
 =============================================================================
@@ -196,12 +162,10 @@ void Quit(const char* errorStr, ...);
 
 #define MAPSPOT(x,y,plane) (mapsegs[(plane)][((y) << MAPSHIFT) + (x)])
 
-#define SIGN(x)         ((x) > 0 ? 1 : -1)
-#define ABS(x)          ((int)(x) > 0 ? (x) : -(x))
-#define LABS(x)         ((int32_t)(x) > 0 ? (x) : -(x))
-
-#define abs(x)          ABS((x))
-
+#ifdef MATH
+#define abs(x)          ((int)(x) > 0 ? (x) : -(x))
+#define labs(x)         ((int)(x) > 0 ? (x) : -(x))
+#endif
 #define lengthof(x)     (sizeof((x)) / sizeof(*(x)))
 #define endof(x)        ((x) + lengthof((x)))
 
@@ -227,6 +191,8 @@ void Quit(const char* errorStr, ...);
 
 // the door is the last picture before the sprites
 #define DOORWALL        (PMSpriteStart - 8)
+#define DOORSTART       90          // WALL - first door code
+#define DOOREND         101         // WALL - last door code
 
 #define MAXACTORS       150         // max number of nazis, etc / map
 #define MAXSTATS        400         // max number of lamps, bonus, etc
@@ -234,13 +200,17 @@ void Quit(const char* errorStr, ...);
 #define MAXWALLTILES    70          // max number of wall tiles
 
 #ifdef SEGA_SATURN
-#define NB_WALL_HWRAM 50/2
+#ifndef SPEAR
+#define NB_WALL_HWRAM 25
+#else
+#define NB_WALL_HWRAM 27
+#endif
 #endif
 
 #if WALLSHIFT >= 7
-typedef uint16_t tiletype;
+typedef unsigned short tiletype;
 #else
-typedef uint8_t tiletype;
+typedef unsigned char tiletype;
 #endif
 
 //
@@ -280,10 +250,9 @@ typedef uint8_t tiletype;
 #define PLAYERSIZE      MINDIST         // player radius
 #define MINACTORDIST    0x10000l        // minimum dist from player center
                                         // to any actor center
-
-#undef M_PI
-#define PI              3.141592657
-#define M_PI PI
+#ifndef M_PI
+#define M_PI              3.141592657
+#endif
 #ifdef SPEARDEMO
 #define NUMDEMOS 1
 #else
@@ -307,6 +276,7 @@ typedef uint8_t tiletype;
 #define VANG360         (VANG90*4)
 
 #define MINDIST         0x5800l
+
 
 #define MAPSHIFT        6
 #define MAPSIZE         (1 << MAPSHIFT)
@@ -338,8 +308,8 @@ enum
 #define STARTAMMO       8
 
 #ifdef SEGA_SATURN
-typedef uint64_t mapbitmap[MAPSIZE];
-static inline bool getmapbit(mapbitmap m, int x, int y)
+typedef unsigned long long mapbitmap[MAPSIZE];
+static inline boolean getmapbit(mapbitmap m, int x, int y)
 {
     return (m[x] & (1ull << y)) != 0;
 }
@@ -747,7 +717,11 @@ enum
     SPR_MACHINEGUNATK4,
 
     SPR_CHAINREADY, SPR_CHAINATK1, SPR_CHAINATK2, SPR_CHAINATK3,
-    SPR_CHAINATK4
+    SPR_CHAINATK4,
+#ifdef COMPASS
+    SPR_DIR_N, SPR_DIR_NE, SPR_DIR_E, SPR_DIR_SE,      //Directions N-SE
+    SPR_DIR_S, SPR_DIR_SW, SPR_DIR_W, SPR_DIR_NW,      //Directions S-NW
+#endif
 };
 
 
@@ -774,7 +748,7 @@ typedef enum
     dr_lock2,
     dr_lock3,
     dr_lock4,
-    dr_elevator
+    dr_elevator,
 } door_t;
 
 typedef enum
@@ -892,7 +866,7 @@ typedef void (*statefunc) (void*);
 #if defined(SEGA_SATURN) && defined(EMBEDDED) 
 typedef struct statestruct
 {
-    bool	rotate;
+    boolean	rotate;
     int shapenum; /* a shapenum of -1 means get from ob->temp1 */
     int tictime;
     void (*think)(), (*action)();
@@ -901,7 +875,7 @@ typedef struct statestruct
 #else
 typedef struct statestruct
 {
-    bool rotate;
+    boolean rotate;
     short   shapenum;           // a shapenum of -1 means get from ob->temp1
     short   tictime;
     void    (*think) (void*), (*action) (void*);
@@ -916,14 +890,26 @@ typedef struct statestruct
 
 typedef struct statstruct
 {
-    byte      tilex, tiley;
+    unsigned char      tilex, tiley;
     short     shapenum;           // if shapenum == -1 the obj has been removed
-    byte* visspot;
-    uint32_t flags;
-    byte      itemnumber;
+    unsigned char* visspot;
+    unsigned int flags;
+    unsigned char      itemnumber;
+#ifdef PUSHOBJECT // Objects that can be pushed
+    unsigned char      pushable;
+#endif   
 } statobj_t;
 
+#ifdef PUSHOBJECT // Objects that can be pushed
+// Place this value on the floor below an item that you want to be pushable
+#define PUSHITEMMARKER    145   // Add this value to your mapdata defines - change value if required
 
+
+extern  void ResetFloorCode(int tilex, int tiley);
+// Arrays for quick checking locations on the map
+extern  char            dx4dir[4];
+extern  char            dy4dir[4];
+#endif
 //---------------------
 //
 // door actor structure
@@ -940,11 +926,14 @@ typedef enum
 
 typedef struct doorstruct
 {
-    byte     tilex, tiley;
-    bool  vertical;
-    byte     lock;
+    unsigned char     tilex, tiley;
+    boolean  vertical;
+    unsigned char     lock;
     doortype action;
     short    ticcount;
+#ifdef BLAKEDOORS
+    boolean doubledoor;
+#endif
 } doorobj_t;
 
 
@@ -966,22 +955,22 @@ typedef struct objstruct
     int		state; /* stateenum */
 #endif
 
-    uint32_t    flags;              // FL_SHOOTABLE, etc
+    unsigned int    flags;              // FL_SHOOTABLE, etc
 
-    int32_t     distance;           // if negative, wait for that door to open
+    int     distance;           // if negative, wait for that door to open
     dirtype     dir;
 
     fixed       x, y;
-    word        tilex, tiley;
-    byte        areanumber;
+    unsigned short        tilex, tiley;
+    unsigned char        areanumber;
 
     short       viewx;
-    word        viewheight;
+    unsigned short        viewheight;
     fixed       transx, transy;      // in global coord
 
     short       angle;
     short       hitpoints;
-    int32_t     speed;
+    int     speed;
 
     short       temp1, temp2, hidden;
     struct objstruct* next, * prev;
@@ -998,14 +987,22 @@ enum
     bt_readypistol,
     bt_readymachinegun,
     bt_readychaingun,
+#ifdef EXTRACONTROLS
+    bt_moveforward,
+    bt_movebackward,
+    bt_strafeleft,
+    bt_straferight,
+#endif
     bt_nextweapon,
     bt_prevweapon,
     bt_esc,
     bt_pause,
+#ifndef EXTRACONTROLS
     bt_strafeleft,
     bt_straferight,
     bt_moveforward,
     bt_movebackward,
+#endif
     bt_turnleft,
     bt_turnright,
     NUMBUTTONS
@@ -1040,7 +1037,7 @@ typedef struct
 {
     short       difficulty;
     short       mapon;
-    int32_t     oldscore, score, nextextra;
+    int     oldscore, score, nextextra;
     short       lives;
     short       health;
     short       ammo;
@@ -1052,9 +1049,15 @@ typedef struct
 
     short       episode, secretcount, treasurecount, killcount,
         secrettotal, treasuretotal, killtotal;
-    int32_t     TimeCount;
-    int32_t     killx, killy;
-    bool     victoryflag;            // set during victory animations
+    int     TimeCount;
+    int     killx, killy;
+    boolean     victoryflag;            // set during victory animations
+#ifdef MAPCONTROLPARTIME
+    float       partime;
+#endif
+#if defined(BOSS_MUSIC) && defined(VIEASM)
+    short       music;
+#endif
 } gametype;
 
 
@@ -1081,7 +1084,7 @@ typedef enum
 =============================================================================
 */
 
-#ifndef SEGA_SATURN //No config, no dir haha!
+#ifndef SEGA_SATURN
 extern  char     str[80];
 extern  char     configdir[256];
 extern  char     configname[13];
@@ -1089,7 +1092,7 @@ extern  char     configname[13];
 
 extern  fixed    focallength;
 #ifndef SEGA_SATURN
-extern  uint32_t screenofs;
+extern  unsigned int screenofs;
 #endif
 extern  int      viewscreenx, viewscreeny;
 extern  int      viewwidth;
@@ -1099,45 +1102,48 @@ extern  int      shootdelta;
 
 extern  int      dirangle[9];
 
-extern  bool  startgame,
+extern  boolean  startgame,
 #ifndef SEGA_SATURN                 
 loadedgame;
 #endif
 #ifdef  VIEASM
-extern byte soundvol, musicvol;
-extern bool reversestereo;
-extern bool allowwindow;
+extern unsigned char soundvol, musicvol;
+extern boolean reversestereo;
+extern boolean allowwindow;
 #endif
 extern  int      mouseadjustment;
 //
 // derived constants
 //
-extern  int32_t  heightnumerator;
+extern  int      heightnumerator;
 extern  fixed    scale;
 
 #ifndef SEGA_SATURN
 //
 // command line parameter variables
 //
-extern  bool  param_debugmode;
-extern  bool  param_nowait;
+extern  boolean  param_debugmode;
+extern  boolean  param_nowait;
 extern  int      param_difficulty;
 extern  int      param_tedlevel;
 extern  int      param_joystickindex;
 extern  int      param_joystickhat;
-extern  longword param_samplerate;
+extern  unsigned int param_samplerate;
 extern  int      param_audiobuffer;
 extern  int      param_mission;
-extern  bool  param_goodtimes;
-extern  bool  param_ignorenumchunks;
+extern  boolean  param_goodtimes;
+extern  boolean  param_ignorenumchunks;
 #endif
 
 void            NewGame(int difficulty, int episode);
-void            CalcProjection(int32_t focal);
+#ifdef MAPCONTROLLEDPLSETT
+void            ResetPlayer(void);
+#endif
+void            CalcProjection(int focal);
 void            NewViewSize(int width);
-bool         SetViewSize(unsigned width, unsigned height);
-bool         LoadTheGame(FILE* file, int x, int y);
-bool         SaveTheGame(FILE* file, int x, int y);
+boolean         SetViewSize(unsigned width, unsigned height);
+boolean         LoadTheGame(FILE* file, int x, int y);
+boolean         SaveTheGame(FILE* file, int x, int y);
 void            ShowViewSize(int width);
 void            ShutdownId(void);
 
@@ -1151,16 +1157,16 @@ void            ShutdownId(void);
 */
 
 extern  gametype    gamestate;
-extern  byte        bordercol;
+extern  unsigned char        bordercol;
 
 #ifndef SEGA_SATURN
 extern  char        demoname[13];
 #endif
 
 #ifdef SPEAR
-extern  int32_t     spearx, speary;
-extern  uint32_t    spearangle;
-extern  bool     spearflag;
+extern  int     spearx, speary;
+extern  unsigned int    spearangle;
+extern  boolean     spearflag;
 #endif
 
 
@@ -1171,7 +1177,7 @@ inline void DrawPlayBorder(void);
 #else
 void    DrawPlayBorder(void);
 #endif
-void    DrawStatusBorder(byte color);
+void    DrawStatusBorder(unsigned char color);
 void    DrawPlayScreen(void);
 void    DrawPlayBorderSides(void);
 #ifndef SEGA_SATURN
@@ -1190,7 +1196,7 @@ void    RecordDemo(void);
 #endif
 #define PlaySoundLocActor(s,ob)   PlaySoundLocGlobal(s,(ob)->x,(ob)->y)
 #ifndef SEGA_SATURN
-void    PlaySoundLocGlobal(word s, fixed gx, fixed gy);
+void    PlaySoundLocGlobal(unsigned short s, fixed gx, fixed gy);
 #endif
 void    UpdateSoundLoc(void);
 
@@ -1211,20 +1217,24 @@ void    UpdateSoundLoc(void);
 #define JOYSCALE    2
 
 #ifdef SPEAR
-extern  int32_t     funnyticount;           // FOR FUNNY BJ FACE
+extern  int     funnyticount;           // FOR FUNNY BJ FACE
 #endif
 
 extern  exit_t      playstate;
 
-extern  int         DebugOk;
+extern  boolean         DebugOk;
 
-extern  bool     madenoise;
+extern  boolean     madenoise;
+
+#ifdef COMPASS
+extern boolean compass;
+#endif
 
 extern  objtype     objlist[MAXACTORS];
 extern  objtype* newobj, * player, * objfreelist, * killerobj;
 
 extern  tiletype    tilemap[MAPSIZE][MAPSIZE];      // wall values only
-extern  bool        spotvis[MAPSIZE][MAPSIZE];
+extern  boolean        spotvis[MAPSIZE][MAPSIZE];
 #ifdef SEGA_SATURN
 extern  int         actorat[MAPSIZE][MAPSIZE];
 extern	unsigned	farmapylookup[MAPSIZE];
@@ -1235,15 +1245,22 @@ extern	objtype* neww;
 extern  objtype* actorat[MAPSIZE][MAPSIZE];
 #endif
 #ifdef REVEALMAP
-extern  bool        mapseen[MAPSIZE][MAPSIZE];
+extern  boolean        mapseen[MAPSIZE][MAPSIZE];
 #endif
+#ifdef HIGHLIGHTPUSHWALLS
 //todo saturn: noclip does not affect anything...
-extern  bool  singlestep, godmode, noclip, ammocheat, mapreveal;
+extern  boolean  singlestep, godmode, noclip, ammocheat, mapreveal, highlightmode;
+#else
+extern  boolean  singlestep, godmode, noclip, ammocheat, mapreveal;
+#endif
+#ifdef EXTRACONTROLS
+extern  int         controlstrafe;
+#endif
 #ifndef SEGA_SATURN
 extern  int  extravbls;
 #endif
-extern  word        mapwidth, mapheight;
-extern  uint32_t    tics;
+extern  unsigned short        mapwidth, mapheight;
+extern  unsigned int    tics;
 #ifndef SEGA_SATURN
 extern  int         lastgamemusicoffset;
 #endif
@@ -1256,14 +1273,17 @@ extern int gamecontrolstrafe;
 // control info
 //
 #ifndef SEGA_SATURN
-extern  bool     mouseenabled, joystickenabled;
+extern  boolean     mouseenabled, joystickenabled;
+#endif
+#ifdef EXTRACONTROLS
+extern  boolean     mousemoveenabled;
 #endif
 extern  int         dirscan[4];
 extern  int         buttonscan[NUMBUTTONS];
 #ifndef SEGA_SATURN
 extern  int         buttonmouse[4];
 extern  int         buttonjoy[32];
-extern  bool     buttonheld[NUMBUTTONS];
+extern  boolean     buttonheld[NUMBUTTONS];
 #endif
 extern  int         viewsize;
 
@@ -1271,10 +1291,10 @@ extern  int         viewsize;
 // current user input
 //
 extern  int         controlx, controly;              // range from -100 to 100
-extern  bool     buttonstate[NUMBUTTONS];
+extern  boolean     buttonstate[NUMBUTTONS];
 
-extern  bool     demorecord, demoplayback;
-extern  int8_t* demoptr, * lastdemoptr;
+extern  boolean     demorecord, demoplayback;
+extern  char* demoptr, * lastdemoptr;
 #ifndef SEGA_SATURN
 extern  void* demobuffer;
 #endif
@@ -1283,7 +1303,7 @@ extern  void* demobuffer;
 void    InitActorList(void);
 void    GetNewActor(void);
 void    PlayLoop(void);
-void    CenterWindow(word w, word h);
+void    CenterWindow(unsigned short w, unsigned short h);
 void    InitRedShifts(void);
 void    FinishPaletteShifts(void);
 void    RemoveObj(objtype* gone);
@@ -1291,6 +1311,10 @@ void    PollControls(void);
 int     StopMusic(void);
 void    StartMusic(void);
 void    ContinueMusic(int offs);
+#if defined(BOSS_MUSIC) && defined(VIEASM)
+void    ChangeGameMusic(int song);
+void    SetLevelMusic(void);
+#endif
 void    StartDamageFlash(int damage);
 void    StartBonusFlash(void);
 
@@ -1306,7 +1330,7 @@ void    StartBonusFlash(void);
 void IntroScreen(void);
 void PG13(void);
 void DrawHighScores(void);
-void CheckHighScore(int32_t score, word other);
+void CheckHighScore(int score, unsigned short other);
 void Victory(void);
 void LevelCompleted(void);
 void ClearSplitVWB(void);
@@ -1326,6 +1350,10 @@ int DebugKeys(void);
 void ViewMap(void);
 void PictureGrabber(void);
 
+#if defined(FIXEDLOGICRATE) && defined(LAGSIMULATOR)
+extern boolean lagging;
+#endif
+
 /*
 =============================================================================
 
@@ -1334,23 +1362,26 @@ void PictureGrabber(void);
 =============================================================================
 */
 
-extern  byte* vbuf;
+extern  unsigned char* vbuf;
 
-extern  int32_t lasttimecount;
-extern  int32_t frameon;
-extern  bool fizzlein, fpscounter;
+extern  int lasttimecount;
+extern  int frameon;
+extern  boolean fizzlein, fpscounter;
+#ifdef AUTOMAP
+extern boolean automap[MAPSIZE][MAPSIZE];
+#endif
 
 #if defined(USE_FLOORCEILINGTEX) || defined(USE_CLOUDSKY)
-extern  int16_t* spanstart;
+extern  short* spanstart;
 #endif
 #ifndef SEGA_SATURN
-extern  int16_t* wallheight;
+extern  short* wallheight;
 #endif
 //
 // math tables
 //
 extern  short* pixelangle;
-extern  int32_t finetangent[FINEANGLES / 4];
+extern  int finetangent[FINEANGLES / 4];
 extern  fixed   sintable[ANGLES + ANGLES / 4];
 extern  fixed* costable;
 
@@ -1361,17 +1392,23 @@ extern  fixed   viewx, viewy;                    // the focal point
 extern  fixed   viewsin, viewcos;
 
 extern  int     postx;
-extern  byte* postsource;
+extern  unsigned char* postsource;
 
 extern  short   midangle;
 
-extern  word    horizwall[MAXWALLTILES], vertwall[MAXWALLTILES];
-
-
+extern  unsigned short    horizwall[MAXWALLTILES], vertwall[MAXWALLTILES];
+//todo saturn:
+#ifdef SEGA_SATURN
+void ScalePost(int postx, int texture, byte* postsource, byte* tilemapaddr, ray_struc* ray);
+#else
 void    ScalePost(void);
+#endif
 void    ThreeDRefresh(void);
 void    CalcTics(void);
-
+#ifdef AUTOMAP
+void DrawAutomap(void);
+void DrawFullmap(void);
+#endif
 
 /*
 =============================================================================
@@ -1383,13 +1420,16 @@ void    CalcTics(void);
 
 typedef struct
 {
-    word leftpix, rightpix;
-    word dataofs[64];
+    unsigned short leftpix, rightpix;
+    unsigned short dataofs[64];
     // table data after dataofs[rightpix-leftpix+1]
 } compshape_t;
 
-
-void ScaleShape(int xcenter, int shapenum, int height, uint32_t flags);
+#ifdef USE_SHADING
+void ScaleShape(int xcenter, int shapenum, int height, unsigned int flags);
+#else
+void ScaleShape(int xcenter, int shapenum, int height);
+#endif
 void SimpleScaleShape(int xcenter, int shapenum, int height);
 #ifdef USE_DIR3DSPR
 void Transform3DShape(statobj_t* statptr);
@@ -1413,18 +1453,18 @@ void	NewState(objtype* ob, int state); /* stateenum */
 void    SpawnNewObj(unsigned tilex, unsigned tiley, statetype* state);
 void    NewState(objtype* ob, statetype* state);
 #endif
-bool TryWalk(objtype* ob);
+boolean TryWalk(objtype* ob);
 void    SelectChaseDir(objtype* ob);
 void    SelectDodgeDir(objtype* ob);
 void    SelectRunDir(objtype* ob);
-void    MoveObj(objtype* ob, int32_t move);
-bool SightPlayer(objtype* ob);
+void    MoveObj(objtype* ob, int move);
+boolean SightPlayer(objtype* ob);
 
 void    KillActor(objtype* ob);
 void    DamageActor(objtype* ob, unsigned damage);
 
-bool CheckLine(objtype* ob);
-bool CheckSight(objtype* ob);
+boolean CheckLine(objtype* ob);
+boolean CheckSight(objtype* ob);
 
 /*
 =============================================================================
@@ -1437,23 +1477,23 @@ bool CheckSight(objtype* ob);
 //
 // player state info
 //
-extern  int32_t  thrustspeed;
-extern  word     plux, pluy;         // player coordinates scaled to unsigned
+extern  int thrustspeed;
+extern  unsigned short     plux, pluy;         // player coordinates scaled to unsigned
 extern  objtype* LastAttacker;
 
 extern  short    anglefrac;
 extern  int      facecount, facetimes;
 
-void    Thrust(int angle, int32_t speed);
+void    Thrust(int angle, int speed);
 void    SpawnPlayer(int tilex, int tiley, int dir);
 void    TakeDamage(int points, objtype* attacker);
-void    GivePoints(int32_t points);
-void    GivePoints(int32_t points);
+void    GivePoints(int points);
+void    GivePoints(int points);
 void    GetBonus(statobj_t* check);
 void    GiveWeapon(int weapon);
 void    GiveAmmo(int ammo);
 void    GiveKey(int key);
-void    StatusDrawFace(uint32_t picnum);
+void    StatusDrawFace(unsigned int picnum);
 void    DrawFace(void);
 void    DrawHealth(void);
 void    HealSelf(int points);
@@ -1483,22 +1523,25 @@ extern  doorobj_t* lastdoorobj;
 extern  short       doornum;
 #endif
 
-extern  word      doorposition[MAXDOORS];
+#ifdef BLAKEDOORS
+extern  unsigned short      ldoorposition[MAXDOORS], rdoorposition[MAXDOORS];   // leading edge of door 0=closed
+#else
+extern  unsigned short      doorposition[MAXDOORS];
+#endif
+extern  unsigned char      areaconnect[NUMAREAS][NUMAREAS];
 
-extern  byte      areaconnect[NUMAREAS][NUMAREAS];
+extern  boolean   areabyplayer[NUMAREAS];
 
-extern  bool   areabyplayer[NUMAREAS];
-
-extern word     pwallstate;
-extern word     pwallpos;        // amount a pushable wall has been moved (0-63)
-extern word     pwallx, pwally;
-extern byte     pwalldir;
+extern unsigned short     pwallstate;
+extern unsigned short     pwallpos;        // amount a pushable wall has been moved (0-63)
+extern unsigned short     pwallx, pwally;
+extern unsigned char     pwalldir;
 extern tiletype pwalltile;
 
 void InitDoorList(void);
 void InitStaticList(void);
 void SpawnStatic(int tilex, int tiley, int type);
-void SpawnDoor(int tilex, int tiley, bool vertical, int lock);
+void SpawnDoor(int tilex, int tiley, boolean vertical, int lock);
 void MoveDoors(void);
 void MovePWalls(void);
 void OpenDoor(int door);
@@ -1613,8 +1656,12 @@ extern  char    helpfilename[], endfilename[];
 
 extern  void    HelpScreens(void);
 extern  void    EndText(void);
-
-
+#ifdef AUTOINTER
+extern  void    IntermissionScreens(void);
+#endif
+#ifdef LOGFILE
+extern  void    LogDiscScreens(char* choice);
+#endif
 /*
 =============================================================================
 
@@ -1664,7 +1711,7 @@ extern int ffDataTopLeft, ffDataTopRight, ffDataBottomLeft, ffDataBottomRight;
  *************************************************************/
 
  // The feature flags are stored as a wall in the upper right corner of each level
-static inline word GetFeatureFlags(void)
+static unsigned short GetFeatureFlags(void)
 {
     return ffDataTopRight;
 }
@@ -1672,7 +1719,7 @@ static inline word GetFeatureFlags(void)
 #endif
 
 #ifdef USE_FLOORCEILINGTEX
-extern byte* ceilingsource, * floorsource;
+extern unsigned char* ceilingsource, * floorsource;
 
 void DrawPlanes(void);
 #ifndef USE_MULTIFLATS
@@ -1682,6 +1729,21 @@ void GetFlatTextures(void);
 
 #ifdef USE_PARALLAX
 void DrawParallax(void);
+#endif
+#ifndef _MSC_VER
+#ifdef NOT_ANSI_C
+static char* itoa(int value, char* string, int radix)
+{
+    sprintf(string, "%d", value);
+    return string;
+}
+
+static char* ltoa(long value, char* string, int radix)
+{
+    sprintf(string, "%ld", value);
+    return string;
+}
+#endif
 #endif
 
 #endif

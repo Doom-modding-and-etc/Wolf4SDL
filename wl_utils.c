@@ -2,19 +2,16 @@
 
 #include "wl_utils.h"
 
-#ifndef N3DS
-#ifndef SWITCH
-
 /*
 ===================
 =
-= safe_malloc
+= wsafe_malloc
 =
 = Wrapper for malloc with a NULL check
 =
 ===================
 */
-void *safe_malloc (size_t size, const char *fname, uint32_t line)
+void *wsafe_malloc(size_t size, const char *fname, unsigned int line)
 {
     void *ptr;
 
@@ -25,9 +22,6 @@ void *safe_malloc (size_t size, const char *fname, uint32_t line)
 
     return ptr;
 }
-#endif
-#endif
-
 /*
 ===================
 =
@@ -71,9 +65,9 @@ fixed FixedDiv (fixed a, fixed b)
 =
 ===================
 */
-word READWORD (byte *ptr)
+unsigned short READWORD (unsigned char *ptr)
 {
-    word val = ptr[0] | ptr[1] << 8;
+    unsigned short val = ptr[0] | ptr[1] << 8;
 #ifdef SEGA_SATURN
     ptr += 2;
 #endif
@@ -89,9 +83,9 @@ word READWORD (byte *ptr)
 =
 ===================
 */
-longword READLONGWORD (byte *ptr)
+unsigned int READLONGWORD (unsigned char *ptr)
 {
-    longword val = ptr[0] | ptr[1] << 8 | ptr[2] << 16 | ptr[3] << 24;
+    unsigned int val = ptr[0] | ptr[1] << 8 | ptr[2] << 16 | ptr[3] << 24;
 
     return val;
 }
@@ -109,7 +103,7 @@ longword READLONGWORD (byte *ptr)
 short atan2fix(fixed x, fixed y)
 {
     boolean negative;
-    long long quot;
+    int64_t quot;
     fixed tang;
     int offset;
     int res;
@@ -132,7 +126,7 @@ short atan2fix(fixed x, fixed y)
         return negative ? 270 : 90;
     if (y == 0)
         return offset;
-    quot = ((long long)y << 32) / x;
+    quot = ((int64_t)y << 32) / x;
     tang = (fixed)quot;
     if (quot != tang) {
         /* Overflow.  */

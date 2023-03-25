@@ -23,7 +23,6 @@ Wolf4SDL v2.2
 - Update mac os build(x86 will be no longer supported).
 - Fix apogee on vieasm
 
-
 Wolf4SDL v2.1
 - Rework on boolean stuff
 - Change typedefs to more cleaner

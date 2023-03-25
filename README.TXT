@@ -17,7 +17,7 @@ https://discord.gg/YNTdx5dXF6
 Main features:
 --------------
  - Cross-platform:
-      Supported operating systems are at least:
+      Supported operating systems/consoles are at least:
        - Windows 98, Windows ME, Windows 2000, Windows XP(32 and 64 bit), Windows Vista(32 and 64 bit), Windows 7 (32 and 64 bit), Windows 8(32 and 64 bit) Windows 10 (32 and 64 bit) and Windows 11(64 Bits only)
        - Linux
        - BSD variants
@@ -25,12 +25,13 @@ Main features:
        - KallistiOS (used for Dreamcast)
        Only little endian platforms like x86, ARM and SH-4 are currently supported.
        - Nintendo Switch
-       - Nintendo 3DS(WIP On Makefile part)
+       - Nintendo 3DS
        - GP2X
        - Sega Saturn.
        - Sony Playstation 2
        - Xbox/Xbox 360(W.I.P)
-
+       - Hakchi 
+	   
  - AdLib sounds and music:
       This port includes the OPL2 emulator from MAME, so you can not only
       hear the AdLib sounds but also music without any AdLib-compatible
@@ -44,9 +45,9 @@ Main features:
       Aside from the original 320x200 resolution, Wolf4SDL currently
       supports any resolutions being multiples of 320x200 or 320x240,
       the default being 640x400.
-      Unlike some other ports, Wolf4SDL does NOT apply any bilinear
-      or similar filtering, so the graphics are NOT blurred but
-      pixelated just as we love it.
+      Wolf4SDL applies bilinear
+      or similar filtering using the crt and scaling feature(SDL2) through version.h, 
+      so you can feel the "vanilla moment", but if you want no filter just disable using version.h
 
  - Fully playable with only a game controller:
       Wolf4SDL can be played completely without a keyboard. At least two
@@ -56,10 +57,6 @@ Main features:
  - Toggle Screen Feature:
     Wolf4SDL can toggle into fullscreen if you press ALT+ENTER
  
- - Linux Wolf Library + WolfRad incorporation
-	Wolf4SDL Has Linux Wolf Library + WolfRad incorporated pure wip but still useful
-	for modding development
-	
 Additional features:
 --------------------
 
@@ -93,7 +90,7 @@ Additional features:
 
 The following versions of Wolfenstein 3D data files are currently supported
 by the source code (choose the version by commenting/uncommenting lines in
-version.h as described in that file):
+version.h as described on that file):
 
  - Wolfenstein 3D v1.1 full Apogee
  - Wolfenstein 3D v1.4 full Apogee
@@ -105,16 +102,16 @@ version.h as described in that file):
  - Wolfenstein 3D v1.4 shareware
  - Spear of Destiny full
  - Spear of Destiny demo
- - Spear of Destiny - Mission 2: Return to Danger (not tested)
- - Spear of Destiny - Mission 3: Ultimate Challenge (not tested)
+ - Spear of Destiny - Mission 2: Return to Danger 
+ - Spear of Destiny - Mission 3: Ultimate Challenge
 
 
 How to play:
 ------------
 
-To play Wolfenstein 3D with Wolf4SDL, you just have to copy the original data
+To play Wolfenstein 3D with Wolf4SDL, you must have to copy the original data
 files (e.g. *.WL6) into the same directory as the Wolf4SDL executable.
-Please make sure, that you use the correct version of the executable with the
+Please make sure, that you should use the correct version of the executable with the
 according data files version as the differences are hardcoded into the binary!
 
 SDL1.2:
@@ -139,10 +136,10 @@ https://github.com/wolfysdl/SDL-Archive/raw/main/SDL2-2.26.0-win32-x86.zip and d
 SDL2 2.26.0 64 bit Runtimes can be acquired at:
 https://github.com/wolfysdl/SDL-Archive/raw/main/SDL2-2.26.0-win32-x64.zip and download "SDL_mixer-2.26.0-win32-x64.zip"
 
-SDL2_mixer 2.0.4 32 bit Runtimes can be acquired at:
+SDL2_mixer 2.6.2 32 bit Runtimes can be acquired at:
 https://github.com/wolfysdl/SDL_mixer-archive/raw/main/SDL2_mixer-2.6.2-win32-x86.zip and download "SDL2_mixer-2.0.4-win32-x86.zip"
 
-SDL2_mixer 2.0.4 64 bit Runtimes can be acquired at:
+SDL2_mixer 2.6.2 64 bit Runtimes can be acquired at:
 https://github.com/wolfysdl/SDL_mixer-archive/raw/main/SDL2_mixer-2.6.2-win32-x64.zip and download "SDL2_mixer-2.0.4-win32-x64.zip"
 
 deprecated links:
@@ -207,18 +204,18 @@ The current version of the source code is available on GitHub at:
 The following ways of compiling the source code are supported:
  - Makefile for Linux, BSD variants, MinGW/MSYS, dreamcast(see README.dc), Nintendo Switch(See README.md), 
 Nintendo 3DS and Sony Playstation 2. see README-dc.txt for more details
- - Visual C++ (Wolf4SDL.VC2022.sln and Wolf4SDL.VC2022.vcproj) (see README-VC.txt)
+ - Visual C++ (Wolf4SDL.VC2022.sln (see README-VC.txt)
  - Special compiling for Dreamcast (see README-dc.txt)
  - Xcode (for Mac OS X, macosx/Wolf4SDL.xcodeproj/project.pbxproj)
  - Special compiling for GP2X (see README-GP2X.txt)
 
-- Deprecated:
+- Deprecated but updated:
  - Visual C++ 2008 (Wolf4SDL.VC9.sln and Wolf4SDL.VC9.vcproj)
  - Visual C++ 2005 (Wolf4SDL.sln and Wolf4SDL.vcproj)
  - Visual C++ 6 (Wolf4SDL.dsw and Wolf4SDL.dsp)
  - Code::Blocks 8.02 (Wolf4SDL.cbp)
  - Dev-C++ 5.0 Beta 9.2 (4.9.9.2) (Wolf4SDL.dev) (see README-devcpp.txt)
- - Visual C++ 2019 (Wolf4SDL.VC2019.sln and Wolf4SDL.VC2019.vcproj) (see README-VC.txt)
+ - Visual C++ 2019 (Wolf4SDL.VC2019.sln (see README-VC.txt)
  
 To compile the source code you need the development libraries of
  
@@ -253,17 +250,16 @@ IMPORTANT: Do not forget to take care of version.h!
 
 TODOs:
 ------
- - Add plataform readme.
- - Fix some versions of Wolfenstein 3d.
+ - Prepare SDL3 Support.
  - Support to sega saturn: wl_draw.c, wl_main.c and wl_menu.c
  - Support OpenBSD.
- 
+ - Add more features from: http://dhw.wolfenstein3d.com/viewtopic.php?t=6310
+ - Port LWLIB to C
+ - Fix Nintendo Switch event movement
 
 Known bugs:
 -----------
-Severe: Bug on the changed key controls keys like: w a s d or something on the Wolf3d part.
-Spear of destiny works file atleast.
-Keyboard on menu screen won´t work after cleanup the kbrd defs.
+ - None! ;D
 
 Troubleshooting:
 ----------------
@@ -292,6 +288,8 @@ Credits:
  - Thanks to Terraformer9x and Nexion for the advice and help for the Mixer sound problem
  - Thanks to Fabian greffrath for the patches on the code 
  - Thanks to keeganatorr for the Nintendo Switch support
+ - Thanks to Codetech84 for the tutorials about SDL and the fixed logic rate code.
+ - Thanks to AlumiuN for the code of HUD Automap and Vieasm(Aka: VODKA-INDUCED ENTERTAINMENT ADVANCED SOUND MANAGER)
  - Thanks to Fabian Sangalard for the awesoeme crt feature used on Chocolate Wolfenstein 3d. 
  - Thanks to vbt for the port of sega saturn
  - Thanks to WayneCa for upgrade the original Wolf
@@ -304,4 +302,4 @@ Licenses:
      - license-id.txt or
      - license-gpl.txt
  - The OPL2 emulator:
-     - license-mame.txt (fmopl.c)
+     - license-mame.txt

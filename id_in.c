@@ -20,11 +20,11 @@
 #include "wl_def.h"
 #ifndef SEGA_SATURN
 #if SDL_MAJOR_VERSION == 1
-#include <SDL_keysym.h>
+#include "SDL_keysym.h"
 #endif
 #endif
-#ifdef _arch_dreamcast
-#include <SDL_dreamcast.h>
+#ifdef HAKCHI
+#include <SDL_scancode.h>
 #endif
 #include "id_in.h"
 /*
@@ -40,19 +40,20 @@
 //
 // configuration variables
 //
-bool MousePresent;
-bool forcegrabmouse;
+boolean MousePresent;
+boolean forcegrabmouse;
 
-volatile bool KeyboardState[KEYCOUNT];
+volatile boolean KeyboardState[129];
+volatile int WheelPos=0;
 #endif
 
 // 	Global variables
-volatile bool	Paused;
+volatile boolean	Paused;
 volatile char		LastASCII;
 volatile ScanCode	LastScan;
 
 //KeyboardDef	KbdDefs = {0x1d,0x38,0x47,0x48,0x49,0x4b,0x4d,0x4f,0x50,0x51};
-KeyboardDef KbdDefs[] = {
+static KeyboardDef KbdDefs = {
     sc_Control,             // button0
     sc_Alt,                 // button1
     sc_Home,                // upleft
@@ -74,8 +75,8 @@ int GameControllerLeftStick[2];
 int GameControllerRightStick[2];
 SDL_GameController* GameController;
 #endif
-static bool GrabInput = false;
-bool fullscreen = true;
+static boolean GrabInput = false;
+boolean fullscreen = true;
 
 #ifndef SEGA_SATURN
 /*
@@ -83,7 +84,7 @@ bool fullscreen = true;
                     LOCAL VARIABLES
 =============================================================================
 */
-byte        ASCIINames[] =		// Unshifted ASCII for scan codes       // TODO: keypad
+unsigned char        ASCIINames[] =		// Unshifted ASCII for scan codes       // TODO: keypad
 {
     //	 0   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F
         0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,8  ,9  ,0  ,0  ,0  ,13 ,0  ,0  ,	// 0
@@ -95,7 +96,7 @@ byte        ASCIINames[] =		// Unshifted ASCII for scan codes       // TODO: key
         0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,	// 6
         0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0		// 7
 };
-byte ShiftNames[] =		// Shifted ASCII for scan codes
+unsigned char ShiftNames[] =		// Shifted ASCII for scan codes
 {
     //	 0   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F
         0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,8  ,9  ,0  ,0  ,0  ,13 ,0  ,0  ,	// 0
@@ -107,7 +108,7 @@ byte ShiftNames[] =		// Shifted ASCII for scan codes
         0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,	// 6
         0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0		// 7
 };
-byte SpecialNames[] =	// ASCII for 0xe0 prefixed codes
+unsigned char SpecialNames[] =	// ASCII for 0xe0 prefixed codes
 {
     //	 0   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F
         0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,	// 0
@@ -121,7 +122,7 @@ byte SpecialNames[] =	// ASCII for 0xe0 prefixed codes
 };
 #endif
 
-static	bool		IN_Started;
+static	boolean		IN_Started;
 
 static	Direction	DirTable[] =		// Quick lookup for total direction
 {
@@ -130,13 +131,13 @@ static	Direction	DirTable[] =		// Quick lookup for total direction
     dir_SouthWest,	dir_South,	dir_SouthEast
 };
 
-bool Keyboard(int key)
+boolean Keyboard(int key)
 {
     int keyIndex = KeyboardLookup(key);
     return keyIndex != UNKNOWN_KEY ? KeyboardState[keyIndex] : false;
 }
 
-void KeyboardSet(int key, bool state)
+void KeyboardSet(int key, boolean state)
 {
     int keyIndex = KeyboardLookup(key);
     if (keyIndex != UNKNOWN_KEY)
@@ -296,8 +297,8 @@ INL_GetMouseButtons(void)
     int middlePressed = buttons & SDL_BUTTON(SDL_BUTTON_MIDDLE);
     int rightPressed = buttons & SDL_BUTTON(SDL_BUTTON_RIGHT);
     buttons &= ~(SDL_BUTTON(SDL_BUTTON_MIDDLE) | SDL_BUTTON(SDL_BUTTON_RIGHT));
-    if(middlePressed) buttons |= 1 << 2;
-    if(rightPressed) buttons |= 1 << 1;
+    if (middlePressed) buttons |= 1 << 2;
+    if (rightPressed) buttons |= 1 << 1;
 
     return buttons;
 }
@@ -310,6 +311,8 @@ INL_GetMouseButtons(void)
 ///////////////////////////////////////////////////////////////////////////
 void IN_GetJoyDelta(int* dx, int* dy)
 {
+	int x;
+    int y;
     if (!Joystick)
     {
         *dx = *dy = 0;
@@ -318,16 +321,16 @@ void IN_GetJoyDelta(int* dx, int* dy)
 
     SDL_JoystickUpdate();
 #ifdef _arch_dreamcast
-    int x = 0;
-    int y = 0;
+    x = 0;
+    y = 0;
 #else
-    int x = SDL_JoystickGetAxis(Joystick, 0) >> 8;
-    int y = SDL_JoystickGetAxis(Joystick, 1) >> 8;
+    x = SDL_JoystickGetAxis(Joystick, 0) >> 8;
+    y = SDL_JoystickGetAxis(Joystick, 1) >> 8;
 #endif
 
     if (param_joystickhat != -1)
     {
-        uint8_t hatState = SDL_JoystickGetHat(Joystick, param_joystickhat);
+        unsigned char hatState = SDL_JoystickGetHat(Joystick, param_joystickhat);
         if (hatState & SDL_HAT_RIGHT)
             x += 127;
         else if (hatState & SDL_HAT_LEFT)
@@ -356,6 +359,7 @@ void IN_GetJoyDelta(int* dx, int* dy)
 ///////////////////////////////////////////////////////////////////////////
 void IN_GetJoyFineDelta(int* dx, int* dy)
 {
+	int x, y;
     if (!Joystick)
     {
         *dx = 0;
@@ -364,9 +368,19 @@ void IN_GetJoyFineDelta(int* dx, int* dy)
     }
 
     SDL_JoystickUpdate();
-    int x = SDL_JoystickGetAxis(Joystick, 0);
-    int y = SDL_JoystickGetAxis(Joystick, 1);
-
+    x = SDL_JoystickGetAxis(Joystick, 0);
+    y = SDL_JoystickGetAxis(Joystick, 1);
+#if defined(HAKCHI)
+    int bt=IN_JoyButtons();
+    if(bt & (1<<12))
+        x += 127;
+    else if(bt & (1<<11))
+        x -= 127;
+    if(bt & (1<<14))
+        y += 127;
+    else if(bt & (1<<13))
+        y -= 127;
+#endif
     if (x < -128) x = -128;
     else if (x > 127) x = 127;
 
@@ -388,24 +402,25 @@ void IN_GetJoyFineDelta(int* dx, int* dy)
 int IN_JoyButtons()
 {
     int i;
+	int res;
 
     if (!Joystick) return 0;
 
     SDL_JoystickUpdate();
 
-    int res = 0;
+    res = 0;
     for (i = 0; i < JoyNumButtons && i < 32; i++)
         res |= SDL_JoystickGetButton(Joystick, i) << i;
     return res;
 }
 
-bool IN_JoyPresent()
+boolean IN_JoyPresent()
 {
     return Joystick != NULL;
 }
 
 
-static bool ToggleFullScreenKeyShortcut(SDL_Keysym* sym)
+static boolean ToggleFullScreenKeyShortcut(SDL_Keysym* sym)
 {
 #if SDL_MAJOR_VERSION == 1
     Uint16 flags = KMOD_ALT;
@@ -426,7 +441,7 @@ static bool ToggleFullScreenKeyShortcut(SDL_Keysym* sym)
 
 static void I_ToggleFullScreen(void)
 {
-    uint32_t flags = NULL;
+    unsigned int flags;
     fullscreen = !fullscreen;
 
     if (fullscreen)
@@ -469,27 +484,44 @@ static void I_ToggleFullScreen(void)
 }
 #endif 
 
-static void processEvent(SDL_Event *event)
+static void processEvent(SDL_Event* event)
 {
+	SDL_Keymod mod;
+	int sym;
+	int intLastScan;
     switch (event->type)
     {
         // exit if the window is closed
     case SDL_QUIT:
         Quit(NULL);
 
+    case SDL_MOUSEBUTTONDOWN:
+    {
+        if (event->button.button == 4)
+        {
+            WheelPos++;
+        }
+
+        if (event->button.button == 5)
+        {
+            WheelPos--;
+        }
+    }
+    break;
+
         // check for keypresses
     case SDL_KEYDOWN:
     {
-            if (ToggleFullScreenKeyShortcut(&event->key.keysym))
-            {
-                I_ToggleFullScreen();
-                return;
-            }
+        if (ToggleFullScreenKeyShortcut(&event->key.keysym))
+        {
+            I_ToggleFullScreen();
+            return;
+        }
 
-            if(event->key.keysym.sym==SDLK_SCROLLLOCK || event->key.keysym.sym==SDLK_F12)
+        if (event->key.keysym.sym == SDLK_SCROLLLOCK || event->key.keysym.sym == SDLK_F12)
         {
 
-                GrabInput = fullscreen || !GrabInput;
+            GrabInput = fullscreen || !GrabInput;
 
 #if SDL_MAJOR_VERSION == 1
             SDL_WM_GrabInput(GrabInput ? SDL_GRAB_ON : SDL_GRAB_OFF);
@@ -500,7 +532,7 @@ static void processEvent(SDL_Event *event)
         }
 
         LastScan = event->key.keysym.sym;
-        SDL_Keymod mod = SDL_GetModState();
+        mod = SDL_GetModState();
         if (Keyboard(sc_Alt))
         {
             if (LastScan == SDLK_F4)
@@ -525,7 +557,7 @@ static void processEvent(SDL_Event *event)
             }
         }
 
-        int sym = LastScan;
+        sym = LastScan;
         if (sym >= 'a' && sym <= 'z')
             sym -= 32;  // convert to uppercase
 
@@ -540,7 +572,7 @@ static void processEvent(SDL_Event *event)
                 LastASCII = ASCIINames[sym];
         }
 
-        int intLastScan = LastScan;
+        intLastScan = LastScan;
         KeyboardSet(intLastScan, 1);
 
         if (LastScan == SDLK_PAUSE)
@@ -607,7 +639,7 @@ static void processEvent(SDL_Event *event)
     case SDL_CONTROLLERBUTTONUP:
         if (GameController)
         {
-            GameControllerButtons[event->cbutton.button] = (bool)event->cbutton.state == SDL_PRESSED;
+            GameControllerButtons[event->cbutton.button] = (boolean)event->cbutton.state == SDL_PRESSED;
         }
         break;
     case SDL_CONTROLLERAXISMOTION:
@@ -689,27 +721,27 @@ IN_Startup(void)
     IN_ClearKeysDown();
 
 #ifndef SEGA_SATURN
-    if(param_joystickindex >= 0 && param_joystickindex < SDL_NumJoysticks())
+    if (param_joystickindex >= 0 && param_joystickindex < SDL_NumJoysticks())
     {
 #if SDL_MAJOR_VERSION == 1        
         Joystick = SDL_JoystickOpen(param_joystickindex);
-        if(Joystick)
+        if (Joystick)
         {
             JoyNumButtons = SDL_JoystickNumButtons(Joystick);
-            if(JoyNumButtons > 32) JoyNumButtons = 32;      // only up to 32 buttons are supported
+            if (JoyNumButtons > 32) JoyNumButtons = 32;      // only up to 32 buttons are supported
             JoyNumHats = SDL_JoystickNumHats(Joystick);
-            if(param_joystickhat < -1 || param_joystickhat >= JoyNumHats)
+            if (param_joystickhat < -1 || param_joystickhat >= JoyNumHats)
                 Quit("The joystickhat param must be between 0 and %i!", JoyNumHats - 1);
         }
 #elif SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
         if (!SDL_IsGameController(param_joystickindex))
         {
-        Joystick = SDL_JoystickOpen(param_joystickindex);
+            Joystick = SDL_JoystickOpen(param_joystickindex);
             if (Joystick)
             {
                 JoyNumButtons = SDL_JoystickNumButtons(Joystick);
-                    if (JoyNumButtons > 32)
-                        JoyNumButtons = 32; // only up to 32 buttons are supported
+                if (JoyNumButtons > 32)
+                    JoyNumButtons = 32; // only up to 32 buttons are supported
                 JoyNumHats = SDL_JoystickNumHats(Joystick);
                 if (param_joystickhat < -1 || param_joystickhat >= JoyNumHats)
                     Quit("The joystickhat param must be between 0 and %i!", JoyNumHats - 1);
@@ -755,7 +787,7 @@ IN_Shutdown(void)
         return;
 
 #if SDL_MAJOR_VERSION == 1
-    if(Joystick)
+    if (Joystick)
         SDL_JoystickClose(Joystick);
 #elif SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
     if (GameController)
@@ -774,6 +806,9 @@ void
 IN_ClearKeysDown(void)
 {
     LastScan = sc_None;
+#ifndef SEGA_SATURN
+    LastASCII = key_None;
+#endif
     memset((void*)KeyboardState, 0, sizeof(KeyboardState));
 }
 
@@ -785,9 +820,9 @@ IN_ClearKeysDown(void)
 //
 ///////////////////////////////////////////////////////////////////////////
 void
-IN_ReadControl(int player, ControlInfo* info)
+IN_ReadControl(ControlInfo* info)
 {
-    word		buttons;
+    unsigned short		buttons;
     int			dx, dy;
     Motion		mx, my;
 
@@ -797,28 +832,28 @@ IN_ReadControl(int player, ControlInfo* info)
 
     IN_ProcessEvents();
 
-    if (Keyboard(upleft))
+    if (Keyboard(KbdDefs.upleft))
         mx = motion_Left, my = motion_Up;
-    else if (Keyboard(upright))
+    else if (Keyboard(KbdDefs.upright))
         mx = motion_Right, my = motion_Up;
-    else if (Keyboard(downleft))
+    else if (Keyboard(KbdDefs.downleft))
         mx = motion_Left, my = motion_Down;
-    else if (Keyboard(downright))
+    else if (Keyboard(KbdDefs.downright))
         mx = motion_Right, my = motion_Down;
 
-    if (Keyboard(up))
+    if (Keyboard(KbdDefs.up))
         my = motion_Up;
-    else if (Keyboard(down))
+    else if (Keyboard(KbdDefs.down))
         my = motion_Down;
 
-    if (Keyboard(left))
+    if (Keyboard(KbdDefs.left))
         mx = motion_Left;
-    else if (Keyboard(right))
+    else if (Keyboard(KbdDefs.right))
         mx = motion_Right;
 
-    if (Keyboard(button0))
+    if (Keyboard(KbdDefs.button0))
         buttons += 1 << 0;
-    if (Keyboard(button1))
+    if (Keyboard(KbdDefs.button1))
         buttons += 1 << 1;
 
 #if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
@@ -845,9 +880,12 @@ IN_ReadControl(int player, ControlInfo* info)
 
     if (GameControllerButtons[bt_Start] || GameControllerButtons[bt_A])
         buttons += 1 << 0;
-
+#ifdef XBOX
+	else if (GameControllerButtons[bt_A])
+#else
     else if (GameControllerButtons[bt_touchpad] || GameControllerButtons[bt_A])
-        buttons += 1 << 0;
+#endif
+		buttons += 1 << 0;
 
     if (GameControllerButtons[bt_Back] || GameControllerButtons[bt_B])
         buttons += 1 << 1;
@@ -909,12 +947,12 @@ IN_WaitForASCII(void)
 //
 ///////////////////////////////////////////////////////////////////////////
 
-bool	btnstate[NUMBUTTONS];
+boolean	btnstate[NUMBUTTONS];
 #endif
 void IN_StartAck(void)
 {
     int i;
-
+	int buttons;
     IN_ProcessEvents();
     //
     // get initial state of everything
@@ -922,12 +960,12 @@ void IN_StartAck(void)
     IN_ClearKeysDown();
 #ifndef SEGA_SATURN
 #if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
-    memset(GameControllerButtons, 0, sizeof(bool));
+    memset(GameControllerButtons, 0, sizeof(boolean));
 #endif
 
     memset(btnstate, 0, sizeof(btnstate));
 
-    int buttons = IN_JoyButtons() << 4;
+    buttons = IN_JoyButtons() << 4;
 
     if (MousePresent)
         buttons |= IN_MouseButtons();
@@ -939,27 +977,28 @@ void IN_StartAck(void)
 }
 
 
-bool IN_CheckAck(void)
+boolean IN_CheckAck(void)
 {
 #ifndef SEGA_SATURN
     int i;
 #endif
+	int buttons;
     IN_ProcessEvents();
     //
     // see if something has been pressed
     //
-	if(LastScan)
-		return true;
+    if (LastScan)
+        return true;
 #ifndef SEGA_SATURN
 #if SDL_MAJOR_VERSION == 2
-    for (int i = 0; i < bt_Max; i++)
+    for (i = 0; i < bt_Max; i++)
     {
         if (GameControllerButtons[i])
-        return true;
+            return true;
     }
 #endif
 
-    int buttons = IN_JoyButtons() << 4;
+    buttons = IN_JoyButtons() << 4;
 
     if (MousePresent)
         buttons |= IN_MouseButtons();
@@ -1010,9 +1049,9 @@ void IN_Ack(void)
 //		button up.
 //
 ///////////////////////////////////////////////////////////////////////////
-bool IN_UserInput(longword delay)
+boolean IN_UserInput(unsigned int delay)
 {
-    longword	lasttime;
+    unsigned int	lasttime;
 
     lasttime = GetTimeCount();
     IN_StartAck();
@@ -1043,7 +1082,7 @@ int IN_MouseButtons(void)
         return 0;
 }
 
-bool IN_IsInputGrabbed()
+boolean IN_IsInputGrabbed()
 {
     return GrabInput;
 }

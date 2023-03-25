@@ -20,8 +20,8 @@ extern TEXTURE tex_spr[SPR_NULLSPRITE + SATURN_WIDTH];
 unsigned char texture_list[SPR_NULLSPRITE];
 #endif
 
-void readChunks(Sint32 fileId, uint32_t size, uint32_t* pageOffsets, Uint8* Chunks, uint8_t* ptr);
-uint8_t* PM_DecodeSprites2(unsigned int start, unsigned int endi, uint32_t* pageOffsets, word* pageLengths, uint8_t* ptr, Sint32 fileId);
+void readChunks(Sint32 fileId, unsigned int size, unsigned int* pageOffsets, unsigned char* Chunks, unsigned char* ptr);
+unsigned char* PM_DecodeSprites2(unsigned int start, unsigned int endi, unsigned int* pageOffsets, word* pageLengths, unsigned char* ptr, int fileId);
 
 #undef atan2
 //#define atan2(a,b) slAtan(a,b)
@@ -41,14 +41,14 @@ uint8_t* PM_DecodeSprites2(unsigned int start, unsigned int endi, uint32_t* page
 =============================================================================
 */
 
-bool         ingame,fizzlein;
+boolean         ingame,fizzlein;
 gametype        gamestate;
-byte            bordercol=VIEWCOLOR;        // color of the Change View/Ingame border
+unsigned char            bordercol=VIEWCOLOR;        // color of the Change View/Ingame border
 
 #ifdef SPEAR
-int32_t        spearx,speary;
-uint32_t        spearangle;
-bool         spearflag;
+int             spearx,speary;
+unsigned int        spearangle;
+boolean         spearflag;
 #endif
 
 #ifdef USE_FEATUREFLAGS
@@ -63,7 +63,11 @@ int ElevatorBackTo[]={1,1,7,3,5,3};
 void SetupGameLevel (void);
 void DrawPlayScreen (void);
 void GameLoop (void);
-
+#ifdef PUSHOBJECT // Objects that can be pushed
+// Arrays for quick checking cardinal direction locations on the map
+char dx4dir[4] = { 0, 1, 0, -1 };  // dx & dy based on direction
+char dy4dir[4] = { -1, 0, 1,  0 };
+#endif
 /*
 =============================================================================
                              LOCAL VARIABLES
@@ -91,7 +95,7 @@ void GameLoop (void);
 
 int leftchannel, rightchannel;
 #define ATABLEMAX 15
-byte righttable[ATABLEMAX][ATABLEMAX * 2] = {
+unsigned char righttable[ATABLEMAX][ATABLEMAX * 2] = {
 { 8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 6, 0, 0, 0, 0, 0, 1, 3, 5, 8, 8, 8, 8, 8, 8, 8, 8},
 { 8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 6, 4, 0, 0, 0, 0, 0, 2, 4, 6, 8, 8, 8, 8, 8, 8, 8, 8},
 { 8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 6, 6, 4, 1, 0, 0, 0, 1, 2, 4, 6, 8, 8, 8, 8, 8, 8, 8, 8},
@@ -108,7 +112,7 @@ byte righttable[ATABLEMAX][ATABLEMAX * 2] = {
 { 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8},
 { 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8}
 };
-byte lefttable[ATABLEMAX][ATABLEMAX * 2] = {
+unsigned char lefttable[ATABLEMAX][ATABLEMAX * 2] = {
 { 8, 8, 8, 8, 8, 8, 8, 8, 5, 3, 1, 0, 0, 0, 0, 0, 6, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8},
 { 8, 8, 8, 8, 8, 8, 8, 8, 6, 4, 2, 0, 0, 0, 0, 0, 4, 6, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8},
 { 8, 8, 8, 8, 8, 8, 8, 8, 6, 4, 2, 1, 0, 0, 0, 1, 4, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8},
@@ -184,12 +188,13 @@ SetSoundLoc(fixed gx,fixed gy)
 =
 ==========================
 */
-void PlaySoundLocGlobal(word s,fixed gx,fixed gy)
+void PlaySoundLocGlobal(unsigned short s,fixed gx,fixed gy)
 {
+	int channel;
     SetSoundLoc(gx, gy);
     SD_PositionSound(leftchannel, rightchannel);
 
-    int channel = SD_PlaySound((soundnames) s);
+    channel = SD_PlaySound((soundnames) s);
     if(channel)
     {
         channelSoundPos[channel - 1].globalsoundx = gx;
@@ -241,11 +246,11 @@ static void ScanInfoPlane(void)
 {
     unsigned x,y;
     int      tile;
-    word     *start;
+    unsigned short *start;
 
 #ifdef SEGA_SATURN
     //-----------------------------------------------------------------------------------
-    uint8_t* itemmap = (uint8_t*)saturnChunk + 0x4000; // ne pas toucher
+    unsigned char* itemmap = (unsigned char*)saturnChunk + 0x4000; // ne pas toucher
     //-----------------------------------------------------------------------------------
 #endif
 
@@ -340,6 +345,14 @@ static void ScanInfoPlane(void)
 #endif
                         gamestate.secrettotal++;
                     break;
+#ifdef SEGA_SATURN
+#ifndef SPEAR
+                case 99:
+                    loaded += PRELOAD_ITEMS(SPR_DEATHCAM, SPR_DEATHCAM);
+                    loaded += PRELOAD_ITEMS(SPR_BJ_W1, SPR_BJ_JUMP4);
+                    break;
+#endif
+#endif
 
 //
 // guard
@@ -674,7 +687,7 @@ static void ScanInfoPlane(void)
 #ifdef SEGA_SATURN
 void VblIn(void);
 
-uint8_t* wallData = NULL;
+unsigned char* wallData = NULL;
 #endif
 
 /*
@@ -689,8 +702,8 @@ void SetupGameLevel (void)
 {
     int  x,y;
     int  mapnum;
-    word *map;
-    word tile;
+    unsigned short *map;
+    unsigned short  tile;
 
 #ifndef SEGA_SATURN
     if (!loadedgame)
@@ -704,6 +717,9 @@ void SetupGameLevel (void)
             = gamestate.killcount
             = gamestate.treasurecount
             = pwallstate = pwallpos = facetimes = 0;
+#if defined(BOSS_MUSIC) && defined(VIEASM)
+        SetLevelMusic();
+#endif
         LastAttacker = NULL;
         killerobj = NULL;
     }
@@ -744,6 +760,9 @@ void SetupGameLevel (void)
 #ifdef REVEALMAP
     memset (mapseen,0,sizeof(mapseen));
 #endif
+#ifdef AUTOMAP
+    memset(automap, 0, sizeof(automap));
+#endif
     map = mapsegs[0];
     for (y=0;y<mapheight;y++)
     {
@@ -753,7 +772,7 @@ void SetupGameLevel (void)
             if (tile<AREATILE)
             {
                 // solid wall
-                tilemap[x][y] = (byte) tile;
+                tilemap[x][y] = (unsigned char) tile;
                 actorat[x][y] = (objtype *)(uintptr_t) tile;
             }
             else
@@ -775,17 +794,17 @@ void SetupGameLevel (void)
 #if defined(SEGA_SATURN)
     char fname[13] = "VSWAP.";
     //	Uint32 i=0;
-    Uint8* Chunks;
+    unsigned char* Chunks;
     long fileSize;
 
     strcat(fname, extension);
 
     Sint32 fileId;
 
-    fileId = GFS_NameToId((Sint8*)fname);
+    fileId = GFS_NameToId((char*)fname);
     fileSize = GetFileSize(fileId);
 
-    Chunks = (Uint8*)saturnChunk;
+    Chunks = (unsigned char*)saturnChunk;
     GFS_Load(fileId, 0, (void*)Chunks, 0x2000);
     ChunksInFile = Chunks[0] | Chunks[1] << 8;
     PMSpriteStart = Chunks[2] | Chunks[3] << 8;
@@ -793,8 +812,8 @@ void SetupGameLevel (void)
     // vbt : on ne charge pas les sons !	
     ChunksInFile = Chunks[4] | Chunks[5] << 8;
 
-    uint32_t* pageOffsets = (uint32_t*)saturnChunk + 0x2000;
-    word* pageLengths = (word*)saturnChunk + (ChunksInFile + 1) * sizeof(int32_t);
+    unsigned int* pageOffsets = (unsigned int*)saturnChunk + 0x2000;
+    unsigned short* pageLengths = (unsigned short*)saturnChunk + (ChunksInFile + 1) * sizeof(int32_t);
 
     for (int i = 0; i < ChunksInFile; i++)
     {
@@ -815,7 +834,7 @@ void SetupGameLevel (void)
 
     pageOffsets[ChunksInFile] = fileSize;
 
-    uint8_t* itemmap = (uint8_t*)saturnChunk + 0x4000;
+    unsigned char* itemmap = (unsigned char*)saturnChunk + 0x4000;
     memset(itemmap, 0x00, 0x2000); // itemmap et itemmap communs, ne pas toucher � la taille du memset
 #endif
 
@@ -825,27 +844,27 @@ void SetupGameLevel (void)
         for (x=0;x<mapwidth;x++)
         {
             tile = *map++;
-            if (tile >= 90 && tile <= 101)
+            if (tile >= DOORSTART && tile <= DOOREND)
             {
                 // door
                 switch (tile)
                 {
-                    case 90:
-                    case 92:
-                    case 94:
-                    case 96:
-                    case 98:
-                    case 100:
-                        SpawnDoor (x,y,1,(tile-90)/2);
-                        break;
-                    case 91:
-                    case 93:
-                    case 95:
-                    case 97:
-                    case 99:
-                    case 101:
-                        SpawnDoor (x,y,0,(tile-91)/2);
-                        break;
+                case 90:
+                case 92:
+                case 94:
+                case 96:
+                case 98:
+                case 100:
+                    SpawnDoor(x, y, 1, (tile - 90) / 2);
+                    break;
+                case 91:
+                case 93:
+                case 95:
+                case 97:
+                case 99:
+                case 101:
+                    SpawnDoor(x, y, 0, (tile - 91) / 2);
+                    break;
                 }
             }
         }
@@ -946,8 +965,6 @@ void SetupGameLevel (void)
 */
 void DrawPlayBorderSides(void)
 {
-    if(viewsize == 21) return;
-
 	const int sw = screenWidth;
 	const int sh = screenHeight;
 	const int vw = viewwidth;
@@ -957,6 +974,8 @@ void DrawPlayBorderSides(void)
 	const int h  = sh - px * STATUSLINES;
 	const int xl = sw / 2 - vw / 2;
 	const int yl = (h - vh) / 2;
+
+    if(viewsize == 21) return;
 
     if(xl != 0)
     {
@@ -995,7 +1014,7 @@ void DrawPlayBorderSides(void)
 ===================
 */
 
-void DrawStatusBorder (byte color)
+void DrawStatusBorder (unsigned char color)
 {
 #ifndef SEGA_SATURN
     int statusborderw = (screenWidth-scaleFactor*320)/2;
@@ -1031,8 +1050,10 @@ void DrawStatusBorder (byte color)
 void DrawPlayBorder (void)
 {
 	const int px = scaleFactor; // size of one "pixel"
-
-    if (bordercol != VIEWCOLOR)
+	const int xl = screenWidth/2-viewwidth/2;
+    const int yl = (screenHeight-px*STATUSLINES-viewheight)/2;
+    
+	if (bordercol != VIEWCOLOR)
         DrawStatusBorder(bordercol);
     else
     {
@@ -1064,8 +1085,7 @@ void DrawPlayBorder (void)
 
     VWB_BarScaledCoord (0,0,screenWidth,screenHeight-px*STATUSLINES,bordercol);
 
-    const int xl = screenWidth/2-viewwidth/2;
-    const int yl = (screenHeight-px*STATUSLINES-viewheight)/2;
+
     VWB_BarScaledCoord (xl,yl,viewwidth,viewheight,0);
 
     if(xl != 0)
@@ -1130,7 +1150,7 @@ void DrawPlayScreen (void)
 void ShowActStatus()
 {
     // Draw status bar without borders
-    byte *source = grsegs[STATUSBARPIC];
+    unsigned char *source = grsegs[STATUSBARPIC];
     int	picnum = STATUSBARPIC - STARTPICS;
     int width = pictable[picnum].width;
     int height = pictable[picnum].height;
@@ -1170,7 +1190,7 @@ char    demoname[13] = "DEMO?.";
 void StartDemoRecord (int levelnumber)
 {
     demobuffer = SafeMalloc(MAXDEMOSIZE);
-    demoptr = (int8_t *) demobuffer;
+    demoptr = (char *) demobuffer;
     lastdemoptr = demoptr+MAXDEMOSIZE;
 
     *demoptr = levelnumber;
@@ -1189,15 +1209,15 @@ void StartDemoRecord (int levelnumber)
 
 void FinishDemoRecord (void)
 {
-    int32_t    length,level;
+    int        length,level;
 
     demorecord = false;
 
-    length = (int32_t) (demoptr - (int8_t *)demobuffer);
+    length = (int) (demoptr - (char *)demobuffer);
 
-    demoptr = ((int8_t *)demobuffer)+1;
-    demoptr[0] = (int8_t) length;
-    demoptr[1] = (int8_t) (length >> 8);
+    demoptr = ((char *)demobuffer)+1;
+    demoptr[0] = (char) length;
+    demoptr[1] = (char) (length >> 8);
     demoptr[2] = 0;
 
     VW_FadeIn();
@@ -1325,17 +1345,17 @@ void PlayDemo (int demonumber)
     int dems[NUMDEMOS]={T_DEMO0};
 #endif
 
-    demoptr = (int8_t *) grsegs[dems[demonumber]];
+    demoptr = (char *) grsegs[dems[demonumber]];
 #else
     demoname[4] = '0'+demonumber;
     CA_LoadFile (demoname,&demobuffer);
-    demoptr = (int8_t *)demobuffer;
+    demoptr = (char *)demobuffer;
 #endif
 
     NewGame (1,0);
     gamestate.mapon = *demoptr++;
     gamestate.difficulty = gd_hard;
-    length = READWORD((uint8_t *)demoptr);
+    length = READWORD((unsigned char *)demoptr);
     // TODO: Seems like the original demo format supports 16 MB demos
     //       But T_DEM00 and T_DEM01 of Wolf have a 0xd8 as third length size...
     demoptr += 3;
@@ -1379,7 +1399,7 @@ void PlayDemo (int demonumber)
 void Died (void)
 {
     float   fangle;
-    int32_t dx,dy;
+    int     dx,dy;
     int     iangle,curangle,clockwise,counter,change;
 
     if (screenfaded)
@@ -1505,6 +1525,9 @@ void Died (void)
         pwallstate = pwallpos = 0;
         gamestate.attackframe = gamestate.attackcount =
             gamestate.weaponframe = 0;
+#ifdef AUTOMAP
+        memset(automap, 0, sizeof(automap));
+#endif
 
         if(viewsize != 21)
         {
@@ -1534,7 +1557,7 @@ void heapWalk();
 
 void GameLoop (void)
 {
-    bool died;
+    boolean died;
 #ifdef MYPROFILE
     clock_t start,end;
 #endif
@@ -1552,6 +1575,11 @@ restartgame:
     ClearMemory ();
     SETFONTCOLOR(0,15);
     VW_FadeOut();
+#ifdef AUTOINTER
+    ClearMScreen();
+    IntermissionScreens(); // Intermission Text - Shown when starting new game
+    ClearMemory();
+#endif
     DrawPlayScreen ();
     died = false;
     do
@@ -1567,6 +1595,13 @@ restartgame:
         if (!loadedgame)
 #endif            
             SetupGameLevel ();
+#ifdef MAPCONTROLLEDPLSETT
+        if (!loadedgame) {
+            if (tilemap[63][0]) {
+                ResetPlayer();
+            }
+        }
+#endif
 
 #ifdef SPEAR
         if (gamestate.mapon == 20)      // give them the key allways
@@ -1574,6 +1609,23 @@ restartgame:
             gamestate.keys |= 1;
             DrawKeys ();
         }
+#endif
+#ifdef MAPCONTROLPARTIME
+        gamestate.partime = 2.0;
+        if (tilemap[61][0] >= 1 && tilemap[61][0] <= 20)
+        {
+            gamestate.partime = tilemap[62][0];
+            if (tilemap[62][0] >= 1 && tilemap[62][0] <= 3)
+            {
+                switch (tilemap[62][0])
+                {
+                case 1: gamestate.partime += .25; break;
+                case 2: gamestate.partime += .5; break;
+                case 3: gamestate.partime += .75; break;
+                }
+            }
+        }
+        gamestate.partime = (gamestate.partime * 4200) / 70;
 #endif
 
         DrawLevel ();                        // ADDEDFIX 5 -  Chris Chokan
@@ -1624,6 +1676,9 @@ startplayloop:
             player->angle = (short)spearangle;
             spearflag = false;
             Thrust (0,0);
+#ifdef AUTOMAP
+            memset(automap, 0, sizeof(automap));
+#endif
             goto startplayloop;
         }
 #endif
@@ -1643,6 +1698,9 @@ startplayloop:
             case ex_secretlevel:
                 if(viewsize == 21) DrawPlayScreen();
                 gamestate.keys = 0;
+#ifdef AUTOMAP
+                memset(automap, 0, sizeof(automap));
+#endif
                 DrawKeys ();
                 VW_FadeOut ();
 
@@ -1734,6 +1792,11 @@ startplayloop:
                         // GOING TO NEXT LEVEL
                         //
                         gamestate.mapon++;
+#ifdef AUTOINTER
+                IntermissionScreens(); // Intermission Screen If file exists
+                ClearMemory();
+                DrawPlayScreen();
+#endif
                 break;
 
             case ex_died:
@@ -1741,7 +1804,19 @@ startplayloop:
                 died = true;                    // don't "get psyched!"
 
                 if (gamestate.lives > -1)
+#ifdef AUTOINTER
+                {
+                    VW_FadeOut();
+                    ClearMScreen();
+                    ClearMemory();
+                    IntermissionScreens(); // Intermission Text
+                    ClearMemory();
+                    DrawPlayScreen();
+#endif
                     break;                          // more lives left
+#ifdef AUTOINTER
+                }
+#endif
 
                 VW_FadeOut ();
                 if(screenHeight % 200 != 0)

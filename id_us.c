@@ -22,20 +22,16 @@
 
 #include "wl_def.h"
 
-#if _MSC_VER == 1200            // Visual C++ 6
-	#define vsnprintf _vsnprintf
-#endif
-
 //	Global variables
-		word		PrintX,PrintY;
-		word		WindowX,WindowY,WindowW,WindowH;
+		unsigned short		PrintX,PrintY;
+		unsigned short		WindowX,WindowY,WindowW,WindowH;
 
 //	Internal variables
 #define	ConfigVersion	1
 
-static	bool		US_Started;
+static	boolean		US_Started;
 
-		void		(*USL_MeasureString)(const char *,word *,word *) = VW_MeasurePropString;
+		void		(*USL_MeasureString)(const char *, unsigned short *, unsigned short *) = VW_MeasurePropString;
 		void		(*USL_DrawString)(const char *) = VWB_DrawPropString;
 
 #ifndef SEGA_SATURN
@@ -54,7 +50,7 @@ static	bool		US_Started;
 
 int rndindex = 0;
 
-static byte rndtable[] = {
+static unsigned char rndtable[] = {
       0,   8, 109, 220, 222, 241, 149, 107,  75, 248, 254, 140,  16,  66,
 	 74,  21, 211,  47,  80, 242, 154,  27, 205, 128, 161,  89,  77,  36,
 	 95, 110,  85,  48, 212, 140, 211, 249,  22,  79, 200,  50,  28, 188,
@@ -120,7 +116,7 @@ US_Shutdown(void)
 //
 ///////////////////////////////////////////////////////////////////////////
 void
-US_SetPrintRoutines(void (*measure)(const char *,word *,word *),
+US_SetPrintRoutines(void (*measure)(const char *, unsigned short *, unsigned short *),
     void (*print)(const char *))
 {
 	USL_MeasureString = measure;
@@ -138,10 +134,10 @@ void
 US_Print(const char *sorg)
 {
 	char c;
-	char *sstart = strdup(sorg);
+	char *sstart = w3sstrdup(sorg);
 	char *s = sstart;
 	char *se;
-	word w,h;
+	unsigned short w,h;
 
 	while (*s)
 	{
@@ -179,10 +175,10 @@ US_Print(const char *sorg)
 //
 ///////////////////////////////////////////////////////////////////////////
 void
-US_PrintUnsigned(longword n)
+US_PrintUnsigned(unsigned int n)
 {
 	char	buffer[32];
-	sprintf(buffer, "%lu", n);
+	sprintf(buffer, "%u", n);
 
 	US_Print(buffer);
 }
@@ -193,11 +189,14 @@ US_PrintUnsigned(longword n)
 //
 ///////////////////////////////////////////////////////////////////////////
 void
-US_PrintSigned(int32_t n)
+US_PrintSigned(int n)
 {
 	char	buffer[32];
-
-	US_Print(ltoa(n,buffer,10));
+#ifdef NOT_ANSI_C
+	US_Print(w3sltoa(n,buffer,10));
+#else
+	US_Print((const char*)sprintf(buffer, "%ld", n));
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -208,7 +207,7 @@ US_PrintSigned(int32_t n)
 void
 USL_PrintInCenter(const char *s,Rect r)
 {
-	word	w,h,
+	unsigned short	w,h,
 			rw,rh;
 
 	USL_MeasureString(s,&w,&h);
@@ -248,7 +247,7 @@ US_PrintCentered(const char *s)
 void
 US_CPrintLine(const char *s)
 {
-	word	w,h;
+	unsigned short	w,h;
 
 	USL_MeasureString(s,&w,&h);
 
@@ -270,7 +269,7 @@ void
 US_CPrint(const char *sorg)
 {
 	char	c;
-	char *sstart = strdup(sorg);
+	char *sstart = w3sstrdup(sorg);
 	char *s = sstart;
 	char *se;
 
@@ -307,8 +306,9 @@ void US_Printf(const char *formatStr, ...)
 {
     char strbuf[256];
     va_list vlist;
+	int len;
     va_start(vlist, formatStr);
-    int len = vsnprintf(strbuf, sizeof(strbuf), formatStr, vlist);
+    len = w3svsnprintf(strbuf, sizeof(strbuf), formatStr, vlist);
     va_end(vlist);
     if(len <= -1 || len >= sizeof(strbuf))
         strbuf[sizeof(strbuf) - 1] = 0;
@@ -326,8 +326,9 @@ void US_CPrintf(const char *formatStr, ...)
 {
     char strbuf[256];
     va_list vlist;
+	int len;
     va_start(vlist, formatStr);
-    int len = vsnprintf(strbuf, sizeof(strbuf), formatStr, vlist);
+    len = w3svsnprintf(strbuf, sizeof(strbuf), formatStr, vlist);
     va_end(vlist);
     if(len <= -1 || len >= sizeof(strbuf))
         strbuf[sizeof(strbuf) - 1] = 0;
@@ -355,9 +356,9 @@ US_ClearWindow(void)
 //
 ///////////////////////////////////////////////////////////////////////////
 void
-US_DrawWindow(word x,word y,word w,word h)
+US_DrawWindow(unsigned short x, unsigned short y, unsigned short w, unsigned short h)
 {
-	word	i,
+	unsigned short	i,
 			sx,sy,sw,sh;
 
 	WindowX = x * 8;
@@ -391,7 +392,7 @@ US_DrawWindow(word x,word y,word w,word h)
 //
 ///////////////////////////////////////////////////////////////////////////
 void
-US_CenterWindow(word w,word h)
+US_CenterWindow(unsigned short w, unsigned short h)
 {
 	US_DrawWindow(((MaxX / 8) - w) / 2,((MaxY / 8) - h) / 2,w,h);
 }
@@ -440,12 +441,12 @@ US_RestoreWindow(WindowRec *win)
 //
 ///////////////////////////////////////////////////////////////////////////
 static void
-USL_XORICursor(int x,int y,const char *s,word cursor)
+USL_XORICursor(int x,int y,const char *s, unsigned short cursor)
 {
-	static	bool	status;		// VGA doesn't XOR...
+	static	boolean	status;		// VGA doesn't XOR...
 	char	buf[MaxString];
 	int		temp;
-	word	w,h;
+	unsigned short	w,h;
 
 	strcpy(buf,s);
 	buf[cursor] = '\0';
@@ -492,21 +493,21 @@ char USL_RotateChar(char ch, int dir)
 //		returned
 //
 ///////////////////////////////////////////////////////////////////////////
-bool
-US_LineInput(int x,int y,char *buf,const char *def,bool escok,
+boolean
+US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 				int maxchars,int maxwidth)
 {
-	bool		redraw,
+	boolean		redraw,
 				cursorvis,cursormoved,
 				done,result, checkkey;
 	ScanCode	sc;
 	char		c;
 	char		s[MaxString],olds[MaxString];
 	int         cursor,len;
-	word		i,
+	unsigned short		i,
 				w,h,
 				temp;
-	longword	curtime, lasttime, lastdirtime, lastbuttontime, lastdirmovetime;
+	unsigned int	curtime, lasttime, lastdirtime, lastbuttontime, lastdirmovetime;
 	ControlInfo ci;
 	Direction   lastdir = dir_None;
 
@@ -728,7 +729,7 @@ US_LineInput(int x,int y,char *buf,const char *def,bool escok,
 			temp = fontcolor;
 			fontcolor = backcolor;
 			USL_DrawString(olds);
-			fontcolor = (byte) temp;
+			fontcolor = (unsigned char) temp;
 			strcpy(olds,s);
 
 			px = x;

@@ -17,7 +17,7 @@ typedef struct
 {
     short      picnum;
     wl_stat_t  type;
-    uint32_t   specialFlags;    // they are ORed to the statobj_t flags
+    unsigned int   specialFlags;    // they are ORed to the statobj_t flags
 } statinfo_t;
 
 statinfo_t statinfo[] =
@@ -193,6 +193,13 @@ void SpawnStatic (int tilex, int tiley, int type)
             laststatobj->flags = FL_BONUS;
             break;
     }
+#ifdef PUSHOBJECT // Pushable Static Object Item
+    if (MAPSPOT(tilex, tiley, 0) == PUSHITEMMARKER)
+    {
+        laststatobj->pushable = 1;     // Make Item Pushable or True
+        ResetFloorCode(tilex, tiley);  // Reset the Floor code to a valid Floor code value
+    }
+#endif
 
     laststatobj->flags |= statinfo[type].specialFlags;
 
@@ -202,6 +209,22 @@ void SpawnStatic (int tilex, int tiley, int type)
         Quit ("Too many static objects!\n");
 }
 
+#ifdef PUSHOBJECT // Objects that can be pushed
+/* ============ Reset Floor Code ================ */
+// Replace Any Map Modifier Code with a valid Floor Code Value
+void ResetFloorCode(int tilex, int tiley)
+{
+    int x, y;
+    for (x = di_north; x <= di_west; x++)
+    {
+        y = MAPSPOT(tilex + dx4dir[x], tiley + dy4dir[x], 0);
+        if (y >= AREATILE && y <= (AREATILE + NUMAREAS - 1))
+        {
+            MAPSPOT(tilex, tiley, 0) = y; return;
+        }
+    }
+}
+#endif
 
 /*
 ===============
@@ -283,12 +306,18 @@ Every time a door opens or closes the areabyplayer matrix gets recalculated.
 doorobj_t       doorobjlist[MAXDOORS],*lastdoorobj;
 short           doornum;
 
-word            doorposition[MAXDOORS];             // leading edge of door 0=closed
+#ifdef BLAKEDOORS
+unsigned short      ldoorposition[MAXDOORS], rdoorposition[MAXDOORS];   // leading edge of door 0=closed
+#else
+unsigned short            doorposition[MAXDOORS];             // leading edge of door 0=closed
+#endif
+
                                                     // 0xffff = fully open
 
-byte            areaconnect[NUMAREAS][NUMAREAS];
+unsigned char            areaconnect[NUMAREAS][NUMAREAS];
 
-bool         areabyplayer[NUMAREAS];
+boolean         areabyplayer[NUMAREAS];
+
 
 
 /*
@@ -359,7 +388,7 @@ void InitDoorList (void)
 ===============
 */
 #if defined(EMBEDDED) && defined(SEGA_SATURN)
-void SpawnDoor (int tilex, int tiley, bool vertical, int lock)
+void SpawnDoor (int tilex, int tiley, boolean vertical, int lock)
 {
     word *map;
 
@@ -477,14 +506,38 @@ void CloseDoor(int door)
 }
 
 #else
-void SpawnDoor(int tilex, int tiley, bool vertical, int lock)
+void SpawnDoor(int tilex, int tiley, boolean vertical, int lock)
 {
-    word* map;
+    unsigned short* map;
 
     if (doornum == MAXDOORS)
         Quit("64+ doors on level!");
-
+#ifndef BLAKEDOORS
     doorposition[doornum] = 0;              // doors start out fully closed
+#endif
+
+#ifdef BLAKEDOORS
+    switch (MAPSPOT(tilex, tiley, 0))
+    {
+    case 90:
+    case 91:
+        lastdoorobj->doubledoor = true;
+        break;
+    default:
+        lastdoorobj->doubledoor = false;
+    }
+    if (lastdoorobj->doubledoor)
+    {
+        ldoorposition[doornum] = 0x7fff;      // doors start out fully closed
+        rdoorposition[doornum] = 0x8000;
+    }
+    else
+    {
+        ldoorposition[doornum] = 0;      // doors start out fully closed
+        rdoorposition[doornum] = 0; // this will function like the original doorposition[]
+    }
+#endif
+
     lastdoorobj->tilex = tilex;
     lastdoorobj->tiley = tiley;
     lastdoorobj->vertical = vertical;
@@ -640,7 +693,15 @@ void OperateDoor (int door)
     {
         if ( ! (gamestate.keys & (1 << (lock-dr_lock1) ) ) )
         {
-            if(doorposition[door]==0)SD_PlaySound (NOWAYSND);  // ADDEDFIX 9       // locked
+#ifdef BLAKEDOORS         
+            if (ldoorposition[door] == 0)
+                SD_PlaySound(NOWAYSND);
+            if(rdoorposition[door] == 0)
+                SD_PlaySound(NOWAYSND);
+#else
+            if(doorposition[door]==0)
+                SD_PlaySound(NOWAYSND);  // ADDEDFIX 9       // locked
+#endif
             return;
         }
     }
@@ -690,10 +751,17 @@ void DoorOpen (int door)
 void DoorOpening (int door)
 {
     unsigned area1,area2;
-    word *map;
-    int32_t position;
+    unsigned short *map;
+    int position;
 
+#ifdef BLAKEDOORS
+    if (doorobjlist[door].doubledoor)
+        position = 0x7fff - ldoorposition[door];
+    else
+        position = rdoorposition[door];
+#else
     position = doorposition[door];
+#endif
     if (!position)
     {
         //
@@ -730,6 +798,26 @@ void DoorOpening (int door)
     //
     // slide the door by an adaptive amount
     //
+#ifdef BLAKEDOORS
+    if (doorobjlist[door].doubledoor)
+    {
+        position += (tics << 10) / 2;
+        if (position >= 0x7fff)
+        {
+            //
+            // door is all the way open
+            //
+            position = 0x7fff;
+            doorobjlist[door].ticcount = 0;
+            doorobjlist[door].action = dr_open;
+            actorat[doorobjlist[door].tilex][doorobjlist[door].tiley] = 0;
+        }
+        ldoorposition[door] = 0x7fff - position;
+        rdoorposition[door] = 0x8000 + position;
+    }
+    else
+    {
+#endif
     position += tics<<10;
     if (position >= 0xffff)
     {
@@ -746,7 +834,13 @@ void DoorOpening (int door)
 #endif
     }
 
-    doorposition[door] = (word) position;
+#ifndef BLAKEDOORS
+    doorposition[door] = (unsigned short)position;
+#else
+    ldoorposition[door] = 0;
+    rdoorposition[door] = position;
+    }
+#endif
 }
 
 
@@ -761,8 +855,8 @@ void DoorOpening (int door)
 void DoorClosing (int door)
 {
     unsigned area1,area2;
-    word *map;
-    int32_t position;
+    unsigned short *map;
+    int position;
     int tilex,tiley;
 
     tilex = doorobjlist[door].tilex;
@@ -780,12 +874,27 @@ void DoorClosing (int door)
         return;
     };
 
+#ifndef BLAKEDOORS
     position = doorposition[door];
 
     //
     // slide the door by an adaptive amount
     //
-    position -= tics<<10;
+    position -= tics << 10;
+#else
+    if (doorobjlist[door].doubledoor)
+    {
+        position = 0x7fff - ldoorposition[door];
+        // slide the door by an adaptive amount
+        position -= (tics << 10) / 2;
+    }
+    else
+    {
+        position = rdoorposition[door];
+        // slide the door by an adaptive amount
+        position -= (tics << 10);
+    }
+#endif
     if (position <= 0)
     {
         //
@@ -820,7 +929,20 @@ void DoorClosing (int door)
         }
     }
 
-    doorposition[door] = (word) position;
+#ifndef BLAKEDOORS
+    doorposition[door] = (unsigned short)position;
+#else
+    if (doorobjlist[door].doubledoor)
+    {
+        ldoorposition[door] = 0x7fff - position;
+        rdoorposition[door] = 0x8000 + position;
+    }
+    else
+    {
+        ldoorposition[door] = 0;
+        rdoorposition[door] = position;
+    }
+#endif
 }
 
 
@@ -869,10 +991,10 @@ void MoveDoors (void)
 =============================================================================
 */
 
-word pwallstate;
-word pwallpos;                  // amount a pushable wall has been moved (0-63)
-word pwallx,pwally;
-byte pwalldir;
+unsigned short pwallstate;
+unsigned short pwallpos;                  // amount a pushable wall has been moved (0-63)
+unsigned short pwallx,pwally;
+unsigned char pwalldir;
 tiletype pwalltile;
 int dirs[4][2]={{0,-1},{1,0},{0,1},{-1,0}};
 
@@ -1045,10 +1167,11 @@ void MovePWalls (void)
 
     oldblock = pwallstate/128;
 
-    pwallstate += (word)tics;
+    pwallstate += (unsigned short)tics;
 
     if (pwallstate/128 != oldblock)
     {
+		int dx, dy;
         // block crossed into a new block
         oldtile = pwalltile;
 
@@ -1059,7 +1182,9 @@ void MovePWalls (void)
         actorat[pwallx][pwally] = 0;
         MAPSPOT(pwallx,pwally,0) = player->areanumber+AREATILE;    // TODO: this is unnecessary, and makes a mess of mapsegs
 
-        int dx=dirs[pwalldir][0], dy=dirs[pwalldir][1];
+        dx=dirs[pwalldir][0];
+		dy=dirs[pwalldir][1];
+
         //
         // see if it should be pushed farther
         //

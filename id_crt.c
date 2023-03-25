@@ -1,6 +1,6 @@
 // File: id_crt.c
 // Project: Wolf4SDL
-// Author: André Guilherme
+// Author: Andrï¿½ Guilherme
 // Creation date: 2022-07-11 
 // Description: 
 // This file fixes the crt bug
@@ -18,16 +18,16 @@
 static int width;
 static int height;
 
-uint8_t coloredFrameBuffer[320 * 200 * 3];
+unsigned char coloredFrameBuffer[320 * 200 * 3];
 
 #if SDL_MAJOR_VERSION == 1
-GLuint crtTexture;
+unsigned int crtTexture;
 #endif
 
 void CRT_Init(int _width) 
 {
     width = _width;
-    height = _width * 3.0 / 4.0;
+    height = _width * 3 / 4;
 
 #if SDL_MAJOR_VERSION == 1  
     //Alloc the OpenGL texture where the screen will be uploaded each frame.
@@ -83,12 +83,13 @@ void CRT_DAC(void)
 #if SDL_MAJOR_VERSION == 1
     // Grab the screen framebuffer from SDL
     SDL_Surface* screen = screenBuffer;
-
+    int i;
     //Convert palette based framebuffer to RGB for OpenGL
-    byte* pixelPointer = coloredFrameBuffer;
-    for (int i = 0; i < 320 * 200; i++) {
-        uint8_t paletteIndex;
-        paletteIndex = ((byte*)screen->pixels)[i];
+    unsigned char* pixelPointer = coloredFrameBuffer;
+    
+    for (i = 0; i < 320 * 200; i++) {
+        unsigned char paletteIndex;
+        paletteIndex = ((unsigned char*)screen->pixels)[i];
         *pixelPointer++ = curpal[paletteIndex].r;
         *pixelPointer++ = curpal[paletteIndex].g;
         *pixelPointer++ = curpal[paletteIndex].b;

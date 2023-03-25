@@ -104,11 +104,22 @@
 #endif
 #define CTL_W   284
 #define CTL_H   60
-
+#ifdef SAVE_GAME_SCREENSHOT
+#define LSM_X   10
+#else
 #define LSM_X   85
+#endif
 #define LSM_Y   55
 #define LSM_W   175
 #define LSM_H   10*13+10
+
+#ifdef SAVE_GAME_SCREENSHOT
+#define LSP_X   184
+#define LSP_Y   80
+#define LSP_W   128
+#define LSP_H   80
+#define BMP_SAVE "savegam?.svg"
+#endif
 
 #ifdef SEGA_SATURN
 #define NM_X    50 + SATURN_ADJUST
@@ -144,7 +155,7 @@ typedef struct {
 typedef struct {
                 short active;
                 char string[36];
-                int (* routine)(int temp1);
+                int (* routine)();
                 } CP_itemtype;
 
 typedef struct {
@@ -181,7 +192,6 @@ int  Confirm(const char *string);
 void Message(const char *string);
 void CheckPause(void);
 void ShootSnd(void);
-void CheckSecretMissions(void);
 void BossKey(void);
 
 void DrawGun(CP_iteminfo *item_i,CP_itemtype *items,int x,int *y,int which,int basey,void (*routine)(int w));
@@ -194,10 +204,13 @@ void DefineMouseBtns(void);
 void DefineJoyBtns(void);
 void DefineKeyBtns(void);
 void DefineKeyMove(void);
+#ifdef EXTRACONTROLS
+void DefineKeyExtra(void);
+#endif
 void EnterCtrlData(int index,CustomCtrls *cust,void (*DrawRtn)(int),void (*PrintRtn)(int),int type);
 
 #ifdef VIEASM
-extern void DrawSoundVols(bool curmode);
+extern void DrawSoundVols(boolean curmode);
 extern int AdjustVolume(int);
 #endif
 void DrawMainMenu(void);
@@ -214,39 +227,47 @@ void DrawCustMouse(int hilight);
 void DrawCustJoy(int hilight);
 void DrawCustKeybd(int hilight);
 void DrawCustKeys(int hilight);
+#ifdef EXTRACONTROLS
+void DrawCustExtra(int hilight);
+
+void PrintCustExtra(int i);
+#endif // EXTRACONTROLS
 void PrintCustMouse(int i);
 void PrintCustJoy(int i);
 void PrintCustKeybd(int i);
 void PrintCustKeys(int i);
+
 
 void PrintLSEntry(int w,int color);
 void TrackWhichGame(int w);
 void DrawNewGameDiff(int w);
 void FixupCustom(int w);
 
-int CP_NewGame(int);
-int CP_Sound(int);
+int CP_NewGame();
+int CP_Sound();
 int  CP_LoadGame(int quick);
 int  CP_SaveGame(int quick);
-int CP_Control(int);
-int CP_ChangeView(int);
-int CP_ExitOptions(int);
-int CP_Quit(int);
-int CP_ViewScores(int);
-int  CP_EndGame(int);
+int CP_Control();
+int CP_ChangeView();
+int CP_Quit();
+int CP_ViewScores();
+int  CP_EndGame();
 
 int  CP_CheckQuick(ScanCode scancode);
 
-int CustomControls(int);
-int MouseSensitivity(int);
+int CustomControls();
+int MouseSensitivity();
 
 void CheckForEpisodes(void);
 
 void FreeMusic(void);
 
 
-enum {MOUSE,JOYSTICK,KEYBOARDBTNS,KEYBOARDMOVE};        // FOR INPUT TYPES
-
+#ifndef EXTRACONTROLS
+enum { MOUSE, JOYSTICK, KEYBOARDBTNS, KEYBOARDMOVE };        // FOR INPUT TYPES
+#else
+enum { MOUSE, JOYSTICK, KEYBOARDBTNS, KEYBOARDMOVE, KEYBOARDEXTRA };        // FOR INPUT TYPES
+#endif
 enum menuitems
 {
         newgame,
@@ -272,7 +293,7 @@ enum menuitems
 //
 typedef struct {
                 int kill,secret,treasure;
-                int32_t time;
+                int time;
                 } LRstruct;
 
 extern LRstruct LevelRatios[];

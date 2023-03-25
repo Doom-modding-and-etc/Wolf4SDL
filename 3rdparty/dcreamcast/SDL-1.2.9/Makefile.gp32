@@ -1,0 +1,92 @@
+CC = arm-elf-gcc
+AR = arm-elf-ar
+AS = arm-elf-as
+LD = arm-elf-gcc
+
+TARGET = /opt/gp32/arm-elf/lib/libSDLx.a
+
+all: $(TARGET)
+
+DEFS= -DSDL_USE_PTHREADS -DNO_SIGNAL_H -DENABLE_GP32 -DDISABLE_STDIO
+
+DEFS+=-DGP32_LIBC
+
+OPTFLAGS =-mtune=arm920 -march=armv4t -marm -mno-thumb-interwork -msoft-float -ffast-math -nostdlib -fno-common -ffreestanding -fno-builtin -fno-exceptions -mstructure-size-boundary=8 -O3 -fomit-frame-pointer -fstrict-aliasing -Wall
+
+CFLAGS=$(OPTFLAGS) $(DEFS)
+
+CFLAGS+=-Iinclude -Isrc -Isrc/audio -Isrc/cdrom -Isrc/endian -Isrc/events -Isrc/joystick -Isrc/thread/gp32 -Isrc/thread -Isrc/timer -Isrc/video
+
+SRCS = \
+	src/video/gp32/SDL_gp32video.c \
+	src/video/gp32/SDL_gp32events.c \
+	src/audio/SDL_audio.c \
+	src/audio/SDL_audiocvt.c \
+	src/audio/SDL_audiomem.c \
+	src/audio/SDL_mixer.c \
+	src/audio/SDL_wave.c \
+	src/audio/gp32/SDL_gp32audio.c \
+	src/cdrom/gp32/SDL_syscdrom.c \
+	src/cdrom/SDL_cdrom.c \
+	src/endian/SDL_endian.c \
+	src/events/SDL_active.c \
+	src/events/SDL_events.c \
+	src/events/SDL_expose.c \
+	src/events/SDL_expose.c \
+	src/events/SDL_keyboard.c \
+	src/events/SDL_mouse.c \
+	src/events/SDL_quit.c \
+	src/events/SDL_resize.c \
+	src/file/SDL_rwops.c \
+	src/joystick/gp32/SDL_sysjoystick.c \
+	src/joystick/SDL_joystick.c \
+	src/SDL.c \
+	src/SDL_error.c \
+	src/SDL_fatal.c \
+	src/SDL_getenv.c \
+	src/SDL_loadso.c \
+	src/thread/gp32/SDL_syscond.c \
+	src/thread/gp32/SDL_sysmutex.c \
+	src/thread/gp32/SDL_syssem.c \
+	src/thread/gp32/SDL_systhread.c \
+	src/thread/SDL_thread.c \
+	src/timer/gp32/SDL_systimer.c \
+	src/timer/SDL_timer.c \
+	src/video/SDL_blit.c \
+	src/video/SDL_blit_0.c \
+	src/video/SDL_blit_1.c \
+	src/video/SDL_blit_A.c \
+	src/video/SDL_blit_N.c \
+	src/video/SDL_bmp.c \
+	src/video/SDL_cursor.c \
+	src/video/SDL_gamma.c \
+	src/video/SDL_pixels.c \
+	src/video/SDL_RLEaccel.c \
+	src/video/SDL_stretch.c \
+	src/video/SDL_surface.c \
+	src/video/SDL_video.c \
+	src/video/SDL_yuv.c \
+	src/video/SDL_yuv_sw.c \
+	src/cpuinfo/SDL_cpuinfo.c \
+
+
+SRCS+=	src/audio/gp32/SDL_dmaaudio.c
+
+src/video/gp32/SDL_gp32blit.o: src/video/gp32/SDL_gp32blit.s
+	$(CC) $(CFLAGS) $(OPTFLAGS) -o src/video/gp32/SDL_gp32blit.o -c src/video/gp32/SDL_gp32blit.s
+
+src/audio/gp32/SDL_dmaaudioasm.o: src/audio/gp32/SDL_dmaaudioasm.s
+	$(CC) $(CFLAGS) $(OPTFLAGS) -o src/audio/gp32/SDL_dmaaudioasm.o -c src/audio/gp32/SDL_dmaaudioasm.s
+
+
+OBJS = $(SRCS:.c=.o) src/video/gp32/SDL_gp32blit.o
+
+OBJS+=	src/audio/gp32/SDL_dmaaudioasm.o
+
+clean:
+	rm -f $(OBJS)
+
+$(TARGET) : $(OBJS)
+	rm -f $(TARGET)
+	$(AR) rcs $(TARGET) $(OBJS)
+

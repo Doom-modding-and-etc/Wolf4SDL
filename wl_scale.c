@@ -31,13 +31,16 @@
 =
 ===================
 */
-
-void ScaleLine (int16_t x, int16_t toppix, fixed fracstep, byte *linesrc, byte *linecmds, byte *curshades)
+#ifdef USE_SHADING
+void ScaleLine(short x, short toppix, fixed fracstep, unsigned char* linesrc, unsigned char* linecmds, unsigned char* curshades)
+#else
+void ScaleLine (short x, short toppix, fixed fracstep, unsigned char* linesrc, unsigned char *linecmds)
+#endif
 {
-    byte    *src,*dest;
-    byte    col;
-    int16_t start,end,top;
-    int16_t startpix,endpix;
+    unsigned char   *src,*dest;
+    unsigned char    col;
+    short start,end,top;
+    short startpix,endpix;
     fixed   frac;
 
     for (end = READWORD(linecmds) >> 1; end; end = READWORD(linecmds) >> 1)
@@ -116,7 +119,7 @@ inline void ScaleShapeDemo(int xcenter, int shapenum, unsigned width)
     user_sprite.XB = width;
     user_sprite.YB = width * height / 64;
     user_sprite.GRDA = 0;
-    slSetSprite(&user_sprite, toFIXED(10));	// à remettre // ennemis et objets
+    slSetSprite(&user_sprite, toFIXED(10));	// ï¿½ remettre // ennemis et objets
     //--------------------------------------------------------------------------------------------	
 }
 inline void ScaleShape(int xcenter, int shapenum, unsigned width)
@@ -124,7 +127,7 @@ inline void ScaleShape(int xcenter, int shapenum, unsigned width)
     unsigned scalel, pixwidth;
 
 #ifdef USE_SHADING
-    byte* curshades;
+    unsigned char* curshades;
     if (flags & FL_FULLBRIGHT)
         curshades = shadetable[0];
     else
@@ -166,19 +169,19 @@ inline void ScaleShape(int xcenter, int shapenum, unsigned width)
     user_sprite.XB = pixwidth;
     user_sprite.YB = pixwidth * height / 64;
     user_sprite.GRDA = 0;
-    slSetSprite(&user_sprite, toFIXED(0 + (SATURN_SORT_VALUE - pixwidth / 2)));	// à remettre // ennemis et objets
+    slSetSprite(&user_sprite, toFIXED(0 + (SATURN_SORT_VALUE - pixwidth / 2)));	// ï¿½ remettre // ennemis et objets
     //--------------------------------------------------------------------------------------------	
 #else
-    byte* vbuf = LOCK() + screenofs;
+    unsigned char* vbuf = LOCK() + screenofs;
     t_compshape* shape;
 
     unsigned starty, endy;
-    word* cmdptr;
-    byte* cline;
-    byte* line;
-    byte* vmem;
+    unsigned short* cmdptr;
+    unsigned char* cline;
+    unsigned char* line;
+    unsigned char* vmem;
     unsigned j;
-    byte col;
+    unsigned char col;
     int actx, i, upperedge;
     short newstart;
     int scrstarty, screndy, lpix, rpix, pixcnt, ycnt;
@@ -188,7 +191,7 @@ inline void ScaleShape(int xcenter, int shapenum, unsigned width)
 
     shape = (t_compshape*)PM_GetSprite(shapenum);
 
-    cmdptr = (word*)shape->dataofs;
+    cmdptr = (unsigned short*)shape->dataofs;
 
     for (i = shape->leftpix, pixcnt = i * pixwidth, rpix = (pixcnt >> 6) + actx; i <= shape->rightpix; i++, cmdptr++)
     {
@@ -200,7 +203,7 @@ inline void ScaleShape(int xcenter, int shapenum, unsigned width)
         {
             if (lpix < 0) lpix = 0;
             if (rpix > viewwidth) rpix = viewwidth, i = shape->rightpix + 1;
-            cline = (byte*)shape + *cmdptr;
+            cline = (unsigned char*)shape + *cmdptr;
             while (lpix < rpix)
             {
                 if (wallwidth[lpix] <= (int)width)
@@ -224,9 +227,9 @@ inline void ScaleShape(int xcenter, int shapenum, unsigned width)
                             if (scrstarty != screndy && screndy > 0)
                             {
 #ifdef USE_SHADING
-                                col = curshades[((byte*)shape)[newstart + j]];
+                                col = curshades[((unsigned char*)shape)[newstart + j]];
 #else
-                                col = ((byte*)shape)[newstart + j];
+                                col = ((unsigned char*)shape)[newstart + j];
 #endif
                                 if (scrstarty < 0) scrstarty = 0;
                                 if (screndy > viewwidth) screndy = viewwidth, j = endy;
@@ -258,14 +261,20 @@ inline void ScaleShape(int xcenter, int shapenum, unsigned width)
 ===================
 */
 
-void ScaleShape (int xcenter, int shapenum, int height, uint32_t flags)
+#ifdef USE_SHADING
+void ScaleShape (int xcenter, int shapenum, int height, unsigned int flags)
+#else
+void ScaleShape (int xcenter, int shapenum, int height)
+#endif
 {
     int         i;
     compshape_t *shape;
-    byte        *linesrc,*linecmds;
-    byte        *curshades;
-    int16_t     scale,toppix;
-    int16_t     x1,x2,actx;
+    unsigned char *linesrc,*linecmds;
+#ifdef USE_SHADING
+    unsigned char *curshades;
+#endif
+    short     scale,toppix;
+    short     x1,x2,actx;
     fixed       frac,fracstep;
 
     scale = height >> 3;        // low three bits are fractional
@@ -318,8 +327,11 @@ void ScaleShape (int xcenter, int shapenum, int height, uint32_t flags)
             if (wallheight[x1] < height)
             {
                 linecmds = &linesrc[shape->dataofs[i - shape->leftpix]];
-
-                ScaleLine (x1,toppix,fracstep,linesrc,linecmds,curshades);
+#ifdef USE_SHADING
+                ScaleLine(x1, toppix, fracstep, linesrc, linecmds, curshades);
+#else
+                ScaleLine (x1,toppix,fracstep,linesrc,linecmds);
+#endif
             }
 
             x1++;
@@ -344,9 +356,9 @@ void SimpleScaleShape (int xcenter, int shapenum, int height)
 {
     int         i;
     compshape_t *shape;
-    byte        *linesrc,*linecmds;
-    int16_t     scale,toppix;
-    int16_t     x1,x2,actx;
+    unsigned char *linesrc,*linecmds;
+    short     scale,toppix;
+    short     x1,x2,actx;
     fixed       frac,fracstep;
 
     scale = height >> 1;
@@ -375,9 +387,11 @@ void SimpleScaleShape (int xcenter, int shapenum, int height)
         while (x1 < x2)
         {
             linecmds = &linesrc[shape->dataofs[i - shape->leftpix]];
-
-            ScaleLine (x1,toppix,fracstep,linesrc,linecmds,NULL);
-
+#ifdef USE_SHADING
+            ScaleLine(x1, toppix, fracstep, linesrc, linecmds, NULL);
+#else
+            ScaleLine (x1,toppix,fracstep,linesrc,linecmds);
+#endif
             x1++;
         }
     }
@@ -397,15 +411,15 @@ void SimpleScaleShape (int xcenter, int shapenum, int height)
 ===================
 */
 
-void Scale3DShape (int x1, int x2, int shapenum, uint32_t flags, fixed ny1, fixed ny2, fixed nx1, fixed nx2)
+void Scale3DShape (int x1, int x2, int shapenum, unsigned int flags, fixed ny1, fixed ny2, fixed nx1, fixed nx2)
 {
     int         i;
     compshape_t *shape;
-    byte        *linesrc,*linecmds;
-    byte        *curshades;
-    int16_t     scale1,toppix;
-    int16_t     dx,len,slinex;
-    int16_t     xpos[TEXTURESIZE + 1];
+    unsigned char *linesrc,*linecmds;
+    unsigned char *curshades;
+    short     scale1,toppix;
+    short     dx,len,slinex;
+    short     xpos[TEXTURESIZE + 1];
     fixed       height,dheight,height1,height2;
     fixed       fracstep;
     fixed       dxx,dzz;
@@ -484,8 +498,11 @@ void Scale3DShape (int x1, int x2, int shapenum, uint32_t flags, fixed ny1, fixe
                 toppix = centery - scale1;
 
                 linecmds = &linesrc[shape->dataofs[i]];
-
-                ScaleLine (slinex,toppix,fracstep,linesrc,linecmds,curshades);
+#ifdef USE_SHADING
+                ScaleLine(slinex, toppix, fracstep, linesrc, linecmds, curshades);
+#else
+                ScaleLine (slinex,toppix,fracstep,linesrc,linecmds);
+#endif
             }
         }
     }

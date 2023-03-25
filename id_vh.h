@@ -18,15 +18,15 @@
 
 typedef struct
 {
-	int16_t width,height;
+	short width,height;
 } pictabletype;
 
 
 typedef struct
 {
-	int16_t height;
-	int16_t location[256];
-	int8_t width[256];
+	short height;
+	short location[256];
+	char width[256];
 } fontstruct;
 
 
@@ -36,7 +36,7 @@ typedef struct
 extern	pictabletype	*pictable;
 extern	pictabletype	*picmtable;
 
-extern  byte            fontcolor,backcolor;
+extern  unsigned char            fontcolor,backcolor;
 extern	int             fontnumber;
 extern	int             px,py;
 
@@ -51,12 +51,8 @@ extern	int             px,py;
 void VWB_DrawPropString	 (const char *string);
 
 void VWB_DrawTile8 (int x, int y, int tile);
-void VWB_DrawTile8M (int x, int y, int tile);
-void VWB_DrawTile16 (int x, int y, int tile);
-void VWB_DrawTile16M (int x, int y, int tile);
 void VWB_DrawPic (int x, int y, int chunknum);
 void VWB_DrawPicScaledCoord (int x, int y, int chunknum);
-void VWB_DrawMPic(int x, int y, int chunknum);
 void VWB_Bar (int x, int y, int width, int height, int color);
 #define VWB_BarScaledCoord VL_BarScaledCoord
 void VWB_Plot (int x, int y, int color);
@@ -71,7 +67,7 @@ void VH_UpdateScreen (SDL_Surface *surface);
 #define VW_UpdateScreen()   VH_UpdateScreen (screenBuffer)
 #endif
 #if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
-void VH_RenderTextures(SDL_Surface* surface);
+void VH_RenderTextures();
 #endif
 //
 // wolfenstein EGA compatbility stuff
@@ -88,10 +84,10 @@ void VH_RenderTextures(SDL_Surface* surface);
 #define VW_FadeIn()		    VL_FadeIn(0,255,gamepal,30);
 #define VW_FadeOut()	    VL_FadeOut(0,255,0,0,0,30);
 #define VW_ScreenToScreen	VL_ScreenToScreen
-void	VW_MeasurePropString (const char *string, word *width, word *height);
+void	VW_MeasurePropString (const char *string, unsigned short *width, unsigned short *height);
 
 void    VH_Startup();
-bool FizzleFade (SDL_Surface *source, int x1, int y1,
-    unsigned width, unsigned height, unsigned frames, bool abortable);
+boolean FizzleFade (SDL_Surface *source, int x1, int y1,
+    unsigned width, unsigned height, unsigned frames, boolean abortable);
 
 #endif

@@ -58,6 +58,7 @@ void CountObjects (void)
 {
     //int     i,total,count,active,inactive,doors;
     int	i, total, count, active, inactive, lgdoors, lsdoors, edoors, ndoors, doors;
+    char str[60];
     objtype *obj;
 
     CenterWindow (17,7);
@@ -68,8 +69,7 @@ void CountObjects (void)
     total = (int)(laststatobj-&statobjlist[0]);
     US_PrintUnsigned (total);
 
-    char str[60];
-    sprintf(str,"\nlaststatobj=%.8X",(int32_t)(uintptr_t)laststatobj);
+    sprintf(str,"\nlaststatobj=%.8X",(int)(uintptr_t)laststatobj);
     US_Print(str);
 
     US_Print("\nIn use statics   :");
@@ -148,12 +148,13 @@ void PictureGrabber (void)
 
     for(i = 0; i < 1000; i++)
     {
+	int file;
         fname[7] = i % 10 + '0';
         fname[6] = (i / 10) % 10 + '0';
         fname[5] = i / 100 + '0';
-        int file = open(fname, O_RDONLY | O_BINARY);
+        /*int*/ file = w3sopen(fname, O_RDONLY | O_BINARY);
         if(file == -1) break;       // file does not exist, so use that filename
-        close(file);
+        w3sclose(file);
     }
 
     // overwrites WSHOT999.BMP if all wshot files exist
@@ -180,7 +181,10 @@ void PictureGrabber (void)
 void BasicOverhead (void)
 {
     int       x,y;
-    int       zoom,temp;
+    int       zoom;
+#ifdef MAPBORDER
+    int       temp;
+#endif
     int       offx,offy;
     uintptr_t tile;
     int       color;
@@ -201,7 +205,7 @@ void BasicOverhead (void)
     for (y = 0; y < mapheight; y++)
     {
         for (x = 0; x < mapwidth; x++)
-            VWB_Bar ((x * zoom) + offx,(y * zoom) + offy,zoom,zoom,(byte)(uintptr_t)actorat[x][y]);
+            VWB_Bar ((x * zoom) + offx,(y * zoom) + offy,zoom,zoom,(unsigned char)(uintptr_t)actorat[x][y]);
     }
 
     //
@@ -261,14 +265,17 @@ void BasicOverhead (void)
 
 void ShapeTest (void)
 {
-    bool    done;
+    boolean    done;
     ScanCode   scan;
-    int        i,j,k,x;
+    int        i,j,x;
+#ifndef VIEASM
+	int k;
+#endif
     int        v2;
     int        oldviewheight;
-    longword   l;
-    byte       v;
-    byte       *addr;
+    unsigned int   l;
+    unsigned char       v;
+    unsigned char *addr;
     soundnames sound;
 
     CenterWindow (20,16);
@@ -296,7 +303,7 @@ void ShapeTest (void)
 
         US_Print ("\n Address: ");
         addr = PM_GetPage(i);
-        sprintf (str,"0x%010X",(intptr_t)addr);
+        sprintf (str,"0x%IX",(intptr_t)addr);
         US_Print (str);
 
         if (addr)
@@ -389,7 +396,7 @@ void ShapeTest (void)
                     else
                         k = DigiList[j + 1].startpage;
 
-                    if (i >= PMSoundStart + DigiList[j].startpage && i < PMSoundStart + k)
+                    if ((uintptr_t)i >= PMSoundStart + DigiList[j].startpage && i < PMSoundStart + k)
                         break;
                 }
 
@@ -489,7 +496,7 @@ void ShapeTest (void)
 
 int DebugKeys (void)
 {
-    bool esc;
+    boolean esc;
     int level;
 
     if (Keyboard(sc_B))             // B = border color
@@ -623,7 +630,7 @@ int DebugKeys (void)
     }
     else if (Keyboard(sc_L))        // L = level ratios
     {
-        byte x,start,end=LRpack;
+        unsigned char x,start,end=LRpack;
 
         if (end == 8)   // wolf3d
         {
@@ -678,6 +685,21 @@ again:
         return 1;
     }
 #endif
+#if defined(FIXEDLOGICRATE) && defined(LAGSIMULATOR)
+    else if (Keyboard(sc_M))        // M = lag simulator
+    {
+        lagging ^= 1;
+        CenterWindow(18, 3);
+        if (lagging)
+            US_PrintCentered("Lag simulator ON");
+        else
+            US_PrintCentered("Lag simulator OFF");
+        VW_UpdateScreen();
+        IN_Ack();
+        return 1;
+    }
+#endif
+
 #if 0
     else if (Keyboard(sc_N))        // N = no clip
     {
@@ -708,6 +730,18 @@ again:
     }
 #endif
 */
+#ifdef AUTOMAP
+    else if (Keyboard(sc_Tab) && Keyboard(sc_M))        // Tab + m = full map
+    {
+        memset(automap, 1, sizeof(automap));
+        CenterWindow(12, 3);
+        US_PrintCentered("Full map!");
+        VW_UpdateScreen();
+        IN_Ack();
+        return 1;
+   }
+#endif
+
     else if (Keyboard(sc_Q))        // Q = fast quit
         Quit (NULL);
     else if (Keyboard(sc_S))        // S = slow motion
@@ -782,33 +816,53 @@ again:
         IN_Ack ();
         return 1;
     }
+#ifdef HIGHLIGHTPUSHWALLS
+    else if (Keyboard(sc_Y)) {   // Y = highlight pushwalls
+        CenterWindow(15, 2);
+        if (highlightmode == 0) {
+            US_PrintCentered("Glow Pushwalls ON");
+            highlightmode = 1;
+        }
+        else {
+            US_PrintCentered("Glow Pushwalls OFF");
+            highlightmode = 0;
+        }
+
+        VW_UpdateScreen();
+        IN_Ack();
+        return 1;
+}
+#endif
 #ifdef USE_CLOUDSKY
     else if(Keyboard(sc_Z) && curSky)
     {
         char defstr[15];
-
+        int seedpx;
+	    int mappx;
+		int seedpy, mappy;
+	    unsigned int newInd;
         CenterWindow(34,4);
         PrintY+=6;
         US_Print("  Recalculate sky with seed: ");
-        int seedpx = px, seedpy = py;
+        /*int*/ seedpx = px, seedpy = py;
         US_PrintUnsigned(curSky->seed);
         US_Print("\n  Use color map (0-");
         US_PrintUnsigned(numColorMaps - 1);
         US_Print("): ");
-        int mappx = px, mappy = py;
+        /*int*/ mappx = px, mappy = py;
         US_PrintUnsigned(curSky->colorMapIndex);
         VW_UpdateScreen();
 
         sprintf(defstr, "%u", curSky->seed);
         esc = !US_LineInput(seedpx, seedpy, str, defstr, true, 10, 0);
         if(esc) return 1;
-        curSky->seed = (uint32_t) atoi(str);
+        curSky->seed = (unsigned int) atoi(str);
 
         sprintf(defstr, "%u", curSky->colorMapIndex);
         esc = !US_LineInput(mappx, mappy, str, defstr, true, 10, 0);
         if(esc) return 1;
-        uint32_t newInd = (uint32_t) atoi(str);
-        if(newInd < (uint32_t) numColorMaps)
+        /*unsigned int*/ newInd = (unsigned int) atoi(str);
+        if(newInd < (unsigned int) numColorMaps)
         {
             curSky->colorMapIndex = newInd;
             InitSky();
@@ -842,10 +896,10 @@ again:
 #define COL_SECRET  WHITE               // pushwall color
 
 
-int16_t maporgx,maporgy;
-int16_t viewtilex,viewtiley;
-int16_t tilemapratio,tilewallratio;
-int16_t tilesize;
+short maporgx,maporgy;
+short viewtilex,viewtiley;
+short tilemapratio,tilewallratio;
+short tilesize;
 
 
 /*
@@ -856,7 +910,7 @@ int16_t tilesize;
 ===================
 */
 
-void DrawMapFloor (int16_t sx, int16_t sy, byte color)
+void DrawMapFloor (short sx, short sy, unsigned char color)
 {
     int x,y;
 
@@ -876,11 +930,11 @@ void DrawMapFloor (int16_t sx, int16_t sy, byte color)
 ===================
 */
 
-void DrawMapWall (int16_t sx, int16_t sy, int16_t wallpic)
+void DrawMapWall (short sx, short sy, short wallpic)
 {
     int  x,y;
-    byte *src;
-    word texturemask;
+    unsigned char *src;
+    unsigned short texturemask;
 
     src = PM_GetPage(wallpic);
 
@@ -902,28 +956,28 @@ void DrawMapWall (int16_t sx, int16_t sy, int16_t wallpic)
 ===================
 */
 
-void DrawMapDoor (int16_t sx, int16_t sy, int16_t doornum)
+void DrawMapDoor (short sx, short sy, short doornum)
 {
     int doorpage;
 
     switch (doorobjlist[doornum].lock)
     {
-        case dr_normal:
-            doorpage = DOORWALL;
-            break;
+    case dr_normal:
+        doorpage = DOORWALL;
+        break;
 
-        case dr_lock1:
-        case dr_lock2:
-        case dr_lock3:
-        case dr_lock4:
-            doorpage = DOORWALL + 6;
-            break;
+    case dr_lock1:
+    case dr_lock2:
+    case dr_lock3:
+    case dr_lock4:
+        doorpage = DOORWALL + 6;
+        break;
 
-        case dr_elevator:
-            doorpage = DOORWALL + 4;
-            break;
+    case dr_elevator:
+        doorpage = DOORWALL + 4;
+        break;
     }
-    
+  
     DrawMapWall (sx,sy,doorpage);
 }
 
@@ -936,13 +990,13 @@ void DrawMapDoor (int16_t sx, int16_t sy, int16_t doornum)
 ===================
 */
 
-void DrawMapSprite (int16_t sx, int16_t sy, int16_t shapenum)
+void DrawMapSprite (short sx, short sy, short shapenum)
 {
     int         x;
     compshape_t *shape;
-    byte        *linesrc,*linecmds;
-    byte        *src;
-    int16_t     end,start,top;
+    unsigned char *linesrc,*linecmds;
+    unsigned char *src;
+    short     end,start,top;
 
     linesrc = PM_GetSpritePage(shapenum);
     shape = (compshape_t *)linesrc;
@@ -1007,9 +1061,9 @@ void DrawMapBorder (void)
 void OverheadRefresh (void)
 {
     int       x,y;
-    byte      rotate[9] = {6,5,4,3,2,1,0,7,0};
-    int16_t   endx,endy;
-    int16_t   sx,sy,shapenum;
+    unsigned char      rotate[9] = {6,5,4,3,2,1,0,7,0};
+    short   endx,endy;
+    short   sx,sy,shapenum;
     uintptr_t tile;
     statobj_t *statptr;
     objtype   *obj;
@@ -1062,7 +1116,7 @@ void OverheadRefresh (void)
                     {
                         obj = (objtype *)tile;
 
-                        if (spotvis[(byte)(obj->x >> TILESHIFT)][(byte)(obj->y >> TILESHIFT)])
+                        if (spotvis[(unsigned char)(obj->x >> TILESHIFT)][(unsigned char)(obj->y >> TILESHIFT)])
                         {
                             shapenum = obj->state->shapenum;
 

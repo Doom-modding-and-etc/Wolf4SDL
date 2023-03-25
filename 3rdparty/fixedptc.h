@@ -68,6 +68,12 @@
  * SUCH DAMAGE.
  */
 
+#if defined(_WIN32)
+#define FIXEDPT_BITS	32
+#elif defined(_WIN64)
+#define FIXEDPT_BITS	64
+#endif
+
 #ifndef FIXEDPT_BITS
 #define FIXEDPT_BITS	32
 #endif
@@ -75,7 +81,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
-#if !defined(_WIN32)
+#if !defined(_MSC_VER)
 #	include <stdint.h>
 #	include <string.h>
 #	include <stdarg.h>
@@ -91,10 +97,10 @@ typedef signed __int64 int64_t;
 #endif
 
 #if FIXEDPT_BITS == 32
-typedef int32_t fixedpt;
-typedef	int64_t	fixedptd;
-typedef	uint32_t fixedptu;
-typedef	uint64_t fixedptud;
+typedef int		fixedpt;
+typedef	long long	fixedptd;
+typedef	unsigned int fixedptu;
+typedef	unsigned long long fixedptud;
 #elif FIXEDPT_BITS == 64
 typedef int64_t fixedpt;
 typedef	__int128_t fixedptd;
@@ -148,7 +154,11 @@ typedef	__uint128_t fixedptud;
 static inline fixedpt
 fixedpt_mul(fixedpt A, fixedpt B)
 {
+#ifdef OLD
 	return (((fixedptd)A * (fixedptd)B) >> FIXEDPT_FBITS);
+#else
+	return (((fixedpt)A * (fixedpt)B) >> FIXEDPT_FBITS);
+#endif
 }
 
 
@@ -156,7 +166,11 @@ fixedpt_mul(fixedpt A, fixedpt B)
 static inline fixedpt
 fixedpt_div(fixedpt A, fixedpt B)
 {
+#ifdef OLD
 	return (((fixedptd)A << FIXEDPT_FBITS) / (fixedptd)B);
+#else
+	return (((fixedpt)A << FIXEDPT_FBITS) / (fixedpt)B);
+#endif
 }
 
 /*

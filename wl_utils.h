@@ -5,49 +5,24 @@
 
 #include "wl_def.h"
 
-#define SafeMalloc(s)    safe_malloc ((s),__FILE__,__LINE__)
+
 #define FRACBITS         16
 
 #define GetTicks() ((SDL_GetTicks()*7)/100)
 
 #define ISPOINTER(x) ((((uintptr_t)(x)) & ~0xffff) != 0)
-
-#if _WIN32
-#define strcasecmp stricmp
-#define strncasecmp strnicmp
-#define snprintf _snprintf
-#elif defined(SWITCH) || defined(N3DS) || defined(PS2)
-static inline char* ltoa(long value, char* string, int radix)
-{
-    sprintf(string, "%ld", value);
-    return string;
-}
-
-#else	
-static inline char* ltoa(long value, char* string, int radix)
-{
-    sprintf(string, "%ld", value);
-    return string;
-}
-static inline char* itoa(int value, char* string, int radix)
-{
-    sprintf(string, "%d", value);
-    return string;
-}
-#endif
-
-extern void     *safe_malloc (size_t size, const char *fname, uint32_t line);
+extern void     *wsafe_malloc (size_t size, const char *fname, unsigned int line);
 extern fixed    FixedMul (fixed a, fixed b);
 extern fixed    FixedDiv (fixed a, fixed b);
-
-extern word     READWORD (byte *ptr);
-extern longword READLONGWORD (byte *ptr);
+#define SafeMalloc(s)    wsafe_malloc ((s),__FILE__,__LINE__)
+extern unsigned short     READWORD (unsigned char *ptr);
+extern unsigned int READLONGWORD (unsigned char *ptr);
 
 #if defined(SEGA_SATURN)
-extern Sint16* LoadFile(char* filename, long* fileSize);
-extern Sint32 GetFileSize(int file_id);
-extern Uint16 SWAP_BYTES_16(Uint16 a);
-extern Uint32 SWAP_BYTES_32(Uint32 a);
+extern short* LoadFile(char* filename, long* fileSize);
+extern int GetFileSize(int file_id);
+extern unsigned short SWAP_BYTES_16(unsigned short a);
+extern unsigned int SWAP_BYTES_32(unsigned int a);
 extern fixed MTH_Mul2(fixed a, fixed b);
 extern void memcpyl(void* dst, void* src, int size);
 extern void* memset4_fast(void*, long, size_t);

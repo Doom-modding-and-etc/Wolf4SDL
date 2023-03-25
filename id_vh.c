@@ -3,7 +3,7 @@
 pictabletype	*pictable;
 
 int	    px,py;
-byte	fontcolor,backcolor;
+unsigned char	fontcolor,backcolor;
 int	    fontnumber;
 
 //==========================================================================
@@ -13,10 +13,10 @@ void VWB_DrawPropString(const char* string)
 #ifdef SEGA_SATURN
     fontstruct* font;
     int		    width, step, height;
-    byte* source, * dest;
-    byte	    ch;
+    unsigned char* source, * dest;
+    unsigned char	    ch;
 
-    byte* vbuf = LOCK();
+    unsigned char* vbuf = LOCK();
 
     font = (fontstruct*)grsegs[STARTFONT + fontnumber];
     font->height = SWAP_BYTES_16(font->height);
@@ -24,10 +24,10 @@ void VWB_DrawPropString(const char* string)
 
     dest = vbuf + scaleFactor * (py * curPitch + px);
 
-    while ((ch = (byte)*string++) != 0)
+    while ((ch = (unsigned char)*string++) != 0)
     {
         width = step = font->width[ch];
-        source = ((byte*)font) + SWAP_BYTES_16(font->location[ch]);
+        source = ((unsigned char*)font) + SWAP_BYTES_16(font->location[ch]);
 
         while (width--)
         {
@@ -53,8 +53,8 @@ void VWB_DrawPropString(const char* string)
 #else
 	fontstruct  *font;
 	int		    width, step, height;
-	byte	    *source, *dest;
-	byte	    ch;
+	unsigned char	    *source, *dest;
+	unsigned char 	    ch;
 	int i;
 	unsigned sx, sy;
 
@@ -65,18 +65,18 @@ void VWB_DrawPropString(const char* string)
 	height = font->height;
 	dest += scaleFactor * (ylookup[py] + px);
 
-	while ((ch = (byte)*string++)!=0)
+	while ((ch = (unsigned char)*string++)!=0)
 	{
 		width = step = font->width[ch];
-		source = ((byte *)font)+font->location[ch];
+		source = ((unsigned char *)font)+font->location[ch];
 		while (width--)
 		{
 			for(i=0; i<height; i++)
 			{
 				if(source[i*step])
 				{
-					for(sy=0; sy<scaleFactor; sy++)
-						for(sx=0; sx<scaleFactor; sx++)
+					for(sy=0; sy<(unsigned int)scaleFactor; sy++)
+						for(sx=0; sx<(unsigned int)scaleFactor; sx++)
 							dest[ylookup[scaleFactor*i+sy]+sx]=fontcolor;
 				}
 			}
@@ -92,7 +92,7 @@ void VWB_DrawPropString(const char* string)
 }
 
 
-void VWL_MeasureString (const char *string, word *width, word *height, fontstruct *font)
+void VWL_MeasureString (const char *string, unsigned short *width, unsigned short *height, fontstruct *font)
 {
 #ifdef SEGA_SATURN
     *height = SWAP_BYTES_16(font->height);
@@ -101,19 +101,19 @@ void VWL_MeasureString (const char *string, word *width, word *height, fontstruc
 	*height = font->height;
 #endif
     for (*width = 0;*string;string++)
-		*width += font->width[*((byte *)string)];	// proportional width
+		*width += font->width[*((unsigned char *)string)];	// proportional width
 
 }
 
-void VW_MeasurePropString (const char *string, word *width, word *height)
+void VW_MeasurePropString (const char *string, unsigned short *width, unsigned short *height)
 {
 	VWL_MeasureString(string,width,height,(fontstruct *)grsegs[STARTFONT+fontnumber]);
 }
 
 #if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
-void VH_RenderTextures(SDL_Surface *surface)
+void VH_RenderTextures()
 {
-    SDL_UpdateTexture(texture, NULL, screen->pixels, screenWidth * sizeof(Uint32));
+    SDL_UpdateTexture(texture, NULL, screen->pixels, screenWidth * sizeof(unsigned int));
     SDL_RenderClear(renderer);
     SDL_RenderCopy(renderer, texture, NULL, NULL);
     SDL_RenderPresent(renderer);
@@ -135,7 +135,7 @@ void VH_UpdateScreen(SDL_Surface *surface)
 #if SDL_MAJOR_VERSION == 1
     SDL_Flip(screen);
 #elif SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
-    VH_RenderTextures(screen);
+    VH_RenderTextures();
 #endif
 }
 #endif
@@ -230,7 +230,7 @@ void VWB_Vlin (int y1, int y2, int x, int color)
 void LoadLatchMem(void)
 {
     int	i, width, height, start, end;
-    byte* src;
+    unsigned char* src;
     SDL_Surface* surf; //,*surf1;
 #if 0
     //
@@ -306,7 +306,7 @@ void LoadLatchMem(void)
 */
 
 // XOR masks for the pseudo-random number sequence starting with n=17 bits
-static const uint32_t rndmasks[] = {
+static const unsigned int rndmasks[] = {
                     // n    XNOR from (starting at 1, not 0 as usual)
     0x00012000,     // 17   17,14
     0x00020400,     // 18   18,11
@@ -325,10 +325,10 @@ static unsigned int rndmask;
 extern SDL_Color curpal[256];
 
 // Returns the number of bits needed to represent the given value
-static int log2_ceil(uint32_t x)
+static int log2_ceil(unsigned int x)
 {
     int n = 0;
-    uint32_t v = 1;
+    unsigned int v = 1;
     while(v < x)
     {
         n++;
@@ -340,9 +340,10 @@ static int log2_ceil(uint32_t x)
 void VH_Startup()
 {
     int rndbits_x = log2_ceil(screenWidth);
+	int rndbits;
     rndbits_y = log2_ceil(screenHeight);
 
-    int rndbits = rndbits_x + rndbits_y;
+    rndbits = rndbits_x + rndbits_y;
     if(rndbits < 17)
         rndbits = 17;       // no problem, just a bit slower
     else if(rndbits > 25)
@@ -351,8 +352,8 @@ void VH_Startup()
     rndmask = rndmasks[rndbits - 17];
 }
 
-bool FizzleFade (SDL_Surface *source, int x1, int y1,
-    unsigned width, unsigned height, unsigned frames, bool abortable)
+boolean FizzleFade (SDL_Surface *source, int x1, int y1,
+    unsigned width, unsigned height, unsigned frames, boolean abortable)
 {
 #ifdef SEGA_SATURN
 #if 1
@@ -366,8 +367,8 @@ bool FizzleFade (SDL_Surface *source, int x1, int y1,
     IN_StartAck();
 
     frame = GetTimeCount();
-    byte* srcptr = (byte*)source->pixels;
-    byte color = (srcptr[x1 + (y1 * width)] ? 0 : 4);
+    unsigned char* srcptr = (unsigned char*)source->pixels;
+    unsigned char color = (srcptr[x1 + (y1 * width)] ? 0 : 4);
 
     SDL_Rect rect = { x1,y1,width,height };
 
@@ -392,14 +393,14 @@ bool FizzleFade (SDL_Surface *source, int x1, int y1,
             //            SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
             //            SDL_UpdateRect(screen, 0, 0, 0, 0);
 #endif
-// xxx			VGAClearScreen(); // vbt : maj du fond d'écran
+// xxx			VGAClearScreen(); // vbt : maj du fond d'ï¿½cran
             //curSurface = source;
             VL_BarScaledCoord(x1, y1, width, height, color); // vbt ajout
             return true;
         }
 
 
-        byte* destptr = (byte*)dest->pixels;
+        unsigned char* destptr = (unsigned char*)dest->pixels;
 
         rndval = lastrndval;
 
@@ -458,20 +459,20 @@ finished:
 #endif
 #else
     unsigned x, y, p, frame, pixperframe;
-    int32_t  rndval, lastrndval;
+    int  rndval = 0, lastrndval = 0;
     int      i,first = 1;
-
-    lastrndval = 0;
+	unsigned char *srcptr;
     pixperframe = width * height / frames;
 
     IN_StartAck ();
 
     frame = GetTimeCount();
-    byte *srcptr = VL_LockSurface(source);
+    srcptr = VL_LockSurface(source);
     if(srcptr == NULL) return false;
 
     do
     {
+		unsigned char *destptr;
         IN_ProcessEvents();
 
         if(abortable && IN_CheckAck ())
@@ -481,7 +482,7 @@ finished:
             return true;
         }
 
-        byte *destptr = VL_LockSurface(screen);
+        destptr = VL_LockSurface(screen);
 
         if(destptr != NULL)
         {
@@ -525,8 +526,8 @@ finished:
                     }
                     else
                     {
-                        byte col = *(srcptr + (y1 + y) * source->pitch + x1 + x);
-                        uint32_t fullcol = SDL_MapRGB(screen->format, curpal[col].r, curpal[col].g, curpal[col].b);
+                        unsigned char col = *(srcptr + (y1 + y) * source->pitch + x1 + x);
+                        unsigned int fullcol = SDL_MapRGB(screen->format, curpal[col].r, curpal[col].g, curpal[col].b);
                         memcpy(destptr + (y1 + y) * screen->pitch + (x1 + x) * screen->format->BytesPerPixel,
                             &fullcol, screen->format->BytesPerPixel);
                     }

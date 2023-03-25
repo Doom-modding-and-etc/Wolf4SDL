@@ -5,8 +5,8 @@
 #include "wl_shade.h"
 
 typedef struct {
-    uint8_t destRed, destGreen, destBlue;   // values between 0 and 255
-    uint8_t fogStrength;
+    unsigned char destRed, destGreen, destBlue;   // values between 0 and 255
+    unsigned char fogStrength;
 } shadedef_t;
 
 shadedef_t shadeDefs[] = {
@@ -17,14 +17,14 @@ shadedef_t shadeDefs[] = {
     {  60,  60,  60, LSHADE_FOG }
 };
 
-uint8_t shadetable[SHADE_COUNT][256];
+unsigned char shadetable[SHADE_COUNT][256];
 int LSHADE_flag;
-
+#ifndef MAPCONTROLLEDSHADE
 #ifdef USE_FEATUREFLAGS
 
 // The lower 8-bit of the upper left tile of every map determine
 // the used shading definition of shadeDefs.
-static inline int GetShadeDefID()
+static int GetShadeDefID()
 {
     int shadeID = ffDataTopLeft & 0x00ff;
     assert(shadeID >= 0 && shadeID < lengthof(shadeDefs));
@@ -51,14 +51,14 @@ static int GetShadeDefID()
 }
 
 #endif
-
+#endif
 
 // Returns the palette index of the nearest matching color of the
 // given RGB color in given palette
-byte GetColor(byte red, byte green, byte blue, SDL_Color *palette)
+unsigned char GetColor(unsigned char red, unsigned char green, unsigned char blue, SDL_Color *palette)
 {
     int col;
-    byte mincol = 0;
+    unsigned char mincol = 0;
     double mindist = 200000.F, curdist, DRed, DGreen, DBlue;
 
     SDL_Color *palPtr = palette;
@@ -72,7 +72,7 @@ byte GetColor(byte red, byte green, byte blue, SDL_Color *palette)
         if(curdist < mindist)
         {
             mindist = curdist;
-            mincol = (byte) col;
+            mincol = (unsigned char) col;
         }
     }
     return mincol;
@@ -80,7 +80,7 @@ byte GetColor(byte red, byte green, byte blue, SDL_Color *palette)
 
 // Fade all colors in 32 steps down to the destination-RGB
 // (use gray for fogging, black for standard shading)
-void GenerateShadeTable(byte destRed, byte destGreen, byte destBlue,
+void GenerateShadeTable(unsigned char destRed, unsigned char destGreen, unsigned char destBlue,
                         SDL_Color *palette, int fog)
 {
     int i,shade;
@@ -106,7 +106,7 @@ void GenerateShadeTable(byte destRed, byte destGreen, byte destBlue,
         // Calc color for each shade of the current color
         for (shade = 0; shade < SHADE_COUNT; shade++)
         {
-            shadetable[shade][i] = GetColor((byte) curRed, (byte) curGreen, (byte) curBlue, palette);
+            shadetable[shade][i] = GetColor((unsigned char) curRed, (unsigned char) curGreen, (unsigned char) curBlue, palette);
 
             // Inc to next shade
             curRed   += redStep;
@@ -126,16 +126,38 @@ void NoShading()
 
 void InitLevelShadeTable()
 {
+#ifdef MAPCONTROLLEDSHADE
+    int rlevel, glevel, blevel;
+    int fstrength;
+    fstrength = tilemap[3][0];
+    rlevel = tilemap[4][0];
+    glevel = tilemap[5][0];
+    blevel = tilemap[6][0];
+    if (fstrength == 0) {
+        NoShading();
+    }
+    else if (fstrength == 1) {
+        GenerateShadeTable(rlevel, glevel, blevel, gamepal, LSHADE_NORMAL);
+    }
+    else if (fstrength >= 2) {
+        GenerateShadeTable(rlevel, glevel, blevel, gamepal, LSHADE_FOG);
+    }
+#else
     shadedef_t *shadeDef = &shadeDefs[GetShadeDefID()];
     if(shadeDef->fogStrength == LSHADE_NOSHADING)
         NoShading();
     else
         GenerateShadeTable(shadeDef->destRed, shadeDef->destGreen, shadeDef->destBlue, gamepal, shadeDef->fogStrength);
+#endif
 }
 
 int GetShade(int scale)
 {
-    int shade = (scale >> 1) / (((viewwidth * 3) >> 8) + 1 + LSHADE_flag);  // TODO: reconsider this...
+    int shade;
+#ifdef MAPCONTROLLEDSHADE
+    if (tilemap[2][0]) return 0; // Turns shading or fog off
+#endif
+    shade = (scale >> 1) / (((viewwidth * 3) >> 8) + 1 + LSHADE_flag);  // TODO: reconsider this...
     if(shade > 32) shade = 32;
     else if(shade < 1) shade = 1;
     shade = 32 - shade;

@@ -49,8 +49,8 @@ typedef struct
 #ifndef SEGA_SATURN
 typedef struct
 {
-    longword        length;
-    word            priority;
+    unsigned int        length;
+    unsigned short            priority;
 } SoundCommon;
 #endif
 #define ORIG_SOUNDCOMMON_SIZE 6
@@ -58,7 +58,7 @@ typedef struct
 #ifndef SEGA_SATURN
 typedef struct
 {
-    byte    mChar, cChar,
+    unsigned char    mChar, cChar,
         mScale, cScale,
         mAttack, cAttack,
         mSus, cSus,
@@ -68,7 +68,7 @@ typedef struct
         // These are only for Muse - these bytes are really unused
         voice,
         mode;
-    byte    unused[3];
+    unsigned char    unused[3];
 } Instrument;
 #endif
 
@@ -77,23 +77,23 @@ typedef struct
 {
     SoundCommon     common;
     Instrument      inst;
-    byte            block;
-    byte            data[1];
+    unsigned char            block;
+    unsigned char            data[1];
 } AdLibSound;
 #define ORIG_INSTRUMENT_SIZE 16
 #define ORIG_ADLIBSOUND_SIZE (ORIG_SOUNDCOMMON_SIZE + ORIG_INSTRUMENT_SIZE + 2)
 #endif
 
-extern bool switching;
+extern boolean switching;
 
 extern globalsoundpos channelSoundPos[];
 
 extern  SDMode          SoundMode;
 extern  SMMode          MusicMode;
 extern  SDSMode         DigiMode;
-extern  bool  		nosound;
+extern  boolean  		nosound;
 
-extern  bool         AdLibPresent, SoundBlasterPresent, SBProPresent, SoundPositioned;
+extern  boolean         AdLibPresent, SoundBlasterPresent, SBProPresent, SoundPositioned;
 
 /* defines for management */
 
@@ -156,26 +156,26 @@ extern  bool         AdLibPresent, SoundBlasterPresent, SBProPresent, SoundPosit
 
 extern sample ASM_Audiosegs[NUMSOUNDS];
 
-extern bool ASM_Open(int frequency, int channels, int maxchan, int buffersize, Uint8 sndvolume, Uint8 musvolume, bool reverse);
-extern bool ASM_IsOpen(void);
-extern bool ASM_PlayMusic(char* musfile);
-extern bool ASM_SwitchMus(char* loadmus, int fadems, bool fade);
-extern bool ASM_FadeInMus(char* loadmus, int fadems);
+extern boolean ASM_Open(int frequency, int channels, int maxchan, int buffersize, unsigned char sndvolume, unsigned char musvolume, boolean reverse);
+extern boolean ASM_IsOpen(void);
+extern boolean ASM_PlayMusic(char* musfile);
+extern boolean ASM_SwitchMus(char* loadmus, int fadems, boolean fade);
+extern boolean ASM_FadeInMus(char* loadmus, int fadems);
 extern sample ASM_Cache(char* sndfile, const char* name);
 extern sample ASM_CacheFromMem(void* ptr, int size, const char* name);
-extern int ASM_PlaySound(sample sound, int angle, Uint8 distance, bool ambient);
+extern int ASM_PlaySound(sample sound, int angle, unsigned char distance, boolean ambient);
 extern void ASM_Uncache(sample chunk);
 extern void ASM_FadeOutMus(int fadems);
 extern void ASM_HaltSound(void);
 extern void ASM_Pause(void);
 extern void ASM_Resume(void);
 extern void ASM_Halt(void);
-extern void ASM_ChangeVolume(Uint8 sndvolume, Uint8 musvolume);
-extern void ASM_ReturnVolume(Uint8* retsnd, Uint8* retmus);
+extern void ASM_ChangeVolume(unsigned char sndvolume, unsigned char musvolume);
+extern void ASM_ReturnVolume(unsigned char* retsnd, unsigned char* retmus);
 extern void ASM_Close(void);
 extern void ASM_StopChannel(int channel);
 extern void ASM_SwitchStep(void);
-extern void ASM_ReverseStereo(bool reverse);
+extern void ASM_ReverseStereo(boolean reverse);
 extern void ASM_ChannelDone(int channel);
 extern int ASM_CurChannels(void);
 
@@ -186,11 +186,7 @@ extern int ASM_CurChannels(void);
 
 #define GetTimeCount()  ((SDL_GetTicks()*TickBase)/1000)
 
-inline void Delay(int wolfticks)
-{
-    if (wolfticks > 0)
-        SDL_Delay(wolfticks * 1000 / TickBase);
-}
+void Delay(int wolfticks);
 
 #define SD_SoundPlaying() 0
 #define UNCACHEAUDIOCHUNK(chunk) ASM_Uncache(ASM_Audiosegs[chunk]);
@@ -209,7 +205,7 @@ extern  void    SD_Startup(void);                                           // D
 extern  void    SD_Shutdown(void);                                          // DONE
 
 extern  void    SD_PositionSound(int leftvol, int rightvol);                // DONE, basically the same
-extern  byte    SD_PlaySound(soundnames sound);                             // DONE, just calls SD_PlayDigitized
+extern  unsigned char    SD_PlaySound(soundnames sound);                             // DONE, just calls SD_PlayDigitized
 extern  void    SD_SetPosition(int channel, int leftpos, int rightpos);     // DONE, basically the same
 extern  void    SD_StopSound(void);                                         // DONE, just calls ASM_HaltSound()
 
@@ -219,11 +215,11 @@ extern  void    SD_MusicOn(void);                                           // D
 extern void SD_FadeOutMusic(int fade);                                  // DONE
 extern  int     SD_MusicOff(void);                                          // DONE, just pauses
 
-extern  bool    SD_MusicPlaying(void);                                      // DONE
-extern  bool    SD_SetSoundMode(SDMode mode);                               // DONE
-extern  bool    SD_SetMusicMode(SMMode mode);                               // DONE
+extern  boolean    SD_MusicPlaying(void);                                      // DONE
+extern  boolean    SD_SetSoundMode(SDMode mode);                               // DONE
+extern  boolean    SD_SetMusicMode(SMMode mode);                               // DONE
 extern void SD_SetDigiDevice(SDSMode mode);
-extern  int     SD_PlayDigitized(word which, int leftpos, int rightpos, bool amb);   // DONE
+extern  int     SD_PlayDigitized(unsigned short which, int leftpos, int rightpos, boolean amb);   // DONE
 extern  void    CA_LoadAllSounds(void);
 
 // Ambient sound prototypes

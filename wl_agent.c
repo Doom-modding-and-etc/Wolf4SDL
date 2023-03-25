@@ -26,9 +26,9 @@
 //
 // player state info
 //
-int32_t        thrustspeed;
+int        thrustspeed;
 
-word            plux, pluy;          // player coordinates scaled to unsigned
+unsigned short            plux, pluy;          // player coordinates scaled to unsigned
 
 short           anglefrac;
 
@@ -49,7 +49,7 @@ statetype   s_attack = { false,0,0,(statefunc)T_Attack,NULL,NULL };
 
 struct atkinf
 {
-    int8_t    tics, attack, frame;   //Attack is for: 1 Gun, 2 Knife, 3 for Machine Gun, 4 Chain Gun
+    char    tics, attack, frame;   //Attack is for: 1 Gun, 2 Knife, 3 for Machine Gun, 4 Chain Gun
 } attackinfo[4][4] =
 {
     { {6,0,1},{6,2,2},{6,0,3},{6,-1,4} },
@@ -60,20 +60,11 @@ struct atkinf
 
 //===========================================================================
 
-//----------
 
-void Attack(void);
-void Use(void);
-void Search(objtype* ob);
-void SelectWeapon(void);
-void SelectItem(void);
-
-//----------
-
-bool TryMove(objtype* ob);
+boolean TryMove(objtype* ob);
 void T_Player(objtype* ob);
 
-void ClipMove(objtype* ob, int32_t xmove, int32_t ymove);
+void ClipMove(objtype* ob, int xmove, int ymove);
 
 /*
 =============================================================================
@@ -154,14 +145,11 @@ void CheckWeaponChange(void)
 
 void ControlMovement(objtype* ob)
 {
-    int32_t oldx, oldy;
     int     angle;
     int     angleunits;
 
     thrustspeed = 0;
 
-    oldx = player->x;
-    oldy = player->y;
 
     if (buttonstate[bt_strafeleft])
     {
@@ -184,6 +172,35 @@ void ControlMovement(objtype* ob)
         else
             Thrust(angle, BASEMOVE * MOVESCALE * tics);
     }
+#ifdef EXTRACONTROLS
+    if (buttonstate[bt_moveforward])
+    {
+        int delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
+        controly = delta;
+        angle = ob->angle - ANGLES;
+        if (angle < 0)
+            angle += ANGLES;
+
+        if (controly)
+            Thrust(angle, RUNMOVE * MOVESCALE * tics);
+        else
+            Thrust(angle, BASEMOVE * MOVESCALE * tics);
+    }
+
+    if (buttonstate[bt_movebackward])
+    {
+        int delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
+        controly = delta;
+        angle = ob->angle - ANGLES;
+        if (angle < 0)
+            angle =- ANGLES;
+
+        if (controly)
+            Thrust(angle, RUNMOVE * MOVESCALE * tics);
+        else
+            Thrust(angle, BASEMOVE * MOVESCALE * tics);
+    }
+#endif
 
     //
     // side to side move
@@ -229,22 +246,24 @@ void ControlMovement(objtype* ob)
 #if SDL_MAJOR_VERSION == 2
     if (gamecontrolstrafe < 0)
     {
+        int speed;
         angle = ob->angle + ANGLES / 4;
         if (angle >= ANGLES)
             angle -= ANGLES;
 
-        int32_t speed = -gamecontrolstrafe * MOVESCALE;
+        speed = -gamecontrolstrafe * MOVESCALE;
         if (controly != 0)
             speed = (speed * 70) / 100; // correct faster diagonal movement
         Thrust(angle, speed);           // move to left
     }
     else if (gamecontrolstrafe > 0)
     {
+        int speed;
         angle = ob->angle - ANGLES / 4;
         if (angle < 0)
             angle += ANGLES;
 
-        int32_t speed = gamecontrolstrafe * MOVESCALE;
+        speed = gamecontrolstrafe * MOVESCALE;
         if (controly != 0)
             speed = (speed * 70) / 100; // correct faster diagonal movement
         Thrust(angle, speed);           // move to right
@@ -256,7 +275,7 @@ void ControlMovement(objtype* ob)
     //
     if (controly < 0)
     {
-        int32_t speed = -controly * MOVESCALE;
+        int speed = -controly * MOVESCALE;
 #if SDL_MAJOR_VERSION == 2        
         if (gamecontrolstrafe != 0)
             speed = (speed * 70) / 100; // correct faster diagonal movement
@@ -265,7 +284,7 @@ void ControlMovement(objtype* ob)
     }
     else if (controly > 0)
     {
-        int32_t speed = controly * BACKMOVESCALE;
+        int speed = controly * BACKMOVESCALE;
         angle = ob->angle + ANGLES / 2;
         if (angle >= ANGLES)
             angle -= ANGLES;
@@ -329,7 +348,7 @@ inline void StatusDrawPicIndirect(unsigned x, unsigned y, unsigned picnum)
 }
 #endif
 
-void StatusDrawFace(uint32_t picnum)
+void StatusDrawFace(unsigned int picnum)
 {
     StatusDrawPic(17, 4, picnum);
 
@@ -421,13 +440,15 @@ void UpdateFace(void)
 ===============
 */
 
-static void LatchNumber(int x, int y, unsigned width, int32_t number)
+static void LatchNumber(int x, int y, unsigned width, int number)
 {
     unsigned length, c;
     char    str[20];
-
-    ltoa(number, str, 10);
-
+#ifdef NOT_ANSI_C
+    w3sltoa(number, str, 10);
+#else
+    sprintf(str, "%ld", number);
+#endif
     length = (unsigned)strlen(str);
 
     while (length < width)
@@ -483,11 +504,22 @@ void TakeDamage(int points, objtype* attacker)
     if (!godmode)
         gamestate.health -= points;
 
-    if (gamestate.health <= 0)
+    if (gamestate.health <= 0) 
     {
-        gamestate.health = 0;
-        playstate = ex_died;
-        killerobj = attacker;
+#ifdef MAPCONTROLLEDLTIME
+        if (tilemap[63][4]) {
+            gamestate.health = 0;
+            playstate = ex_completed;
+        }
+        else 
+        {
+#endif
+            gamestate.health = 0;
+            playstate = ex_died;
+            killerobj = attacker;
+#ifdef MAPCONTROLLEDLTIME
+        }
+#endif
     }
 
     if (godmode != 2)
@@ -607,7 +639,7 @@ void DrawScore(void)
 ===============
 */
 
-void GivePoints(int32_t points)
+void GivePoints(int points)
 {
     gamestate.score += points;
     while (gamestate.score >= gamestate.nextextra)
@@ -892,11 +924,11 @@ void GetBonus(statobj_t* check)
 ===================
 */
 
-bool TryMove(objtype* ob)
+boolean TryMove(objtype* ob)
 {
     int         xl, yl, xh, yh, x, y;
     objtype* check;
-    int32_t     deltax, deltay;
+    int     deltax, deltay;
 
     xl = (ob->x - PLAYERSIZE) >> TILESHIFT;
     yl = (ob->y - PLAYERSIZE) >> TILESHIFT;
@@ -1001,9 +1033,9 @@ bool TryMove(objtype* ob)
 ===================
 */
 
-void ClipMove(objtype* ob, int32_t xmove, int32_t ymove)
+void ClipMove(objtype* ob, int xmove, int ymove)
 {
-    int32_t    basex, basey;
+    int    basex, basey;
 
     basex = ob->x;
     basey = ob->y;
@@ -1015,8 +1047,8 @@ void ClipMove(objtype* ob, int32_t xmove, int32_t ymove)
 
 #if !defined(REMDEBUG) || !defined(SEGA_SATURN)
     if (noclip && ob->x > 2 * TILEGLOBAL && ob->y > 2 * TILEGLOBAL
-        && ob->x < (((int32_t)(mapwidth - 1)) << TILESHIFT)
-        && ob->y < (((int32_t)(mapheight - 1)) << TILESHIFT))
+        && ob->x < (((int)(mapwidth - 1)) << TILESHIFT)
+        && ob->y < (((int)(mapheight - 1)) << TILESHIFT))
         return;         // walk through walls
 #endif
 
@@ -1068,6 +1100,8 @@ void VictoryTile(void)
 static fixed FixedByFracOrig(fixed a, fixed b)
 {
     int sign = 0;
+    fixed res = (fixed)(((int64_t)a * b) >> 16);
+;
     if (b == 65536) b = 65535;
     else if (b == -65536) b = 65535, sign = 1;
     else if (b < 0) b = (-b), sign = 1;
@@ -1077,19 +1111,15 @@ static fixed FixedByFracOrig(fixed a, fixed b)
         a = -a;
         sign = !sign;
     }
-#ifdef _XBOX
-	fixed res = (fixed) (((int32_t)a * b) >> 16);
-#else
-    fixed res = (fixed)(((int64_t)a * b) >> 16);
-#endif
+    res = (fixed)(((int64_t)a * b) >> 16);
 	if (sign)
         res = -res;
     return res;
 }
 
-void Thrust(int angle, int32_t speed)
+void Thrust(int angle, int speed)
 {
-    int32_t xmove, ymove;
+    int xmove, ymove;
 
     //
     // ZERO FUNNY COUNTER IF MOVED!
@@ -1161,6 +1191,7 @@ void Cmd_Fire(void)
         attackinfo[gamestate.weapon][gamestate.attackframe].tics;
     gamestate.weaponframe =
         attackinfo[gamestate.weapon][gamestate.attackframe].frame;
+
 }
 
 //===========================================================================
@@ -1176,8 +1207,10 @@ void Cmd_Fire(void)
 void Cmd_Use(void)
 {
     int     checkx, checky, doornum, dir;
-    bool elevatorok;
-
+    boolean elevatorok;
+#if defined(PUSHOBJECT) || defined(LOGFILE) 
+    statobj_t* statptr;
+#endif
     //
     // find which cardinal direction the player is facing
     //
@@ -1209,7 +1242,43 @@ void Cmd_Use(void)
         dir = di_south;
         elevatorok = false;
     }
+#ifdef LOGFILE
+    // Added by Havoc for interactive objects
+    for (statptr = &statobjlist[0]; statptr != laststatobj; statptr++)
+    {
+        if (statptr->tilex == checkx && statptr->tiley == checky &&
+            (statptr->shapenum == SPR_STAT_4 || statptr->shapenum == SPR_STAT_9 || statptr->shapenum == SPR_STAT_19) &&
+            !buttonheld[bt_use])
+        {
+            buttonheld[bt_use] = true;
 
+            ClearMemory();
+
+            VW_FadeOut();
+
+            switch (statptr->shapenum)
+            {
+            case SPR_STAT_4:
+                LogDiscScreens("1");
+                break;
+
+            case SPR_STAT_9:
+                LogDiscScreens("2");
+                break;
+
+            case SPR_STAT_19:
+                LogDiscScreens("3");
+                break;
+            }
+
+            ClearMemory();
+
+            IN_ClearKeysDown();
+
+            DrawPlayScreen();
+        }
+    }
+#endif
     doornum = tilemap[checkx][checky];
 #if defined(EMBEDDED) && defined(SEGA_SATURN)
     if (*(mapsegs[1] + farmapylookup[checky] + checkx) == PUSHABLETILE)
@@ -1250,6 +1319,43 @@ void Cmd_Use(void)
     }
     else
         SD_PlaySound(DONOTHINGSND);
+#ifdef PUSHOBJECT
+    // Static Object/Items manipulation routines
+    for (statptr = statobjlist; statptr != laststatobj; statptr++)
+    {
+        if (statptr->tilex == checkx && statptr->tiley == checky && !buttonheld[bt_use])
+        {
+            buttonheld[bt_use] = true;        // that must react to spacebar
+
+#ifdef PUSHOBJECT // Pushable Items or Objects that can be pushed
+
+            if (statptr->pushable) // Is the item Pushable
+            {
+                if (actorat[checkx][checky])
+                {
+                    if (actorat[checkx + dx4dir[dir]][checky + dy4dir[dir]] > 0) { return; } // Is Tile to move to Free?
+                    SD_PlaySound(TAKEDAMAGESND);                                 // Make a Ugh pushing sound
+                    statptr->tilex = statptr->tilex + dx4dir[dir];                // Free to move object
+                    statptr->tiley = statptr->tiley + dy4dir[dir];                // to it's new location
+                    statptr->visspot = &spotvis[statptr->tilex][statptr->tiley];  // Make it visible
+                    actorat[checkx][checky] = (objtype*)(uintptr_t)0;
+                    actorat[statptr->tilex][statptr->tiley] = (objtype*)(uintptr_t)64;
+                }
+            }
+#endif
+            // Other routines for static objects can be inserted here
+
+            // End of static object check loop
+        }
+    }
+#endif
+#ifdef PUSHOBJECT // Pushable Static Object Item
+    if (MAPSPOT(tilex, tiley, 0) == PUSHITEMMARKER)
+    {
+        laststatobj->pushable = 1;     // Make Item Pushable or True
+        ResetFloorCode(tilex, tiley);  // Reset the Floor code to a valid Floor code value
+    }
+#endif
 }
 
 /*
@@ -1279,8 +1385,8 @@ void SpawnPlayer(int tilex, int tiley, int dir)
 #else
     player->areanumber = MAPSPOT(tilex, tiley, 0) - AREATILE;
 #endif
-    player->x = ((int32_t)tilex << TILESHIFT) + TILEGLOBAL / 2;
-    player->y = ((int32_t)tiley << TILESHIFT) + TILEGLOBAL / 2;
+    player->x = ((int)tilex << TILESHIFT) + TILEGLOBAL / 2;
+    player->y = ((int)tiley << TILESHIFT) + TILEGLOBAL / 2;
 #if defined(EMBEDDED) && defined(SEGA_SATURN)
     player->state = s_player;
 #else
@@ -1311,7 +1417,7 @@ void SpawnPlayer(int tilex, int tiley, int dir)
 void    KnifeAttack(objtype* ob)
 {
     objtype* check, * closest;
-    int32_t  dist;
+    int  dist;
 
     SD_PlaySound(ATKKNIFESND);
     // actually fire
@@ -1320,7 +1426,7 @@ void    KnifeAttack(objtype* ob)
     for (check = ob->next; check; check = check->next)
     {
         if ((check->flags & FL_SHOOTABLE) && (check->flags & FL_VISIBLE)
-            && abs(check->viewx - centerx) < shootdelta)
+            && abs((int)check->viewx - centerx) < shootdelta)
         {
             if (check->transx < dist)
             {
@@ -1340,14 +1446,117 @@ void    KnifeAttack(objtype* ob)
     DamageActor(closest, US_RndT() >> 4);
 }
 
+#ifdef BULLET_CALC
+#define COLSIZE 0x4000l
+#define STEPDIST 0x800l
+
+void    GunAttack(objtype* ob)
+{
+    int             bulletx, bullety;
+    short           bangle, damage, accuracy, numshots;
+    boolean         hit;
+    objtype* check;
+    int i;
+    switch (gamestate.weapon)
+    {
+    case wp_pistol:
+        SD_PlaySound(ATKPISTOLSND);
+        break;
+    case wp_machinegun:
+        SD_PlaySound(ATKMACHINEGUNSND);
+        break;
+    case wp_chaingun:
+        SD_PlaySound(ATKGATLINGSND);
+        break;
+    }
+
+    madenoise = true;
 
 
+
+    //
+    // AlumiuN's new weaponry code - trace bullets
+    //
+    switch (gamestate.weapon)
+    {
+    case wp_pistol: accuracy = 4; numshots = 1; break;
+    case wp_machinegun: accuracy = 5; numshots = 1; break;
+    case wp_chaingun: accuracy = 9; numshots = 1; break;
+    }
+
+    for (i = 0; i < numshots; i++)
+    {
+        bulletx = player->x;
+        bullety = player->y;
+        bangle = player->angle;
+
+        if (accuracy)
+        {
+            if (US_RndT() > 127)
+                bangle -= US_RndT() % (accuracy + 1);
+            else
+                bangle += US_RndT() % (accuracy + 1);
+        }
+
+        hit = false;    // Assume the worst! Oh, and reset the variable. :)
+
+        while (1)
+        {
+            bulletx += FixedMul(STEPDIST, costable[bangle]);
+            bullety -= FixedMul(STEPDIST, sintable[bangle]);
+
+            //
+            // check for solid walls
+            //
+            check = actorat[bulletx >> TILESHIFT][bullety >> TILESHIFT];
+            if (check && !ISPOINTER(check) && (uintptr_t)check != 64)
+            {
+                if ((uintptr_t)check < 128)      // Hit a wall
+                {
+                    // Add any effects that you want to happen when the bullet hits a wall
+                }
+                else if (doorobjlist[(uintptr_t)check - 128].action < 0xdfff / 2)   // Cheap hack - improve later?
+                {
+                    // Add any effects that you want to happen when the bullet hits a door
+                }
+                hit = true;
+            }
+
+            if (hit)
+                break;
+
+            check = objlist;
+            while (check)
+            {
+                if (check->flags & FL_SHOOTABLE)
+                {
+                    if (labs(bulletx - check->x) < COLSIZE && labs(bullety - check->y) < COLSIZE)
+                    {
+                        hit = true;
+                        switch (gamestate.weapon)
+                        {
+                        case wp_pistol: damage = 10 + US_RndT() % 25; break;
+                        case wp_machinegun: damage = 8 + US_RndT() % 22; break;
+                        case wp_chaingun: damage = 6 + US_RndT() % 20; break;
+                        }
+                        DamageActor(check, damage);
+                    }
+                }
+                check = check->next;
+            }
+
+            if (hit)
+                break;
+        }
+    }
+}
+#else
 void    GunAttack(objtype* ob)
 {
     objtype* check, * closest, * oldclosest;
     int      damage;
     int      dx, dy, dist;
-    int32_t  viewdist;
+    int  viewdist;
 
     switch (gamestate.weapon)
     {
@@ -1377,7 +1586,7 @@ void    GunAttack(objtype* ob)
         for (check = ob->next; check; check = check->next)
         {
             if ((check->flags & FL_SHOOTABLE) && (check->flags & FL_VISIBLE)
-                && abs(check->viewx - centerx) < shootdelta)
+                && abs((int)check->viewx - centerx) < shootdelta)
             {
                 if (check->transx < viewdist)
                 {
@@ -1400,8 +1609,8 @@ void    GunAttack(objtype* ob)
     //
     // hit something
     //
-    dx = ABS(closest->tilex - player->tilex);
-    dy = ABS(closest->tiley - player->tiley);
+    dx = abs((int)closest->tilex - player->tilex);
+    dy = abs((int)closest->tiley - player->tiley);
     dist = dx > dy ? dx : dy;
     if (dist < 2)
         damage = US_RndT() / 4;
@@ -1415,7 +1624,7 @@ void    GunAttack(objtype* ob)
     }
     DamageActor(closest, damage);
 }
-
+#endif
 //===========================================================================
 
 /*
@@ -1428,7 +1637,7 @@ void    GunAttack(objtype* ob)
 
 void VictorySpin(void)
 {
-    int32_t    desty;
+    int    desty;
 
     if (player->angle > 270)
     {
@@ -1443,7 +1652,7 @@ void VictorySpin(void)
             player->angle = 270;
     }
 
-    desty = (((int32_t)player->tiley - 5) << TILESHIFT) - 0x3000;
+    desty = (((int)player->tiley - 5) << TILESHIFT) - 0x3000;
 
     if (player->y > desty)
     {
@@ -1486,8 +1695,8 @@ void    T_Attack(objtype* ob)
     if (gamestate.victoryflag)              // watching the BJ actor
         return;
 
-    plux = (word)(player->x >> UNSIGNEDSHIFT);                     // scale to fit in unsigned
-    pluy = (word)(player->y >> UNSIGNEDSHIFT);
+    plux = (unsigned short)(player->x >> UNSIGNEDSHIFT);                     // scale to fit in unsigned
+    pluy = (unsigned short)(player->y >> UNSIGNEDSHIFT);
     player->tilex = (short)(player->x >> TILESHIFT);                // scale to tile values
     player->tiley = (short)(player->y >> TILESHIFT);
 
@@ -1592,8 +1801,8 @@ void    T_Player(objtype* ob)
     if (gamestate.victoryflag)              // watching the BJ actor
         return;
 
-    plux = (word)(player->x >> UNSIGNEDSHIFT);                     // scale to fit in unsigned
-    pluy = (word)(player->y >> UNSIGNEDSHIFT);
+    plux = (unsigned short)(player->x >> UNSIGNEDSHIFT);                     // scale to fit in unsigned
+    pluy = (unsigned short)(player->y >> UNSIGNEDSHIFT);
     player->tilex = (short)(player->x >> TILESHIFT);                // scale to tile values
     player->tiley = (short)(player->y >> TILESHIFT);
 }

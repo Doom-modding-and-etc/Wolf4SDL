@@ -7,7 +7,7 @@
 #include "wl_def.h"
 
 #if defined(USE_RAIN) || defined(USE_SNOW)
-uint32_t rainpos;
+unsigned int rainpos;
 #endif
 
 typedef struct
@@ -84,7 +84,7 @@ void DrawStarSky (void)
     point3d_t *pt;
     byte      *dest;
     byte      shade;
-    int16_t   stopx,starty,stopy;
+    short   stopx,starty,stopy;
     fixed     x,y,z;
     fixed     xx,yy;
     
@@ -167,8 +167,8 @@ void DrawStarSky (void)
 void DrawRain (void)
 {
 #if defined(USE_FLOORCEILINGTEX) && defined(FIXRAINSNOWLEAKS)
-    byte      tilex,tiley;
-    int16_t   prestep;
+    unsigned char      tilex,tiley;
+    short   prestep;
     fixed     basedist,stepscale;
     fixed     xfrac,yfrac;
     fixed     xstep,ystep;
@@ -176,8 +176,8 @@ void DrawRain (void)
 
     int       i;
     point3d_t *pt;
-    byte      shade;
-    int32_t   ax,az,x,y,z,xx,yy,height,actheight;
+    unsigned char      shade;
+    int       ax,az,x,y,z,xx,yy,height,actheight;
     fixed     px,pz;
 
     px = (player->y + FixedMul(0x7900, viewsin)) >> 6;
@@ -270,8 +270,8 @@ void DrawRain (void)
 void DrawSnow (void)
 {
 #if defined(USE_FLOORCEILINGTEX) && defined(FIXRAINSNOWLEAKS)
-    byte      tilex,tiley;
-    int16_t   prestep;
+    unsigned char      tilex,tiley;
+    short   prestep;
     fixed     basedist,stepscale;
     fixed     xfrac,yfrac;
     fixed     xstep,ystep;
@@ -279,8 +279,8 @@ void DrawSnow (void)
 
     int       i;
     point3d_t *pt;
-    byte      shade;
-    int32_t   ax,az,x,y,z,xx,yy,height,actheight;
+    unsigned char      shade;
+    int       ax,az,x,y,z,xx,yy,height,actheight;
     fixed     px,pz;
     
     px = (player->y + FixedMul(0x7900, viewsin)) >> 6;

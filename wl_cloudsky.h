@@ -5,13 +5,13 @@
 
 typedef struct
 {
-    byte    length;
-    int16_t startAndDir;
+    unsigned char    length;
+    short startAndDir;
 } colormapentry_t;
 
 typedef struct
 {
-    byte            numColors;
+    unsigned char            numColors;
     colormapentry_t *entries;
 } colormap_t;
 
@@ -40,10 +40,10 @@ typedef struct
 
 typedef struct
 {
-    uint32_t seed;
-    uint16_t speed;
-    uint16_t angle;
-    byte     colorMapIndex;
+    unsigned int seed;
+    unsigned short speed;
+    unsigned short angle;
+    unsigned char     colorMapIndex;
 } cloudsky_t;
 
 extern cloudsky_t *curSky;

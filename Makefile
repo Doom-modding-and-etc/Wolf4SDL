@@ -21,7 +21,7 @@ endif
 CFLAGS_SDL ?= $(shell $(SDL_CONFIG) --cflags)
 LDFLAGS_SDL ?= $(shell $(SDL_CONFIG) --libs)
 CFLAGS += -O2 -Wall -W -g -Wpointer-arith -Wreturn-type -Wwrite-strings -Wcast-align -std=gnu99 \
--Wimplicit-int -Wsequence-point $(CFLAGS_SDL)
+-Wimplicit-int -Wsequence-point -DOLD $(CFLAGS_SDL)
 
 LDFLAGS += $(LDFLAGS_SDL) -lm
 ifeq ($(SDL_MAJOR_VERSION),1)
@@ -39,19 +39,10 @@ endif
 ifneq (,$(findstring MINGW,$(shell uname -s)))
 LDFLAGS += -static-libgcc
 endif
-LW_LIB_SRCS += 3rdparty/lw_lib/lw_ai_enemy.c 3rdparty/lw_lib/lw_bres.c 3rdparty/lw_lib/lw_ctx.c \
-3rdparty/lw_lib/lw_edit.c 3rdparty/lw_lib/lw_fs.c 3rdparty/lw_lib/lw_maptool.c 3rdparty/lw_lib/lw_misc.c \
-3rdparty/lw_lib/lw_protmsg.c 3rdparty/lw_lib/lw_pwscan.c 3rdparty/lw_lib/lw_vec.c
-
-WOLFRAD_SRCS += 3rdparty/wolfrad/wolfrad.c 3rdparty/wolfrad/wr_level.c 3rdparty/wolfrad/wr_lightinfo.c \
-3rdparty/wolfrad/wr_lightmap.c 3rdparty/wolfrad/wr_rad.c 3rdparty/wolfrad/wr_radmap.c 3rdparty/wolfrad/wr_raycaster.c \
-3rdparty/wolfrad/wr_room.c 3rdparty/wolfrad/wr_scene.c
 
 ID_ENGINE_SRCS += id_ca.c id_crt.o id_in.c id_pm.c id_sd.c id_us.c id_vh.c id_vieasm.c id_vl.c
 
-SRCS += aud_sys/mame/fmopl.c aud_sys/dosbox/dbopl.c $(LW_LIB_SRCS) $(WOLFRAD_SRCS) $(ID_ENGINE_SRCS) signon.c \
-wl_ai.c wl_conartist.c wl_benchhobo.c wl_clockking.c wl_ed.c wl_firefly.c wl_hooker.c wl_led.c wl_healthmeter.c \
-wl_math.c wl_physics.c wl_pimp.c wl_polygon.c wl_sleephobo.c wl_anyactor.c \
+SRCS += aud_sys/mame/fmopl.c aud_sys/dosbox/dbopl.c $(ID_ENGINE_SRCS) signon.c \
 wl_act1.c wl_act2.c wl_agent.c wl_atmos.c wl_cloudsky.c wl_debug.c wl_draw.c wl_game.c wl_inter.c \
 wl_main.c wl_menu.c wl_parallax.c wl_plane.c wl_play.c wl_scale.c wl_shade.c wl_state.c \
 wl_text.c wl_utils.c 

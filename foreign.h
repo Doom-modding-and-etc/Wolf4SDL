@@ -48,6 +48,9 @@
 
 #define	STR_MOUSEEN	"Mouse Enabled"
 #define	STR_JOYEN	"Joystick Enabled"
+#ifdef EXTRACONTROLS
+#define STR_MOUSEMVN "Mouse Movement"
+#endif
 #define	STR_PORT2	"Use joystick port 2"
 #define	STR_GAMEPAD	"Gravis GamePad Enabled"
 #define	STR_SENS	"Mouse Sensitivity"

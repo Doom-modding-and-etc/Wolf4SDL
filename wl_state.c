@@ -45,15 +45,15 @@ void SpawnNewObj(unsigned tilex, unsigned tiley, statetype* state);
 #endif
 void    NewState (objtype *ob, statetype *state);
 
-bool TryWalk (objtype *ob);
-void    MoveObj (objtype *ob, int32_t move);
+boolean TryWalk (objtype *ob);
+void    MoveObj (objtype *ob, int move);
 
 void    KillActor (objtype *ob);
 void    DamageActor (objtype *ob, unsigned damage);
 
-bool CheckLine (objtype *ob);
+boolean CheckLine (objtype *ob);
 void    FirstSighting (objtype *ob);
-bool CheckSight (objtype *ob);
+boolean CheckSight (objtype *ob);
 
 /*
 =============================================================================
@@ -113,8 +113,8 @@ void SpawnNewObj (unsigned tilex, unsigned tiley, statetype *state)
 
     newobj->tilex = (short) tilex;
     newobj->tiley = (short) tiley;
-    newobj->x = ((int32_t)tilex<<TILESHIFT)+TILEGLOBAL/2;
-    newobj->y = ((int32_t)tiley<<TILESHIFT)+TILEGLOBAL/2;
+    newobj->x = ((int)tilex<<TILESHIFT)+TILEGLOBAL/2;
+    newobj->y = ((int)tiley<<TILESHIFT)+TILEGLOBAL/2;
     newobj->dir = nodir;
 
     actorat[tilex][tiley] = newobj;
@@ -262,7 +262,7 @@ void NewState(objtype* ob, statetype* state)
 }
 #endif
 
-bool TryWalk (objtype *ob)
+boolean TryWalk (objtype *ob)
 {
     int       doornum = -1;
     uintptr_t temp;
@@ -741,9 +741,9 @@ void SelectRunDir (objtype *ob)
 =================
 */
 
-void MoveObj (objtype *ob, int32_t move)
+void MoveObj (objtype *ob, int move)
 {
-    int32_t    deltax,deltay;
+    int    deltax,deltay;
 
     switch (ob->dir)
     {
@@ -1295,13 +1295,13 @@ void DamageActor (objtype *ob, unsigned damage)
 =====================
 */
 
-bool CheckLine (objtype *ob)
+boolean CheckLine (objtype *ob)
 {
     int         x1,y1,xt1,yt1,x2,y2,xt2,yt2;
     int         x,y;
     int         xdist,ydist,xstep,ystep;
     int         partial,delta;
-    int32_t     ltemp;
+    int     ltemp;
     int         xfrac,yfrac,deltafrac;
     unsigned    value,intercept;
 
@@ -1332,14 +1332,14 @@ bool CheckLine (objtype *ob)
 
         deltafrac = abs(x2-x1);
         delta = y2-y1;
-        ltemp = ((int32_t)delta<<8)/deltafrac;
+        ltemp = ((int)delta<<8)/deltafrac;
         if (ltemp > 0x7fffl)
             ystep = 0x7fff;
         else if (ltemp < -0x7fffl)
             ystep = -0x7fff;
         else
             ystep = ltemp;
-        yfrac = y1 + (((int32_t)ystep*partial) >>8);
+        yfrac = y1 + (((int)ystep*partial) >>8);
 
         x = xt1+xstep;
         xt2 += xstep;
@@ -1363,7 +1363,11 @@ bool CheckLine (objtype *ob)
             value &= ~BIT_DOOR;
             intercept = yfrac-ystep/2;
 
-            if (intercept>doorposition[value])
+#ifdef BLAKEDOORS
+            if (intercept<ldoorposition[value] || intercept>rdoorposition[value])
+#else
+            if (intercept > doorposition[value])
+#endif
                 return false;
 
         } while (x != xt2);
@@ -1386,14 +1390,14 @@ bool CheckLine (objtype *ob)
 
         deltafrac = abs(y2-y1);
         delta = x2-x1;
-        ltemp = ((int32_t)delta<<8)/deltafrac;
+        ltemp = ((int)delta<<8)/deltafrac;
         if (ltemp > 0x7fffl)
             xstep = 0x7fff;
         else if (ltemp < -0x7fffl)
             xstep = -0x7fff;
         else
             xstep = ltemp;
-        xfrac = x1 + (((int32_t)xstep*partial) >>8);
+        xfrac = x1 + (((int)xstep*partial) >>8);
 
         y = yt1 + ystep;
         yt2 += ystep;
@@ -1417,7 +1421,11 @@ bool CheckLine (objtype *ob)
             value &= ~BIT_DOOR;
             intercept = xfrac-xstep/2;
 
-            if (intercept>doorposition[value])
+#ifdef BLAKEDOORS
+            if (intercept<ldoorposition[value] || intercept>rdoorposition[value])
+#else
+            if (intercept > doorposition[value])
+#endif
                 return false;
         } while (y != yt2);
     }
@@ -1442,9 +1450,9 @@ bool CheckLine (objtype *ob)
 
 #define MINSIGHT        0x18000l
 
-bool CheckSight (objtype *ob)
+boolean CheckSight (objtype *ob)
 {
-    int32_t deltax,deltay;
+    int deltax,deltay;
 
     //
     // don't bother tracing a line if the area isn't connected to the player's
@@ -1587,6 +1595,10 @@ void FirstSighting (objtype *ob)
 #ifndef SPEAR
         case bossobj:
             SD_PlaySound(GUTENTAGSND);
+#if defined(BOSS_MUSIC) && defined(VIEASM)
+            ChangeGameMusic(ULTIMATE_MUS);
+#endif
+
 #if defined(EMBEDDED) && defined(SEGA_SATURN)
             NewState(ob, s_bosschase1);
 #else
@@ -1741,11 +1753,7 @@ void FirstSighting (objtype *ob)
         ob->distance = 0;       // ignore the door opening command
 
     ob->flags |= FL_ATTACKMODE|FL_FIRSTATTACK;
-#ifdef _XBOX
-	ob->active = ac_yes;
-#else
-    ob->active = true;	// wake up the guards! Wolf3s: HUH?
-#endif
+    ob->active = (activetype)true;	// wake up the guards! Wolf3s: HUH?
 }
 
 
@@ -1764,7 +1772,7 @@ void FirstSighting (objtype *ob)
 ===============
 */
 
-bool SightPlayer (objtype *ob)
+boolean SightPlayer (objtype *ob)
 {
     if (ob->flags & FL_ATTACKMODE)
         Quit ("An actor in ATTACKMODE called SightPlayer!");

@@ -41,8 +41,8 @@ typedef struct _Channel Channel;
 
 typedef uintptr_t       Bitu;
 typedef intptr_t        Bits;
-typedef uint32_t        Bit32u;
-typedef int32_t         Bit32s;
+typedef unsigned int    Bit32u;
+typedef int             Bit32s;
 typedef uint16_t        Bit16u;
 typedef int16_t         Bit16s;
 typedef uint8_t         Bit8u;

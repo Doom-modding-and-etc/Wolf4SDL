@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svnroot/cadcdev/!svn/ver/559/kos-ports/SDL/base/src/joystick
+END
+SDL_joystick.c
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/cadcdev/!svn/ver/9/kos-ports/SDL/base/src/joystick/SDL_joystick.c
+END
+SDL_sysjoystick.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svnroot/cadcdev/!svn/ver/9/kos-ports/SDL/base/src/joystick/SDL_sysjoystick.h
+END
+SDL_joystick_c.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/cadcdev/!svn/ver/9/kos-ports/SDL/base/src/joystick/SDL_joystick_c.h
+END

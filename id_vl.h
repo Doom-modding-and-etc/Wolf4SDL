@@ -15,6 +15,9 @@ void Quit (const char *error,...);
 //===========================================================================
 
 extern SDL_Surface *screen, *screenBuffer;
+#ifdef SAVE_GAME_SCREENSHOT
+extern SDL_Surface* lastGameSurface;
+#endif
 #if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
@@ -25,21 +28,21 @@ extern SDL_Texture* upscaledTexture;
 #endif
 
 #ifndef SEGA_SATURN 
-extern  bool fullscreen, usedoublebuffering;
+extern  boolean fullscreen, usedoublebuffering;
 #endif
 
-extern uint32_t screenWidth, screenHeight, screenBits,
+extern unsigned int screenWidth, screenHeight, screenBits,
 #ifndef SEGA_SATURN
 screenPitch, bufferPitch;   
 #endif
 extern  int      scaleFactor;
 
-extern	bool  screenfaded;
+extern	boolean  screenfaded;
 #ifndef SEGA_SATURN
 extern	unsigned bordercolor;
 #endif
 
-extern  uint32_t *ylookup;
+extern  unsigned int *ylookup;
 
 extern SDL_Color gamepal[256];
 
@@ -57,39 +60,41 @@ extern SDL_Color gamepal[256];
 #define VL_ClearScreen(c)    SDL_FillRect(screenBuffer,NULL,(c))
 
 
-void VL_DePlaneVGA (byte *source, int width, int height);
+void VL_DePlaneVGA (unsigned char *source, int width, int height);
 void VL_SetVGAPlaneMode (void);
-void VL_SetTextMode (void);
 void VL_Shutdown (void);
 
-void VL_ConvertPalette(byte *srcpal, SDL_Color *destpal, int numColors);
+void VL_ConvertPalette(unsigned char *srcpal, SDL_Color *destpal, int numColors);
 void VL_FillPalette (int red, int green, int blue);
-void VL_SetColor    (int color, int red, int green, int blue);
 void VL_GetColor    (int color, int *red, int *green, int *blue);
-void VL_SetPalette  (SDL_Color *palette, bool forceupdate);
+void VL_SetPalette  (SDL_Color *palette, boolean forceupdate);
 void VL_GetPalette  (SDL_Color *palette);
 void VL_FadeOut     (int start, int end, int red, int green, int blue, int steps);
 void VL_FadeIn      (int start, int end, SDL_Color *palette, int steps);
 
-byte *VL_LockSurface(SDL_Surface *surface);
+unsigned char *VL_LockSurface(SDL_Surface *surface);
 #ifndef SEGA_SATURN
 void VL_UnlockSurface(SDL_Surface *surface);
 #else
 #define VL_UnlockSurface(surface) SDL_UnlockSurface(surface)
 #endif
-byte VL_GetPixel        (int x, int y);
+#ifdef SAVE_GAME_SCREENSHOT
+unsigned char VL_GetPixel(SDL_Surface* surface, int x, int y);
+void VL_SetSaveGameSlot();
+#else
+unsigned char VL_GetPixel        (int x, int y);
+#endif
 void VL_Plot            (int x, int y, int color);
 void VL_Hlin            (unsigned x, unsigned y, unsigned width, int color);
 void VL_Vlin            (int x, int y, int height, int color);
 void VL_BarScaledCoord  (int scx, int scy, int scwidth, int scheight, int color);
 void VL_Bar             (int x, int y, int width, int height, int color);
 
-void VL_DrawPicBare             (int x, int y, byte *pic, int width, int height);
 void VL_ScreenToScreen          (SDL_Surface *source, SDL_Surface *dest);
-void VL_MemToScreenScaledCoord  (byte *source, int width, int height, int scx, int scy);
-void VL_MemToScreenScaledCoord2  (byte *source, int origwidth, int origheight, int srcx, int srcy,
+void VL_MemToScreenScaledCoord  (unsigned char *source, int width, int height, int scx, int scy);
+void VL_MemToScreenScaledCoord2  (unsigned char *source, int origwidth, int origheight, int srcx, int srcy,
                                     int destx, int desty, int width, int height);
 
-void VL_MemToScreen (byte *source, int width, int height, int x, int y);
+void VL_MemToScreen (unsigned char *source, int width, int height, int x, int y);
 
 #endif

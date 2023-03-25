@@ -6,6 +6,15 @@
 
 #include "wl_def.h"
 
+#ifdef MAPCONTROLLEDSKY
+static int GetParallaxStartTexture()
+{
+    int startTex = tilemap[7][0];
+    return startTex;
+}
+
+#else
+
 #ifdef USE_FEATUREFLAGS
 
 // The lower left tile of every map determines the start texture of the parallax sky.
@@ -36,7 +45,7 @@ int GetParallaxStartTexture (void)
 }
 
 #endif
-
+#endif
 /*
 ====================
 =
@@ -48,16 +57,16 @@ int GetParallaxStartTexture (void)
 void DrawParallax (void)
 {
     int     x,y;
-    byte    *dest,*skysource;
-    word    texture;
-    int16_t angle;
-    int16_t skypage,curskypage;
-    int16_t lastskypage;
-    int16_t xtex;
-    int16_t toppix;
+    unsigned char *dest,*skysource;
+    unsigned short    texture;
+    short angle;
+    short skypage,curskypage;
+    short lastskypage;
+    short xtex;
+    short toppix;
 
     skypage = GetParallaxStartTexture();
-    skypage += USE_PARALLAX - 1;
+    skypage += 16 - 1;
     lastskypage = -1;
 
     for (x = 0; x < viewwidth; x++)
@@ -74,7 +83,7 @@ void DrawParallax (void)
         else if (angle >= FINEANGLES)
             angle -= FINEANGLES;
 
-        xtex = ((angle * USE_PARALLAX) << TEXTURESHIFT) / FINEANGLES;
+        xtex = ((angle * 16) << TEXTURESHIFT) / FINEANGLES;
         curskypage = xtex >> TEXTURESHIFT;
 
         if (lastskypage != curskypage)

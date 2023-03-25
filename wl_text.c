@@ -1,5 +1,4 @@
 // WL_TEXT.C
-
 #include "wl_def.h"
 
 /*
@@ -73,7 +72,7 @@ static int     picx;
 static int     picy;
 static int     picnum;
 static int     picdelay;
-static bool layoutdone;
+static boolean layoutdone;
 
 //===========================================================================
 
@@ -372,7 +371,7 @@ void HandleWord (void)
 {
     char    wword[WORDLIMIT];
     int     wordindex;
-    word    wwidth,wheight,newpos;
+    unsigned short    wwidth,wheight,newpos;
 
 
     //
@@ -428,7 +427,7 @@ void HandleWord (void)
 =====================
 */
 
-void PageLayout (bool shownumber)
+void PageLayout (boolean shownumber)
 {
     int     i,oldfontcolor;
     char    ch;
@@ -648,8 +647,9 @@ void ShowArticle (char *article)
     };
 #endif
     unsigned    oldfontnumber;
-    bool     newpage,firstpage;
+    boolean     newpage,firstpage;
     ControlInfo ci;
+	Direction dir;
 
 #ifdef JAPAN
     pagenum = 1;
@@ -698,7 +698,7 @@ void ShowArticle (char *article)
 
         LastScan = 0;
         ReadAnyControl(&ci);
-        Direction dir = ci.dir;
+        dir = ci.dir;
         switch(dir)
         {
             case dir_North:
@@ -785,8 +785,10 @@ char helpfilename[13] = "HELPART.", endfilename[13] = "ENDART1.";
 #if !defined(SPEAR) || !defined(SEGA_SATURN)
 void HelpScreens (void)
 {
+#ifdef ARTSEXTERN
     int     artnum;
-    char    *text;
+	char    *text;
+#endif
 #ifndef ARTSEXTERN
     void    *layout;
 #endif
@@ -877,5 +879,82 @@ void EndText (void)
     FreeMusic ();
 #endif
 #endif
+}
+#endif
+
+#ifdef AUTOINTER
+/*
+======================
+=
+= Intermission Screens by BrotherTank
+=
+======================
+*/
+void IntermissionScreens(void)
+{
+    void*      layout;
+
+    char intfilename[13] = "INTART00.";
+    strcat(intfilename, extension);
+
+#ifndef SPEAR
+#ifndef SEAMLESS
+    intfilename[6] = '0' + (gamestate.episode + 1);
+    intfilename[7] = '0' + (gamestate.mapon + 1);
+#else
+    intfilename[6] = '0' + ((gamestate.mapon + 1) / 10);
+    intfilename[7] = '0' + ((gamestate.mapon + 1) % 10);
+#endif
+#else
+    intfilename[6] = '0' + ((gamestate.mapon + 1) / 10);
+    intfilename[7] = '0' + ((gamestate.mapon + 1) % 10);
+#endif
+
+    if (CA_LoadFile(intfilename, &layout))
+    {
+        ShowArticle((char*)layout);
+        VW_FadeOut();
+        free(layout);
+        FreeMusic();
+    }
+}
+#endif
+#ifdef LOGFILE
+/*
+======================
+=
+= Log Disc Screens
+=
+= By Havoc
+=
+======================
+*/
+void LogDiscScreens(char* choice)
+{
+    char* text;
+    void *layout;
+    char  logfilename[13] = "LOG000.";
+
+    strcat(logfilename, extension);
+
+#ifndef SPEAR
+    logfilename[3] = '0' + (gamestate.episode + 1);
+    logfilename[4] = '0' + (gamestate.mapon + 1);
+#else
+    logfilename[3] = '0' + ((gamestate.mapon + 1) / 10);
+    logfilename[4] = '0' + ((gamestate.mapon + 1) % 10);
+#endif
+    logfilename[5] = *choice;
+
+    if (!CA_LoadFile(logfilename, &layout))
+    {
+        text = (char*)layout;
+#ifndef SPEAR
+        ShowArticle(text);
+#endif
+        free(layout);
+
+        VW_FadeOut();
+    }
 }
 #endif
