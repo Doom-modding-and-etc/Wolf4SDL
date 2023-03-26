@@ -18,13 +18,13 @@ WINDRES   = windres.exe
 OBJ       = aud_sys/mame/fmopl.o aud_sys/dosbox/dbopl.o id_ca.o id_crt.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vieasm.o id_w3swrap.o id_vl.o signon.o psnprntf.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
 LINKOBJ   = aud_sys/mame/fmopl.o aud_sys/dosbox/dbopl.o id_ca.o id_crt.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vieasm.o id_w3swrap.o id_vl.o signon.o psnprntf.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
 LIBDIR    = -specs=$(DEVKITPRO)/libnx/switch.specs -L$(DEVKITPRO)/libnx/lib -L$(DEVKITPRO)/portlibs/switch/lib
-LIBS      = $(LIBDIR) -lSDL2 -lSDL2main -lSDL2_mixer -lmpg123 -lmodplug -lvorbisidec -logg -lopusfile -lopus -lEGL -lstdc++ `sdl2-config --libs` -lm -lnx
+LIBS      = $(LIBDIR) -lSDL2 -lSDL2main -lSDL2_mixer -lmpg123 -lmodplug -lvorbisidec -logg -lopusfile -lopus `sdl2-config --libs` -lm -lnx -lEGL -lstdc++
 INCS      = -I$(DEVKITPRO)/portlibs/switch/include -I$(DEVKITPRO)/portlibs/switch/include/SDL2 -I$(DEVKITPRO)/libnx/include 
 BIN       = Wolf4SDL.elf
 BUILD	  =	build
 ARCH 	  = -march=armv8-a -mtune=cortex-a57 -mtp=soft -fPIE -fPIC -O3 -O2
 DEFINES   = -DSWITCH 
-CFLAGS    = $(INCS) $(DEFINES) $(ARCH) -Wall -W -g -Wpointer-arith -Wreturn-type -Wwrite-strings -Wcast-align -std=c99 -Wimplicit-int -Wsequence-point 
+CFLAGS    = $(INCS) $(DEFINES) $(ARCH) -Wall -W -g -Wpointer-arith -Wreturn-type -Wwrite-strings -Wcast-align -std=gnu99 -Wimplicit-int -Wsequence-point 
 RM        = rm -f
 LINK      = aarch64-none-elf-gcc
 C		  = aarch64-none-elf-gcc

@@ -14,6 +14,8 @@
 
 #ifdef N3DS
 #include <3ds.h>
+#elif defined(SWITCH)
+#include <switch.h>
 #endif
 #if defined(_arch_dreamcast)
 #include <kos.h>
@@ -1089,6 +1091,9 @@ extern  char     str[80];
 extern  char     configdir[256];
 extern  char     configname[13];
 #endif
+#ifdef SWITCH
+extern PadState pad;
+#endif
 
 extern  fixed    focallength;
 #ifndef SEGA_SATURN
@@ -1478,6 +1483,11 @@ boolean CheckSight(objtype* ob);
 // player state info
 //
 extern  int thrustspeed;
+#ifdef SWITCH
+extern int JOYSTICK_DEAD_ZONE;
+extern int JOYSTICK_MAX_ZONE;
+extern HidAnalogStickState pos_left, pos_right;
+#endif
 extern  unsigned short     plux, pluy;         // player coordinates scaled to unsigned
 extern  objtype* LastAttacker;
 
@@ -1730,20 +1740,38 @@ void GetFlatTextures(void);
 #ifdef USE_PARALLAX
 void DrawParallax(void);
 #endif
-#ifndef _MSC_VER
-#ifdef NOT_ANSI_C
-static char* itoa(int value, char* string, int radix)
+
+/*
+===================
+=
+= w3sitoa
+=
+= converts a char to a int value.
+=
+===================
+*/
+
+static char* w3sitoa(int value, char* string, int radix)
 {
-    sprintf(string, "%d", value);
+    snprintf(string, radix, "%d", value);
     return string;
 }
 
-static char* ltoa(long value, char* string, int radix)
+/*
+===================
+=
+= w3sitoa
+=
+= converts a char to a long value.
+=
+===================
+*/
+
+static char* w3sltoa(long value, char* string, int radix)
 {
-    sprintf(string, "%ld", value);
+    snprintf(string, radix, "%ld", value);
     return string;
 }
-#endif
-#endif
+
 
 #endif

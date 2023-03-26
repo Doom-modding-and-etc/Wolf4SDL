@@ -57,6 +57,10 @@ extern unsigned char signon[];
 boolean     mousemoveenabled;
 #endif // EXTRACONTROLS
 
+#ifdef SWITCH
+PadState pad;
+#endif
+
 char    str[80];
 int     dirangle[9] = {0,ANGLES/8,2*ANGLES/8,3*ANGLES/8,4*ANGLES/8,
                        5*ANGLES/8,6*ANGLES/8,7*ANGLES/8,ANGLES};
@@ -2136,6 +2140,22 @@ void CheckParameters(int argc, char *argv[])
 
 int main (int argc, char *argv[])
 {
+#ifdef SWITCH
+    // nxlink
+    socketInitializeDefault();
+	nxlinkStdio();
+
+    /* emulator
+    consoleDebugInit(debugDevice_SVC);
+	stdout = stderr; */
+	printf("nxlink printf\n");
+    printf("MAIN ENTRY\n");
+	
+	printf("Configure Nintendo Switch gamepad");
+    padConfigureInput(1, HidNpadStyleSet_NpadStandard);
+    padInitializeDefault(&pad);		
+#endif	
+	
 #if defined(_arch_dreamcast)
     DC_Main();
     DC_CheckParameters();
@@ -2148,7 +2168,7 @@ int main (int argc, char *argv[])
     ps2_printf("CheckParameters DONE\n", 4);
 #endif
 #ifdef PS2
-        PS2_Started();
+    PS2_Started();
 #endif
     CheckForEpisodes(); 
 #if defined(SWITCH) || defined (N3DS) 

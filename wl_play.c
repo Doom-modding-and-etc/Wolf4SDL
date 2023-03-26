@@ -618,6 +618,12 @@ void PollControls (void)
 {
     int max, min, i;
     unsigned char buttonbits;
+#ifdef SWITCH
+	unsigned int kDown;
+	float turnspeed = 0;
+    float movespeed = 0;
+	int delta;
+#endif
 
     IN_ProcessEvents();
 
@@ -678,6 +684,37 @@ void PollControls (void)
 //
 // get button states
 //
+#ifdef SWITCH
+    padUpdate(&pad);
+
+    kDown = padGetButtons(&pad);
+
+    //u32 kToggle = hidKeysDown(CONTROLLER_P1_AUTO);
+
+    if((kDown & HidNpadButton_A) || (kDown & HidNpadButton_ZR))
+        buttonstate[bt_attack] = true;
+
+    if((kDown & HidNpadButton_B))
+        buttonstate[bt_use] = true;
+
+    if((kDown & HidNpadButton_X))
+        buttonstate[bt_strafe] = true;
+
+    if((kDown & HidNpadButton_Y) || (kDown & HidNpadButton_ZL))
+        buttonstate[bt_run] = true;
+
+    if((kDown & HidNpadButton_R))
+        buttonstate[bt_nextweapon] = true;
+
+    if((kDown & HidNpadButton_L))
+        buttonstate[bt_prevweapon] = true;
+
+    if((kDown & HidNpadButton_Minus))
+        buttonstate[bt_esc] = true;
+
+    if((kDown & HidNpadButton_Plus))
+        buttonstate[bt_pause] = true;
+#else
     PollKeyboardButtons();
 #if SDL_MAJOR_VERSION == 2
     PollGameControllerButtons();
@@ -688,9 +725,76 @@ void PollControls (void)
     if (joystickenabled)
         PollJoystickButtons();
 #endif
+#endif
 //
 // get movements
 //
+#ifdef SWITCH
+    // keyboard movement code
+    delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
+	
+    if((kDown & HidNpadButton_Up))
+        controly -= delta;
+    if((kDown & HidNpadButton_Right))
+        controly += delta;
+    if((kDown & HidNpadButton_Left))
+        controlx -= delta;
+    if((kDown & HidNpadButton_Right))
+        controlx += delta;
+
+    //Read the joysticks' position
+    pos_left = padGetStickPos(&pos_left, 0);
+    pos_right = padGetStickPos(&pos_right, 1);
+
+    if( pos_left.x < 0)
+    {
+        buttonstate[bt_strafeleft] = true;
+    }
+    else if( pos_left.x > 0)
+    {
+        buttonstate[bt_straferight] = true;
+    }
+    if( pos_left.y < -JOYSTICK_DEAD_ZONE)
+    {
+        movespeed = floor((float)((float)pos_left.y/(float)32767)*(float)35);
+        if( pos_left.y < -JOYSTICK_MAX_ZONE )
+        {
+            movespeed = -35;
+        }
+        delta = buttonstate[bt_run] ? (movespeed*2) * tics : movespeed * tics;
+        controly -= delta;
+    }
+    if( pos_left.y > JOYSTICK_DEAD_ZONE)
+    {
+        movespeed = floor((float)((float)-pos_left.y/(float)32767)*(float)35);
+        if( pos_left.y > JOYSTICK_MAX_ZONE)
+        {
+            movespeed = -35;
+        }
+        delta = buttonstate[bt_run] ? (movespeed*2) * tics : movespeed * tics;
+        controly += delta;
+    }
+    if( pos_right.x < -JOYSTICK_DEAD_ZONE)
+    {
+        turnspeed = floor((float)((float)-pos_right.x/(float)32767)*(float)35);
+        if( pos_right.x < -JOYSTICK_MAX_ZONE)
+        {
+            turnspeed = 35;
+        }
+        delta = buttonstate[bt_run] ? (turnspeed*2) * tics : turnspeed * tics;
+        controlx -= delta;
+    }
+    else if( pos_right.x > JOYSTICK_DEAD_ZONE)
+    {
+        turnspeed = floor((float)((float)pos_right.x/(float)32767)*(float)35);
+        if( pos_right.x > JOYSTICK_MAX_ZONE)
+        {
+            turnspeed = 35;
+        }
+        delta = buttonstate[bt_run] ? (turnspeed*2) * tics : turnspeed * tics;
+        controlx += delta;
+    }
+#else
     PollKeyboardMove();
 #if SDL_MAJOR_VERSION == 2
     PollGameControllerMove();
@@ -701,7 +805,7 @@ void PollControls (void)
 
     if (joystickenabled)
         PollJoystickMove ();
-
+#endif
 //
 // bound movement to a maximum
 //
