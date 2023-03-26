@@ -31,11 +31,11 @@ ARCH_LIBS      = -g -mword-relocations -ffunction-sections -march=armv6k -mfloat
 LIBS      = -specs=$(DEVKITPRO)/devkitARM/arm-none-eabi/lib/3dsx.specs $(ARCH_LIBS) -L$(DEVKITPRO)/libctru/lib -L$(DEVKITPRO)/portlibs/3ds/lib -lSDL_mixer -lmpg123 -lmodplug -lmad -lmikmod -lvorbisidec -logg -lopusfile -lopus `sdl-config --libs` -lm  -lstdc++
 INCS      = -I3rdparty -Iaud_sys -Iaud_sys/doxbox/ -Iaud_sys/mame  -I$(DEVKITPRO)/portlibs/3ds/include/SDL -I$(DEVKITPRO)/libctru/include -I$(DEVKITPRO)/portlibs/3ds/include  
 BUILD	  =	build
-BIN       = release/Wolf4SDL.elf
-BINDIR	  = release
+BIN       = release_n3ds/Wolf4SDL.elf
+BINDIR	  = release_n3ds
 CFLAGS    = $(INCS) $(DEFINES) -Wno-narrowing -Ofast -mword-relocations \
 			-fomit-frame-pointer -ffunction-sections \
-			-std=gnu89 -Wall -W -g \
+			-std=gnu99 -Wall -W -g \
 			-Wpointer-arith -Wreturn-type -Wwrite-strings \
 			-Wcast-align -Wimplicit-int -Wsequence-point $(ARCH)
 GPROF     = gprof.exe
@@ -66,16 +66,16 @@ endif
 
 .PHONY: all clean
 
-#all: release/Wolf4SDL.3dsx
+#all: release_n3ds/Wolf4SDL.3dsx
 
-release/Wolf4SDL.3dsx: $(3DSXTOOL) $(BIN) release/Wolf4SDL.smdh
-	$(3DSXTOOL) $(BIN) release/Wolf4SDL.3dsx --smdh=release/$(OUTPUT).smdh
+release_n3ds/Wolf4SDL.3dsx: $(3DSXTOOL) $(BIN) release_n3ds/Wolf4SDL.smdh
+	$(3DSXTOOL) $(BIN) release_n3ds/Wolf4SDL.3dsx --smdh=release_n3ds/$(OUTPUT).smdh
 
 $(BIN): $(LINKOBJ)
-	$(LINK) $(LINKOBJ) -o "release/Wolf4SDL.elf" $(LIBS)
+	$(LINK) $(LINKOBJ) -o "release_n3ds/Wolf4SDL.elf" $(LIBS)
 
-release/Wolf4SDL.smdh : $(ICON)
-	$(SMDHTOOL) --create "$(APP_TITLE)" "$(APP_DESCRIPTION)" "$(APP_AUTHOR)" $(APP_ICON) release/Wolf4SDL.smdh
+release_n3ds/Wolf4SDL.smdh : $(ICON)
+	$(SMDHTOOL) --create "$(APP_TITLE)" "$(APP_DESCRIPTION)" "$(APP_AUTHOR)" $(APP_ICON) release_n3ds/Wolf4SDL.smdh
 	
 clean: 
 	rm -fr obj/ $(BIN)	
