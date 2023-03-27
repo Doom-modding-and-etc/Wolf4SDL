@@ -618,11 +618,16 @@ void PollControls (void)
 {
     int max, min, i;
     unsigned char buttonbits;
-#ifdef SWITCH
+#if defined(SWITCH) 
 	unsigned int kDown;
 	float turnspeed = 0;
     float movespeed = 0;
 	int delta;
+#elif defined(N3DS)
+	unsigned int kDown;
+	int delta;
+	circlePosition cpos;
+	int cx = 0, cy = 0;
 #endif
 
     IN_ProcessEvents();
@@ -684,7 +689,7 @@ void PollControls (void)
 //
 // get button states
 //
-#ifdef SWITCH
+#if defined(SWITCH) 
     padUpdate(&pad);
 
     kDown = padGetButtons(&pad);
@@ -714,6 +719,36 @@ void PollControls (void)
 
     if((kDown & HidNpadButton_Plus))
         buttonstate[bt_pause] = true;
+#elif defined(N3DS)
+    hidScanInput();
+
+    kDown = hidKeysHeld();
+
+    //u32 kToggle = hidKeysDown(CONTROLLER_P1_AUTO);
+
+    if((kDown & KEY_A) || (kDown & KEY_ZR))
+        buttonstate[bt_attack] = true;
+
+    if((kDown & KEY_B))
+        buttonstate[bt_use] = true;
+
+    if((kDown & KEY_X))
+        buttonstate[bt_strafe] = true;
+
+    if((kDown & KEY_Y) || (kDown & KEY_ZL))
+        buttonstate[bt_run] = true;
+
+    if((kDown & KEY_R))
+        buttonstate[bt_nextweapon] = true;
+
+    if((kDown & KEY_L))
+        buttonstate[bt_prevweapon] = true;
+
+    if((kDown & KEY_START))
+        buttonstate[bt_esc] = true;
+
+    if((kDown & KEY_SELECT))
+        buttonstate[bt_pause] = true;
 #else
     PollKeyboardButtons();
 #if SDL_MAJOR_VERSION == 2
@@ -729,7 +764,7 @@ void PollControls (void)
 //
 // get movements
 //
-#ifdef SWITCH
+#if defined(SWITCH)
     // keyboard movement code
     delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
 	
@@ -794,6 +829,32 @@ void PollControls (void)
         delta = buttonstate[bt_run] ? (turnspeed*2) * tics : turnspeed * tics;
         controlx += delta;
     }
+#elif defined(N3DS)
+    // keyboard movement code
+    delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
+
+    if((kDown & KEY_DUP))
+        controly -= delta;
+    if((kDown & KEY_DDOWN))
+        controly += delta;
+    if((kDown & KEY_DLEFT))
+        controlx -= delta;
+    if((kDown & KEY_DRIGHT))
+        controlx += delta;
+
+	hidCircleRead(&cpos);
+	if (abs(cpos.dx) > 32) 
+        cx = (cpos.dx) >> 1;
+	else
+        cx = 0;
+	
+    if (abs(cpos.dy) > 32) 
+        cy = (0-(cpos.dy)) >> 2;
+	else 
+        cy = 0;
+
+    controlx += cx * 10/(13-mouseadjustment);
+	controly += cy * 20/(13-mouseadjustment);	
 #else
     PollKeyboardMove();
 #if SDL_MAJOR_VERSION == 2
