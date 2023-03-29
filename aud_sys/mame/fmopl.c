@@ -77,7 +77,6 @@ Revision History:
 */
 
 #include "../../version.h"
-#ifndef USE_DOSBOX
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -2586,5 +2585,4 @@ void Y8950SetKeyboardHandler(int which,OPL_PORTHANDLER_W KeyboardHandler_w,OPL_P
 	OPL->keyboard_param = param;
 }
 
-#endif
 #endif

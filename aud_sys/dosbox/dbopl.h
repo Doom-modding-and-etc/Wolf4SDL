@@ -17,7 +17,7 @@
  */
 
 #include "../../wl_def.h"
-#ifdef USE_DOSBOX
+
 #ifdef _MSC_VER
   #if _MSC_VER < 1300
     #include <BaseTsd.h>
@@ -215,5 +215,4 @@ void Chip__WriteReg(Chip *self, Bit32u reg, Bit8u val );
 void Chip__GenerateBlock2(Chip *self, Bitu total, Bit32s* output );
 void Chip__GenerateBlock3(Chip* self, Bitu total, Bit32s* output);
 #endif
-#endif //USE_DOSBOX
 

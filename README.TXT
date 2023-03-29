@@ -33,7 +33,7 @@ Main features:
        - Hakchi 
 	   
  - AdLib sounds and music:
-      This port includes the OPL2 emulator from MAME and DOSBOX, so you can not only
+      This port includes the OPL2 emulator from MAME and DOSBOX plus OPL3 Emulator also from nukedyt, so you can not only
       hear the AdLib sounds but also music without any AdLib-compatible
       soundcard in near to perfect quality!
 
@@ -256,6 +256,7 @@ TODOs:
  - Add more features from: http://dhw.wolfenstein3d.com/viewtopic.php?t=6310
  - Port LWLIB to C
  - Fix Nintendo Switch movement
+ - Fix nukedopl3 when compiling with old Visual C++.
 
 Known bugs:
 -----------
@@ -293,7 +294,8 @@ Credits:
  - Thanks to vbt for the port of sega saturn
  - Thanks to WayneCa for upgrade the original Wolf
  - Thanks to hax0kartik for the port of Wolf4SDL to Nintendo 3DS
-
+ - Many Thanks to nukedyt for the awesome nuked-opl3
+ 
 Licenses:
 ---------
  - The original source code of Wolfenstein 3D:
@@ -302,3 +304,5 @@ Licenses:
      - license-gpl.txt
  - The OPL2 emulator:
      - license-mame.txt
+ - The OPL3 emulator:
+	 - LICENSE.nkopl3(GNU LESSER GENERAL PUBLIC LICENSE)

@@ -40,8 +40,10 @@
 #if defined(GP2X_940)
 #include "gp2x/fmopl.h"
 #else
-#ifdef USE_DOSBOX
+#if defined(USE_DOSBOX)
 #include "aud_sys/dosbox/dbopl.h"
+#elif defined(USE_NUKEDOPL)
+#include "aud_sys/nukedopl3/opl3.h"
 #else
 #include "aud_sys/mame/fmopl.h"
 #endif
@@ -140,6 +142,49 @@ static void YM3812UpdateOne(Chip *which, short* stream, int length)
 #endif
 }
 
+#elif defined(USE_NUKEDOPL)
+static opl3_chip chip;
+
+static boolean YM3812Init(int numChips, int clock, int rate)
+{
+    OPL3_Reset(&chip, rate);
+    return true;
+}
+
+static void YM3812Write(opl3_chip* which, unsigned int reg, unsigned char val)
+{
+    OPL3_WriteReg(which, (unsigned short)reg, (unsigned char)val);
+}
+
+static void YM3812UpdateOne(opl3_chip* which, short* stream, int length)
+{
+    short buffer[2048 * 2];
+    int i;
+
+    // length should be at least the max. samplesPerMusicTick
+    // in Catacomb 3-D and Keen 4-6, which is param_samplerate / 700.
+    // So 512 is sufficient for a sample rate of 358.4 kHz, which is
+    // significantly higher than the OPL rate anyway.
+    if (length > 2048)
+        length = 2048;
+
+    // Output is 16-bit stereo sound
+    OPL3_GenerateStream(which, buffer, length);
+    for (i = 0; i < length; i++)
+    {
+        // Scale volume
+        int sample = 2 * buffer[i];
+        if (sample > 16384) sample = 16384;
+        else if (sample < -16384) sample = -16384;
+#ifdef MIXER_SAMPLE_FORMAT_FLOAT
+        stream[i] = (float)buffer[2 * i] / 32767.0f;
+#elif defined (MIXER_SAMPLE_FORMAT_SINT16)
+        stream[i] = buffer[2 * i];
+#else
+        stream[i * 2] = stream[i * 2 + 1] = (short)sample;
+#endif
+    }
+}
 #else
 
 static const int oplChip = 0;
@@ -944,7 +989,7 @@ void SDL_IMFMusicPlayer(void *udata, unsigned char *stream, int len)
         {
             if(numreadysamples<sampleslen)
             {
-#ifdef USE_DOSBOX
+#if defined(USE_DOSBOX) || defined(USE_NUKEDOPL)
                 YM3812UpdateOne(&chip, stream16, numreadysamples);
 #else
                 YM3812UpdateOne(oplChip, stream16, numreadysamples);
@@ -954,7 +999,7 @@ void SDL_IMFMusicPlayer(void *udata, unsigned char *stream, int len)
             }
             else
             {
-#ifdef USE_DOSBOX
+#if defined(USE_DOSBOX) || defined(USE_NUKEDOPL)
                 YM3812UpdateOne(&chip, stream16, sampleslen);
 #else
                 YM3812UpdateOne(oplChip, stream16, sampleslen);
@@ -1068,12 +1113,12 @@ SD_Startup(void)
     }
 #endif
     for(i=1;i<0xf6;i++)
-#ifdef USE_DOSBOX
+#if defined(USE_DOSBOX) || defined(USE_NUKEDOPL)
         YM3812Write(&chip, i, 0);
 #else
         YM3812Write(oplChip,i,0);
 #endif
-#ifdef USE_DOSBOX
+#if defined(USE_DOSBOX) || defined(USE_NUKEDOPL)
     YM3812Write(&chip, i, 0x20);
 #else
     YM3812Write(oplChip,1,0x20); // Set WSE=1

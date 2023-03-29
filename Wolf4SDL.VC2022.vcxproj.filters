@@ -23,6 +23,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
+    <Filter Include="aud_sys\nukedopl3">
+      <UniqueIdentifier>{2eb22d8e-ea6f-40cc-8331-fbaa19aa3429}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="aud_sys\mame\fmopl.c">
@@ -63,6 +66,9 @@
     <ClCompile Include="wl_utils.c" />
     <ClCompile Include="id_w3swrap.c" />
     <ClCompile Include="psnprntf.c" />
+    <ClCompile Include="aud_sys\nukedopl3\opl3.c">
+      <Filter>aud_sys\nukedopl3</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="docs\README-PS2.md">
@@ -136,6 +142,9 @@
     <ClInclude Include="wl_utils.h" />
     <ClInclude Include="id_w3swrap.h" />
     <ClInclude Include="psnprntf.h" />
+    <ClInclude Include="aud_sys\nukedopl3\opl3.h">
+      <Filter>aud_sys\nukedopl3</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="win\Wolf4SDL.rc">

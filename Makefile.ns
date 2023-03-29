@@ -15,8 +15,8 @@ APP_AUTHOR := Wolf3s, keeganatorr, Aryan, Mortriz Ripper and The other contribui
 APP_VERSION := 2.2
 ICON := icon_switch/wolf4sdl.png
 WINDRES   = windres.exe
-OBJ       = aud_sys/mame/fmopl.o aud_sys/dosbox/dbopl.o id_ca.o id_crt.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vieasm.o id_w3swrap.o id_vl.o signon.o psnprntf.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
-LINKOBJ   = aud_sys/mame/fmopl.o aud_sys/dosbox/dbopl.o id_ca.o id_crt.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vieasm.o id_w3swrap.o id_vl.o signon.o psnprntf.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
+OBJ       = aud_sys/dosbox/dbopl.o aud_sys/mame/fmopl.o id_ca.o id_crt.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vieasm.o id_w3swrap.o id_vl.o signon.o psnprntf.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
+LINKOBJ   = aud_sys/dosbox/dbopl.o aud_sys/mame/fmopl.o id_ca.o id_crt.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vieasm.o id_w3swrap.o id_vl.o signon.o psnprntf.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
 LIBDIR    = -specs=$(DEVKITPRO)/libnx/switch.specs -L$(DEVKITPRO)/libnx/lib -L$(DEVKITPRO)/portlibs/switch/lib
 LIBS      = $(LIBDIR) -lSDL2 -lSDL2main -lSDL2_mixer -lmpg123 -lmodplug -lvorbisidec -logg -lopusfile -lopus `sdl2-config --libs` -lm -lnx -lEGL -lstdc++
 INCS      = -I$(DEVKITPRO)/portlibs/switch/include -I$(DEVKITPRO)/portlibs/switch/include/SDL2 -I$(DEVKITPRO)/libnx/include 
@@ -64,11 +64,14 @@ all: $(BIN)
 $(BIN): $(OBJ)
 	$(LINK) $(LINKOBJ) -o "Wolf4SDL.elf" $(LIBS)
 
+aud_sys/dosbox/dbopl.o: $(GLOBALDEPS) aud_sys/dosbox/dbopl.c aud_sys/dosbox/dbopl.h
+	$(C) -c aud_sys/dosbox/dbopl.c -o aud_sys/dosbox/dbopl.o $(CFLAGS)
+
 aud_sys/mame/fmopl.o: $(GLOBALDEPS) aud_sys/mame/fmopl.c aud_sys/mame/fmopl.h
 	$(C) -c aud_sys/mame/fmopl.c -o aud_sys/mame/fmopl.o $(CFLAGS)
 
-aud_sys/dosbox/dbopl.o: $(GLOBALDEPS) aud_sys/dosbox/dbopl.c aud_sys/dosbox/dbopl.h
-	$(C) -c aud_sys/dosbox/dbopl.c -o aud_sys/dosbox/dbopl.o $(CFLAGS)
+aud_sys/nukedopl3/opl3.o: $(GLOBALDEPS) aud_sys/nukedopl3/opl3.c aud_sys/nukedopl3/opl3.h
+	$(C) -c aud_sys/nukedopl3/opl3.c -o aud_sys/nukedopl3/opl3.o $(CFLAGS)
 
 id_ca.o: $(GLOBALDEPS) id_ca.c wl_def.h 
 	$(C) -c id_ca.c -o id_ca.o $(CFLAGS)	

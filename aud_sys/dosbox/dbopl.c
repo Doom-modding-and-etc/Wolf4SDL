@@ -49,6 +49,7 @@
 #include <string.h>
 
 #include "dbopl.h"
+
 #ifdef _MSC_VER
 #define inline __inline
 #endif

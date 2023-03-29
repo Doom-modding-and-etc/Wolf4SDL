@@ -1753,7 +1753,7 @@ void DrawParallax(void);
 
 static char* w3sitoa(int value, char* string, int radix)
 {
-    snprintf(string, radix, "%d", value);
+    w3ssnprintf(string, radix, "%d", value);
     return string;
 }
 
@@ -1769,7 +1769,7 @@ static char* w3sitoa(int value, char* string, int radix)
 
 static char* w3sltoa(long value, char* string, int radix)
 {
-    snprintf(string, radix, "%ld", value);
+    w3ssnprintf(string, radix, "%ld", value);
     return string;
 }
 

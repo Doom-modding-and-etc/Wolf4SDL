@@ -220,6 +220,7 @@
   <ItemGroup>
     <ClCompile Include="aud_sys\dosbox\dbopl.c" />
     <ClCompile Include="aud_sys\mame\fmopl.c" />
+    <ClCompile Include="aud_sys\nukedopl3\opl3.c" />
     <ClCompile Include="id_crt.c" />
     <ClCompile Include="id_ca.c" />
     <ClCompile Include="id_in.c" />
@@ -272,6 +273,7 @@
     <ClInclude Include="audiowl6.h" />
     <ClInclude Include="aud_sys\dosbox\dbopl.h" />
     <ClInclude Include="aud_sys\mame\fmopl.h" />
+    <ClInclude Include="aud_sys\nukedopl3\opl3.h" />
     <ClInclude Include="id_crt.h" />
     <ClInclude Include="foreign.h" />
     <ClInclude Include="f_spear.h" />
