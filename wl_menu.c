@@ -3790,7 +3790,7 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
         //
         // CHANGE GUN SHAPE
         //
-        if ((int)GetTimeCount () - lastBlinkTime > timer)
+        if (GetTimeCount () - lastBlinkTime > (size_t)timer)
         {
             lastBlinkTime = GetTimeCount ();
             if (shape == C_CURSOR1PIC)

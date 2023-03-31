@@ -427,7 +427,7 @@ BJ_Breathe (void)
 
     SDL_Delay(5);
 
-    if ((int) GetTimeCount () - lastBreathTime > max)
+    if (GetTimeCount () - lastBreathTime > (size_t)max)
     {
         which ^= 1;
         VWB_DrawPic (0, 16, pics[which]);

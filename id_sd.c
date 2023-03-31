@@ -55,12 +55,12 @@
 #ifdef USE_DOSBOX
 static Chip chip;
 
-static boolean YM3812Init(int numChips, int clock, int rate)
+static int YM3812Init(int numChips, int clock, int rate)
 {
     DBOPL_InitTables();
     Chip__Chip(&chip);
     Chip__Setup(&chip, rate);
-    return true;
+    return 1;
 }
 
 static void YM3812Write(Chip *which, Bit32u reg, Bit8u val)
@@ -145,10 +145,10 @@ static void YM3812UpdateOne(Chip *which, short* stream, int length)
 #elif defined(USE_NUKEDOPL)
 static opl3_chip chip;
 
-static boolean YM3812Init(int numChips, int clock, int rate)
+static int YM3812Init(int numChips, int clock, int rate)
 {
     OPL3_Reset(&chip, rate);
-    return true;
+    return 1;
 }
 
 static void YM3812Write(opl3_chip* which, unsigned int reg, unsigned char val)
