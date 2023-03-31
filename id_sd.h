@@ -156,7 +156,7 @@ extern  int             DigiMap[];
 #ifndef SEGA_SATURN
 extern  int             DigiChannel[];
 #endif
-#define GetTimeCount()  ((SDL_GetTicks()*7)/100)
+
 
 // Function prototypes
 void            Delay (int wolfticks);

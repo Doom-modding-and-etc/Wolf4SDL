@@ -67,7 +67,7 @@ boolean lagging = true;
 // replacing refresh manager
 //
 unsigned short     mapwidth,mapheight;
-unsigned int tics;
+size_t tics;
 
 //
 // control info
@@ -581,7 +581,6 @@ void PollGameControllerMove(void)
 {
     int delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
 
-
     if (GameControllerRightStick[0] > 64)
         controlx += delta;
     else if (GameControllerRightStick[0] < -64)
@@ -638,8 +637,8 @@ void PollControls (void)
     if (demoplayback || demorecord)   // demo recording and playback needs to be constant
     {
         // wait up to DEMOTICS Wolf tics
-        unsigned int curtime = SDL_GetTicks();
-		int timediff;
+        size_t curtime = WL_GetTicks();
+		size_t timediff;
         lasttimecount += DEMOTICS;
         timediff = (lasttimecount * 100) / 7 - curtime;
         if(timediff > 0)
@@ -1970,7 +1969,7 @@ unsigned int oldtime = 0;
 
 void ClockGameLogic(void)
 {
-    unsigned int curtime;
+    size_t curtime;
     unsigned int deltatime;
     double time_to_pass;
     if (demorecord || demoplayback)
@@ -1979,7 +1978,7 @@ void ClockGameLogic(void)
         return;
     }
 
-    curtime = SDL_GetTicks();
+    curtime = WL_GetTicks();
     deltatime = curtime - oldtime;
     if (oldtime == 0)
         deltatime = 0;
@@ -2008,10 +2007,10 @@ void LagSimulator(void)
 
     if (lagging)
     {
-        if (next_lag_spike == -1 || SDL_GetTicks() >= next_lag_spike)
+        if (next_lag_spike == -1 || WL_GetTicks() >= next_lag_spike)
         {
             SDL_Delay(80 + (rand() % 200));
-            next_lag_spike = SDL_GetTicks() + 200 + rand() % 350;
+            next_lag_spike = WL_GetTicks() + 200 + rand() % 350;
         }
     }
 }

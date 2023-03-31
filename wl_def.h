@@ -972,7 +972,7 @@ typedef struct objstruct
 
     short       angle;
     short       hitpoints;
-    int     speed;
+    size_t     speed;
 
     short       temp1, temp2, hidden;
     struct objstruct* next, * prev;
@@ -1051,7 +1051,7 @@ typedef struct
 
     short       episode, secretcount, treasurecount, killcount,
         secrettotal, treasuretotal, killtotal;
-    int     TimeCount;
+    size_t     TimeCount;
     int     killx, killy;
     boolean     victoryflag;            // set during victory animations
 #ifdef MAPCONTROLPARTIME
@@ -1265,7 +1265,7 @@ extern  int         controlstrafe;
 extern  int  extravbls;
 #endif
 extern  unsigned short        mapwidth, mapheight;
-extern  unsigned int    tics;
+extern  size_t    tics;
 #ifndef SEGA_SATURN
 extern  int         lastgamemusicoffset;
 #endif
@@ -1369,7 +1369,7 @@ extern boolean lagging;
 
 extern  unsigned char* vbuf;
 
-extern  int lasttimecount;
+extern  size_t lasttimecount;
 extern  int frameon;
 extern  boolean fizzlein, fpscounter;
 #ifdef AUTOMAP
@@ -1535,9 +1535,9 @@ extern  short       doornum;
 
 #ifdef BLAKEDOORS
 extern  unsigned short      ldoorposition[MAXDOORS], rdoorposition[MAXDOORS];   // leading edge of door 0=closed
-#else
-extern  unsigned short      doorposition[MAXDOORS];
 #endif
+extern  unsigned short      doorposition[MAXDOORS];
+
 extern  unsigned char      areaconnect[NUMAREAS][NUMAREAS];
 
 extern  boolean   areabyplayer[NUMAREAS];

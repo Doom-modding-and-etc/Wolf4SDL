@@ -308,9 +308,9 @@ short           doornum;
 
 #ifdef BLAKEDOORS
 unsigned short      ldoorposition[MAXDOORS], rdoorposition[MAXDOORS];   // leading edge of door 0=closed
-#else
-unsigned short            doorposition[MAXDOORS];             // leading edge of door 0=closed
 #endif
+unsigned short            doorposition[MAXDOORS];             // leading edge of door 0=closed
+
 
                                                     // 0xffff = fully open
 
@@ -856,7 +856,7 @@ void DoorClosing (int door)
 {
     unsigned area1,area2;
     unsigned short *map;
-    int position;
+    int	position;
     int tilex,tiley;
 
     tilex = doorobjlist[door].tilex;

@@ -456,7 +456,7 @@ void T_Projectile (objtype *ob)
     if (ob->obclass == rocketobj || ob->obclass == hrocketobj)
         HomeToPlayer(ob);
 #endif
-    speed = (int)ob->speed*tics;
+    speed = ob->speed*tics;
 
     deltax = FixedMul(speed,costable[ob->angle]);
     deltay = -FixedMul(speed,sintable[ob->angle]);

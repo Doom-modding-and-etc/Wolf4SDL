@@ -1269,7 +1269,7 @@ CP_itemtype MusicMenu[]=
 void DoJukebox(void)
 {
     int which,lastsong=-1;
-    unsigned start;
+    size_t start;
     unsigned songs[]=
         {
 #ifndef SPEAR
@@ -1314,7 +1314,7 @@ void DoJukebox(void)
 
 #ifndef SPEAR
 #ifndef UPLOAD
-    start = ((SDL_GetTicks()/10)%3)*6;
+    start = ((WL_GetTicks()/10)%3)*6;
 #else
     start = 0;
 #endif

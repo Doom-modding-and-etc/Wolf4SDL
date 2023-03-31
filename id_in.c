@@ -1050,9 +1050,9 @@ void IN_Ack(void)
 //		button up.
 //
 ///////////////////////////////////////////////////////////////////////////
-boolean IN_UserInput(unsigned int delay)
+boolean IN_UserInput(size_t delay)
 {
-    unsigned int	lasttime;
+    size_t	lasttime;
 
     lasttime = GetTimeCount();
     IN_StartAck();

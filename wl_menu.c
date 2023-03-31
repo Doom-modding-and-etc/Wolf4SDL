@@ -673,7 +673,8 @@ CP_ReadThis (int blank)
 void
 BossKey (void)
 {
-    int i,lastBlinkTime;
+    int i;
+    size_t lastBlinkTime;
 
     SD_MusicOff ();
 
@@ -2625,7 +2626,8 @@ void
 EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*PrintRtn) (int),
                int type)
 {
-    int j,z, exit, tick, redraw, which, x, picked, lastFlashTime;
+    int j, z, exit, tick, redraw, which, x, picked;
+    size_t lastFlashTime;
     ControlInfo ci;
 
 
@@ -3751,7 +3753,8 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
     char key;
     static int redrawitem = 1, lastitem = -1;
     int i, x, y, basey, exit, which, shape;
-    int lastBlinkTime, timer;
+    size_t lastBlinkTime;
+    int timer;
     ControlInfo ci;
 
 
@@ -4038,17 +4041,17 @@ DrawGun (CP_iteminfo * item_i, CP_itemtype * items, int x, int *y, int which, in
 //
 ////////////////////////////////////////////////////////////////////
 void
-TicDelay (int count)
+TicDelay (size_t count)
 {
     ControlInfo ci;
 
-    int startTime = GetTimeCount ();
+    size_t startTime = GetTimeCount ();
     do
     {
         SDL_Delay(5);
         ReadAnyControl (&ci);
     }
-    while ((int) GetTimeCount () - startTime < count && ci.dir != dir_None);
+    while (GetTimeCount () - startTime < count && ci.dir != dir_None);
 }
 
 
@@ -4227,7 +4230,8 @@ void ReadAnyControl(ControlInfo *ci)
 int
 Confirm (const char *string)
 {
-    int xit = 0, x, y, tick = 0, lastBlinkTime;
+    int xit = 0, x, y, tick = 0;
+    size_t lastBlinkTime;
     int whichsnd[2] = { ESCPRESSEDSND, SHOOTSND };
     ControlInfo ci;
 

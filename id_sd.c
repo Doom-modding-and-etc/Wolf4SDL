@@ -111,7 +111,7 @@ static void YM3812UpdateOne(Chip *which, short* stream, int length)
         }
     }
 #else
-    Bit32s buffer[2048 * 2];
+    int buffer[2048 * 2];
     int i;
 
     // length should be at least the max. samplesPerMusicTick
@@ -128,7 +128,7 @@ static void YM3812UpdateOne(Chip *which, short* stream, int length)
     for (i = 0; i < length; i++)
     {
         // Scale volume
-        Bit32s sample = 2 * buffer[i];
+        int sample = 2 * buffer[i];
         if (sample > 32767) sample = 32767;
         else if (sample < -32768) sample = -32768;
 #ifdef MIXER_SAMPLE_FORMAT_FLOAT
@@ -136,7 +136,7 @@ static void YM3812UpdateOne(Chip *which, short* stream, int length)
 #elif defined (MIXER_SAMPLE_FORMAT_SINT16)
         stream[i] = sample;
 #else
-        stream[i * 2] = stream[i * 2 + 1] = (short)sample; 
+        stream[i * 2] = stream[i * 2 + 1] = (short *)sample; 
 #endif
     }
 #endif
@@ -181,7 +181,7 @@ static void YM3812UpdateOne(opl3_chip* which, short* stream, int length)
 #elif defined (MIXER_SAMPLE_FORMAT_SINT16)
         stream[i] = buffer[2 * i];
 #else
-        stream[i * 2] = stream[i * 2 + 1] = (short)sample;
+        stream[i * 2] = stream[i * 2 + 1] = (short *)sample;
 #endif
     }
 }
@@ -610,11 +610,8 @@ void SD_PrepareSound(int which)
     if(origsamples + size >= PM_GetPageEnd())
         Quit("SD_PrepareSound(%i): Sound reaches out of page file!\n", which);
 
-    
-
     wavebuffer = (unsigned char*)SafeMalloc(sizeof(headchunk) + sizeof(wavechunk)
         + destsamples * 2);     // dest are 16-bit samples
-
 
     head.filelenminus8 = sizeof(head) + destsamples*2;  // (sizeof(dhead)-8 = 0)
     memcpy(wavebuffer, &head, sizeof(head));

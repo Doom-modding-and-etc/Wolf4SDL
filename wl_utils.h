@@ -5,10 +5,16 @@
 
 #include "wl_def.h"
 
-
 #define FRACBITS         16
+#ifdef _WIN64
+#define WL_GetTicks() SDL_GetTicks64()
+#else
+#define WL_GetTicks() SDL_GetTicks()
+#endif
 
-#define GetTicks() ((SDL_GetTicks()*7)/100)
+#define GetTicks() ((WL_GetTicks()*7)/100)
+
+#define GetTimeCount()  ((WL_GetTicks()*7)/100)
 
 #define ISPOINTER(x) ((((uintptr_t)(x)) & ~0xffff) != 0)
 extern void     *wsafe_malloc (size_t size, const char *fname, unsigned int line);

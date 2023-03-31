@@ -803,7 +803,7 @@ void MoveObj (objtype *ob, int move)
             goto moveok;         // move closer until he meets CheckLine
 
         if (ob->obclass == ghostobj || ob->obclass == spectreobj)
-            TakeDamage (tics*2,ob);
+            TakeDamage ((int)tics*2,ob);
 
         //
         // back up
