@@ -303,6 +303,6 @@ Licenses:
      - license-id.txt or
      - license-gpl.txt
  - The OPL2 emulator:
-     - license-mame.txt
+     - docs/license-mame.txt
  - The OPL3 emulator:
-	 - LICENSE.nkopl3(GNU LESSER GENERAL PUBLIC LICENSE)
+	 - docs/LICENSE.nkopl3
