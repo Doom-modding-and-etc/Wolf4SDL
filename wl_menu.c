@@ -18,10 +18,17 @@
 
 extern int lastgamemusicoffset;
 
+#ifdef MENU_DEMOS
+int LastDemo;
+#endif
+
 //
 // PRIVATE PROTOTYPES
 //
 int  CP_ReadThis (int);
+#ifdef MENU_DEMOS
+int CP_WatchDemo();
+#endif
 extern void SetTheTextColor(CP_itemtype* items, int hlight);
 
 #ifdef SPEAR
@@ -83,7 +90,11 @@ CP_itemtype MainMenu[] = {
 #endif
 
     {1, STR_VS, CP_ViewScores},
+#ifdef MENU_DEMOS
     {1, STR_BD, 0},
+#else
+    {1, STR_BD, 0},
+#endif
     {1, STR_QT, 0}
 #endif
 };
@@ -617,7 +628,11 @@ DrawMainMenu (void)
 #ifdef SPANISH
         strcpy (&MainMenu[backtodemo].string, STR_GAME);
 #else
+#ifdef MENU_DEMOS
+        strcpy(&MainMenu[backtodemo].string[0], STR_GAME);
+#else
         strcpy (&MainMenu[backtodemo].string[8], STR_GAME);
+#endif
 #endif
 
 #else
@@ -632,7 +647,11 @@ DrawMainMenu (void)
 #ifdef SPANISH
         strcpy (&MainMenu[backtodemo].string, STR_BD);
 #else
+#ifdef MENU_DEMOS
+        strcpy(&MainMenu[backtodemo].string[0], STR_BD);
+#else
         strcpy (&MainMenu[backtodemo].string[8], STR_DEMO);
+#endif
 #endif
 #else
         VWB_DrawPic (12 * 8, 20 * 8, C_MRETDEMOPIC);
@@ -1049,7 +1068,21 @@ CP_NewGame ()
 
     return 0;
 }
+#ifdef MENU_DEMOS
+////////////////////////////////////////////////////////////////////
+//
+// WATCH THE DEMO
+//
+////////////////////////////////////////////////////////////////////
 
+int CP_WatchDemo()
+{
+    if (!ingame)
+        PlayDemo(LastDemo++ % NUMDEMOS);
+
+    return 0;
+}
+#endif
 
 #ifndef SPEAR
 /////////////////////

@@ -1718,8 +1718,9 @@ void Quit (const char *errorStr, ...)
 
 static void DemoLoop()
 {
+#ifndef MENU_DEMOS
     int LastDemo = 0;
-
+#endif
 //
 // check for launch from ted
 //
@@ -1824,18 +1825,23 @@ static void DemoLoop()
 // demo
 //
 
+
+
+#ifndef MENU_DEMOS
             #ifndef SPEARDEMO
             PlayDemo (LastDemo++%4);
             #else
             PlayDemo (0);
             #endif
-
+#endif
             if (playstate == ex_abort)
                 break;
             VW_FadeOut();
             if(screenHeight % 200 != 0)
                 VL_ClearScreen(0);
+#ifndef MENU_DEMOS
             StartCPMusic(INTROSONG);
+#endif
         }
 
         VW_FadeOut ();
