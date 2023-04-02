@@ -57,7 +57,7 @@
 #define FIXCALCROTATE         // Apply a modified version of Ginyu's fix to make CalcRotate more accurate at high resolutions
 //#define VIEASM //Activates: VODKA-INDUCED ENTERTAINMENT ADVANCED SOUND MANAGER v0.9.2(Warning: only works with .wav and .ogg placed in sounds/ follow the asmcref.h for more details).
 //#define BANDEDHOLOWALLS     // Use the old DOS-style "banded" wall drawing behaviour when inside walls
-//#define USE_DOSBOX //Replaces fmopl sound and uses DOSBOX Sound instead.
+#define USE_DOSBOX //Replaces fmopl sound and uses DOSBOX Sound instead.
 //#define USE_NUKEDOPL //Replaces fmopl sound and uses NUKEDOPL instead. 
 //#define GOD_MODE //Use godmode
 //#define FIXEDLOGICRATE       // Enables framerate independent game logic (aka: uncapped refreshrate) (by Codetech84)

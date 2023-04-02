@@ -454,7 +454,7 @@ static void I_ToggleFullScreen(void)
 #if SDL_MAJOR_VERSION == 1
         flags |= SDL_FULLSCREEN | SDL_VIDEORESIZE | SDL_RESIZABLE;
 #elif SDL_MAJOR_VERSION == 2
-        flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+        flags |= SDL_WINDOW_FULLSCREEN;
 #endif        
         GrabInput = true;
 #if SDL_MAJOR_VERSION == 1

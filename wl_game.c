@@ -1460,7 +1460,7 @@ void Died (void)
             curangle -= ANGLES;
         do
         {
-            change = tics*DEATHROTATE;
+            change = (int)tics*DEATHROTATE;
             if (curangle + change > iangle)
                 change = iangle-curangle;
 

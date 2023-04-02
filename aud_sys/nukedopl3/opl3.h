@@ -51,9 +51,9 @@
 extern "C" {
 #endif
 #ifdef DEPRECATED
-#include <inttypes.h>
-#else
 #include <stdint.h>
+#else
+#include <inttypes.h>
 #endif
 
 #ifndef OPL_ENABLE_STEREOEXT

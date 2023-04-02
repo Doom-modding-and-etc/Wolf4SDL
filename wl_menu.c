@@ -73,8 +73,8 @@ CP_itemtype MainMenu[] = {
     {1, STR_NG, CP_NewGame},
     {1, STR_SD, CP_Sound},
     {1, STR_CL, CP_Control},
-    {1, STR_LG, CP_LoadGame},
-    {0, STR_SG, CP_SaveGame},
+    {1, STR_LG, (int (*)())CP_LoadGame},
+    {0, STR_SG, (int (*)())CP_SaveGame},
     {1, STR_CV, CP_ChangeView},
 
 #ifndef GOODTIMES
@@ -470,15 +470,15 @@ US_ControlPanel (ScanCode scancode)
             goto finishup;
 
         case sc_F4:
-            CP_Sound (0);
+            CP_Sound ();
             goto finishup;
 
         case sc_F5:
-            CP_ChangeView (0);
+            CP_ChangeView ();
             goto finishup;
 
         case sc_F6:
-            CP_Control (0);
+            CP_Control ();
             goto finishup;
 
         finishup:
@@ -539,7 +539,7 @@ US_ControlPanel (ScanCode scancode)
             case viewscores:
                 if (MainMenu[viewscores].routine == NULL)
                 {
-                    if (CP_EndGame (0))
+                    if (CP_EndGame ())
                         StartGame = 1;
                 }
                 else
@@ -558,7 +558,7 @@ US_ControlPanel (ScanCode scancode)
 
             case -1:
             case quit:
-                CP_Quit (0);
+                CP_Quit ();
                 break;
 
             default:

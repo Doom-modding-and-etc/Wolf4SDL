@@ -561,7 +561,7 @@ finished:
         }
 
         frame++;
-        Delay(frame - GetTimeCount());        // don't go too fast
+        Delay((int)frame - (int)GetTimeCount());        // don't go too fast
     } while (1);
 
 finished:

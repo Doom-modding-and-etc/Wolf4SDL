@@ -182,15 +182,15 @@ void ControlMovement(objtype* ob)
             angle -= ANGLES;
         if (buttonstate[bt_run])
 #ifdef SWITCH
-			Thrust(angle, (strafespeed*2) * MOVESCALE * tics);
+			Thrust(angle, (strafespeed*2) * MOVESCALE * (int)tics);
 #else
-            Thrust(angle, RUNMOVE * MOVESCALE * tics);
+            Thrust(angle, RUNMOVE * MOVESCALE * (int)tics);
 #endif
         else
 #ifdef SWITCH
-			Thrust(angle, strafespeed * MOVESCALE * tics);
+			Thrust(angle, strafespeed * MOVESCALE * (int)tics);
 #else
-            Thrust(angle, BASEMOVE * MOVESCALE * tics);
+            Thrust(angle, BASEMOVE * MOVESCALE * (int)tics);
 #endif
     }
 
@@ -201,15 +201,15 @@ void ControlMovement(objtype* ob)
             angle += ANGLES;
         if (buttonstate[bt_run])
 #ifdef SWITCH	
-			Thrust(angle, (strafespeed*2) * MOVESCALE * tics );
+			Thrust(angle, (strafespeed*2) * MOVESCALE * (int)tics );
 #else		
-            Thrust(angle, RUNMOVE * MOVESCALE * tics);
+            Thrust(angle, RUNMOVE * MOVESCALE * (int)tics);
 #endif
 		else
 #ifdef SWITCH
-			Thrust(angle, strafespeed * MOVESCALE * tics);
+			Thrust(angle, strafespeed * MOVESCALE * (int)tics);
 #else
-            Thrust(angle, BASEMOVE * MOVESCALE * tics);
+            Thrust(angle, BASEMOVE * MOVESCALE * (int)tics);
 #endif
     }
 #ifdef EXTRACONTROLS
@@ -458,7 +458,7 @@ void UpdateFace(void)
     else if (SD_SoundPlaying() == GETGATLINGSND)
         return;
 
-    facecount += tics;
+    facecount += (int)tics;
     if (facecount > US_RndT())
     {
         gamestate.faceframe = (US_RndT() >> 6);
@@ -1692,7 +1692,7 @@ void VictorySpin(void)
 
     if (player->y > desty)
     {
-        player->y -= tics * 4096;
+        player->y -= (fixed)tics * 4096;
         if (player->y < desty)
             player->y = desty;
     }

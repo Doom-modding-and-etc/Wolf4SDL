@@ -1247,7 +1247,6 @@ SD_PlaySound(soundnames sound)
             if (s->priority < DigiPriority)
                 return(false);
 #endif
-
             int channel = SD_PlayDigitized(DigiMap[sound], lp, rp);
             SoundPositioned = ispos;
             DigiNumber = sound;

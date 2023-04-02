@@ -451,15 +451,15 @@ void T_Projectile (objtype *ob)
 {
     int deltax,deltay;
     int     damage;
-    int speed;
+    size_t speed;
 #ifdef SEEKER_MISSILES
     if (ob->obclass == rocketobj || ob->obclass == hrocketobj)
         HomeToPlayer(ob);
 #endif
     speed = ob->speed*tics;
 
-    deltax = FixedMul(speed,costable[ob->angle]);
-    deltay = -FixedMul(speed,sintable[ob->angle]);
+    deltax = FixedMul((fixed)speed,costable[ob->angle]);
+    deltay = -FixedMul((fixed)speed,sintable[ob->angle]);
 
     if (deltax>0x10000l)
         deltax = 0x10000l;
@@ -2584,7 +2584,7 @@ void T_GiftThrow (objtype *ob)
 
 void T_Schabb (objtype *ob)
 {
-    int move;
+    size_t move;
     int     dx,dy,dist;
     boolean dodge;
 
@@ -2637,7 +2637,7 @@ void T_Schabb (objtype *ob)
 
         if (move < ob->distance)
         {
-            MoveObj (ob,move);
+            MoveObj (ob,(int)move);
             break;
         }
 
@@ -2676,7 +2676,7 @@ void T_Schabb (objtype *ob)
 
 void T_Gift (objtype *ob)
 {
-    int move;
+    size_t move;
     int     dx,dy,dist;
     boolean dodge;
 
@@ -2729,7 +2729,7 @@ void T_Gift (objtype *ob)
 
         if (move < ob->distance)
         {
-            MoveObj (ob,move);
+            MoveObj (ob,(int)move);
             break;
         }
 
@@ -2768,7 +2768,7 @@ void T_Gift (objtype *ob)
 
 void T_Fat (objtype *ob)
 {
-    int move;
+    size_t move;
     int     dx,dy,dist;
     boolean dodge;
 
@@ -2821,7 +2821,7 @@ void T_Fat (objtype *ob)
 
         if (move < ob->distance)
         {
-            MoveObj (ob,move);
+            MoveObj (ob,(int)move);
             break;
         }
 
@@ -3184,7 +3184,7 @@ void T_FakeFire (objtype *ob)
 
 void T_Fake (objtype *ob)
 {
-    int move;
+    size_t move;
 
     if (CheckLine(ob))                      // got a shot at player?
     {
@@ -3214,7 +3214,7 @@ void T_Fake (objtype *ob)
     {
         if (move < ob->distance)
         {
-            MoveObj (ob,move);
+            MoveObj (ob,(int)move);
             break;
         }
 
@@ -3279,7 +3279,8 @@ CHASE
 
 void T_Chase (objtype *ob)
 {
-    int move,target;
+	size_t move;
+	int target;
     int     dx,dy,dist,chance;
     boolean dodge;
 
@@ -3300,13 +3301,13 @@ void T_Chase (objtype *ob)
             if(!dist || (dist == 1 && ob->distance < 0x4000))
                 chance = 300;
             else
-                chance = (tics<<4)/dist;
+                chance = (int)(tics<<4)/dist;
         }
         else
 #endif
         {
             if (dist)
-                chance = (tics<<4)/dist;
+                chance = (int)(tics<<4)/dist;
             else
                 chance = 300;
 
@@ -3410,7 +3411,7 @@ void T_Chase (objtype *ob)
 
         if (move < ob->distance)
         {
-            MoveObj (ob,move);
+            MoveObj (ob,(int)move);
             break;
         }
 
@@ -3447,7 +3448,7 @@ void T_Chase (objtype *ob)
 
 void T_Ghosts (objtype *ob)
 {
-    int move;
+    size_t move;
 
     if (ob->dir == nodir)
     {
@@ -3462,7 +3463,7 @@ void T_Ghosts (objtype *ob)
     {
         if (move < ob->distance)
         {
-            MoveObj (ob,move);
+            MoveObj (ob,(int)move);
             break;
         }
 
@@ -3495,7 +3496,7 @@ void T_Ghosts (objtype *ob)
 
 void T_DogChase (objtype *ob)
 {
-    int    move;
+    size_t    move;
     int    dx,dy;
 
 
@@ -3516,13 +3517,13 @@ void T_DogChase (objtype *ob)
         dx = player->x - ob->x;
         if (dx<0)
             dx = -dx;
-        dx -= move;
+        dx -= (int)move;
         if (dx <= MINACTORDIST)
         {
             dy = player->y - ob->y;
             if (dy<0)
                 dy = -dy;
-            dy -= move;
+            dy -= (int)move;
             if (dy <= MINACTORDIST)
             {
                 NewState (ob,&s_dogjump1);
@@ -3532,7 +3533,7 @@ void T_DogChase (objtype *ob)
 
         if (move < ob->distance)
         {
-            MoveObj (ob,move);
+            MoveObj (ob,(int)move);
             break;
         }
 
@@ -3603,7 +3604,7 @@ void SelectPathDir (objtype *ob)
 
 void T_Path (objtype *ob)
 {
-    int    move;
+    size_t    move;
 
     if (SightPlayer (ob))
         return;
@@ -3637,7 +3638,7 @@ void T_Path (objtype *ob)
 
         if (move < ob->distance)
         {
-            MoveObj (ob,move);
+            MoveObj (ob,(int)move);
             break;
         }
 
@@ -3915,7 +3916,7 @@ void T_BJRun (objtype *ob)
 {
     int    move;
 
-    move = BJRUNSPEED*tics;
+    move = BJRUNSPEED*(int)tics;
 
     while (move)
     {
@@ -3953,7 +3954,7 @@ void T_BJJump (objtype *ob)
 {
     int    move;
 
-    move = BJJUMPSPEED*tics;
+    move = BJJUMPSPEED*(int)tics;
     MoveObj (ob,move);
 }
 

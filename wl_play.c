@@ -494,7 +494,7 @@ void PollGameControllerButtons(void)
 
 void PollKeyboardMove (void)
 {
-    int delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
+    int delta = buttonstate[bt_run] ? RUNMOVE * (int)tics : BASEMOVE * (int)tics;
 
     if (Keyboard(dirscan[di_north]))
         controly -= delta;
@@ -553,10 +553,8 @@ void PollMouseMove (void)
 void PollJoystickMove (void)
 {
     int joyx, joyy;
-	int delta;
+	int delta = buttonstate[bt_run] ? RUNMOVE * (int)tics : BASEMOVE * (int)tics;
     IN_GetJoyDelta (&joyx, &joyy);
-
-    delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
 
     if (joyx > 64 || buttonstate[bt_turnright])
         controlx += delta;
@@ -579,7 +577,7 @@ void PollJoystickMove (void)
 */
 void PollGameControllerMove(void)
 {
-    int delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
+    int delta = buttonstate[bt_run] ? RUNMOVE * (int)tics : BASEMOVE * (int)tics;
 
     if (GameControllerRightStick[0] > 64)
         controlx += delta;
@@ -642,7 +640,7 @@ void PollControls (void)
         lasttimecount += DEMOTICS;
         timediff = (lasttimecount * 100) / 7 - curtime;
         if(timediff > 0)
-            SDL_Delay(timediff);
+            SDL_Delay((unsigned int)timediff);
 
         if(timediff < -2 * DEMOTICS)       // more than 2-times DEMOTICS behind?
             lasttimecount = (curtime * 7) / 100;    // yes, set to current timecount
@@ -869,7 +867,7 @@ void PollControls (void)
 //
 // bound movement to a maximum
 //
-    max = 100 * tics;
+    max = 100 * (int)tics;
     min = -max;
     if (controlx > max)
         controlx = max;
@@ -1678,7 +1676,7 @@ void UpdatePaletteShifts (void)
         white = bonuscount / WHITETICS + 1;
         if (white > NUMWHITESHIFTS)
             white = NUMWHITESHIFTS;
-        bonuscount -= tics;
+        bonuscount -= (int)tics;
         if (bonuscount < 0)
             bonuscount = 0;
     }
@@ -1692,7 +1690,7 @@ void UpdatePaletteShifts (void)
         if (red > NUMREDSHIFTS)
             red = NUMREDSHIFTS;
 
-        damagecount -= tics;
+        damagecount -= (int)tics;
         if (damagecount < 0)
             damagecount = 0;
     }

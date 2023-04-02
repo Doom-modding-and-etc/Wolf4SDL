@@ -12,8 +12,11 @@
  *  GNU General Public License for more details.
  */
 
+#ifdef _MSC_VER
+#include <stdint.h>
+#else
 #include <inttypes.h>
-
+#endif
 //Use 8 handlers based on a small logatirmic wavetabe and an exponential table for volume
 #define WAVE_HANDLER	10
 //Use a logarithmic wavetable with an exponential table for volume

@@ -1279,7 +1279,7 @@ void Chip__GenerateBlock2(Chip *self, Bitu total, Bit32s* output ) {
                 Channel *ch;
 		int count;
 
-		Bit32u samples = Chip__ForwardLFO( self, total );
+		Bit32u samples = Chip__ForwardLFO( self, (Bit32u)total );
 		memset(output, 0, sizeof(Bit32s) * samples);
 		count = 0;
 		for ( ch = self->chan; ch < self->chan + 9; ) {
@@ -1296,7 +1296,7 @@ void Chip__GenerateBlock3(Chip *self, Bitu total, Bit32s* output  ) {
                 int count;
                 Channel *ch;
 
-		Bit32u samples = Chip__ForwardLFO( self, total );
+		Bit32u samples = Chip__ForwardLFO( self, (Bit32u)total );
 		memset(output, 0, sizeof(Bit32s) * samples *2);
 		count = 0;
 		for ( ch = self->chan; ch < self->chan + 18; ) {

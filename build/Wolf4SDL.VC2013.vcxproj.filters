@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="aud_sys">
+      <UniqueIdentifier>{55772db5-8f3d-4dd4-ae46-af529918a4a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="aud_sys\dosbox">
+      <UniqueIdentifier>{d92206b0-1e88-4283-a17c-dcfe20186624}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="aud_sys\mame">
+      <UniqueIdentifier>{99ff3606-2d82-4b0d-8a62-821e11999a93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="win">
+      <UniqueIdentifier>{f3dee59a-0fe4-4588-a9e3-ce9813fc8287}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="aud_sys\nukedopl3">
+      <UniqueIdentifier>{3773be9b-e75e-47fb-a0c5-1dea54dfc9d7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\aud_sys\dosbox\dbopl.c">
+      <Filter>aud_sys\dosbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\aud_sys\mame\fmopl.c">
+      <Filter>aud_sys\mame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\id_ca.c" />
+    <ClCompile Include="..\id_crt.c" />
+    <ClCompile Include="..\id_in.c" />
+    <ClCompile Include="..\id_pm.c" />
+    <ClCompile Include="..\id_sd.c" />
+    <ClCompile Include="..\id_us.c" />
+    <ClCompile Include="..\id_vh.c" />
+    <ClCompile Include="..\id_vieasm.c" />
+    <ClCompile Include="..\id_vl.c" />
+    <ClCompile Include="..\id_w3swrap.c" />
+    <ClCompile Include="..\psnprntf.c" />
+    <ClCompile Include="..\sdl_winmain.c" />
+    <ClCompile Include="..\signon.c" />
+    <ClCompile Include="..\wl_act1.c" />
+    <ClCompile Include="..\wl_act2.c" />
+    <ClCompile Include="..\wl_agent.c" />
+    <ClCompile Include="..\wl_atmos.c" />
+    <ClCompile Include="..\wl_cloudsky.c" />
+    <ClCompile Include="..\wl_debug.c" />
+    <ClCompile Include="..\wl_draw.c" />
+    <ClCompile Include="..\wl_game.c" />
+    <ClCompile Include="..\wl_inter.c" />
+    <ClCompile Include="..\wl_main.c" />
+    <ClCompile Include="..\wl_menu.c" />
+    <ClCompile Include="..\wl_parallax.c" />
+    <ClCompile Include="..\wl_plane.c" />
+    <ClCompile Include="..\wl_play.c" />
+    <ClCompile Include="..\wl_scale.c" />
+    <ClCompile Include="..\wl_shade.c" />
+    <ClCompile Include="..\wl_state.c" />
+    <ClCompile Include="..\wl_text.c" />
+    <ClCompile Include="..\wl_utils.c" />
+    <ClCompile Include="..\aud_sys\nukedopl3\opl3.c">
+      <Filter>aud_sys\nukedopl3</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\aud_sys\dosbox\dbopl.h">
+      <Filter>aud_sys\dosbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\aud_sys\mame\fmopl.h">
+      <Filter>aud_sys\mame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\win\resource.h">
+      <Filter>win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\asmcref.h" />
+    <ClInclude Include="..\audiosod.h" />
+    <ClInclude Include="..\audiowl6.h" />
+    <ClInclude Include="..\f_spear.h" />
+    <ClInclude Include="..\foreign.h" />
+    <ClInclude Include="..\gfxv_apo.h" />
+    <ClInclude Include="..\gfxv_jap.h" />
+    <ClInclude Include="..\gfxv_sod.h" />
+    <ClInclude Include="..\gfxv_wl6.h" />
+    <ClInclude Include="..\gp2x.h" />
+    <ClInclude Include="..\id_ca.h" />
+    <ClInclude Include="..\id_crt.h" />
+    <ClInclude Include="..\id_in.h" />
+    <ClInclude Include="..\id_pm.h" />
+    <ClInclude Include="..\id_sd.h" />
+    <ClInclude Include="..\id_us.h" />
+    <ClInclude Include="..\id_vh.h" />
+    <ClInclude Include="..\id_vieasm.h" />
+    <ClInclude Include="..\id_vl.h" />
+    <ClInclude Include="..\id_w3swrap.h" />
+    <ClInclude Include="..\psnprntf.h" />
+    <ClInclude Include="..\version.h" />
+    <ClInclude Include="..\wl_atmos.h" />
+    <ClInclude Include="..\wl_cloudsky.h" />
+    <ClInclude Include="..\wl_def.h" />
+    <ClInclude Include="..\wl_menu.h" />
+    <ClInclude Include="..\wl_shade.h" />
+    <ClInclude Include="..\wl_utils.h" />
+    <ClInclude Include="..\aud_sys\nukedopl3\opl3.h">
+      <Filter>aud_sys\nukedopl3</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\win\Wolf4SDL.ico">
+      <Filter>win</Filter>
+    </None>
+    <None Include="..\sodpal.inc" />
+    <None Include="..\wolfpal.inc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\win\Wolf4SDL.rc">
+      <Filter>win</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

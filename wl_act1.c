@@ -818,7 +818,7 @@ void DoorOpening (int door)
     else
     {
 #endif
-    position += tics<<10;
+    position += (int)tics<<10;
     if (position >= 0xffff)
     {
         //
@@ -880,7 +880,7 @@ void DoorClosing (int door)
     //
     // slide the door by an adaptive amount
     //
-    position -= tics << 10;
+    position -= (int)tics << 10;
 #else
     if (doorobjlist[door].doubledoor)
     {
