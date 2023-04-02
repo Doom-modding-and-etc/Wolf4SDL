@@ -136,7 +136,7 @@ static void YM3812UpdateOne(Chip *which, short* stream, int length)
 #elif defined (MIXER_SAMPLE_FORMAT_SINT16)
         stream[i] = sample;
 #else
-        stream[i * 2] = stream[i * 2 + 1] = (short *)sample; 
+        stream[i * 2] = stream[i * 2 + 1] = (short )sample; 
 #endif
     }
 #endif
@@ -181,7 +181,7 @@ static void YM3812UpdateOne(opl3_chip* which, short* stream, int length)
 #elif defined (MIXER_SAMPLE_FORMAT_SINT16)
         stream[i] = buffer[2 * i];
 #else
-        stream[i * 2] = stream[i * 2 + 1] = (short *)sample;
+        stream[i * 2] = stream[i * 2 + 1] = (short )sample;
 #endif
     }
 }

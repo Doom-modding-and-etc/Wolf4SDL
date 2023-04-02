@@ -50,6 +50,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 #ifdef DEPRECATED
 #include <stdint.h>
 #else
