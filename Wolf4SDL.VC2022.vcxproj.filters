@@ -7,9 +7,6 @@
     <Filter Include="3rdparty\uthash">
       <UniqueIdentifier>{ee62495d-7e7d-47cd-887a-6ab58fcf9cf2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="docs">
-      <UniqueIdentifier>{edf36f10-9ca6-4453-8266-36aa89a35560}</UniqueIdentifier>
-    </Filter>
     <Filter Include="aud_sys">
       <UniqueIdentifier>{0508f7ca-accd-4598-8412-f3c247f894f8}</UniqueIdentifier>
     </Filter>
@@ -34,15 +31,18 @@
     <ClCompile Include="aud_sys\dosbox\dbopl.c">
       <Filter>aud_sys\dosbox</Filter>
     </ClCompile>
-    <ClCompile Include="id_ca.c" />
     <ClCompile Include="id_crt.c" />
+    <ClCompile Include="id_ca.c" />
     <ClCompile Include="id_in.c" />
     <ClCompile Include="id_pm.c" />
     <ClCompile Include="id_sd.c" />
+    <ClCompile Include="id_udp.c" />
     <ClCompile Include="id_us.c" />
     <ClCompile Include="id_vh.c" />
     <ClCompile Include="id_vieasm.c" />
     <ClCompile Include="id_vl.c" />
+    <ClCompile Include="id_w3swrap.c" />
+    <ClCompile Include="psnprntf.c" />
     <ClCompile Include="sdl_winmain.c" />
     <ClCompile Include="signon.c" />
     <ClCompile Include="wl_act1.c" />
@@ -64,25 +64,8 @@
     <ClCompile Include="wl_state.c" />
     <ClCompile Include="wl_text.c" />
     <ClCompile Include="wl_utils.c" />
-    <ClCompile Include="id_w3swrap.c" />
-    <ClCompile Include="psnprntf.c" />
-    <ClCompile Include="aud_sys\nukedopl3\opl3.c">
-      <Filter>aud_sys\nukedopl3</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="docs\README-PS2.md">
-      <Filter>docs</Filter>
-    </None>
-    <None Include="docs\README-Switch.md">
-      <Filter>docs</Filter>
-    </None>
-    <None Include="docs\README-3DS.md">
-      <Filter>docs</Filter>
-    </None>
-    <None Include="docs\README-CRT.md">
-      <Filter>docs</Filter>
-    </None>
+    <ClCompile Include="id_udp.c" />
+    <ClCompile Include="aud_sys\nukedopl3\opl3.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="win\resource.h">
@@ -115,81 +98,66 @@
     <ClInclude Include="3rdparty\fixedptc.h">
       <Filter>3rdparty</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="3rdparty\fixedptc.h" />
+    <ClInclude Include="3rdparty\uthash\utarray.h" />
+    <ClInclude Include="3rdparty\uthash\uthash.h" />
+    <ClInclude Include="3rdparty\uthash\utlist.h" />
+    <ClInclude Include="3rdparty\uthash\utringbuffer.h" />
+    <ClInclude Include="3rdparty\uthash\utstack.h" />
+    <ClInclude Include="3rdparty\uthash\utstring.h" />
     <ClInclude Include="asmcref.h" />
     <ClInclude Include="audiosod.h" />
     <ClInclude Include="audiowl6.h" />
-    <ClInclude Include="f_spear.h" />
+    <ClInclude Include="aud_sys\dosbox\dbopl.h" />
+    <ClInclude Include="aud_sys\mame\fmopl.h" />
+    <ClInclude Include="aud_sys\nukedopl3\opl3.h" />
+    <ClInclude Include="id_crt.h" />
     <ClInclude Include="foreign.h" />
+    <ClInclude Include="f_spear.h" />
     <ClInclude Include="gfxv_apo.h" />
     <ClInclude Include="gfxv_jap.h" />
     <ClInclude Include="gfxv_sod.h" />
     <ClInclude Include="gfxv_wl6.h" />
     <ClInclude Include="id_ca.h" />
-    <ClInclude Include="id_crt.h" />
     <ClInclude Include="id_in.h" />
     <ClInclude Include="id_pm.h" />
     <ClInclude Include="id_sd.h" />
+    <ClInclude Include="id_udp.h" />
     <ClInclude Include="id_us.h" />
     <ClInclude Include="id_vh.h" />
     <ClInclude Include="id_vieasm.h" />
     <ClInclude Include="id_vl.h" />
+    <ClInclude Include="id_w3swrap.h" />
+    <ClInclude Include="psnprntf.h" />
     <ClInclude Include="version.h" />
+    <ClInclude Include="win\resource.h" />
     <ClInclude Include="wl_atmos.h" />
     <ClInclude Include="wl_cloudsky.h" />
     <ClInclude Include="wl_def.h" />
     <ClInclude Include="wl_menu.h" />
     <ClInclude Include="wl_shade.h" />
     <ClInclude Include="wl_utils.h" />
-    <ClInclude Include="id_w3swrap.h" />
-    <ClInclude Include="psnprntf.h" />
-    <ClInclude Include="aud_sys\nukedopl3\opl3.h">
-      <Filter>aud_sys\nukedopl3</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="win\Wolf4SDL.rc">
-      <Filter>win</Filter>
-    </ResourceCompile>
+    <None Include="docs\README-3DS.md" />
+    <None Include="docs\README-CRT.md" />
+    <None Include="docs\README-PS2.md" />
+    <None Include="docs\README-Switch.md" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="docs\license-mame.txt" />
     <Text Include="README.txt" />
-    <Text Include="docs\README-dc.txt">
-      <Filter>docs</Filter>
-    </Text>
-    <Text Include="docs\README-devcpp.txt">
-      <Filter>docs</Filter>
-    </Text>
-    <Text Include="docs\README-GP2X.txt">
-      <Filter>docs</Filter>
-    </Text>
-    <Text Include="docs\README-VC.txt">
-      <Filter>docs</Filter>
-    </Text>
-    <Text Include="docs\SVNLOG.TXT">
-      <Filter>docs</Filter>
-    </Text>
-    <Text Include="docs\VIEASM Beta readme.txt">
-      <Filter>docs</Filter>
-    </Text>
-    <Text Include="docs\wolfinst.txt">
-      <Filter>docs</Filter>
-    </Text>
-    <Text Include="docs\Changes.txt">
-      <Filter>docs</Filter>
-    </Text>
-    <Text Include="docs\Changes-dc.txt">
-      <Filter>docs</Filter>
-    </Text>
-    <Text Include="docs\license-mame.txt">
-      <Filter>docs</Filter>
-    </Text>
-    <Text Include="docs\README-codeblocks.txt">
-      <Filter>docs</Filter>
-    </Text>
   </ItemGroup>
   <ItemGroup>
     <Image Include="win\Wolf4SDL.ico">
       <Filter>win</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="win\Wolf4SDL.rc">
+      <Filter>win</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

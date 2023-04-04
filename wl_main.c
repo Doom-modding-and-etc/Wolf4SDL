@@ -817,6 +817,9 @@ boolean LoadTheGame(FILE *file,int x,int y)
 
 void ShutdownId (void)
 {  
+#ifdef LWUDPCOMMS
+    UDP_shutdown ();
+#endif
     US_Shutdown ();         // This line is completely useless...
 #if defined(SWITCH) || defined (N3DS)
     printf("US_Shutdown DONE\n");
@@ -1473,6 +1476,9 @@ static void InitGame()
 #elif defined(PS2)
     ps2_printf("US Started DONE\n", 4);
 #endif
+#ifdef LWUDPCOMMS
+    UDP_startup();
+#endif
 
     // TODO: Will any memory checking be needed someday??
 #ifdef NOTYET
@@ -2075,7 +2081,14 @@ void CheckParameters(int argc, char *argv[])
             param_ignorenumchunks = true;
         else IFARG("--help")
             showHelp = true;
+#ifdef LWUDPCOMMS
+        else IFARG(UDP_check(arg))
+        {
+                                    // do nothing
+        }
+#endif
         else hasError = true;
+
     }
     if(hasError || showHelp)
     {
@@ -2124,6 +2137,10 @@ void CheckParameters(int argc, char *argv[])
             " --goodtimes            Disable copy protection quiz\n"
 #endif
             , defaultSampleRate
+#ifdef LWUDPCOMMS
+            ,
+            UDP_parameterHelp
+#endif
         );
         exit(1);
     }

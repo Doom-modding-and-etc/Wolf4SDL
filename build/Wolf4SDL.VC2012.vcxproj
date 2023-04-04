@@ -27,6 +27,7 @@
     <ClCompile Include="..\id_in.c" />
     <ClCompile Include="..\id_pm.c" />
     <ClCompile Include="..\id_sd.c" />
+    <ClCompile Include="..\id_udp.c" />
     <ClCompile Include="..\id_us.c" />
     <ClCompile Include="..\id_vh.c" />
     <ClCompile Include="..\id_vieasm.c" />
@@ -74,6 +75,7 @@
     <ClInclude Include="..\id_in.h" />
     <ClInclude Include="..\id_pm.h" />
     <ClInclude Include="..\id_sd.h" />
+    <ClInclude Include="..\id_udp.h" />
     <ClInclude Include="..\id_us.h" />
     <ClInclude Include="..\id_vh.h" />
     <ClInclude Include="..\id_vieasm.h" />

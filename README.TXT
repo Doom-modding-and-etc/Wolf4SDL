@@ -122,8 +122,12 @@ https://github.com/wolfysdl/SDL-Archive/raw/main/SDL-1.2.15-win32.zip and downlo
 SDL 1.2.15 64 bit Runtimes can be acquired at: 
 https://github.com/wolfysdl/SDL-Archive/raw/main/SDL-1.2.15-win32-x64.zip and download "SDL-1.2.15-win32-x64.zip"
 
-SDL_mixer 1.2.12 Runtimes can be acquired at:
+SDL_mixer 1.2.12 32 bit Runtimes can be acquired at:
 https://github.com/wolfysdl/SDL_mixer-archive/raw/main/SDL_mixer-1.2.12-win32.zip and download "SDL_mixer-1.2.12-win32.zip"
+
+SDL_mixer 1.2.12 64 bit Runtimes can be acquired at:
+https://github.com/wolfysdl/SDL_mixer-archive/raw/main/SDL_mixer-1.2.12-win32-x64.zip and download "SDL_mixer-1.2.12-win32-x64.zip"
+
 
 or
 

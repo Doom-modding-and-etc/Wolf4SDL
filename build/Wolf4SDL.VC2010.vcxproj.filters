@@ -59,6 +59,7 @@
     <ClCompile Include="..\aud_sys\nukedopl3\opl3.c">
       <Filter>aud_sys\nukedopl3</Filter>
     </ClCompile>
+    <ClCompile Include="..\id_udp.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\aud_sys\dosbox\dbopl.h">
@@ -101,6 +102,7 @@
     <ClInclude Include="..\aud_sys\nukedopl3\opl3.h">
       <Filter>aud_sys\nukedopl3</Filter>
     </ClInclude>
+    <ClInclude Include="..\id_udp.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\win\Wolf4SDL.ico">

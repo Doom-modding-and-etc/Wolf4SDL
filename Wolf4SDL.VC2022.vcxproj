@@ -183,7 +183,7 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>false</DataExecutionPrevention>
       <AdditionalLibraryDirectories>C:\SDL2\lib\x64</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_mixer.lib;SDL2_net.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClCompile>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WINDOWS_IGNORE_PACKING_MISMATCH;USE_FIXEDPTC;_WIN32;C89;HAVE_M_PI;_USE_MATH_DEFINES;USE_HEADER;PSNPRINTF</PreprocessorDefinitions>
@@ -226,6 +226,7 @@
     <ClCompile Include="id_in.c" />
     <ClCompile Include="id_pm.c" />
     <ClCompile Include="id_sd.c" />
+    <ClCompile Include="id_udp.c" />
     <ClCompile Include="id_us.c" />
     <ClCompile Include="id_vh.c" />
     <ClCompile Include="id_vieasm.c" />
@@ -255,12 +256,6 @@
     <ClCompile Include="wl_utils.c" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="docs\README-3DS.md" />
-    <None Include="docs\README-CRT.md" />
-    <None Include="docs\README-PS2.md" />
-    <None Include="docs\README-Switch.md" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="3rdparty\fixedptc.h" />
     <ClInclude Include="3rdparty\uthash\utarray.h" />
     <ClInclude Include="3rdparty\uthash\uthash.h" />
@@ -285,6 +280,7 @@
     <ClInclude Include="id_in.h" />
     <ClInclude Include="id_pm.h" />
     <ClInclude Include="id_sd.h" />
+    <ClInclude Include="id_udp.h" />
     <ClInclude Include="id_us.h" />
     <ClInclude Include="id_vh.h" />
     <ClInclude Include="id_vieasm.h" />
@@ -304,17 +300,7 @@
     <ResourceCompile Include="win\Wolf4SDL.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="docs\Changes-dc.txt" />
-    <Text Include="docs\Changes.txt" />
     <Text Include="docs\license-mame.txt" />
-    <Text Include="docs\README-codeblocks.txt" />
-    <Text Include="docs\README-dc.txt" />
-    <Text Include="docs\README-devcpp.txt" />
-    <Text Include="docs\README-GP2X.txt" />
-    <Text Include="docs\README-VC.txt" />
-    <Text Include="docs\SVNLOG.TXT" />
-    <Text Include="docs\VIEASM Beta readme.txt" />
-    <Text Include="docs\wolfinst.txt" />
     <Text Include="README.txt" />
   </ItemGroup>
   <ItemGroup>

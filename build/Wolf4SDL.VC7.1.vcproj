@@ -246,6 +246,12 @@
 			RelativePath="..\id_sd.h">
 		</File>
 		<File
+			RelativePath="..\id_udp.c">
+		</File>
+		<File
+			RelativePath="..\id_udp.h">
+		</File>
+		<File
 			RelativePath="..\id_us.c">
 		</File>
 		<File

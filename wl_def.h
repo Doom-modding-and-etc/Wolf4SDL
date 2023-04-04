@@ -138,6 +138,9 @@ void Quit(const char* errorStr, ...);
 #endif
 #include "id_us.h"
 #include "id_ca.h"
+#ifdef LWUDPCOMMS
+#include "id_udp.h"
+#endif
 #include "wl_menu.h"
 #include "wl_utils.h"
 #include "id_w3swrap.h"

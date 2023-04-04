@@ -15,8 +15,8 @@ APP_AUTHOR := Wolf3s, keeganatorr, Aryan, Mortriz Ripper and The other contribui
 APP_VERSION := 2.2
 ICON := icon_switch/wolf4sdl.png
 WINDRES   = windres.exe
-OBJ       = aud_sys/dosbox/dbopl.o aud_sys/mame/fmopl.o id_ca.o id_crt.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vieasm.o id_w3swrap.o id_vl.o signon.o psnprntf.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
-LINKOBJ   = aud_sys/dosbox/dbopl.o aud_sys/mame/fmopl.o id_ca.o id_crt.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vieasm.o id_w3swrap.o id_vl.o signon.o psnprntf.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
+OBJ       = aud_sys/dosbox/dbopl.o aud_sys/mame/fmopl.o id_ca.o id_crt.o id_in.o id_pm.o id_sd.o id_udp.o id_us.o id_vh.o id_vieasm.o id_w3swrap.o id_vl.o signon.o psnprntf.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
+LINKOBJ   = aud_sys/dosbox/dbopl.o aud_sys/mame/fmopl.o id_ca.o id_crt.o id_in.o id_pm.o id_sd.o id_udp.o id_us.o id_vh.o id_vieasm.o id_w3swrap.o id_vl.o signon.o psnprntf.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o wl_inter.o wl_game.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
 LIBDIR    = -specs=$(DEVKITPRO)/libnx/switch.specs -L$(DEVKITPRO)/libnx/lib -L$(DEVKITPRO)/portlibs/switch/lib
 LIBS      = $(LIBDIR) -lSDL2 -lSDL2main -lSDL2_mixer -lmpg123 -lmodplug -lvorbisidec -logg -lopusfile -lopus `sdl2-config --libs` -lm -lnx -lEGL -lstdc++
 INCS      = -I$(DEVKITPRO)/portlibs/switch/include -I$(DEVKITPRO)/portlibs/switch/include/SDL2 -I$(DEVKITPRO)/libnx/include 
@@ -87,6 +87,9 @@ id_pm.o: $(GLOBALDEPS) id_pm.c wl_def.h
 
 id_sd.o: $(GLOBALDEPS) id_sd.c wl_def.h
 	$(C) -c id_sd.c -o id_sd.o $(CFLAGS) 	
+
+id_udp.o: $(GLOBALDEPS) id_udp.c wl_def.h 
+	$(C) -c id_udp.c -o id_udp.o $(CFLAGS)
 
 id_us.o: $(GLOBALDEPS) id_us.c wl_def.h 
 	$(C) -c id_us.c -o id_us.o $(CFLAGS)	
