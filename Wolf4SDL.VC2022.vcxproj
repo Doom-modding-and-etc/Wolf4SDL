@@ -218,6 +218,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="3rdparty\lwlib\lw_ctx.c" />
+    <ClCompile Include="3rdparty\lwlib\lw_fs.c" />
+    <ClCompile Include="3rdparty\lwlib\lw_misc.c" />
+    <ClCompile Include="3rdparty\lwlib\lw_protmsg.c" />
+    <ClCompile Include="3rdparty\lwlib\lw_vec.c" />
+    <ClCompile Include="3rdparty\lwlib\pwscan.c" />
     <ClCompile Include="aud_sys\dosbox\dbopl.c" />
     <ClCompile Include="aud_sys\mame\fmopl.c" />
     <ClCompile Include="aud_sys\nukedopl3\opl3.c" />
@@ -257,6 +263,19 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3rdparty\fixedptc.h" />
+    <ClInclude Include="3rdparty\lwlib\lw_bitseq.h" />
+    <ClInclude Include="3rdparty\lwlib\lw_ctx.h" />
+    <ClInclude Include="3rdparty\lwlib\lw_dict.h" />
+    <ClInclude Include="3rdparty\lwlib\lw_fs.h" />
+    <ClInclude Include="3rdparty\lwlib\lw_hvec.h" />
+    <ClInclude Include="3rdparty\lwlib\lw_img.h" />
+    <ClInclude Include="3rdparty\lwlib\lw_intmap.h" />
+    <ClInclude Include="3rdparty\lwlib\lw_misc.h" />
+    <ClInclude Include="3rdparty\lwlib\lw_protmsg.h" />
+    <ClInclude Include="3rdparty\lwlib\lw_strmap.h" />
+    <ClInclude Include="3rdparty\lwlib\lw_vec.h" />
+    <ClInclude Include="3rdparty\lwlib\pwscan.h" />
+    <ClInclude Include="3rdparty\lwlib\vec.h" />
     <ClInclude Include="3rdparty\uthash\utarray.h" />
     <ClInclude Include="3rdparty\uthash\uthash.h" />
     <ClInclude Include="3rdparty\uthash\utlist.h" />

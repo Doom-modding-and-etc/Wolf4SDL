@@ -23,6 +23,9 @@
     <Filter Include="aud_sys\nukedopl3">
       <UniqueIdentifier>{2eb22d8e-ea6f-40cc-8331-fbaa19aa3429}</UniqueIdentifier>
     </Filter>
+    <Filter Include="3rdparty\lwlib">
+      <UniqueIdentifier>{6a9dcee5-77f3-44e1-924f-f5b484c22682}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="aud_sys\mame\fmopl.c">
@@ -65,7 +68,27 @@
     <ClCompile Include="wl_text.c" />
     <ClCompile Include="wl_utils.c" />
     <ClCompile Include="id_udp.c" />
-    <ClCompile Include="aud_sys\nukedopl3\opl3.c" />
+    <ClCompile Include="aud_sys\nukedopl3\opl3.c">
+      <Filter>aud_sys\nukedopl3</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\lwlib\lw_misc.c">
+      <Filter>3rdparty\lwlib</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\lwlib\lw_vec.c">
+      <Filter>3rdparty\lwlib</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\lwlib\pwscan.c">
+      <Filter>3rdparty\lwlib</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\lwlib\lw_ctx.c">
+      <Filter>3rdparty\lwlib</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\lwlib\lw_fs.c">
+      <Filter>3rdparty\lwlib</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\lwlib\lw_protmsg.c">
+      <Filter>3rdparty\lwlib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="win\resource.h">
@@ -98,6 +121,48 @@
     <ClInclude Include="3rdparty\fixedptc.h">
       <Filter>3rdparty</Filter>
     </ClInclude>
+    <ClInclude Include="aud_sys\nukedopl3\opl3.h">
+      <Filter>aud_sys\nukedopl3</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\lwlib\lw_intmap.h">
+      <Filter>3rdparty\lwlib</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\lwlib\lw_misc.h">
+      <Filter>3rdparty\lwlib</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\lwlib\lw_vec.h">
+      <Filter>3rdparty\lwlib</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\lwlib\pwscan.h">
+      <Filter>3rdparty\lwlib</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\lwlib\vec.h">
+      <Filter>3rdparty\lwlib</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\lwlib\lw_ctx.h">
+      <Filter>3rdparty\lwlib</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\lwlib\lw_dict.h">
+      <Filter>3rdparty\lwlib</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\lwlib\lw_bitseq.h">
+      <Filter>3rdparty\lwlib</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\lwlib\lw_hvec.h">
+      <Filter>3rdparty\lwlib</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\lwlib\lw_img.h">
+      <Filter>3rdparty\lwlib</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\lwlib\lw_fs.h">
+      <Filter>3rdparty\lwlib</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\lwlib\lw_protmsg.h">
+      <Filter>3rdparty\lwlib</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\lwlib\lw_strmap.h">
+      <Filter>3rdparty\lwlib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3rdparty\fixedptc.h" />
@@ -112,7 +177,6 @@
     <ClInclude Include="audiowl6.h" />
     <ClInclude Include="aud_sys\dosbox\dbopl.h" />
     <ClInclude Include="aud_sys\mame\fmopl.h" />
-    <ClInclude Include="aud_sys\nukedopl3\opl3.h" />
     <ClInclude Include="id_crt.h" />
     <ClInclude Include="foreign.h" />
     <ClInclude Include="f_spear.h" />
@@ -139,12 +203,6 @@
     <ClInclude Include="wl_menu.h" />
     <ClInclude Include="wl_shade.h" />
     <ClInclude Include="wl_utils.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="docs\README-3DS.md" />
-    <None Include="docs\README-CRT.md" />
-    <None Include="docs\README-PS2.md" />
-    <None Include="docs\README-Switch.md" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="docs\license-mame.txt" />
