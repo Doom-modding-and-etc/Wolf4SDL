@@ -184,7 +184,7 @@ extern int ASM_CurChannels(void);
 
 #define TickBase        70      // 70Hz per tick - used as a base for timer 0
 
-#define GetTimeCount()  ((SDL_GetTicks()*TickBase)/1000)
+#define GetTimeCount()  ((WL_GetTicks()*TickBase)/1000)
 
 void Delay(int wolfticks);
 

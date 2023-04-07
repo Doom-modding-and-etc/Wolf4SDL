@@ -18,7 +18,7 @@ Main features:
 --------------
  - Cross-platform:
       Supported operating systems/consoles are at least:
-       - Windows 98, Windows ME, Windows 2000, Windows XP(32 and 64 bit), Windows Vista(32 and 64 bit), Windows 7 (32 and 64 bit), Windows 8(32 and 64 bit) Windows 10 (32 and 64 bit) and Windows 11(64 Bits only)
+       - Windows 98, Windows ME, Windows 2000, Windows XP(32 and 64 bit), Windows Vista(32 and 64 bit), Windows 7 (32 and 64 bit), Windows 8(32 and 64 bit), Windows 8.1(32 and 64 bit) Windows 10 (32 and 64 bit) and Windows 11(64 Bits only)
        - Linux
        - BSD variants
        - Mac OS X (x86 and x64)
@@ -33,7 +33,7 @@ Main features:
        - Hakchi 
 	   
  - AdLib sounds and music:
-      This port includes the OPL2 emulator from MAME, so you can not only
+      This port includes the OPL2 emulator from MAME and DOSBOX plus OPL3 Emulator also from nukedyt, so you can not only
       hear the AdLib sounds but also music without any AdLib-compatible
       soundcard in near to perfect quality!
 
@@ -122,8 +122,12 @@ https://github.com/wolfysdl/SDL-Archive/raw/main/SDL-1.2.15-win32.zip and downlo
 SDL 1.2.15 64 bit Runtimes can be acquired at: 
 https://github.com/wolfysdl/SDL-Archive/raw/main/SDL-1.2.15-win32-x64.zip and download "SDL-1.2.15-win32-x64.zip"
 
-SDL_mixer 1.2.12 Runtimes can be acquired at:
+SDL_mixer 1.2.12 32 bit Runtimes can be acquired at:
 https://github.com/wolfysdl/SDL_mixer-archive/raw/main/SDL_mixer-1.2.12-win32.zip and download "SDL_mixer-1.2.12-win32.zip"
+
+SDL_mixer 1.2.12 64 bit Runtimes can be acquired at:
+https://github.com/wolfysdl/SDL_mixer-archive/raw/main/SDL_mixer-1.2.12-win32-x64.zip and download "SDL_mixer-1.2.12-win32-x64.zip"
+
 
 or
 
@@ -255,7 +259,8 @@ TODOs:
  - Support OpenBSD.
  - Add more features from: http://dhw.wolfenstein3d.com/viewtopic.php?t=6310
  - Port LWLIB to C
- - Fix Nintendo Switch event movement
+ - Fix Nintendo Switch movement
+ - Fix nukedopl3 when compiling with old Visual C++.
 
 Known bugs:
 -----------
@@ -294,6 +299,7 @@ Credits:
  - Thanks to vbt for the port of sega saturn
  - Thanks to WayneCa for upgrade the original Wolf
  - Thanks to hax0kartik for the port of Wolf4SDL to Nintendo 3DS
+ - Many Thanks to nukedyt for the awesome nuked-opl3
  
 Licenses:
 ---------
@@ -302,4 +308,6 @@ Licenses:
      - license-id.txt or
      - license-gpl.txt
  - The OPL2 emulator:
-     - license-mame.txt
+     - docs/license-mame.txt
+ - The OPL3 emulator:
+	 - docs/LICENSE.nkopl3

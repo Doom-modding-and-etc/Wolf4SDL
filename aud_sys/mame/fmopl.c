@@ -77,7 +77,6 @@ Revision History:
 */
 
 #include "../../version.h"
-#ifndef USE_DOSBOX
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -97,7 +96,11 @@ Revision History:
 #ifdef USE_INLINE_C89
 #define INLINE
 #else
+#ifdef _MSC_VER
+#define INLINE __inline
+#else
 #define INLINE inline
+#endif
 #endif
 
 /* output final shift */
@@ -2586,5 +2589,4 @@ void Y8950SetKeyboardHandler(int which,OPL_PORTHANDLER_W KeyboardHandler_w,OPL_P
 	OPL->keyboard_param = param;
 }
 
-#endif
 #endif

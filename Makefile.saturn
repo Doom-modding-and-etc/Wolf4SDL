@@ -22,7 +22,7 @@ CMNDIR = l:/saturn/dev/wolf3ddma/root
 
 # source_program
 SRCS = Platform/sega/saturn/low.s Platform/sega/saturn/saturn.c Platform/sega/saturn/pcmsys.c \ 
-Platform/sega/saturn/workarea.c aud_sys/fmopl/fmopl.c id_ca.c id_in.c id_pm.c id_us.c id_vh.c id_vieasm.c id_vl.c id_w3swrap.o \
+Platform/sega/saturn/workarea.c aud_sys/fmopl/fmopl.c aud_sys/dosbox/dbopl.c aud_sys/nukedopl3/opl3.c id_ca.c id_in.c id_pm.c id_udp.c id_us.c id_vh.c id_vieasm.c id_vl.c id_w3swrap.o \
 psnprntf.o signon.c wl_act1.c wl_act2.c wl_agent.c wl_atmos.c wl_cloudsky.c wl_debug.c wl_draw.c wl_game.c \
 wl_inter.c wl_main.c wl_menu.c wl_parallax.c wl_plane.c wl_play.c wl_scale.c wl_shade.c wl_state.c \
 wl_utils.c l:/saturn/SBL6/SEGALIB/GFS/elf/gfs2.o l:/saturn/SBL6/SEGALIB/GFS/elf/gfs_cdb2.o l:/saturn/SBL6/SEGALIB/GFS/elf/gfs_cdc2.o \

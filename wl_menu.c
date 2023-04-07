@@ -18,10 +18,17 @@
 
 extern int lastgamemusicoffset;
 
+#ifdef MENU_DEMOS
+int LastDemo;
+#endif
+
 //
 // PRIVATE PROTOTYPES
 //
 int  CP_ReadThis (int);
+#ifdef MENU_DEMOS
+int CP_WatchDemo();
+#endif
 extern void SetTheTextColor(CP_itemtype* items, int hlight);
 
 #ifdef SPEAR
@@ -66,8 +73,8 @@ CP_itemtype MainMenu[] = {
     {1, STR_NG, CP_NewGame},
     {1, STR_SD, CP_Sound},
     {1, STR_CL, CP_Control},
-    {1, STR_LG, CP_LoadGame},
-    {0, STR_SG, CP_SaveGame},
+    {1, STR_LG, (int (*)())CP_LoadGame},
+    {0, STR_SG, (int (*)())CP_SaveGame},
     {1, STR_CV, CP_ChangeView},
 
 #ifndef GOODTIMES
@@ -83,7 +90,11 @@ CP_itemtype MainMenu[] = {
 #endif
 
     {1, STR_VS, CP_ViewScores},
+#ifdef MENU_DEMOS
     {1, STR_BD, 0},
+#else
+    {1, STR_BD, 0},
+#endif
     {1, STR_QT, 0}
 #endif
 };
@@ -459,15 +470,15 @@ US_ControlPanel (ScanCode scancode)
             goto finishup;
 
         case sc_F4:
-            CP_Sound (0);
+            CP_Sound ();
             goto finishup;
 
         case sc_F5:
-            CP_ChangeView (0);
+            CP_ChangeView ();
             goto finishup;
 
         case sc_F6:
-            CP_Control (0);
+            CP_Control ();
             goto finishup;
 
         finishup:
@@ -528,7 +539,7 @@ US_ControlPanel (ScanCode scancode)
             case viewscores:
                 if (MainMenu[viewscores].routine == NULL)
                 {
-                    if (CP_EndGame (0))
+                    if (CP_EndGame ())
                         StartGame = 1;
                 }
                 else
@@ -547,7 +558,7 @@ US_ControlPanel (ScanCode scancode)
 
             case -1:
             case quit:
-                CP_Quit (0);
+                CP_Quit ();
                 break;
 
             default:
@@ -617,7 +628,11 @@ DrawMainMenu (void)
 #ifdef SPANISH
         strcpy (&MainMenu[backtodemo].string, STR_GAME);
 #else
+#ifdef MENU_DEMOS
+        strcpy(&MainMenu[backtodemo].string[0], STR_GAME);
+#else
         strcpy (&MainMenu[backtodemo].string[8], STR_GAME);
+#endif
 #endif
 
 #else
@@ -632,7 +647,11 @@ DrawMainMenu (void)
 #ifdef SPANISH
         strcpy (&MainMenu[backtodemo].string, STR_BD);
 #else
+#ifdef MENU_DEMOS
+        strcpy(&MainMenu[backtodemo].string[0], STR_BD);
+#else
         strcpy (&MainMenu[backtodemo].string[8], STR_DEMO);
+#endif
 #endif
 #else
         VWB_DrawPic (12 * 8, 20 * 8, C_MRETDEMOPIC);
@@ -673,7 +692,8 @@ CP_ReadThis (int blank)
 void
 BossKey (void)
 {
-    int i,lastBlinkTime;
+    int i;
+    size_t lastBlinkTime;
 
     SD_MusicOff ();
 
@@ -1048,7 +1068,21 @@ CP_NewGame ()
 
     return 0;
 }
+#ifdef MENU_DEMOS
+////////////////////////////////////////////////////////////////////
+//
+// WATCH THE DEMO
+//
+////////////////////////////////////////////////////////////////////
 
+int CP_WatchDemo()
+{
+    if (!ingame)
+        PlayDemo(LastDemo++ % NUMDEMOS);
+
+    return 0;
+}
+#endif
 
 #ifndef SPEAR
 /////////////////////
@@ -2625,7 +2659,8 @@ void
 EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*PrintRtn) (int),
                int type)
 {
-    int j,z, exit, tick, redraw, which, x, picked, lastFlashTime;
+    int j, z, exit, tick, redraw, which, x, picked;
+    size_t lastFlashTime;
     ControlInfo ci;
 
 
@@ -3751,7 +3786,8 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
     char key;
     static int redrawitem = 1, lastitem = -1;
     int i, x, y, basey, exit, which, shape;
-    int lastBlinkTime, timer;
+    size_t lastBlinkTime;
+    int timer;
     ControlInfo ci;
 
 
@@ -3787,7 +3823,7 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
         //
         // CHANGE GUN SHAPE
         //
-        if ((int)GetTimeCount () - lastBlinkTime > timer)
+        if (GetTimeCount () - lastBlinkTime > (size_t)timer)
         {
             lastBlinkTime = GetTimeCount ();
             if (shape == C_CURSOR1PIC)
@@ -4038,17 +4074,17 @@ DrawGun (CP_iteminfo * item_i, CP_itemtype * items, int x, int *y, int which, in
 //
 ////////////////////////////////////////////////////////////////////
 void
-TicDelay (int count)
+TicDelay (size_t count)
 {
     ControlInfo ci;
 
-    int startTime = GetTimeCount ();
+    size_t startTime = GetTimeCount ();
     do
     {
         SDL_Delay(5);
         ReadAnyControl (&ci);
     }
-    while ((int) GetTimeCount () - startTime < count && ci.dir != dir_None);
+    while (GetTimeCount () - startTime < count && ci.dir != dir_None);
 }
 
 
@@ -4227,7 +4263,8 @@ void ReadAnyControl(ControlInfo *ci)
 int
 Confirm (const char *string)
 {
-    int xit = 0, x, y, tick = 0, lastBlinkTime;
+    int xit = 0, x, y, tick = 0;
+    size_t lastBlinkTime;
     int whichsnd[2] = { ESCPRESSEDSND, SHOOTSND };
     ControlInfo ci;
 

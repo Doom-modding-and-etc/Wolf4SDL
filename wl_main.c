@@ -57,6 +57,10 @@ extern unsigned char signon[];
 boolean     mousemoveenabled;
 #endif // EXTRACONTROLS
 
+#ifdef SWITCH
+PadState pad;
+#endif
+
 char    str[80];
 int     dirangle[9] = {0,ANGLES/8,2*ANGLES/8,3*ANGLES/8,4*ANGLES/8,
                        5*ANGLES/8,6*ANGLES/8,7*ANGLES/8,ANGLES};
@@ -813,6 +817,9 @@ boolean LoadTheGame(FILE *file,int x,int y)
 
 void ShutdownId (void)
 {  
+#ifdef LWUDPCOMMS
+    UDP_shutdown ();
+#endif
     US_Shutdown ();         // This line is completely useless...
 #if defined(SWITCH) || defined (N3DS)
     printf("US_Shutdown DONE\n");
@@ -1265,7 +1272,7 @@ CP_itemtype MusicMenu[]=
 void DoJukebox(void)
 {
     int which,lastsong=-1;
-    unsigned start;
+    size_t start;
     unsigned songs[]=
         {
 #ifndef SPEAR
@@ -1310,7 +1317,7 @@ void DoJukebox(void)
 
 #ifndef SPEAR
 #ifndef UPLOAD
-    start = ((SDL_GetTicks()/10)%3)*6;
+    start = ((WL_GetTicks()/10)%3)*6;
 #else
     start = 0;
 #endif
@@ -1468,6 +1475,9 @@ static void InitGame()
     printf("US Started");
 #elif defined(PS2)
     ps2_printf("US Started DONE\n", 4);
+#endif
+#ifdef LWUDPCOMMS
+    UDP_startup();
 #endif
 
     // TODO: Will any memory checking be needed someday??
@@ -1714,8 +1724,9 @@ void Quit (const char *errorStr, ...)
 
 static void DemoLoop()
 {
+#ifndef MENU_DEMOS
     int LastDemo = 0;
-
+#endif
 //
 // check for launch from ted
 //
@@ -1820,18 +1831,23 @@ static void DemoLoop()
 // demo
 //
 
+
+
+#ifndef MENU_DEMOS
             #ifndef SPEARDEMO
             PlayDemo (LastDemo++%4);
             #else
             PlayDemo (0);
             #endif
-
+#endif
             if (playstate == ex_abort)
                 break;
             VW_FadeOut();
             if(screenHeight % 200 != 0)
                 VL_ClearScreen(0);
+#ifndef MENU_DEMOS
             StartCPMusic(INTROSONG);
+#endif
         }
 
         VW_FadeOut ();
@@ -2065,7 +2081,14 @@ void CheckParameters(int argc, char *argv[])
             param_ignorenumchunks = true;
         else IFARG("--help")
             showHelp = true;
+#ifdef LWUDPCOMMS
+        else IFARG(UDP_check(arg))
+        {
+                                    // do nothing
+        }
+#endif
         else hasError = true;
+
     }
     if(hasError || showHelp)
     {
@@ -2114,6 +2137,10 @@ void CheckParameters(int argc, char *argv[])
             " --goodtimes            Disable copy protection quiz\n"
 #endif
             , defaultSampleRate
+#ifdef LWUDPCOMMS
+            ,
+            UDP_parameterHelp
+#endif
         );
         exit(1);
     }
@@ -2136,6 +2163,22 @@ void CheckParameters(int argc, char *argv[])
 
 int main (int argc, char *argv[])
 {
+#ifdef SWITCH
+    // nxlink
+    socketInitializeDefault();
+	nxlinkStdio();
+
+    /* emulator
+    consoleDebugInit(debugDevice_SVC);
+	stdout = stderr; */
+	printf("nxlink printf\n");
+    printf("MAIN ENTRY\n");
+	
+	printf("Configure Nintendo Switch gamepad");
+    padConfigureInput(1, HidNpadStyleSet_NpadStandard);
+    padInitializeDefault(&pad);		
+#endif	
+	
 #if defined(_arch_dreamcast)
     DC_Main();
     DC_CheckParameters();
@@ -2148,7 +2191,7 @@ int main (int argc, char *argv[])
     ps2_printf("CheckParameters DONE\n", 4);
 #endif
 #ifdef PS2
-        PS2_Started();
+    PS2_Started();
 #endif
     CheckForEpisodes(); 
 #if defined(SWITCH) || defined (N3DS) 

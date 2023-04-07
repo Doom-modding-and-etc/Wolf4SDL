@@ -45,11 +45,11 @@ unsigned char* scr = NULL;
 
 unsigned char *vbuf;
 
-int        lasttimecount;
+size_t        lasttimecount;
 int        frameon;
 boolean fpscounter;
 
-int fps_frames=0, fps_time=0, fps=0;
+size_t fps_frames=0, fps_time=0, fps=0;
 
 #if defined(USE_FLOORCEILINGTEX) || defined(USE_CLOUDSKY)
 short *spanstart;
@@ -1111,12 +1111,12 @@ void DrawPlayerWeapon (void)
 void CalcTics (void)
 {
 #ifndef FIXEDLOGICRATE
-    unsigned int curtime;
+    size_t curtime;
 #endif
 //
 // calculate tics since last refresh for adaptive timing
 //
-    if (lasttimecount > (int) GetTimeCount())
+    if (lasttimecount > GetTimeCount())
         lasttimecount = GetTimeCount();    // if the game was paused a LONG time
 
 #ifdef FIXEDLOGICRATE
@@ -1124,13 +1124,12 @@ void CalcTics (void)
     tics = 1;
     lasttimecount += tics;
 #else
-
-    curtime = SDL_GetTicks();
+    curtime = WL_GetTicks();
     tics = (curtime * 7) / 100 - lasttimecount;
     if(!tics)
     {
         // wait until end of current tic
-        SDL_Delay(((lasttimecount + 1) * 100) / 7 - curtime);
+        SDL_Delay(((((unsigned int)lasttimecount + 1) * 100) / 7 - (unsigned int)curtime));
         tics = 1;
     }
 
@@ -1882,7 +1881,7 @@ void ThreeDRefresh (void)
             SETFONTCOLOR(7,127);
             PrintX=4; PrintY=1;
             VWB_Bar(0,0,50,10,bordercol);
-            US_PrintSigned(fps);
+            US_PrintSigned((int)fps);
             US_Print(" fps");
         }
 #endif
@@ -1894,9 +1893,9 @@ void ThreeDRefresh (void)
     {
         fps_frames++;
 #ifdef FIXEDLOGICRATE
-    if (SDL_GetTicks() - fps_time > 500)
+    if (WL_GetTicks() - fps_time > 500)
     {
-        fps_time = SDL_GetTicks();
+        fps_time = WL_GetTicks();
         fps = fps_frames << 1;
         fps_frames = 0;
     }

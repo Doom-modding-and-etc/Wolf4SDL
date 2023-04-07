@@ -27,7 +27,11 @@
 // player state info
 //
 int        thrustspeed;
-
+#ifdef SWITCH
+int JOYSTICK_DEAD_ZONE = 3000;
+int JOYSTICK_MAX_ZONE = 30000;
+HidAnalogStickState pos_left, pos_right;
+#endif
 unsigned short            plux, pluy;          // player coordinates scaled to unsigned
 
 short           anglefrac;
@@ -147,9 +151,29 @@ void ControlMovement(objtype* ob)
 {
     int     angle;
     int     angleunits;
-
+#ifdef SWITCH
+    float strafespeed = 0;
+#endif
     thrustspeed = 0;
 
+#ifdef SWITCH
+    //Read the joysticks' position
+    pos_left = padGetStickPos(&pad, 0);
+    pos_right = padGetStickPos(&pad, 1);
+
+    if( pos_left.x < -JOYSTICK_DEAD_ZONE)
+    {
+        strafespeed = floor((float)((float)-pos_left.x/(float)32767)*(float)35);
+    }
+    if( pos_left.x > JOYSTICK_DEAD_ZONE)
+    {
+        strafespeed = floor((float)((float)pos_left.x/(float)32767)*(float)35);
+    }
+    if( pos_left.x < -JOYSTICK_MAX_ZONE || pos_left.x > JOYSTICK_MAX_ZONE)
+    {
+        strafespeed = 35;
+    }
+#endif
 
     if (buttonstate[bt_strafeleft])
     {
@@ -157,9 +181,17 @@ void ControlMovement(objtype* ob)
         if (angle >= ANGLES)
             angle -= ANGLES;
         if (buttonstate[bt_run])
-            Thrust(angle, RUNMOVE * MOVESCALE * tics);
+#ifdef SWITCH
+			Thrust(angle, (strafespeed*2) * MOVESCALE * (int)tics);
+#else
+            Thrust(angle, RUNMOVE * MOVESCALE * (int)tics);
+#endif
         else
-            Thrust(angle, BASEMOVE * MOVESCALE * tics);
+#ifdef SWITCH
+			Thrust(angle, strafespeed * MOVESCALE * (int)tics);
+#else
+            Thrust(angle, BASEMOVE * MOVESCALE * (int)tics);
+#endif
     }
 
     if (buttonstate[bt_straferight])
@@ -168,9 +200,17 @@ void ControlMovement(objtype* ob)
         if (angle < 0)
             angle += ANGLES;
         if (buttonstate[bt_run])
-            Thrust(angle, RUNMOVE * MOVESCALE * tics);
-        else
-            Thrust(angle, BASEMOVE * MOVESCALE * tics);
+#ifdef SWITCH	
+			Thrust(angle, (strafespeed*2) * MOVESCALE * (int)tics );
+#else		
+            Thrust(angle, RUNMOVE * MOVESCALE * (int)tics);
+#endif
+		else
+#ifdef SWITCH
+			Thrust(angle, strafespeed * MOVESCALE * (int)tics);
+#else
+            Thrust(angle, BASEMOVE * MOVESCALE * (int)tics);
+#endif
     }
 #ifdef EXTRACONTROLS
     if (buttonstate[bt_moveforward])
@@ -418,7 +458,7 @@ void UpdateFace(void)
     else if (SD_SoundPlaying() == GETGATLINGSND)
         return;
 
-    facecount += tics;
+    facecount += (int)tics;
     if (facecount > US_RndT())
     {
         gamestate.faceframe = (US_RndT() >> 6);
@@ -444,11 +484,7 @@ static void LatchNumber(int x, int y, unsigned width, int number)
 {
     unsigned length, c;
     char    str[20];
-#ifdef NOT_ANSI_C
     w3sltoa(number, str, 10);
-#else
-    sprintf(str, "%ld", number);
-#endif
     length = (unsigned)strlen(str);
 
     while (length < width)
@@ -1656,7 +1692,7 @@ void VictorySpin(void)
 
     if (player->y > desty)
     {
-        player->y -= tics * 4096;
+        player->y -= (fixed)tics * 4096;
         if (player->y < desty)
             player->y = desty;
     }

@@ -458,7 +458,8 @@ finished:
     return false;
 #endif
 #else
-    unsigned x, y, p, frame, pixperframe;
+    unsigned x, y, p, pixperframe; //TODO: <--
+    size_t frame;
     int  rndval = 0, lastrndval = 0;
     int      i,first = 1;
 	unsigned char *srcptr;
@@ -560,7 +561,7 @@ finished:
         }
 
         frame++;
-        Delay(frame - GetTimeCount());        // don't go too fast
+        Delay((int)frame - (int)GetTimeCount());        // don't go too fast
     } while (1);
 
 finished:

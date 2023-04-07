@@ -11,7 +11,9 @@
 
 #ifndef VIEASM
 #ifdef USE_DOSBOX
-#define alOut(n,b) YM3812Write(chip, n, b)
+#define alOut(n,b) YM3812Write(&chip, n, b)
+#elif defined(USE_NUKEDOPL)
+#define alOut(n,b) YM3812Write(&chip, n, b)
 #else
 #define alOut(n,b) YM3812Write(oplChip, n, b)
 #endif
@@ -154,7 +156,7 @@ extern  int             DigiMap[];
 #ifndef SEGA_SATURN
 extern  int             DigiChannel[];
 #endif
-#define GetTimeCount()  ((SDL_GetTicks()*7)/100)
+
 
 // Function prototypes
 void            Delay (int wolfticks);

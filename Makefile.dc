@@ -20,7 +20,7 @@ OPT= -O3 -Wall -ffast-math
 KOS_LOCAL_CFLAGS = -DDREAMCAST -DMAX_MEM_LEVEL -DSDL -DLSB_FIRST -DALIGN_LONG -DINLINE -DDC -DUCHAR_MAX=0xff -DUSHRT_MAX=0xffff -DULONG_MAX=0xffffffff
 KOS_CFLAGS += $(OPT)
 # Files ---------------------------------------------------------------------------
-OBJS = Platform/dc/dc_main.o Platform/dc/dc_vmu.o aud_sys/mame/fmopl.o aud_sys/dosbox/dbopl.o id_ca.o id_crt.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vieasm.o id_vl.o id_w3swrap.o psnprntf.o signon.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o wl_game.o wl_inter.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
+OBJS = Platform/dc/dc_main.o Platform/dc/dc_vmu.o  aud_sys/dosbox/dbopl.o aud_sys/mame/fmopl.o aud_sys/nukedopl3/opl3.o id_ca.o id_crt.o id_in.o id_pm.o id_sd.o id_udp.o id_us.o id_vh.o id_vieasm.o id_vl.o id_w3swrap.o psnprntf.o signon.o wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o wl_game.o wl_inter.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o wl_shade.o wl_state.o wl_text.o wl_utils.o
 
 KOS_CFLAGS += -I${KOS_BASE}/../kos-ports/include/SDL -I./
 

@@ -14,6 +14,8 @@
 
 #ifdef N3DS
 #include <3ds.h>
+#elif defined(SWITCH)
+#include <switch.h>
 #endif
 #if defined(_arch_dreamcast)
 #include <kos.h>
@@ -136,6 +138,9 @@ void Quit(const char* errorStr, ...);
 #endif
 #include "id_us.h"
 #include "id_ca.h"
+#ifdef LWUDPCOMMS
+#include "id_udp.h"
+#endif
 #include "wl_menu.h"
 #include "wl_utils.h"
 #include "id_w3swrap.h"
@@ -970,7 +975,7 @@ typedef struct objstruct
 
     short       angle;
     short       hitpoints;
-    int     speed;
+    size_t     speed;
 
     short       temp1, temp2, hidden;
     struct objstruct* next, * prev;
@@ -1049,7 +1054,7 @@ typedef struct
 
     short       episode, secretcount, treasurecount, killcount,
         secrettotal, treasuretotal, killtotal;
-    int     TimeCount;
+    size_t     TimeCount;
     int     killx, killy;
     boolean     victoryflag;            // set during victory animations
 #ifdef MAPCONTROLPARTIME
@@ -1088,6 +1093,9 @@ typedef enum
 extern  char     str[80];
 extern  char     configdir[256];
 extern  char     configname[13];
+#endif
+#ifdef SWITCH
+extern PadState pad;
 #endif
 
 extern  fixed    focallength;
@@ -1260,7 +1268,7 @@ extern  int         controlstrafe;
 extern  int  extravbls;
 #endif
 extern  unsigned short        mapwidth, mapheight;
-extern  unsigned int    tics;
+extern  size_t    tics;
 #ifndef SEGA_SATURN
 extern  int         lastgamemusicoffset;
 #endif
@@ -1364,7 +1372,7 @@ extern boolean lagging;
 
 extern  unsigned char* vbuf;
 
-extern  int lasttimecount;
+extern  size_t lasttimecount;
 extern  int frameon;
 extern  boolean fizzlein, fpscounter;
 #ifdef AUTOMAP
@@ -1478,6 +1486,11 @@ boolean CheckSight(objtype* ob);
 // player state info
 //
 extern  int thrustspeed;
+#ifdef SWITCH
+extern int JOYSTICK_DEAD_ZONE;
+extern int JOYSTICK_MAX_ZONE;
+extern HidAnalogStickState pos_left, pos_right;
+#endif
 extern  unsigned short     plux, pluy;         // player coordinates scaled to unsigned
 extern  objtype* LastAttacker;
 
@@ -1525,9 +1538,9 @@ extern  short       doornum;
 
 #ifdef BLAKEDOORS
 extern  unsigned short      ldoorposition[MAXDOORS], rdoorposition[MAXDOORS];   // leading edge of door 0=closed
-#else
-extern  unsigned short      doorposition[MAXDOORS];
 #endif
+extern  unsigned short      doorposition[MAXDOORS];
+
 extern  unsigned char      areaconnect[NUMAREAS][NUMAREAS];
 
 extern  boolean   areabyplayer[NUMAREAS];
@@ -1730,20 +1743,38 @@ void GetFlatTextures(void);
 #ifdef USE_PARALLAX
 void DrawParallax(void);
 #endif
-#ifndef _MSC_VER
-#ifdef NOT_ANSI_C
-static char* itoa(int value, char* string, int radix)
+
+/*
+===================
+=
+= w3sitoa
+=
+= converts a char to a int value.
+=
+===================
+*/
+
+static char* w3sitoa(int value, char* string, int radix)
 {
-    sprintf(string, "%d", value);
+    w3ssnprintf(string, radix, "%d", value);
     return string;
 }
 
-static char* ltoa(long value, char* string, int radix)
+/*
+===================
+=
+= w3sitoa
+=
+= converts a char to a long value.
+=
+===================
+*/
+
+static char* w3sltoa(long value, char* string, int radix)
 {
-    sprintf(string, "%ld", value);
+    w3ssnprintf(string, radix, "%ld", value);
     return string;
 }
-#endif
-#endif
+
 
 #endif

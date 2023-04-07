@@ -192,11 +192,7 @@ void
 US_PrintSigned(int n)
 {
 	char	buffer[32];
-#ifdef NOT_ANSI_C
 	US_Print(w3sltoa(n,buffer,10));
-#else
-	US_Print((const char*)sprintf(buffer, "%ld", n));
-#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -507,7 +503,7 @@ US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 	unsigned short		i,
 				w,h,
 				temp;
-	unsigned int	curtime, lasttime, lastdirtime, lastbuttontime, lastdirmovetime;
+	size_t	curtime, lasttime, lastdirtime, lastbuttontime, lastdirmovetime;
 	ControlInfo ci;
 	Direction   lastdir = dir_None;
 
@@ -784,7 +780,7 @@ US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 void US_InitRndT(int randomize)
 {
     if(randomize)
-        rndindex = (SDL_GetTicks() >> 4) & 0xff;
+        rndindex = (WL_GetTicks() >> 4) & 0xff;
     else
         rndindex = 0;
 }

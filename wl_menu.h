@@ -186,7 +186,7 @@ void DrawWindow(int x,int y,int w,int h,int wcolor);
 void DrawOutline(int x,int y,int w,int h,int color1,int color2);
 void WaitKeyUp(void);
 void ReadAnyControl(ControlInfo *ci);
-void TicDelay(int count);
+void TicDelay(size_t count);
 int StartCPMusic(int song);
 int  Confirm(const char *string);
 void Message(const char *string);

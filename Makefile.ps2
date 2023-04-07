@@ -10,7 +10,7 @@ wl_shade.o wl_state.o wl_text.o wl_utils.o
 
 PS2_OBJS = Platform/PS2/ps2_modules.o Platform/PS2/ps2_mc.o Platform/PS2/ps2_main.o Platform/PS2/ps2_data_loader.o
 
-EE_OBJS = $(PS2_OBJS) aud_sys/mame/fmopl.o aud_sys/dosbox/dbopl.o $(ID_ENGINE_OBJS) $(WL_OBJS)
+EE_OBJS = $(PS2_OBJS) aud_sys/dosbox/dbopl.o aud_sys/mame/fmopl.o aud_sys/nukedopl3/opl3.o $(ID_ENGINE_OBJS) $(WL_OBJS)
 
 EE_INCS = -I$(PS2SDK)/ee/include -I$(PS2SDK)/ports/include/SDL2 -I$(PS2SDK)/ports/include -I$(GSKIT)/include -I$(GSKIT)/ee/dma/include -I$(GSKIT)/ee/gs/include -I$(GSKIT)/ee/toolkit/include 
 EE_LDFLAGS = -L$(PS2SDK)/ports/lib -L$(PS2SDK)/iop/lib/ -L$(PS2SDK)/ee/lib/ -L$(PS2DEV)/gsKit/lib 

@@ -24,13 +24,20 @@
 #define	STR_CV	"Change View"
 #define	STR_VS	"View Scores"
 #define STR_EG	"End Game"
+#ifdef MENU_DEMOS
+#define STR_BD "Watch Demo"
+#else
 #define	STR_BD	"Back to Demo"
+#endif
 #define STR_QT	"Quit"
 
 #define STR_LOADING	"Loading"
 #define STR_SAVING	"Saving"
-
+#ifdef MENU_DEMOS
+#define STR_GAME   "Back To Game"
+#else
 #define STR_GAME	"Game"
+#endif
 #define STR_DEMO	"Demo"
 #define STR_LGC		"Load Game called\n\""
 #define STR_EMPTY	"empty"

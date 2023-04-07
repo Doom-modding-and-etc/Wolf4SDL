@@ -585,11 +585,7 @@ void VL_SetColor	(int color, int red, int green, int blue)
         SDL_SetPaletteColors(screen->format->palette, &col, color, 1);
     else
     {
-		SDL_Texture* texture;
-        SDL_SetPaletteColors(screenBuffer->format->palette, &col, color, 1);
-
-        texture = SDL_CreateTextureFromSurface(renderer, screenBuffer);
-               
+        SDL_SetPaletteColors(screenBuffer->format->palette, &col, color, 1);   
 #ifdef CRT        
         CRT_Init(screen);
         CRT_DAC();

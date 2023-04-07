@@ -67,7 +67,7 @@ boolean lagging = true;
 // replacing refresh manager
 //
 unsigned short     mapwidth,mapheight;
-unsigned int tics;
+size_t tics;
 
 //
 // control info
@@ -494,7 +494,7 @@ void PollGameControllerButtons(void)
 
 void PollKeyboardMove (void)
 {
-    int delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
+    int delta = buttonstate[bt_run] ? RUNMOVE * (int)tics : BASEMOVE * (int)tics;
 
     if (Keyboard(dirscan[di_north]))
         controly -= delta;
@@ -553,10 +553,8 @@ void PollMouseMove (void)
 void PollJoystickMove (void)
 {
     int joyx, joyy;
-	int delta;
+	int delta = buttonstate[bt_run] ? RUNMOVE * (int)tics : BASEMOVE * (int)tics;
     IN_GetJoyDelta (&joyx, &joyy);
-
-    delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
 
     if (joyx > 64 || buttonstate[bt_turnright])
         controlx += delta;
@@ -579,8 +577,7 @@ void PollJoystickMove (void)
 */
 void PollGameControllerMove(void)
 {
-    int delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
-
+    int delta = buttonstate[bt_run] ? RUNMOVE * (int)tics : BASEMOVE * (int)tics;
 
     if (GameControllerRightStick[0] > 64)
         controlx += delta;
@@ -618,6 +615,17 @@ void PollControls (void)
 {
     int max, min, i;
     unsigned char buttonbits;
+#if defined(SWITCH) 
+	unsigned int kDown;
+	float turnspeed = 0;
+    float movespeed = 0;
+	int delta;
+#elif defined(N3DS)
+	unsigned int kDown;
+	int delta;
+	circlePosition cpos;
+	int cx = 0, cy = 0;
+#endif
 
     IN_ProcessEvents();
 
@@ -627,12 +635,12 @@ void PollControls (void)
     if (demoplayback || demorecord)   // demo recording and playback needs to be constant
     {
         // wait up to DEMOTICS Wolf tics
-        unsigned int curtime = SDL_GetTicks();
-		int timediff;
+        size_t curtime = WL_GetTicks();
+		size_t timediff;
         lasttimecount += DEMOTICS;
         timediff = (lasttimecount * 100) / 7 - curtime;
         if(timediff > 0)
-            SDL_Delay(timediff);
+            SDL_Delay((unsigned int)timediff);
 
         if(timediff < -2 * DEMOTICS)       // more than 2-times DEMOTICS behind?
             lasttimecount = (curtime * 7) / 100;    // yes, set to current timecount
@@ -678,6 +686,67 @@ void PollControls (void)
 //
 // get button states
 //
+#if defined(SWITCH) 
+    padUpdate(&pad);
+
+    kDown = padGetButtons(&pad);
+
+    //u32 kToggle = hidKeysDown(CONTROLLER_P1_AUTO);
+
+    if((kDown & HidNpadButton_A) || (kDown & HidNpadButton_ZR))
+        buttonstate[bt_attack] = true;
+
+    if((kDown & HidNpadButton_B))
+        buttonstate[bt_use] = true;
+
+    if((kDown & HidNpadButton_X))
+        buttonstate[bt_strafe] = true;
+
+    if((kDown & HidNpadButton_Y) || (kDown & HidNpadButton_ZL))
+        buttonstate[bt_run] = true;
+
+    if((kDown & HidNpadButton_R))
+        buttonstate[bt_nextweapon] = true;
+
+    if((kDown & HidNpadButton_L))
+        buttonstate[bt_prevweapon] = true;
+
+    if((kDown & HidNpadButton_Minus))
+        buttonstate[bt_esc] = true;
+
+    if((kDown & HidNpadButton_Plus))
+        buttonstate[bt_pause] = true;
+#elif defined(N3DS)
+    hidScanInput();
+
+    kDown = hidKeysHeld();
+
+    //u32 kToggle = hidKeysDown(CONTROLLER_P1_AUTO);
+
+    if((kDown & KEY_A) || (kDown & KEY_ZR))
+        buttonstate[bt_attack] = true;
+
+    if((kDown & KEY_B))
+        buttonstate[bt_use] = true;
+
+    if((kDown & KEY_X))
+        buttonstate[bt_strafe] = true;
+
+    if((kDown & KEY_Y) || (kDown & KEY_ZL))
+        buttonstate[bt_run] = true;
+
+    if((kDown & KEY_R))
+        buttonstate[bt_nextweapon] = true;
+
+    if((kDown & KEY_L))
+        buttonstate[bt_prevweapon] = true;
+
+    if((kDown & KEY_START))
+        buttonstate[bt_esc] = true;
+
+    if((kDown & KEY_SELECT))
+        buttonstate[bt_pause] = true;
+#else
     PollKeyboardButtons();
 #if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
     PollGameControllerButtons();
@@ -688,9 +757,102 @@ void PollControls (void)
     if (joystickenabled)
         PollJoystickButtons();
 #endif
+#endif
 //
 // get movements
 //
+#if defined(SWITCH)
+    // keyboard movement code
+    delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
+	
+    if((kDown & HidNpadButton_Up))
+        controly -= delta;
+    if((kDown & HidNpadButton_Right))
+        controly += delta;
+    if((kDown & HidNpadButton_Left))
+        controlx -= delta;
+    if((kDown & HidNpadButton_Right))
+        controlx += delta;
+
+    //Read the joysticks' position
+    pos_left = padGetStickPos(&pos_left, 0);
+    pos_right = padGetStickPos(&pos_right, 1);
+
+    if( pos_left.x < 0)
+    {
+        buttonstate[bt_strafeleft] = true;
+    }
+    else if( pos_left.x > 0)
+    {
+        buttonstate[bt_straferight] = true;
+    }
+    if( pos_left.y < -JOYSTICK_DEAD_ZONE)
+    {
+        movespeed = floor((float)((float)pos_left.y/(float)32767)*(float)35);
+        if( pos_left.y < -JOYSTICK_MAX_ZONE )
+        {
+            movespeed = -35;
+        }
+        delta = buttonstate[bt_run] ? (movespeed*2) * tics : movespeed * tics;
+        controly -= delta;
+    }
+    if( pos_left.y > JOYSTICK_DEAD_ZONE)
+    {
+        movespeed = floor((float)((float)-pos_left.y/(float)32767)*(float)35);
+        if( pos_left.y > JOYSTICK_MAX_ZONE)
+        {
+            movespeed = -35;
+        }
+        delta = buttonstate[bt_run] ? (movespeed*2) * tics : movespeed * tics;
+        controly += delta;
+    }
+    if( pos_right.x < -JOYSTICK_DEAD_ZONE)
+    {
+        turnspeed = floor((float)((float)-pos_right.x/(float)32767)*(float)35);
+        if( pos_right.x < -JOYSTICK_MAX_ZONE)
+        {
+            turnspeed = 35;
+        }
+        delta = buttonstate[bt_run] ? (turnspeed*2) * tics : turnspeed * tics;
+        controlx -= delta;
+    }
+    else if( pos_right.x > JOYSTICK_DEAD_ZONE)
+    {
+        turnspeed = floor((float)((float)pos_right.x/(float)32767)*(float)35);
+        if( pos_right.x > JOYSTICK_MAX_ZONE)
+        {
+            turnspeed = 35;
+        }
+        delta = buttonstate[bt_run] ? (turnspeed*2) * tics : turnspeed * tics;
+        controlx += delta;
+    }
+#elif defined(N3DS)
+    // keyboard movement code
+    delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
+
+    if((kDown & KEY_DUP))
+        controly -= delta;
+    if((kDown & KEY_DDOWN))
+        controly += delta;
+    if((kDown & KEY_DLEFT))
+        controlx -= delta;
+    if((kDown & KEY_DRIGHT))
+        controlx += delta;
+
+	hidCircleRead(&cpos);
+	if (abs(cpos.dx) > 32) 
+        cx = (cpos.dx) >> 1;
+	else
+        cx = 0;
+	
+    if (abs(cpos.dy) > 32) 
+        cy = (0-(cpos.dy)) >> 2;
+	else 
+        cy = 0;
+
+    controlx += cx * 10/(13-mouseadjustment);
+	controly += cy * 20/(13-mouseadjustment);	
+#else
     PollKeyboardMove();
 #if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
     PollGameControllerMove();
@@ -701,11 +863,11 @@ void PollControls (void)
 
     if (joystickenabled)
         PollJoystickMove ();
-
+#endif
 //
 // bound movement to a maximum
 //
-    max = 100 * tics;
+    max = 100 * (int)tics;
     min = -max;
     if (controlx > max)
         controlx = max;
@@ -1514,7 +1676,7 @@ void UpdatePaletteShifts (void)
         white = bonuscount / WHITETICS + 1;
         if (white > NUMWHITESHIFTS)
             white = NUMWHITESHIFTS;
-        bonuscount -= tics;
+        bonuscount -= (int)tics;
         if (bonuscount < 0)
             bonuscount = 0;
     }
@@ -1528,7 +1690,7 @@ void UpdatePaletteShifts (void)
         if (red > NUMREDSHIFTS)
             red = NUMREDSHIFTS;
 
-        damagecount -= tics;
+        damagecount -= (int)tics;
         if (damagecount < 0)
             damagecount = 0;
     }
@@ -1805,7 +1967,7 @@ unsigned int oldtime = 0;
 
 void ClockGameLogic(void)
 {
-    unsigned int curtime;
+    size_t curtime;
     unsigned int deltatime;
     double time_to_pass;
     if (demorecord || demoplayback)
@@ -1814,7 +1976,7 @@ void ClockGameLogic(void)
         return;
     }
 
-    curtime = SDL_GetTicks();
+    curtime = WL_GetTicks();
     deltatime = curtime - oldtime;
     if (oldtime == 0)
         deltatime = 0;
@@ -1843,10 +2005,10 @@ void LagSimulator(void)
 
     if (lagging)
     {
-        if (next_lag_spike == -1 || SDL_GetTicks() >= next_lag_spike)
+        if (next_lag_spike == -1 || WL_GetTicks() >= next_lag_spike)
         {
             SDL_Delay(80 + (rand() % 200));
-            next_lag_spike = SDL_GetTicks() + 200 + rand() % 350;
+            next_lag_spike = WL_GetTicks() + 200 + rand() % 350;
         }
     }
 }

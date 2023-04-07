@@ -44,7 +44,7 @@
 //#define FIXRAINSNOWLEAKS    // Enables leaking ceilings fix (by Adam Biser, only needed if maps with rain/snow and ceilings exist)
 //#define VIEWMAP             // Enables the overhead map
 //#define REVEALMAP           // Enables showing only the areas of the overhead map that have been seen
-
+//#define MENU_DEMOS            // Adds the menu demos support
 
 //#define DEBUGKEYS           // Comment this out to compile without the Tab debug keys
 #define ARTSEXTERN
@@ -52,12 +52,14 @@
 #define PLAYDEMOLIKEORIGINAL  // When playing or recording demos, several bug fixes do not take
                               // effect to let the original demos work as in the original Wolf3D v1.4
                               // (actually better, as the second demo rarely worked)
+//#define LWUDPCOMMS            // Enables UDP networked communications for multiplayer support
 //#define CRT // Makes the screen fixed in 4:3
 //#define SCALE2X //The screen will be scaled in 2x with linear filter. This guy needs to work with CRT defined or else it won´t work..
 #define FIXCALCROTATE         // Apply a modified version of Ginyu's fix to make CalcRotate more accurate at high resolutions
 //#define VIEASM //Activates: VODKA-INDUCED ENTERTAINMENT ADVANCED SOUND MANAGER v0.9.2(Warning: only works with .wav and .ogg placed in sounds/ follow the asmcref.h for more details).
 //#define BANDEDHOLOWALLS     // Use the old DOS-style "banded" wall drawing behaviour when inside walls
 //#define USE_DOSBOX //Replaces fmopl sound and uses DOSBOX Sound instead.
+//#define USE_NUKEDOPL //Replaces fmopl sound and uses NUKEDOPL instead. 
 //#define GOD_MODE //Use godmode
 //#define FIXEDLOGICRATE       // Enables framerate independent game logic (aka: uncapped refreshrate) (by Codetech84)
 //#define LAGSIMULATOR          // Enables lag simulator debug option, depends on fixed logic rate (by Codetech84)

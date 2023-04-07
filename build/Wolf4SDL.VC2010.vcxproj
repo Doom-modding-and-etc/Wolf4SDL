@@ -21,11 +21,13 @@
   <ItemGroup>
     <ClCompile Include="..\aud_sys\dosbox\dbopl.c" />
     <ClCompile Include="..\aud_sys\mame\fmopl.c" />
+    <ClCompile Include="..\aud_sys\nukedopl3\opl3.c" />
     <ClCompile Include="..\id_ca.c" />
     <ClCompile Include="..\id_crt.c" />
     <ClCompile Include="..\id_in.c" />
     <ClCompile Include="..\id_pm.c" />
     <ClCompile Include="..\id_sd.c" />
+    <ClCompile Include="..\id_udp.c" />
     <ClCompile Include="..\id_us.c" />
     <ClCompile Include="..\id_vh.c" />
     <ClCompile Include="..\id_vieasm.c" />
@@ -60,6 +62,7 @@
     <ClInclude Include="..\audiowl6.h" />
     <ClInclude Include="..\aud_sys\dosbox\dbopl.h" />
     <ClInclude Include="..\aud_sys\mame\fmopl.h" />
+    <ClInclude Include="..\aud_sys\nukedopl3\opl3.h" />
     <ClInclude Include="..\foreign.h" />
     <ClInclude Include="..\f_spear.h" />
     <ClInclude Include="..\gfxv_apo.h" />
@@ -72,6 +75,7 @@
     <ClInclude Include="..\id_in.h" />
     <ClInclude Include="..\id_pm.h" />
     <ClInclude Include="..\id_sd.h" />
+    <ClInclude Include="..\id_udp.h" />
     <ClInclude Include="..\id_us.h" />
     <ClInclude Include="..\id_vh.h" />
     <ClInclude Include="..\id_vieasm.h" />
@@ -199,8 +203,9 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WINDOWS_IGNORE_PACKING_MISMATCH;USE_FIXEDPTC;_WIN32;C89;HAVE_M_PI;_USE_MATH_DEFINES;USE_HEADER;USE_INLINE_C99;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WINDOWS_IGNORE_PACKING_MISMATCH;USE_FIXEDPTC;_WIN32;C89;HAVE_M_PI;_USE_MATH_DEFINES;USE_INLINE_C99;MIXER_SAMPLE_FORMAT_SINT16;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>C:\SDL2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
