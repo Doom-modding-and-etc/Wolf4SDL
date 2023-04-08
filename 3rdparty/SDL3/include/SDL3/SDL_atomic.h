@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -22,7 +22,7 @@
 /**
  * \file SDL_atomic.h
  *
- * Atomic operations.
+ * \brief Atomic operations.
  *
  * IMPORTANT:
  * If you are not an expert in concurrent lockless programming, you should
@@ -41,7 +41,7 @@
  *
  * You can find out a little more about lockless programming and the
  * subtle issues that can arise here:
- * http://msdn.microsoft.com/en-us/library/ee418650%28v=vs.85%29.aspx
+ * https://learn.microsoft.com/en-us/windows/win32/dxtecharts/lockless-programming
  *
  * There's also lots of good information here:
  * http://www.1024cores.net/home/lock-free-algorithms
@@ -60,9 +60,9 @@
 #define SDL_atomic_h_
 
 #include <SDL3/SDL_stdinc.h>
-#include <SDL3/SDL_platform.h>
+#include <SDL3/SDL_platform_defines.h>
 
-#include <SDL3/begin_code.h>
+#include <SDL3/SDL_begin_code.h>
 
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
@@ -77,6 +77,11 @@ extern "C" {
  * holding a lock has been terminated.  For this reason you should
  * minimize the code executed inside an atomic lock and never do
  * expensive things like API or system calls while holding them.
+ *
+ * They are also vulnerable to starvation if the thread holding
+ * the lock is lower priority than other threads and doesn't get
+ * scheduled. In general you should use mutexes instead, since
+ * they have better performance and contention behavior.
  *
  * The atomic locks are not safe to lock recursively.
  *
@@ -181,6 +186,10 @@ extern __inline void SDL_CompilerBarrier(void);
  * \since This function is available since SDL 3.0.0.
  */
 extern DECLSPEC void SDLCALL SDL_MemoryBarrierReleaseFunction(void);
+
+/*
+ * \since This function is available since SDL 3.0.0.
+ */
 extern DECLSPEC void SDLCALL SDL_MemoryBarrierAcquireFunction(void);
 
 #if defined(__GNUC__) && (defined(__powerpc__) || defined(__ppc__))
@@ -239,14 +248,15 @@ typedef void (*SDL_KernelMemoryBarrierFunc)();
     #define SDL_CPUPauseInstruction() __asm__ __volatile__("yield" ::: "memory")
 #elif (defined(__powerpc__) || defined(__powerpc64__))
     #define SDL_CPUPauseInstruction() __asm__ __volatile__("or 27,27,27");
+#elif (defined(__riscv) && __riscv_xlen == 64)
+    #define SDL_CPUPauseInstruction() __asm__ __volatile__(".insn i 0x0F, 0, x0, x0, 0x010");
 #elif defined(_MSC_VER) && (defined(_M_IX86) || defined(_M_X64))
     #define SDL_CPUPauseInstruction() _mm_pause()  /* this is actually "rep nop" and not a SIMD instruction. No inline asm in MSVC x86-64! */
 #elif defined(_MSC_VER) && (defined(_M_ARM) || defined(_M_ARM64))
     #define SDL_CPUPauseInstruction() __yield()
 #elif defined(__WATCOMC__) && defined(__386__)
-    /* watcom assembler rejects PAUSE if CPU < i686, and it refuses REP NOP as an invalid combination. Hardcode the bytes.  */
     extern __inline void SDL_CPUPauseInstruction(void);
-    #pragma aux SDL_CPUPauseInstruction = "db 0f3h,90h"
+    #pragma aux SDL_CPUPauseInstruction = ".686p" ".xmm2" "pause"
 #else
     #define SDL_CPUPauseInstruction()
 #endif
@@ -256,7 +266,7 @@ typedef void (*SDL_KernelMemoryBarrierFunc)();
  * \brief A type representing an atomic integer value.  It is a struct
  *        so people don't accidentally use numeric operations on it.
  */
-typedef struct { int value; } SDL_atomic_t;
+typedef struct { int value; } SDL_AtomicInt;
 
 /**
  * Set an atomic variable to a new value if it is currently an old value.
@@ -264,7 +274,7 @@ typedef struct { int value; } SDL_atomic_t;
  * ***Note: If you don't know what this function is for, you shouldn't use
  * it!***
  *
- * \param a a pointer to an SDL_atomic_t variable to be modified
+ * \param a a pointer to an SDL_AtomicInt variable to be modified
  * \param oldval the old value
  * \param newval the new value
  * \returns SDL_TRUE if the atomic variable was set, SDL_FALSE otherwise.
@@ -275,7 +285,7 @@ typedef struct { int value; } SDL_atomic_t;
  * \sa SDL_AtomicGet
  * \sa SDL_AtomicSet
  */
-extern DECLSPEC SDL_bool SDLCALL SDL_AtomicCAS(SDL_atomic_t *a, int oldval, int newval);
+extern DECLSPEC SDL_bool SDLCALL SDL_AtomicCAS(SDL_AtomicInt *a, int oldval, int newval);
 
 /**
  * Set an atomic variable to a value.
@@ -285,7 +295,7 @@ extern DECLSPEC SDL_bool SDLCALL SDL_AtomicCAS(SDL_atomic_t *a, int oldval, int 
  * ***Note: If you don't know what this function is for, you shouldn't use
  * it!***
  *
- * \param a a pointer to an SDL_atomic_t variable to be modified
+ * \param a a pointer to an SDL_AtomicInt variable to be modified
  * \param v the desired value
  * \returns the previous value of the atomic variable.
  *
@@ -293,7 +303,7 @@ extern DECLSPEC SDL_bool SDLCALL SDL_AtomicCAS(SDL_atomic_t *a, int oldval, int 
  *
  * \sa SDL_AtomicGet
  */
-extern DECLSPEC int SDLCALL SDL_AtomicSet(SDL_atomic_t *a, int v);
+extern DECLSPEC int SDLCALL SDL_AtomicSet(SDL_AtomicInt *a, int v);
 
 /**
  * Get the value of an atomic variable.
@@ -301,14 +311,14 @@ extern DECLSPEC int SDLCALL SDL_AtomicSet(SDL_atomic_t *a, int v);
  * ***Note: If you don't know what this function is for, you shouldn't use
  * it!***
  *
- * \param a a pointer to an SDL_atomic_t variable
+ * \param a a pointer to an SDL_AtomicInt variable
  * \returns the current value of an atomic variable.
  *
  * \since This function is available since SDL 3.0.0.
  *
  * \sa SDL_AtomicSet
  */
-extern DECLSPEC int SDLCALL SDL_AtomicGet(SDL_atomic_t *a);
+extern DECLSPEC int SDLCALL SDL_AtomicGet(SDL_AtomicInt *a);
 
 /**
  * Add to an atomic variable.
@@ -318,7 +328,7 @@ extern DECLSPEC int SDLCALL SDL_AtomicGet(SDL_atomic_t *a);
  * ***Note: If you don't know what this function is for, you shouldn't use
  * it!***
  *
- * \param a a pointer to an SDL_atomic_t variable to be modified
+ * \param a a pointer to an SDL_AtomicInt variable to be modified
  * \param v the desired value to add
  * \returns the previous value of the atomic variable.
  *
@@ -327,7 +337,7 @@ extern DECLSPEC int SDLCALL SDL_AtomicGet(SDL_atomic_t *a);
  * \sa SDL_AtomicDecRef
  * \sa SDL_AtomicIncRef
  */
-extern DECLSPEC int SDLCALL SDL_AtomicAdd(SDL_atomic_t *a, int v);
+extern DECLSPEC int SDLCALL SDL_AtomicAdd(SDL_AtomicInt *a, int v);
 
 /**
  * \brief Increment an atomic variable used as a reference count.
@@ -403,8 +413,6 @@ extern DECLSPEC void* SDLCALL SDL_AtomicGetPtr(void **a);
 }
 #endif
 
-#include <SDL3/close_code.h>
+#include <SDL3/SDL_close_code.h>
 
 #endif /* SDL_atomic_h_ */
-
-/* vi: set ts=4 sw=4 expandtab: */

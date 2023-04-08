@@ -159,7 +159,6 @@ void ctxWrite(void *var, const void *val, int size, int ctxNum)
 
 void ctxReset(void)
 {
-	int Index;
 	lwlib_IntMapIterDecl(it);
 
 	lwlib_IntMapIterLoop(m_PJLVarArray, it)

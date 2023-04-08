@@ -73,5 +73,3 @@ Makefile.win
 # VS Code Files & Folders #
 ##############
 /.vscode
-/build
-/SDL/x64

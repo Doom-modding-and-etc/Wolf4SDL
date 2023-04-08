@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -22,7 +22,7 @@
 /**
  *  \file SDL_opengl.h
  *
- *  This is a simple file to encapsulate the OpenGL API headers.
+ *  \brief This is a simple file to encapsulate the OpenGL API headers.
  */
 
 /**
@@ -68,7 +68,7 @@
 #ifndef __gl_h_
 #define __gl_h_
 
-#if defined(USE_MGL_NAMESPACE)
+#ifdef USE_MGL_NAMESPACE
 #include <SDL3/gl_mangle.h>
 #endif
 
@@ -2121,5 +2121,3 @@ typedef void (APIENTRYP PFNGLMULTITEXCOORD4SVARBPROC) (GLenum target, const GLsh
 #endif /* !__IOS__ */
 
 #endif /* SDL_opengl_h_ */
-
-/* vi: set ts=4 sw=4 expandtab: */

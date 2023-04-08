@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -22,7 +22,7 @@
 /**
  *  \file SDL_version.h
  *
- *  This header defines the current SDL version.
+ *  \brief This header defines the current SDL version.
  */
 
 #ifndef SDL_version_h_
@@ -30,7 +30,7 @@
 
 #include <SDL3/SDL_stdinc.h>
 
-#include <SDL3/begin_code.h>
+#include <SDL3/SDL_begin_code.h>
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
 extern "C" {
@@ -115,12 +115,14 @@ typedef struct SDL_version
  * This function may be called safely at any time, even before SDL_Init().
  *
  * \param ver the SDL_version structure that contains the version information
+ * \returns 0 on success or a negative error code on failure; call
+ *          SDL_GetError() for more information.
  *
  * \since This function is available since SDL 3.0.0.
  *
  * \sa SDL_GetRevision
  */
-extern DECLSPEC void SDLCALL SDL_GetVersion(SDL_version * ver);
+extern DECLSPEC int SDLCALL SDL_GetVersion(SDL_version * ver);
 
 /**
  * Get the code revision of SDL that is linked against your program.
@@ -156,8 +158,6 @@ extern DECLSPEC const char *SDLCALL SDL_GetRevision(void);
 #ifdef __cplusplus
 }
 #endif
-#include <SDL3/close_code.h>
+#include <SDL3/SDL_close_code.h>
 
 #endif /* SDL_version_h_ */
-
-/* vi: set ts=4 sw=4 expandtab: */

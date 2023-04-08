@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -22,7 +22,7 @@
 /**
  *  \file SDL_syswm.h
  *
- *  Include file for SDL custom system window manager hooks.
+ *  \brief Include file for SDL custom system window manager hooks.
  */
 
 #ifndef SDL_syswm_h_
@@ -30,34 +30,158 @@
 
 #include <SDL3/SDL_stdinc.h>
 #include <SDL3/SDL_error.h>
+#include <SDL3/SDL_platform_defines.h>
 #include <SDL3/SDL_video.h>
-#include <SDL3/SDL_version.h>
 
 /**
  *  \brief SDL_syswm.h
  *
- *  Your application has access to a special type of event ::SDL_SYSWMEVENT,
+ *  Your application has access to a special type of event ::SDL_EVENT_SYSWM,
  *  which contains window-manager specific information and arrives whenever
  *  an unhandled window event occurs.  This event is ignored by default, but
- *  you can enable it with SDL_EventState().
- *
- *  As of SDL 3.0, this file no longer includes the platform specific headers
- *  and types. You should include the headers you need and define one or more
- *  of the following for the subsystems you're working with:
- *
- *      SDL_ENABLE_SYSWM_ANDROID
- *      SDL_ENABLE_SYSWM_COCOA
- *      SDL_ENABLE_SYSWM_KMSDRM
- *      SDL_ENABLE_SYSWM_UIKIT
- *      SDL_ENABLE_SYSWM_VIVANTE
- *      SDL_ENABLE_SYSWM_WAYLAND
- *      SDL_ENABLE_SYSWM_WINDOWS
- *      SDL_ENABLE_SYSWM_WINRT
- *      SDL_ENABLE_SYSWM_X11
+ *  you can enable it with SDL_SetEventEnabled().
  */
-struct SDL_SysWMinfo;
 
-#include <SDL3/begin_code.h>
+/**
+ *  The available subsystems based on platform
+ */
+#ifndef SDL_DISABLE_SYSWM_PLATFORMS
+
+#ifndef SDL_DISABLE_SYSWM_ANDROID
+#ifdef __ANDROID__
+#define SDL_ENABLE_SYSWM_ANDROID
+#endif
+#endif /* !SDL_DISABLE_SYSWM_ANDROID */
+
+#ifndef SDL_DISABLE_SYSWM_COCOA
+#ifdef __MACOS__
+#define SDL_ENABLE_SYSWM_COCOA
+#endif
+#endif /* !SDL_DISABLE_SYSWM_COCOA */
+
+#ifndef SDL_DISABLE_SYSWM_HAIKU
+#ifdef __HAIKU__
+#define SDL_ENABLE_SYSWM_HAIKU
+#endif
+#endif /* !SDL_DISABLE_SYSWM_HAIKU */
+
+#ifndef SDL_DISABLE_SYSWM_KMSDRM
+#if defined(__LINUX__) || defined(__FREEBSD__) || defined(__OPENBSD__)
+#define SDL_ENABLE_SYSWM_KMSDRM
+#endif
+#endif /* !SDL_DISABLE_SYSWM_KMSDRM */
+
+#ifndef SDL_DISABLE_SYSWM_RISCOS
+#ifdef __RISCOS__
+#define SDL_ENABLE_SYSWM_RISCOS
+#endif
+#endif /* !SDL_DISABLE_SYSWM_RISCOS */
+
+#ifndef SDL_DISABLE_SYSWM_UIKIT
+#if defined(__IOS__) || defined(__TVOS__)
+#define SDL_ENABLE_SYSWM_UIKIT
+#endif
+#endif /* !SDL_DISABLE_SYSWM_UIKIT */
+
+#ifndef SDL_DISABLE_SYSWM_VIVANTE
+/* Not enabled by default */
+#endif /* !SDL_DISABLE_SYSWM_VIVANTE */
+
+#ifndef SDL_DISABLE_SYSWM_WAYLAND
+#if defined(__LINUX__) || defined(__FREEBSD__)
+#define SDL_ENABLE_SYSWM_WAYLAND
+#endif
+#endif /* !SDL_DISABLE_SYSWM_WAYLAND */
+
+#ifndef SDL_DISABLE_SYSWM_WINDOWS
+#ifdef __WIN32__
+#define SDL_ENABLE_SYSWM_WINDOWS
+#endif
+#endif /* !SDL_DISABLE_SYSWM_WINDOWS */
+
+#ifndef SDL_DISABLE_SYSWM_WINRT
+#ifdef __WINRT__
+#define SDL_ENABLE_SYSWM_WINRT
+#endif
+#endif /* !SDL_DISABLE_SYSWM_WINRT */
+
+#ifndef SDL_DISABLE_SYSWM_X11
+#if defined(__unix__) && !defined(__WIN32__) && !defined(__ANDROID__) && !defined(__QNX__)
+#define SDL_ENABLE_SYSWM_X11
+#endif
+#endif /* !SDL_DISABLE_SYSWM_X11 */
+
+#endif /* !SDL_DISABLE_SYSWM_PLATFORMS */
+
+/**
+ *  Forward declaration of types used by subsystems
+ */
+#ifndef SDL_DISABLE_SYSWM_TYPES
+
+#if defined(SDL_ENABLE_SYSWM_ANDROID) && !defined(SDL_DISABLE_SYSWM_ANDROID_TYPES)
+typedef struct ANativeWindow ANativeWindow;
+typedef void *EGLSurface;
+#endif /* SDL_ENABLE_SYSWM_ANDROID */
+
+#if defined(SDL_ENABLE_SYSWM_COCOA) && !defined(SDL_DISABLE_SYSWM_COCOA_TYPES)
+#ifdef __OBJC__
+@class NSWindow;
+#else
+typedef struct _NSWindow NSWindow;
+#endif
+#endif /* SDL_ENABLE_SYSWM_COCOA */
+
+#if defined(SDL_ENABLE_SYSWM_KMSDRM) && !defined(SDL_DISABLE_SYSWM_KMSDRM_TYPES)
+struct gbm_device;
+#endif /* SDL_ENABLE_SYSWM_KMSDRM */
+
+#if defined(SDL_ENABLE_SYSWM_UIKIT) && !defined(SDL_DISABLE_SYSWM_UIKIT_TYPES)
+#ifdef __OBJC__
+#include <UIKit/UIKit.h>
+#else
+typedef struct _UIWindow UIWindow;
+typedef struct _UIViewController UIViewController;
+#endif
+typedef Uint32 GLuint;
+#endif /* SDL_ENABLE_SYSWM_UIKIT */
+
+#if defined(SDL_ENABLE_SYSWM_VIVANTE) && !defined(SDL_DISABLE_SYSWM_VIVANTE_TYPES)
+#include <SDL3/SDL_egl.h>
+#endif /* SDL_ENABLE_SYSWM_VIVANTE */
+
+#if defined(SDL_ENABLE_SYSWM_WAYLAND) && !defined(SDL_DISABLE_SYSWM_WAYLAND_TYPES)
+struct wl_display;
+struct wl_egl_window;
+struct wl_surface;
+struct xdg_popup;
+struct xdg_positioner;
+struct xdg_surface;
+struct xdg_toplevel;
+#endif /* SDL_ENABLE_SYSWM_WAYLAND */
+
+#if defined(SDL_ENABLE_SYSWM_WINDOWS) && !defined(SDL_DISABLE_SYSWM_WINDOWS_TYPES)
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#ifndef NOMINMAX   /* don't define min() and max(). */
+#define NOMINMAX
+#endif
+#include <windows.h>
+#endif /* SDL_ENABLE_SYSWM_WINDOWS */
+
+#if defined(SDL_ENABLE_SYSWM_WINRT) && !defined(SDL_DISABLE_SYSWM_WINRT_TYPES)
+#include <Inspectable.h>
+#endif /* SDL_ENABLE_SYSWM_WINRT */
+
+#if defined(SDL_ENABLE_SYSWM_X11) && !defined(SDL_DISABLE_SYSWM_X11_TYPES)
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
+#endif /* SDL_ENABLE_SYSWM_X11 */
+
+#endif /* !SDL_DISABLE_SYSWM_TYPES */
+
+
+#include <SDL3/SDL_begin_code.h>
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
 extern "C" {
@@ -72,7 +196,6 @@ extern "C" {
 #define SDL_METALVIEW_TAG 255
 
 
-#if !defined(SDL_PROTOTYPES_ONLY)
 /**
  *  These are the various supported windowing subsystems
  */
@@ -104,7 +227,7 @@ struct SDL_SysWMmsg
 
     union
     {
-#if defined(SDL_ENABLE_SYSWM_WINDOWS)
+#ifdef SDL_ENABLE_SYSWM_WINDOWS
         struct {
             HWND hwnd;                  /**< The window for the message */
             UINT msg;                   /**< The type of message */
@@ -112,7 +235,7 @@ struct SDL_SysWMmsg
             LPARAM lParam;              /**< LONG message parameter */
         } win;
 #endif
-#if defined(SDL_ENABLE_SYSWM_X11)
+#ifdef SDL_ENABLE_SYSWM_X11
         struct {
             XEvent event;
         } x11;
@@ -137,7 +260,7 @@ struct SDL_SysWMinfo
 
     union
     {
-#if defined(SDL_ENABLE_SYSWM_WINDOWS)
+#ifdef SDL_ENABLE_SYSWM_WINDOWS
         struct
         {
             HWND window;                /**< The window handle */
@@ -145,13 +268,13 @@ struct SDL_SysWMinfo
             HINSTANCE hinstance;        /**< The instance handle */
         } win;
 #endif
-#if defined(SDL_ENABLE_SYSWM_WINRT)
+#ifdef SDL_ENABLE_SYSWM_WINRT
         struct
         {
             IInspectable * window;      /**< The WinRT CoreWindow */
         } winrt;
 #endif
-#if defined(SDL_ENABLE_SYSWM_X11)
+#ifdef SDL_ENABLE_SYSWM_X11
         struct
         {
             Display *display;           /**< The X11 display */
@@ -159,7 +282,7 @@ struct SDL_SysWMinfo
             Window window;              /**< The X11 window */
         } x11;
 #endif
-#if defined(SDL_ENABLE_SYSWM_COCOA)
+#ifdef SDL_ENABLE_SYSWM_COCOA
         struct
         {
 #if defined(__OBJC__) && defined(__has_feature)
@@ -173,7 +296,7 @@ struct SDL_SysWMinfo
 #endif
         } cocoa;
 #endif
-#if defined(SDL_ENABLE_SYSWM_UIKIT)
+#ifdef SDL_ENABLE_SYSWM_UIKIT
         struct
         {
 #if defined(__OBJC__) && defined(__has_feature)
@@ -190,7 +313,7 @@ struct SDL_SysWMinfo
             GLuint resolveFramebuffer; /**< The Framebuffer Object which holds the resolve color Renderbuffer, when MSAA is used. */
         } uikit;
 #endif
-#if defined(SDL_ENABLE_SYSWM_WAYLAND)
+#ifdef SDL_ENABLE_SYSWM_WAYLAND
         struct
         {
             struct wl_display *display;             /**< Wayland display */
@@ -203,7 +326,7 @@ struct SDL_SysWMinfo
         } wl;
 #endif
 
-#if defined(SDL_ENABLE_SYSWM_ANDROID)
+#ifdef SDL_ENABLE_SYSWM_ANDROID
         struct
         {
             ANativeWindow *window;
@@ -211,7 +334,7 @@ struct SDL_SysWMinfo
         } android;
 #endif
 
-#if defined(SDL_ENABLE_SYSWM_VIVANTE)
+#ifdef SDL_ENABLE_SYSWM_VIVANTE
         struct
         {
             EGLNativeDisplayType display;
@@ -219,7 +342,7 @@ struct SDL_SysWMinfo
         } vivante;
 #endif
 
-#if defined(SDL_ENABLE_SYSWM_KMSDRM)
+#ifdef SDL_ENABLE_SYSWM_KMSDRM
         struct
         {
             int dev_index;               /**< Device index (ex: the X in /dev/dri/cardX) */
@@ -234,8 +357,6 @@ struct SDL_SysWMinfo
     } info;
 };
 SDL_COMPILE_TIME_ASSERT(SDL_SysWMinfo_size, sizeof(struct SDL_SysWMinfo) == SDL_SYSWM_CURRENT_INFO_SIZE);
-
-#endif /* SDL_PROTOTYPES_ONLY */
 
 typedef struct SDL_SysWMinfo SDL_SysWMinfo;
 
@@ -261,8 +382,6 @@ extern DECLSPEC int SDLCALL SDL_GetWindowWMInfo(SDL_Window *window, SDL_SysWMinf
 #ifdef __cplusplus
 }
 #endif
-#include <SDL3/close_code.h>
+#include <SDL3/SDL_close_code.h>
 
 #endif /* SDL_syswm_h_ */
-
-/* vi: set ts=4 sw=4 expandtab: */

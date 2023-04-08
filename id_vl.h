@@ -57,8 +57,11 @@ extern SDL_Color gamepal[256];
 #else
 #define VL_WaitVBL(a)        SDL_Delay((a)*8)
 #endif
+#if SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2
 #define VL_ClearScreen(c)    SDL_FillRect(screenBuffer,NULL,(c))
-
+#else
+#define VL_ClearScreen(c)    SDL_FillSurfaceRect(screenBuffer,NULL,(c))
+#endif
 
 void VL_DePlaneVGA (unsigned char *source, int width, int height);
 void VL_SetVGAPlaneMode (void);

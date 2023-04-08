@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -22,7 +22,7 @@
 /**
  *  \file SDL_loadso.h
  *
- *  System dependent library loading routines
+ *  \brief System dependent library loading routines
  *
  *  Some things to keep in mind:
  *  \li These functions only work on C function names.  Other languages may
@@ -44,7 +44,7 @@
 #include <SDL3/SDL_stdinc.h>
 #include <SDL3/SDL_error.h>
 
-#include <SDL3/begin_code.h>
+#include <SDL3/SDL_begin_code.h>
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
 extern "C" {
@@ -89,8 +89,7 @@ extern DECLSPEC void *SDLCALL SDL_LoadObject(const char *sofile);
  * \sa SDL_LoadObject
  * \sa SDL_UnloadObject
  */
-extern DECLSPEC void *SDLCALL SDL_LoadFunction(void *handle,
-                                               const char *name);
+extern DECLSPEC SDL_FunctionPointer SDLCALL SDL_LoadFunction(void *handle, const char *name);
 
 /**
  * Unload a shared object from memory.
@@ -108,8 +107,6 @@ extern DECLSPEC void SDLCALL SDL_UnloadObject(void *handle);
 #ifdef __cplusplus
 }
 #endif
-#include <SDL3/close_code.h>
+#include <SDL3/SDL_close_code.h>
 
 #endif /* SDL_loadso_h_ */
-
-/* vi: set ts=4 sw=4 expandtab: */

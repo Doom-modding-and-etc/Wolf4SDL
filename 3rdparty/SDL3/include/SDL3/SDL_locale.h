@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -22,16 +22,16 @@
 /**
  *  \file SDL_locale.h
  *
- *  Include file for SDL locale services
+ *  \brief Include file for SDL locale services
  */
 
-#ifndef _SDL_locale_h
-#define _SDL_locale_h
+#ifndef SDL_locale_h
+#define SDL_locale_h
 
 #include <SDL3/SDL_stdinc.h>
 #include <SDL3/SDL_error.h>
 
-#include <SDL3/begin_code.h>
+#include <SDL3/SDL_begin_code.h>
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
 /* *INDENT-OFF* */
@@ -79,12 +79,12 @@ typedef struct SDL_Locale
  * This might be a "slow" call that has to query the operating system. It's
  * best to ask for this once and save the results. However, this list can
  * change, usually because the user has changed a system preference outside of
- * your program; SDL will send an SDL_LOCALECHANGED event in this case, if
- * possible, and you can call this function again to get an updated copy of
+ * your program; SDL will send an SDL_EVENT_LOCALE_CHANGED event in this case,
+ * if possible, and you can call this function again to get an updated copy of
  * preferred locales.
  *
- * \return array of locales, terminated with a locale with a NULL language
- *         field. Will return NULL on error.
+ * \returns array of locales, terminated with a locale with a NULL language
+ *          field. Will return NULL on error.
  *
  * \since This function is available since SDL 3.0.0.
  */
@@ -96,8 +96,6 @@ extern DECLSPEC SDL_Locale * SDLCALL SDL_GetPreferredLocales(void);
 }
 /* *INDENT-ON* */
 #endif
-#include <SDL3/close_code.h>
+#include <SDL3/SDL_close_code.h>
 
-#endif /* _SDL_locale_h */
-
-/* vi: set ts=4 sw=4 expandtab: */
+#endif /* SDL_locale_h */

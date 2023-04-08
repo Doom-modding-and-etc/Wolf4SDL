@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -22,7 +22,7 @@
 /**
  *  \file SDL_touch.h
  *
- *  Include file for SDL touch event handling.
+ *  \brief Include file for SDL touch event handling.
  */
 
 #ifndef SDL_touch_h_
@@ -32,7 +32,7 @@
 #include <SDL3/SDL_error.h>
 #include <SDL3/SDL_video.h>
 
-#include <SDL3/begin_code.h>
+#include <SDL3/SDL_begin_code.h>
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
 extern "C" {
@@ -99,12 +99,18 @@ extern DECLSPEC SDL_TouchID SDLCALL SDL_GetTouchDevice(int index);
  * Get the touch device name as reported from the driver or NULL if the index
  * is invalid.
  *
+ * \param index the touch device index
+ * \returns touch device name
+ *
  * \since This function is available since SDL 3.0.0.
  */
 extern DECLSPEC const char* SDLCALL SDL_GetTouchName(int index);
 
 /**
  * Get the type of the given touch device.
+ *
+ * \param touchID the ID of a touch device
+ * \returns touch device type
  *
  * \since This function is available since SDL 3.0.0.
  */
@@ -115,7 +121,8 @@ extern DECLSPEC SDL_TouchDeviceType SDLCALL SDL_GetTouchDeviceType(SDL_TouchID t
  *
  * \param touchID the ID of a touch device
  * \returns the number of active fingers for a given touch device on success
- *          or 0 on failure; call SDL_GetError() for more information.
+ *          or a negative error code on failure; call SDL_GetError() for more
+ *          information.
  *
  * \since This function is available since SDL 3.0.0.
  *
@@ -141,8 +148,6 @@ extern DECLSPEC SDL_Finger * SDLCALL SDL_GetTouchFinger(SDL_TouchID touchID, int
 #ifdef __cplusplus
 }
 #endif
-#include <SDL3/close_code.h>
+#include <SDL3/SDL_close_code.h>
 
 #endif /* SDL_touch_h_ */
-
-/* vi: set ts=4 sw=4 expandtab: */

@@ -240,12 +240,14 @@ int console_main(int argc, char *argv[])
 	}
 	SDL_strlcpy(bufp, appname, n+1);
 	appname = bufp;
-
+#if !defined SDL_MAJOR_VERSION == 3
 	/* Load SDL dynamic link library */
 	if ( SDL_Init(SDL_INIT_NOPARACHUTE) < 0 ) {
 		ShowError("WinMain() error", SDL_GetError());
 		return(FALSE);
 	}
+#endif
+
 	atexit(cleanup_output);
 	atexit(cleanup);
 #if SDL_MAJOR_VERSION == 1

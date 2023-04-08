@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -19,12 +19,18 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
+/**
+ *  \file SDL_assert.h
+ *
+ *  \brief Header file for assertion SDL API functions
+ */
+
 #ifndef SDL_assert_h_
 #define SDL_assert_h_
 
 #include <SDL3/SDL_stdinc.h>
 
-#include <SDL3/begin_code.h>
+#include <SDL3/SDL_begin_code.h>
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
 extern "C" {
@@ -47,11 +53,14 @@ on the assertion line and not in some random guts of SDL, and so each
 assert can have unique static variables associated with it.
 */
 
-#if defined(_MSC_VER)
+#ifdef _MSC_VER
 /* Don't include intrin.h here because it contains C++ code */
     extern void __cdecl __debugbreak(void);
     #define SDL_TriggerBreakpoint() __debugbreak()
-#elif _SDL_HAS_BUILTIN(__builtin_debugtrap)
+#elif defined(ANDROID)
+    #include <assert.h>
+    #define SDL_TriggerBreakpoint() assert(0)
+#elif SDL_HAS_BUILTIN(__builtin_debugtrap)
     #define SDL_TriggerBreakpoint() __builtin_debugtrap()
 #elif (defined(__GNUC__) || defined(__clang__)) && (defined(__i386__) || defined(__x86_64__))
     #define SDL_TriggerBreakpoint() __asm__ __volatile__ ( "int $3\n\t" )
@@ -125,21 +134,42 @@ typedef struct SDL_AssertData
     const struct SDL_AssertData *next;
 } SDL_AssertData;
 
-#if (SDL_ASSERT_LEVEL > 0)
-
-/* Never call this directly. Use the SDL_assert* macros. */
-extern DECLSPEC SDL_AssertState SDLCALL SDL_ReportAssertion(SDL_AssertData *,
-                                                             const char *,
-                                                             const char *, int)
-#if defined(__clang__)
+/**
+ * Never call this directly.
+ *
+ * Use the SDL_assert* macros.
+ *
+ * \param data assert data structure
+ * \param func function name
+ * \param file file name
+ * \param line line number
+ * \returns assert state
+ *
+ * \since This function is available since SDL 3.0.0.
+ */
+extern DECLSPEC SDL_AssertState SDLCALL SDL_ReportAssertion(SDL_AssertData *data,
+                                                            const char *func,
+                                                            const char *file, int line)
+#ifdef __clang__
 #if __has_feature(attribute_analyzer_noreturn)
-/* this tells Clang's static analysis that we're a custom assert function,
-   and that the analyzer should assume the condition was always true past this
-   SDL_assert test. */
    __attribute__((analyzer_noreturn))
 #endif
 #endif
 ;
+/* Previous 'analyzer_noreturn' attribute tells Clang's static analysis that we're a custom assert function,
+   and that the analyzer should assume the condition was always true past this
+   SDL_assert test. */
+
+
+/* Define the trigger breakpoint call used in asserts */
+#ifndef SDL_AssertBreakpoint
+#if defined(ANDROID) && defined(assert)
+/* Define this as empty in case assert() is defined as SDL_assert */
+#define SDL_AssertBreakpoint() 
+#else
+#define SDL_AssertBreakpoint() SDL_TriggerBreakpoint()
+#endif
+#endif /* !SDL_AssertBreakpoint */
 
 /* the do {} while(0) avoids dangling else problems:
     if (x) SDL_assert(y); else blah();
@@ -151,20 +181,16 @@ extern DECLSPEC SDL_AssertState SDLCALL SDL_ReportAssertion(SDL_AssertData *,
 #define SDL_enabled_assert(condition) \
     do { \
         while ( !(condition) ) { \
-            static struct SDL_AssertData sdl_assert_data = { \
-                0, 0, #condition, 0, 0, 0, 0 \
-            }; \
+            static struct SDL_AssertData sdl_assert_data = { 0, 0, #condition, 0, 0, 0, 0 }; \
             const SDL_AssertState sdl_assert_state = SDL_ReportAssertion(&sdl_assert_data, SDL_FUNCTION, SDL_FILE, SDL_LINE); \
             if (sdl_assert_state == SDL_ASSERTION_RETRY) { \
                 continue; /* go again. */ \
             } else if (sdl_assert_state == SDL_ASSERTION_BREAK) { \
-                SDL_TriggerBreakpoint(); \
+                SDL_AssertBreakpoint(); \
             } \
             break; /* not retrying. */ \
         } \
     } while (SDL_NULL_WHILE_LOOP_CONDITION)
-
-#endif  /* enabled assertions support code */
 
 /* Enable various levels of assertions. */
 #if SDL_ASSERT_LEVEL == 0   /* assertions disabled */
@@ -313,8 +339,6 @@ extern DECLSPEC void SDLCALL SDL_ResetAssertionReport(void);
 #ifdef __cplusplus
 }
 #endif
-#include <SDL3/close_code.h>
+#include <SDL3/SDL_close_code.h>
 
 #endif /* SDL_assert_h_ */
-
-/* vi: set ts=4 sw=4 expandtab: */

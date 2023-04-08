@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -22,20 +22,20 @@
 /**
  *  \file SDL_blendmode.h
  *
- *  Header file declaring the SDL_BlendMode enumeration
+ *  \brief Header file declaring the SDL_BlendMode enumeration
  */
 
 #ifndef SDL_blendmode_h_
 #define SDL_blendmode_h_
 
-#include <SDL3/begin_code.h>
+#include <SDL3/SDL_begin_code.h>
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /**
- *  \brief The blend mode used in SDL_RenderCopy() and drawing operations.
+ *  \brief The blend mode used in SDL_RenderTexture() and drawing operations.
  */
 typedef enum
 {
@@ -52,7 +52,7 @@ typedef enum
                                               dstA = dstA */
     SDL_BLENDMODE_MUL = 0x00000008,      /**< color multiply
                                               dstRGB = (srcRGB * dstRGB) + (dstRGB * (1-srcA))
-                                              dstA = (srcA * dstA) + (dstA * (1-srcA)) */
+                                              dstA = dstA */
     SDL_BLENDMODE_INVALID = 0x7FFFFFFF
 
     /* Additional custom blend modes can be returned by SDL_ComposeCustomBlendMode() */
@@ -191,8 +191,6 @@ extern DECLSPEC SDL_BlendMode SDLCALL SDL_ComposeCustomBlendMode(SDL_BlendFactor
 #ifdef __cplusplus
 }
 #endif
-#include <SDL3/close_code.h>
+#include <SDL3/SDL_close_code.h>
 
 #endif /* SDL_blendmode_h_ */
-
-/* vi: set ts=4 sw=4 expandtab: */

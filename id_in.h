@@ -373,7 +373,7 @@ typedef	int		ScanCode;
 
 #define	key_None		0
 #define key_unknown SDLK_UNKNOWN
-#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 2 
 #define bt_None SDL_CONTROLLER_BUTTON_INVALID
 #define bt_A SDL_CONTROLLER_BUTTON_A
 #define bt_B SDL_CONTROLLER_BUTTON_B
@@ -402,15 +402,47 @@ typedef	int		ScanCode;
 #define gc_trigger_left SDL_CONTROLLER_AXIS_TRIGGERLEFT
 #define gc_trigger_right SDL_CONTROLLER_AXIS_TRIGGERRIGHT
 #define gc_axis_max SDL_CONTROLLER_AXIS_MAX
-#endif
+#else
+#define bt_None SDL_GAMEPAD_BUTTON_INVALID
+#define bt_A SDL_GAMEPAD_BUTTON_A
+#define bt_B SDL_GAMEPAD_BUTTON_B
+#define bt_X SDL_GAMEPAD_BUTTON_X
+#define bt_Y SDL_GAMEPAD_BUTTON_Y
+#define bt_Back SDL_GAMEPAD_BUTTON_BACK
+#define bt_Guide SDL_GAMEPAD_BUTTON_GUIDE
+#define bt_Start SDL_GAMEPAD_BUTTON_START
+#define bt_LeftStick SDL_GAMEPAD_BUTTON_LEFT_STICK
+#define bt_RightStick SDL_GAMEPAD_BUTTON_RIGHT_STICK
+#define bt_LeftShoulder SDL_GAMEPAD_BUTTON_LEFT_SHOULDER
+#define bt_RightShoulder SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER
+#define bt_DpadUp SDL_GAMEPAD_BUTTON_DPAD_UP
+#define bt_DpadDown SDL_GAMEPAD_BUTTON_DPAD_DOWN
+#define bt_DpadLeft SDL_GAMEPAD_BUTTON_DPAD_LEFT
+#define bt_DpadRight SDL_GAMEPAD_BUTTON_DPAD_RIGHT
+#define bt_touchpad SDL_GAMEPAD_BUTTON_TOUCHPAD
+#define bt_Max SDL_GAMEPAD_BUTTON_MAX
 
+//Axis stuff
+#define gc_axis_invalid SDL_GAMEPAD_AXIS_INVALID
+#define gc_axis_leftx SDL_GAMEPAD_AXIS_LEFTX
+#define gc_axis_lefty SDL_GAMEPAD_AXIS_LEFTY
+#define gc_axis_rightx SDL_GAMEPAD_AXIS_RIGHTX
+#define gc_axis_righty SDL_GAMEPAD_AXIS_RIGHTY
+#define gc_trigger_left SDL_GAMEPAD_AXIS_LEFT_TRIGGER
+#define gc_trigger_right SDL_GAMEPAD_AXIS_RIGHT_TRIGGER
+#define gc_axis_max SDL_GAMEPAD_AXIS_MAX
+#endif
 #endif
 
 #if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
 extern boolean GameControllerButtons[bt_Max];
 extern int GameControllerLeftStick[2];
 extern int GameControllerRightStick[2];
+#if SDL_MAJOR_VERSION == 2
 extern SDL_GameController* GameController;
+#else
+extern SDL_Gamepad* GameController;
+#endif
 #endif
 
 typedef	enum

@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -25,7 +25,7 @@
 /**
  *  \file SDL_mutex.h
  *
- *  Functions to provide thread synchronization primitives.
+ *  \brief Functions to provide thread synchronization primitives.
  */
 
 #include <SDL3/SDL_stdinc.h>
@@ -39,7 +39,7 @@
     defined(__clang__) && (!defined(SWIG))
 #define SDL_THREAD_ANNOTATION_ATTRIBUTE__(x)   __attribute__((x))
 #else
-#define SDL_THREAD_ANNOTATION_ATTRIBUTE__(x)   // no-op
+#define SDL_THREAD_ANNOTATION_ATTRIBUTE__(x)   /* no-op */
 #endif
 
 #define SDL_CAPABILITY(x) \
@@ -105,7 +105,7 @@
 /******************************************************************************/
 
 
-#include <SDL3/begin_code.h>
+#include <SDL3/SDL_begin_code.h>
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
 extern "C" {
@@ -166,7 +166,8 @@ extern DECLSPEC SDL_mutex *SDLCALL SDL_CreateMutex(void);
  * other threads in the system (this is known as a "recursive mutex").
  *
  * \param mutex the mutex to lock
- * \return 0, or -1 on error.
+ * \returns 0 on success or a negative error code on failure; call
+ *          SDL_GetError() for more information.
  *
  * \since This function is available since SDL 3.0.0.
  */
@@ -208,7 +209,8 @@ extern DECLSPEC int SDLCALL SDL_TryLockMutex(SDL_mutex * mutex) SDL_TRY_ACQUIRE(
  * It is also an error to unlock a mutex that isn't locked at all.
  *
  * \param mutex the mutex to unlock.
- * \returns 0, or -1 on error.
+ * \returns 0 on success or a negative error code on failure; call
+ *          SDL_GetError() for more information.
  *
  * \since This function is available since SDL 3.0.0.
  */
@@ -481,7 +483,9 @@ extern DECLSPEC int SDLCALL SDL_CondBroadcast(SDL_cond *cond);
  * `cond`. Once the condition variable is signaled, the mutex is re-locked and
  * the function returns.
  *
- * The mutex must be locked before calling this function.
+ * The mutex must be locked before calling this function. Locking the mutex
+ * recursively (more than once) is not supported and leads to undefined
+ * behavior.
  *
  * This function is the equivalent of calling SDL_CondWaitTimeout() with a
  * time length of `SDL_MUTEX_MAXWAIT`.
@@ -510,12 +514,14 @@ extern DECLSPEC int SDLCALL SDL_CondWait(SDL_cond *cond, SDL_mutex *mutex);
  * signaled or the time elapsed, the mutex is re-locked and the function
  * returns.
  *
- * The mutex must be locked before calling this function.
+ * The mutex must be locked before calling this function. Locking the mutex
+ * recursively (more than once) is not supported and leads to undefined
+ * behavior.
  *
  * \param cond the condition variable to wait on
  * \param mutex the mutex used to coordinate thread access
- * \param timeoutMS the maximum time to wait, in milliseconds, or `SDL_MUTEX_MAXWAIT`
- *           to wait indefinitely
+ * \param timeoutMS the maximum time to wait, in milliseconds, or
+ *                  `SDL_MUTEX_MAXWAIT` to wait indefinitely
  * \returns 0 if the condition variable is signaled, `SDL_MUTEX_TIMEDOUT` if
  *          the condition is not signaled in the allotted time, or a negative
  *          error code on failure; call SDL_GetError() for more information.
@@ -538,8 +544,6 @@ extern DECLSPEC int SDLCALL SDL_CondWaitTimeout(SDL_cond *cond,
 #ifdef __cplusplus
 }
 #endif
-#include <SDL3/close_code.h>
+#include <SDL3/SDL_close_code.h>
 
 #endif /* SDL_mutex_h_ */
-
-/* vi: set ts=4 sw=4 expandtab: */

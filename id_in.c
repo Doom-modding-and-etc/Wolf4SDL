@@ -70,10 +70,14 @@ static SDL_Joystick* Joystick;
 int JoyNumButtons;
 static int JoyNumHats;
 #if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
-bool GameControllerButtons[GAMECONTROLLER_MAX];
+boolean GameControllerButtons[bt_Max];
 int GameControllerLeftStick[2];
 int GameControllerRightStick[2];
+#if SDL_MAJOR_VERSION == 2
 SDL_GameController* GameController;
+#else
+SDL_Gamepad* GameController;
+#endif
 #endif
 static boolean GrabInput = false;
 boolean fullscreen = true;
@@ -318,19 +322,31 @@ void IN_GetJoyDelta(int* dx, int* dy)
         *dx = *dy = 0;
         return;
     }
-
+#if SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2
     SDL_JoystickUpdate();
+#else
+    SDL_UpdateJoysticks();
+#endif
 #ifdef _arch_dreamcast
     x = 0;
     y = 0;
 #else
+#if SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2
     x = SDL_JoystickGetAxis(Joystick, 0) >> 8;
     y = SDL_JoystickGetAxis(Joystick, 1) >> 8;
+#else
+    x = SDL_GetJoystickAxis(Joystick, 0) >> 8;
+    y = SDL_GetJoystickAxis(Joystick, 1) >> 8;
+#endif
 #endif
 
     if (param_joystickhat != -1)
     {
+#if SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2
         unsigned char hatState = SDL_JoystickGetHat(Joystick, param_joystickhat);
+#else
+        unsigned char hatState = SDL_GetJoystickHat(Joystick, param_joystickhat);
+#endif
         if (hatState & SDL_HAT_RIGHT)
             x += 127;
         else if (hatState & SDL_HAT_LEFT)
@@ -367,9 +383,18 @@ void IN_GetJoyFineDelta(int* dx, int* dy)
         return;
     }
 
+#if SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2
     SDL_JoystickUpdate();
+#else
+    SDL_UpdateJoysticks();
+#endif
+#if SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2
     x = SDL_JoystickGetAxis(Joystick, 0);
     y = SDL_JoystickGetAxis(Joystick, 1);
+#else
+    x = SDL_GetJoystickAxis(Joystick, 0);
+    y = SDL_GetJoystickAxis(Joystick, 1);
+#endif
 #if defined(HAKCHI)
     int bt=IN_JoyButtons();
     if(bt & (1<<12))
@@ -406,11 +431,19 @@ int IN_JoyButtons()
 
     if (!Joystick) return 0;
 
+#if SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2
     SDL_JoystickUpdate();
+#else
+    SDL_UpdateJoysticks();
+#endif
 
     res = 0;
     for (i = 0; i < JoyNumButtons && i < 32; i++)
+#if SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2
         res |= SDL_JoystickGetButton(Joystick, i) << i;
+#else
+        res |= SDL_GetJoystickButton(Joystick, i) << i;
+#endif
     return res;
 }
 
@@ -424,8 +457,10 @@ static boolean ToggleFullScreenKeyShortcut(SDL_Keysym* sym)
 {
 #if SDL_MAJOR_VERSION == 1
     Uint16 flags = KMOD_ALT;
-#elif SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
+#elif SDL_MAJOR_VERSION == 2 
     Uint16 flags = (KMOD_LALT | KMOD_RALT);
+#else
+    Uint16 flags = (SDL_KMOD_LALT | SDL_KMOD_RALT);
 #endif
 #if defined(__MACOSX__)
     flags |= (KMOD_LGUI | KMOD_RGUI);
@@ -491,11 +526,18 @@ static void processEvent(SDL_Event* event)
 	int intLastScan;
     switch (event->type)
     {
+#if SDL_MAJOR_VERSION == 2
         // exit if the window is closed
     case SDL_QUIT:
+#else
+    case SDL_EVENT_QUIT:
+#endif
         Quit(NULL);
-
+#if SDL_MAJOR_VERSION == 2
     case SDL_MOUSEBUTTONDOWN:
+#else
+    case SDL_EVENT_MOUSE_BUTTON_DOWN:
+#endif
     {
         if (event->button.button == 4)
         {
@@ -508,9 +550,13 @@ static void processEvent(SDL_Event* event)
         }
     }
     break;
+    // check for keypresses
+#if SDL_MAJOR_VERSION == 2
 
-        // check for keypresses
     case SDL_KEYDOWN:
+#else
+    case SDL_EVENT_KEY_DOWN:
+#endif
     {
         if (ToggleFullScreenKeyShortcut(&event->key.keysym))
         {
@@ -545,7 +591,11 @@ static void processEvent(SDL_Event* event)
         else if (LastScan == SDLK_RCTRL) LastScan = SDLK_LCTRL;
         else
         {
+#if SDL_MAJOR_VERSION == 2
             if ((mod & KMOD_NUM) == 0)
+#else
+            if ((mod & SDL_KMOD_NUM) == 0)
+#endif
             {
                 switch (LastScan)
                 {
@@ -560,8 +610,11 @@ static void processEvent(SDL_Event* event)
         sym = LastScan;
         if (sym >= 'a' && sym <= 'z')
             sym -= 32;  // convert to uppercase
-
+#if SDL_MAJOR_VERSION == 2
         if (mod & (KMOD_SHIFT | KMOD_CAPS))
+#else
+        if (mod & (SDL_KMOD_SHIFT | SDL_KMOD_CAPS))
+#endif
         {
             if (sym < lengthof(ShiftNames) && ShiftNames[sym])
                 LastASCII = ShiftNames[sym];
@@ -579,8 +632,11 @@ static void processEvent(SDL_Event* event)
             Paused = true;
         break;
     }
-
+#if SDL_MAJOR_VERSION == 2
     case SDL_KEYUP:
+#else
+    case SDL_EVENT_KEY_UP:
+#endif
     {
         int key = event->key.keysym.sym;
         if (key == SDLK_KP_ENTER) key = SDLK_RETURN;
@@ -589,7 +645,11 @@ static void processEvent(SDL_Event* event)
         else if (key == SDLK_RCTRL) key = SDLK_LCTRL;
         else
         {
+#if SDL_MAJOR_VERSION == 2
             if ((SDL_GetModState() & KMOD_NUM) == 0)
+#else
+            if ((SDL_GetModState() & SDL_KMOD_NUM) == 0)
+#endif
             {
                 switch (key)
                 {
@@ -616,18 +676,35 @@ static void processEvent(SDL_Event* event)
 
 #if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
     // check for game controller events
-    case SDL_CONTROLLERDEVICEADDED: {
+#if SDL_MAJOR_VERSION == 2
+    case SDL_CONTROLLERDEVICEADDED: 
+#else
+    case SDL_EVENT_GAMEPAD_ADDED:
+#endif
+    {
         if (!GameController)
         {
+#if SDL_MAJOR_VERSION == 3
+            int id = event->gdevice.which;
+
+            if (SDL_IsGamepad(id))
+            {
+                GameController = SDL_OpenGamepad(id);
+            }
+#else
             int id = event->cdevice.which;
+
             if (SDL_IsGameController(id))
             {
                 GameController = SDL_GameControllerOpen(id);
             }
+#endif
         }
         break;
     }
-    case SDL_CONTROLLERDEVICEREMOVED: {
+#if SDL_MAJOR_VERSION == 2
+    case SDL_CONTROLLERDEVICEREMOVED:
+    {
         if (GameController)
         {
             SDL_GameControllerClose(GameController);
@@ -639,7 +716,11 @@ static void processEvent(SDL_Event* event)
     case SDL_CONTROLLERBUTTONUP:
         if (GameController)
         {
+#if SDL_MAJOR_VERSION == 2
             GameControllerButtons[event->cbutton.button] = (boolean)event->cbutton.state == SDL_PRESSED;
+#else
+            GameControllerButtons[event->gbutton.button] = (boolean)event->gbutton.state == SDL_PRESSED;
+#endif
         }
         break;
     case SDL_CONTROLLERAXISMOTION:
@@ -659,7 +740,43 @@ static void processEvent(SDL_Event* event)
             if (event->caxis.axis == SDL_CONTROLLER_AXIS_TRIGGERRIGHT)
                 GameControllerButtons[bt_RightShoulder] = event->caxis.value == 32767;
         }
+#else
+    case SDL_EVENT_GAMEPAD_REMOVED: 
+    {
+        if (GameController)
+        {
+            SDL_CloseGamepad(GameController);
+            GameController = NULL;
+        }
         break;
+    }
+    case SDL_EVENT_GAMEPAD_BUTTON_DOWN:
+    case SDL_EVENT_GAMEPAD_BUTTON_UP:
+        if (GameController)
+        {
+            GameControllerButtons[event->gbutton.button] = (boolean)event->gbutton.state == SDL_PRESSED;
+        }
+        break;
+    case SDL_EVENT_GAMEPAD_AXIS_MOTION:
+        if (GameController)
+        {
+            if (event->gaxis.axis == gc_axis_leftx)
+                GameControllerLeftStick[0] = event->gaxis.value >> 8;
+            if (event->gaxis.axis == gc_axis_lefty)
+                GameControllerLeftStick[1] = event->gaxis.value >> 8;
+            if (event->gaxis.axis == gc_axis_rightx)
+                GameControllerRightStick[0] = event->gaxis.value >> 8;
+            if (event->gaxis.axis == gc_axis_righty)
+                GameControllerRightStick[1] = event->gaxis.value >> 8;
+
+            if (event->gaxis.axis == gc_trigger_left)
+                GameControllerButtons[bt_LeftShoulder] = event->gaxis.value == 32767;
+            if (event->gaxis.axis == gc_trigger_right)
+                GameControllerButtons[bt_RightShoulder] = event->gaxis.value == 32767;
+        }
+#endif
+        break;
+
 #endif
     }
 }
@@ -721,7 +838,11 @@ IN_Startup(void)
     IN_ClearKeysDown();
 
 #ifndef SEGA_SATURN
+#if SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2
     if (param_joystickindex >= 0 && param_joystickindex < SDL_NumJoysticks())
+#else
+    if (param_joystickindex >= 0 && param_joystickindex < (int)SDL_GetJoysticks)
+#endif
     {
 #if SDL_MAJOR_VERSION == 1        
         Joystick = SDL_JoystickOpen(param_joystickindex);
@@ -733,7 +854,7 @@ IN_Startup(void)
             if (param_joystickhat < -1 || param_joystickhat >= JoyNumHats)
                 Quit("The joystickhat param must be between 0 and %i!", JoyNumHats - 1);
         }
-#elif SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
+#elif SDL_MAJOR_VERSION == 2 
         if (!SDL_IsGameController(param_joystickindex))
         {
             Joystick = SDL_JoystickOpen(param_joystickindex);
@@ -747,11 +868,27 @@ IN_Startup(void)
                     Quit("The joystickhat param must be between 0 and %i!", JoyNumHats - 1);
             }
         }
+#else
+        if (!SDL_IsGamepad(param_joystickindex))
+        {
+            Joystick = SDL_OpenJoystick(param_joystickindex);
+            if (Joystick)
+            {
+                JoyNumButtons = SDL_GetNumJoystickButtons(Joystick);
+                if (JoyNumButtons > 32)
+                    JoyNumButtons = 32; // only up to 32 buttons are supported
+                JoyNumHats = SDL_GetNumJoystickHats(Joystick);
+                if (param_joystickhat < -1 || param_joystickhat >= JoyNumHats)
+                    Quit("The joystickhat param must be between 0 and %i!", JoyNumHats - 1);
+        }
+    }
 #endif
     }
-
-    SDL_EventState(SDL_MOUSEMOTION, SDL_IGNORE);
-
+#if SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2
+    SDL_EventState(SDL_MOUSEMOTION, 0);
+#else
+    SDL_EventEnabled(SDL_EVENT_MOUSE_MOTION);
+#endif
     if (fullscreen || forcegrabmouse)
     {
         GrabInput = true;
@@ -789,9 +926,12 @@ IN_Shutdown(void)
 #if SDL_MAJOR_VERSION == 1
     if (Joystick)
         SDL_JoystickClose(Joystick);
-#elif SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
+#elif SDL_MAJOR_VERSION == 2 
     if (GameController)
         SDL_GameControllerClose(GameController);
+#else
+    if (GameController)
+        SDL_CloseGamepad(GameController);
 #endif
     IN_Started = false;
 }
@@ -990,7 +1130,7 @@ boolean IN_CheckAck(void)
     if (LastScan)
         return true;
 #ifndef SEGA_SATURN
-#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
     for (i = 0; i < bt_Max; i++)
     {
         if (GameControllerButtons[i])

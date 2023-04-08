@@ -11,6 +11,9 @@
 #ifndef __APPLE__
 #include <SDL_syswm.h>
 #endif
+#if SDL_MAJOR_VERSION == 3
+#include <SDL_main.h>
+#endif
 
 #ifdef _arch_dreamcast
 #include <SDL.h>
@@ -1421,8 +1424,11 @@ static void InitGame()
     ps2_printf("SDL2 Initialized", 4);
 #endif
 #endif
-
+#if SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2
     numJoysticks = SDL_NumJoysticks();
+#else
+    numJoysticks = SDL_GetJoysticks;
+#endif
     if(param_joystickindex && (param_joystickindex < -1 || param_joystickindex >= numJoysticks))
     {
         if(!numJoysticks)

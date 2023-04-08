@@ -459,6 +459,7 @@ void PollJoystickButtons (void)
             buttonstate[buttonjoy[i]] = true;
     }
 }
+#endif
  
 #if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
 /*

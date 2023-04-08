@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -22,7 +22,7 @@
 /**
  *  \file SDL_endian.h
  *
- *  Functions for reading and writing endian-specific values
+ *  \brief Functions for reading and writing endian-specific values
  */
 
 #ifndef SDL_endian_h_
@@ -110,7 +110,7 @@ _m_prefetch(void *__P)
 #endif /* !SDL_FLOATWORDORDER */
 
 
-#include <SDL3/begin_code.h>
+#include <SDL3/SDL_begin_code.h>
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
 extern "C" {
@@ -122,11 +122,11 @@ extern "C" {
 
 /* various modern compilers may have builtin swap */
 #if defined(__GNUC__) || defined(__clang__)
-#   define HAS_BUILTIN_BSWAP16 (_SDL_HAS_BUILTIN(__builtin_bswap16)) || \
+#   define HAS_BUILTIN_BSWAP16 (SDL_HAS_BUILTIN(__builtin_bswap16)) || \
         (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8))
-#   define HAS_BUILTIN_BSWAP32 (_SDL_HAS_BUILTIN(__builtin_bswap32)) || \
+#   define HAS_BUILTIN_BSWAP32 (SDL_HAS_BUILTIN(__builtin_bswap32)) || \
         (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 3))
-#   define HAS_BUILTIN_BSWAP64 (_SDL_HAS_BUILTIN(__builtin_bswap64)) || \
+#   define HAS_BUILTIN_BSWAP64 (SDL_HAS_BUILTIN(__builtin_bswap64)) || \
         (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 3))
 
     /* this one is broken */
@@ -138,9 +138,12 @@ extern "C" {
 #   define HAS_BROKEN_BSWAP 0
 #endif
 
+/**
+ * Byte swap 16-bit integer.
+ */
 #if HAS_BUILTIN_BSWAP16
 #define SDL_Swap16(x) __builtin_bswap16(x)
-#elif defined(_MSC_VER) && (_MSC_VER >= 1400)
+#elif (defined(_MSC_VER) && (_MSC_VER >= 1400)) && !defined(__ICL)
 #pragma intrinsic(_byteswap_ushort)
 #define SDL_Swap16(x) _byteswap_ushort(x)
 #elif defined(__i386__) && !HAS_BROKEN_BSWAP
@@ -187,9 +190,12 @@ SDL_Swap16(Uint16 x)
 }
 #endif
 
+/**
+ * Byte swap 32-bit integer.
+ */
 #if HAS_BUILTIN_BSWAP32
 #define SDL_Swap32(x) __builtin_bswap32(x)
-#elif defined(_MSC_VER) && (_MSC_VER >= 1400)
+#elif (defined(_MSC_VER) && (_MSC_VER >= 1400)) && !defined(__ICL)
 #pragma intrinsic(_byteswap_ulong)
 #define SDL_Swap32(x) _byteswap_ulong(x)
 #elif defined(__i386__) && !HAS_BROKEN_BSWAP
@@ -239,9 +245,12 @@ SDL_Swap32(Uint32 x)
 }
 #endif
 
+/**
+ * Byte swap 64-bit integer.
+ */
 #if HAS_BUILTIN_BSWAP64
 #define SDL_Swap64(x) __builtin_bswap64(x)
-#elif defined(_MSC_VER) && (_MSC_VER >= 1400)
+#elif (defined(_MSC_VER) && (_MSC_VER >= 1400)) && !defined(__ICL)
 #pragma intrinsic(_byteswap_uint64)
 #define SDL_Swap64(x) _byteswap_uint64(x)
 #elif defined(__i386__) && !HAS_BROKEN_BSWAP
@@ -293,6 +302,9 @@ SDL_Swap64(Uint64 x)
 #endif
 
 
+/**
+ * Byte swap floating point number.
+ */
 SDL_FORCE_INLINE float
 SDL_SwapFloat(float x)
 {
@@ -315,6 +327,46 @@ SDL_SwapFloat(float x)
  *  \name Swap to native
  *  Byteswap item from the specified endianness to the native endianness.
  */
+
+/**
+ * \def SDL_SwapLE16
+ * Swap 16-bit little endian integer to 16-bit native endian integer.
+ */
+
+/**
+ * \def SDL_SwapLE32
+ * Swap 32-bit little endian integer to 32-bit native endian integer.
+ */
+
+/**
+ * \def SDL_SwapLE64
+ * Swap 64-bit little endian integer to 64-bit native endian integer.
+ */
+
+/**
+ * \def SDL_SwapFloatLE
+ * Swap little endian float to native endian float.
+ */
+/**
+ * \def SDL_SwapBE16
+ * Swap 16-bit big endian integer to 16-bit native endian integer.
+ */
+
+/**
+ * \def SDL_SwapBE32
+ * Swap 32-bit big endian integer to 32-bit native endian integer.
+ */
+
+/**
+ * \def SDL_SwapBE64
+ * Swap 64-bit big endian integer to 64-bit native endian integer.
+ */
+
+/**
+ * \def SDL_SwapFloatBE
+ * Swap endian float to native endian float.
+ */
+
 /* @{ */
 #if SDL_BYTEORDER == SDL_LIL_ENDIAN
 #define SDL_SwapLE16(X)     (X)
@@ -341,8 +393,6 @@ SDL_SwapFloat(float x)
 #ifdef __cplusplus
 }
 #endif
-#include <SDL3/close_code.h>
+#include <SDL3/SDL_close_code.h>
 
 #endif /* SDL_endian_h_ */
-
-/* vi: set ts=4 sw=4 expandtab: */

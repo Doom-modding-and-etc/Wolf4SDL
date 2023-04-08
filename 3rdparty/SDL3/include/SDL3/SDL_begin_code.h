@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -20,7 +20,7 @@
 */
 
 /**
- *  \file begin_code.h
+ *  \file SDL_begin_code.h
  *
  *  This file sets things up for C dynamic library function definitions,
  *  static inlined functions, and structures aligned at 4-byte alignment.
@@ -28,10 +28,10 @@
  */
 
 /* This shouldn't be nested -- included it around code only. */
-#ifdef _begin_code_h
-#error Nested inclusion of begin_code.h
+#ifdef SDL_begin_code_h
+#error Nested inclusion of SDL_begin_code.h
 #endif
-#define _begin_code_h
+#define SDL_begin_code_h
 
 #ifndef SDL_DEPRECATED
 #  if defined(__GNUC__) && (__GNUC__ >= 4)  /* technically, this arrived in gcc 3.1, but oh well. */
@@ -78,7 +78,7 @@
 /* Force structure packing at 4 byte alignment.
    This is necessary if the header is included in code which has structure
    packing set to an alternate value, say for loading structures from disk.
-   The packing is reset to the previous value in close_code.h
+   The packing is reset to the previous value in SDL_close_code.h
  */
 #if defined(_MSC_VER) || defined(__MWERKS__) || defined(__BORLANDC__)
 #ifdef _MSC_VER
@@ -99,7 +99,7 @@
 #endif /* Compiler needs structure packing set */
 
 #ifndef SDL_INLINE
-#if defined(__GNUC__)
+#ifdef __GNUC__
 #define SDL_INLINE __inline__
 #elif defined(_MSC_VER) || defined(__BORLANDC__) || \
       defined(__DMC__) || defined(__SC__) || \
@@ -118,7 +118,7 @@
 #endif /* SDL_INLINE not defined */
 
 #ifndef SDL_FORCE_INLINE
-#if defined(_MSC_VER)
+#ifdef _MSC_VER
 #define SDL_FORCE_INLINE __forceinline
 #elif ( (defined(__GNUC__) && (__GNUC__ >= 4)) || defined(__clang__) )
 #define SDL_FORCE_INLINE __attribute__((always_inline)) static __inline__
@@ -128,7 +128,7 @@
 #endif /* SDL_FORCE_INLINE not defined */
 
 #ifndef SDL_NORETURN
-#if defined(__GNUC__)
+#ifdef __GNUC__
 #define SDL_NORETURN __attribute__((noreturn))
 #elif defined(_MSC_VER)
 #define SDL_NORETURN __declspec(noreturn)
@@ -138,7 +138,7 @@
 #endif /* SDL_NORETURN not defined */
 
 /* Apparently this is needed by several Windows compilers */
-#if !defined(__MACH__)
+#ifndef __MACH__
 #ifndef NULL
 #ifdef __cplusplus
 #define NULL 0
@@ -153,36 +153,36 @@
     (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202000L)
 #define SDL_FALLTHROUGH [[fallthrough]]
 #else
-#if defined(__has_attribute)
-#define _HAS_FALLTHROUGH __has_attribute(__fallthrough__)
+#ifdef __has_attribute
+#define SDL_HAS_FALLTHROUGH __has_attribute(__fallthrough__)
 #else
-#define _HAS_FALLTHROUGH 0
+#define SDL_HAS_FALLTHROUGH 0
 #endif /* __has_attribute */
-#if _HAS_FALLTHROUGH && \
+#if SDL_HAS_FALLTHROUGH && \
    ((defined(__GNUC__) && __GNUC__ >= 7) || \
     (defined(__clang_major__) && __clang_major__ >= 10))
 #define SDL_FALLTHROUGH __attribute__((__fallthrough__))
 #else
 #define SDL_FALLTHROUGH do {} while (0) /* fallthrough */
-#endif /* _HAS_FALLTHROUGH */
-#undef _HAS_FALLTHROUGH
+#endif /* SDL_HAS_FALLTHROUGH */
+#undef SDL_HAS_FALLTHROUGH
 #endif /* C++17 or C2x */
 #endif /* SDL_FALLTHROUGH not defined */
 
 #ifndef SDL_MALLOC
-#if defined(__GNUC__)
+#if defined(__GNUC__) && (__GNUC__ >= 3)
 #define SDL_MALLOC __attribute__((malloc))
-/* FIXME
+/** FIXME
 #elif defined(_MSC_VER)
 #define SDL_MALLOC __declspec(allocator) __desclspec(restrict)
-*/
+**/
 #else
 #define SDL_MALLOC
 #endif
 #endif /* SDL_MALLOC not defined */
 
 #ifndef SDL_ALLOC_SIZE
-#if defined(__clang__) || (defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 3)))
+#if (defined(__clang__) && __clang_major__ >= 4) || (defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 3)))
 #define SDL_ALLOC_SIZE(p) __attribute__((alloc_size(p)))
 #elif defined(_MSC_VER)
 #define SDL_ALLOC_SIZE(p)
@@ -192,7 +192,7 @@
 #endif /* SDL_ALLOC_SIZE not defined */
 
 #ifndef SDL_ALLOC_SIZE2
-#if defined(__clang__) || (defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 3)))
+#if (defined(__clang__) && __clang_major__ >= 4) || (defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 3)))
 #define SDL_ALLOC_SIZE2(p1, p2) __attribute__((alloc_size(p1, p2)))
 #elif defined(_MSC_VER)
 #define SDL_ALLOC_SIZE2(p1, p2)

@@ -115,7 +115,11 @@ void VH_RenderTextures()
 {
     SDL_UpdateTexture(texture, NULL, screen->pixels, screenWidth * sizeof(unsigned int));
     SDL_RenderClear(renderer);
+#if SDL_MAJOR_VERSION == 2
     SDL_RenderCopy(renderer, texture, NULL, NULL);
+#else
+    SDL_RenderTexture(renderer, texture, NULL, NULL);
+#endif
     SDL_RenderPresent(renderer);
 }
 #endif
@@ -353,7 +357,7 @@ void VH_Startup()
 }
 
 boolean FizzleFade (SDL_Surface *source, int x1, int y1,
-    unsigned width, unsigned height, unsigned frames, boolean abortable)
+    size_t width, size_t height, size_t frames, boolean abortable)
 {
 #ifdef SEGA_SATURN
 #if 1
@@ -458,8 +462,7 @@ finished:
     return false;
 #endif
 #else
-    unsigned x, y, p, pixperframe; //TODO: <--
-    size_t frame;
+    size_t x, y, p, pixperframe, frame;
     int  rndval = 0, lastrndval = 0;
     int      i,first = 1;
 	unsigned char *srcptr;
@@ -561,7 +564,7 @@ finished:
         }
 
         frame++;
-        Delay((int)frame - (int)GetTimeCount());        // don't go too fast
+        Delay(frame - GetTimeCount());        // don't go too fast
     } while (1);
 
 finished:

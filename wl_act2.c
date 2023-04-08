@@ -2635,7 +2635,7 @@ void T_Schabb (objtype *ob)
             TryWalk(ob);
         }
 
-        if (move < ob->distance)
+        if (move < (size_t)ob->distance)
         {
             MoveObj (ob,(int)move);
             break;
@@ -2727,7 +2727,7 @@ void T_Gift (objtype *ob)
             TryWalk(ob);
         }
 
-        if (move < ob->distance)
+        if (move < (size_t)ob->distance)
         {
             MoveObj (ob,(int)move);
             break;
@@ -2819,7 +2819,7 @@ void T_Fat (objtype *ob)
             TryWalk(ob);
         }
 
-        if (move < ob->distance)
+        if (move < (size_t)ob->distance)
         {
             MoveObj (ob,(int)move);
             break;
@@ -3212,7 +3212,7 @@ void T_Fake (objtype *ob)
 
     while (move)
     {
-        if (move < ob->distance)
+        if (move < (size_t)ob->distance)
         {
             MoveObj (ob,(int)move);
             break;
@@ -3409,7 +3409,7 @@ void T_Chase (objtype *ob)
             }
         }
 
-        if (move < ob->distance)
+        if (move < (size_t)ob->distance)
         {
             MoveObj (ob,(int)move);
             break;
@@ -3461,7 +3461,7 @@ void T_Ghosts (objtype *ob)
 
     while (move)
     {
-        if (move < ob->distance)
+        if (move < (size_t)ob->distance)
         {
             MoveObj (ob,(int)move);
             break;
@@ -3531,7 +3531,7 @@ void T_DogChase (objtype *ob)
             }
         }
 
-        if (move < ob->distance)
+        if (move < (size_t)ob->distance)
         {
             MoveObj (ob,(int)move);
             break;
@@ -3636,7 +3636,7 @@ void T_Path (objtype *ob)
             }
         }
 
-        if (move < ob->distance)
+        if (move < (size_t)ob->distance)
         {
             MoveObj (ob,(int)move);
             break;
