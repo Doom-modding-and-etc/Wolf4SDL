@@ -962,7 +962,7 @@ typedef struct objstruct
 
     unsigned int    flags;              // FL_SHOOTABLE, etc
 
-    int     distance;           // if negative, wait for that door to open
+    size_t     distance;           // if negative, wait for that door to open
     dirtype     dir;
 
     fixed       x, y;
