@@ -412,14 +412,14 @@ void PollKeyboardButtons (void)
 =
 ===================
 */
-#ifndef VANILLA
+
 int LastWheelPos=0;
-#endif
+
 
 void PollMouseButtons (void)
 {
     int buttons = IN_MouseButtons ();
-#ifndef VANILLA
+
     if (WheelPos < LastWheelPos)
     {
         buttonstate[bt_prevweapon] = true;
@@ -432,7 +432,6 @@ void PollMouseButtons (void)
 
     LastWheelPos = WheelPos;
 
-#endif
     if (buttons & 1)
         buttonstate[buttonmouse[0]] = true;
     if (buttons & 2)

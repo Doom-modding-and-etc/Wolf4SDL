@@ -53,13 +53,13 @@
 
 #ifndef SEGA_SATURN
 #ifdef USE_DOSBOX
-static Chip chip;
+static Chip oplChip;
 
 static int YM3812Init(int numChips, int clock, int rate)
 {
     DBOPL_InitTables();
-    Chip__Chip(&chip);
-    Chip__Setup(&chip, rate);
+    Chip__Chip(&oplChip);
+    Chip__Setup(&oplChip, rate);
     return 1;
 }
 
@@ -143,11 +143,11 @@ static void YM3812UpdateOne(Chip *which, short* stream, int length)
 }
 
 #elif defined(USE_NUKEDOPL)
-static opl3_chip chip;
+static opl3_chip oplChip;
 
 static int YM3812Init(int numChips, int clock, int rate)
 {
-    OPL3_Reset(&chip, rate);
+    OPL3_Reset(&oplChip, rate);
     return 1;
 }
 
@@ -986,21 +986,13 @@ void SDL_IMFMusicPlayer(void *udata, unsigned char *stream, int len)
         {
             if(numreadysamples<sampleslen)
             {
-#if defined(USE_DOSBOX) || defined(USE_NUKEDOPL)
-                YM3812UpdateOne(&chip, stream16, numreadysamples);
-#else
                 YM3812UpdateOne(oplChip, stream16, numreadysamples);
-#endif
                 stream16 += numreadysamples*2;
                 sampleslen -= numreadysamples;
             }
             else
             {
-#if defined(USE_DOSBOX) || defined(USE_NUKEDOPL)
-                YM3812UpdateOne(&chip, stream16, sampleslen);
-#else
                 YM3812UpdateOne(oplChip, stream16, sampleslen);
-#endif
                 numreadysamples -= sampleslen;
                 return;
             }
@@ -1110,17 +1102,9 @@ SD_Startup(void)
     }
 #endif
     for(i=1;i<0xf6;i++)
-#if defined(USE_DOSBOX) || defined(USE_NUKEDOPL)
-        YM3812Write(&chip, i, 0);
-#else
         YM3812Write(oplChip,i,0);
-#endif
-#if defined(USE_DOSBOX) || defined(USE_NUKEDOPL)
-    YM3812Write(&chip, i, 0x20);
-#else
     YM3812Write(oplChip,1,0x20); // Set WSE=1
 //    YM3812Write(0,8,0); // Set CSM=0 & SEL=0		 // already set in for statement
-#endif
     Mix_HookMusic(SDL_IMFMusicPlayer, 0);
     Mix_ChannelFinished(SD_ChannelFinished);
     AdLibPresent = true;

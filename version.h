@@ -64,7 +64,7 @@
 //#define FIXEDLOGICRATE       // Enables framerate independent game logic (aka: uncapped refreshrate) (by Codetech84)
 //#define LAGSIMULATOR          // Enables lag simulator debug option, depends on fixed logic rate (by Codetech84)
 //#define AUTOMAP //Enables the HUD automap feature by AlumiuN
-//#define VANILLA //Deactivates some features that Wolf3d or Sod doesn´t have on orignial game
+
 //Credits: Codetech84
 //#define MAPCONTROLLEDMUSIC //Activates the map controlled music.
 //#define MAPCONTROLPARTIME //Activates the map partial time control
