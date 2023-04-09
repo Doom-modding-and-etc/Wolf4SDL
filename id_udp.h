@@ -207,7 +207,7 @@ void serializePlayerItself(Stream* stream);
 inline void serializePlayer(Stream* stream, Player* x);
 
 const boolean CPlayer(const Player* player);
-
+/*
 #ifdef WIP
 template <class Pred>
 boolean findPlayer(Player::Vec& players, Pred pred)
@@ -228,7 +228,7 @@ Player& getPlayer(Player::Vec& players, Pred pred)
     return *it;
 }
 #endif
-
+*/
 void serialize_DataLayer(Stream* stream);
 
 inline void serialize_DataLayerStream(Stream* stream, DataLayer* x);
