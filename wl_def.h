@@ -934,7 +934,7 @@ typedef struct doorstruct
     unsigned char     tilex, tiley;
     boolean  vertical;
     unsigned char     lock;
-    doortype action;
+    size_t action;
     short    ticcount;
 #ifdef BLAKEDOORS
     boolean doubledoor;
@@ -1557,7 +1557,7 @@ void SpawnStatic(int tilex, int tiley, int type);
 void SpawnDoor(int tilex, int tiley, boolean vertical, int lock);
 void MoveDoors(void);
 void MovePWalls(void);
-void OpenDoor(int door);
+void OpenDoor(size_t door);
 void PlaceItemType(int itemtype, int tilex, int tiley);
 void PushWall(int checkx, int checky, int dir);
 void OperateDoor(int door);

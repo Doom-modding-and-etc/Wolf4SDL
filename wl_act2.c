@@ -2628,8 +2628,8 @@ void T_Schabb (objtype *ob)
             //
             // waiting for a door to open
             //
-            OpenDoor (-ob->distance-1);
-            if (doorobjlist[-ob->distance-1].action != dr_open)
+            OpenDoor (ob->distance-1);
+            if (doorobjlist[ob->distance-1].action != dr_open)
                 return;
             ob->distance = TILEGLOBAL;      // go ahead, the door is now open
             TryWalk(ob);
@@ -2720,8 +2720,8 @@ void T_Gift (objtype *ob)
             //
             // waiting for a door to open
             //
-            OpenDoor (-ob->distance-1);
-            if (doorobjlist[-ob->distance-1].action != dr_open)
+            OpenDoor (ob->distance-1);
+            if (doorobjlist[ob->distance-1].action != dr_open)
                 return;
             ob->distance = TILEGLOBAL;      // go ahead, the door is now open
             TryWalk(ob);
@@ -2812,8 +2812,8 @@ void T_Fat (objtype *ob)
             //
             // waiting for a door to open
             //
-            OpenDoor (-ob->distance-1);
-            if (doorobjlist[-ob->distance-1].action != dr_open)
+            OpenDoor (ob->distance-1);
+            if (doorobjlist[ob->distance-1].action != dr_open)
                 return;
             ob->distance = TILEGLOBAL;      // go ahead, the door is now open
             TryWalk(ob);
@@ -3399,8 +3399,8 @@ void T_Chase (objtype *ob)
             //
             // waiting for a door to open
             //
-            OpenDoor (-ob->distance-1);
-            if (doorobjlist[-ob->distance-1].action != dr_open)
+            OpenDoor (ob->distance-1);
+            if (doorobjlist[ob->distance-1].action != dr_open)
                 return;
             ob->distance = TILEGLOBAL;      // go ahead, the door is now open
             DEMOIF_SDL
@@ -3626,8 +3626,8 @@ void T_Path (objtype *ob)
             //
             // waiting for a door to open
             //
-            OpenDoor (-ob->distance-1);
-            if (doorobjlist[-ob->distance-1].action != dr_open)
+            OpenDoor (ob->distance-1);
+            if (doorobjlist[ob->distance-1].action != dr_open)
                 return;
             ob->distance = TILEGLOBAL;      // go ahead, the door is now open
             DEMOIF_SDL
@@ -3914,7 +3914,7 @@ void SpawnBJVictory (void)
 
 void T_BJRun (objtype *ob)
 {
-    int    move;
+    size_t    move;
 
     move = BJRUNSPEED*(int)tics;
 
@@ -3922,7 +3922,7 @@ void T_BJRun (objtype *ob)
     {
         if (move < ob->distance)
         {
-            MoveObj (ob,move);
+            MoveObj (ob,(int)move);
             break;
         }
 

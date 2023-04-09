@@ -666,7 +666,7 @@ void CloseDoor(int door)
 =====================
 */
 
-void OpenDoor(int door)
+void OpenDoor(size_t door)
 {
     if (doorobjlist[door].action == dr_open)
         doorobjlist[door].ticcount = 0;         // reset open time
