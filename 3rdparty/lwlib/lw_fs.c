@@ -188,7 +188,7 @@ void lwlib_Fs_Commit(lwlib_Fs_t fs, void *buf, int count,
 		ret = fread(buf, count, 1, priv->fp);
 		if (ret == 0)
 		{
-			memset((byte *)buf, 0, count);
+			memset((lwlib_Byte_t *)buf, 0, count);
 		}
 		break;
 	case lwlib_Fs_FileMode(Write):
@@ -253,7 +253,7 @@ void lwlib_Fs_Commit(lwlib_Fs_t fs, void *buf, int count,
 			ret = fread(buf, count, 1, priv->fp);
 			if (ret == 0)
 			{
-				memset((byte *)buf, 0, count);
+				memset((lwlib_Byte_t*)buf, 0, count);
 			}
 			lwlib_Fs_ConsumeLine(fs, tmpStr);
 			break;
@@ -268,7 +268,7 @@ void lwlib_Fs_Commit(lwlib_Fs_t fs, void *buf, int count,
 			}
 			else
 			{
-				memset((byte *)buf, 0, count);
+				memset((lwlib_Byte_t*)buf, 0, count);
 			}
 			break;
 		case lwlib_Fs_VarType_Informative:

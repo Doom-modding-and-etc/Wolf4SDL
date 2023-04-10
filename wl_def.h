@@ -78,8 +78,60 @@
 #else
 #include "3rdparty/fixedptc.h"	
 #endif
-
 #include "id_w3swrap.h"
+//
+// The packed attribute forces structures to be packed into the minimum 
+// space necessary.  If this is not done, the compiler may align structure
+// fields differently to optimize memory access, inflating the overall
+// structure size.  It is important to use the packed attribute on certain
+// structures where alignment is important, particularly data read/written
+// to disk.
+//
+
+#ifdef __GNUC__
+
+#if defined(_WIN32) && !defined(__clang__)
+#define PACKEDATTR __attribute__((packed,gcc_struct))
+#else
+#define PACKEDATTR __attribute__((packed))
+#endif
+
+#define PRINTF_ATTR(fmt, first) __attribute__((format(printf, fmt, first)))
+#define PRINTF_ARG_ATTR(x) __attribute__((format_arg(x)))
+#define NORETURN __attribute__((noreturn))
+
+#else
+#if defined(_MSC_VER)
+#define PACKEDATTR __pragma(pack(pop))
+#else
+#define PACKEDATTR
+#endif
+#endif
+
+#ifdef __WATCOMC__
+#define PACKEDPREFIX _Packed
+#elif defined(_MSC_VER)
+#ifdef OLD
+#define PACKEDPREFIX //TODO: __pragma(pack(push,1))
+#else
+#define PACKEDPREFIX __pragma(pack(push,1))
+#endif
+#else
+#define PACKEDPREFIX
+#endif
+
+#define PACKED_STRUCT(...) PACKEDPREFIX struct __VA_ARGS__ PACKEDATTR
+
+#ifdef __GNUC__
+#define CONSTFUNC __attribute__((const))
+#define PUREFUNC __attribute__((pure))
+#define NORETURN __attribute__ ((noreturn))
+#else
+#define CONSTFUNC
+#define PUREFUNC
+#define NORETURN
+#endif
+
 #if defined(_MSC_VER) && defined(__GNUC__)
 #ifdef X64_ARCH
 typedef unsigned long long uintptr_t;
@@ -100,13 +152,13 @@ typedef unsigned int size_t;
 
 #ifndef __GNUC__
 #ifdef OLD_MSVC
-typedef __int64 int64_t;
+typedef long __int64 int64_t;
 #else
 typedef long long int64_t;
 #endif
 #endif
 
-#if !defined O_BINARY
+#ifndef _MSC_VER
 #define O_BINARY 0
 #endif
 
@@ -143,7 +195,7 @@ void Quit(const char* errorStr, ...);
 #endif
 #include "wl_menu.h"
 #include "wl_utils.h"
-#include "id_w3swrap.h"
+
 
 
 /*
@@ -878,7 +930,7 @@ typedef struct statestruct
     int next; /* stateenum */
 } statetype;
 #else
-typedef struct statestruct
+typedef PACKED_STRUCT(statestruct)
 {
     boolean rotate;
     short   shapenum;           // a shapenum of -1 means get from ob->temp1
@@ -893,7 +945,7 @@ typedef struct statestruct
 //
 //---------------------
 
-typedef struct statstruct
+typedef PACKED_STRUCT(statstruct)
 {
     unsigned char      tilex, tiley;
     short     shapenum;           // if shapenum == -1 the obj has been removed
@@ -929,7 +981,7 @@ typedef enum
     dr_closing
 } doortype;
 
-typedef struct doorstruct
+typedef PACKED_STRUCT(doorstruct)
 {
     unsigned char     tilex, tiley;
     boolean  vertical;
@@ -948,7 +1000,7 @@ typedef struct doorstruct
 //
 //--------------------
 
-typedef struct objstruct
+typedef PACKED_STRUCT(objstruct)
 {
     activetype  active;
     short       ticcount;

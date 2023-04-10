@@ -74,7 +74,7 @@ fixed   viewsin,viewcos;
 
 void    TransformActor (objtype *ob);
 void    BuildTables (void);
-void    ClearScreen (void);
+void    VGAClearScreen (void);
 int     CalcRotate (objtype *ob);
 void    DrawScaleds (void);
 void    CalcTics (void);

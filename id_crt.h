@@ -18,7 +18,7 @@
 #if SDL_MAJOR_VERSION == 1
 #if defined(_XBOX)
 #include "xbox/fakeglx.h"
-#elif defined(_WIN32)
+#elif defined(_MSC_VER)
 #include <Windows.h>
 #include <GL/gl.h>
 #elif defined(__linux__)

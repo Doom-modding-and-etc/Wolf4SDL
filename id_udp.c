@@ -11,14 +11,25 @@ You will need a SDL_net library to make this file work properly
 
 #include "wl_def.h"
 #ifdef LWUDPCOMMS
+#ifndef SEGA_SATURN
 #include <sys/types.h>
-#if defined _WIN32
-    #include <io.h>
-#elif defined _arch_dreamcast
-    #include <unistd.h>
-#else
-    #include <sys/uio.h>
-    #include <unistd.h>
+#if defined(_MSC_VER)
+#include <io.h>
+#elif defined(SWITCH)
+#include <sys/_iovec.h>
+#elif defined(N3DS) || defined(PS2) 
+struct iovec
+{
+    void* iov_base;
+    size_t iov_len;
+};
+#elif !defined(_arch_dreamcast)
+#include <sys/uio.h>
+#include <unistd.h>
+#else	
+#include <sys/uio.h>
+#include <unistd.h>
+#endif
 #endif
 #include <SDL_net.h>
 

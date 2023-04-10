@@ -520,7 +520,7 @@ void VL_ConvertPalette(unsigned char *srcpal, SDL_Color *destpal, int numColors)
 =================
 */
 
-void VL_FillPalette (int red, int green, int blue)
+void VL_FillPalette (unsigned char red, unsigned char green, unsigned char blue)
 {
     int i;
     SDL_Color pal[256];
@@ -680,7 +680,7 @@ void VL_GetPalette (SDL_Color *palette)
 =================
 */
 
-void VL_FadeOut (int start, int end, int red, int green, int blue, int steps)
+void VL_FadeOut(int start, int end, unsigned char red, unsigned char green, unsigned char blue, int steps)
 {
 	int		    i,j,orig,delta;
 	SDL_Color   *origptr, *newptr;

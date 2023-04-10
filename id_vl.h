@@ -65,11 +65,11 @@ void VL_SetVGAPlaneMode (void);
 void VL_Shutdown (void);
 
 void VL_ConvertPalette(unsigned char *srcpal, SDL_Color *destpal, int numColors);
-void VL_FillPalette (int red, int green, int blue);
+void VL_FillPalette (unsigned char red, unsigned char green, unsigned char blue);
 void VL_GetColor    (int color, int *red, int *green, int *blue);
 void VL_SetPalette  (SDL_Color *palette, boolean forceupdate);
 void VL_GetPalette  (SDL_Color *palette);
-void VL_FadeOut     (int start, int end, int red, int green, int blue, int steps);
+void VL_FadeOut     (int start, int end, unsigned char red, unsigned char green, unsigned char blue, int steps);
 void VL_FadeIn      (int start, int end, SDL_Color *palette, int steps);
 
 unsigned char *VL_LockSurface(SDL_Surface *surface);

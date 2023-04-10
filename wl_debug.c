@@ -1,6 +1,6 @@
 // WL_DEBUG.C
 
-#ifdef _WIN32
+#ifdef _MSC_VER
 	#include <io.h>
 #else
 	#include <unistd.h>
