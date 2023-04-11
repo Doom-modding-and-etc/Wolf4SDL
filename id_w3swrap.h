@@ -20,7 +20,7 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifdef _WIN32
+#ifdef _MSC_VER
 #include <io.h>
 #else
 #include <unistd.h>
@@ -41,12 +41,12 @@ typedef unsigned char boolean;
 #endif
 #else
 #include <stdbool.h> //for true and false.
-#ifndef _WIN32
+#ifndef _MSC_VER
 typedef unsigned char boolean;
 #endif
 #endif
 
-#ifdef _WIN32
+#ifdef _MSC_VER
 #ifdef _XBOX
 #include <xtl.h>
 #include <XObjBase.h>
@@ -61,7 +61,7 @@ typedef unsigned char boolean;
 #include "psnprntf.h"
 #endif
 
-#ifdef _WIN32
+#ifdef _MSC_VER
 #define w3sopen _open
 #define w3swrite _write
 #define w3saccess _access

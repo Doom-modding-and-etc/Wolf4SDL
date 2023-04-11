@@ -15,7 +15,7 @@ loaded into the data segment
 */
 #ifndef SEGA_SATURN
 #include <sys/types.h>
-#if defined _WIN32
+#if defined(_MSC_VER)
     #include <io.h>
 #elif defined(SWITCH)
 	#include <sys/_iovec.h>
@@ -1597,8 +1597,6 @@ void CA_CacheMap (int mapnum)
 #ifndef SEGA_SATURN
 void CA_CannotOpen(const char *string)
 {
-    char str[30];
-
     strcpy(str,"Can't open ");
     strcat(str,string);
     strcat(str,"!\n");

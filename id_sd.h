@@ -154,7 +154,7 @@ extern  int             DigiChannel[];
 
 
 // Function prototypes
-void            Delay (int wolfticks);
+void            Delay (unsigned int wolfticks);
 
 extern  void    SD_Startup(void),
                 SD_Shutdown(void);

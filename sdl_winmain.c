@@ -262,7 +262,7 @@ int console_main(int argc, char *argv[])
 	status = SDL_main(argc, argv);
 
 	/* Exit cleanly, calling atexit() functions */
-	exit(status);
+	_exit(status);
 
 	/* Hush little compiler, don't you cry... */
 	return 0;
