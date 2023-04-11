@@ -38,7 +38,7 @@ static const dirtype diagonal[9][9] =
 
 
 
-#ifdef EMBEDDED
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
 void SpawnNewObj(unsigned tilex, unsigned tiley, int state);
 #else
 void SpawnNewObj(unsigned tilex, unsigned tiley, statetype* state);
@@ -79,7 +79,7 @@ boolean CheckSight (objtype *ob);
 ===================
 */
 #if defined(EMBEDDED) && defined(SEGA_SATURN)
-
+void	SpawnNewObj(unsigned tilex, unsigned tiley, int state){ /* stateenum */
 GetNewActor();
 
 newobj->state = state;
@@ -113,8 +113,8 @@ void SpawnNewObj (unsigned tilex, unsigned tiley, statetype *state)
 
     newobj->tilex = (short) tilex;
     newobj->tiley = (short) tiley;
-    newobj->x = ((int)tilex<<TILESHIFT)+TILEGLOBAL/2;
-    newobj->y = ((int)tiley<<TILESHIFT)+TILEGLOBAL/2;
+    newobj->x = ((fixed)tilex<<TILESHIFT)+TILEGLOBAL/2;
+    newobj->y = ((fixed)tiley<<TILESHIFT)+TILEGLOBAL/2;
     newobj->dir = nodir;
 
     actorat[tilex][tiley] = newobj;
@@ -1545,7 +1545,7 @@ void FirstSighting (objtype *ob)
     {
         case guardobj:
             PlaySoundLocActor(HALTSND,ob);
-#ifdef EMBEDDED
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
             NewState(ob, s_grdchase1);
 #else
             NewState(ob, &s_grdchase1);
@@ -1555,7 +1555,7 @@ void FirstSighting (objtype *ob)
 
         case officerobj:
             PlaySoundLocActor(SPIONSND,ob);
-#ifdef EMBEDDED
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
             NewState(ob, s_ofcchase1);
 #else
             NewState(ob, &s_ofcchase1);
@@ -1564,7 +1564,7 @@ void FirstSighting (objtype *ob)
             break;
 
         case mutantobj:
-#ifdef EMBEDDED
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
             NewState(ob, s_mutchase1);
 #else
             NewState(ob, &s_mutchase1);
@@ -1574,7 +1574,7 @@ void FirstSighting (objtype *ob)
 
         case ssobj:
             PlaySoundLocActor(SCHUTZADSND,ob);
-#ifdef EMBEDDED
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
             NewState(ob, s_sschase1);
 #else
             NewState(ob, &s_sschase1);
@@ -1584,7 +1584,7 @@ void FirstSighting (objtype *ob)
 
         case dogobj:
             PlaySoundLocActor(DOGBARKSND,ob);
-#ifdef EMBEDDED
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
             NewState(ob, s_dogchase1);
 #else
             NewState(ob, &s_dogchase1);

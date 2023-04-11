@@ -55,7 +55,7 @@ extern SDL_Color gamepal[256];
 #ifdef SEGA_SATURN
 #define VL_WaitVBL(a)	wait_vblank(a*1)  //SDL_Delay((a)*8)
 #else
-#define VL_WaitVBL(a)        SDL_Delay((a)*8)
+#define VL_WaitVBL(a)        SDL_Delay(((unsigned int)a)*8)
 #endif
 #define VL_ClearScreen(c)    SDL_FillRect(screenBuffer,NULL,(c))
 

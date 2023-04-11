@@ -156,7 +156,7 @@ void SpawnStatic (int tilex, int tiley, int type)
     switch (statinfo[type].type)
     {
         case block:
-#ifdef EMBEDDED		
+#if defined(EMBEDDED) && defined(SEGA_SATURN)
             //			actorat[tilex][tiley] = 1;	// consider it a blocking tile
             set_wall_at(tilex, tiley, 1);	// consider it a blocking tile
 #else		

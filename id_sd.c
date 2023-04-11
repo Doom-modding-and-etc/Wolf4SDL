@@ -293,7 +293,7 @@ extern 	void sound_cdda(int track, int loop);
 short	load_adx(char* filename);
 #endif
 
-void Delay (int wolfticks)
+void Delay (unsigned int wolfticks)
 {
     if (wolfticks > 0)
         SDL_Delay ((wolfticks * 100) / 7);

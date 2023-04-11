@@ -87,7 +87,7 @@
 // structures where alignment is important, particularly data read/written
 // to disk.
 //
-
+/*
 #ifdef __GNUC__
 
 #if defined(_WIN32) && !defined(__clang__)
@@ -131,7 +131,7 @@
 #define PUREFUNC
 #define NORETURN
 #endif
-
+*/
 #if defined(_MSC_VER) && defined(__GNUC__)
 #ifdef X64_ARCH
 typedef unsigned long long uintptr_t;
@@ -930,7 +930,7 @@ typedef struct statestruct
     int next; /* stateenum */
 } statetype;
 #else
-typedef PACKED_STRUCT(statestruct)
+typedef struct statestruct
 {
     boolean rotate;
     short   shapenum;           // a shapenum of -1 means get from ob->temp1
@@ -945,7 +945,7 @@ typedef PACKED_STRUCT(statestruct)
 //
 //---------------------
 
-typedef PACKED_STRUCT(statstruct)
+typedef struct statstruct
 {
     unsigned char      tilex, tiley;
     short     shapenum;           // if shapenum == -1 the obj has been removed
@@ -981,7 +981,7 @@ typedef enum
     dr_closing
 } doortype;
 
-typedef PACKED_STRUCT(doorstruct)
+typedef struct doorstruct
 {
     unsigned char     tilex, tiley;
     boolean  vertical;
@@ -1000,7 +1000,7 @@ typedef PACKED_STRUCT(doorstruct)
 //
 //--------------------
 
-typedef PACKED_STRUCT(objstruct)
+typedef struct objstruct
 {
     activetype  active;
     short       ticcount;
