@@ -1310,7 +1310,7 @@ void RecordDemo (void)
 
     StopMusic ();
     VW_FadeOut ();
-    ClearMemory ();
+    SD_StopDigitized ();
 
     FinishDemoRecord ();
 }
@@ -1381,7 +1381,7 @@ void PlayDemo (int demonumber)
     demoplayback = false;
 
     StopMusic ();
-    ClearMemory ();
+    SD_StopDigitized ();
 }
 
 //==========================================================================
@@ -1511,7 +1511,7 @@ void Died (void)
 
     IN_UserInput(100);
     SD_WaitSoundDone ();
-    ClearMemory();
+    SD_StopDigitized();
 
     gamestate.lives--;
 
@@ -1578,7 +1578,7 @@ restartgame:
 #ifdef AUTOINTER
     ClearMScreen();
     IntermissionScreens(); // Intermission Text - Shown when starting new game
-    ClearMemory();
+    SD_StopDigitized();
 #endif
     DrawPlayScreen ();
     died = false;
@@ -1666,7 +1666,7 @@ startplayloop:
             else
                 SD_WaitSoundDone();
 
-            ClearMemory ();
+            SD_StopDigitized ();
             gamestate.oldscore = gamestate.score;
             gamestate.mapon = 20;
             SetupGameLevel ();
@@ -1704,7 +1704,7 @@ startplayloop:
                 DrawKeys ();
                 VW_FadeOut ();
 
-                ClearMemory ();
+                SD_StopDigitized ();
 
                 LevelCompleted ();              // do the intermission
 #ifdef SEGA_SATURN
@@ -1719,7 +1719,7 @@ startplayloop:
 
                     VW_FadeOut ();
 
-                    ClearMemory ();
+                    SD_StopDigitized ();
 
                     CheckHighScore (gamestate.score,gamestate.mapon+1);
 #ifndef JAPAN
@@ -1737,7 +1737,7 @@ startplayloop:
 
                     VW_FadeOut ();
 
-                    ClearMemory ();
+                    SD_StopDigitized  ();
 
                     CheckHighScore (gamestate.score,gamestate.mapon+1);
 #ifndef JAPAN
@@ -1794,7 +1794,7 @@ startplayloop:
                         gamestate.mapon++;
 #ifdef AUTOINTER
                 IntermissionScreens(); // Intermission Screen If file exists
-                ClearMemory();
+                SD_StopDigitized();
                 DrawPlayScreen();
 #endif
                 break;
@@ -1808,9 +1808,9 @@ startplayloop:
                 {
                     VW_FadeOut();
                     ClearMScreen();
-                    ClearMemory();
+                    SD_StopDigitized();
                     IntermissionScreens(); // Intermission Text
-                    ClearMemory();
+                    SD_StopDigitized();
                     DrawPlayScreen();
 #endif
                     break;                          // more lives left
@@ -1822,7 +1822,7 @@ startplayloop:
                 if(screenHeight % 200 != 0)
                     VL_ClearScreen(0);
 
-                ClearMemory ();
+                SD_StopDigitized ();
 
                 CheckHighScore (gamestate.score,gamestate.mapon+1);
 #ifndef JAPAN

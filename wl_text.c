@@ -834,7 +834,7 @@ void EndText (void)
     void    *layout;
 #endif
 
-    ClearMemory ();
+    SD_StopDigitized ();
 
 #ifdef JAPAN
     ShowArticle(gamestate.episode + 1);

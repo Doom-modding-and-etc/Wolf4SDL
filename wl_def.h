@@ -1247,8 +1247,6 @@ void    ShowActStatus(void);
 void    PlayDemo(int demonumber);
 void    RecordDemo(void);
 
-#define ClearMemory SD_StopDigitized
-
 
 // JAB
 #ifndef SEGA_SATURN

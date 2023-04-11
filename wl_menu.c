@@ -509,7 +509,7 @@ US_ControlPanel (ScanCode scancode)
 			SDL_Color pal[256];
             VW_FadeOut ();
             StartCPMusic (XJAZNAZI_MUS);
-            ClearMemory ();
+            SD_StopDigitized ();
 
 
             VWB_DrawPic (0, 0, IDGUYS1PIC);

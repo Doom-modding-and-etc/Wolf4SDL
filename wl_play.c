@@ -966,7 +966,7 @@ void CheckKeys (void)
         noclip ^= 1;
         WindowH = 160;
 
-        ClearMemory();
+        SD_StopDigitized();
         CA_CacheGrChunks();
         ClearSplitVWB();
         //VW_ScreenToScreen(screen, screenBuffer, 80, 160);
@@ -1021,7 +1021,7 @@ void CheckKeys (void)
     if (Keyboard(sc_Tab) && Keyboard(sc_G) && Keyboard(sc_F10)) 
     {
 
-        ClearMemory();
+        SD_StopDigitized();
         // CA_CacheGrChunk(STARTFONT + 1);
         CA_CacheGrChunks();
         ClearSplitVWB();
@@ -1063,7 +1063,7 @@ void CheckKeys (void)
         DrawAmmo ();
         DrawScore ();
 
-        ClearMemory ();
+        SD_StopDigitized();
         ClearSplitVWB ();
 
         Message (STR_CHEATER1 "\n"
@@ -1083,7 +1083,7 @@ void CheckKeys (void)
 #ifdef DEBUGKEYS
     if (Keyboard(sc_BackSpace) && Keyboard(sc_LShift) && Keyboard(sc_Alt) && param_debugmode)
     {
-        ClearMemory ();
+        SD_StopDigitized ();
         ClearSplitVWB ();
 
         Message ("Debugging keys are\nnow available!");
@@ -1101,7 +1101,7 @@ void CheckKeys (void)
     //
     if (Keyboard(sc_B) && Keyboard(sc_A) && Keyboard(sc_T))
     {
-        ClearMemory();
+        SD_StopDigitized();
         ClearSplitVWB();
 
         Message("Commander Keen is also\n"
