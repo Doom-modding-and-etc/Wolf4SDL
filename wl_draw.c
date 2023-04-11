@@ -1885,7 +1885,7 @@ void ThreeDRefresh (void)
             US_Print(" fps");
         }
 #endif
-        VW_UpdateScreen ();
+        VH_UpdateScreen (screenBuffer);
     }
 
 #ifndef REMDEBUG

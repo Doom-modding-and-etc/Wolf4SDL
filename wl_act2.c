@@ -4047,7 +4047,7 @@ void    A_StartDeathCam (objtype *ob)
 
     FinishPaletteShifts ();
 
-    VW_WaitVBL (100);
+    VL_WaitVBL (100);
 
     if (gamestate.victoryflag)
     {
@@ -4055,7 +4055,7 @@ void    A_StartDeathCam (objtype *ob)
         return;
     }
 
-    if(usedoublebuffering) VW_UpdateScreen();
+    if(usedoublebuffering) VH_UpdateScreen(screenBuffer);
 
     gamestate.victoryflag = true;
 #ifndef SEGA_SATURN
@@ -4090,9 +4090,9 @@ void    A_StartDeathCam (objtype *ob)
     }
 
 #if !defined(SEGA_SATURN) && !defined(USE_SPRITES)
-    VW_UpdateScreen ();
+    VH_UpdateScreen (screenBuffer);
 #endif
-    if(usedoublebuffering) VW_UpdateScreen();
+    if(usedoublebuffering) VH_UpdateScreen(screenBuffer);
 
     IN_UserInput(300);
 

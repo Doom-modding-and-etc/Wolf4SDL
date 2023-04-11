@@ -752,7 +752,7 @@ US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 		if (cursorvis)
 			USL_XORICursor(x,y,s,cursor);
 
-		VW_UpdateScreen();
+		VH_UpdateScreen(screenBuffer);
 	}
 
 	if (cursorvis)
@@ -763,7 +763,7 @@ US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 		py = y;
 		USL_DrawString(olds);
 	}
-	VW_UpdateScreen();
+	VH_UpdateScreen(screenBuffer);
 
 	IN_ClearKeysDown();
 	return(result);

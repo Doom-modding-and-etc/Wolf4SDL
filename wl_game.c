@@ -172,7 +172,7 @@ SetSoundLoc(fixed gx,fixed gy)
     US_PrintSigned(leftchannel);
     US_Print(",");
     US_PrintSigned(rightchannel);
-    VW_UpdateScreen();
+    VH_UpdateScreen(screenBuffer);
 #endif
 }
 
@@ -979,29 +979,29 @@ void DrawPlayBorderSides(void)
 
     if(xl != 0)
     {
-	    VWB_BarScaledCoord(0,            0, xl - px,     h, bordercol);                 // left side
-	    VWB_BarScaledCoord(xl + vw + px, 0, xl - px * 2, h, bordercol);                 // right side
+        VL_BarScaledCoord (0,            0, xl - px,     h, bordercol);                 // left side
+        VL_BarScaledCoord (xl + vw + px, 0, xl - px * 2, h, bordercol);                 // right side
     }
 
     if(yl != 0)
     {
-	    VWB_BarScaledCoord(0, 0,            sw, yl - px, bordercol);                    // upper side
-	    VWB_BarScaledCoord(0, yl + vh + px, sw, yl - px, bordercol);                    // lower side
+        VL_BarScaledCoord (0, 0,            sw, yl - px, bordercol);                    // upper side
+        VL_BarScaledCoord (0, yl + vh + px, sw, yl - px, bordercol);                    // lower side
     }
 
     if(xl != 0)
     {
         // Paint game view border lines
-	    VWB_BarScaledCoord(xl - px, yl - px, vw + px, px,          0);                      // upper border
-	    VWB_BarScaledCoord(xl,      yl + vh, vw + px, px,          bordercol - 2);          // lower border
-	    VWB_BarScaledCoord(xl - px, yl - px, px,      vh + px,     0);                      // left border
-	    VWB_BarScaledCoord(xl + vw, yl - px, px,      vh + px * 2, bordercol - 2);          // right border
-	    VWB_BarScaledCoord(xl - px, yl + vh, px,      px,          bordercol - 3);          // lower left highlight
+        VL_BarScaledCoord (xl - px, yl - px, vw + px, px,          0);                      // upper border
+        VL_BarScaledCoord (xl,      yl + vh, vw + px, px,          bordercol - 2);          // lower border
+        VL_BarScaledCoord (xl - px, yl - px, px,      vh + px,     0);                      // left border
+        VL_BarScaledCoord (xl + vw, yl - px, px,      vh + px * 2, bordercol - 2);          // right border
+        VL_BarScaledCoord (xl - px, yl + vh, px,      px,          bordercol - 3);          // lower left highlight
     }
     else
     {
         // Just paint a lower border line
-        VWB_BarScaledCoord(0, yl+vh, vw, px, bordercol-2);       // lower border
+        VL_BarScaledCoord (0, yl+vh, vw, px, bordercol-2);       // lower border
     }
 }
 
@@ -1019,22 +1019,22 @@ void DrawStatusBorder (unsigned char color)
 #ifndef SEGA_SATURN
     int statusborderw = (screenWidth-scaleFactor*320)/2;
 
-    VWB_BarScaledCoord (0,0,screenWidth,screenHeight-scaleFactor*(STATUSLINES-3),color);
-    VWB_BarScaledCoord (0,screenHeight-scaleFactor*(STATUSLINES-3),
+    VL_BarScaledCoord (0,0,screenWidth,screenHeight-scaleFactor*(STATUSLINES-3),color);
+    VL_BarScaledCoord (0,screenHeight-scaleFactor*(STATUSLINES-3),
         statusborderw+scaleFactor*8,scaleFactor*(STATUSLINES-4),color);
-    VWB_BarScaledCoord (0,screenHeight-scaleFactor*2,screenWidth,scaleFactor*2,color);
-    VWB_BarScaledCoord (screenWidth-statusborderw-scaleFactor*8, screenHeight-scaleFactor*(STATUSLINES-3),
+    VL_BarScaledCoord (0,screenHeight-scaleFactor*2,screenWidth,scaleFactor*2,color);
+    VL_BarScaledCoord (screenWidth-statusborderw-scaleFactor*8, screenHeight-scaleFactor*(STATUSLINES-3),
         statusborderw+scaleFactor*8,scaleFactor*(STATUSLINES-4),color);
 
-    VWB_BarScaledCoord (statusborderw+scaleFactor*9, screenHeight-scaleFactor*3,
+    VL_BarScaledCoord (statusborderw+scaleFactor*9, screenHeight-scaleFactor*3,
         scaleFactor*97, scaleFactor*1, color-1);
-    VWB_BarScaledCoord (statusborderw+scaleFactor*106, screenHeight-scaleFactor*3,
+    VL_BarScaledCoord (statusborderw+scaleFactor*106, screenHeight-scaleFactor*3,
         scaleFactor*161, scaleFactor*1, color-2);
-    VWB_BarScaledCoord (statusborderw+scaleFactor*267, screenHeight-scaleFactor*3,
+    VL_BarScaledCoord (statusborderw+scaleFactor*267, screenHeight-scaleFactor*3,
         scaleFactor*44, scaleFactor*1, color-3);
-    VWB_BarScaledCoord (screenWidth-statusborderw-scaleFactor*9, screenHeight-scaleFactor*(STATUSLINES-4),
+    VL_BarScaledCoord (screenWidth-statusborderw-scaleFactor*9, screenHeight-scaleFactor*(STATUSLINES-4),
         scaleFactor*1, scaleFactor*20, color-2);
-    VWB_BarScaledCoord (screenWidth-statusborderw-scaleFactor*9, screenHeight-scaleFactor*(STATUSLINES/2-4),
+    VL_BarScaledCoord (screenWidth-statusborderw-scaleFactor*9, screenHeight-scaleFactor*(STATUSLINES/2-4),
         scaleFactor*1, scaleFactor*14, color-3);
 #endif
 }
@@ -1061,32 +1061,32 @@ void DrawPlayBorder (void)
         const int statusborderw = (screenWidth - px * SATURN_WIDTH) / 2;
 
 #if SATURN_WIDTH == 352
-        VWB_BarScaledCoord(0, screenHeight - px * STATUSLINES,
+        VL_BarScaledCoord(0, screenHeight - px * STATUSLINES,
             8 + statusborderw + px * 8, px * STATUSLINES, bordercol);
-        VWB_BarScaledCoord(screenWidth - 8 - statusborderw - px * 8, screenHeight - px * STATUSLINES,
+        VL_BarScaledCoord(screenWidth - 8 - statusborderw - px * 8, screenHeight - px * STATUSLINES,
             8 + statusborderw + px * 8, px * STATUSLINES, bordercol
 #else
-        VWB_BarScaledCoord(0, screenHeight - px * STATUSLINES,
+        VL_BarScaledCoord(0, screenHeight - px * STATUSLINES,
             statusborderw + px * 8, px * STATUSLINES, bordercol);
-        VWB_BarScaledCoord(screenWidth - statusborderw - px * 8, screenHeight - px * STATUSLINES,
+        VL_BarScaledCoord(screenWidth - statusborderw - px * 8, screenHeight - px * STATUSLINES,
             statusborderw + px * 8, px * STATUSLINES, bordercol);
 #endif
 #else
         const int statusborderw = (screenWidth-px*320)/2;
 
-        VWB_BarScaledCoord (0, screenHeight-px*STATUSLINES,
+        VL_BarScaledCoord (0, screenHeight-px*STATUSLINES,
             statusborderw+px*8, px*STATUSLINES, bordercol);
-        VWB_BarScaledCoord (screenWidth-statusborderw-px*8, screenHeight-px*STATUSLINES,
+        VL_BarScaledCoord (screenWidth-statusborderw-px*8, screenHeight-px*STATUSLINES,
             statusborderw+px*8, px*STATUSLINES, bordercol);
 #endif
     }
 
     if((unsigned) viewheight == screenHeight) return;
 
-    VWB_BarScaledCoord (0,0,screenWidth,screenHeight-px*STATUSLINES,bordercol);
+    VL_BarScaledCoord (0,0,screenWidth,screenHeight-px*STATUSLINES,bordercol);
 
 
-    VWB_BarScaledCoord (xl,yl,viewwidth,viewheight,0);
+    VL_BarScaledCoord (xl,yl,viewwidth,viewheight,0);
 
     if(xl != 0)
     {
@@ -1099,11 +1099,11 @@ void DrawPlayBorder (void)
 #endif
 
         // Paint game view border lines
-        VWB_BarScaledCoord(xl-px, yl-px, viewwidth+px, px, 0);                      // upper border
-        VWB_BarScaledCoord(xl, yl+viewheight, viewwidth+px, px, bordercol-2);       // lower border
-        VWB_BarScaledCoord(xl-px, yl-px, px, viewheight+px, 0);                     // left border
-        VWB_BarScaledCoord(xl+viewwidth, yl-px, px, viewheight+2*px, bordercol-2);  // right border
-        VWB_BarScaledCoord(xl-px, yl+viewheight, px, px, bordercol-3);              // lower left highlight
+        VL_BarScaledCoord(xl-px, yl-px, viewwidth+px, px, 0);                      // upper border
+        VL_BarScaledCoord(xl, yl+viewheight, viewwidth+px, px, bordercol-2);       // lower border
+        VL_BarScaledCoord(xl-px, yl-px, px, viewheight+px, 0);                     // left border
+        VL_BarScaledCoord(xl+viewwidth, yl-px, px, viewheight+2*px, bordercol-2);  // right border
+        VL_BarScaledCoord(xl-px, yl+viewheight, px, px, bordercol-3);              // lower left highlight
     }
     else
     {
@@ -1115,7 +1115,7 @@ void DrawPlayBorder (void)
         slWindow(0, 0, SATURN_WIDTH - 1, 239, 300, screenWidth / 2, screenHeight / 2);
 #endif
         // Just paint a lower border line
-        VWB_BarScaledCoord(0, yl+viewheight, viewwidth, px, bordercol-2);       // lower border
+        VL_BarScaledCoord(0, yl+viewheight, viewwidth, px, bordercol-2);       // lower border
     }
 }
 
@@ -1220,13 +1220,13 @@ void FinishDemoRecord (void)
     demoptr[1] = (char) (length >> 8);
     demoptr[2] = 0;
 
-    VW_FadeIn();
+    VL_FadeIn (0, 255, gamepal, 30);
     CenterWindow(24,3);
     PrintY+=6;
     fontnumber=0;
     SETFONTCOLOR(0,15);
     US_Print(" Demo number (0-9): ");
-    VW_UpdateScreen();
+    VH_UpdateScreen(screenBuffer);
 
     if (US_LineInput (px,py,str,NULL,true,1,0))
     {
@@ -1270,8 +1270,8 @@ void RecordDemo (void)
 #else
     US_Print("  Demo which level(1-21): "); maps = 21;
 #endif
-    VW_UpdateScreen();
-    VW_FadeIn ();
+    VH_UpdateScreen(screenBuffer);
+    VL_FadeIn (0, 255, gamepal, 30);
     esc = !US_LineInput (px,py,str,NULL,true,2,0);
     if (esc)
         return;
@@ -1282,7 +1282,7 @@ void RecordDemo (void)
     if (level >= maps || level < 0)
         return;
 
-    VW_FadeOut ();
+    VL_FadeOut (0, 255, 0, 0, 0, 30);
 
 #ifndef SPEAR
     NewGame (gd_hard,level/10);
@@ -1295,22 +1295,22 @@ void RecordDemo (void)
     StartDemoRecord (level);
 
     DrawPlayScreen ();
-    VW_FadeIn ();
+    VL_FadeIn (0, 255, gamepal, 30);
 
     startgame = false;
 
     SetupGameLevel ();
     StartMusic ();
 
-    if(usedoublebuffering) VW_UpdateScreen();
+    if(usedoublebuffering) VH_UpdateScreen(screenBuffer);
     fizzlein = true;
 
     PlayLoop ();
 
 
     StopMusic ();
-    VW_FadeOut ();
-    ClearMemory ();
+    VL_FadeOut (0, 255, 0, 0, 0, 30);
+    SD_StopDigitized ();
 
     FinishDemoRecord ();
 }
@@ -1361,7 +1361,7 @@ void PlayDemo (int demonumber)
     demoptr += 3;
     lastdemoptr = demoptr-4+length;
 
-    VW_FadeOut ();
+    VL_FadeOut (0, 255, 0, 0, 0, 30);
 
     SETFONTCOLOR(0,15);
     DrawPlayScreen ();
@@ -1381,7 +1381,7 @@ void PlayDemo (int demonumber)
     demoplayback = false;
 
     StopMusic ();
-    ClearMemory ();
+    SD_StopDigitized ();
 }
 
 //==========================================================================
@@ -1405,7 +1405,7 @@ void Died (void)
     if (screenfaded)
     {
         ThreeDRefresh ();
-        VW_FadeIn ();
+        VL_FadeIn (0, 255, gamepal, 30);
     }
 
     gamestate.weapon = (weapontype) -1;                     // take away weapon
@@ -1501,7 +1501,7 @@ void Died (void)
     //
     FinishPaletteShifts ();
 
-    if(usedoublebuffering) VW_UpdateScreen();
+    if(usedoublebuffering) VH_UpdateScreen(screenBuffer);
 
     VL_BarScaledCoord (viewscreenx,viewscreeny,viewwidth,viewheight,4);
 
@@ -1511,7 +1511,7 @@ void Died (void)
 
     IN_UserInput(100);
     SD_WaitSoundDone ();
-    ClearMemory();
+    SD_StopDigitized();
 
     gamestate.lives--;
 
@@ -1572,13 +1572,13 @@ void GameLoop (void)
 //vbt dernier niveau
 
 restartgame:
-    ClearMemory ();
+    SD_StopDigitized ();
     SETFONTCOLOR(0,15);
-    VW_FadeOut();
+    VL_FadeOut (0, 255, 0, 0, 0, 30);
 #ifdef AUTOINTER
     ClearMScreen();
     IntermissionScreens(); // Intermission Text - Shown when starting new game
-    ClearMemory();
+    SD_StopDigitized();
 #endif
     DrawPlayScreen ();
     died = false;
@@ -1666,7 +1666,7 @@ startplayloop:
             else
                 SD_WaitSoundDone();
 
-            ClearMemory ();
+            SD_StopDigitized ();
             gamestate.oldscore = gamestate.score;
             gamestate.mapon = 20;
             SetupGameLevel ();
@@ -1702,9 +1702,9 @@ startplayloop:
                 memset(automap, 0, sizeof(automap));
 #endif
                 DrawKeys ();
-                VW_FadeOut ();
+                VL_FadeOut (0, 255, 0, 0, 0, 30);
 
-                ClearMemory ();
+                SD_StopDigitized ();
 
                 LevelCompleted ();              // do the intermission
 #ifdef SEGA_SATURN
@@ -1717,9 +1717,9 @@ startplayloop:
                 {
                     died = true;                    // don't "get psyched!"
 
-                    VW_FadeOut ();
+                    VL_FadeOut (0, 255, 0, 0, 0, 30);
 
-                    ClearMemory ();
+                    SD_StopDigitized ();
 
                     CheckHighScore (gamestate.score,gamestate.mapon+1);
 #ifndef JAPAN
@@ -1735,9 +1735,9 @@ startplayloop:
                 {
                     died = true;                    // don't "get psyched!"
 
-                    VW_FadeOut ();
+                    VL_FadeOut ( 0, 255, 0, 0, 0, 30);
 
-                    ClearMemory ();
+                    SD_StopDigitized  ();
 
                     CheckHighScore (gamestate.score,gamestate.mapon+1);
 #ifndef JAPAN
@@ -1794,7 +1794,7 @@ startplayloop:
                         gamestate.mapon++;
 #ifdef AUTOINTER
                 IntermissionScreens(); // Intermission Screen If file exists
-                ClearMemory();
+                SD_StopDigitized();
                 DrawPlayScreen();
 #endif
                 break;
@@ -1806,11 +1806,11 @@ startplayloop:
                 if (gamestate.lives > -1)
 #ifdef AUTOINTER
                 {
-                    VW_FadeOut();
+                    VL_FadeOut(0, 255, 0, 0, 0, 30);
                     ClearMScreen();
-                    ClearMemory();
+                    SD_StopDigitized();
                     IntermissionScreens(); // Intermission Text
-                    ClearMemory();
+                    SD_StopDigitized();
                     DrawPlayScreen();
 #endif
                     break;                          // more lives left
@@ -1818,11 +1818,11 @@ startplayloop:
                 }
 #endif
 
-                VW_FadeOut ();
+                VL_FadeOut (0, 255, 0, 0, 0, 30);
                 if(screenHeight % 200 != 0)
                     VL_ClearScreen(0);
 
-                ClearMemory ();
+                SD_StopDigitized ();
 
                 CheckHighScore (gamestate.score,gamestate.mapon+1);
 #ifndef JAPAN
@@ -1834,15 +1834,15 @@ startplayloop:
             case ex_victorious:
                 if(viewsize == 21) DrawPlayScreen();
 #ifndef SPEAR
-                VW_FadeOut ();
+                VL_FadeOut (0, 255, 0, 0, 0, 30);
 #else
                 VL_FadeOut (0,255,0,17,17,300);
 #endif
-                ClearMemory ();
+                SD_StopDigitized ();
 
                 Victory ();
 
-                ClearMemory ();
+                SD_StopDigitized ();
 
                 CheckHighScore (gamestate.score,gamestate.mapon+1);
 #ifndef JAPAN
@@ -1854,7 +1854,7 @@ startplayloop:
             default:
                 if(viewsize == 21) DrawPlayScreen();
 #ifndef SEGA_SATURN
-                ClearMemory ();
+                SD_StopDigitized ();
 #endif
                 break;
         }
