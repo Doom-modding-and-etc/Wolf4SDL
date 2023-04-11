@@ -969,8 +969,9 @@ void CheckKeys (void)
         SD_StopDigitized();
         CA_CacheGrChunks();
         ClearSplitVWB();
-        //VW_ScreenToScreen(screen, screenBuffer, 80, 160);
-
+#ifdef NOT_YET
+        VL_ScreenToScreen(screen, screenBuffer);
+#endif
         if (noclip)
             Message("No clipping ON");
         else
@@ -1122,7 +1123,7 @@ void CheckKeys (void)
     {
         int lastoffs = StopMusic();
         VWB_DrawPic (16 * 8, 80 - 2 * 8, PAUSEDPIC);
-        VW_UpdateScreen();
+        VH_UpdateScreen(screenBuffer);
         IN_Ack ();
         Paused = false;
         ContinueMusic(lastoffs);
@@ -1141,7 +1142,7 @@ void CheckKeys (void)
 #endif
            scan == sc_F9 || scan == sc_F7 || scan == sc_F8)     // pop up quit dialog
     {
-        ClearMemory ();
+        SD_StopDigitized ();
         ClearSplitVWB ();
         US_ControlPanel (scan);
 
@@ -1162,14 +1163,14 @@ void CheckKeys (void)
 #ifdef SAVE_GAME_SCREENSHOT
         VL_SetSaveGameSlot();
 #endif
-        ClearMemory ();
-        VW_FadeOut ();
+        SD_StopDigitized ();
+        VL_FadeOut (0, 255, 0, 0, 0, 30);
 
         US_ControlPanel (buttonstate[bt_esc] ? sc_Escape : scan);
 
         SETFONTCOLOR (0, 15);
         IN_ClearKeysDown ();
-        VW_FadeOut();
+        VL_FadeOut (0, 255, 0, 0, 0, 30);
         if(viewsize != 21)
             DrawPlayScreen ();
         if (!startgame && !loadedgame)
@@ -2166,18 +2167,18 @@ void PlayLoop (void)
 
         UpdateSoundLoc();      // JAB
         if (screenfaded)
-            VW_FadeIn();
+            VL_FadeIn(0, 255, gamepal, 30);
 
         // Do single stepping outside of the game logic loop
         if (singlestep)
         {
-            VW_WaitVBL(singlestep);
+            VL_WaitVBL(singlestep);
             lasttimecount = GetTimeCount();
         }
 
         // Extra vbls left outside of game logic
         if (extravbls)
-            VW_WaitVBL(extravbls);
+            VL_WaitVBL(extravbls);
     }
 #else
     do
@@ -2218,7 +2219,7 @@ void PlayLoop (void)
         UpdateSoundLoc ();      // JAB
 #endif
         if (screenfaded)
-            VW_FadeIn ();
+            VL_FadeIn (0, 255, gamepal, 30);
 
         CheckKeys ();
 
@@ -2228,11 +2229,11 @@ void PlayLoop (void)
 #ifndef SEGA_SATURN
         if (singlestep)
         {
-            VW_WaitVBL (singlestep);
+            VL_WaitVBL (singlestep);
             lasttimecount = GetTimeCount();
         }
         if (extravbls)
-            VW_WaitVBL (extravbls);
+            VL_WaitVBL (extravbls);
 #endif
         if (demoplayback)
         {

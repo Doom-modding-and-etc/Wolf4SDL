@@ -481,7 +481,7 @@ void DiskFlopAnim(int x,int y)
     if (!x && !y)
         return;
     VWB_DrawPic(x,y,C_DISKLOADING1PIC+which);
-    if (!usedoublebuffering) VW_UpdateScreen();    // ADDEDFIX 4 - Chris
+    if (!usedoublebuffering) VH_UpdateScreen(screenBuffer);    // ADDEDFIX 4 - Chris
     which^=1;
 }
 
@@ -844,11 +844,11 @@ void ShutdownId (void)
 #elif defined(PS2)
     ps2_printf("IN_Shutdown DONE\n", 4);
 #endif        
-    VW_Shutdown ();
+    VL_Shutdown ();
 #if defined(SWITCH) || defined (N3DS)
-    printf("VW_Shutdown DONE\n");
+    printf("VL_Shutdown DONE\n");
 #elif defined(PS2)
-    ps2_printf("VW_Shutdown DONE\n", 4);
+    ps2_printf("VL_Shutdown DONE\n", 4);
 #endif    
     CA_Shutdown ();
 #if defined(SWITCH) || defined (N3DS)
@@ -1032,9 +1032,9 @@ void FinishSignon (void)
 {
 #ifndef SPEAR
 #ifdef SAVE_GAME_SCREENSHOT
-    VW_Bar(0, 189, 300, 11, VL_GetPixel(screen, 0, 0));
+    VL_Bar(0, 189, 300, 11, VL_GetPixel(screen, 0, 0));
 #else
-    VW_Bar(0, 189, 300, 11, VL_GetPixel(0, 0));
+    VL_Bar(0, 189, 300, 11, VL_GetPixel(0, 0));
 #endif
     WindowX = 0;
     WindowW = 320;
@@ -1051,16 +1051,16 @@ void FinishSignon (void)
 
     #endif
 
-    VW_UpdateScreen();
+    VH_UpdateScreen(screenBuffer);
 
     if (!param_nowait)
         IN_Ack ();
 
     #ifndef JAPAN
 #ifdef SAVE_GAME_SCREENSHOT
-    VW_Bar(0, 189, 300, 11, VL_GetPixel(screen, 0, 0));
+    VL_Bar(0, 189, 300, 11, VL_GetPixel(screen, 0, 0));
 #else
-    VW_Bar(0, 189, 300, 11, VL_GetPixel(0, 0));
+    VL_Bar(0, 189, 300, 11, VL_GetPixel(0, 0));
 #endif
     PrintY = 190;
     SETFONTCOLOR(10,4);
@@ -1071,12 +1071,12 @@ void FinishSignon (void)
     US_CPrint ("Working...");
     #endif
 
-    VW_UpdateScreen();
+    VH_UpdateScreen(screenBuffer);
     #endif
 
     SETFONTCOLOR(0,15);
 #else
-    VW_UpdateScreen();
+    VH_UpdateScreen(screenBuffer);
 
     if (!param_nowait)
         VW_WaitVBL(3*70);
@@ -1348,7 +1348,7 @@ void DoJukebox(void)
     US_CPrint ("Robert's Jukebox");
 
     SETFONTCOLOR (TEXTCOLOR,BKGDCOLOR);
-    VW_UpdateScreen();
+    VH_UpdateScreen(screenBuffer);
     MenuFadeIn();
 
     do
@@ -1362,7 +1362,7 @@ void DoJukebox(void)
             StartCPMusic(songs[start + which]);
             MusicMenu[start+which].active = 2;
             DrawMenu (&MusicItems,&MusicMenu[start]);
-            VW_UpdateScreen();
+            VH_UpdateScreen(screenBuffer);
             lastsong = which;
         }
     } while(which>=0);
@@ -1423,6 +1423,7 @@ static void InitGame()
 #endif
 
     numJoysticks = SDL_NumJoysticks();
+    
     if(param_joystickindex && (param_joystickindex < -1 || param_joystickindex >= numJoysticks))
     {
         if(!numJoysticks)
@@ -1438,9 +1439,8 @@ static void InitGame()
 
     SignonScreen ();
 
-	VW_UpdateScreen();
+    VH_UpdateScreen(screenBuffer);
 
-    VH_Startup ();
 #if defined(SWITCH) || defined (N3DS) 
     printf("VH Started DONE\n");
 #elif defined(PS2)
@@ -1596,7 +1596,7 @@ void ShowViewSize (int width)
     {
         viewwidth = screenWidth;
         viewheight = screenHeight;
-        VWB_BarScaledCoord (0, 0, screenWidth, screenHeight, 0);
+        VL_BarScaledCoord (0, 0, screenWidth, screenHeight, 0);
     }
     else if(width == 20)
     {
@@ -1798,31 +1798,31 @@ static void DemoLoop()
             VWB_DrawPic (0,0,TITLE1PIC);
             VWB_DrawPic (0,80,TITLE2PIC);
 
-            VW_UpdateScreen ();
+            VH_UpdateScreen (screenBuffer);
             VL_FadeIn(0,255,pal,30);
 #else
             VWB_DrawPic (0,0,TITLEPIC);
-            VW_UpdateScreen ();
-            VW_FadeIn();
+            VH_UpdateScreen(screenBuffer);
+            VL_FadeIn(0, 255, gamepal, 30);
 #endif
             if (IN_UserInput(TickBase*15))
                 break;
-            VW_FadeOut();
+            VL_FadeOut (0, 255, 0, 0, 0, 30);
 //
 // credits page
 //
             VWB_DrawPic (0,0,CREDITSPIC);
-            VW_UpdateScreen();
-            VW_FadeIn ();
+            VH_UpdateScreen(screenBuffer);
+            VL_FadeIn (0, 255, gamepal, 30);
             if (IN_UserInput(TickBase*10))
                 break;
-            VW_FadeOut ();
+            VL_FadeOut (0, 255, 0, 0, 0, 30);
 //
 // high scores
 //
             DrawHighScores ();
-            VW_UpdateScreen ();
-            VW_FadeIn ();
+            VH_UpdateScreen (screenBuffer);
+            VL_FadeIn (0, 255, gamepal, 30);
 
             if (IN_UserInput(TickBase*10))
                 break;
@@ -1842,7 +1842,7 @@ static void DemoLoop()
 #endif
             if (playstate == ex_abort)
                 break;
-            VW_FadeOut();
+            VL_FadeOut (0, 255, 0, 0, 0, 30);
             if(screenHeight % 200 != 0)
                 VL_ClearScreen(0);
 #ifndef MENU_DEMOS
@@ -1850,7 +1850,7 @@ static void DemoLoop()
 #endif
         }
 
-        VW_FadeOut ();
+        VL_FadeOut (0, 255, 0, 0, 0, 30);
 
 #ifdef DEBUGKEYS
         if (Keyboard(sc_Tab) && param_debugmode)
@@ -1866,7 +1866,7 @@ static void DemoLoop()
             GameLoop ();
             if(!param_nowait)
             {
-                VW_FadeOut();
+                VL_FadeOut (0, 255, 0, 0, 0, 30);
                 StartCPMusic(INTROSONG);
             }
         }

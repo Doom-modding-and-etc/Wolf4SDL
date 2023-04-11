@@ -1290,7 +1290,7 @@ void Cmd_Use(void)
 
             ClearMemory();
 
-            VW_FadeOut();
+            VL_FadeOut(0, 255, 0, 0, 0, 30);
 
             switch (statptr->shapenum)
             {

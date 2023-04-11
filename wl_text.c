@@ -178,7 +178,7 @@ void TimedPicCommand (void)
     // update the screen, and wait for time delay
     //
 #if !defined(USE_SPRIES) && !defined(USE_SPRITES)
-    VW_UpdateScreen ();
+    VH_UpdateScreen (screenBuffer);
 #endif
     //
     // wait for time
@@ -686,7 +686,7 @@ void ShowArticle (char *article)
             PageLayout (true);
 #endif
 #if !defined(USE_SPRITES) && !defined(SEGA_SATURN)
-            VW_UpdateScreen ();
+            VH_UpdateScreen (screenBuffer);
 #endif
             if (firstpage)
             {
@@ -796,7 +796,7 @@ void HelpScreens (void)
 
 #ifdef JAPAN
     ShowArticle (0);
-    VW_FadeOut();
+    VL_FadeOut (0, 255, 0, 0, 0, 30);
     FreeMusic ();
 #else
 
@@ -814,7 +814,7 @@ void HelpScreens (void)
     free(layout);
 #endif
 
-    VW_FadeOut();
+    VL_FadeOut(0, 255, 0, 0, 0, 30);
 
     FreeMusic ();
 #endif
@@ -839,7 +839,7 @@ void EndText (void)
 #ifdef JAPAN
     ShowArticle(gamestate.episode + 1);
 
-    VW_FadeOut();
+    VL_FadeOut(0, 255, 0, 0, 0, 30);
 
     SETFONTCOLOR(0,15);
     IN_ClearKeysDown();
@@ -870,7 +870,7 @@ void EndText (void)
 #endif
 
 
-    VW_FadeOut();
+    VL_FadeOut(0, 255, 0, 0, 0, 30);
     SETFONTCOLOR(0,15);
     IN_ClearKeysDown();
     if (MousePresent && IN_IsInputGrabbed())
@@ -913,7 +913,7 @@ void IntermissionScreens(void)
     if (CA_LoadFile(intfilename, &layout))
     {
         ShowArticle((char*)layout);
-        VW_FadeOut();
+        VL_FadeOut(0, 255, 0, 0, 0, 30);
         free(layout);
         FreeMusic();
     }
@@ -954,7 +954,7 @@ void LogDiscScreens(char* choice)
 #endif
         free(layout);
 
-        VW_FadeOut();
+        VL_FadeOut(0, 255, 0, 0, 0, 30);
     }
 }
 #endif
