@@ -1,6 +1,6 @@
 //PS2_DATA_LOADER.H
 #include "../../wl_def.h"
-#ifdef PS2
+
 #include "ps2_mc.h"
 
 //General Structure for the ps2 dualshock joystick.
@@ -39,5 +39,3 @@ extern SDL_Surface *loader_image;
 extern SDL_Surface *loader_icn;
 //extern SDL_Surface *loader_image_btPresses[btMax];
 extern SDL_Window *loader_window;
-
-#endif

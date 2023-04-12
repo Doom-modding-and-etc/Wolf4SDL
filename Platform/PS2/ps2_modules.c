@@ -1,5 +1,9 @@
 #include "ps2_modules.h"
-#ifdef PS2
+
+#include <kernel.h>
+#include <stdio.h>
+#include <ps2_all_drivers.h>
+
 
 #ifdef RESET_IOP
 void resetIOP()
@@ -53,4 +57,3 @@ void PS2_Unload_Modules()
 	deinit_hdd_driver(false);
 	deinit_fileXio_driver();
 }
-#endif

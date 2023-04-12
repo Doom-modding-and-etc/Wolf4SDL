@@ -196,7 +196,7 @@ void VWB_Plot (int x, int y, int color)
 void VWB_Hlin (int x1, int x2, int y, int color)
 {
     if(scaleFactor == 1)
-    	VW_Hlin(x1,x2,y,color);
+    	VWB_HlinScaledCoord(x1,x2,y,color);
     else
         VL_Bar(x1, y, x2-x1+1, 1, color);
 }
@@ -204,7 +204,7 @@ void VWB_Hlin (int x1, int x2, int y, int color)
 void VWB_Vlin (int y1, int y2, int x, int color)
 {
     if(scaleFactor == 1)
-        VW_Vlin(y1,y2,x,color);
+        VWB_VlinScaledCoord(y1,y2,x,color);
     else
         VL_Bar(x, y1, 1, y2-y1+1, color);
 }
@@ -393,7 +393,7 @@ boolean FizzleFade (SDL_Surface *source, int x1, int y1,
             //            SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
             //            SDL_UpdateRect(screen, 0, 0, 0, 0);
 #endif
-// xxx			VGAClearScreen(); // vbt : maj du fond d'écran
+// xxx			VGAClearScreen(); // vbt : maj du fond d'ï¿½cran
             //curSurface = source;
             VL_BarScaledCoord(x1, y1, width, height, color); // vbt ajout
             return true;

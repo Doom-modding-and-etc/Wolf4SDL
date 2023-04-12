@@ -98,11 +98,11 @@
 #define DATADIR "/3ds/wolf4sdl/wolf3d/"
 #elif defined(PS2)
 #if defined(USB)
-#define DATADIR "mass0://data"
+#define DATADIR "mass0:/data"
 #elif defined(HDD)
-#define DATADIR "hdd0://data"
+#define DATADIR "hdd0:/data"
 #else
-#define DATADIR "host0://data"
+#define DATADIR "host0:/data"
 #endif
 #elif defined(SEGA_SATURN)
 #define DATADIR "/data"

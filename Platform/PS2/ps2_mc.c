@@ -1,13 +1,15 @@
 //PS2_MC.C
-#ifdef PS2
+
+
 #include "ps2_mc.h"
-#include "wl_def.h"
+
+#include <libmc.h>
 #include <stdio.h>
 
-bool PS2_Init_Memory_Card_Type()
+boolean PS2_Init_Memory_Card_Type()
 {
     int ret;
-    bool success = true; //Initialize the memory;
+    boolean success = true; //Initialize the memory;
 
 #ifdef USE_MC
     ret = mcInit(MC_TYPE_MC);
@@ -164,5 +166,3 @@ void PS2_Unload_Memory_Card()
 {
     mcClose(0);
 }
-
-#endif

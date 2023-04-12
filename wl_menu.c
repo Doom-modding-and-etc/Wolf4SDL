@@ -4758,16 +4758,17 @@ CheckForEpisodes (void)
     struct stat statbuf;
 
     // On Linux like systems, the configdir defaults to $HOME/.wolf4sdl
-#if !defined(_WIN32) && !defined(_arch_dreamcast) && !defined(SWITCH) && !defined (N3DS) && defined(PS2) && defined(SEGA_SATURN) 
+#if !defined(_WIN32) && !defined(_arch_dreamcast) && !defined(SWITCH) && !defined (N3DS) && !defined(PS2) && defined(SEGA_SATURN) 
     if(configdir[0] == 0)
     {
         // Set config location to home directory for multi-user support
         char *homedir = getenv("HOME");
+        const char *homedir = "/.wolf4sdl";
         if(homedir == NULL)
         {
             Quit("Your $HOME directory is not defined. You must set this before playing.");
         }
-        #define WOLFDIR "/.wolf4sdl"
+        
         if(strlen(homedir) + sizeof(WOLFDIR) > sizeof(configdir))
         {
             Quit("Your $HOME directory path is too long. It cannot be used for saving games.");
@@ -4781,7 +4782,7 @@ CheckForEpisodes (void)
         // Ensure config directory exists and create if necessary
         if(stat(configdir, &statbuf) != 0)
         {
-#ifdef _WIN32
+#ifdef _MSC_VER
             if(_mkdir(configdir) != 0)
 #else
             if(mkdir(configdir, 0755) != 0)
@@ -4835,7 +4836,7 @@ printf("\"========================================================\"");
 #ifdef JAPAN
 #ifdef JAPDEMO
 #if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN)
-    if(!stat(DATADIR "vswap.wj1", &statbuf))
+    if(!stat(DATADIR"vswap.wj1", &statbuf))
 #else    
     if (!stat("vswap.wj1", &statbuf))
 #endif    
@@ -4868,7 +4869,7 @@ printf("\"========================================================\"");
 //
 #ifdef UPLOAD
 #if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN)
-    if (!stat(DATADIR "vswap.wl1", &statbuf)) 
+    if (!stat(DATADIR"vswap.wl1", &statbuf)) 
     {
     
     }
@@ -4884,7 +4885,7 @@ printf("\"========================================================\"");
 #else
 #ifndef SPEAR
 #if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) 
-    if(!stat(DATADIR "vswap.wl6", &statbuf))
+    if(!stat(DATADIR"vswap.wl6", &statbuf))
 #else
     if(!stat("vswap.wl6", &statbuf))
 #endif
@@ -4901,7 +4902,7 @@ printf("\"========================================================\"");
     else
     {
 #if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN)  
-        if(!stat(DATADIR "vswap.wl3", &statbuf))
+        if(!stat(DATADIR"vswap.wl3", &statbuf))
 #else 
         if (!stat("vswap.wl3", &statbuf))
 #endif
@@ -4912,7 +4913,7 @@ printf("\"========================================================\"");
         else
         {
 #if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN)          
-            if (!stat(DATADIR "vswap.wl1", &statbuf))
+            if (!stat(DATADIR"vswap.wl1", &statbuf))
 #else
             if (!stat("vswap.wl1", &statbuf))
 #endif

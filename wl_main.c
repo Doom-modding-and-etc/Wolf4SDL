@@ -824,44 +824,44 @@ void ShutdownId (void)
 #if defined(SWITCH) || defined (N3DS)
     printf("US_Shutdown DONE\n");
 #elif defined(PS2)
-    ps2_printf ("US_Shutdown DONE\n",  4);
+    ps2_printf_XY("US_Shutdown DONE\n",  4, 20, 20);
 #endif
     SD_Shutdown ();
 #if defined(SWITCH) || defined (N3DS)
     printf("SD_Shutdown DONE\n");
 #elif defined(PS2)
-    ps2_printf ("SD_Shutdown DONE\n", 4);
+    ps2_printf_XY ("SD_Shutdown DONE\n", 4, 20, 20);
 #endif    
     PM_Shutdown ();
 #if defined(SWITCH) || defined (N3DS)
     printf("PM_Shutdown DONE\n");
 #elif defined(PS2)
-    ps2_printf("PM_Shutdown DONE\n", 4);
+    ps2_printf_XY("PM_Shutdown DONE\n", 4, 20, 20);
 #endif    
     IN_Shutdown ();
 #if defined(SWITCH) || defined (N3DS)
     printf("IN_Shutdown DONE\n");
 #elif defined(PS2)
-    ps2_printf("IN_Shutdown DONE\n", 4);
+    ps2_printf_XY("IN_Shutdown DONE\n", 4, 20, 20);
 #endif        
     VL_Shutdown ();
 #if defined(SWITCH) || defined (N3DS)
     printf("VL_Shutdown DONE\n");
 #elif defined(PS2)
-    ps2_printf("VL_Shutdown DONE\n", 4);
+    ps2_printf_XY("VL_Shutdown DONE\n", 4, 20, 20);
 #endif    
     CA_Shutdown ();
 #if defined(SWITCH) || defined (N3DS)
     printf("CA_Shutdown DONE\n");
 #elif defined(PS2)
-    ps2_printf("CA_Shutdown DONE\n", 4);
+    ps2_printf_XY("CA_Shutdown DONE\n", 4, 20, 20);
 #endif    
 #if defined(GP2X_940)
     GP2X_Shutdown();
 #endif
 #if defined(PS2)
     PS2_Shutdown();
-    ps2_printf("PS2_Shutdown DONE\n", 4);
+    ps2_printf_XY("PS2_Shutdown DONE\n", 4, 20, 20);
 #endif
 }
 
@@ -1391,7 +1391,7 @@ static void InitGame()
 #if defined (SWITCH) || defined (N3DS) 
     printf("GAME START");
 #elif defined(PS2)
-    ps2_printf("GAME START", 4);
+    ps2_printf_XY("GAME START", 4, 20, 20);
 #endif
     // initialize SDL
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
@@ -1416,9 +1416,9 @@ static void InitGame()
 #endif
 #elif defined (PS2)
 #if SDL_MAJOR_VERSION == 1 
-    ps2_printf("SDL1.2 Initialized", 4);   
+    ps2_printf_XY("SDL1.2 Initialized", 4, 20, 20);   
 #elif SDL_MAJOR_VERSION == 2
-    ps2_printf("SDL2 Initialized", 4);
+    ps2_printf_XY("SDL2 Initialized", 4, 20, 20);
 #endif
 #endif
 
@@ -1444,37 +1444,37 @@ static void InitGame()
 #if defined(SWITCH) || defined (N3DS) 
     printf("VH Started DONE\n");
 #elif defined(PS2)
-    ps2_printf("VH Started DONE\n", 5);
+    ps2_printf_XY("VH Started DONE\n", 5, 20, 20);
 #endif
     IN_Startup ();
 #if defined(SWITCH) || defined (N3DS) 
     printf("IN Started DONE\n");
 #elif defined(PS2)
-    ps2_printf("IN Started DONE\n", 4);
+    ps2_printf_XY("IN Started DONE\n", 4, 20, 20);
 #endif
     PM_Startup ();
 #if defined(SWITCH) || defined (N3DS) 
     printf("PM Started");
 #elif defined(PS2)
-    ps2_printf("PM Started DONE\n", 4);
+    ps2_printf_XY("PM Started DONE\n", 4, 20, 20);
 #endif
     SD_Startup ();
 #if defined(SWITCH) || defined (N3DS)
     printf("SD Started DONE\n");
 #elif defined(PS2)
-    ps2_printf("SD Started DONE\n", 4);
+    ps2_printf_XY("SD Started DONE\n", 4, 20, 20);
 #endif
     CA_Startup ();
 #if defined(SWITCH) || defined (N3DS) 
     printf("CA Started");
 #elif defined(PS2)
-    ps2_printf("CA Started DONE\n", 4);
+    ps2_printf_XY("CA Started DONE\n", 4, 20, 20);
 #endif
     US_Startup ();
 #if defined(SWITCH) || defined (N3DS)
     printf("US Started");
 #elif defined(PS2)
-    ps2_printf("US Started DONE\n", 4);
+    ps2_printf_XY("US Started DONE\n", 4);
 #endif
 #ifdef LWUDPCOMMS
     UDP_startup();
@@ -2188,7 +2188,7 @@ int main (int argc, char *argv[])
 #if defined(SWITCH) || defined (N3DS) 
     printf("CheckParameters() DONE\n");
 #elif defined(PS2)
-    ps2_printf("CheckParameters DONE\n", 4);
+    ps2_printf_XY("CheckParameters DONE\n", 4, 20, 20);
 #endif
 #ifdef PS2
     PS2_Started();
@@ -2197,19 +2197,19 @@ int main (int argc, char *argv[])
 #if defined(SWITCH) || defined (N3DS) 
     printf("CheckForEpisodes() DONE\n");
 #elif defined(PS2)
-    ps2_printf("ChceckForEpisodes() DONE\n" , 4);
+    ps2_printf_XY("ChceckForEpisodes() DONE\n" , 4, 20, 20);
 #endif
     InitGame();
 #if defined(SWITCH) || defined (N3DS)
     printf("InitGame() DONE\n");
 #elif defined(PS2)
-    ps2_printf("InitGame()", 4);
+    ps2_printf_XY("InitGame()", 4, 20, 20);
 #endif
     DemoLoop();
 #if defined(SWITCH) || defined (N3DS)
     printf("DemoLoop() DONE\n");
 #elif defined(PS2)
-    ps2_printf("DemoLoop() DONE\n", 4);
+    ps2_printf_XY("DemoLoop() DONE\n", 4, 20, 20);
 #endif
     Quit("Demo loop exited???");
     return 1;

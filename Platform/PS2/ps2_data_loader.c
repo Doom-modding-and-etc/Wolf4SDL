@@ -1,6 +1,6 @@
 //PS2_DATA_LOADER.C
 #include "ps2_data_loader.h"
-#ifdef PS2
+
 #include <ps2_printf.h>
 #include <SDL_mixer.h>
 
@@ -117,5 +117,3 @@ void PS2_SDL_Shutdown()
     SDL_Quit();
     SDL_DestroyWindow(window);
 }
-
-#endif
