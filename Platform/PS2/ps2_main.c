@@ -27,7 +27,7 @@ void PS2_Started()
 
 void PS2_Shutdown()
 {
-    ps2_printf_XY("Undloadind SBV Patches", 4, 20, 20);
+    ps2_printf_XY("Unloading SBV Patches", 4, 20, 20);
     PS2_Unload_RPC_Patches();
     ps2_printf_XY("Unloading MC...", 4, 20, 20);
     PS2_Unload_Memory_Card();

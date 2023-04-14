@@ -1441,6 +1441,7 @@ static void InitGame()
 
     VH_UpdateScreen(screenBuffer);
 
+    VH_Startup();
 #if defined(SWITCH) || defined (N3DS) 
     printf("VH Started DONE\n");
 #elif defined(PS2)
@@ -2183,15 +2184,15 @@ int main (int argc, char *argv[])
     DC_Main();
     DC_CheckParameters();
 #else
+#ifdef PS2
+    PS2_Started();
+#endif
     CheckParameters(argc, argv);
 #endif
 #if defined(SWITCH) || defined (N3DS) 
     printf("CheckParameters() DONE\n");
 #elif defined(PS2)
     ps2_printf_XY("CheckParameters DONE\n", 4, 20, 20);
-#endif
-#ifdef PS2
-    PS2_Started();
 #endif
     CheckForEpisodes(); 
 #if defined(SWITCH) || defined (N3DS) 

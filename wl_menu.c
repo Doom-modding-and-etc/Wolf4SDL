@@ -11,13 +11,8 @@
     #include <io.h>
     #include <direct.h>
 #elif defined(PS2)
-#ifdef USE_SYS
-    #include <sys/fcntl.h>
-    #include <sys/unistd.h>
-#else
     #include <fcntl.h>
     #include <unistd.h>
-#endif
     #include <dirent.h>
 #else
     #include <unistd.h>
