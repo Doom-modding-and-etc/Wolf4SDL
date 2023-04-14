@@ -31,7 +31,7 @@
 
 static	boolean		US_Started;
 
-		void		(*USL_MeasureString)(const char *, unsigned short *, unsigned short *) = VW_MeasurePropString;
+		void		(*USL_MeasureString)(const char *, unsigned short *, unsigned short *) = VL_MeasurePropString;
 		void		(*USL_DrawString)(const char *) = VWB_DrawPropString;
 
 #ifndef SEGA_SATURN
@@ -752,7 +752,7 @@ US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 		if (cursorvis)
 			USL_XORICursor(x,y,s,cursor);
 
-		VH_UpdateScreen(screenBuffer);
+		VL_UpdateScreen(screenBuffer);
 	}
 
 	if (cursorvis)
@@ -763,7 +763,7 @@ US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 		py = y;
 		USL_DrawString(olds);
 	}
-	VH_UpdateScreen(screenBuffer);
+	VL_UpdateScreen(screenBuffer);
 
 	IN_ClearKeysDown();
 	return(result);

@@ -519,7 +519,7 @@ US_ControlPanel (ScanCode scancode)
             VWB_DrawPic (0, 0, IDGUYS1PIC);
             VWB_DrawPic (0, 80, IDGUYS2PIC);
 
-            VH_UpdateScreen (screenBuffer); 
+            VL_UpdateScreen (screenBuffer); 
             
             VL_ConvertPalette(grsegs[IDGUYSPALETTE], pal, 256);
             VL_FadeIn (0, 255, pal, 30);
@@ -665,7 +665,7 @@ DrawMainMenu (void)
     }
 
     DrawMenu (&MainItems, &MainMenu[0]);
-    VH_UpdateScreen (screenBuffer);
+    VL_UpdateScreen (screenBuffer);
 }
 
 #ifndef GOODTIMES
@@ -710,7 +710,7 @@ BossKey (void)
     PrintY = 1;
 
     US_Print ("C>");
-    VH_UpdateScreen(screenBuffer);
+    VL_UpdateScreen(screenBuffer);
 
     i = 0;
     lastBlinkTime = GetTimeCount();
@@ -732,7 +732,7 @@ BossKey (void)
 
             PrintX = 14;
             US_Print ("_");
-            VH_UpdateScreen (screenBuffer);
+            VL_UpdateScreen (screenBuffer);
 
             i ^= 1;
             lastBlinkTime = GetTimeCount();
@@ -881,7 +881,7 @@ int CP_CheckQuick(ScanCode scancode)
 #endif
 #endif
             {
-                VH_UpdateScreen (screenBuffer);
+                VL_UpdateScreen (screenBuffer);
                 SD_MusicOff ();
                 SD_StopSound ();
                 MenuFadeOut ();
@@ -947,7 +947,7 @@ CP_ViewScores ()
 #endif
 
     DrawHighScores ();
-    VH_UpdateScreen (screenBuffer);
+    VL_UpdateScreen (screenBuffer);
     MenuFadeIn ();
     fontnumber = 1;
 
@@ -1121,7 +1121,7 @@ DrawNewEpisode (void)
     for (i = 0; i < 6; i++)
         VWB_DrawPic (NE_X + 32, NE_Y + i * 26, C_EPISODE1PIC + i);
 
-    VH_UpdateScreen (screenBuffer);
+    VL_UpdateScreen (screenBuffer);
     MenuFadeIn ();
     WaitKeyUp ();
 }
@@ -1159,7 +1159,7 @@ DrawNewGame (void)
 
     DrawMenu (&NewItems, &NewMenu[0]);
     DrawNewGameDiff (NewItems.curpos);
-    VH_UpdateScreen (screenBuffer);
+    VL_UpdateScreen (screenBuffer);
     MenuFadeIn ();
     WaitKeyUp ();
 }
@@ -1262,7 +1262,7 @@ DrawSoundVols(boolean curmode)
     DrawSliderBox(60, 72, soundvol, 2, 10, 10, (curmode) ? TEXTCOLOR : READCOLOR);
     DrawSliderBox(60, 122, musicvol, 2, 10, 10, (curmode) ? READCOLOR : TEXTCOLOR);
 
-    VH_UpdateScreen(screenBuffer);
+    VL_UpdateScreen(screenBuffer);
 }
 
 
@@ -1500,7 +1500,7 @@ DrawSoundMenu(void)
         }
 
     DrawMenuGun(&SndItems);
-    VH_UpdateScreen(screenBuffer);
+    VL_UpdateScreen(screenBuffer);
 }
 #else
 int
@@ -1719,7 +1719,7 @@ DrawSoundMenu (void)
         }
 
     DrawMenuGun (&SndItems);
-    VH_UpdateScreen (screenBuffer);
+    VL_UpdateScreen (screenBuffer);
 }
 #endif
 
@@ -1749,7 +1749,7 @@ DrawLSAction (int which)
     else
         US_Print (STR_SAVING "...");
 
-    VH_UpdateScreen (screenBuffer);
+    VL_UpdateScreen (screenBuffer);
 }
 
 
@@ -1908,7 +1908,7 @@ DrawLoadSaveScreen (int loadsave)
         PrintLSEntry (i, TEXTCOLOR);
 
     DrawMenu (&LSItems, &LSMenu[0]);
-    VH_UpdateScreen (screenBuffer);
+    VL_UpdateScreen (screenBuffer);
     MenuFadeIn ();
     WaitKeyUp ();
 }
@@ -2158,7 +2158,7 @@ CP_SaveGame (int quick)
                         VL_LatchToScreenScaledCoord(bmpSurface, 0, 0, LSP_W, LSP_H, LSP_X * scaleFactor, LSP_Y * scaleFactor);
                     }
 #endif
-                    VH_UpdateScreen (screenBuffer);
+                    VL_UpdateScreen (screenBuffer);
                 }
             }
 
@@ -2171,7 +2171,7 @@ CP_SaveGame (int quick)
             if (!SaveGamesAvail[which])
                 VWB_Bar (LSM_X + LSItems.indent + 1, LSM_Y + which * 13 + 1,
                          LSM_W - LSItems.indent - 16, 10, BKGDCOLOR);
-            VH_UpdateScreen (screenBuffer);
+            VL_UpdateScreen (screenBuffer);
 
             if (US_LineInput
                 (LSM_X + LSItems.indent + 2, LSM_Y + which * 13 + 1, input, input, true, 31,
@@ -2227,7 +2227,7 @@ CP_SaveGame (int quick)
                     VL_LatchToScreenScaledCoord(bmpSurface, 0, 0, LSP_W, LSP_H, LSP_X * scaleFactor, LSP_Y * scaleFactor);
                 }
 #endif
-                VH_UpdateScreen (screenBuffer);
+                VL_UpdateScreen (screenBuffer);
                 SD_PlaySound (ESCPRESSEDSND);
                 continue;
             }
@@ -2350,7 +2350,7 @@ DrawMouseSens (void)
     DrawOutline (60 + 20 * mouseadjustment, 97, 20, 10, 0, READCOLOR);
     VWB_Bar (61 + 20 * mouseadjustment, 98, 19, 9, READHCOLOR);
 
-    VH_UpdateScreen (screenBuffer);
+    VL_UpdateScreen (screenBuffer);
     MenuFadeIn ();
 }
 
@@ -2383,7 +2383,7 @@ MouseSensitivity ()
                     DrawOutline (60, 97, 200, 10, 0, HIGHLIGHT);
                     DrawOutline (60 + 20 * mouseadjustment, 97, 20, 10, 0, READCOLOR);
                     VWB_Bar (61 + 20 * mouseadjustment, 98, 19, 9, READHCOLOR);
-                    VH_UpdateScreen (screenBuffer);
+                    VL_UpdateScreen (screenBuffer);
                     SD_PlaySound (MOVEGUN1SND);
                     TicDelay(20);
                 }
@@ -2398,7 +2398,7 @@ MouseSensitivity ()
                     DrawOutline (60, 97, 200, 10, 0, HIGHLIGHT);
                     DrawOutline (60 + 20 * mouseadjustment, 97, 20, 10, 0, READCOLOR);
                     VWB_Bar (61 + 20 * mouseadjustment, 98, 19, 9, READHCOLOR);
-                    VH_UpdateScreen (screenBuffer);
+                    VL_UpdateScreen (screenBuffer);
                     SD_PlaySound (MOVEGUN1SND);
                     TicDelay(20);
                 }
@@ -2510,7 +2510,7 @@ DrawCtlScreen (void)
     }
 
     DrawMenuGun (&CtlItems);
-    VH_UpdateScreen (screenBuffer);
+    VL_UpdateScreen (screenBuffer);
 }
 
 
@@ -2697,7 +2697,7 @@ EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*Prin
             PrintRtn (which);
             PrintX = x;
             SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
-            VH_UpdateScreen (screenBuffer);
+            VL_UpdateScreen (screenBuffer);
             WaitKeyUp ();
             redraw = 0;
         }
@@ -2755,7 +2755,7 @@ EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*Prin
                     }
                     tick ^= 1;
                     lastFlashTime = GetTimeCount();
-                    VH_UpdateScreen (screenBuffer);
+                    VL_UpdateScreen (screenBuffer);
                 }
                 else SDL_Delay(5);
 
@@ -3249,7 +3249,7 @@ DrawCustomScreen (void)
             }
 
 
-    VH_UpdateScreen (screenBuffer);
+    VL_UpdateScreen (screenBuffer);
     MenuFadeIn ();
 }
 
@@ -3441,7 +3441,7 @@ CP_ChangeView ()
                     newview = 4;
                 if(newview >= 19) DrawChangeView(newview);
                 else ShowViewSize (newview);
-                VH_UpdateScreen (screenBuffer);
+                VL_UpdateScreen (screenBuffer);
                 SD_PlaySound (HITWALLSND);
                 TicDelay (10);
                 break;
@@ -3455,7 +3455,7 @@ CP_ChangeView ()
                     DrawChangeView(newview);
                 }
                 else ShowViewSize (newview);
-                VH_UpdateScreen (screenBuffer);
+                VL_UpdateScreen (screenBuffer);
                 SD_PlaySound (HITWALLSND);
                 TicDelay (10);
                 break;
@@ -3516,7 +3516,7 @@ DrawChangeView (int view)
     US_CPrint (STR_SIZE2 "\n");
     US_CPrint (STR_SIZE3);
 #endif
-    VH_UpdateScreen (screenBuffer);
+    VL_UpdateScreen (screenBuffer);
 }
 
 
@@ -3540,7 +3540,7 @@ CP_Quit ()
 
 #endif
     {
-        VH_UpdateScreen(screenBuffer);
+        VL_UpdateScreen(screenBuffer);
         SD_MusicOff ();
         SD_StopSound ();
         MenuFadeOut ();
@@ -3813,7 +3813,7 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
     //
     if (routine)
         routine (which);
-    VH_UpdateScreen (screenBuffer);
+    VL_UpdateScreen (screenBuffer);
 
     shape = C_CURSOR1PIC;
     timer = 8;
@@ -3843,7 +3843,7 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
             VWB_DrawPic (x, y, shape);
             if (routine)
                 routine (which);
-            VH_UpdateScreen (screenBuffer);
+            VL_UpdateScreen (screenBuffer);
         }
         else SDL_Delay(5);
 
@@ -3992,7 +3992,7 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
 
     if (routine)
         routine (which);
-    VH_UpdateScreen (screenBuffer);
+    VL_UpdateScreen (screenBuffer);
 
     item_i->curpos = which;
 
@@ -4031,7 +4031,7 @@ EraseGun (CP_iteminfo * item_i, CP_itemtype * items, int x, int y, int which)
     PrintX = item_i->x + item_i->indent;
     PrintY = item_i->y + which * 13;
     US_Print ((items + which)->string);
-    VH_UpdateScreen (screenBuffer);
+    VL_UpdateScreen (screenBuffer);
 }
 
 
@@ -4042,7 +4042,7 @@ void
 DrawHalfStep (int x, int y)
 {
     VWB_DrawPic (x, y, C_CURSOR1PIC);
-    VH_UpdateScreen (screenBuffer);
+    VL_UpdateScreen (screenBuffer);
     SD_PlaySound (MOVEGUN1SND);
     SDL_Delay (8 * 100 / 7);
 }
@@ -4068,7 +4068,7 @@ DrawGun (CP_iteminfo * item_i, CP_itemtype * items, int x, int *y, int which, in
     //
     if (routine)
         routine (which);
-    VH_UpdateScreen (screenBuffer);
+    VL_UpdateScreen (screenBuffer);
     SD_PlaySound (MOVEGUN2SND);
 }
 
@@ -4299,7 +4299,7 @@ Confirm (const char *string)
                     PrintY = y;
                     US_Print ("_");
             }
-            VH_UpdateScreen (screenBuffer);
+            VL_UpdateScreen (screenBuffer);
             tick ^= 1;
             lastBlinkTime = GetTimeCount();
         }
@@ -4348,7 +4348,7 @@ GetYorN (int x, int y, int pic)
     soundnames whichsnd[2] = { ESCPRESSEDSND, SHOOTSND };
 
     VWB_DrawPic (x * 8, y * 8, pic);
-    VH_UpdateScreen (screenBuffer);
+    VL_UpdateScreen (screenBuffer);
     IN_ClearKeysDown ();
 
     do
@@ -4427,7 +4427,7 @@ Message (const char *string)
     DrawOutline (WindowX - 5, PrintY - 5, mw + 10, h + 10, 0, HIGHLIGHT);
     SETFONTCOLOR (0, TEXTCOLOR);
     US_Print (string);
-    VH_UpdateScreen (screenBuffer);
+    VL_UpdateScreen (screenBuffer);
 }
 
 ////////////////////////////////////////////////////////////////////

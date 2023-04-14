@@ -172,7 +172,7 @@ SetSoundLoc(fixed gx,fixed gy)
     US_PrintSigned(leftchannel);
     US_Print(",");
     US_PrintSigned(rightchannel);
-    VH_UpdateScreen(screenBuffer);
+    VL_UpdateScreen(screenBuffer);
 #endif
 }
 
@@ -1226,7 +1226,7 @@ void FinishDemoRecord (void)
     fontnumber=0;
     SETFONTCOLOR(0,15);
     US_Print(" Demo number (0-9): ");
-    VH_UpdateScreen(screenBuffer);
+    VL_UpdateScreen(screenBuffer);
 
     if (US_LineInput (px,py,str,NULL,true,1,0))
     {
@@ -1270,7 +1270,7 @@ void RecordDemo (void)
 #else
     US_Print("  Demo which level(1-21): "); maps = 21;
 #endif
-    VH_UpdateScreen(screenBuffer);
+    VL_UpdateScreen(screenBuffer);
     VL_FadeIn (0, 255, gamepal, 30);
     esc = !US_LineInput (px,py,str,NULL,true,2,0);
     if (esc)
@@ -1302,7 +1302,7 @@ void RecordDemo (void)
     SetupGameLevel ();
     StartMusic ();
 
-    if(usedoublebuffering) VH_UpdateScreen(screenBuffer);
+    if(usedoublebuffering) VL_UpdateScreen(screenBuffer);
     fizzlein = true;
 
     PlayLoop ();
@@ -1501,7 +1501,7 @@ void Died (void)
     //
     FinishPaletteShifts ();
 
-    if(usedoublebuffering) VH_UpdateScreen(screenBuffer);
+    if(usedoublebuffering) VL_UpdateScreen(screenBuffer);
 
     VL_BarScaledCoord (viewscreenx,viewscreeny,viewwidth,viewheight,4);
 

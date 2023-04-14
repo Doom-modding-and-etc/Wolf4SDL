@@ -481,7 +481,7 @@ void DiskFlopAnim(int x,int y)
     if (!x && !y)
         return;
     VWB_DrawPic(x,y,C_DISKLOADING1PIC+which);
-    if (!usedoublebuffering) VH_UpdateScreen(screenBuffer);    // ADDEDFIX 4 - Chris
+    if (!usedoublebuffering) VL_UpdateScreen(screenBuffer);    // ADDEDFIX 4 - Chris
     which^=1;
 }
 
@@ -1051,7 +1051,7 @@ void FinishSignon (void)
 
     #endif
 
-    VH_UpdateScreen(screenBuffer);
+    VL_UpdateScreen(screenBuffer);
 
     if (!param_nowait)
         IN_Ack ();
@@ -1071,12 +1071,12 @@ void FinishSignon (void)
     US_CPrint ("Working...");
     #endif
 
-    VH_UpdateScreen(screenBuffer);
+    VL_UpdateScreen(screenBuffer);
     #endif
 
     SETFONTCOLOR(0,15);
 #else
-    VH_UpdateScreen(screenBuffer);
+    VL_UpdateScreen(screenBuffer);
 
     if (!param_nowait)
         VW_WaitVBL(3*70);
@@ -1348,7 +1348,7 @@ void DoJukebox(void)
     US_CPrint ("Robert's Jukebox");
 
     SETFONTCOLOR (TEXTCOLOR,BKGDCOLOR);
-    VH_UpdateScreen(screenBuffer);
+    VL_UpdateScreen(screenBuffer);
     MenuFadeIn();
 
     do
@@ -1362,7 +1362,7 @@ void DoJukebox(void)
             StartCPMusic(songs[start + which]);
             MusicMenu[start+which].active = 2;
             DrawMenu (&MusicItems,&MusicMenu[start]);
-            VH_UpdateScreen(screenBuffer);
+            VL_UpdateScreen(screenBuffer);
             lastsong = which;
         }
     } while(which>=0);
@@ -1439,13 +1439,13 @@ static void InitGame()
 
     SignonScreen ();
 
-    VH_UpdateScreen(screenBuffer);
+    //VL_UpdateScreen(screenBuffer);
 
-    VH_Startup();
+    VL_Startup();
 #if defined(SWITCH) || defined (N3DS) 
-    printf("VH Started DONE\n");
+    printf("VL Started DONE\n");
 #elif defined(PS2)
-    ps2_printf_XY("VH Started DONE\n", 5, 20, 20);
+    ps2_printf_XY("VL Started DONE\n", 5, 20, 20);
 #endif
     IN_Startup ();
 #if defined(SWITCH) || defined (N3DS) 
@@ -1799,11 +1799,11 @@ static void DemoLoop()
             VWB_DrawPic (0,0,TITLE1PIC);
             VWB_DrawPic (0,80,TITLE2PIC);
 
-            VH_UpdateScreen (screenBuffer);
+            VL_UpdateScreen (screenBuffer);
             VL_FadeIn(0,255,pal,30);
 #else
             VWB_DrawPic (0,0,TITLEPIC);
-            VH_UpdateScreen(screenBuffer);
+            VL_UpdateScreen(screenBuffer);
             VL_FadeIn(0, 255, gamepal, 30);
 #endif
             if (IN_UserInput(TickBase*15))
@@ -1813,7 +1813,7 @@ static void DemoLoop()
 // credits page
 //
             VWB_DrawPic (0,0,CREDITSPIC);
-            VH_UpdateScreen(screenBuffer);
+            VL_UpdateScreen(screenBuffer);
             VL_FadeIn (0, 255, gamepal, 30);
             if (IN_UserInput(TickBase*10))
                 break;
@@ -1822,7 +1822,7 @@ static void DemoLoop()
 // high scores
 //
             DrawHighScores ();
-            VH_UpdateScreen (screenBuffer);
+            VL_UpdateScreen (screenBuffer);
             VL_FadeIn (0, 255, gamepal, 30);
 
             if (IN_UserInput(TickBase*10))

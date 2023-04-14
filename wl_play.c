@@ -1123,7 +1123,7 @@ void CheckKeys (void)
     {
         int lastoffs = StopMusic();
         VWB_DrawPic (16 * 8, 80 - 2 * 8, PAUSEDPIC);
-        VH_UpdateScreen(screenBuffer);
+        VL_UpdateScreen(screenBuffer);
         IN_Ack ();
         Paused = false;
         ContinueMusic(lastoffs);
@@ -1227,7 +1227,7 @@ void CheckKeys (void)
     {
         ScanCode key;
         DrawFullmap();
-        VH_UpdateScreen(screen);
+        VL_UpdateScreen(screen);
 
         IN_ClearKeysDown();
         key = IN_WaitForKey();

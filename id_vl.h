@@ -62,6 +62,18 @@ extern SDL_Color gamepal[256];
 
 void VL_DePlaneVGA (unsigned char *source, int width, int height);
 void VL_SetVGAPlaneMode (void);
+
+void VL_Startup();
+void VL_UpdateScreen(SDL_Surface* surface);
+#if SDL_MAJOR_VERSION == 2
+void VL_RenderTextures();
+#endif
+
+void	VL_MeasurePropString(const char* string, unsigned short* width, unsigned short* height);
+
+boolean FizzleFade(SDL_Surface* source, int x1, int y1,
+	unsigned width, unsigned height, unsigned frames, boolean abortable);
+
 void VL_Shutdown (void);
 
 void VL_ConvertPalette(unsigned char *srcpal, SDL_Color *destpal, int numColors);

@@ -178,7 +178,7 @@ void TimedPicCommand (void)
     // update the screen, and wait for time delay
     //
 #if !defined(USE_SPRIES) && !defined(USE_SPRITES)
-    VH_UpdateScreen (screenBuffer);
+    VL_UpdateScreen (screenBuffer);
 #endif
     //
     // wait for time
@@ -390,7 +390,7 @@ void HandleWord (void)
     //
     // see if it fits on this line
     //
-    VW_MeasurePropString (wword,&wwidth,&wheight);
+    VL_MeasurePropString (wword,&wwidth,&wheight);
 
     while (px+wwidth > (int) rightmargin[rowon])
     {
@@ -686,7 +686,7 @@ void ShowArticle (char *article)
             PageLayout (true);
 #endif
 #if !defined(USE_SPRITES) && !defined(SEGA_SATURN)
-            VH_UpdateScreen (screenBuffer);
+            VL_UpdateScreen (screenBuffer);
 #endif
             if (firstpage)
             {
