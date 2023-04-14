@@ -101,6 +101,8 @@
 #define DATADIR "mass0:/data"
 #elif defined(HDD)
 #define DATADIR "hdd0:/data"
+#elif defined(CDFS) /*vd support*/
+#define DATADIR "cdrom:/data"
 #else
 #define DATADIR "host0:/data"
 #endif
