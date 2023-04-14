@@ -986,13 +986,21 @@ void SDL_IMFMusicPlayer(void *udata, unsigned char *stream, int len)
         {
             if(numreadysamples<sampleslen)
             {
+#if defined(USE_DOSBOX) || defined(USE_NUKEDOPL)
+                YM3812UpdateOne(&oplChip, stream16, numreadysamples);
+#else
                 YM3812UpdateOne(oplChip, stream16, numreadysamples);
+#endif
                 stream16 += numreadysamples*2;
                 sampleslen -= numreadysamples;
             }
             else
             {
+#if defined(USE_DOSBOX) || defined(USE_NUKEDOPL)
+                YM3812UpdateOne(&oplChip, stream16, sampleslen);
+#else
                 YM3812UpdateOne(oplChip, stream16, sampleslen);
+#endif
                 numreadysamples -= sampleslen;
                 return;
             }
@@ -1093,17 +1101,14 @@ SD_Startup(void)
     // Init music
 
     samplesPerMusicTick = param_samplerate / 700;    // SDL_t0FastAsmService played at 700Hz
-#ifdef USE_DOSBOX
-    YM3812Init(1, 3579545, param_samplerate);
-#else
     if(YM3812Init(1,3579545,param_samplerate))
     {
         printf("Unable to create virtual OPL!!\n");
     }
-#endif
+
     for(i=1;i<0xf6;i++)
-        YM3812Write(oplChip,i,0);
-    YM3812Write(oplChip,1,0x20); // Set WSE=1
+        alOut(i,0);
+    alOut(1,0x20); // Set WSE=1
 //    YM3812Write(0,8,0); // Set CSM=0 & SEL=0		 // already set in for statement
     Mix_HookMusic(SDL_IMFMusicPlayer, 0);
     Mix_ChannelFinished(SD_ChannelFinished);

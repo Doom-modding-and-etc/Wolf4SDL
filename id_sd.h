@@ -10,8 +10,13 @@
 #include "version.h"
 
 #ifndef VIEASM
-
+#if defined(USE_DOSBOX) || defined(USE_NUKEDOPL)
+#define alOut(n,b) YM3812Write(&oplChip, n, b)
+#else
 #define alOut(n,b) YM3812Write(oplChip, n, b)
+#endif
+
+
 #define TickBase        70      // 70Hz per tick - used as a base for timer 0
 
 typedef enum
