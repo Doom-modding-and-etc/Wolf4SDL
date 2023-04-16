@@ -3,7 +3,7 @@
 /*
 =============================================================================
 ID_UDP.C NOTE:
-This file was ported to C by me André Guilherme to match the Wolf4SDL Coding
+This file was ported to C by me AndrÃ© Guilherme to match the Wolf4SDL Coding
 standards, this is an very early stage and you may be can find bugs.
 You will need a SDL_net library to make this file work properly
 =============================================================================
@@ -398,9 +398,8 @@ boolean is(PollState x)
         }
         return *it;
     }
-
-
 */
+
 void UDP_startup(void)
 {
     size_t i = 0;
@@ -572,9 +571,7 @@ void parsePacket(DataLayer *rxProtState)
 
    stream.dataLayer = rxProtState;
 }
-
-#ifdef WIP 
-
+/*
 void handleStateReceived(DataLayer &rxProtState)
 {
     const int uid = rxProtState.sendingPeerUid;
@@ -669,7 +666,8 @@ getmore:
         }
     }
 }
-#endif
+*/
+
 void UDP_finishRxWaitPoll(void)
 {
     udp_tics += tics;
