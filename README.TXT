@@ -33,7 +33,7 @@ Main features:
        - Hakchi 
 	   
  - AdLib sounds and music:
-      This port includes the OPL2 emulator from MAME and DOSBOX plus OPL3 Emulator also from nukedyt, so you can not only
+      This port includes the OPL2 emulator from MAME and DOSBOX plus OPL3 Emulator also nukedyt, so you can not only
       hear the AdLib sounds but also music without any AdLib-compatible
       soundcard in near to perfect quality!
 
