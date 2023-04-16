@@ -2049,4 +2049,4 @@ void DrawFullmap(void)
     VL_UnlockSurface(screenBuffer);
     scr = NULL;
 }
-#endif
+#endif //AUTOMAP

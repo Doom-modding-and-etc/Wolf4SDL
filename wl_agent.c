@@ -376,7 +376,7 @@ void StatusDrawPic(unsigned x, unsigned y, unsigned picnum)
 }
 
 #ifdef SEGA_SATURN
-inline void StatusDrawPicIndirect(unsigned x, unsigned y, unsigned picnum)
+wlinline void StatusDrawPicIndirect(unsigned x, unsigned y, unsigned picnum)
 {
 #if SATURN_WIDTH == 352	
     LatchDrawPicScaledCoordIndirect(2 + (screenWidth - scaleFactor * SATURN_WIDTH) / 16 + scaleFactor * x,
@@ -484,7 +484,7 @@ static void LatchNumber(int x, int y, unsigned width, int number)
 {
     unsigned length, c;
     char    str[20];
-    w3sltoa(number, str, 10);
+    wlltoa(number, str, 10);
     length = (unsigned)strlen(str);
 
     while (length < width)
@@ -1842,3 +1842,4 @@ void    T_Player(objtype* ob)
     player->tilex = (short)(player->x >> TILESHIFT);                // scale to tile values
     player->tiley = (short)(player->y >> TILESHIFT);
 }
+//WL_AGENT_C

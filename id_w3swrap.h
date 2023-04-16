@@ -119,4 +119,4 @@ int w3svsnprintf(char* buf, size_t buf_len, const char* s, va_list args);
 
 #ifdef C99
 #define M_PI 3.14159265358979323846
-#endif
+#endif //C89

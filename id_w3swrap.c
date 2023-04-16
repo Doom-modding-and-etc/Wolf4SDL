@@ -80,4 +80,4 @@ char* w3sstrupr( char* s )
   return s;
 }
 
-#endif
+#endif //_WIN32

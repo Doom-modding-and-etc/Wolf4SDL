@@ -1847,3 +1847,4 @@ boolean SightPlayer (objtype *ob)
 
     return true;
 }
+//WL_STATE_C

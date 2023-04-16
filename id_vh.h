@@ -61,4 +61,4 @@ void VWB_Vlin (int y1, int y2, int x, int color);
 #define VWB_VlinScaledCoord(y,z,x,c)	VL_Vlin(x,y,(z)-(y)+1,c)
 
 
-#endif
+#endif //__ID_VH_H_

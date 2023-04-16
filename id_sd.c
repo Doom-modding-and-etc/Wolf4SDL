@@ -293,10 +293,10 @@ extern 	void sound_cdda(int track, int loop);
 short	load_adx(char* filename);
 #endif
 
-void Delay (unsigned int wolfticks)
+wlinline void Delay (size_t wolfticks)
 {
     if (wolfticks > 0)
-        SDL_Delay ((wolfticks * 100) / 7);
+        SDL_Delay (((unsigned int)wolfticks * 100) / 7);
 }
 
 #ifndef SEGA_SATURN

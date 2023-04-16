@@ -159,7 +159,7 @@ extern  int             DigiChannel[];
 
 
 // Function prototypes
-void            Delay (unsigned int wolfticks);
+extern wlinline void  Delay (size_t wolfticks);
 
 extern  void    SD_Startup(void),
                 SD_Shutdown(void);
@@ -195,4 +195,4 @@ extern  void	SD_PrepareSound(int which);
 extern  int     SD_PlayDigitized(unsigned short which,int leftpos,int rightpos);
 extern  void    SD_StopDigitized(void);
 #endif
-#endif
+#endif //__ID_SD_H_

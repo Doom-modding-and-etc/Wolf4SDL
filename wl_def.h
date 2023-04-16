@@ -158,7 +158,7 @@ typedef long long int64_t;
 #endif
 #endif
 
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) && !defined(__GNUC__)
 #define O_BINARY 0
 #endif
 
@@ -175,6 +175,14 @@ typedef struct
 }Rect;
 
 void Quit(const char* errorStr, ...);
+
+#if defined(_MSC_VER)
+#define wlinline __inline
+#elif defined(__GNUC__)
+#define wlinline __inline__
+#else
+#define wlinline 
+#endif
 
 #include "id_pm.h"
 #ifdef VIEASM
@@ -195,8 +203,6 @@ void Quit(const char* errorStr, ...);
 #endif
 #include "wl_menu.h"
 #include "wl_utils.h"
-
-
 
 /*
 =============================================================================
@@ -366,18 +372,18 @@ enum
 
 #ifdef SEGA_SATURN
 typedef unsigned long long mapbitmap[MAPSIZE];
-static inline boolean getmapbit(mapbitmap m, int x, int y)
+static wlinline boolean getmapbit(mapbitmap m, int x, int y)
 {
     return (m[x] & (1ull << y)) != 0;
 }
-static inline void setmapbit(mapbitmap m, int x, int y)
+static wlinline void setmapbit(mapbitmap m, int x, int y)
 {
     m[x] |= (1ull << y);
 }
 
 extern mapbitmap objactor;
 
-static inline void clearmapbit(mapbitmap m, int x, int y)
+static wlinline void clearmapbit(mapbitmap m, int x, int y)
 {
     m[x] &= ~(1ull << y);
 }
@@ -1233,7 +1239,7 @@ extern  boolean     spearflag;
 void    SetupGameLevel(void);
 void    GameLoop(void);
 #ifdef SEGA_SATURN
-inline void DrawPlayBorder(void);
+wlinline void DrawPlayBorder(void);
 #else
 void    DrawPlayBorder(void);
 #endif
@@ -1794,37 +1800,4 @@ void GetFlatTextures(void);
 void DrawParallax(void);
 #endif
 
-/*
-===================
-=
-= w3sitoa
-=
-= converts a char to a int value.
-=
-===================
-*/
-
-static char* w3sitoa(int value, char* string, int radix)
-{
-    w3ssnprintf(string, radix, "%d", value);
-    return string;
-}
-
-/*
-===================
-=
-= w3sitoa
-=
-= converts a char to a long value.
-=
-===================
-*/
-
-static char* w3sltoa(long value, char* string, int radix)
-{
-    w3ssnprintf(string, radix, "%ld", value);
-    return string;
-}
-
-
-#endif
+#endif //__WL_DEF_H_

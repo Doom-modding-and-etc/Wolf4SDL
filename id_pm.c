@@ -366,7 +366,7 @@ void PM_Shutdown (void)
 ==================
 */
 
-unsigned int PM_GetPageSize (int page)
+wlinline unsigned int PM_GetPageSize (int page)
 {
     if (page < 0 || page >= ChunksInFile)
         Quit ("PM_GetPageSize: Invalid page request: %i",page);
@@ -385,7 +385,7 @@ unsigned int PM_GetPageSize (int page)
 ==================
 */
 
-unsigned char *PM_GetPage (int page)
+wlinline unsigned char *PM_GetPage (int page)
 {
 #ifndef SEGA_SATURN
     if (page < 0 || page >= ChunksInFile)
@@ -405,19 +405,19 @@ unsigned char *PM_GetPage (int page)
 ==================
 */
 #ifndef SEGA_SATURN
-unsigned char *PM_GetPageEnd (void)
+wlinline unsigned char *PM_GetPageEnd (void)
 {
     return PMPages[ChunksInFile];
 }
 #endif
 
 #ifdef SEGA_SATURN
-static inline unsigned char* PM_GetTexture(int wallpic)
+wlinline unsigned char* PM_GetTexture(int wallpic)
 {
     return PM_GetPage(wallpic);
 }
 
-static inline unsigned short* PM_GetSprite(int shapenum)
+wlinline unsigned short* PM_GetSprite(int shapenum)
 {
     // correct alignment is enforced by PM_Startup()
     return (unsigned short*)(void*)PM_GetPage(PMSpriteStart + shapenum);

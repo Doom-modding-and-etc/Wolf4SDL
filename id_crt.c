@@ -160,4 +160,4 @@ void CRT_Screenshot(void)
     CRT_FreeScreenshot(correctAspect, incorrectAspect);
 }
 
-#endif
+#endif //CRT

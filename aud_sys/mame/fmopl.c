@@ -2589,4 +2589,4 @@ void Y8950SetKeyboardHandler(int which,OPL_PORTHANDLER_W KeyboardHandler_w,OPL_P
 	OPL->keyboard_param = param;
 }
 
-#endif
+#endif //BUILD_Y8950

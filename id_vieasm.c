@@ -847,4 +847,4 @@ void Delay(int wolfticks)
         SDL_Delay(wolfticks * 1000 / TickBase);
 }
 
-#endif
+#endif //VIEASM

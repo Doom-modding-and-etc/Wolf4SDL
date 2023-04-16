@@ -25,11 +25,12 @@ struct iovec
      void *iov_base;     
      size_t iov_len;    
 };
-#elif !defined(_arch_dreamcast)
+#elif !defined(_arch_dreamcast) 
+#ifdef DEVCPP
+    #include <io.h>
+#else
     #include <sys/uio.h>
-    #include <unistd.h>
-#else	
-    #include <sys/uio.h>
+#endif
     #include <unistd.h>
 #endif
 #endif

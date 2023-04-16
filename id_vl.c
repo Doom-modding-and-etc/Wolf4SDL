@@ -1374,7 +1374,7 @@ void VL_Vlin (int x, int y, int height, int color)
 =================
 */
 
-void VL_Bar (int x, int y, int width, int height, int color)
+wlinline void VL_Bar (int x, int y, int width, int height, int color)
 {
     VL_BarScaledCoord(scaleFactor*x, scaleFactor*y,scaleFactor*width, scaleFactor*height, color);
 }
@@ -1471,7 +1471,7 @@ void VL_DePlaneVGA (unsigned char *source, int width, int height)
 =================
 */
 
-void VL_MemToScreen (unsigned char *source, int width, int height, int x, int y)
+wlinline void VL_MemToScreen (unsigned char *source, int width, int height, int x, int y)
 {
     VL_MemToScreenScaledCoord(source, width, height, scaleFactor*x, scaleFactor*y);
 }

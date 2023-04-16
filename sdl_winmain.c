@@ -400,4 +400,4 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, LPSTR szCmdLine, int sw)
 }
 
 #endif  // _WIN32
-#endif
+#endif //SDL_WINMAIN_C

@@ -49,5 +49,5 @@ void CRT_DestroyTexture(SDL_Texture* texture1, SDL_Texture* texture2);
 void CRT_BlitImage(SDL_Surface* img1src, SDL_Surface* img1dst, SDL_Surface* img2src, SDL_Surface* img2dst);
 
 #endif
-#endif
+#endif //ID_CRT_H
 

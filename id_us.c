@@ -192,7 +192,7 @@ void
 US_PrintSigned(int n)
 {
 	char	buffer[32];
-	US_Print(w3sltoa(n,buffer,10));
+	US_Print(wlltoa((long)n,buffer,10));
 }
 
 ///////////////////////////////////////////////////////////////////////////

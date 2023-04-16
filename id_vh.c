@@ -247,4 +247,4 @@ void LoadLatchMem(void)
     //free(surf1);
     //surf1=NULL;
 }
-#endif
+#endif //ID_VH_C

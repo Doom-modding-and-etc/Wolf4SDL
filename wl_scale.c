@@ -94,7 +94,7 @@ void ScaleLine (short x, short toppix, fixed fracstep, unsigned char* linesrc, u
 
 #ifdef SEGA_SATURN
 //==========================================================================
-inline void ScaleShapeDemo(int xcenter, int shapenum, unsigned width)
+wlinline void ScaleShapeDemo(int xcenter, int shapenum, unsigned width)
 {
     unsigned char* surfacePtr = (unsigned char*)PM_GetSprite(shapenum); // + ((0) * source->pitch) + 0;
     unsigned char* nextSurfacePtr = (unsigned char*)PM_GetSprite(shapenum + 1);
@@ -122,7 +122,7 @@ inline void ScaleShapeDemo(int xcenter, int shapenum, unsigned width)
     slSetSprite(&user_sprite, toFIXED(10));	// � remettre // ennemis et objets
     //--------------------------------------------------------------------------------------------	
 }
-inline void ScaleShape(int xcenter, int shapenum, unsigned width)
+wlinline void ScaleShape(int xcenter, int shapenum, unsigned width)
 {
     unsigned scalel, pixwidth;
 

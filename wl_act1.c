@@ -1222,4 +1222,4 @@ void MovePWalls (void)
 
     pwallpos = (pwallstate/2)&63;
 }
-#endif
+#endif //SEGA_SATURN

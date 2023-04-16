@@ -4789,7 +4789,11 @@ CheckForEpisodes (void)
 #ifdef _MSC_VER
             if(_mkdir(configdir) != 0)
 #else
+#ifdef DEVCPP
+            if(mkdir(configdir) != 0)
+#else
             if(mkdir(configdir, 0755) != 0)
+#endif
 #endif
             {
                 Quit("The configuration directory \"%s\" could not be created.", configdir);

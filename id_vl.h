@@ -100,13 +100,13 @@ void VL_Plot            (int x, int y, int color);
 void VL_Hlin            (unsigned x, unsigned y, unsigned width, int color);
 void VL_Vlin            (int x, int y, int height, int color);
 void VL_BarScaledCoord  (int scx, int scy, int scwidth, int scheight, int color);
-void VL_Bar             (int x, int y, int width, int height, int color);
+extern wlinline void VL_Bar             (int x, int y, int width, int height, int color);
 
 void VL_ScreenToScreen          (SDL_Surface *source, SDL_Surface *dest);
 void VL_MemToScreenScaledCoord  (unsigned char *source, int width, int height, int scx, int scy);
 void VL_MemToScreenScaledCoord2  (unsigned char *source, int origwidth, int origheight, int srcx, int srcy,
                                     int destx, int desty, int width, int height);
 
-void VL_MemToScreen (unsigned char *source, int width, int height, int x, int y);
+extern wlinline void VL_MemToScreen (unsigned char *source, int width, int height, int x, int y);
 
 #endif
