@@ -309,7 +309,7 @@ void HandleCommand (void)
 
 void NewLine (void)
 {
-    char    ch;
+    
 
     if (++rowon == TEXTROWS)
     {
@@ -321,7 +321,7 @@ void NewLine (void)
         {
             if (*text == '^')
             {
-                ch = toupper(*(text+1));
+                char ch = toupper(*(text+1));
                 if (ch == 'E' || ch == 'P')
                 {
                     layoutdone = true;
@@ -429,7 +429,8 @@ void HandleWord (void)
 
 void PageLayout (boolean shownumber)
 {
-    int     i,oldfontcolor;
+    int     i;
+    unsigned char oldfontcolor;
     char    ch;
 
     oldfontcolor = fontcolor;
@@ -757,7 +758,7 @@ void ShowArticle (char *article)
     } while (LastScan != sc_Escape && !ci.button1);
 
     IN_ClearKeysDown ();
-    fontnumber = oldfontnumber;
+    fontnumber = (int)oldfontnumber;
 }
 
 
@@ -849,8 +850,6 @@ void EndText (void)
     FreeMusic ();
 #endif
 #else
-
-
 
 #ifdef ARTSEXTERN
     artnum = endextern+gamestate.episode;

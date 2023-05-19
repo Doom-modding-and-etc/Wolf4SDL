@@ -4,6 +4,7 @@
 	Version="7.10"
 	Name="Wolf4SDLx"
 	ProjectGUID="{8AB60A56-0087-47D4-B23C-82EA19F7C814}"
+	RootNamespace="Wolf4SDLx"
 	Keyword="XboxProj">
 	<Platforms>
 		<Platform
@@ -30,7 +31,7 @@
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="FALSE"
 				DebugInformationFormat="4"
-				CompileAs="1"/>
+				CompileAs="2"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -175,8 +176,8 @@
 				FavorSizeOrSpeed="2"
 				OmitFramePointers="TRUE"
 				OptimizeForProcessor="2"
-				AdditionalIncludeDirectories="&quot;C:\Documents and Settings\WOLF3S\SDL2\SDL2&quot;"
-				PreprocessorDefinitions="NDEBUG;_XBOX;_CRT_SECURE_NO_WARNINGS;C89;USE_INLINE_C89;_USE_MATH_DEFINES;XBOX"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)../3rdparty/Xbox/Include/SDL&quot;;&quot;$(SolutionDir)../Platform/Xbox/&quot;"
+				PreprocessorDefinitions="NDEBUG;_XBOX;_CRT_SECURE_NO_WARNINGS;C89;strcasecmp=stricmp;fopen=fopex;open=opex;mkdir=mkdix;unlink=unlinx;stat=stax;exit=exix;FindFirstFileA=FindFirstFilex;_USE_MATH_DEFINES;XBOX"
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
 				BufferSecurityCheck="TRUE"
@@ -188,16 +189,16 @@
 				WarnAsError="FALSE"
 				Detect64BitPortabilityProblems="FALSE"
 				DebugInformationFormat="3"
-				CompileAs="1"/>
+				CompileAs="0"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xapilib.lib d3d8.lib d3dx8.lib xgraphics.lib dsound.lib dmusic.lib xacteng.lib xsndtrk.lib xvoice.lib xonlines.lib xboxkrnl.lib libSDL2x.lib libSDL2x_mixer.lib"
+				AdditionalDependencies="xapilib.lib d3d8.lib d3dx8.lib xgraphics.lib dsound.lib dmusic.lib xacteng.lib xsndtrk.lib xvoice.lib xonlines.lib xboxkrnl.lib libSDLx.lib libSmpegX.lib SDL_Config.lib"
 				OutputFile="$(OutDir)/$(ProjectName).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;C:\Documents and Settings\WOLF3S\SDL2&quot;"
-				GenerateDebugInformation="TRUE"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)../3rdparty/Xbox/Libs/&quot;"
+				GenerateDebugInformation="FALSE"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -215,7 +216,12 @@
 				Name="XboxDeploymentTool"/>
 			<Tool
 				Name="XboxImageTool"
-				StackSize="65536"/>
+				StackSize="65536"
+				NoLibWarn="TRUE"
+				TitleID="0xa600850"
+				TitleName="Wolf4SDL-X"
+				TitleImage="$(SolutionDir)../xbelogo/titleimage.xbx"
+				SaveGameImage="$(SolutionDir)../xbelogo/saveimage.xbx"/>
 		</Configuration>
 		<Configuration
 			Name="Release_LTCG|Xbox"
@@ -267,58 +273,6 @@
 				Name="XboxImageTool"
 				StackSize="65536"/>
 		</Configuration>
-		<Configuration
-			Name="SDL1.2|Xbox"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="1"
-			CharacterSet="2">
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="3"
-				OmitFramePointers="TRUE"
-				OptimizeForProcessor="2"
-				AdditionalIncludeDirectories="&quot;C:\Documents and Settings\WOLF3S\SDL1.2\include&quot;"
-				PreprocessorDefinitions="NDEBUG;_XBOX;C89;USE_INLINE_C89;_USE_MATH_DEFINES"
-				StringPooling="TRUE"
-				RuntimeLibrary="0"
-				BufferSecurityCheck="TRUE"
-				EnableFunctionLevelLinking="TRUE"
-				EnableEnhancedInstructionSet="1"
-				UsePrecompiledHeader="0"
-				PrecompiledHeaderFile="$(OutDir)/$(ProjectName).pch"
-				WarningLevel="3"
-				Detect64BitPortabilityProblems="FALSE"
-				DebugInformationFormat="3"
-				CompileAs="1"/>
-			<Tool
-				Name="VCCustomBuildTool"/>
-			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="xapilib.lib d3d8.lib d3dx8.lib xgraphics.lib dsound.lib dmusic.lib xacteng.lib xsndtrk.lib xvoice.lib xonlines.lib xboxkrnl.lib libSDLx.lib SDL_mixer.lib"
-				OutputFile="$(OutDir)/$(ProjectName).exe"
-				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;C:\Documents and Settings\WOLF3S\SDL1.2\&quot;"
-				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
-				SubSystem="2"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
-				OptimizeForWindows98="1"
-				SetChecksum="TRUE"
-				TargetMachine="1"/>
-			<Tool
-				Name="VCPostBuildEventTool"/>
-			<Tool
-				Name="VCPreBuildEventTool"/>
-			<Tool
-				Name="VCPreLinkEventTool"/>
-			<Tool
-				Name="XboxDeploymentTool"/>
-			<Tool
-				Name="XboxImageTool"
-				StackSize="65536"/>
-		</Configuration>
 	</Configurations>
 	<References>
 	</References>
@@ -330,456 +284,256 @@
 				Name="dosbox"
 				Filter="">
 				<File
-					RelativePath=".\aud_sys\dosbox\dbopl.c">
+					RelativePath="..\aud_sys\dosbox\dbopl.c">
+					<FileConfiguration
+						Name="Release|Xbox"
+						ExcludedFromBuild="TRUE">
+						<Tool
+							Name="VCCLCompilerTool"
+							CompileAs="0"/>
+					</FileConfiguration>
 				</File>
 				<File
-					RelativePath=".\aud_sys\dosbox\dbopl.h">
+					RelativePath="..\aud_sys\dosbox\dbopl.h">
 				</File>
 			</Filter>
 			<Filter
 				Name="mame"
 				Filter="">
 				<File
-					RelativePath=".\aud_sys\mame\fmopl.c">
+					RelativePath="..\aud_sys\mame\fmopl.c">
 				</File>
 				<File
-					RelativePath=".\aud_sys\mame\fmopl.h">
+					RelativePath="..\aud_sys\mame\fmopl.h">
 				</File>
 			</Filter>
 			<Filter
-				Name="opl3"
+				Name="nukedopl3"
 				Filter="">
 				<File
-					RelativePath=".\aud_sys\nuked-opl3\opl3.c">
-					<FileConfiguration
-						Name="Release|Xbox"
-						ExcludedFromBuild="TRUE">
-						<Tool
-							Name="VCCLCompilerTool"/>
-					</FileConfiguration>
+					RelativePath="..\aud_sys\nukedopl3\opl3.c">
 				</File>
 				<File
-					RelativePath=".\aud_sys\nuked-opl3\opl3.h">
-					<FileConfiguration
-						Name="Release|Xbox"
-						ExcludedFromBuild="TRUE">
-						<Tool
-							Name="VCCustomBuildTool"/>
-					</FileConfiguration>
+					RelativePath="..\aud_sys\nukedopl3\opl3.h">
 				</File>
 			</Filter>
 		</Filter>
 		<Filter
-			Name="3rdparty"
+			Name="xbox"
 			Filter="">
 			<File
-				RelativePath=".\3rdparty\fixedptc.h">
+				RelativePath="..\Platform\Xbox\fakeglx09.c">
 			</File>
-			<Filter
-				Name="lw_lib"
-				Filter="">
-				<File
-					RelativePath=".\3rdparty\lw_lib\lw_ai_enemy.c">
-				</File>
-				<File
-					RelativePath=".\3rdparty\lw_lib\lw_ai_enemy.h">
-				</File>
-				<File
-					RelativePath=".\3rdparty\lw_lib\lw_bres.c">
-				</File>
-				<File
-					RelativePath=".\3rdparty\lw_lib\lw_bres.h">
-				</File>
-				<File
-					RelativePath=".\3rdparty\lw_lib\lw_ctx.c">
-				</File>
-				<File
-					RelativePath=".\3rdparty\lw_lib\lw_ctx.h">
-				</File>
-				<File
-					RelativePath=".\3rdparty\lw_lib\lw_dict.h">
-				</File>
-				<File
-					RelativePath=".\3rdparty\lw_lib\lw_edit.c">
-				</File>
-				<File
-					RelativePath=".\3rdparty\lw_lib\lw_edit.h">
-				</File>
-				<File
-					RelativePath=".\3rdparty\lw_lib\lw_fs.c">
-				</File>
-				<File
-					RelativePath=".\3rdparty\lw_lib\lw_fs.h">
-				</File>
-				<File
-					RelativePath=".\3rdparty\lw_lib\lw_img.h">
-				</File>
-				<File
-					RelativePath=".\3rdparty\lw_lib\lw_intmap.h">
-				</File>
-				<File
-					RelativePath=".\3rdparty\lw_lib\lw_maptool.c">
-				</File>
-				<File
-					RelativePath=".\3rdparty\lw_lib\lw_maptool.h">
-				</File>
-				<File
-					RelativePath=".\3rdparty\lw_lib\lw_misc.c">
-				</File>
-				<File
-					RelativePath=".\3rdparty\lw_lib\lw_misc.h">
-				</File>
-				<File
-					RelativePath=".\3rdparty\lw_lib\lw_protmsg.c">
-				</File>
-				<File
-					RelativePath=".\3rdparty\lw_lib\lw_protmsg.h">
-				</File>
-				<File
-					RelativePath=".\3rdparty\lw_lib\lw_pwscan.c">
-				</File>
-				<File
-					RelativePath=".\3rdparty\lw_lib\lw_pwscan.h">
-				</File>
-				<File
-					RelativePath=".\3rdparty\lw_lib\lw_strmap.h">
-				</File>
-				<File
-					RelativePath=".\3rdparty\lw_lib\lw_vec.c">
-				</File>
-				<File
-					RelativePath=".\3rdparty\lw_lib\lw_vec.h">
-				</File>
-			</Filter>
-			<Filter
-				Name="uthash"
-				Filter="">
-				<File
-					RelativePath=".\3rdparty\uthash\utarray.h">
-				</File>
-				<File
-					RelativePath=".\3rdparty\uthash\uthash.h">
-				</File>
-				<File
-					RelativePath=".\3rdparty\uthash\utlist.h">
-				</File>
-				<File
-					RelativePath=".\3rdparty\uthash\utringbuffer.h">
-				</File>
-				<File
-					RelativePath=".\3rdparty\uthash\utstack.h">
-				</File>
-				<File
-					RelativePath=".\3rdparty\uthash\utstring.h">
-				</File>
-			</Filter>
-			<Filter
-				Name="wolfrad"
-				Filter="">
-				<File
-					RelativePath=".\3rdparty\wolfrad\wolfrad.c">
-				</File>
-				<File
-					RelativePath=".\3rdparty\wolfrad\wolfrad.h">
-				</File>
-				<File
-					RelativePath=".\3rdparty\wolfrad\wr_level.c">
-				</File>
-				<File
-					RelativePath=".\3rdparty\wolfrad\wr_level.h">
-				</File>
-				<File
-					RelativePath=".\3rdparty\wolfrad\wr_lightinfo.c">
-				</File>
-				<File
-					RelativePath=".\3rdparty\wolfrad\wr_lightinfo.h">
-				</File>
-				<File
-					RelativePath=".\3rdparty\wolfrad\wr_lightmap.c">
-				</File>
-				<File
-					RelativePath=".\3rdparty\wolfrad\wr_lightmap.h">
-				</File>
-				<File
-					RelativePath=".\3rdparty\wolfrad\wr_rad.c">
-				</File>
-				<File
-					RelativePath=".\3rdparty\wolfrad\wr_rad.h">
-				</File>
-				<File
-					RelativePath=".\3rdparty\wolfrad\wr_radmap.c">
-				</File>
-				<File
-					RelativePath=".\3rdparty\wolfrad\wr_radmap.h">
-				</File>
-				<File
-					RelativePath=".\3rdparty\wolfrad\wr_raycaster.c">
-				</File>
-				<File
-					RelativePath=".\3rdparty\wolfrad\wr_raycaster.h">
-				</File>
-				<File
-					RelativePath=".\3rdparty\wolfrad\wr_room.c">
-				</File>
-				<File
-					RelativePath=".\3rdparty\wolfrad\wr_room.h">
-				</File>
-				<File
-					RelativePath=".\3rdparty\wolfrad\wr_scene.c">
-				</File>
-				<File
-					RelativePath=".\3rdparty\wolfrad\wr_scene.h">
-				</File>
-			</Filter>
+			<File
+				RelativePath="..\Platform\Xbox\fakeglx09.h">
+			</File>
+			<File
+				RelativePath="..\Platform\Xbox\xboxconfig.cpp">
+			</File>
+			<File
+				RelativePath="..\Platform\Xbox\xboxconfig.h">
+			</File>
+			<File
+				RelativePath="..\Platform\Xbox\xboxjoy.c">
+			</File>
+			<File
+				RelativePath="..\Platform\Xbox\xboxjoy.h">
+			</File>
+			<File
+				RelativePath="..\Platform\Xbox\xboxmissing.c">
+			</File>
+			<File
+				RelativePath="..\Platform\Xbox\xboxmissing.h">
+			</File>
 		</Filter>
 		<File
-			RelativePath=".\asmcref.h">
+			RelativePath="..\asmcref.h">
 		</File>
 		<File
-			RelativePath=".\audiosod.h">
+			RelativePath="..\audiosod.h">
 		</File>
 		<File
-			RelativePath=".\audiowl6.h">
+			RelativePath="..\audiowl6.h">
 		</File>
 		<File
-			RelativePath=".\f_spear.h">
+			RelativePath="..\f_spear.h">
 		</File>
 		<File
-			RelativePath=".\foreign.h">
+			RelativePath="..\foreign.h">
 		</File>
 		<File
-			RelativePath=".\gfxv_apo.h">
+			RelativePath="..\gfxv_apo.h">
 		</File>
 		<File
-			RelativePath=".\gfxv_jap.h">
+			RelativePath="..\gfxv_jap.h">
 		</File>
 		<File
-			RelativePath=".\gfxv_sod.h">
+			RelativePath="..\gfxv_sod.h">
 		</File>
 		<File
-			RelativePath=".\gfxv_wl6.h">
+			RelativePath="..\gfxv_wl6.h">
 		</File>
 		<File
-			RelativePath=".\id_ca.c">
+			RelativePath="..\id_ca.c">
 		</File>
 		<File
-			RelativePath=".\id_ca.h">
+			RelativePath="..\id_ca.h">
 		</File>
 		<File
-			RelativePath=".\id_crt.c">
+			RelativePath="..\id_crt.c">
 		</File>
 		<File
-			RelativePath=".\id_crt.h">
+			RelativePath="..\id_crt.h">
 		</File>
 		<File
-			RelativePath=".\id_in.c">
+			RelativePath="..\id_in.c">
 		</File>
 		<File
-			RelativePath=".\id_in.h">
+			RelativePath="..\id_in.h">
 		</File>
 		<File
-			RelativePath=".\id_pm.c">
+			RelativePath="..\id_pm.c">
 		</File>
 		<File
-			RelativePath=".\id_pm.h">
+			RelativePath="..\id_pm.h">
 		</File>
 		<File
-			RelativePath=".\id_sd.c">
+			RelativePath="..\id_sd.c">
 		</File>
 		<File
-			RelativePath=".\id_sd.h">
+			RelativePath="..\id_sd.h">
 		</File>
 		<File
-			RelativePath=".\id_us.c">
+			RelativePath="..\id_udp.c">
 		</File>
 		<File
-			RelativePath=".\id_us.h">
+			RelativePath="..\id_udp.h">
 		</File>
 		<File
-			RelativePath=".\id_vh.c">
+			RelativePath="..\id_us.c">
 		</File>
 		<File
-			RelativePath=".\id_vh.h">
+			RelativePath="..\id_us.h">
 		</File>
 		<File
-			RelativePath=".\id_vieasm.c">
+			RelativePath="..\id_vh.c">
 		</File>
 		<File
-			RelativePath=".\id_vieasm.h">
+			RelativePath="..\id_vh.h">
 		</File>
 		<File
-			RelativePath=".\id_vl.c">
+			RelativePath="..\id_vieasm.c">
 		</File>
 		<File
-			RelativePath=".\id_vl.h">
+			RelativePath="..\id_vieasm.h">
 		</File>
 		<File
-			RelativePath=".\id_w3swrap.c">
+			RelativePath="..\id_vl.c">
 		</File>
 		<File
-			RelativePath=".\id_w3swrap.h">
+			RelativePath="..\id_vl.h">
 		</File>
 		<File
-			RelativePath=".\psnprntf.c">
+			RelativePath="..\id_w3swrap.c">
 		</File>
 		<File
-			RelativePath=".\psnprntf.h">
+			RelativePath="..\id_w3swrap.h">
 		</File>
 		<File
-			RelativePath=".\signon.c">
+			RelativePath="..\psnprntf.c">
 		</File>
 		<File
-			RelativePath=".\sodpal.inc">
+			RelativePath="..\psnprntf.h">
 		</File>
 		<File
-			RelativePath=".\version.h">
+			RelativePath="..\sdl_winmain.c">
 		</File>
 		<File
-			RelativePath=".\wl_act1.c">
+			RelativePath="..\signon.c">
 		</File>
 		<File
-			RelativePath=".\wl_act2.c">
+			RelativePath="..\sodpal.inc">
 		</File>
 		<File
-			RelativePath=".\wl_agent.c">
+			RelativePath="..\version.h">
 		</File>
 		<File
-			RelativePath=".\wl_ai.c">
+			RelativePath="..\wl_act1.c">
 		</File>
 		<File
-			RelativePath=".\wl_ai.h">
+			RelativePath="..\wl_act2.c">
 		</File>
 		<File
-			RelativePath=".\wl_anyactor.c">
+			RelativePath="..\wl_agent.c">
 		</File>
 		<File
-			RelativePath=".\wl_anyactor.h">
+			RelativePath="..\wl_atmos.c">
 		</File>
 		<File
-			RelativePath=".\wl_atmos.c">
+			RelativePath="..\wl_atmos.h">
 		</File>
 		<File
-			RelativePath=".\wl_atmos.h">
+			RelativePath="..\wl_cloudsky.c">
 		</File>
 		<File
-			RelativePath=".\wl_benchhobo.c">
+			RelativePath="..\wl_cloudsky.h">
 		</File>
 		<File
-			RelativePath=".\wl_clockking.c">
+			RelativePath="..\wl_debug.c">
 		</File>
 		<File
-			RelativePath=".\wl_cloudsky.c">
+			RelativePath="..\wl_def.h">
 		</File>
 		<File
-			RelativePath=".\wl_cloudsky.h">
+			RelativePath="..\wl_draw.c">
 		</File>
 		<File
-			RelativePath=".\wl_conartist.c">
+			RelativePath="..\wl_game.c">
 		</File>
 		<File
-			RelativePath=".\wl_debug.c">
+			RelativePath="..\wl_inter.c">
 		</File>
 		<File
-			RelativePath=".\wl_def.h">
+			RelativePath="..\wl_main.c">
 		</File>
 		<File
-			RelativePath=".\wl_draw.c">
+			RelativePath="..\wl_menu.c">
 		</File>
 		<File
-			RelativePath=".\wl_ed.c">
+			RelativePath="..\wl_menu.h">
 		</File>
 		<File
-			RelativePath=".\wl_ed.h">
+			RelativePath="..\wl_parallax.c">
 		</File>
 		<File
-			RelativePath=".\wl_firefly.c">
+			RelativePath="..\wl_plane.c">
 		</File>
 		<File
-			RelativePath=".\wl_game.c">
+			RelativePath="..\wl_play.c">
 		</File>
 		<File
-			RelativePath=".\wl_healthbar.c">
+			RelativePath="..\wl_scale.c">
 		</File>
 		<File
-			RelativePath=".\wl_healthbar.h">
+			RelativePath="..\wl_shade.c">
 		</File>
 		<File
-			RelativePath=".\wl_hooker.c">
+			RelativePath="..\wl_shade.h">
 		</File>
 		<File
-			RelativePath=".\wl_inter.c">
+			RelativePath="..\wl_state.c">
 		</File>
 		<File
-			RelativePath=".\wl_led.c">
+			RelativePath="..\wl_text.c">
 		</File>
 		<File
-			RelativePath=".\wl_led.h">
+			RelativePath="..\wl_utils.c">
 		</File>
 		<File
-			RelativePath=".\wl_main.c">
+			RelativePath="..\wl_utils.h">
 		</File>
 		<File
-			RelativePath=".\wl_math.c">
-		</File>
-		<File
-			RelativePath=".\wl_math.h">
-		</File>
-		<File
-			RelativePath=".\wl_menu.c">
-		</File>
-		<File
-			RelativePath=".\wl_menu.h">
-		</File>
-		<File
-			RelativePath=".\wl_parallax.c">
-		</File>
-		<File
-			RelativePath=".\wl_physics.c">
-		</File>
-		<File
-			RelativePath=".\wl_physics.h">
-		</File>
-		<File
-			RelativePath=".\wl_pimp.c">
-		</File>
-		<File
-			RelativePath=".\wl_plane.c">
-		</File>
-		<File
-			RelativePath=".\wl_play.c">
-		</File>
-		<File
-			RelativePath=".\wl_polygon.c">
-		</File>
-		<File
-			RelativePath=".\wl_polygon.h">
-		</File>
-		<File
-			RelativePath=".\wl_scale.c">
-		</File>
-		<File
-			RelativePath=".\wl_shade.c">
-		</File>
-		<File
-			RelativePath=".\wl_shade.h">
-		</File>
-		<File
-			RelativePath=".\wl_sleephobo.c">
-		</File>
-		<File
-			RelativePath=".\wl_state.c">
-		</File>
-		<File
-			RelativePath=".\wl_text.c">
-		</File>
-		<File
-			RelativePath=".\wl_utils.c">
-		</File>
-		<File
-			RelativePath=".\wl_utils.h">
-		</File>
-		<File
-			RelativePath=".\wolfpal.inc">
+			RelativePath="..\wolfpal.inc">
 		</File>
 	</Files>
 	<Globals>

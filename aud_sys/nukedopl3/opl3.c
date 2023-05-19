@@ -50,7 +50,7 @@
 #ifdef _MSC_VER
 #define inline __inline
 #else
-
+#define inline 
 #endif
 #endif
 
@@ -1540,9 +1540,9 @@ void OPL3_WriteRegDelayed(opl3_chip* chip, unsigned short reg, unsigned char v, 
     chip->writebuf_lasttime = writebuf->time;
 }
 
-void OPL3_Generate4ChStream(opl3_chip *chip, signed short *sndptr1, signed short *sndptr2, size_t numsamples)
+void OPL3_Generate4ChStream(opl3_chip *chip, signed short *sndptr1, signed short *sndptr2, int numsamples)
 {
-    size_t i;
+    int i;
     signed short samples[4];
 
     for(i = 0; i < numsamples; i++)
@@ -1557,9 +1557,9 @@ void OPL3_Generate4ChStream(opl3_chip *chip, signed short *sndptr1, signed short
     }
 }
 
-void OPL3_GenerateStream(opl3_chip *chip, signed short *sndptr, size_t numsamples)
+void OPL3_GenerateStream(opl3_chip *chip, signed short *sndptr, int numsamples)
 {
-    size_t i;
+    int i;
 
     for(i = 0; i < numsamples; i++)
     {

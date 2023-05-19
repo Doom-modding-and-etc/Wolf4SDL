@@ -52,7 +52,6 @@ wlinline fixed FixedMul (fixed a, fixed b)
 wlinline fixed FixedDiv (fixed a, fixed b)
 {
 	int64_t c = ((int64_t)a << FRACBITS) / (int64_t)b;
-
 	return (fixed)c;
 }
 
@@ -90,6 +89,7 @@ wlinline unsigned int READLONGWORD (unsigned char *ptr)
     return val;
 }
 
+
 /*
 ===================
 =
@@ -101,7 +101,7 @@ wlinline unsigned int READLONGWORD (unsigned char *ptr)
 */
 wlinline char* wlitoa(int value, char* string, int radix)
 {
-    w3ssnprintf(string, radix, "%d", value);
+    w3ssnprintf(string, sizeof(string), "%d", value);
     return string;
 }
 
@@ -116,9 +116,10 @@ wlinline char* wlitoa(int value, char* string, int radix)
 */
 wlinline char* wlltoa(long value, char* string, int radix)
 {
-    w3ssnprintf(string, radix, "%ld", value);
+    w3ssnprintf(string, sizeof(string), "%ld", value);
     return string;
 }
+
 
 /*
 ===================

@@ -29,10 +29,13 @@ int LastDemo;
 //
 // PRIVATE PROTOTYPES
 //
+#if !defined(GOODTIMES) && !defined(SPEAR)
 int  CP_ReadThis (int);
+#endif
 #ifdef MENU_DEMOS
 int CP_WatchDemo();
 #endif
+
 extern void SetTheTextColor(CP_itemtype* items, int hlight);
 
 #ifdef SPEAR
@@ -62,24 +65,24 @@ char endStrings[9][80] = {
 
 CP_itemtype MainMenu[] = {
 #ifdef JAPAN
-    {1, "", CP_NewGame},
-    {1, "", CP_Sound},
-    {1, "", CP_Control},
-    {1, "", CP_LoadGame},
-    {0, "", CP_SaveGame},
-    {1, "", CP_ChangeView},
+    {1, "", (int(*)(int))CP_NewGame},
+    {1, "", (int(*)(int))CP_Sound},
+    {1, "", (int(*)(int))CP_Control},
+    {1, "", (int(*)(int))CP_LoadGame},
+    {0, "", (int(*)(int))CP_SaveGame},
+    {1, "", (int(*)(int))CP_ChangeView},
     {2, "", CP_ReadThis},
-    {1, "", CP_ViewScores},
+    {1, "", (int(*)(int))CP_ViewScores},
     {1, "", 0},
     {1, "", 0}
 #else
 
-    {1, STR_NG, CP_NewGame},
-    {1, STR_SD, CP_Sound},
-    {1, STR_CL, CP_Control},
-    {1, STR_LG, (int (*)())CP_LoadGame},
-    {0, STR_SG, (int (*)())CP_SaveGame},
-    {1, STR_CV, CP_ChangeView},
+    {1, STR_NG, (int(*)(int))CP_NewGame},
+    {1, STR_SD, (int(*)(int))CP_Sound},
+    {1, STR_CL, (int(*)(int))CP_Control},
+    {1, STR_LG, (int(*)(int))CP_LoadGame},
+    {0, STR_SG, (int(*)(int))CP_SaveGame},
+    {1, STR_CV, (int(*)(int))CP_ChangeView},
 
 #ifndef GOODTIMES
 #ifndef SPEAR
@@ -93,7 +96,7 @@ CP_itemtype MainMenu[] = {
 #endif
 #endif
 
-    {1, STR_VS, CP_ViewScores},
+    {1, STR_VS, (int(*)(int))CP_ViewScores},
 #ifdef MENU_DEMOS
     {1, STR_BD, 0},
 #else
@@ -150,9 +153,17 @@ CP_itemtype SndMenu[] = {
 enum { CTL_MOUSEENABLE, CTL_JOYENABLE, CTL_JOY2BUTTONUNKNOWN, CTL_GAMEPADUNKONWN, CTL_MOUSESENS, CTL_CUSTOMIZE };
 #else
 #ifndef EXTRACONTROLS
+#ifdef MOUSELOOK
+enum { CTL_MOUSEENABLE, CTL_MOUSESENS, CTL_MOUSELOOK, CTL_ALWAYSRUN, CTL_JOYENABLE, CTL_CUSTOMIZE };
+#else
 enum { CTL_MOUSEENABLE, CTL_MOUSESENS, CTL_JOYENABLE, CTL_CUSTOMIZE };
+#endif
+#else
+#ifdef MOUSELOOK
+enum { CTL_MOUSEENABLE, CTL_MOUSESENS, CTL_MOUSELOOK, CTL_ALWAYSRUN, CTL_JOYENABLE, CTL_CUSTOMIZE };
 #else
 enum { CTL_MOUSEENABLE, CTL_MOUSESENS, CTL_MOUSEMOVEENABLE, CTL_CUSTOMIZE };
+#endif
 #endif // EXTRACONTROLS
 #endif
 
@@ -162,17 +173,21 @@ CP_itemtype CtlMenu[] = {
     {0, "", 0},
     {0, "", 0},
     {0, "", 0},
-    {0, "", MouseSensitivity},
-    {1, "", CustomControls}
+    {0, "", (int(*)(int))MouseSensitivity},
+    {1, "", (int(*)(int))CustomControls}
 #else
     {0, STR_MOUSEEN, 0},
-    {0, STR_SENS, MouseSensitivity},
+    {0, STR_SENS, (int(*)(int))MouseSensitivity},
 #ifdef EXTRACONTROLS
     {0, STR_MOUSEMVN, 0},
 #else
+#ifdef MOUSELOOK
+    {0, STR_MLOOK, 0},
+    {1, STR_ALRUN, 0},
+#endif	
     {0, STR_JOYEN, 0},
 #endif
-    {1, STR_CUSTOM, CustomControls}
+    {1, STR_CUSTOM, (int(*)(int))CustomControls}
 #endif
 };
 
@@ -668,8 +683,7 @@ DrawMainMenu (void)
     VL_UpdateScreen (screenBuffer);
 }
 
-#ifndef GOODTIMES
-#ifndef SPEAR
+#if !defined(GOODTIMES) && !defined(SPEAR)
 ////////////////////////////////////////////////////////////////////
 //
 // READ THIS!
@@ -683,7 +697,6 @@ CP_ReadThis (int blank)
     StartCPMusic (MENUSONG);
     return true;
 }
-#endif
 #endif
 
 
@@ -921,7 +934,7 @@ CP_EndGame ()
     killerobj = NULL;
 
     MainMenu[savegame].active = 0;
-    MainMenu[viewscores].routine = CP_ViewScores;
+    MainMenu[viewscores].routine = (int(*)(int))CP_ViewScores;
 #ifndef JAPAN
     strcpy (MainMenu[viewscores].string, STR_VS);
 #endif
@@ -1965,7 +1978,7 @@ void VL_LatchToScreenScaledCoord(SDL_Surface* source, int xsrc, int ysrc,
         //       So, we do the blit on our own...
         if (screenBits != 8)
         {
-            byte* src, * dest;
+            unsigned char* src, * dest;
             unsigned srcPitch;
             int i, j;
 
@@ -1981,7 +1994,7 @@ void VL_LatchToScreenScaledCoord(SDL_Surface* source, int xsrc, int ysrc,
             {
                 for (i = 0; i < width; i++)
                 {
-                    byte col = src[(ysrc + j) * srcPitch + xsrc + i];
+                    unsigned char col = src[(ysrc + j) * srcPitch + xsrc + i];
                     dest[(scydest + j) * curPitch + scxdest + i] = col;
                 }
             }
@@ -1997,7 +2010,7 @@ void VL_LatchToScreenScaledCoord(SDL_Surface* source, int xsrc, int ysrc,
     }
     else
     {
-        byte* src, * dest;
+        unsigned char* src, * dest;
         unsigned srcPitch;
         int i, j, sci, scj;
         unsigned m, n;
@@ -2014,7 +2027,7 @@ void VL_LatchToScreenScaledCoord(SDL_Surface* source, int xsrc, int ysrc,
         {
             for (i = 0, sci = 0; i < width; i++, sci += scaleFactor)
             {
-                byte col = src[(ysrc + j) * srcPitch + xsrc + i];
+                unsigned char col = src[(ysrc + j) * srcPitch + xsrc + i];
                 for (m = 0; m < scaleFactor; m++)
                 {
                     for (n = 0; n < scaleFactor; n++)
@@ -2273,6 +2286,21 @@ CP_Control ()
                 break;
 
 #ifndef EXTRACONTROLS
+#ifdef MOUSELOOK
+            case CTL_MOUSELOOK:
+                mouselookenabled ^= 1;
+                DrawCtlScreen();
+                CusItems.curpos = -1;
+                ShootSnd();
+                break;
+
+            case CTL_ALWAYSRUN:
+                alwaysrunenabled ^= 1;
+                DrawCtlScreen();
+                CusItems.curpos = -1;
+                ShootSnd();
+                break;
+#endif	
             case CTL_JOYENABLE:
                 joystickenabled ^= 1;
                 DrawCtlScreen();
@@ -2280,6 +2308,22 @@ CP_Control ()
                 ShootSnd();
                 break;
 #else
+#ifdef MOUSELOOK
+            case CTL_MOUSELOOK:
+                mouselookenabled ^= 1;
+                DrawCtlScreen ();
+                CusItems.curpos = -1;
+                ShootSnd ();
+                break;
+
+            case CTL_ALWAYSRUN:
+                alwaysrunenabled ^= 1;
+                DrawCtlScreen ();
+                CusItems.curpos = -1;
+                ShootSnd ();
+				break;
+#endif	
+
             case CTL_MOUSEMOVEENABLE:
                 mousemoveenabled ^= 1;
                 DrawCtlScreen();
@@ -2461,12 +2505,18 @@ DrawCtlScreen (void)
 #ifdef EXTRACONTROLS
         CtlMenu[CTL_MOUSEMOVEENABLE].active = 1;
 #endif
+#ifdef MOUSELOOK
+		CtlMenu[CTL_MOUSELOOK].active = 1;
+#endif
     }
 
 #ifdef EXTRACONTROLS
     CtlMenu[CTL_MOUSESENS].active = CtlMenu[CTL_MOUSEMOVEENABLE].active = mouseenabled;
 #else
     CtlMenu[CTL_MOUSESENS].active = mouseenabled;
+#ifdef MOUSELOOK
+	CtlMenu[CTL_MOUSELOOK].active = mouseenabled;
+#endif
 #endif
 
 
@@ -2482,11 +2532,40 @@ DrawCtlScreen (void)
 
     y = CTL_Y + 29;
 #ifndef EXTRACONTROLS
+#ifdef MOUSELOOK
+    if (mouselookenabled)
+        VWB_DrawPic(x, y, C_SELECTEDPIC);
+    else
+        VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+
+    y = CTL_Y + 42;
+    if (alwaysrunenabled)
+        VWB_DrawPic(x, y, C_SELECTEDPIC);
+    else
+        VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+
+    y = CTL_Y + 55;
+#endif	
+
     if (joystickenabled)
         VWB_DrawPic(x, y, C_SELECTEDPIC);
     else
         VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
 #else
+#ifdef MOUSELOOK
+    if (mouselookenabled)
+        VWB_DrawPic (x, y, C_SELECTEDPIC);
+    else
+        VWB_DrawPic (x, y, C_NOTSELECTEDPIC);
+
+    y = CTL_Y + 42;
+    if (alwaysrunenabled)
+        VWB_DrawPic (x, y, C_SELECTEDPIC);
+    else
+        VWB_DrawPic (x, y, C_NOTSELECTEDPIC);
+
+    y = CTL_Y + 55;
+#endif	
     if (mousemoveenabled)
         VWB_DrawPic(x, y, C_SELECTEDPIC);
     else
@@ -3545,6 +3624,9 @@ CP_Quit ()
         SD_StopSound ();
         MenuFadeOut ();
         Quit (NULL);
+#ifdef _XBOX
+        XLaunchNewImage(NULL, NULL);
+#endif	
     }
 
     DrawMainMenu ();
@@ -3729,11 +3811,11 @@ void SetupSaveGames()
     int i;
     char name[13];
     char* savepath[300];
-	const int handle = w3sopen((char*)savepath, O_RDONLY | O_BINARY);
 
     strcpy(name, SaveName);
     for(i = 0; i < 10; i++)
     {
+        int handle;
         name[7] = '0' + i;
 #ifdef _arch_dreamcast
         // Try to unpack file
@@ -3744,7 +3826,11 @@ void SetupSaveGames()
                 w3ssnprintf((char*)savepath, sizeof(savepath), "%s/%s", configdir, name);
             else
                 strcpy((char*)savepath, name);
-
+#if defined(_MSC_VER) || defined(DEVCPP)
+            handle = w3sopen((const char*)savepath, O_RDONLY | O_BINARY);
+#else
+            handle = w3sopen((const char*)savepath, O_RDONLY | O_BINARY, 644);
+#endif			
             if(handle >= 0)
             {
                 char temp[32];
@@ -3787,11 +3873,9 @@ CleanupControlPanel (void)
 int
 HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
 {
-    char key;
     static int redrawitem = 1, lastitem = -1;
     int i, x, y, basey, exit, which, shape;
-    size_t lastBlinkTime;
-    int timer;
+    size_t lastBlinkTime, timer;
     ControlInfo ci;
 
 
@@ -3824,10 +3908,12 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
 
     do
     {
+		char key;
+
         //
         // CHANGE GUN SHAPE
         //
-        if (GetTimeCount () - lastBlinkTime > (size_t)timer)
+        if (GetTimeCount () - lastBlinkTime > timer)
         {
             lastBlinkTime = GetTimeCount ();
             if (shape == C_CURSOR1PIC)
@@ -4007,7 +4093,7 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
             {
                 ShootSnd ();
                 MenuFadeOut ();
-                (items + which)->routine (0);
+                (items + which)->routine(0);
             }
             return which;
 
@@ -4751,6 +4837,7 @@ ShootSnd (void)
 }
 
 
+
 ///////////////////////////////////////////////////////////////////////////
 //
 // CHECK FOR EPISODES
@@ -4760,24 +4847,31 @@ void
 CheckForEpisodes (void)
 {
     struct stat statbuf;
-
+#ifdef HAKCHI
+    const char check_string = "Checking for game files in: " + DATADIR;
+#endif
     // On Linux like systems, the configdir defaults to $HOME/.wolf4sdl
-#if !defined(_WIN32) && !defined(_arch_dreamcast) && !defined(SWITCH) && !defined (N3DS) && !defined(PS2) && defined(SEGA_SATURN) 
+#if !defined(_WIN32) && !defined(_arch_dreamcast) 
     if(configdir[0] == 0)
     {
         // Set config location to home directory for multi-user support
+#ifdef PSVITA
+        const char *WOLFDIR[256];
+        char* homedir = WOLFDIR;
+#else
         char *homedir = getenv("HOME");
-        const char *homedir = "/.wolf4sdl";
+        const char* WOLFDIR = "/.wolf4sdl";
+#endif
         if(homedir == NULL)
         {
             Quit("Your $HOME directory is not defined. You must set this before playing.");
         }
-        
+     
         if(strlen(homedir) + sizeof(WOLFDIR) > sizeof(configdir))
         {
             Quit("Your $HOME directory path is too long. It cannot be used for saving games.");
         }
-        w3ssnprintf(configdir, sizeof(configdir), "%s" WOLFDIR, homedir);
+        w3ssnprintf(configdir, sizeof(configdir), "%s", WOLFDIR, homedir);
     }
 #endif
 
@@ -4788,12 +4882,12 @@ CheckForEpisodes (void)
         {
 #ifdef _MSC_VER
             if(_mkdir(configdir) != 0)
-#else
-#ifdef DEVCPP
-            if(mkdir(configdir) != 0)
+#elif defined(PSVITA)
+            if (sceIoMkdir(configdir, 0777) != 0)
+#elif defined(DEVCPP)
+			if(mkdir(configdir) != 0)
 #else
             if(mkdir(configdir, 0755) != 0)
-#endif
 #endif
             {
                 Quit("The configuration directory \"%s\" could not be created.", configdir);
@@ -4830,8 +4924,6 @@ CheckForEpisodes (void)
 
 printf("\"========================================================\"");
 
-const char datadir_string = DATADIR;
-const check_string = "Checking for game files in: "+datadir_string;
 
 printf(check_string, "%s");
 
@@ -4843,7 +4935,7 @@ printf("\"========================================================\"");
 //
 #ifdef JAPAN
 #ifdef JAPDEMO
-#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN)
+#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
     if(!stat(DATADIR"vswap.wj1", &statbuf))
 #else    
     if (!stat("vswap.wj1", &statbuf))
@@ -4852,7 +4944,7 @@ printf("\"========================================================\"");
         strcpy (extension, "wj1");
 #else
 
-#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN)
+#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
     if(!stat(DATADIR "vswap.wj6", &statbuf))
 #else
     if(!stat("vswap.wj6", &statbuf))
@@ -4876,23 +4968,20 @@ printf("\"========================================================\"");
 // ENGLISH
 //
 #ifdef UPLOAD
-#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN)
+#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
     if (!stat(DATADIR"vswap.wl1", &statbuf)) 
-    {
-    
-    }
-#else        
-    if(!stat("vswap.wl1", &statbuf))
-    {
-    
-    }
+#else 
+	if(!stat("vswap.wl1", &statbuf))
 #endif
+    {
+		   strcpy (extension, "wl1");
+    }
     else
         Quit ("NO WOLFENSTEIN 3-D DATA FILES to be found!");
 
 #else
 #ifndef SPEAR
-#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) 
+#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
     if(!stat(DATADIR"vswap.wl6", &statbuf))
 #else
     if(!stat("vswap.wl6", &statbuf))
@@ -4909,7 +4998,7 @@ printf("\"========================================================\"");
     }
     else
     {
-#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN)  
+#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
         if(!stat(DATADIR"vswap.wl3", &statbuf))
 #else 
         if (!stat("vswap.wl3", &statbuf))
@@ -4920,12 +5009,11 @@ printf("\"========================================================\"");
         }
         else
         {
-#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN)          
+#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)         
             if (!stat(DATADIR"vswap.wl1", &statbuf))
 #else
             if (!stat("vswap.wl1", &statbuf))
 #endif
-
                 strcpy (extension, "wl1");
             else
                 Quit ("NO WOLFENSTEIN 3-D DATA FILES to be found!");
@@ -4939,7 +5027,7 @@ printf("\"========================================================\"");
 #ifndef SPEARDEMO
     if(param_mission == 0)
     {
-#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN)  
+#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
         if(!stat(DATADIR"vswap.sod", &statbuf))
 #else
         if(!stat("vswap.sod", &statbuf))
@@ -4950,7 +5038,7 @@ printf("\"========================================================\"");
     }
     else if(param_mission == 1)
     {
-#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN)  
+#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2) 
         if(!stat(DATADIR"vswap.sd1", &statbuf))
 #else
         if(!stat("vswap.sd1", &statbuf))
@@ -4961,7 +5049,7 @@ printf("\"========================================================\"");
     }
     else if(param_mission == 2)
     {
-#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN)  
+#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)  
         if(!stat(DATADIR"vswap.sd2", &statbuf))
 #else
         if(!stat("vswap.sd2", &statbuf))
@@ -4972,7 +5060,7 @@ printf("\"========================================================\"");
     }
     else if(param_mission == 3)
     {
-#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN)  
+#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2) 
         if(!stat(DATADIR"vswap.sd3", &statbuf))
 #else        
         if(!stat("vswap.sd3", &statbuf))
@@ -4988,7 +5076,7 @@ printf("\"========================================================\"");
     strcpy (audioext, "sod");
 #endif
 #else
-#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN)
+#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
     if(!stat(DATADIR "vswap.sdm", &statbuf))
 #else
     if(!stat("vswap.sdm", &statbuf))

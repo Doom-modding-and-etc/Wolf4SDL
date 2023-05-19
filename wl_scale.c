@@ -34,13 +34,13 @@
 #ifdef USE_SHADING
 void ScaleLine(short x, short toppix, fixed fracstep, unsigned char* linesrc, unsigned char* linecmds, unsigned char* curshades)
 #else
-void ScaleLine (short x, short toppix, fixed fracstep, unsigned char* linesrc, unsigned char *linecmds)
+void ScaleLine (fixed x, fixed toppix, fixed fracstep, unsigned char* linesrc, unsigned char *linecmds)
 #endif
 {
     unsigned char   *src,*dest;
     unsigned char    col;
     short start,end,top;
-    short startpix,endpix;
+    fixed startpix,endpix;
     fixed   frac;
 
     for (end = READWORD(linecmds) >> 1; end; end = READWORD(linecmds) >> 1)
@@ -274,7 +274,7 @@ void ScaleShape (int xcenter, int shapenum, int height)
     unsigned char *curshades;
 #endif
     short     scale,toppix;
-    short     x1,x2,actx;
+    fixed     x1,x2,actx;
     fixed       frac,fracstep;
 
     scale = height >> 3;        // low three bits are fractional
@@ -358,7 +358,7 @@ void SimpleScaleShape (int xcenter, int shapenum, int height)
     compshape_t *shape;
     unsigned char *linesrc,*linecmds;
     short     scale,toppix;
-    short     x1,x2,actx;
+    fixed     x1,x2,actx;
     fixed       frac,fracstep;
 
     scale = height >> 1;

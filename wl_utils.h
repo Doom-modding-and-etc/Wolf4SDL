@@ -6,8 +6,12 @@
 #include "wl_def.h"
 
 #define FRACBITS         16
+#if SDL_MAJOR_VERSION == 2
 #ifdef _WIN64
 #define WL_GetTicks() SDL_GetTicks64()
+#else
+#define WL_GetTicks() SDL_GetTicks()
+#endif
 #else
 #define WL_GetTicks() SDL_GetTicks()
 #endif
@@ -23,8 +27,9 @@ extern wlinline fixed    FixedDiv (fixed a, fixed b);
 #define SafeMalloc(s)    wsafe_malloc ((s),__FILE__,__LINE__)
 extern wlinline unsigned short     READWORD (unsigned char *ptr);
 extern wlinline unsigned int READLONGWORD (unsigned char *ptr);
-extern char* wlitoa(int value, char* string, int radix);
-extern char* wlltoa(long value, char* string, int radix);
+
+extern wlinline char* wlitoa(int value, char* string, int radix);
+extern wlinline char* wlltoa(long value, char* string, int radix);
 
 #if defined(SEGA_SATURN)
 extern short* LoadFile(char* filename, long* fileSize);

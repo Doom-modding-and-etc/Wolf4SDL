@@ -52,8 +52,8 @@ void VWB_DrawPropString(const char* string)
     UNLOCK();
 #else
 	fontstruct  *font;
-	int		    width, step, height;
-	unsigned char	    *source, *dest;
+	int		     height;
+	unsigned char	   *dest;
 	unsigned char 	    ch;
 	int i;
 	unsigned sx, sy;
@@ -67,8 +67,9 @@ void VWB_DrawPropString(const char* string)
 
 	while ((ch = (unsigned char)*string++)!=0)
 	{
-		width = step = font->width[ch];
-		source = ((unsigned char *)font)+font->location[ch];
+        int		     step;
+        int width = step = font->width[ch];
+        unsigned char* source = ((unsigned char *)font)+font->location[ch];
 		while (width--)
 		{
 			for(i=0; i<height; i++)
@@ -148,22 +149,22 @@ void VWB_Plot (int x, int y, int color)
     if(scaleFactor == 1)
         VL_Plot(x,y,color);
     else
-        VL_Bar(x, y, 1, 1, color);
+        VWB_Bar(x, y, 1, 1, color);
 }
 #endif
 
 void VWB_Hlin (int x1, int x2, int y, int color)
 {
     if(scaleFactor == 1)
-    	VWB_HlinScaledCoord(x1,x2,y,color);
+        VW_Hlin(x1, x2, y, color);
     else
         VL_Bar(x1, y, x2-x1+1, 1, color);
 }
 
 void VWB_Vlin (int y1, int y2, int x, int color)
 {
-    if(scaleFactor == 1)
-        VWB_VlinScaledCoord(y1,y2,x,color);
+    if (scaleFactor == 1)
+        VW_Vlin(y1, y2, x, color);
     else
         VL_Bar(x, y1, 1, y2-y1+1, color);
 }

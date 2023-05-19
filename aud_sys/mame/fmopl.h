@@ -22,7 +22,6 @@
 /* compiler dependence */
 #ifndef OSD_CPU_H
 #define OSD_CPU_H
-#ifndef _MSC_VER
 typedef unsigned char	UINT8;   /* unsigned  8bit */
 typedef unsigned short	UINT16;  /* unsigned 16bit */
 typedef unsigned int	UINT32;  /* unsigned 32bit */
@@ -30,13 +29,6 @@ typedef signed char		INT8;    /* signed  8bit   */
 typedef signed short	INT16;   /* signed 16bit   */
 typedef signed int		INT32;   /* signed 32bit   */
 typedef int BOOL;
-#else
-#ifdef _XBOX
-#include <xtl.h>
-#else
-#include <rpc.h>
-#endif
-#endif
 #endif
 
 #if (OPL_SAMPLE_BITS==16)

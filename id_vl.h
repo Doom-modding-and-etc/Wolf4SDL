@@ -72,13 +72,12 @@ void VL_RenderTextures();
 void	VL_MeasurePropString(const char* string, unsigned short* width, unsigned short* height);
 
 boolean FizzleFade(SDL_Surface* source, int x1, int y1,
-	unsigned width, unsigned height, unsigned frames, boolean abortable);
+	unsigned int width, unsigned int height, unsigned int frames, boolean abortable);
 
 void VL_Shutdown (void);
 
 void VL_ConvertPalette(unsigned char *srcpal, SDL_Color *destpal, int numColors);
 void VL_FillPalette (unsigned char red, unsigned char green, unsigned char blue);
-void VL_GetColor    (int color, int *red, int *green, int *blue);
 void VL_SetPalette  (SDL_Color *palette, boolean forceupdate);
 void VL_GetPalette  (SDL_Color *palette);
 void VL_FadeOut     (int start, int end, unsigned char red, unsigned char green, unsigned char blue, int steps);
@@ -108,5 +107,8 @@ void VL_MemToScreenScaledCoord2  (unsigned char *source, int origwidth, int orig
                                     int destx, int desty, int width, int height);
 
 extern wlinline void VL_MemToScreen (unsigned char *source, int width, int height, int x, int y);
+
+#define VW_Hlin(x,z,y,c)	VL_Hlin(x,y,(z)-(x)+1,c)
+#define VW_Vlin(y,z,x,c)	VL_Vlin(x,y,(z)-(y)+1,c)
 
 #endif

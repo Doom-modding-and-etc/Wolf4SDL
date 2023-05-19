@@ -39,7 +39,9 @@ void DrawSpan (short x1, short x2, short height)
 {
     unsigned char      tilex,tiley,lasttilex,lasttiley;
     unsigned char      *dest;
+#ifdef USE_SHADING
     unsigned char      *shade;
+#endif
     unsigned short      texture,spot;
     unsigned int  rowofs;
     short   ceilingpage,floorpage,lastceilingpage,lastfloorpage;
@@ -167,7 +169,9 @@ void DrawSpan (short x1, short x2, short height)
 void DrawSpan (short x1, short x2, short height)
 {
     unsigned char *dest;
+#ifdef USE_SHADING	
     unsigned char *shade;
+#endif
     unsigned short     texture;
     unsigned int rowofs;
     short    count,prestep;

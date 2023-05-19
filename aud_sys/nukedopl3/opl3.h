@@ -47,6 +47,10 @@
 
 #endif
 
+#ifdef _MSC_VER
+#define inline __inline
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -58,7 +62,7 @@ extern "C" {
 #define OPL_WRITEBUF_SIZE   1024
 #define OPL_WRITEBUF_DELAY  2
 
-#ifdef USE_HEADER_TYPE
+#if defined(USE_HEADER_TYPE) || defined(__GNUC__)
 #include <inttypes.h>
 #endif
 
@@ -66,12 +70,13 @@ typedef struct _opl3_slot opl3_slot;
 typedef struct _opl3_channel opl3_channel;
 typedef struct _opl3_chip opl3_chip;
 
-
+#ifndef __GNUC__
 #ifdef OLD_MSVC
 typedef unsigned long long uint64_t;
 #else
 #ifndef DEVCPP
 typedef unsigned long long uint64_t;
+#endif
 #endif
 #endif
 
@@ -185,10 +190,10 @@ OPL_API void OPL3_Reset(opl3_chip *chip, unsigned int samplerate);
 OPL_API void OPL3_WriteReg(opl3_chip *chip, unsigned short reg, unsigned char v);
 OPL_API void OPL3_WriteRegBuffered(opl3_chip *chip, unsigned short reg, unsigned char v);
 OPL_API void OPL3_WriteRegDelayed(opl3_chip* chip, unsigned short reg, unsigned char v, uint64_t delay);
-OPL_API void OPL3_GenerateStream(opl3_chip *chip, signed short *sndptr, size_t numsamples);
+OPL_API void OPL3_GenerateStream(opl3_chip *chip, signed short *sndptr, int numsamples);
 OPL_API void OPL3_Generate4Ch(opl3_chip *chip, signed short *buf4);
 OPL_API void OPL3_Generate4ChResampled(opl3_chip *chip, signed short *buf4);
-OPL_API void OPL3_Generate4ChStream(opl3_chip *chip, signed short *sndptr1, signed short *sndptr2, size_t numsamples);
+OPL_API void OPL3_Generate4ChStream(opl3_chip *chip, signed short *sndptr1, signed short *sndptr2, int numsamples);
 
 #ifdef __cplusplus
 }

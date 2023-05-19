@@ -33,9 +33,6 @@
 =============================================================================
 */
 
-
-#define UNKNOWN_KEY KEYCOUNT
-
 #ifndef SEGA_SATURN
 //
 // configuration variables
@@ -134,13 +131,13 @@ static	Direction	DirTable[] =		// Quick lookup for total direction
 boolean Keyboard(int key)
 {
     int keyIndex = KeyboardLookup(key);
-    return keyIndex != UNKNOWN_KEY ? KeyboardState[keyIndex] : false;
+    return keyIndex != KEYCOUNT ? KeyboardState[keyIndex] : false;
 }
 
 void KeyboardSet(int key, boolean state)
 {
     int keyIndex = KeyboardLookup(key);
-    if (keyIndex != UNKNOWN_KEY)
+    if (keyIndex != KEYCOUNT)
     {
         KeyboardState[keyIndex] = state;
     }
@@ -279,7 +276,7 @@ int KeyboardLookup(int key)
     case SDLK_PRINTSCREEN: return 126;
     case SDLK_NUMLOCKCLEAR: return 127;
     case SDLK_SCROLLLOCK: return 128;
-    default: return UNKNOWN_KEY;
+    default: return KEYCOUNT;
     }
 }
 
@@ -350,7 +347,47 @@ void IN_GetJoyDelta(int* dx, int* dy)
     *dx = x;
     *dy = y;
 }
+#ifdef PSVITA
+void IN_GetJoyDelta2(int* dx, int* dy)
+{
+    if (!Joystick)
+    {
+        *dx = *dy = 0;
+        return;
+    }
 
+    SDL_JoystickUpdate();
+#ifdef _arch_dreamcast
+    int x = 0;
+    int y = 0;
+#else
+    int x = SDL_JoystickGetAxis(Joystick, 2) >> 8;
+    int y = SDL_JoystickGetAxis(Joystick, 3) >> 8;
+#endif
+
+    if (param_joystickhat != -1)
+    {
+        unsigned char hatState = SDL_JoystickGetHat(Joystick, param_joystickhat);
+        if (hatState & SDL_HAT_RIGHT)
+            x += 127;
+        else if (hatState & SDL_HAT_LEFT)
+            x -= 127;
+        if (hatState & SDL_HAT_DOWN)
+            y += 127;
+        else if (hatState & SDL_HAT_UP)
+            y -= 127;
+
+        if (x < -128) x = -128;
+        else if (x > 127) x = 127;
+
+        if (y < -128) y = -128;
+        else if (y > 127) y = 127;
+    }
+
+    *dx = x;
+    *dy = y;
+}
+#endif
 ///////////////////////////////////////////////////////////////////////////
 //
 //	IN_GetJoyFineDelta() - Returns the relative movement of the specified
@@ -441,20 +478,20 @@ static boolean ToggleFullScreenKeyShortcut(SDL_Keysym* sym)
 
 static void I_ToggleFullScreen(void)
 {
-    unsigned int flags;
+    unsigned int flags = 0;
     fullscreen = !fullscreen;
 
     if (fullscreen)
     {
 #if SDL_MAJOR_VERSION == 1
-        SDL_SetVideoMode(screenWidth, screenHeight, screenBits, SDL_RESIZABLE);
+        SDL_SetVideoMode(screenWidth, screenHeight, screenBits, 0);
 #elif SDL_MAJOR_VERSION == 2
         SDL_GetWindowSize(window, (int*)&screenWidth, (int*)&screenHeight);
 #endif
 #if SDL_MAJOR_VERSION == 1
-        flags |= SDL_FULLSCREEN | SDL_VIDEORESIZE | SDL_RESIZABLE;
+        flags |= SDL_FULLSCREEN;
 #elif SDL_MAJOR_VERSION == 2
-        flags |= SDL_WINDOW_FULLSCREEN;
+        flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 #endif        
         GrabInput = true;
 #if SDL_MAJOR_VERSION == 1
@@ -465,7 +502,7 @@ static void I_ToggleFullScreen(void)
     }
 
 #if SDL_MAJOR_VERSION == 1
-    SDL_WM_ToggleFullScreen(screenBuffer);
+    flags = flags | SDL_FULLSCREEN;
 
     if (!fullscreen)
     {

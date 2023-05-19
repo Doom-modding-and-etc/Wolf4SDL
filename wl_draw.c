@@ -2015,10 +2015,7 @@ void DrawFullmap(void)
                     DrawTile(sx + dx, sy + dy, ts, ts, EMPTYCOLOUR);
                 else if (tilemap[x][y] >= 128)
                 {
-#ifdef BLAKEDOORS
-
-
-#else
+#ifndef BLAKEDOORS
                     if (!doorposition[tilemap[x][y] - 128])
                         DrawTile(sx + dx, sy + dy, ts, ts, DOORCOLOUR);
                     else

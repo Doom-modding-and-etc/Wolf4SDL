@@ -12,17 +12,7 @@
 #include "wl_cloudsky.h"
 #endif
 
-#ifdef DEBUG
-extern	statetype s_grddie4;
-extern	statetype s_dogdead;
-extern	statetype s_ofcdie5;
-extern	statetype s_mutdie5;
-extern	statetype s_ssdie4;
-extern	statetype s_fakestand;
-extern	statetype s_fakedie6;
-extern	statetype s_mechadie4;
-extern	statetype s_mechastand;
-#endif
+
 
 /*
 =============================================================================
@@ -145,14 +135,18 @@ void PictureGrabber (void)
 {
     int i;
     static char fname[] = "WSHOT000.BMP";
-
-    for(i = 0; i < 1000; i++)
+  
+	for(i = 0; i < 1000; i++)
     {
-	int file;
+		int file;
         fname[7] = i % 10 + '0';
         fname[6] = (i / 10) % 10 + '0';
         fname[5] = i / 100 + '0';
-        /*int*/ file = w3sopen(fname, O_RDONLY | O_BINARY);
+#if defined(_MSC_VER) || defined(DEVCPP)
+        file = w3sopen(fname, O_RDONLY | O_BINARY);
+#else
+        file = w3sopen(fname, O_RDONLY | O_BINARY, 644);
+#endif
         if(file == -1) break;       // file does not exist, so use that filename
         w3sclose(file);
     }
@@ -994,8 +988,9 @@ void DrawMapSprite (short sx, short sy, short shapenum)
 {
     int         x;
     compshape_t *shape;
-    unsigned char *linesrc,*linecmds;
+    unsigned char *linesrc;
     unsigned char *src;
+    unsigned char* linecmds;
     short     end,start,top;
 
     linesrc = PM_GetSpritePage(shapenum);

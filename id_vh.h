@@ -57,8 +57,5 @@ void VWB_Bar (int x, int y, int width, int height, int color);
 void VWB_Plot (int x, int y, int color);
 void VWB_Hlin (int x1, int x2, int y, int color);
 void VWB_Vlin (int y1, int y2, int x, int color);
-#define VWB_HlinScaledCoord(x,z,y,c)	VL_Hlin(x,y,(z)-(x)+1,c)
-#define VWB_VlinScaledCoord(y,z,x,c)	VL_Vlin(x,y,(z)-(y)+1,c)
-
 
 #endif //__ID_VH_H_

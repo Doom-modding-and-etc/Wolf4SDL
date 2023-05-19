@@ -281,7 +281,6 @@ void InitSky (void)
 void DrawCloudSpan (short x1, short x2, short height)
 {
     unsigned char*dest;
-    unsigned short     texture;
     short  count,prestep;
     fixed    basedist;
     fixed    stepscale;
@@ -307,7 +306,7 @@ void DrawCloudSpan (short x1, short x2, short height)
 
     while (count--)
     {
-        texture = ((xfrac >> 5) & 0xff00) + (~(yfrac >> 13) & 0xff);
+        unsigned short     texture = ((xfrac >> 5) & 0xff00) + (~(yfrac >> 13) & 0xff);
 
         *dest++ = skyc[texture];
 

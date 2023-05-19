@@ -841,10 +841,10 @@ void SD_SetDigiDevice(SDSMode mode)
     }
 }
 
-void Delay(int wolfticks)
+wlinline void Delay(int wolfticks)
 {
     if (wolfticks > 0)
-        SDL_Delay(wolfticks * 1000 / TickBase);
+        SDL_Delay((unsigned int)wolfticks * 1000 / TickBase);
 }
 
 #endif //VIEASM

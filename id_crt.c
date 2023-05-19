@@ -11,10 +11,26 @@
 // and the original file creation date: 2014-08-26.
 
 
+#include "wl_def.h"
+#ifdef CRT
+#include <SDL.h>
+
+// Win32
+#if SDL_MAJOR_VERSION == 1
+#if defined(XBOX)
+#include <fakeglx09.h>
+#elif defined(_MSC_VER)
+#include <Windows.h>
+#include <GL/gl.h>
+#elif defined(__linux__)
+#include <GL/gl.h>
+#else
+#include <SDL_opengl.h>
+#endif
+#endif
+
 #include "id_crt.h"
 
-#ifdef CRT
-#include "wl_def.h"
 static int width;
 static int height;
 
@@ -39,8 +55,8 @@ void CRT_Init(int _width)
         GL_TEXTURE_2D,         // target
         0,                     // level, 0 = base, no minimap,
         GL_RGB,                // internalformat
-        320,                   // width
-        200,                   // height
+        screenWidth,                   // width
+        screenHeight,                   // height
         0,                     // border, always 0 in OpenGL ES
         GL_RGB,                // format
         GL_UNSIGNED_BYTE,      // type
@@ -61,15 +77,15 @@ void CRT_Init(int _width)
 
     SDL_GL_SwapBuffers(); 
 #elif SDL_MAJOR_VERSION == 2
-    texture = SDL_CreateTexture(renderer, NULL, 0, width, height);
-    SDL_GetTextureColorMod(texture, 0xFF, 0xFF, 0xFF);
+    texture = SDL_CreateTexture(renderer, 0, 0, width, height);
+    SDL_GetTextureColorMod(texture, (unsigned char *)0xFF, (unsigned char *)0xFF, (unsigned char *)0xFF);
     SDL_UpdateTexture(texture, NULL, screen->pixels, screenWidth * sizeof(Uint32));
-#if defined(SCALE2X)
+#ifdef SCALE2X
     // Render the intermediate texture into the up-scaled texture using 'nearest' integer scaling.
     SDL_SetRenderTarget(renderer, upscaledTexture);
 #endif    
     SDL_RenderCopy(renderer, texture, NULL, NULL);
-#if defined(SCALE2X)
+#ifdef SCALE2X
     // Finally render this up-scaled texture to the window using linear scaling.
     SDL_SetRenderTarget(renderer, NULL);
     SDL_RenderCopy(renderer, upscaledTexture, NULL, NULL);
@@ -82,17 +98,18 @@ void CRT_DAC(void)
 {
 #if SDL_MAJOR_VERSION == 1
     // Grab the screen framebuffer from SDL
-    SDL_Surface* screen = screenBuffer;
     int i;
     //Convert palette based framebuffer to RGB for OpenGL
     unsigned char* pixelPointer = coloredFrameBuffer;
     
+    screen = screenBuffer;
+
     for (i = 0; i < 320 * 200; i++) {
         unsigned char paletteIndex;
         paletteIndex = ((unsigned char*)screen->pixels)[i];
-        *pixelPointer++ = curpal[paletteIndex].r;
-        *pixelPointer++ = curpal[paletteIndex].g;
-        *pixelPointer++ = curpal[paletteIndex].b;
+        *pixelPointer++ = gamepal[paletteIndex].r;
+        *pixelPointer++ = gamepal[paletteIndex].g;
+        *pixelPointer++ = gamepal[paletteIndex].b;
     }
 
     //Upload texture
@@ -101,8 +118,8 @@ void CRT_DAC(void)
         0,
         0,
         0,
-        320,
-        200,
+        screenWidth,
+        screenHeight,
         GL_RGB,
         GL_UNSIGNED_BYTE,
         coloredFrameBuffer);
@@ -118,7 +135,7 @@ void CRT_DAC(void)
     //Flip buffer
     SDL_GL_SwapBuffers();
 #elif SDL_MAJOR_VERSION == 2
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, screenBuffer);
+    texture = SDL_CreateTextureFromSurface(renderer, screenBuffer);
     SDL_RenderCopy(renderer, texture, NULL, NULL);
     SDL_RenderPresent(renderer);
     SDL_GetKeyboardState(NULL);
@@ -131,11 +148,13 @@ void CRT_FreeScreenshot(SDL_Surface* surface1, SDL_Surface *surface2)
     SDL_FreeSurface(surface2);
 }
 
-#if !SDL_MAJOR_VERSION == 1
+#if SDL_MAJOR_VERSION == 2
 void CRT_DestroyTexture(SDL_Texture* texture1, SDL_Texture* texture2) 
 {
     SDL_DestroyTexture(texture);
+#ifdef SCALE_2X
     SDL_DestroyTexture(upscaledTexture);
+#endif
 }
 #endif
 
@@ -150,14 +169,17 @@ void CRT_Screenshot(void)
     const char* filename = "screenshot.bmp";
     int aspectWidth = 640;
     int aspectHeight = 440;
+    SDL_Surface* correctAspect;
+    SDL_Surface* incorrectAspect;
 
     printf("Screenshot.\n");
 
-    SDL_Surface* correctAspect = SDL_CreateRGBSurface(0, aspectWidth, aspectHeight, 32, 0, 0, 0, 0);
-    SDL_Surface* incorrectAspect = SDL_CreateRGBSurface(0, screenBuffer->w, screenBuffer->h, 32, 0, 0, 0, 0);
+
+    correctAspect = SDL_CreateRGBSurface(0, aspectWidth, aspectHeight, 32, 0, 0, 0, 0);
+    incorrectAspect = SDL_CreateRGBSurface(0, screenBuffer->w, screenBuffer->h, 32, 0, 0, 0, 0);
     CRT_BlitImage(screenBuffer, incorrectAspect, incorrectAspect, correctAspect);
     SDL_SaveBMP(correctAspect, filename);
+
     CRT_FreeScreenshot(correctAspect, incorrectAspect);
 }
-
-#endif //CRT
+#endif

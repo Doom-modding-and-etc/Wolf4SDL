@@ -24,7 +24,7 @@ int LSHADE_flag;
 
 // The lower 8-bit of the upper left tile of every map determine
 // the used shading definition of shadeDefs.
-static int GetShadeDefID()
+static wlinline int GetShadeDefID()
 {
     int shadeID = ffDataTopLeft & 0x00ff;
     assert(shadeID >= 0 && shadeID < lengthof(shadeDefs));
@@ -33,7 +33,7 @@ static int GetShadeDefID()
 
 #else
 
-static int GetShadeDefID()
+static wlinline int GetShadeDefID()
 {
     int shadeID;
     switch(gamestate.episode * 10 + gamestate.mapon)
@@ -59,12 +59,12 @@ unsigned char GetColor(unsigned char red, unsigned char green, unsigned char blu
 {
     int col;
     unsigned char mincol = 0;
-    double mindist = 200000.F, curdist, DRed, DGreen, DBlue;
-
+    
     SDL_Color *palPtr = palette;
 
     for(col = 0; col < 256; col++, palPtr++)
     {
+		double mindist = 200000.F, curdist, DRed, DGreen, DBlue;
         DRed   = (double) (red   - palPtr->r);
         DGreen = (double) (green - palPtr->g);
         DBlue  = (double) (blue  - palPtr->b);
@@ -84,7 +84,7 @@ void GenerateShadeTable(unsigned char destRed, unsigned char destGreen, unsigned
                         SDL_Color *palette, int fog)
 {
     int i,shade;
-    double curRed, curGreen, curBlue, redStep, greenStep, blueStep;
+
     SDL_Color *palPtr = palette;
 
     // Set the fog-flag
@@ -93,6 +93,7 @@ void GenerateShadeTable(unsigned char destRed, unsigned char destGreen, unsigned
     // Color loop
     for(i = 0; i < 256; i++, palPtr++)
     {
+		double curRed, curGreen, curBlue, redStep, greenStep, blueStep;
         // Get original palette color
         curRed   = palPtr->r;
         curGreen = palPtr->g;

@@ -1,7 +1,7 @@
 [Project]
 FileName=Wolf4SDL.dev
 Name=Wolf4SDL
-UnitCount=78
+UnitCount=77
 Type=0
 Ver=1
 ObjFiles=
@@ -330,16 +330,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit46]
-FileName=..\Makefile.win
-CompileCpp=0
-Folder=Wolf4SDL
-Compile=0
-Link=0
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit47]
 FileName=..\psnprntf.c
 CompileCpp=0
 Folder=Wolf4SDL
@@ -349,7 +339,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit48]
+[Unit47]
 FileName=..\psnprntf.h
 CompileCpp=0
 Folder=Wolf4SDL
@@ -359,7 +349,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit49]
+[Unit48]
 FileName=..\README.TXT
 CompileCpp=0
 Folder=Wolf4SDL
@@ -369,7 +359,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit50]
+[Unit49]
 FileName=..\sdl_winmain.c
 CompileCpp=0
 Folder=Wolf4SDL
@@ -379,12 +369,22 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit51]
+[Unit50]
 FileName=..\signon.c
 CompileCpp=0
 Folder=Wolf4SDL
 Compile=1
 Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit51]
+FileName=..\sodpal.inc
+CompileCpp=0
+Folder=Wolf4SDL
+Compile=0
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
@@ -408,17 +408,17 @@ ProductVersion=0.1
 AutoIncBuildNr=0
 
 [Unit52]
-FileName=..\sodpal.inc
+FileName=..\version.h
 CompileCpp=0
 Folder=Wolf4SDL
-Compile=0
-Link=0
+Compile=1
+Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
 [Unit53]
-FileName=..\version.h
+FileName=..\wl_act1.c
 CompileCpp=0
 Folder=Wolf4SDL
 Compile=1
@@ -446,7 +446,7 @@ ProductVersion=
 AutoIncBuildNr=0
 
 [Unit54]
-FileName=..\wl_act1.c
+FileName=..\wl_act2.c
 CompileCpp=0
 Folder=Wolf4SDL
 Compile=1
@@ -456,7 +456,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit55]
-FileName=..\wl_act2.c
+FileName=..\wl_agent.c
 CompileCpp=0
 Folder=Wolf4SDL
 Compile=1
@@ -616,16 +616,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit56]
-FileName=..\wl_agent.c
-CompileCpp=0
-Folder=Wolf4SDL
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit57]
 FileName=..\wl_atmos.c
 CompileCpp=0
 Folder=Wolf4SDL
@@ -635,7 +625,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit58]
+[Unit57]
 FileName=..\wl_atmos.h
 CompileCpp=0
 Folder=Wolf4SDL
@@ -645,7 +635,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit59]
+[Unit58]
 FileName=..\wl_cloudsky.c
 CompileCpp=0
 Folder=Wolf4SDL
@@ -655,7 +645,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit60]
+[Unit59]
 FileName=..\wl_cloudsky.h
 CompileCpp=0
 Folder=Wolf4SDL
@@ -665,7 +655,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit61]
+[Unit60]
 FileName=..\wl_debug.c
 CompileCpp=0
 Folder=Wolf4SDL
@@ -675,7 +665,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit62]
+[Unit61]
 FileName=..\wl_def.h
 CompileCpp=0
 Folder=Wolf4SDL
@@ -685,7 +675,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit63]
+[Unit62]
 FileName=..\wl_draw.c
 CompileCpp=0
 Folder=Wolf4SDL
@@ -695,7 +685,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit64]
+[Unit63]
 FileName=..\wl_game.c
 CompileCpp=0
 Folder=Wolf4SDL
@@ -705,7 +695,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit65]
+[Unit64]
 FileName=..\wl_inter.c
 CompileCpp=0
 Folder=Wolf4SDL
@@ -715,7 +705,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit66]
+[Unit65]
 FileName=..\wl_main.c
 CompileCpp=0
 Folder=Wolf4SDL
@@ -725,7 +715,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit67]
+[Unit66]
 FileName=..\wl_menu.c
 CompileCpp=0
 Folder=Wolf4SDL
@@ -735,7 +725,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit68]
+[Unit67]
 FileName=..\wl_menu.h
 CompileCpp=0
 Folder=Wolf4SDL
@@ -745,7 +735,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit69]
+[Unit68]
 FileName=..\wl_parallax.c
 CompileCpp=0
 Folder=Wolf4SDL
@@ -755,7 +745,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit70]
+[Unit69]
 FileName=..\wl_plane.c
 CompileCpp=0
 Folder=Wolf4SDL
@@ -765,7 +755,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit71]
+[Unit70]
 FileName=..\wl_play.c
 CompileCpp=0
 Folder=Wolf4SDL
@@ -775,7 +765,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit72]
+[Unit71]
 FileName=..\wl_scale.c
 CompileCpp=0
 Folder=Wolf4SDL
@@ -785,7 +775,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit73]
+[Unit72]
 FileName=..\wl_shade.c
 CompileCpp=0
 Folder=Wolf4SDL
@@ -795,7 +785,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit74]
+[Unit73]
 FileName=..\wl_shade.h
 CompileCpp=0
 Folder=Wolf4SDL
@@ -805,7 +795,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit75]
+[Unit74]
 FileName=..\wl_state.c
 CompileCpp=0
 Folder=Wolf4SDL
@@ -815,7 +805,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit76]
+[Unit75]
 FileName=..\wl_text.c
 CompileCpp=0
 Folder=Wolf4SDL
@@ -825,8 +815,18 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit77]
+[Unit76]
 FileName=..\wl_utils.c
+CompileCpp=0
+Folder=Wolf4SDL
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit77]
+FileName=..\wl_utils.h
 CompileCpp=0
 Folder=Wolf4SDL
 Compile=1

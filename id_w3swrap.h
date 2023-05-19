@@ -69,12 +69,14 @@ typedef unsigned char boolean;
 #define w3sclose _close
 #define w3sstrdup _strdup
 #define w3sstrupr _strupr
-#define w3sstricmp _stricmp
-#define w3sstrnicmp _strnicmp
 #define w3sstrcasecmp _stricmp
 #define w3sstrncasecmp _strnicmp
 #define w3sstrlwr _strlwr
+#ifdef _WIN64
+#define w3slseek _lseeki64
+#else
 #define w3slseek _lseek
+#endif
 #define w3sunlink _unlink
 #else
 #define w3sopen open
@@ -85,8 +87,6 @@ typedef unsigned char boolean;
 #define w3sstrdup strdup
 char* w3sstrupr(char* str);
 char* w3sstrlwr(char* str);
-#define w3sstricmp stricmp
-#define w3sstrnicmp strnicmp
 #define w3sstrcasecmp strcasecmp
 #define w3sstrncasecmp strncasecmp
 #define w3slseek lseek

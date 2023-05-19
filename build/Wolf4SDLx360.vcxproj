@@ -27,122 +27,85 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="3rdparty\lw_lib\lw_ai_enemy.c" />
-    <ClCompile Include="3rdparty\lw_lib\lw_bres.c" />
-    <ClCompile Include="3rdparty\lw_lib\lw_ctx.c" />
-    <ClCompile Include="3rdparty\lw_lib\lw_edit.c" />
-    <ClCompile Include="3rdparty\lw_lib\lw_fs.c" />
-    <ClCompile Include="3rdparty\lw_lib\lw_maptool.c" />
-    <ClCompile Include="3rdparty\lw_lib\lw_misc.c" />
-    <ClCompile Include="3rdparty\lw_lib\lw_protmsg.c" />
-    <ClCompile Include="3rdparty\lw_lib\lw_pwscan.c" />
-    <ClCompile Include="3rdparty\lw_lib\lw_vec.c" />
-    <ClCompile Include="3rdparty\wolfrad\wolfrad.c" />
-    <ClCompile Include="3rdparty\wolfrad\wr_level.c" />
-    <ClCompile Include="3rdparty\wolfrad\wr_lightinfo.c" />
-    <ClCompile Include="3rdparty\wolfrad\wr_lightmap.c" />
-    <ClCompile Include="3rdparty\wolfrad\wr_rad.c" />
-    <ClCompile Include="3rdparty\wolfrad\wr_radmap.c" />
-    <ClCompile Include="3rdparty\wolfrad\wr_raycaster.c" />
-    <ClCompile Include="3rdparty\wolfrad\wr_room.c" />
-    <ClCompile Include="3rdparty\wolfrad\wr_scene.c" />
-    <ClCompile Include="aud_sys\dosbox\dbopl.c" />
-    <ClCompile Include="aud_sys\mame\fmopl.c" />
-    <ClCompile Include="id_ca.c" />
-    <ClCompile Include="id_crt.c" />
-    <ClCompile Include="id_in.c" />
-    <ClCompile Include="id_pm.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Xbox 360'">CompileAsCpp</CompileAs>
-    </ClCompile>
-    <ClCompile Include="id_sd.c" />
-    <ClCompile Include="id_us.c" />
-    <ClCompile Include="id_vh.c" />
-    <ClCompile Include="id_vieasm.c" />
-    <ClCompile Include="id_vl.c" />
-    <ClCompile Include="signon.c" />
-    <ClCompile Include="wl_act1.c" />
-    <ClCompile Include="wl_act2.c" />
-    <ClCompile Include="wl_agent.c" />
-    <ClCompile Include="wl_atmos.c" />
-    <ClCompile Include="wl_cloudsky.c" />
-    <ClCompile Include="wl_debug.c" />
-    <ClCompile Include="wl_draw.c" />
-    <ClCompile Include="wl_game.c" />
-    <ClCompile Include="wl_inter.c" />
-    <ClCompile Include="wl_main.c" />
-    <ClCompile Include="wl_menu.c" />
-    <ClCompile Include="wl_parallax.c" />
-    <ClCompile Include="wl_plane.c" />
-    <ClCompile Include="wl_play.c" />
-    <ClCompile Include="wl_scale.c" />
-    <ClCompile Include="wl_shade.c" />
-    <ClCompile Include="wl_state.c" />
-    <ClCompile Include="wl_text.c" />
-    <ClCompile Include="wl_utils.c" />
-  </ItemGroup>
-  <ItemGroup>
+    <ClInclude Include="..\asmcref.h" />
+    <ClInclude Include="..\audiosod.h" />
+    <ClInclude Include="..\audiowl6.h" />
+    <ClInclude Include="..\aud_sys\nukedopl3\opl3.h" />
+    <ClInclude Include="..\foreign.h" />
+    <ClInclude Include="..\f_spear.h" />
+    <ClInclude Include="..\gfxv_apo.h" />
+    <ClInclude Include="..\gfxv_jap.h" />
+    <ClInclude Include="..\gfxv_sod.h" />
+    <ClInclude Include="..\gfxv_wl6.h" />
+    <ClInclude Include="..\id_ca.h" />
+    <ClInclude Include="..\id_crt.h" />
+    <ClInclude Include="..\id_in.h" />
+    <ClInclude Include="..\id_pm.h" />
+    <ClInclude Include="..\id_sd.h" />
+    <ClInclude Include="..\id_udp.h" />
+    <ClInclude Include="..\id_us.h" />
+    <ClInclude Include="..\id_vh.h" />
+    <ClInclude Include="..\id_vieasm.h" />
+    <ClInclude Include="..\id_vl.h" />
+    <ClInclude Include="..\id_w3swrap.h" />
+    <ClInclude Include="..\psnprntf.h" />
+    <ClInclude Include="..\version.h" />
+    <ClInclude Include="..\wl_atmos.h" />
+    <ClInclude Include="..\wl_cloudsky.h" />
+    <ClInclude Include="..\wl_def.h" />
+    <ClInclude Include="..\wl_menu.h" />
+    <ClInclude Include="..\wl_shade.h" />
+    <ClInclude Include="..\wl_utils.h" />
     <ClInclude Include="3rdparty\fixedptc.h" />
-    <ClInclude Include="3rdparty\lw_lib\lw_ai_enemy.h" />
-    <ClInclude Include="3rdparty\lw_lib\lw_bres.h" />
-    <ClInclude Include="3rdparty\lw_lib\lw_ctx.h" />
-    <ClInclude Include="3rdparty\lw_lib\lw_dict.h" />
-    <ClInclude Include="3rdparty\lw_lib\lw_edit.h" />
-    <ClInclude Include="3rdparty\lw_lib\lw_fs.h" />
-    <ClInclude Include="3rdparty\lw_lib\lw_img.h" />
-    <ClInclude Include="3rdparty\lw_lib\lw_intmap.h" />
-    <ClInclude Include="3rdparty\lw_lib\lw_maptool.h" />
-    <ClInclude Include="3rdparty\lw_lib\lw_misc.h" />
-    <ClInclude Include="3rdparty\lw_lib\lw_protmsg.h" />
-    <ClInclude Include="3rdparty\lw_lib\lw_pwscan.h" />
-    <ClInclude Include="3rdparty\lw_lib\lw_strmap.h" />
-    <ClInclude Include="3rdparty\lw_lib\lw_vec.h" />
     <ClInclude Include="3rdparty\uthash\utarray.h" />
     <ClInclude Include="3rdparty\uthash\uthash.h" />
     <ClInclude Include="3rdparty\uthash\utlist.h" />
     <ClInclude Include="3rdparty\uthash\utringbuffer.h" />
     <ClInclude Include="3rdparty\uthash\utstack.h" />
     <ClInclude Include="3rdparty\uthash\utstring.h" />
-    <ClInclude Include="3rdparty\wolfrad\wolfrad.h" />
-    <ClInclude Include="3rdparty\wolfrad\wr_level.h" />
-    <ClInclude Include="3rdparty\wolfrad\wr_lightinfo.h" />
-    <ClInclude Include="3rdparty\wolfrad\wr_lightmap.h" />
-    <ClInclude Include="3rdparty\wolfrad\wr_rad.h" />
-    <ClInclude Include="3rdparty\wolfrad\wr_radmap.h" />
-    <ClInclude Include="3rdparty\wolfrad\wr_raycaster.h" />
-    <ClInclude Include="3rdparty\wolfrad\wr_room.h" />
-    <ClInclude Include="3rdparty\wolfrad\wr_scene.h" />
-    <ClInclude Include="asmcref.h" />
-    <ClInclude Include="audiosod.h" />
-    <ClInclude Include="audiowl6.h" />
     <ClInclude Include="aud_sys\dosbox\dbopl.h" />
     <ClInclude Include="aud_sys\mame\fmopl.h" />
-    <ClInclude Include="foreign.h" />
-    <ClInclude Include="f_spear.h" />
-    <ClInclude Include="gfxv_apo.h" />
-    <ClInclude Include="gfxv_jap.h" />
-    <ClInclude Include="gfxv_sod.h" />
-    <ClInclude Include="gfxv_wl6.h" />
-    <ClInclude Include="gp2x.h" />
-    <ClInclude Include="id_ca.h" />
-    <ClInclude Include="id_crt.h" />
-    <ClInclude Include="id_in.h" />
-    <ClInclude Include="id_pm.h" />
-    <ClInclude Include="id_sd.h" />
-    <ClInclude Include="id_us.h" />
-    <ClInclude Include="id_vh.h" />
-    <ClInclude Include="id_vieasm.h" />
-    <ClInclude Include="id_vl.h" />
-    <ClInclude Include="version.h" />
-    <ClInclude Include="wl_atmos.h" />
-    <ClInclude Include="wl_cloudsky.h" />
-    <ClInclude Include="wl_def.h" />
-    <ClInclude Include="wl_menu.h" />
-    <ClInclude Include="wl_shade.h" />
-    <ClInclude Include="wl_utils.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="sodpal.inc" />
-    <None Include="wolfpal.inc" />
+    <None Include="..\sodpal.inc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\aud_sys\dosbox\dbopl.c" />
+    <ClCompile Include="..\aud_sys\mame\fmopl.c" />
+    <ClCompile Include="..\aud_sys\nukedopl3\opl3.c" />
+    <ClCompile Include="..\id_ca.c" />
+    <ClCompile Include="..\id_crt.c" />
+    <ClCompile Include="..\id_in.c" />
+    <ClCompile Include="..\id_pm.c" />
+    <ClCompile Include="..\id_sd.c" />
+    <ClCompile Include="..\id_udp.c" />
+    <ClCompile Include="..\id_us.c" />
+    <ClCompile Include="..\id_vh.c" />
+    <ClCompile Include="..\id_vieasm.c" />
+    <ClCompile Include="..\id_vl.c" />
+    <ClCompile Include="..\id_w3swrap.c" />
+    <ClCompile Include="..\psnprntf.c" />
+    <ClCompile Include="..\sdl_winmain.c" />
+    <ClCompile Include="..\signon.c" />
+    <ClCompile Include="..\wl_act1.c" />
+    <ClCompile Include="..\wl_act2.c" />
+    <ClCompile Include="..\wl_agent.c" />
+    <ClCompile Include="..\wl_atmos.c" />
+    <ClCompile Include="..\wl_cloudsky.c" />
+    <ClCompile Include="..\wl_debug.c" />
+    <ClCompile Include="..\wl_draw.c" />
+    <ClCompile Include="..\wl_game.c" />
+    <ClCompile Include="..\wl_inter.c" />
+    <ClCompile Include="..\wl_main.c" />
+    <ClCompile Include="..\wl_menu.c" />
+    <ClCompile Include="..\wl_parallax.c" />
+    <ClCompile Include="..\wl_plane.c" />
+    <ClCompile Include="..\wl_play.c" />
+    <ClCompile Include="..\wl_scale.c" />
+    <ClCompile Include="..\wl_shade.c" />
+    <ClCompile Include="..\wl_state.c" />
+    <ClCompile Include="..\wl_text.c" />
+    <ClCompile Include="..\wl_utils.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5851E8E2-1C14-4383-8C3D-C4F4A10F31A2}</ProjectGuid>
@@ -321,7 +284,7 @@
       <PrecompiledHeaderOutputFile>$(OutDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PreprocessorDefinitions>NDEBUG;_XBOX;XBOX_360;C89;USE_INLINE_C89;_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <CompileAs>CompileAsCpp</CompileAs>
+      <CompileAs>Default</CompileAs>
       <InlineFunctionExpansion>Default</InlineFunctionExpansion>
       <AdditionalIncludeDirectories>C:\SDLx360\SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <IntrinsicFunctions>false</IntrinsicFunctions>
@@ -334,7 +297,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <ProgramDatabaseFile>$(OutDir)$(ProjectName).pdb</ProgramDatabaseFile>
       <SetChecksum>true</SetChecksum>
-      <AdditionalDependencies>xapilib.lib;d3d9.lib;d3dx9.lib;xgraphics.lib;xboxkrnl.lib;xnet.lib;xaudio2.lib;xact3.lib;x3daudio.lib;xmcore.lib;vcomp.lib;SDLx360.lib;SDL_mixerx360.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xapilib.lib;d3d9.lib;d3dx9.lib;xgraphics.lib;xboxkrnl.lib;xnet.lib;xaudio2.lib;xact3.lib;x3daudio.lib;xmcore.lib;vcomp.lib;SDLx360.lib;SDL_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\SDLx360;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>

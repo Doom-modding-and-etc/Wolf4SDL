@@ -103,7 +103,11 @@
 #define CTL_Y   86
 #endif
 #define CTL_W   284
+#ifdef MOUSELOOK
+#define CTL_H   86
+#else
 #define CTL_H   60
+#endif
 #ifdef SAVE_GAME_SCREENSHOT
 #define LSM_X   10
 #else
@@ -155,7 +159,7 @@ typedef struct {
 typedef struct {
                 short active;
                 char string[36];
-                int (* routine)();
+                int (* routine)(int quick);
                 } CP_itemtype;
 
 typedef struct {

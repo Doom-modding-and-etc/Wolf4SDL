@@ -26,7 +26,7 @@ struct iovec
      size_t iov_len;    
 };
 #elif !defined(_arch_dreamcast) 
-#ifdef DEVCPP
+#if defined(DEVCPP) || !defined(PSVITA)
     #include <io.h>
 #else
     #include <sys/uio.h>
@@ -167,7 +167,7 @@ char graphext[5];
 char audioext[5];
 #endif
 
-#if defined(SWITCH) || defined(SEGA_SATURN) || defined(N3DS) || defined(PS2)
+#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
 #ifdef SEGA_SATURN
 static const char gheadname[] = DATADIR "VGAHEAD.";
 static const char gfilename[] = DATADIR "VGAGRAPH.";
@@ -198,8 +198,7 @@ static const char gdictname[] = "vgadict.";
 static const char mheadname[] = "maphead.";
 #ifdef CARMACIZED
 static const char mfilecama[] = "gamemaps.";
-#endif
-#ifndef CARMACIZED
+#else
 static const char mfilename[] = "maptemp.";
 #endif
 #ifndef VIEASM
@@ -266,7 +265,7 @@ static int GRFILEPOS(const size_t idx)
 void CAL_GetGrChunkLength (int chunk)
 {
 #ifdef SEGA_SATURN
-    unsigned int pos = GRFILEPOS(chunk);
+    size_t pos = GRFILEPOS(chunk);
     readChunks(grhandle, sizeof(chunkexplen), &pos, saturnChunk, (unsigned char*)&chunkexplen);
 #else
     w3slseek(grhandle, GRFILEPOS(chunk), SEEK_SET);
@@ -287,8 +286,13 @@ void CAL_GetGrChunkLength (int chunk)
 
 boolean CA_WriteFile (const char *filename, void *ptr, int length)
 {
-    const int handle = w3sopen(filename, O_CREAT | O_WRONLY | O_BINARY, 0644);
-    if (handle == -1)
+    int handle;
+#if defined(_MSC_VER) || defined(DEVCPP)
+	handle = w3sopen(filename, O_CREAT | O_WRONLY | O_BINARY);
+#else
+    handle = w3sopen(filename, O_CREAT | O_WRONLY | O_BINARY, 0644);
+#endif
+	if (handle == -1)
         return false;
 
     if (!w3swrite (handle,ptr,length))
@@ -315,12 +319,17 @@ boolean CA_WriteFile (const char *filename, void *ptr, int length)
 boolean CA_LoadFile (const char *filename, void **ptr)
 {
     int size;
-
-    const int handle = w3sopen(filename, O_RDONLY | O_BINARY);
-    if (handle == -1)
+    
+    int handle;
+#if defined(_MSC_VER) || defined(DEVCPP)
+	handle = w3sopen(filename, O_RDONLY | O_BINARY);
+#else
+    handle = w3sopen(filename, O_RDONLY | O_BINARY, 0644);
+#endif
+	if (handle == -1)
         return false;
 
-    size = w3slseek(handle, 0, SEEK_END);
+    size = (int)w3slseek(handle, 0, SEEK_END);
     w3slseek(handle, 0, SEEK_SET);
     *ptr = SafeMalloc(size);
 
@@ -406,7 +415,7 @@ static void CAL_HuffExpand(unsigned char *source, unsigned char *dest, int lengt
 
 void CAL_CarmackExpand (unsigned char *source, unsigned short *dest, int length)
 {
-    unsigned short ch,chhigh,count,offset;
+    unsigned short count, offset;
     unsigned char *inptr;
     unsigned short *copyptr, *outptr;
 
@@ -417,9 +426,10 @@ void CAL_CarmackExpand (unsigned char *source, unsigned short *dest, int length)
 
     while (length>0)
     {
-        ch = READWORD(inptr);
+        unsigned short ch = READWORD(inptr);
+        unsigned short chhigh = ch >> 8;
         inptr += 2;
-        chhigh = ch>>8;
+        
         if (chhigh == NEARTAG)
         {
             count = ch&0xff;
@@ -477,7 +487,6 @@ void CAL_CarmackExpand (unsigned char *source, unsigned short *dest, int length)
 
 int CA_RLEWCompress (unsigned short *source, int length, unsigned short *dest, unsigned short rlewtag)
 {
-    unsigned short value,count;
     unsigned i;
     unsigned short *start,*end;
 
@@ -490,8 +499,8 @@ int CA_RLEWCompress (unsigned short *source, int length, unsigned short *dest, u
     //
     do
     {
-        count = 1;
-        value = *source++;
+        unsigned short count = 1;
+        unsigned short value = *source++;
         while (*source == value && source<end)
         {
             count++;
@@ -532,7 +541,7 @@ int CA_RLEWCompress (unsigned short *source, int length, unsigned short *dest, u
 
 void CA_RLEWexpand (unsigned short *source, unsigned short *dest, int length, unsigned short rlewtag)
 {
-    unsigned short value,count,i;
+    unsigned short count,i;
     unsigned short *end=dest+length/2;
 
 //
@@ -540,7 +549,7 @@ void CA_RLEWexpand (unsigned short *source, unsigned short *dest, int length, un
 //
     do
     {
-        value = *source++;
+        unsigned short value = *source++;
         if (value != rlewtag)
             //
             // uncompressed
@@ -751,9 +760,12 @@ void CAL_SetupGrFile (void)
 
     strcpy(fname,gdictname);
     strcat(fname,graphext);
-
-    handle = w3sopen(fname, O_RDONLY | O_BINARY);
-    if (handle == -1)
+#if defined(_MSC_VER) || defined(DEVCPP)
+	handle = w3sopen(fname, O_RDONLY | O_BINARY);
+#else
+	handle = w3sopen(fname, O_RDONLY | O_BINARY, 0644);
+#endif
+	if (handle == -1)
         CA_CannotOpen(fname);
 
     w3sread(handle, grhuffman, sizeof(grhuffman));
@@ -762,12 +774,15 @@ void CAL_SetupGrFile (void)
     // load the data offsets from ???head.ext
     strcpy(fname,gheadname);
     strcat(fname,graphext);
-
-    handle = w3sopen(fname, O_RDONLY | O_BINARY);
-    if (handle == -1)
+#if defined(_MSC_VER) || defined(DEVCPP)
+	handle = w3sopen(fname, O_RDONLY | O_BINARY);
+#else
+	handle = w3sopen(fname, O_RDONLY | O_BINARY, 644);
+#endif
+	if (handle == -1)
         CA_CannotOpen(fname);
 
-    headersize = w3slseek(handle, 0, SEEK_END);
+    headersize = (long)w3slseek(handle, 0, SEEK_END);
     w3slseek(handle, 0, SEEK_SET);
 
 	expectedsize = lengthof(grstarts);
@@ -796,18 +811,34 @@ void CAL_SetupGrFile (void)
 //
     strcpy(fname,gfilename);
     strcat(fname,graphext);
-
-    grhandle = w3sopen(fname, O_RDONLY | O_BINARY);
-    if (grhandle == -1)
+#if defined(_MSC_VER) || defined(DEVCPP)
+	grhandle = w3sopen(fname, O_RDONLY | O_BINARY);
+#else
+	grhandle = w3sopen(fname, O_RDONLY | O_BINARY, 0644);
+#endif
+	if (grhandle == -1)
         CA_CannotOpen(fname);
 
 
 //
 // load the pic and sprite headers into the arrays in the data segment
 //
+#if defined(REINTERPRET_CAST)
+    pictable = reinterpret_cast<pictabletype*>(SafeMalloc(NUMPICS * sizeof(*pictable)));
+#elif defined(STATIC_CAST)
+    pictable = static_cast<pictabletype*>(SafeMalloc(NUMPICS * sizeof(*pictable)));
+#else
     pictable = (pictabletype*)SafeMalloc(NUMPICS * sizeof(*pictable));
+#endif
+
     CAL_GetGrChunkLength(STRUCTPIC);                // position file pointer
+#if defined(REINTERPRET_CAST)
+    compseg = reinterpret_cast<unsigned char*>(SafeMalloc(chunkcomplen));
+#elif defined(STATIC_CAST)
+    compseg = static_cast<unsigned char*>(SafeMalloc(chunkcomplen));
+#else
     compseg = (unsigned char*)SafeMalloc(chunkcomplen);
+#endif
     w3sread (grhandle,compseg,chunkcomplen);
     CAL_HuffExpand(compseg, (unsigned char*)pictable, NUMPICS * sizeof(*pictable), grhuffman);
     free(compseg);
@@ -954,7 +985,7 @@ void CAL_SetupMapFile (void)
     int     i;
     int handle;
     int pos;
-#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN)
+#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
     char fname[13 + sizeof(DATADIR)];
 #else
     char fname[13];
@@ -964,13 +995,21 @@ void CAL_SetupMapFile (void)
 //
     strcpy(fname,mheadname);
     strcat(fname,extension);
-
-    handle = w3sopen(fname, O_RDONLY | O_BINARY);
-    if (handle == -1)
+#if defined(_MSC_VER) || defined(DEVCPP)
+	handle = w3sopen(fname, O_RDONLY | O_BINARY);
+#else
+	handle = w3sopen(fname, O_RDONLY | O_BINARY, 0644);
+#endif
+	if (handle == -1)
         CA_CannotOpen(fname);
-
+#if defined(REINTERPRET_CAST)
+    tinf = reinterpret_cast<mapfiletype*>(SafeMalloc(sizeof(*tinf)));
+#elif defined(STATIC_CAST)
+    tinf = static_cast<mapfiletype*>(SafeMalloc(sizeof(*tinf)));
+#else
     tinf = (mapfiletype*)SafeMalloc(sizeof(*tinf));
-
+#endif
+    
     w3sread(handle, tinf, sizeof(*tinf));
     w3sclose(handle);
 
@@ -980,9 +1019,12 @@ void CAL_SetupMapFile (void)
 #ifdef CARMACIZED
     strcpy(fname, mfilecama);    
     strcat(fname, extension);
-
-    maphandle = w3sopen(fname, O_RDONLY | O_BINARY);
-    if (maphandle == -1)
+#if defined(_MSC_VER) || defined(DEVCPP)
+	maphandle = w3sopen(fname, O_RDONLY | O_BINARY);
+#else
+    maphandle = w3sopen(fname, O_RDONLY | O_BINARY, 0644);
+#endif
+	if (maphandle == -1)
         CA_CannotOpen(fname);
 #else
     strcpy(fname,mfilename);
@@ -1001,8 +1043,13 @@ void CAL_SetupMapFile (void)
         pos = tinf->headeroffsets[i];
         if (pos<0)                          // $FFFFFFFF start is a sparse map
             continue;
-
+#if defined(REINTERPRET_CAST)
+        mapheaderseg[i] = reinterpret_cast<maptype*>(SafeMalloc(sizeof(*mapheaderseg[i])));
+#elif defined(STATIC_CAST)
+        mapheaderseg[i] = static_cast<maptype*>(SafeMalloc(sizeof(*mapheaderseg[i])));
+#else
         mapheaderseg[i] = (maptype*)SafeMalloc(sizeof(*mapheaderseg[i]));
+#endif
 
         w3slseek(maphandle,pos,SEEK_SET);
         w3sread (maphandle,mapheaderseg[i],sizeof(*mapheaderseg[i]));
@@ -1013,7 +1060,13 @@ void CAL_SetupMapFile (void)
 //
     for (i = 0; i < MAPPLANES; i++)
     {
+#if defined(REINTERPRET_CAST)
+        mapsegs[i] = reinterpret_cast<unsigned short*>(SafeMalloc(MAPAREA * sizeof(*mapsegs[i])));
+#elif defined(STATIC_CAST)
+        mapsegs[i] = static_cast<unsigned short*>(SafeMalloc(MAPAREA * sizeof(*mapsegs[i])));
+#else
         mapsegs[i] = (unsigned short*)SafeMalloc(MAPAREA * sizeof(*mapsegs[i]));
+#endif
     }
 #endif
 }
@@ -1055,9 +1108,12 @@ void CAL_SetupAudioFile (void)
 //
     strcpy(fname,afilename);
     strcat(fname,audioext);
-
-    audiohandle = w3sopen(fname, O_RDONLY | O_BINARY);
-    if (audiohandle == -1)
+#if defined(_MSC_VER) || defined(DEVCPP)
+	audiohandle = w3sopen(fname, O_RDONLY | O_BINARY);
+#else
+	audiohandle = w3sopen(fname, O_RDONLY | O_BINARY, 0644);
+#endif
+	if (audiohandle == -1)
         CA_CannotOpen(fname);
 }
 #endif
@@ -1186,8 +1242,13 @@ int CA_CacheAudioChunk (int chunk)
 
     if (audiosegs[chunk])
         return size;                        // already in memory
-
-    audiosegs[chunk] = SafeMalloc(size);
+#if defined(REINTERPRET_CAST)
+    audiosegs[chunk] = reinterpret_cast<unsigned char*>(SafeMalloc(size));
+#elif defined(STATIC_CAST)
+    audiosegs[chunk] = static_cast<unsigned char*>(SafeMalloc(size));
+#else
+    audiosegs[chunk] = (unsigned char*)SafeMalloc(size);
+#endif
 
     w3slseek(audiohandle,pos,SEEK_SET);
     w3sread(audiohandle,audiosegs[chunk],size);
@@ -1208,13 +1269,23 @@ void CA_CacheAdlibSoundChunk (int chunk)
         return;                        // already in memory
 
     w3slseek(audiohandle, pos, SEEK_SET);
-
-    bufferseg = SafeMalloc(ORIG_ADLIBSOUND_SIZE - 1);
+#if defined(REINTERPRET_CAST)
+    bufferseg = reinterpret_cast<unsigned char*>(SafeMalloc(ORIG_ADLIBSOUND_SIZE - 1));
+#elif defined(STATIC_CAST)
+    bufferseg = static_cast<unsigned char*>(SafeMalloc(ORIG_ADLIBSOUND_SIZE - 1));
+#else
+    bufferseg = (unsigned char*)SafeMalloc(ORIG_ADLIBSOUND_SIZE - 1);
+#endif
     ptr = bufferseg;
 
     w3sread(audiohandle, ptr, ORIG_ADLIBSOUND_SIZE - 1);   // without data[1]
-
-    sound = SafeMalloc(size + sizeof(*sound) - ORIG_ADLIBSOUND_SIZE);
+#if defined(REINTERPRET_CAST)
+    sound = reinterpret_cast<AdLibSound*>(SafeMalloc(size + sizeof(*sound) - ORIG_ADLIBSOUND_SIZE));
+#elif defined(STATIC_CAST)
+    sound = static_cast<AdLibSound*>(SafeMalloc(size + sizeof(*sound) - ORIG_ADLIBSOUND_SIZE));
+#else
+    sound = (AdLibSound*)SafeMalloc(size + sizeof(*sound) - ORIG_ADLIBSOUND_SIZE);
+#endif
 
     sound->common.length = READLONGWORD(ptr);
     ptr += 4;
@@ -1358,7 +1429,13 @@ void CAL_ExpandGrChunk (int chunk, int *source)
     //
     // allocate final space and decompress it
     //
-    grsegs[chunk] = SafeMalloc(expanded);
+#if defined(REINTERPRET_CAST)
+    grsegs[chunk] = reinterpret_cast<unsigned char*>(SafeMalloc(expanded));
+#elif defined(STATIC_CAST)
+    grsegs[chunk] = static_cast<unsigned char*>(SafeMalloc(expanded));
+#else
+    grsegs[chunk] = (unsigned char*)SafeMalloc(expanded);
+#endif
 
     CAL_HuffExpand((unsigned char *) source, grsegs[chunk], expanded, grhuffman);
 }
@@ -1374,11 +1451,11 @@ void CAL_ExpandGrChunk (int chunk, int *source)
 #ifndef SEGA_SATURN
 void CAL_DeplaneGrChunk (int chunk)
 {
-    int     i;
     short width,height;
 
     if (chunk == STARTTILE8)
     {
+        int     i;
         width = height = 8;
 
         for (i = 0; i < NUMTILE8; i++)
@@ -1480,8 +1557,13 @@ void CA_CacheGrChunks (void)
 #endif
 
         w3slseek(grhandle,pos,SEEK_SET);
-
+#if defined(REINTERPRET_CAST)
+        bufferseg = reinterpret_cast<int*>(SafeMalloc(compressed));
+#elif defined(STATIC_CAST)
+        bufferseg = static_cast<int*>(SafeMalloc(compressed));
+#else
         bufferseg = (int*)SafeMalloc(compressed);
+#endif
         source = bufferseg;
 
         w3sread(grhandle,source,compressed);
@@ -1535,7 +1617,7 @@ void CA_CacheMap (int mapnum)
 //
 #ifdef SEGA_SATURN
     //TODO: Adapt this...
-    uint32_t pos = GRFILEPOS(chunk);
+    pos = GRFILEPOS(chunk);
     readChunks(grhandle, sizeof(chunkexplen), &pos, saturnChunk, (unsigned char*)&chunkexplen);
 #else
     size = MAPAREA * sizeof(*dest);
@@ -1554,7 +1636,13 @@ void CA_CacheMap (int mapnum)
 #ifndef SEGA_SATURN
         w3slseek(maphandle,pos,SEEK_SET);
 #endif
+#if defined(REINTERPRET_CAST)
+        bufferseg = reinterpret_cast<unsigned short*>(SafeMalloc(compressed));
+#elif defined(STATIC_CAST)
+        bufferseg = static_cast<unsigned short*>(SafeMalloc(compressed));
+#else
         bufferseg = (unsigned short*)SafeMalloc(compressed);
+#endif
         source = bufferseg;
 #ifdef SEGA_SATURN
         memcpy(source, &Chunks[pos], compressed);
@@ -1575,7 +1663,13 @@ void CA_CacheMap (int mapnum)
         expanded = *source;
         source++;
 #endif
+#if defined(REINTERPRET_CAST)
+        buffer2seg = reinterpret_cast<unsigned short*>(SafeMalloc(expanded));
+#elif defined(STATIC_CAST)
+        buffer2seg = static_cast<unsigned short*>(SafeMalloc(expanded));
+#else
         buffer2seg = (unsigned short*)SafeMalloc(expanded);
+#endif
         CAL_CarmackExpand((unsigned char *) source, buffer2seg,expanded);
         CA_RLEWexpand(buffer2seg+1,dest,size,tinf->RLEWtag);
         free(buffer2seg);

@@ -91,7 +91,7 @@ SDL_Window *window;
 SDL_Renderer *renderer;
 SDL_Texture *texture;
 #if defined(SCALE2X) 
-SDL_Texture* upscaledTexture = NULL;
+SDL_Texture* upscaledTexture;
 #endif
 #endif
 
@@ -108,8 +108,8 @@ SDL_Color palette1[256], palette2[256];
 SDL_Color curpal[256];
 
 
-static unsigned int rndbits_y;
-static unsigned int rndmask;
+static size_t rndbits_y;
+static size_t rndmask;
 
 
 #define CASSERT(x) extern int ASSERT_COMPILE[((x) != 0) * 2 - 1];
@@ -238,7 +238,7 @@ WRGB(38,  0, 34)
 };
 
 // XOR masks for the pseudo-random number sequence starting with n=17 bits
-static const unsigned int rndmasks[] = {
+static const size_t rndmasks[] = {
     // n    XNOR from (starting at 1, not 0 as usual)
 0x00012000,     // 17   17,14
 0x00020400,     // 18   18,11
@@ -259,10 +259,11 @@ CASSERT(lengthof(gamepal) == 256)
 //===========================================================================
 
 // Returns the number of bits needed to represent the given value
-static int log2_ceil(unsigned int x)
+static size_t log2_ceil(unsigned int x)
 {
     int n = 0;
     unsigned int v = 1;
+    
     while (v < x)
     {
         n++;
@@ -281,8 +282,8 @@ static int log2_ceil(unsigned int x)
 
 void VL_Startup()
 {
-    int rndbits_x = log2_ceil(screenWidth);
-    int rndbits;
+    size_t rndbits_x = log2_ceil(screenWidth);
+    size_t rndbits;
     rndbits_y = log2_ceil(screenHeight);
 
     rndbits = rndbits_x + rndbits_y;
@@ -298,7 +299,6 @@ void VWL_MeasureString(const char* string, unsigned short* width, unsigned short
 {
 #ifdef SEGA_SATURN
     * height = SWAP_BYTES_16(font->height);
-
 #else
     * height = font->height;
 #endif
@@ -333,7 +333,6 @@ void VL_Shutdown (void)
     free (wallheight);
 #if defined(USE_FLOORCEILINGTEX) || defined(USE_CLOUDSKY)
     free (spanstart);
-
     spanstart = NULL;
 #endif
     screenBuffer = NULL;
@@ -358,7 +357,7 @@ void VL_Shutdown (void)
 */
 
 boolean FizzleFade(SDL_Surface* source, int x1, int y1,
-    unsigned width, unsigned height, unsigned frames, boolean abortable)
+    unsigned int width, unsigned int height, unsigned int frames, boolean abortable)
 {
 #ifdef SEGA_SATURN
 #if 1
@@ -463,10 +462,9 @@ finished:
     return false;
 #endif
 #else
-    unsigned x, y, p, pixperframe; //TODO: <--
-    size_t frame;
-    int  rndval = 0, lastrndval = 0;
-    int      i, first = 1;
+    size_t x, y, p, pixperframe, frame;
+    size_t  rndval = 0, lastrndval = 0;
+    size_t      i, first = 1;
     unsigned char* srcptr;
     pixperframe = width * height / frames;
 
@@ -588,7 +586,7 @@ finished:
 
 void VL_SetVGAPlaneMode (void)
 {
-    int i;
+    unsigned int i;
 #if SDL_MAJOR_VERSION == 2
     unsigned int a,r,g,b;
 #endif
@@ -658,7 +656,7 @@ void VL_SetVGAPlaneMode (void)
 #else
     screen = SDL_SetVideoMode(screenWidth, screenHeight, screenBits,
         (usedoublebuffering ? SDL_HWSURFACE | SDL_DOUBLEBUF : 0) | (screenBits == 8 ? SDL_HWPALETTE : 0)
-        | (fullscreen ? SDL_FULLSCREEN : 0));
+        | (fullscreen ? SDL_FULLSCREEN : 0) | (SDL_OPENGL ? true : false));
 #endif
 
     if(!screen)
@@ -770,15 +768,34 @@ void VL_SetVGAPlaneMode (void)
 
     scaleFactor = screenWidth/320;
     if(screenHeight/200 < (unsigned int)scaleFactor) scaleFactor = screenHeight/200;
-
+#if defined(REINTERPRET_CAST)
+    ylookup = reinterpret_cast<unsigned int*>(SafeMalloc(screenHeight * sizeof(*ylookup)));
+    pixelangle = reinterpret_cast<short*>(SafeMalloc(screenWidth * sizeof(*pixelangle)));
+    wallheight = reinterpret_cast<short*>(SafeMalloc(screenWidth * sizeof(*wallheight)));
+#if defined(USE_FLOORCEILINGTEX) || defined(USE_CLOUDSKY)
+    spanstart = reinterpret_cast<short*>(SafeMalloc((screenHeight / 2) * sizeof(*spanstart)));
+#endif
+#elif defined(STATIC_CAST)
+    ylookup = static_cast<unsigned int*>(SafeMalloc(screenHeight * sizeof(*ylookup)));
+    pixelangle = static_cast<short*>(SafeMalloc(screenWidth * sizeof(*pixelangle)));
+    wallheight = static_cast<short*>(SafeMalloc(screenWidth * sizeof(*wallheight)));
+#if defined(USE_FLOORCEILINGTEX) || defined(USE_CLOUDSKY)
+    spanstart = static_cast<short*>(SafeMalloc((screenHeight / 2) * sizeof(*spanstart)));
+#endif
+#else
     ylookup = (unsigned int*)SafeMalloc(screenHeight * sizeof(*ylookup));
     pixelangle = (short*)SafeMalloc(screenWidth * sizeof(*pixelangle));
     wallheight = (short*)SafeMalloc(screenWidth * sizeof(*wallheight));
 #if defined(USE_FLOORCEILINGTEX) || defined(USE_CLOUDSKY)
+    spanstart = (short*)SafeMalloc((screenHeight / 2) * sizeof(*spanstart));
+#endif
+#endif
+
+#if defined(USE_FLOORCEILINGTEX) || defined(USE_CLOUDSKY)
     spanstart = SafeMalloc((screenHeight / 2) * sizeof(*spanstart));
 #endif
 
-    for (i = 0; i < (int)screenHeight; i++)
+    for (i = 0; i < screenHeight; i++)
         ylookup[i] = i * bufferPitch;
 }
 
@@ -874,7 +891,7 @@ void VL_FillPalette (unsigned char red, unsigned char green, unsigned char blue)
 =================
 */
 
-void VL_SetColor	(int color, int red, int green, int blue)
+void VL_SetColor(int color, unsigned char red, unsigned char green, unsigned char blue)
 {
 #ifdef SEGA_SATURN
     memcpyl(curpal, palette, sizeof(SDL_Color) * 256);
@@ -882,9 +899,9 @@ void VL_SetColor	(int color, int red, int green, int blue)
    
     SDL_Color col = 
     { 
-        (unsigned char) red,
-        (unsigned char) green,
-        (unsigned char) blue
+        red,
+        green,
+        blue
     };
     
     curpal[color] = col;
@@ -907,7 +924,8 @@ void VL_SetColor	(int color, int red, int green, int blue)
         SDL_SetPaletteColors(screen->format->palette, &col, color, 1);
     else
     {
-        SDL_SetPaletteColors(screenBuffer->format->palette, &col, color, 1);   
+        SDL_SetPaletteColors(screenBuffer->format->palette, &col, color, 1);
+        SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
 #ifdef CRT        
         CRT_Init(screen);
         CRT_DAC();
@@ -920,22 +938,6 @@ void VL_SetColor	(int color, int red, int green, int blue)
 }
 
 //===========================================================================
-
-/*
-=================
-=
-= VL_GetColor
-=
-=================
-*/
-
-void VL_GetColor	(int color, int *red, int *green, int *blue)
-{
-    SDL_Color *col = &curpal[color];
-    *red = col->r;
-    *green = col->g;
-    *blue = col->b;
-}
 
 //===========================================================================
 
@@ -961,7 +963,7 @@ void VL_SetPalette(SDL_Color* palette, boolean forceupdate)
         {
             SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
 
-	        SDL_Flip (screen);
+	        VL_UpdateScreen(screen);
 #else
         SDL_SetPaletteColors(screen->format->palette, palette, 0, 256);
     else
@@ -1430,8 +1432,13 @@ void VL_DePlaneVGA (unsigned char *source, int width, int height)
 
     if (width & 3)
         Quit ("DePlaneVGA: width not divisible by 4!");
-
+#if defined(REINTERPRET_CAST)
+    temp = reinterpret_cast<unsigned char*>(SafeMalloc(size));
+#elif defined(STATIC_CAST)
+    temp = static_cast<unsigned char*>(SafeMalloc(size));
+#else
     temp = (unsigned char*)SafeMalloc(size);
+#endif
 
 //
 // munge pic into the temp buffer

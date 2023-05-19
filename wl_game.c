@@ -47,7 +47,7 @@ unsigned char            bordercol=VIEWCOLOR;        // color of the Change View
 
 #ifdef SPEAR
 int             spearx,speary;
-unsigned int        spearangle;
+short        spearangle;
 boolean         spearflag;
 #endif
 
@@ -134,7 +134,7 @@ void
 SetSoundLoc(fixed gx,fixed gy)
 {
     fixed   xt,yt;
-    int     x,y;
+    fixed     x,y;
 
 //
 // translate point to view centered coordinates
@@ -190,7 +190,7 @@ SetSoundLoc(fixed gx,fixed gy)
 */
 void PlaySoundLocGlobal(unsigned short s,fixed gx,fixed gy)
 {
-	int channel;
+	boolean channel;
     SetSoundLoc(gx, gy);
     SD_PositionSound(leftchannel, rightchannel);
 
@@ -244,7 +244,7 @@ void UpdateSoundLoc(void)
 
 static void ScanInfoPlane(void)
 {
-    unsigned x,y;
+    unsigned char x,y;
     int      tile;
     unsigned short *start;
 
@@ -769,7 +769,7 @@ void SetupGameLevel (void)
         for (x=0;x<mapwidth;x++)
         {
             tile = *map++;
-            if (tile<AREATILE)
+            if (tile< AMBUSHTILE)
             {
                 // solid wall
                 tilemap[x][y] = (unsigned char) tile;
@@ -829,7 +829,7 @@ void SetupGameLevel (void)
 
     //fread(pageLengths, sizeof(word), ChunksInFile, file);
     long pageDataSize = fileSize - pageOffsets[0];
-    if (pageDataSize > (size_t) -1)
+    if (pageDataSize > (unsigned int) -1)
         Quit("The page file \"%s\" is too large!", fname);
 
     pageOffsets[ChunksInFile] = fileSize;
@@ -855,7 +855,7 @@ void SetupGameLevel (void)
                 case 96:
                 case 98:
                 case 100:
-                    SpawnDoor(x, y, 1, (tile - 90) / 2);
+                    SpawnDoor((unsigned char)x, (unsigned char)y, true, (tile - 90) / 2);
                     break;
                 case 91:
                 case 93:
@@ -863,7 +863,7 @@ void SetupGameLevel (void)
                 case 97:
                 case 99:
                 case 101:
-                    SpawnDoor(x, y, 0, (tile - 91) / 2);
+                    SpawnDoor((unsigned char)x, (unsigned char)y, false, (tile - 91) / 2);
                     break;
                 }
             }
@@ -895,14 +895,6 @@ void SetupGameLevel (void)
             tile = *map++;
             if (tile == AMBUSHTILE)
             {
-                tilemap[x][y] = 0;
-#ifdef SEGA_SATURN
-                if (get_actor_at(x, y) == AMBUSHTILE)
-                    clear_actor(x, y);
-#else
-                if ((unsigned)(uintptr_t)actorat[x][y] == AMBUSHTILE)
-                    actorat[x][y] = NULL;
-#endif
                 if (*map >= AREATILE)
                     tile = *map;
                 if (*(map-1-mapwidth) >= AREATILE)
@@ -1156,7 +1148,7 @@ void ShowActStatus()
     int height = pictable[picnum].height;
     int destx = (screenWidth-scaleFactor*320)/2 + 9 * scaleFactor;
     int desty = screenHeight - (height - 4) * scaleFactor;
-	//TODO:
+
     VL_MemToScreenScaledCoord2(source, width, height, 9, 4, destx, desty, width - 18, height - 7);
 
     ingame = false;
@@ -1209,7 +1201,7 @@ void StartDemoRecord (int levelnumber)
 
 void FinishDemoRecord (void)
 {
-    int        length,level;
+    int        length;
 
     demorecord = false;
 
@@ -1230,7 +1222,7 @@ void FinishDemoRecord (void)
 
     if (US_LineInput (px,py,str,NULL,true,1,0))
     {
-        level = atoi (str);
+        int level = atoi (str);
         if (level>=0 && level<=9)
         {
             demoname[4] = (char)('0'+level);
@@ -1399,7 +1391,7 @@ void PlayDemo (int demonumber)
 void Died (void)
 {
     float   fangle;
-    int     dx,dy;
+    fixed     dx,dy;
     int     iangle,curangle,clockwise,counter,change;
 
     if (screenfaded)
@@ -1673,7 +1665,7 @@ startplayloop:
             StartMusic ();
             player->x = spearx;
             player->y = speary;
-            player->angle = (short)spearangle;
+            player->angle = spearangle;
             spearflag = false;
             Thrust (0,0);
 #ifdef AUTOMAP
@@ -1725,7 +1717,7 @@ startplayloop:
 #ifndef JAPAN
                     strcpy(MainMenu[viewscores].string,STR_VS);
 #endif
-                    MainMenu[viewscores].routine = CP_ViewScores;
+                    MainMenu[viewscores].routine = (int(*)(int))CP_ViewScores;
                     return;
                 }
 #endif
@@ -1828,7 +1820,7 @@ startplayloop:
 #ifndef JAPAN
                 strcpy(MainMenu[viewscores].string,STR_VS);
 #endif
-                MainMenu[viewscores].routine = CP_ViewScores;
+                MainMenu[viewscores].routine = (int(*)(int))CP_ViewScores;
                 return;
 
             case ex_victorious:
@@ -1848,7 +1840,7 @@ startplayloop:
 #ifndef JAPAN
                 strcpy(MainMenu[viewscores].string,STR_VS);
 #endif
-                MainMenu[viewscores].routine = CP_ViewScores;
+                MainMenu[viewscores].routine = (int(*)(int))CP_ViewScores;
                 return;
 
             default:

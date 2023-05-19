@@ -10,7 +10,6 @@ Global
 		Profile_FastCap = Profile_FastCap
 		Release = Release
 		Release_LTCG = Release_LTCG
-		SDL1.2 = SDL1.2
 	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
 		{8AB60A56-0087-47D4-B23C-82EA19F7C814}.Debug.ActiveCfg = Debug|Xbox
@@ -23,8 +22,6 @@ Global
 		{8AB60A56-0087-47D4-B23C-82EA19F7C814}.Release.Build.0 = Release|Xbox
 		{8AB60A56-0087-47D4-B23C-82EA19F7C814}.Release_LTCG.ActiveCfg = Release_LTCG|Xbox
 		{8AB60A56-0087-47D4-B23C-82EA19F7C814}.Release_LTCG.Build.0 = Release_LTCG|Xbox
-		{8AB60A56-0087-47D4-B23C-82EA19F7C814}.SDL1.2.ActiveCfg = SDL1.2|Xbox
-		{8AB60A56-0087-47D4-B23C-82EA19F7C814}.SDL1.2.Build.0 = SDL1.2|Xbox
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

@@ -48,16 +48,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 	Da luz: This file is used on Half-Lifex to make the OpenGL
 	become fake(Directd3d8) since OG Xbox doesn´t have support to OpenGL; this will be used
 	on SDL1.2 Support because of the CRT Function That uses OpenGL Declarations to work, if you
-	prefer the SDL2 go nuts, you probablly don´t need this file for nothing
+	prefer the SDL2 go nuts, but you probablly don´t need this file for nothing
 */
+
+
+#if SDL_MAJOR_VERSION == 1
 
 
 #include "fakeglx09.h"
 
-#if defined (_XBOX)
-#if SDL_MAJOR_VERSION == 1
-#include <xtl.h>
-#include <xgraphics.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -65,8 +64,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <io.h>
 #include <direct.h>
 
+
 // TODO Fix this warning instead of disabling it
-#pragma warning (disable: 4273)
+//#pragma warning (disable: 4273)
 
 // we get a few signed/unsigned mismatches here
 #pragma warning (disable: 4018)
@@ -3756,4 +3756,3 @@ PROC WINAPI wglGetProcAddress (LPCSTR s)
 
 #pragma warning (pop)
 #endif
-#endif// Da luz end

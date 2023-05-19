@@ -17,23 +17,26 @@ https://discord.gg/YNTdx5dXF6
 Main features:
 --------------
  - Cross-platform:
-      Supported operating systems/consoles are at least:
-       - Windows 98, Windows ME, Windows 2000, Windows XP(32 and 64 bit), Windows Vista(32 and 64 bit), Windows 7 (32 and 64 bit), Windows 8(32 and 64 bit), Windows 8.1(32 and 64 bit) Windows 10 (32 and 64 bit) and Windows 11(64 Bits only)
+   Supported operating systems/consoles are at least:
+       - Windows 98, Windows ME, Windows 2000, Windows XP(32 and 64 bit), Windows Vista(32 and 64 bit), Windows 7 (32 and 64 bit), Windows 8(32 and 64 bit), Windows 8.1(32 and 64 bit), Windows 10 (32 and 64 bit) and Windows 11(64 Bits only)
        - Linux
        - BSD variants
        - Mac OS X (x86 and x64)
        - KallistiOS (used for Dreamcast)
-       Only little endian platforms like x86, ARM and SH-4 are currently supported.
+         Only little endian platforms like x86, ARM and SH-4 are currently supported.
        - Nintendo Switch
        - Nintendo 3DS
        - GP2X
        - Sega Saturn.
-       - Sony Playstation 2
-       - Xbox/Xbox 360(W.I.P)
+       - Playstation 2(W.I.P)
+       - Playstation Vita
+       - Xbox
+       - Xbox 360(W.I.P)
        - Hakchi 
+       - Zipit Z2
 	   
  - AdLib sounds and music:
-      This port includes the OPL2 emulator from MAME and DOSBOX plus OPL3 Emulator also nukedyt, so you can not only
+      This port includes the OPL2 emulator from MAME and DOSBOX plus the OPL3 Emulator from nukedyt, so you can not only
       hear the AdLib sounds but also music without any AdLib-compatible
       soundcard in near to perfect quality!
 
@@ -254,18 +257,19 @@ IMPORTANT: Do not forget to take care of version.h!
 
 TODOs:
 ------
- - Prepare SDL3 Support.
+ - Prepare SDL3 Support
  - Support to sega saturn: wl_draw.c, wl_main.c and wl_menu.c
- - Support OpenBSD.
- - Add more features from: http://dhw.wolfenstein3d.com/viewtopic.php?t=6310
+ - Support OpenBSD
  - Port LWLIB to C
  - Fix Nintendo Switch movement
- - Fix nukedopl3 when compiling with old Visual C++.
+ - Fix nukedopl3 when compiling with old Visual C++
+ - Support real crt filters(This should be on v2.4)
 
 Known bugs:
 -----------
- - None! ;D
-
+ - After Hans Grosse level, the game crashes on the next Boss level
+ - Boss dissapers after moving on his initial position
+ 
 Troubleshooting:
 ----------------
 
@@ -279,8 +283,8 @@ Credits:
  - Special thanks to the DOSBox team for providing a GPL'ed OPL2/3 emulator!
  - Special thanks to the MAME developement team for providing the source code
    of the OPL2 emulator!
- - Speacial thanks to AryanWolf3d for upgrade this source port
  - Ultra special many thanks to the prboom+ team for providing the c port of dosbox opl
+ - Speacial thanks to AryanWolf3d for upgrade this source port
  - Many thanks to "Der Tron" for hosting the svn repository, making Wolf4SDL
    FreeBSD compatible, testing, bugfixing and cleaning up the code!
  - Thanks to Chris Chokan for his improvements on Wolf4GW (base of Wolf4SDL)
@@ -293,13 +297,17 @@ Credits:
  - Thanks to Fabian greffrath for the patches on the code 
  - Thanks to keeganatorr for the Nintendo Switch support
  - Thanks to Codetech84 for the tutorials about SDL and the fixed logic rate code.
- - Thanks to AlumiuN for the code of HUD Automap and Vieasm(Aka: VODKA-INDUCED ENTERTAINMENT ADVANCED SOUND MANAGER)
+ - Thanks to AlumiuN for the code of HUD Automap, Vieasm(Aka: VODKA-INDUCED ENTERTAINMENT ADVANCED SOUND MANAGER) and Mantaining Wolf4SDL
  - Thanks to Fabian Sangalard for the awesoeme crt feature used on Chocolate Wolfenstein 3d. 
  - Thanks to vbt for the port of sega saturn
  - Thanks to WayneCa for upgrade the original Wolf
  - Thanks to hax0kartik for the port of Wolf4SDL to Nintendo 3DS
- - Many Thanks to nukedyt for the awesome nuked-opl3
- 
+ - Many thanks to nukedyt for the awesome nuked-opl3
+ - Thanks to mozzwald for the Zipit Z2 port of Wolf4SDL 
+ - Thanks to Rinnegatamante for the Wolfenstein 3d initially but later Wolf4SDL 
+ - Ultra many thanks to XtecuterX73(upgrade) and A600 for the port of Wolf4SDL(Aka: xWolf3d) to Orginal Xbox
+ - BDC(marty28) for the fakeglx09 used on HalfLifeX
+
 Licenses:
 ---------
  - The original source code of Wolfenstein 3D:

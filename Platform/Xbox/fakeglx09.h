@@ -1,7 +1,6 @@
 /*
 Quake source code is Copyright (C) 1996-1997 Id Software, Inc.
 D3D8 FakeGL Wrapper is Copyright (C) 2009 MH
-Wolf4SDL FakeGLx Support for Xbox Is Copyright (C) 2001 - 2022 Mortriz "Ripper", Arayan, Wolf3s and marty28
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -19,7 +18,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 NOTE:
-	Da luz: (WIP) This file is used on Half-Lifex to make the OpenGL
+	Da luz: This file is used on Half-Lifex to make the OpenGL
 	become fake(Directd3d8) since OG Xbox doesn´t have support to OpenGL; this will be used
 	on SDL1.2 Support because of the CRT Function That uses OpenGL Declarations to work, if you
 	prefer the SDL2 go nuts, you probablly don´t need this file for nothing
@@ -28,11 +27,11 @@ NOTE:
 #ifndef H_FAKEGLWRAPPER
 #define H_FAKEGLWRAPPER
 
-#include "../version.h" //Da luz start... 
+#include "../../version.h" //Da luz start... 
 
-#if defined (_XBOX)
-
-#if SDL_MAJOR_VERSION == 1
+#include <xtl.h>
+#include <xgraphics.h>
+#include <windef.h>
 
 // inconsistent dll linkage warning
 #pragma warning (disable: 4273)
@@ -2392,6 +2391,4 @@ void D3D_ResetMode (int width, int height, int bpp, BOOL windowed);
 #define GLD3D_TEXTURE_MAX_ANISOTROPY_EXT     0x84FE
 #define GLD3D_MAX_TEXTURE_MAX_ANISOTROPY_EXT 0x84FF
 
-#endif //SDL_MAJOR_VERSION 
 #endif //H_FAKEGLWRAPPER
-#endif //_XBOX

@@ -23,6 +23,8 @@
 #include "id_w3swrap.h"
 #include <stdio.h>
 #include <stddef.h>
+#include <malloc.h>
+#include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <ctype.h>
@@ -58,8 +60,7 @@ int w3svsnprintf(char* buf, size_t buf_len, const char* s, va_list args)
 #endif
 #endif
 
-
-#ifndef _WIN32
+#ifndef _MSC_VER
 char* w3sstrlwr(char* x)
 {
   int b;

@@ -45,6 +45,7 @@ int GetParallaxStartTexture (void)
 }
 
 #endif
+
 #endif
 /*
 ====================
@@ -63,7 +64,6 @@ void DrawParallax (void)
     short skypage,curskypage;
     short lastskypage;
     short xtex;
-    short toppix;
 
     skypage = GetParallaxStartTexture();
     skypage += 16 - 1;
@@ -71,7 +71,7 @@ void DrawParallax (void)
 
     for (x = 0; x < viewwidth; x++)
     {
-        toppix = centery - (wallheight[x] >> 3);
+        short toppix = centery - (wallheight[x] >> 3);
 
         if (toppix <= 0)
             continue;                // nothing to draw

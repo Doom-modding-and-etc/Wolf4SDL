@@ -12,11 +12,7 @@
 #include <stdlib.h>
 
 #define WIN32_LEAN_AND_MEAN
-#if defined(_XBOX)
-#include <xtl.h>
-#else
 #include <windows.h>
-#endif
 #ifdef _WIN32_WCE
 # define DIR_SEPERATOR TEXT("\\")
 # undef _getcwd
@@ -213,6 +209,7 @@ static void cleanup_output(void)
 //#define console_main main
 //#endif
 
+#ifndef _XBOX
 /* This is where execution begins [console apps] */
 int console_main(int argc, char *argv[])
 {
@@ -398,6 +395,6 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, LPSTR szCmdLine, int sw)
 	/* Hush little compiler, don't you cry... */
 	return 0;
 }
-
+#endif
 #endif  // _WIN32
 #endif //SDL_WINMAIN_C
