@@ -51,7 +51,7 @@ void PM_Startup (void)
 #endif
     datasize;
     FILE *file;
-#if defined(SWITCH) || defined (N3DS) || defined (PS2) || defined (SEGA_SATURN)
+#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
     char fname[13 + sizeof(DATADIR)] = DATADIR "vswap.";
 #else   
     char fname[13] = "vswap.";
@@ -107,7 +107,13 @@ void PM_Startup (void)
     //
     pageOffsets = (unsigned int*)saturnChunk;
 #else
+#if defined(REINTERPRET_CAST)
+    pageOffsets = reinterpret_cast<unsigned int*>(SafeMalloc((ChunksInFile + 1) * sizeof(*pageOffsets)));
+#elif defined(STATIC_CAST)
+    pageOffsets = static_cast<unsigned int*>(SafeMalloc((ChunksInFile + 1) * sizeof(*pageOffsets)));
+#else
     pageOffsets = (unsigned int*)SafeMalloc((ChunksInFile + 1) * sizeof(*pageOffsets));
+#endif
 #endif
 #ifndef SEGA_SATURN
     fread (pageOffsets,sizeof(*pageOffsets),ChunksInFile,file);
@@ -120,15 +126,17 @@ void PM_Startup (void)
 #ifdef SEGA_SATURN
     pageLengths = (unsigned short*)saturnChunk + (ChunksInFile + 1) * sizeof(int);
 #else
+#if defined(REINTERPRET_CAST)
+    pageLengths = reinterpret_cast<unsigned short*>(SafeMalloc(ChunksInFile * sizeof(*pageLengths)));
+#elif defined(STATIC_CAST)
+    pageLengths = static_cast<unsigned short*>(SafeMalloc(ChunksInFile * sizeof(*pageLengths)));
+#else
     pageLengths = (unsigned short*)SafeMalloc(ChunksInFile * sizeof(*pageLengths));
+#endif
 #endif
 #ifndef SEGA_SATURN
     fread (pageLengths,sizeof(*pageLengths),ChunksInFile,file);
 #endif
-/*
-
-*/
-
 #ifndef SEGA_SATURN
     fseek (file,0,SEEK_END);
     filesize = ftell(file);
@@ -176,13 +184,25 @@ void PM_Startup (void)
     //
     // allocate enough memory to hold the whole page file
     //
+#if defined(REINTERPRET_CAST)
+    PMPageData = reinterpret_cast<unsigned char*>(SafeMalloc(datasize + padding));
+#elif defined(STATIC_CAST)
+    PMPageData = static_cast<unsigned char*>(SafeMalloc(datasize + padding));
+#else
     PMPageData = (unsigned char*)SafeMalloc(datasize + padding);
+#endif
 
     //
     // [ChunksInFile + 1] pointers to page starts
     // the last pointer points one byte after the last page
     //
+#if defined(REINTERPRET_CAST)
+    PMPages = reinterpret_cast<unsigned char**>(SafeMalloc((ChunksInFile + 1) * sizeof(*PMPages)));
+#elif defined(STATIC_CAST)
+    PMPages = static_cast<unsigned char**>(SafeMalloc((ChunksInFile + 1) * sizeof(*PMPages)));
+#else
     PMPages = (unsigned char**)SafeMalloc((ChunksInFile + 1) * sizeof(*PMPages));
+#endif
 
     //
     // load pages and initialize PMPages pointers
@@ -366,7 +386,7 @@ void PM_Shutdown (void)
 ==================
 */
 
-unsigned int PM_GetPageSize (int page)
+wlinline unsigned int PM_GetPageSize (int page)
 {
     if (page < 0 || page >= ChunksInFile)
         Quit ("PM_GetPageSize: Invalid page request: %i",page);
@@ -385,7 +405,7 @@ unsigned int PM_GetPageSize (int page)
 ==================
 */
 
-unsigned char *PM_GetPage (int page)
+wlinline unsigned char *PM_GetPage (int page)
 {
 #ifndef SEGA_SATURN
     if (page < 0 || page >= ChunksInFile)
@@ -405,19 +425,19 @@ unsigned char *PM_GetPage (int page)
 ==================
 */
 #ifndef SEGA_SATURN
-unsigned char *PM_GetPageEnd (void)
+wlinline unsigned char *PM_GetPageEnd (void)
 {
     return PMPages[ChunksInFile];
 }
 #endif
 
 #ifdef SEGA_SATURN
-static inline unsigned char* PM_GetTexture(int wallpic)
+wlinline unsigned char* PM_GetTexture(int wallpic)
 {
     return PM_GetPage(wallpic);
 }
 
-static inline unsigned short* PM_GetSprite(int shapenum)
+wlinline unsigned short* PM_GetSprite(int shapenum)
 {
     // correct alignment is enforced by PM_Startup()
     return (unsigned short*)(void*)PM_GetPage(PMSpriteStart + shapenum);

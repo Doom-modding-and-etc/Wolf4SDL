@@ -552,6 +552,9 @@ int     IN_MouseButtons(void);
 boolean IN_JoyPresent();
 int     IN_JoyButtons(void);
 void    IN_GetJoyDelta(int* dx, int* dy);
+#ifdef PSVITA
+void    IN_GetJoyDelta2(int* dx, int* dy);
+#endif
 void    IN_GetJoyFineDelta(int* dx, int* dy);
 
 void    IN_StartAck(void);

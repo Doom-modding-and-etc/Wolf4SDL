@@ -31,7 +31,7 @@
 
 static	boolean		US_Started;
 
-		void		(*USL_MeasureString)(const char *, unsigned short *, unsigned short *) = VW_MeasurePropString;
+		void		(*USL_MeasureString)(const char *, unsigned short *, unsigned short *) = VL_MeasurePropString;
 		void		(*USL_DrawString)(const char *) = VWB_DrawPropString;
 
 #ifndef SEGA_SATURN
@@ -178,7 +178,7 @@ void
 US_PrintUnsigned(unsigned int n)
 {
 	char	buffer[32];
-	sprintf(buffer, "%u", n);
+	sprintf(buffer, "%lu", (unsigned long)n);
 
 	US_Print(buffer);
 }
@@ -192,7 +192,7 @@ void
 US_PrintSigned(int n)
 {
 	char	buffer[32];
-	US_Print(w3sltoa(n,buffer,10));
+	US_Print(wlltoa((long)n,buffer,10));
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -203,15 +203,15 @@ US_PrintSigned(int n)
 void
 USL_PrintInCenter(const char *s,Rect r)
 {
-	unsigned short	w,h,
+	fixed	w,h,
 			rw,rh;
 
-	USL_MeasureString(s,&w,&h);
+	USL_MeasureString(s,(unsigned short*)&w, (unsigned short*)&h);
 	rw = r.lr.x - r.ul.x;
 	rh = r.lr.y - r.ul.y;
 
-	px = r.ul.x + ((rw - w) / 2);
-	py = r.ul.y + ((rh - h) / 2);
+	px = (int)r.ul.x + (int)((rw - w) / 2);
+	py = (int)r.ul.y + (int)((rh - h) / 2);
 	USL_DrawString(s);
 }
 
@@ -441,7 +441,7 @@ USL_XORICursor(int x,int y,const char *s, unsigned short cursor)
 {
 	static	boolean	status;		// VGA doesn't XOR...
 	char	buf[MaxString];
-	int		temp;
+	
 	unsigned short	w,h;
 
 	strcpy(buf,s);
@@ -454,7 +454,7 @@ USL_XORICursor(int x,int y,const char *s, unsigned short cursor)
 		USL_DrawString("\x80");
 	else
 	{
-		temp = fontcolor;
+		unsigned char temp = fontcolor;
 		fontcolor = backcolor;
 		USL_DrawString("\x80");
 		fontcolor = temp;
@@ -491,20 +491,19 @@ char USL_RotateChar(char ch, int dir)
 ///////////////////////////////////////////////////////////////////////////
 boolean
 US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
-				int maxchars,int maxwidth)
+				size_t maxchars,size_t maxwidth)
 {
 	boolean		redraw,
 				cursorvis,cursormoved,
-				done,result, checkkey;
-	ScanCode	sc;
-	char		c;
+				done,result;
+
 	char		s[MaxString],olds[MaxString];
-	int         cursor,len;
+	size_t        cursor, len;
 	unsigned short		i,
-				w,h,
-				temp;
-	size_t	curtime, lasttime, lastdirtime, lastbuttontime, lastdirmovetime;
-	ControlInfo ci;
+		w, h;
+	unsigned char	    temp;
+	size_t	lasttime, lastdirtime, lastbuttontime, lastdirmovetime;
+	
 	Direction   lastdir = dir_None;
 
 	if (def)
@@ -512,7 +511,7 @@ US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 	else
 		*s = '\0';
 	*olds = '\0';
-	cursor = (int) strlen(s);
+	cursor = strlen(s);
 	cursormoved = redraw = true;
 
 	cursorvis = done = false;
@@ -523,10 +522,15 @@ US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 
 	while (!done)
 	{
+		ControlInfo ci;
+		boolean checkkey;
+		ScanCode	sc;
+		char		c;
+		size_t	curtime;
 		ReadAnyControl(&ci);
 
 		if (cursorvis)
-			USL_XORICursor(x,y,s,cursor);
+			USL_XORICursor(x,y,s,(unsigned short)cursor);
 
 		sc = LastScan;
 		LastScan = sc_None;
@@ -601,7 +605,7 @@ US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 			}
 		}
 
-		if((int)(curtime - lastbuttontime) > TickBase / 4)   // 250 ms
+		if((curtime - lastbuttontime) > TickBase / 4)   // 250 ms
 		{
 			if(ci.button0)             // acts as return
 			{
@@ -652,7 +656,7 @@ US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 					cursormoved = true;
 					break;
 				case sc_End:
-					cursor = (int) strlen(s);
+					cursor = strlen(s);
 					c = key_None;
 					cursormoved = true;
 					break;
@@ -692,7 +696,7 @@ US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 					cursormoved = true;
 					break;
 
-				case SDLK_KP_5: //0x4c:	// Keypad 5 // TODO: hmmm...
+				case sc_5: //0x4c:	// Keypad 5 // TODO: hmmm...
 				case sc_UpArrow:
 				case sc_DownArrow:
 				case sc_PgUp:
@@ -704,13 +708,13 @@ US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 
 			if (c)
 			{
-				len = (int) strlen(s);
+				len = strlen(s);
 				USL_MeasureString(s,&w,&h);
 
 				if(isprint(c) && (len < MaxString - 1) && ((!maxchars) || (len < maxchars))
 					&& ((!maxwidth) || (w < maxwidth)))
 				{
-					for (i = len + 1;i > cursor;i--)
+					for (i = (unsigned short)len + 1;i > cursor;i--)
 						s[i] = s[i - 1];
 					s[cursor++] = c;
 					redraw = true;
@@ -725,7 +729,7 @@ US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 			temp = fontcolor;
 			fontcolor = backcolor;
 			USL_DrawString(olds);
-			fontcolor = (unsigned char) temp;
+			fontcolor = temp;
 			strcpy(olds,s);
 
 			px = x;
@@ -750,20 +754,20 @@ US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 		}
 		else SDL_Delay(5);
 		if (cursorvis)
-			USL_XORICursor(x,y,s,cursor);
+			USL_XORICursor(x,y,s,(unsigned short)cursor);
 
-		VH_UpdateScreen(screenBuffer);
+		VL_UpdateScreen(screenBuffer);
 	}
 
 	if (cursorvis)
-		USL_XORICursor(x,y,s,cursor);
+		USL_XORICursor(x,y,s,(unsigned short)cursor);
 	if (!result)
 	{
 		px = x;
 		py = y;
 		USL_DrawString(olds);
 	}
-	VH_UpdateScreen(screenBuffer);
+	VL_UpdateScreen(screenBuffer);
 
 	IN_ClearKeysDown();
 	return(result);

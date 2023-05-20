@@ -12,17 +12,7 @@
 #include "wl_cloudsky.h"
 #endif
 
-#ifdef DEBUG
-extern	statetype s_grddie4;
-extern	statetype s_dogdead;
-extern	statetype s_ofcdie5;
-extern	statetype s_mutdie5;
-extern	statetype s_ssdie4;
-extern	statetype s_fakestand;
-extern	statetype s_fakedie6;
-extern	statetype s_mechadie4;
-extern	statetype s_mechastand;
-#endif
+
 
 /*
 =============================================================================
@@ -126,7 +116,7 @@ void CountObjects (void)
     US_Print("\nInactive actors  :");
     US_PrintUnsigned(inactive);
 
-    VH_UpdateScreen(screenBuffer);
+    VL_UpdateScreen(screenBuffer);
     IN_Ack ();
 }
 
@@ -145,14 +135,18 @@ void PictureGrabber (void)
 {
     int i;
     static char fname[] = "WSHOT000.BMP";
-
-    for(i = 0; i < 1000; i++)
+  
+	for(i = 0; i < 1000; i++)
     {
-	int file;
+		int file;
         fname[7] = i % 10 + '0';
         fname[6] = (i / 10) % 10 + '0';
         fname[5] = i / 100 + '0';
-        /*int*/ file = w3sopen(fname, O_RDONLY | O_BINARY);
+#if defined(_MSC_VER) || defined(DEVCPP)
+        file = w3sopen(fname, O_RDONLY | O_BINARY);
+#else
+        file = w3sopen(fname, O_RDONLY | O_BINARY, 644);
+#endif
         if(file == -1) break;       // file does not exist, so use that filename
         w3sclose(file);
     }
@@ -163,7 +157,7 @@ void PictureGrabber (void)
 
     CenterWindow (18,2);
     US_PrintCentered ("Screenshot taken");
-    VH_UpdateScreen(screenBuffer);
+    VL_UpdateScreen(screenBuffer);
     IN_Ack();
 }
 #endif
@@ -243,7 +237,7 @@ void BasicOverhead (void)
 
     VWB_Bar ((player->tilex * zoom) + offx,(player->tiley * zoom) + offy,zoom,zoom,15);
 
-    VH_UpdateScreen(screenBuffer);
+    VL_UpdateScreen(screenBuffer);
     IN_Ack ();
 
 #ifdef MAPBORDER
@@ -279,7 +273,7 @@ void ShapeTest (void)
     soundnames sound;
 
     CenterWindow (20,16);
-    VH_UpdateScreen(screenBuffer);
+    VL_UpdateScreen(screenBuffer);
 
     i = 0;
     done = false;
@@ -429,7 +423,7 @@ void ShapeTest (void)
             }
         }
 
-        VH_UpdateScreen(screenBuffer);
+        VL_UpdateScreen(screenBuffer);
 
         IN_Ack ();
         scan = LastScan;
@@ -504,7 +498,7 @@ int DebugKeys (void)
         CenterWindow(20,3);
         PrintY+=6;
         US_Print(" Border color (0-56): ");
-        VH_UpdateScreen(screenBuffer);
+        VL_UpdateScreen(screenBuffer);
         esc = !US_LineInput (px,py,str,NULL,true,2,0);
         if (!esc)
         {
@@ -540,7 +534,7 @@ int DebugKeys (void)
             US_PrintCentered ("Darkone's FPS Counter OFF");
         else
             US_PrintCentered ("Darkone's FPS Counter ON");
-        VH_UpdateScreen(screenBuffer);
+        VL_UpdateScreen(screenBuffer);
         IN_Ack();
         fpscounter ^= 1;
         return 1;
@@ -568,7 +562,7 @@ int DebugKeys (void)
             US_PrintUnsigned (spotvis[player->tilex][player->tiley]);
         else
             US_PrintUnsigned (actorat[player->tilex][player->tiley]->flags);
-        VH_UpdateScreen(screenBuffer);
+        VL_UpdateScreen(screenBuffer);
         IN_Ack();
         return 1;
     }
@@ -583,7 +577,7 @@ int DebugKeys (void)
         else if (godmode == 2)
             US_PrintCentered ("God mode OFF");
 
-        VH_UpdateScreen(screenBuffer);
+        VL_UpdateScreen(screenBuffer);
         IN_Ack();
         if (godmode != 2)
             godmode++;
@@ -601,7 +595,7 @@ int DebugKeys (void)
     {
         CenterWindow (12,3);
         US_PrintCentered ("Free items!");
-        VH_UpdateScreen(screenBuffer);
+        VL_UpdateScreen(screenBuffer);
         GivePoints (100000);
         HealSelf (99);
         if (gamestate.bestweapon<wp_chaingun)
@@ -618,7 +612,7 @@ int DebugKeys (void)
         CenterWindow(16,3);
         PrintY+=6;
         US_Print("  Give Key (1-4): ");
-        VH_UpdateScreen(screenBuffer);
+        VL_UpdateScreen(screenBuffer);
         esc = !US_LineInput (px,py,str,NULL,true,1,0);
         if (!esc)
         {
@@ -660,7 +654,7 @@ again:
             US_PrintUnsigned(LevelRatios[x].treasure);
             US_Print("%\n");
         }
-        VH_UpdateScreen(screenBuffer);
+        VL_UpdateScreen(screenBuffer);
         IN_Ack();
         if (end == 10 && gamestate.mapon > 9)
         {
@@ -680,7 +674,7 @@ again:
             US_PrintCentered ("Map reveal ON");
         else
             US_PrintCentered ("Map reveal OFF");
-        VH_UpdateScreen(screenBuffer);
+        VL_UpdateScreen(screenBuffer);
         IN_Ack ();
         return 1;
     }
@@ -694,7 +688,7 @@ again:
             US_PrintCentered("Lag simulator ON");
         else
             US_PrintCentered("Lag simulator OFF");
-        VH_UpdateScreen(screenBuffer);
+        VL_UpdateScreen(screenBuffer);
         IN_Ack();
         return 1;
     }
@@ -709,7 +703,7 @@ again:
             US_PrintCentered ("No clipping ON");
         else
             US_PrintCentered ("No clipping OFF");
-        VH_UpdateScreen(screenBuffer);
+        VL_UpdateScreen(screenBuffer);
         IN_Ack ();
         return 1;
     }
@@ -736,7 +730,7 @@ again:
         memset(automap, 1, sizeof(automap));
         CenterWindow(12, 3);
         US_PrintCentered("Full map!");
-        VH_UpdateScreen(screenBuffer);
+        VL_UpdateScreen(screenBuffer);
         IN_Ack();
         return 1;
    }
@@ -749,7 +743,7 @@ again:
         CenterWindow(30,3);
         PrintY+=6;
         US_Print(" Slow Motion steps (default 14): ");
-        VH_UpdateScreen(screenBuffer);
+        VL_UpdateScreen(screenBuffer);
         esc = !US_LineInput (px,py,str,NULL,true,2,0);
         if (!esc)
         {
@@ -771,7 +765,7 @@ again:
         CenterWindow(30,3);
         PrintY+=6;
         US_Print("  Add how many extra VBLs(0-8): ");
-        VH_UpdateScreen(screenBuffer);
+        VL_UpdateScreen(screenBuffer);
         esc = !US_LineInput (px,py,str,NULL,true,1,0);
         if (!esc)
         {
@@ -790,7 +784,7 @@ again:
 #else
         US_Print("  Warp to which level(1-21): ");
 #endif
-        VH_UpdateScreen(screenBuffer);
+        VL_UpdateScreen(screenBuffer);
         esc = !US_LineInput (px,py,str,NULL,true,2,0);
         if (!esc)
         {
@@ -811,7 +805,7 @@ again:
     {
         CenterWindow (12,3);
         US_PrintCentered ("Extra stuff!");
-        VH_UpdateScreen(screenBuffer);
+        VL_UpdateScreen(screenBuffer);
         // DEBUG: put stuff here
         IN_Ack ();
         return 1;
@@ -828,7 +822,7 @@ again:
             highlightmode = 0;
         }
 
-        VH_UpdateScreen(screenBuffer);
+        VL_UpdateScreen(screenBuffer);
         IN_Ack();
         return 1;
 }
@@ -851,7 +845,7 @@ again:
         US_Print("): ");
         /*int*/ mappx = px, mappy = py;
         US_PrintUnsigned(curSky->colorMapIndex);
-        VH_UpdateScreen(screenBuffer);
+        VL_UpdateScreen(screenBuffer);
 
         sprintf(defstr, "%u", curSky->seed);
         esc = !US_LineInput(seedpx, seedpy, str, defstr, true, 10, 0);
@@ -871,7 +865,7 @@ again:
         {
             CenterWindow (18,3);
             US_PrintCentered ("Illegal color map!");
-            VH_UpdateScreen(screenBuffer);
+            VL_UpdateScreen(screenBuffer);
             IN_Ack ();
         }
     }
@@ -994,8 +988,9 @@ void DrawMapSprite (short sx, short sy, short shapenum)
 {
     int         x;
     compshape_t *shape;
-    unsigned char *linesrc,*linecmds;
+    unsigned char *linesrc;
     unsigned char *src;
+    unsigned char* linecmds;
     short     end,start,top;
 
     linesrc = PM_GetSpritePage(shapenum);
@@ -1155,7 +1150,7 @@ void OverheadRefresh (void)
     VL_UnlockSurface (screenBuffer);
     vbuf = NULL;
 
-    VH_UpdateScreen (screenBuffer);
+    VL_UpdateScreen (screenBuffer);
 }
 
 

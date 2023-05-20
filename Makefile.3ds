@@ -10,9 +10,9 @@ include $(DEVKITARM)/3ds_rules
 PORTLIBS    := $(DEVKITPRO)/portlibs/3ds
 TARGET		:=	$(notdir $(CURDIR))
 APP_TITLE := Wolf4SDL
-APP_DESCRIPTION := Cross Plataform Source Port Of Wolfenstein 3d for Nintendo 3ds by: hax0kartik and Adopted by: André "Wolf3s" Guilherme
-APP_AUTHOR := Wolf3s, hax0kartik, Aryan, Mortriz Ripper and The other contribuitors
-APP_VERSION := 2.2
+APP_DESCRIPTION := Cross Plataform Source Port Of Wolfenstein 3d for Nintendo 3ds by: keeganatorr and Adopted by: André "Wolf3s" Guilherme
+APP_AUTHOR := Wolf3s, keeganatorr, AryanWolf3d, AlumiuN, Mortriz Ripper and The other contribuitors
+APP_VERSION := 2.3
 ICON := icon_3ds/wolf4sdl.png
 CC        = arm-none-eabi-gcc
 #Audio System
@@ -66,7 +66,7 @@ endif
 
 .PHONY: all clean
 
-#all: release_n3ds/Wolf4SDL.3dsx
+all: release_n3ds/Wolf4SDL.3dsx
 
 release_n3ds/Wolf4SDL.3dsx: $(3DSXTOOL) $(BIN) release_n3ds/Wolf4SDL.smdh
 	$(3DSXTOOL) $(BIN) release_n3ds/Wolf4SDL.3dsx --smdh=release_n3ds/$(OUTPUT).smdh

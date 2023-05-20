@@ -59,4 +59,4 @@ void CA_CacheMap (int mapnum);
 
 void CA_CannotOpen(const char *name);
 
-#endif
+#endif //__ID_CA_H_

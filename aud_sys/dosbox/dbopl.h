@@ -11,12 +11,15 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  */
-
-#ifdef _MSC_VER
+#ifndef _MSC_VER
 #include <stdint.h>
-#else
-#include <inttypes.h>
 #endif
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 //Use 8 handlers based on a small logatirmic wavetabe and an exponential table for volume
 #define WAVE_HANDLER	10
 //Use a logarithmic wavetable with an exponential table for volume
@@ -27,9 +30,9 @@
 //Select the type of wave generator routine
 #define DBOPL_WAVE WAVE_TABLEMUL
 
-typedef struct _Chip Chip;
-typedef struct _Operator Operator;
-typedef struct _Channel Channel;
+struct _Chip;
+struct _Operator;
+struct _Channel;
 
 typedef uintptr_t       Bitu;
 typedef intptr_t        Bits;
@@ -46,8 +49,8 @@ typedef Bits ( DB_FASTCALL *WaveHandler) ( Bitu i, Bitu volume );
 
 #define DB_FASTCALL
 
-typedef Bits (*VolumeHandler)(Operator *self);
-typedef Channel* (*SynthHandler)(Channel *self, Chip* chip, Bit32u samples, Bit32s* output );
+typedef Bits (*VolumeHandler)(struct _Operator *self);
+typedef struct _Channel* (*SynthHandler)(struct _Channel *self, struct _Chip* chip, Bit32u samples, Bit32s* output );
 
 //Different synth modes that can generate blocks of data
 typedef enum {
@@ -128,6 +131,8 @@ struct _Operator {
 	Bit8u ksr;
 };
 
+typedef struct _Operator Operator;
+
 struct _Channel {
 	Operator op[2];
 	SynthHandler synthHandler;
@@ -143,6 +148,8 @@ struct _Channel {
 	Bit8s maskRight;
 
 };
+
+typedef struct _Channel Channel;
 
 struct _Chip {
 	//This is used as the base counter for vibrato and tremolo
@@ -182,6 +189,8 @@ struct _Chip {
 
 };
 
+typedef struct _Chip Chip;
+
 /*
 struct Handler : public Adlib::Handler {
 	DBOPL::Chip chip;
@@ -191,20 +200,21 @@ struct Handler : public Adlib::Handler {
 	virtual void Init( Bitu rate );
 };
 */
-#ifdef __cplusplus
-extern "C"
-{
-#endif
+
 void Chip__Setup(Chip *self, Bit32u rate );
 void DBOPL_InitTables( void );
 void Chip__Chip(Chip *self);
 void Chip__WriteReg(Chip *self, Bit32u reg, Bit8u val );
 void Chip__GenerateBlock2(Chip *self, Bitu total, Bit32s* output );
 void Chip__GenerateBlock3(Chip *self, Bitu total, Bit32s* output );
-#ifdef __cplusplus
-}
-#endif
+
 // haleyjd 09/09/10: Not standard C.
 #ifdef _MSC_VER
 #define inline __inline
+#else
+#define inline 
+#endif
+
+#ifdef __cplusplus
+}
 #endif

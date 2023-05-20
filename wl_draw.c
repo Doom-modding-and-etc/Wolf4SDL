@@ -1885,7 +1885,7 @@ void ThreeDRefresh (void)
             US_Print(" fps");
         }
 #endif
-        VH_UpdateScreen (screenBuffer);
+        VL_UpdateScreen (screenBuffer);
     }
 
 #ifndef REMDEBUG
@@ -2015,10 +2015,7 @@ void DrawFullmap(void)
                     DrawTile(sx + dx, sy + dy, ts, ts, EMPTYCOLOUR);
                 else if (tilemap[x][y] >= 128)
                 {
-#ifdef BLAKEDOORS
-
-
-#else
+#ifndef BLAKEDOORS
                     if (!doorposition[tilemap[x][y] - 128])
                         DrawTile(sx + dx, sy + dy, ts, ts, DOORCOLOUR);
                     else
@@ -2049,4 +2046,4 @@ void DrawFullmap(void)
     VL_UnlockSurface(screenBuffer);
     scr = NULL;
 }
-#endif
+#endif //AUTOMAP

@@ -10,25 +10,7 @@
 
 #ifndef ID_CRT_H
 #define ID_CRT_H
-#include "version.h"
-
 #ifdef CRT
-#include <SDL.h>
-// Win32
-#if SDL_MAJOR_VERSION == 1
-#if defined(_XBOX)
-#include "xbox/fakeglx.h"
-#elif defined(_MSC_VER)
-#include <Windows.h>
-#include <GL/gl.h>
-#elif defined(__linux__)
-#include <GL/gl.h>
-#else
-#include <SDL_opengl.h>
-#endif
-#endif
-
-extern SDL_Color curpal[256];
 /*
  * CRT aspect ratio is 4:3, height will be infered.
  */
@@ -47,7 +29,7 @@ void CRT_DestroyTexture(SDL_Texture* texture1, SDL_Texture* texture2);
 #endif
 
 void CRT_BlitImage(SDL_Surface* img1src, SDL_Surface* img1dst, SDL_Surface* img2src, SDL_Surface* img2dst);
+#endif
+#endif
 
-#endif
-#endif
 

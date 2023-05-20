@@ -43,16 +43,6 @@ extern	int             px,py;
 #define SETFONTCOLOR(f,b) fontcolor=f;backcolor=b;
 
 //
-// wolfenstein EGA compatbility stuff
-//
-
-void	VW_MeasurePropString(const char* string, unsigned short* width, unsigned short* height);
-
-void    VH_Startup();
-boolean FizzleFade(SDL_Surface* source, int x1, int y1,
-	unsigned width, unsigned height, unsigned frames, boolean abortable);
-
-//
 // mode independent routines
 // coordinates in pixels, rounded to best screen res
 // regions marked in double buffer
@@ -67,14 +57,5 @@ void VWB_Bar (int x, int y, int width, int height, int color);
 void VWB_Plot (int x, int y, int color);
 void VWB_Hlin (int x1, int x2, int y, int color);
 void VWB_Vlin (int y1, int y2, int x, int color);
-#define VWB_HlinScaledCoord(x,z,y,c)	VL_Hlin(x,y,(z)-(x)+1,c)
-#define VWB_VlinScaledCoord(y,z,x,c)	VL_Vlin(x,y,(z)-(y)+1,c)
 
-void VH_UpdateScreen (SDL_Surface *surface);
-
-#if SDL_MAJOR_VERSION == 2
-void VH_RenderTextures();
-#endif
-
-
-#endif
+#endif //__ID_VH_H_

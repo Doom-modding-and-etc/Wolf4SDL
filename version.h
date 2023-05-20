@@ -4,7 +4,7 @@
 #ifndef VERSIONALREADYCHOSEN              // used for batch compiling
 
 /* Defines used for different versions */
-//#define SPEAR
+#define SPEAR
 //#define SPEARDEMO
 //#define UPLOAD
 #define GOODTIMES
@@ -45,7 +45,7 @@
 //#define VIEWMAP             // Enables the overhead map
 //#define REVEALMAP           // Enables showing only the areas of the overhead map that have been seen
 //#define MENU_DEMOS            // Adds the menu demos support
-
+//#define MYPROFILE
 //#define DEBUGKEYS           // Comment this out to compile without the Tab debug keys
 #define ARTSEXTERN
 #define DEMOSEXTERN
@@ -64,7 +64,7 @@
 //#define FIXEDLOGICRATE       // Enables framerate independent game logic (aka: uncapped refreshrate) (by Codetech84)
 //#define LAGSIMULATOR          // Enables lag simulator debug option, depends on fixed logic rate (by Codetech84)
 //#define AUTOMAP //Enables the HUD automap feature by AlumiuN
-
+//#define MOUSELOOK //Enables the mouse look support by skolnick
 //Credits: Codetech84
 //#define MAPCONTROLLEDMUSIC //Activates the map controlled music.
 //#define MAPCONTROLPARTIME //Activates the map partial time control
@@ -98,13 +98,19 @@
 #define DATADIR "/3ds/wolf4sdl/wolf3d/"
 #elif defined(PS2)
 #if defined(USB)
-#define DATADIR "mass0://data"
+#define DATADIR "mass0:/data"
 #elif defined(HDD)
-#define DATADIR "hdd0://data"
+#define DATADIR "hdd0:/data"
+#elif defined(CDFS) /*dvd support*/
+#define DATADIR "cdrom:/data"
 #else
-#define DATADIR "host0://data"
+#define DATADIR "host0:/data"
 #endif
 #elif defined(SEGA_SATURN)
 #define DATADIR "/data"
+#elif defined(PSVITA)
+#define DATADIR "ux0:data/Wolfenstein 3D/"
+#elif defined(ZIPIT_Z2)
+#define DATADIR "/usr/share/games/wolf3d/"
 #endif
 #endif

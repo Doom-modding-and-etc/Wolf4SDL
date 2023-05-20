@@ -10,8 +10,13 @@
 #include "version.h"
 
 #ifndef VIEASM
-
+#if defined(USE_DOSBOX) || defined(USE_NUKEDOPL)
+#define alOut(n,b) YM3812Write(&oplChip, n, b)
+#else
 #define alOut(n,b) YM3812Write(oplChip, n, b)
+#endif
+
+
 #define TickBase        70      // 70Hz per tick - used as a base for timer 0
 
 typedef enum
@@ -154,8 +159,7 @@ extern  int             DigiChannel[];
 
 
 // Function prototypes
-void            Delay (unsigned int wolfticks);
-
+extern wlinline void  Delay (int wolfticks);
 extern  void    SD_Startup(void),
                 SD_Shutdown(void);
 
@@ -190,4 +194,5 @@ extern  void	SD_PrepareSound(int which);
 extern  int     SD_PlayDigitized(unsigned short which,int leftpos,int rightpos);
 extern  void    SD_StopDigitized(void);
 #endif
-#endif
+
+#endif //__ID_SD_H_

@@ -43,14 +43,14 @@
 #endif
 #include <math.h>
 /* input: [0, 256), output: [0, 65536] */
-#define OPL_SIN(x) ((int32_t)(sin((x) * M_PI / 512.0) * 65536.0))
+#define OPL_SIN(x) ((signed int)(sin((x) * M_PI / 512.0) * 65536.0))
 #endif
 
 #ifdef USE_INLINE_C99
 #ifdef _MSC_VER
 #define inline __inline
 #else
-
+#define inline 
 #endif
 #endif
 
@@ -82,7 +82,7 @@ enum {
     logsin table
 */
 
-static const uint16_t logsinrom[256] = {
+static const unsigned short logsinrom[256] = {
     0x859, 0x6c3, 0x607, 0x58b, 0x52e, 0x4e4, 0x4a6, 0x471,
     0x443, 0x41a, 0x3f5, 0x3d3, 0x3b5, 0x398, 0x37e, 0x365,
     0x34e, 0x339, 0x324, 0x311, 0x2ff, 0x2ed, 0x2dc, 0x2cd,
@@ -121,7 +121,7 @@ static const uint16_t logsinrom[256] = {
     exp table
 */
 
-static const uint16_t exprom[256] = {
+static const unsigned short exprom[256] = {
     0x7fa, 0x7f5, 0x7ef, 0x7ea, 0x7e4, 0x7df, 0x7da, 0x7d4,
     0x7cf, 0x7c9, 0x7c4, 0x7bf, 0x7b9, 0x7b4, 0x7ae, 0x7a9,
     0x7a4, 0x79f, 0x799, 0x794, 0x78f, 0x78a, 0x784, 0x77f,
@@ -162,7 +162,7 @@ static const uint16_t exprom[256] = {
     1/2, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 12, 12, 15, 15
 */
 
-static const uint8_t mt[16] = {
+static const unsigned char mt[16] = {
     1, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 20, 24, 24, 30, 30
 };
 
@@ -170,11 +170,11 @@ static const uint8_t mt[16] = {
     ksl table
 */
 
-static const uint8_t kslrom[16] = {
+static const unsigned char kslrom[16] = {
     0, 32, 40, 45, 48, 51, 53, 55, 56, 58, 59, 60, 61, 62, 63, 64
 };
 
-static const uint8_t kslshift[4] = {
+static const unsigned char kslshift[4] = {
     8, 1, 2, 0
 };
 
@@ -182,7 +182,7 @@ static const uint8_t kslshift[4] = {
     envelope generator constants
 */
 
-static const uint8_t eg_incstep[4][4] = {
+static const unsigned char eg_incstep[4][4] = {
     { 0, 0, 0, 0 },
     { 1, 0, 0, 0 },
     { 1, 0, 1, 0 },
@@ -193,12 +193,12 @@ static const uint8_t eg_incstep[4][4] = {
     address decoding
 */
 
-static const int8_t ad_slot[0x20] = {
+static const signed char ad_slot[0x20] = {
     0, 1, 2, 3, 4, 5, -1, -1, 6, 7, 8, 9, 10, 11, -1, -1,
     12, 13, 14, 15, 16, 17, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
 };
 
-static const uint8_t ch_slot[18] = {
+static const unsigned char ch_slot[18] = {
     0, 1, 2, 6, 7, 8, 12, 13, 14, 18, 19, 20, 24, 25, 26, 30, 31, 32
 };
 
@@ -207,18 +207,18 @@ static const uint8_t ch_slot[18] = {
     stereo extension panning table
 */
 
-static int32_t panpot_lut[256];
-static uint8_t panpot_lut_build = 0;
+static signed int panpot_lut[256];
+static unsigned char panpot_lut_build = 0;
 #endif
 
 /*
     Envelope generator
 */
 
-typedef int16_t(*envelope_sinfunc)(uint16_t phase, uint16_t envelope);
+typedef signed short(*envelope_sinfunc)(unsigned short phase, unsigned short envelope);
 typedef void(*envelope_genfunc)(opl3_slot *slott);
 
-static int16_t OPL3_EnvelopeCalcExp(uint32_t level)
+static signed short OPL3_EnvelopeCalcExp(unsigned int level)
 {
     if (level > 0x1fff)
     {
@@ -227,10 +227,10 @@ static int16_t OPL3_EnvelopeCalcExp(uint32_t level)
     return (exprom[level & 0xff] << 1) >> (level >> 8);
 }
 
-static int16_t OPL3_EnvelopeCalcSin0(uint16_t phase, uint16_t envelope)
+static signed short OPL3_EnvelopeCalcSin0(unsigned short phase, unsigned short envelope)
 {
-    uint16_t out = 0;
-    uint16_t neg = 0;
+    unsigned short out = 0;
+    unsigned short neg = 0;
     phase &= 0x3ff;
     if (phase & 0x200)
     {
@@ -247,9 +247,9 @@ static int16_t OPL3_EnvelopeCalcSin0(uint16_t phase, uint16_t envelope)
     return OPL3_EnvelopeCalcExp(out + (envelope << 3)) ^ neg;
 }
 
-static int16_t OPL3_EnvelopeCalcSin1(uint16_t phase, uint16_t envelope)
+static signed short OPL3_EnvelopeCalcSin1(unsigned short phase, unsigned short envelope)
 {
-    uint16_t out = 0;
+    unsigned short out = 0;
     phase &= 0x3ff;
     if (phase & 0x200)
     {
@@ -266,9 +266,9 @@ static int16_t OPL3_EnvelopeCalcSin1(uint16_t phase, uint16_t envelope)
     return OPL3_EnvelopeCalcExp(out + (envelope << 3));
 }
 
-static int16_t OPL3_EnvelopeCalcSin2(uint16_t phase, uint16_t envelope)
+static signed short OPL3_EnvelopeCalcSin2(unsigned short phase, unsigned short envelope)
 {
-    uint16_t out = 0;
+    unsigned short out = 0;
     phase &= 0x3ff;
     if (phase & 0x100)
     {
@@ -281,9 +281,9 @@ static int16_t OPL3_EnvelopeCalcSin2(uint16_t phase, uint16_t envelope)
     return OPL3_EnvelopeCalcExp(out + (envelope << 3));
 }
 
-static int16_t OPL3_EnvelopeCalcSin3(uint16_t phase, uint16_t envelope)
+static signed short OPL3_EnvelopeCalcSin3(unsigned short phase, unsigned short envelope)
 {
-    uint16_t out = 0;
+    unsigned short out = 0;
     phase &= 0x3ff;
     if (phase & 0x100)
     {
@@ -296,10 +296,10 @@ static int16_t OPL3_EnvelopeCalcSin3(uint16_t phase, uint16_t envelope)
     return OPL3_EnvelopeCalcExp(out + (envelope << 3));
 }
 
-static int16_t OPL3_EnvelopeCalcSin4(uint16_t phase, uint16_t envelope)
+static signed short OPL3_EnvelopeCalcSin4(unsigned short phase, unsigned short envelope)
 {
-    uint16_t out = 0;
-    uint16_t neg = 0;
+    unsigned short out = 0;
+    unsigned short neg = 0;
     phase &= 0x3ff;
     if ((phase & 0x300) == 0x100)
     {
@@ -320,9 +320,9 @@ static int16_t OPL3_EnvelopeCalcSin4(uint16_t phase, uint16_t envelope)
     return OPL3_EnvelopeCalcExp(out + (envelope << 3)) ^ neg;
 }
 
-static int16_t OPL3_EnvelopeCalcSin5(uint16_t phase, uint16_t envelope)
+static signed short OPL3_EnvelopeCalcSin5(unsigned short phase, unsigned short envelope)
 {
-    uint16_t out = 0;
+    unsigned short out = 0;
     phase &= 0x3ff;
     if (phase & 0x200)
     {
@@ -339,9 +339,9 @@ static int16_t OPL3_EnvelopeCalcSin5(uint16_t phase, uint16_t envelope)
     return OPL3_EnvelopeCalcExp(out + (envelope << 3));
 }
 
-static int16_t OPL3_EnvelopeCalcSin6(uint16_t phase, uint16_t envelope)
+static signed short OPL3_EnvelopeCalcSin6(unsigned short phase, unsigned short envelope)
 {
-    uint16_t neg = 0;
+    unsigned short neg = 0;
     phase &= 0x3ff;
     if (phase & 0x200)
     {
@@ -350,10 +350,10 @@ static int16_t OPL3_EnvelopeCalcSin6(uint16_t phase, uint16_t envelope)
     return OPL3_EnvelopeCalcExp(envelope << 3) ^ neg;
 }
 
-static int16_t OPL3_EnvelopeCalcSin7(uint16_t phase, uint16_t envelope)
+static signed short OPL3_EnvelopeCalcSin7(unsigned short phase, unsigned short envelope)
 {
-    uint16_t out = 0;
-    uint16_t neg = 0;
+    unsigned short out = 0;
+    unsigned short neg = 0;
     phase &= 0x3ff;
     if (phase & 0x200)
     {
@@ -385,28 +385,28 @@ enum envelope_gen_num
 
 static void OPL3_EnvelopeUpdateKSL(opl3_slot *slot)
 {
-    int16_t ksl = (kslrom[slot->channel->f_num >> 6] << 2)
+    signed short ksl = (kslrom[slot->channel->f_num >> 6] << 2)
                - ((0x08 - slot->channel->block) << 5);
     if (ksl < 0)
     {
         ksl = 0;
     }
-    slot->eg_ksl = (uint8_t)ksl;
+    slot->eg_ksl = (unsigned char)ksl;
 }
 
 static void OPL3_EnvelopeCalc(opl3_slot *slot)
 {
-    uint8_t nonzero;
-    uint8_t rate;
-    uint8_t rate_hi;
-    uint8_t rate_lo;
-    uint8_t reg_rate = 0;
-    uint8_t ks;
-    uint8_t eg_shift, shift;
-    uint16_t eg_rout;
-    int16_t eg_inc;
-    uint8_t eg_off;
-    uint8_t reset = 0;
+    unsigned char nonzero;
+    unsigned char rate;
+    unsigned char rate_hi;
+    unsigned char rate_lo;
+    unsigned char reg_rate = 0;
+    unsigned char ks;
+    unsigned char eg_shift, shift;
+    unsigned short eg_rout;
+    signed short eg_inc;
+    unsigned char eg_off;
+    unsigned char reset = 0;
     slot->eg_out = slot->eg_rout + (slot->reg_tl << 2)
                  + (slot->eg_ksl >> kslshift[slot->reg_ksl]) + *slot->trem;
     if (slot->key && slot->eg_gen == envelope_gen_num_release)
@@ -541,12 +541,12 @@ static void OPL3_EnvelopeCalc(opl3_slot *slot)
     }
 }
 
-static void OPL3_EnvelopeKeyOn(opl3_slot *slot, uint8_t type)
+static void OPL3_EnvelopeKeyOn(opl3_slot *slot, unsigned char type)
 {
     slot->key |= type;
 }
 
-static void OPL3_EnvelopeKeyOff(opl3_slot *slot, uint8_t type)
+static void OPL3_EnvelopeKeyOff(opl3_slot *slot, unsigned char type)
 {
     slot->key &= ~type;
 }
@@ -558,18 +558,18 @@ static void OPL3_EnvelopeKeyOff(opl3_slot *slot, uint8_t type)
 static void OPL3_PhaseGenerate(opl3_slot *slot)
 {
     opl3_chip *chip;
-    uint16_t f_num;
-    uint32_t basefreq;
-    uint8_t rm_xor, n_bit;
-    uint32_t noise;
-    uint16_t phase;
+    unsigned short f_num;
+    unsigned int basefreq;
+    unsigned char rm_xor, n_bit;
+    unsigned int noise;
+    unsigned short phase;
 
     chip = slot->chip;
     f_num = slot->channel->f_num;
     if (slot->reg_vib)
     {
-        int8_t range;
-        uint8_t vibpos;
+        signed char range;
+        unsigned char vibpos;
 
         range = (f_num >> 7) & 7;
         vibpos = slot->chip->vibpos;
@@ -591,7 +591,7 @@ static void OPL3_PhaseGenerate(opl3_slot *slot)
         f_num += range;
     }
     basefreq = (f_num << slot->channel->block) >> 1;
-    phase = (uint16_t)(slot->pg_phase >> 9);
+    phase = (unsigned short)(slot->pg_phase >> 9);
     if (slot->pg_reset)
     {
         slot->pg_phase = 0;
@@ -649,7 +649,7 @@ static void OPL3_PhaseGenerate(opl3_slot *slot)
     Slot
 */
 
-static void OPL3_SlotWrite20(opl3_slot *slot, uint8_t data)
+static void OPL3_SlotWrite20(opl3_slot *slot, unsigned char data)
 {
     if ((data >> 7) & 0x01)
     {
@@ -657,7 +657,7 @@ static void OPL3_SlotWrite20(opl3_slot *slot, uint8_t data)
     }
     else
     {
-        slot->trem = (uint8_t*)&slot->chip->zeromod;
+        slot->trem = (unsigned char*)&slot->chip->zeromod;
     }
     slot->reg_vib = (data >> 6) & 0x01;
     slot->reg_type = (data >> 5) & 0x01;
@@ -665,20 +665,20 @@ static void OPL3_SlotWrite20(opl3_slot *slot, uint8_t data)
     slot->reg_mult = data & 0x0f;
 }
 
-static void OPL3_SlotWrite40(opl3_slot *slot, uint8_t data)
+static void OPL3_SlotWrite40(opl3_slot *slot, unsigned char data)
 {
     slot->reg_ksl = (data >> 6) & 0x03;
     slot->reg_tl = data & 0x3f;
     OPL3_EnvelopeUpdateKSL(slot);
 }
 
-static void OPL3_SlotWrite60(opl3_slot *slot, uint8_t data)
+static void OPL3_SlotWrite60(opl3_slot *slot, unsigned char data)
 {
     slot->reg_ar = (data >> 4) & 0x0f;
     slot->reg_dr = data & 0x0f;
 }
 
-static void OPL3_SlotWrite80(opl3_slot *slot, uint8_t data)
+static void OPL3_SlotWrite80(opl3_slot *slot, unsigned char data)
 {
     slot->reg_sl = (data >> 4) & 0x0f;
     if (slot->reg_sl == 0x0f)
@@ -688,7 +688,7 @@ static void OPL3_SlotWrite80(opl3_slot *slot, uint8_t data)
     slot->reg_rr = data & 0x0f;
 }
 
-static void OPL3_SlotWriteE0(opl3_slot *slot, uint8_t data)
+static void OPL3_SlotWriteE0(opl3_slot *slot, unsigned char data)
 {
     slot->reg_wf = data & 0x07;
     if (slot->chip->newm == 0x00)
@@ -721,12 +721,12 @@ static void OPL3_SlotCalcFB(opl3_slot *slot)
 
 static void OPL3_ChannelSetupAlg(opl3_channel *channel);
 
-static void OPL3_ChannelUpdateRhythm(opl3_chip *chip, uint8_t data)
+static void OPL3_ChannelUpdateRhythm(opl3_chip *chip, unsigned char data)
 {
     opl3_channel *channel6;
     opl3_channel *channel7;
     opl3_channel *channel8;
-    uint8_t chnum;
+    unsigned char chnum;
 
     chip->rhy = data & 0x3f;
     if (chip->rhy & 0x20)
@@ -813,7 +813,7 @@ static void OPL3_ChannelUpdateRhythm(opl3_chip *chip, uint8_t data)
     }
 }
 
-static void OPL3_ChannelWriteA0(opl3_channel *channel, uint8_t data)
+static void OPL3_ChannelWriteA0(opl3_channel *channel, unsigned char data)
 {
     if (channel->chip->newm && channel->chtype == ch_4op2)
     {
@@ -833,7 +833,7 @@ static void OPL3_ChannelWriteA0(opl3_channel *channel, uint8_t data)
     }
 }
 
-static void OPL3_ChannelWriteB0(opl3_channel *channel, uint8_t data)
+static void OPL3_ChannelWriteB0(opl3_channel *channel, unsigned char data)
 {
     if (channel->chip->newm && channel->chtype == ch_4op2)
     {
@@ -984,7 +984,7 @@ static void OPL3_ChannelUpdateAlg(opl3_channel *channel)
     }
 }
 
-static void OPL3_ChannelWriteC0(opl3_channel *channel, uint8_t data)
+static void OPL3_ChannelWriteC0(opl3_channel *channel, unsigned char data)
 {
     channel->fb = (data & 0x0e) >> 1;
     channel->con = data & 0x01;
@@ -998,7 +998,7 @@ static void OPL3_ChannelWriteC0(opl3_channel *channel, uint8_t data)
     }
     else
     {
-        channel->cha = channel->chb = (uint16_t)~0;
+        channel->cha = channel->chb = (unsigned short)~0;
         // TODO: Verify on real chip if DAC2 output is disabled in compat mode
         channel->chc = channel->chd = 0;
     }
@@ -1012,7 +1012,7 @@ static void OPL3_ChannelWriteC0(opl3_channel *channel, uint8_t data)
 }
 
 #if OPL_ENABLE_STEREOEXT
-static void OPL3_ChannelWriteD0(opl3_channel* channel, uint8_t data)
+static void OPL3_ChannelWriteD0(opl3_channel* channel, unsigned char data)
 {
     if (channel->chip->stereoext)
     {
@@ -1070,10 +1070,10 @@ static void OPL3_ChannelKeyOff(opl3_channel *channel)
     }
 }
 
-static void OPL3_ChannelSet4Op(opl3_chip *chip, uint8_t data)
+static void OPL3_ChannelSet4Op(opl3_chip *chip, unsigned char data)
 {
-    uint8_t bit;
-    uint8_t chnum;
+    unsigned char bit;
+    unsigned char chnum;
     for (bit = 0; bit < 6; bit++)
     {
         chnum = bit;
@@ -1097,7 +1097,7 @@ static void OPL3_ChannelSet4Op(opl3_chip *chip, uint8_t data)
     }
 }
 
-static int16_t OPL3_ClipSample(int32_t sample)
+static signed short OPL3_ClipSample(signed int sample)
 {
     if (sample > 32767)
     {
@@ -1107,7 +1107,7 @@ static int16_t OPL3_ClipSample(int32_t sample)
     {
         sample = -32768;
     }
-    return (int16_t)sample;
+    return (signed short)sample;
 }
 
 static void OPL3_ProcessSlot(opl3_slot *slot)
@@ -1118,15 +1118,15 @@ static void OPL3_ProcessSlot(opl3_slot *slot)
     OPL3_SlotGenerate(slot);
 }
 
-inline void OPL3_Generate4Ch(opl3_chip *chip, int16_t *buf4)
+inline void OPL3_Generate4Ch(opl3_chip *chip, signed short *buf4)
 {
     opl3_channel *channel;
     opl3_writebuf *writebuf;
-    int16_t **out;
-    int32_t mix[2];
-    uint8_t ii;
-    int16_t accm;
-    uint8_t shift = 0;
+    signed short **out;
+    signed int mix[2];
+    unsigned char ii;
+    signed short accm;
+    unsigned char shift = 0;
 
     buf4[1] = OPL3_ClipSample(chip->mixbuff[1]);
     buf4[3] = OPL3_ClipSample(chip->mixbuff[3]);
@@ -1147,11 +1147,11 @@ inline void OPL3_Generate4Ch(opl3_chip *chip, int16_t *buf4)
         out = channel->out;
         accm = *out[0] + *out[1] + *out[2] + *out[3];
 #if OPL_ENABLE_STEREOEXT
-        mix[0] += (int16_t)((accm * channel->leftpan) >> 16);
+        mix[0] += (signed short)((accm * channel->leftpan) >> 16);
 #else
-        mix[0] += (int16_t)(accm & channel->cha);
+        mix[0] += (signed short)(accm & channel->cha);
  #endif
-        mix[1] += (int16_t)(accm & channel->chc);
+        mix[1] += (signed short)(accm & channel->chc);
     }
     chip->mixbuff[0] = mix[0];
     chip->mixbuff[2] = mix[1];
@@ -1180,11 +1180,11 @@ inline void OPL3_Generate4Ch(opl3_chip *chip, int16_t *buf4)
         out = channel->out;
         accm = *out[0] + *out[1] + *out[2] + *out[3];
 #if OPL_ENABLE_STEREOEXT
-        mix[0] += (int16_t)((accm * channel->rightpan) >> 16);
+        mix[0] += (signed short)((accm * channel->rightpan) >> 16);
 #else
-        mix[0] += (int16_t)(accm & channel->chb);
+        mix[0] += (signed short)(accm & channel->chb);
  #endif
-        mix[1] += (int16_t)(accm & channel->chd);
+        mix[1] += (signed short)(accm & channel->chd);
     }
     chip->mixbuff[1] = mix[0];
     chip->mixbuff[3] = mix[1];
@@ -1262,15 +1262,15 @@ inline void OPL3_Generate4Ch(opl3_chip *chip, int16_t *buf4)
     chip->writebuf_samplecnt++;
 }
 
-void OPL3_Generate(opl3_chip *chip, int16_t *buf)
+void OPL3_Generate(opl3_chip *chip, signed short *buf)
 {
-    int16_t samples[4];
+    signed short samples[4];
     OPL3_Generate4Ch(chip, samples);
     buf[0] = samples[0];
     buf[1] = samples[1];
 }
 
-void OPL3_Generate4ChResampled(opl3_chip *chip, int16_t *buf4)
+void OPL3_Generate4ChResampled(opl3_chip *chip, signed short *buf4)
 {
     while (chip->samplecnt >= chip->rateratio)
     {
@@ -1281,32 +1281,32 @@ void OPL3_Generate4ChResampled(opl3_chip *chip, int16_t *buf4)
         OPL3_Generate4Ch(chip, chip->samples);
         chip->samplecnt -= chip->rateratio;
     }
-    buf4[0] = (int16_t)((chip->oldsamples[0] * (chip->rateratio - chip->samplecnt)
+    buf4[0] = (signed short)((chip->oldsamples[0] * (chip->rateratio - chip->samplecnt)
                         + chip->samples[0] * chip->samplecnt) / chip->rateratio);
-    buf4[1] = (int16_t)((chip->oldsamples[1] * (chip->rateratio - chip->samplecnt)
+    buf4[1] = (signed short)((chip->oldsamples[1] * (chip->rateratio - chip->samplecnt)
                         + chip->samples[1] * chip->samplecnt) / chip->rateratio);
-    buf4[2] = (int16_t)((chip->oldsamples[2] * (chip->rateratio - chip->samplecnt)
+    buf4[2] = (signed short)((chip->oldsamples[2] * (chip->rateratio - chip->samplecnt)
                         + chip->samples[2] * chip->samplecnt) / chip->rateratio);
-    buf4[3] = (int16_t)((chip->oldsamples[3] * (chip->rateratio - chip->samplecnt)
+    buf4[3] = (signed short)((chip->oldsamples[3] * (chip->rateratio - chip->samplecnt)
                         + chip->samples[3] * chip->samplecnt) / chip->rateratio);
     chip->samplecnt += 1 << RSM_FRAC;
 }
 
-void OPL3_GenerateResampled(opl3_chip *chip, int16_t *buf)
+void OPL3_GenerateResampled(opl3_chip *chip, signed short *buf)
 {
-    int16_t samples[4];
+    signed short samples[4];
     OPL3_Generate4ChResampled(chip, samples);
     buf[0] = samples[0];
     buf[1] = samples[1];
 }
 
-void OPL3_Reset(opl3_chip *chip, uint32_t samplerate)
+void OPL3_Reset(opl3_chip *chip, unsigned int samplerate)
 {
     opl3_slot *slot;
     opl3_channel *channel;
-    uint8_t slotnum;
-    uint8_t channum;
-    uint8_t local_ch_slot;
+    unsigned char slotnum;
+    unsigned char channum;
+    unsigned char local_ch_slot;
 
     memset(chip, 0, sizeof(opl3_chip));
     for (slotnum = 0; slotnum < 36; slotnum++)
@@ -1317,7 +1317,7 @@ void OPL3_Reset(opl3_chip *chip, uint32_t samplerate)
         slot->eg_rout = 0x1ff;
         slot->eg_out = 0x1ff;
         slot->eg_gen = envelope_gen_num_release;
-        slot->trem = (uint8_t*)&chip->zeromod;
+        slot->trem = (unsigned char*)&chip->zeromod;
         slot->slot_num = slotnum;
     }
     for (channum = 0; channum < 18; channum++)
@@ -1359,7 +1359,7 @@ void OPL3_Reset(opl3_chip *chip, uint32_t samplerate)
 #if OPL_ENABLE_STEREOEXT
     if (!panpot_lut_build)
     {
-        int32_t i;
+        signed int i;
         for (i = 0; i < 256; i++)
         {
             panpot_lut[i] = OPL_SIN(i);
@@ -1369,10 +1369,10 @@ void OPL3_Reset(opl3_chip *chip, uint32_t samplerate)
 #endif
 }
 
-void OPL3_WriteReg(opl3_chip *chip, uint16_t reg, uint8_t v)
+void OPL3_WriteReg(opl3_chip *chip, unsigned short reg, unsigned char v)
 {
-    uint8_t high = (reg >> 8) & 0x01;
-    uint8_t regm = reg & 0xff;
+    unsigned char high = (reg >> 8) & 0x01;
+    unsigned char regm = reg & 0xff;
     switch (regm & 0xf0)
     {
     case 0x00:
@@ -1479,11 +1479,11 @@ void OPL3_WriteReg(opl3_chip *chip, uint16_t reg, uint8_t v)
     }
 }
 
-void OPL3_WriteRegBuffered(opl3_chip *chip, uint16_t reg, uint8_t v)
+void OPL3_WriteRegBuffered(opl3_chip *chip, unsigned short reg, unsigned char v)
 {
     uint64_t time1, time2;
     opl3_writebuf *writebuf;
-    uint32_t writebuf_last;
+    unsigned int writebuf_last;
 
     writebuf_last = chip->writebuf_last;
     writebuf = &chip->writebuf[writebuf_last];
@@ -1511,7 +1511,7 @@ void OPL3_WriteRegBuffered(opl3_chip *chip, uint16_t reg, uint8_t v)
     chip->writebuf_last = (writebuf_last + 1) % OPL_WRITEBUF_SIZE;
 }
 
-void OPL3_WriteRegDelayed(opl3_chip* chip, uint16_t reg, uint8_t v, uint64_t delay)
+void OPL3_WriteRegDelayed(opl3_chip* chip, unsigned short reg, unsigned char v, uint64_t delay)
 {
     uint64_t currentTime;
     opl3_writebuf* writebuf = &chip->writebuf[chip->writebuf_last];
@@ -1540,10 +1540,10 @@ void OPL3_WriteRegDelayed(opl3_chip* chip, uint16_t reg, uint8_t v, uint64_t del
     chip->writebuf_lasttime = writebuf->time;
 }
 
-void OPL3_Generate4ChStream(opl3_chip *chip, int16_t *sndptr1, int16_t *sndptr2, uint32_t numsamples)
+void OPL3_Generate4ChStream(opl3_chip *chip, signed short *sndptr1, signed short *sndptr2, int numsamples)
 {
-    uint32_t i;
-    int16_t samples[4];
+    int i;
+    signed short samples[4];
 
     for(i = 0; i < numsamples; i++)
     {
@@ -1557,9 +1557,9 @@ void OPL3_Generate4ChStream(opl3_chip *chip, int16_t *sndptr1, int16_t *sndptr2,
     }
 }
 
-void OPL3_GenerateStream(opl3_chip *chip, int16_t *sndptr, uint32_t numsamples)
+void OPL3_GenerateStream(opl3_chip *chip, signed short *sndptr, int numsamples)
 {
-    uint32_t i;
+    int i;
 
     for(i = 0; i < numsamples; i++)
     {

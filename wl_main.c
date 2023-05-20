@@ -91,12 +91,8 @@ int     mouseadjustment;
 unsigned char    soundvol, musicvol;
 boolean reversestereo;
 #endif
-#if defined(SWITCH)
-char configdir[256] = "/switch/wolf4sdl/";
-#elif defined(N3DS)
-char configdir[256] = "/3ds/wolf4sdl/wolf3d";
-#elif defined(SEGA_SATURN) || defined(PS2)
-char configdir[256] = "data/";
+#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
+char configdir[256] = DATADIR;
 #else
 char    configdir[256] = "";
 #endif
@@ -167,7 +163,8 @@ void ReadConfig(void)
     SDSMode sds;
 
     char* configpath[300];
-	const int file = w3sopen((const char*)configpath, O_RDONLY | O_BINARY);
+    int file;
+
 #ifdef _arch_dreamcast
     DC_LoadFromVMU(configname);
 #endif
@@ -176,8 +173,12 @@ void ReadConfig(void)
         w3ssnprintf((char*)configpath, sizeof(configpath), "%s/%s", configdir, configname);
     else
         strcpy((char*)configpath, configname);
+#if defined(_MSC_VER) || defined(DEVCPP)
+    file = w3sopen((const char*)configpath, O_CREAT | O_WRONLY | O_BINARY);
+#else
+    file = w3sopen((const char*)configpath, O_CREAT | O_WRONLY | O_BINARY, 0644);
+#endif
 
-    
     if (file != -1)
     {
         //
@@ -219,6 +220,16 @@ void ReadConfig(void)
 #endif
         w3sread(file,&viewsize,sizeof(viewsize));
         w3sread(file,&mouseadjustment,sizeof(mouseadjustment));
+#ifdef MOUSELOOK
+        //To keep backwards compatibility with older save files, we try to
+        //detect if there is still info to read from the file. If so, we
+        //assume it's the mouselook setting. If not, we simply close the file.
+        if (w3sread(file,&mouselookenabled,sizeof(mouselookenabled)) != sizeof(mouselookenabled))
+            printf ("Original Wolf4SDL config file detected (missing mouselook setting)\n");
+
+        if (w3sread(file,&alwaysrunenabled,sizeof(alwaysrunenabled)) != sizeof(alwaysrunenabled))
+            printf ("Original Wolf4SDL config file detected (missing alwaysrun setting)\n");
+#endif		
 #ifdef EXTRACONTROLS
         w3sread(file, &mousemoveenabled, sizeof(mousemoveenabled));
         w3sread(file, &dummyMouseMoveEnabled, sizeof(dummyMouseMoveEnabled));
@@ -252,6 +263,10 @@ void ReadConfig(void)
         {
             joystickenabled = true;
         }
+#ifdef MOUSELOOK
+        if(mouselookenabled) mouselookenabled=true;
+        if(alwaysrunenabled) alwaysrunenabled=true;
+#endif	
 #ifdef EXTRACONTROLS
         if (mousemoveenabled)
         {
@@ -263,6 +278,9 @@ void ReadConfig(void)
             mouseenabled = false;
 #ifdef EXTRACONTROLS
             mousemoveenabled = false;
+#endif
+#ifdef MOUSELOOK
+			mouselookenabled = false;
 #endif
         }
         if (!IN_JoyPresent())
@@ -308,12 +326,18 @@ noconfig:
 #ifdef EXTRACONTROLS
             mousemoveenabled = true;
 #endif
+#ifdef MOUSELOOK
+			mouselookenabled = true;
+#endif
         }
         if (IN_JoyPresent())
             joystickenabled = true;
 
         viewsize = 19;                          // start with a good size
         mouseadjustment=5;
+#ifdef MOUSELOOK
+		alwaysrunenabled = false;
+#endif	
 #ifdef VIEASM
         soundvol = 100;
         musicvol = 100;
@@ -341,7 +365,8 @@ noconfig:
 void WriteConfig(void)
 {
     char *configpath[300];
-	const int file = w3sopen((const char*)configpath, O_CREAT | O_WRONLY | O_BINARY, 0644);
+    int file;
+
 #ifdef _arch_dreamcast
     fs_unlink(configname);
 #endif
@@ -350,8 +375,11 @@ void WriteConfig(void)
         w3ssnprintf((char*)configpath, sizeof(configpath), "%s/%s", configdir, configname);
     else
         strcpy((char*)configpath, configname);
-
-   
+#if defined(_MSC_VER) || defined(DEVCPP)
+    file = w3sopen((const char*)configpath, O_CREAT | O_WRONLY | O_BINARY);
+#else
+    file = w3sopen(configpath, O_CREAT | O_WRONLY | O_BINARY, 0644);
+#endif   
     if (file != -1)
     {
         unsigned short tmp=0xfefa;
@@ -382,6 +410,12 @@ void WriteConfig(void)
 #endif
         w3swrite(file,&viewsize,sizeof(viewsize));
         w3swrite(file,&mouseadjustment,sizeof(mouseadjustment));
+#ifdef MOUSELOOK
+        //Mouselookenabled state is saved last, so if this config file is used
+        //with original Wold4SDL, this property is simply ignored.
+        write(file,&mouselookenabled,sizeof(mouselookenabled));
+        write(file,&alwaysrunenabled,sizeof(alwaysrunenabled));
+#endif	
 #ifdef EXTRACONTROLS
         w3swrite(file, &mousemoveenabled, sizeof(mousemoveenabled));
 #endif // EXTRACONTROLS
@@ -390,7 +424,6 @@ void WriteConfig(void)
         w3swrite(file, &musicvol, sizeof(musicvol));
         w3swrite(file, &reversestereo, sizeof(reversestereo));
 #endif
-
         w3sclose(file);
     }
 #ifdef _arch_dreamcast
@@ -484,14 +517,14 @@ void DiskFlopAnim(int x,int y)
     if (!x && !y)
         return;
     VWB_DrawPic(x,y,C_DISKLOADING1PIC+which);
-    if (!usedoublebuffering) VH_UpdateScreen(screenBuffer);    // ADDEDFIX 4 - Chris
+    if (!usedoublebuffering) VL_UpdateScreen(screenBuffer);    // ADDEDFIX 4 - Chris
     which^=1;
 }
 
 
-int DoChecksum(unsigned char *source,unsigned size,int checksum)
+int DoChecksum(unsigned char *source, unsigned int size,int checksum)
 {
-    unsigned i;
+    unsigned int i;
 
     for (i=0;i<size-1;i++)
     checksum += source[i]^source[i+1];
@@ -507,9 +540,6 @@ int DoChecksum(unsigned char *source,unsigned size,int checksum)
 =
 ==================
 */
-
-extern statetype s_grdstand;
-extern statetype s_player;
 
 boolean SaveTheGame(FILE *file,int x,int y)
 {
@@ -540,7 +570,7 @@ boolean SaveTheGame(FILE *file,int x,int y)
 #endif
 #ifdef AUTOMAP
     fwrite(automap, sizeof(automap), 1, file);
-    checksum = DoChecksum((byte*)automap, sizeof(automap), checksum);
+    checksum = DoChecksum((unsigned char*)automap, sizeof(automap), checksum);
 #endif
     DiskFlopAnim(x,y);
 
@@ -827,44 +857,44 @@ void ShutdownId (void)
 #if defined(SWITCH) || defined (N3DS)
     printf("US_Shutdown DONE\n");
 #elif defined(PS2)
-    ps2_printf ("US_Shutdown DONE\n",  4);
+    ps2_printf_XY("US_Shutdown DONE\n",  4, 20, 20);
 #endif
     SD_Shutdown ();
 #if defined(SWITCH) || defined (N3DS)
     printf("SD_Shutdown DONE\n");
 #elif defined(PS2)
-    ps2_printf ("SD_Shutdown DONE\n", 4);
+    ps2_printf_XY ("SD_Shutdown DONE\n", 4, 20, 20);
 #endif    
     PM_Shutdown ();
 #if defined(SWITCH) || defined (N3DS)
     printf("PM_Shutdown DONE\n");
 #elif defined(PS2)
-    ps2_printf("PM_Shutdown DONE\n", 4);
+    ps2_printf_XY("PM_Shutdown DONE\n", 4, 20, 20);
 #endif    
     IN_Shutdown ();
 #if defined(SWITCH) || defined (N3DS)
     printf("IN_Shutdown DONE\n");
 #elif defined(PS2)
-    ps2_printf("IN_Shutdown DONE\n", 4);
+    ps2_printf_XY("IN_Shutdown DONE\n", 4, 20, 20);
 #endif        
     VL_Shutdown ();
 #if defined(SWITCH) || defined (N3DS)
     printf("VL_Shutdown DONE\n");
 #elif defined(PS2)
-    ps2_printf("VL_Shutdown DONE\n", 4);
+    ps2_printf_XY("VL_Shutdown DONE\n", 4, 20, 20);
 #endif    
     CA_Shutdown ();
 #if defined(SWITCH) || defined (N3DS)
     printf("CA_Shutdown DONE\n");
 #elif defined(PS2)
-    ps2_printf("CA_Shutdown DONE\n", 4);
+    ps2_printf_XY("CA_Shutdown DONE\n", 4, 20, 20);
 #endif    
 #if defined(GP2X_940)
     GP2X_Shutdown();
 #endif
 #if defined(PS2)
     PS2_Shutdown();
-    ps2_printf("PS2_Shutdown DONE\n", 4);
+    ps2_printf_XY("PS2_Shutdown DONE\n", 4, 20, 20);
 #endif
 }
 
@@ -940,9 +970,7 @@ void BuildTables (void)
 void CalcProjection (int focal)
 {
     int     i;
-    int    intang;
-    float   angle;
-    double  tang;
+
     int     halfview;
     double  facedist;
 
@@ -960,7 +988,7 @@ void CalcProjection (int focal)
     // divide heightnumerator by a posts distance to get the posts height for
     // the heightbuffer.  The pixel height is height>>2
     //
-    heightnumerator = (TILEGLOBAL*scale)>>6;
+    heightnumerator = (int)(TILEGLOBAL*scale)>>6;
 
     //
     // calculate the angle offset from view angle of each pixel's ray
@@ -969,9 +997,9 @@ void CalcProjection (int focal)
     for (i=0;i<halfview;i++)
     {
         // start 1/2 pixel over, so viewangle bisects two middle pixels
-        tang = (int)i*VIEWGLOBAL/viewwidth/facedist;
-        angle = (float) atan(tang);
-        intang = (int) (angle*radtoint);
+        double  tang = (int)i*VIEWGLOBAL/viewwidth/facedist;
+        float   angle = (float) atan(tang);
+        int intang = (int) (angle*radtoint);
         pixelangle[halfview-1-i] = intang;
         pixelangle[halfview+i] = -intang;
     }
@@ -1054,7 +1082,7 @@ void FinishSignon (void)
 
     #endif
 
-    VH_UpdateScreen(screenBuffer);
+    VL_UpdateScreen(screenBuffer);
 
     if (!param_nowait)
         IN_Ack ();
@@ -1074,15 +1102,15 @@ void FinishSignon (void)
     US_CPrint ("Working...");
     #endif
 
-    VH_UpdateScreen(screenBuffer);
+    VL_UpdateScreen(screenBuffer);
     #endif
 
     SETFONTCOLOR(0,15);
 #else
-    VH_UpdateScreen(screenBuffer);
+    VL_UpdateScreen(screenBuffer);
 
     if (!param_nowait)
-        VW_WaitVBL(3*70);
+        VL_WaitVBL(3*70);
 #endif
 }
 
@@ -1351,7 +1379,7 @@ void DoJukebox(void)
     US_CPrint ("Robert's Jukebox");
 
     SETFONTCOLOR (TEXTCOLOR,BKGDCOLOR);
-    VH_UpdateScreen(screenBuffer);
+    VL_UpdateScreen(screenBuffer);
     MenuFadeIn();
 
     do
@@ -1365,7 +1393,7 @@ void DoJukebox(void)
             StartCPMusic(songs[start + which]);
             MusicMenu[start+which].active = 2;
             DrawMenu (&MusicItems,&MusicMenu[start]);
-            VH_UpdateScreen(screenBuffer);
+            VL_UpdateScreen(screenBuffer);
             lastsong = which;
         }
     } while(which>=0);
@@ -1394,7 +1422,7 @@ static void InitGame()
 #if defined (SWITCH) || defined (N3DS) 
     printf("GAME START");
 #elif defined(PS2)
-    ps2_printf("GAME START", 4);
+    ps2_printf_XY("GAME START", 4, 20, 20);
 #endif
     // initialize SDL
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
@@ -1419,9 +1447,9 @@ static void InitGame()
 #endif
 #elif defined (PS2)
 #if SDL_MAJOR_VERSION == 1 
-    ps2_printf("SDL1.2 Initialized", 4);   
+    ps2_printf_XY("SDL1.2 Initialized", 4, 20, 20);   
 #elif SDL_MAJOR_VERSION == 2
-    ps2_printf("SDL2 Initialized", 4);
+    ps2_printf_XY("SDL2 Initialized", 4, 20, 20);
 #endif
 #endif
 #if SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2
@@ -1444,42 +1472,41 @@ static void InitGame()
 
     SignonScreen ();
 
-    VH_UpdateScreen(screenBuffer);
-
+    VL_Startup();
 #if defined(SWITCH) || defined (N3DS) 
-    printf("VH Started DONE\n");
+    printf("VL Started DONE\n");
 #elif defined(PS2)
-    ps2_printf("VH Started DONE\n", 5);
+    ps2_printf_XY("VL Started DONE\n", 5, 20, 20);
 #endif
     IN_Startup ();
 #if defined(SWITCH) || defined (N3DS) 
     printf("IN Started DONE\n");
 #elif defined(PS2)
-    ps2_printf("IN Started DONE\n", 4);
+    ps2_printf_XY("IN Started DONE\n", 4, 20, 20);
 #endif
     PM_Startup ();
 #if defined(SWITCH) || defined (N3DS) 
     printf("PM Started");
 #elif defined(PS2)
-    ps2_printf("PM Started DONE\n", 4);
+    ps2_printf_XY("PM Started DONE\n", 4, 20, 20);
 #endif
     SD_Startup ();
 #if defined(SWITCH) || defined (N3DS)
     printf("SD Started DONE\n");
 #elif defined(PS2)
-    ps2_printf("SD Started DONE\n", 4);
+    ps2_printf_XY("SD Started DONE\n", 4, 20, 20);
 #endif
     CA_Startup ();
 #if defined(SWITCH) || defined (N3DS) 
     printf("CA Started");
 #elif defined(PS2)
-    ps2_printf("CA Started DONE\n", 4);
+    ps2_printf_XY("CA Started DONE\n", 4, 20, 20);
 #endif
     US_Startup ();
 #if defined(SWITCH) || defined (N3DS)
     printf("US Started");
 #elif defined(PS2)
-    ps2_printf("US Started DONE\n", 4);
+    ps2_printf_XY("US Started DONE\n", 4);
 #endif
 #ifdef LWUDPCOMMS
     UDP_startup();
@@ -1729,9 +1756,7 @@ void Quit (const char *errorStr, ...)
 
 static void DemoLoop()
 {
-#ifndef MENU_DEMOS
     int LastDemo = 0;
-#endif
 //
 // check for launch from ted
 //
@@ -1803,11 +1828,11 @@ static void DemoLoop()
             VWB_DrawPic (0,0,TITLE1PIC);
             VWB_DrawPic (0,80,TITLE2PIC);
 
-            VH_UpdateScreen (screenBuffer);
+            VL_UpdateScreen (screenBuffer);
             VL_FadeIn(0,255,pal,30);
 #else
             VWB_DrawPic (0,0,TITLEPIC);
-            VH_UpdateScreen(screenBuffer);
+            VL_UpdateScreen(screenBuffer);
             VL_FadeIn(0, 255, gamepal, 30);
 #endif
             if (IN_UserInput(TickBase*15))
@@ -1817,7 +1842,7 @@ static void DemoLoop()
 // credits page
 //
             VWB_DrawPic (0,0,CREDITSPIC);
-            VH_UpdateScreen(screenBuffer);
+            VL_UpdateScreen(screenBuffer);
             VL_FadeIn (0, 255, gamepal, 30);
             if (IN_UserInput(TickBase*10))
                 break;
@@ -1826,7 +1851,7 @@ static void DemoLoop()
 // high scores
 //
             DrawHighScores ();
-            VH_UpdateScreen (screenBuffer);
+            VL_UpdateScreen (screenBuffer);
             VL_FadeIn (0, 255, gamepal, 30);
 
             if (IN_UserInput(TickBase*10))
@@ -1837,22 +1862,20 @@ static void DemoLoop()
 //
 
 
-
-#ifndef MENU_DEMOS
             #ifndef SPEARDEMO
-            PlayDemo (LastDemo++%4);
+            PlayDemo (LastDemo++%NUMDEMOS);
             #else
             PlayDemo (0);
             #endif
-#endif
+
             if (playstate == ex_abort)
                 break;
             VL_FadeOut (0, 255, 0, 0, 0, 30);
             if(screenHeight % 200 != 0)
                 VL_ClearScreen(0);
-#ifndef MENU_DEMOS
+
             StartCPMusic(INTROSONG);
-#endif
+
         }
 
         VL_FadeOut (0, 255, 0, 0, 0, 30);
@@ -2066,7 +2089,7 @@ void CheckParameters(int argc, char *argv[])
             }
             else
             {
-                size_t len = strlen(argv[i]);
+                unsigned int len = (unsigned int)strlen(argv[i]);
                 if(len + 2 > sizeof(configdir))
                 {
                     printf("The config directory is too long!\n");
@@ -2099,7 +2122,7 @@ void CheckParameters(int argc, char *argv[])
     {
         if(hasError) printf("\n");
         printf(
-            "Wolf4SDL v2.2\n"
+            "Wolf4SDL v2.3\n"
             "Ported by Chaos-Software, additions by the community\n"
             "Original Wolfenstein 3D by id Software\n\n"
             "Usage: Wolf4SDL [options]\n"
@@ -2188,33 +2211,33 @@ int main (int argc, char *argv[])
     DC_Main();
     DC_CheckParameters();
 #else
+#ifdef PS2
+    PS2_Started();
+#endif
     CheckParameters(argc, argv);
 #endif
 #if defined(SWITCH) || defined (N3DS) 
     printf("CheckParameters() DONE\n");
 #elif defined(PS2)
-    ps2_printf("CheckParameters DONE\n", 4);
-#endif
-#ifdef PS2
-    PS2_Started();
+    ps2_printf_XY("CheckParameters DONE\n", 4, 20, 20);
 #endif
     CheckForEpisodes(); 
 #if defined(SWITCH) || defined (N3DS) 
     printf("CheckForEpisodes() DONE\n");
 #elif defined(PS2)
-    ps2_printf("ChceckForEpisodes() DONE\n" , 4);
+    ps2_printf_XY("ChceckForEpisodes() DONE\n" , 4, 20, 20);
 #endif
     InitGame();
 #if defined(SWITCH) || defined (N3DS)
     printf("InitGame() DONE\n");
 #elif defined(PS2)
-    ps2_printf("InitGame()", 4);
+    ps2_printf_XY("InitGame()", 4, 20, 20);
 #endif
     DemoLoop();
 #if defined(SWITCH) || defined (N3DS)
     printf("DemoLoop() DONE\n");
 #elif defined(PS2)
-    ps2_printf("DemoLoop() DONE\n", 4);
+    ps2_printf_XY("DemoLoop() DONE\n", 4, 20, 20);
 #endif
     Quit("Demo loop exited???");
     return 1;

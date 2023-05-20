@@ -1,5 +1,9 @@
 #include "ps2_modules.h"
-#ifdef PS2
+
+#include <kernel.h>
+#include <stdio.h>
+#include <ps2_all_drivers.h>
+
 
 #ifdef RESET_IOP
 void resetIOP()
@@ -32,14 +36,19 @@ void PS2_Unload_RPC_Patches(void)
 
 void PS2_Load_Modules(void)
 {
-	init_fileXio_driver();
 	init_memcard_driver(true);
+#ifdef USB	
 	init_usb_driver(true);
+#endif
+#ifdef CDFS
 	init_cdfs_driver();
+#endif
 	init_joystick_driver(true);
 	init_audio_driver();
 	init_poweroff_driver();
+#ifdef HDD
 	init_hdd_driver(true, true);
+#endif
 }
 
 void PS2_Unload_Modules()
@@ -47,10 +56,14 @@ void PS2_Unload_Modules()
 	deinit_poweroff_driver();
 	deinit_audio_driver();
 	deinit_joystick_driver(false);
+#ifdef USB	
 	deinit_usb_driver(false);
-	deinit_cdfs_driver();
-	deinit_memcard_driver(true);
-	deinit_hdd_driver(false);
-	deinit_fileXio_driver();
-}
 #endif
+#ifdef CDFS
+	deinit_cdfs_driver();
+#endif
+	deinit_memcard_driver(true);
+#ifdef HDD
+	deinit_hdd_driver(false);
+#endif
+}

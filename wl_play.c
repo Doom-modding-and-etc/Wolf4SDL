@@ -75,6 +75,9 @@ size_t tics;
 #ifndef SEGA_SATURN
 boolean mouseenabled, joystickenabled;
 #endif
+#ifdef MOUSELOOK
+boolean mouselookenabled, alwaysrunenabled;
+#endif
 int dirscan[4] =
 {
     sc_UpArrow,
@@ -159,6 +162,40 @@ int buttonjoy[32] =
     bt_nobutton,
     bt_nobutton,
     bt_nobutton,
+#elif defined(XBOX)
+    bt_use, 
+	bt_nextweapon, 
+	bt_nobutton, 
+	bt_prevweapon, 
+	bt_nobutton, 
+	bt_nobutton, 
+	bt_run, 
+	bt_attack,
+    bt_pause, 
+	bt_esc, 
+	bt_nobutton, 
+	bt_nobutton, 
+	bt_nobutton, 
+	bt_nobutton, 
+	bt_nobutton, 
+	bt_nobutton,
+#elif defined(PSVITA)
+    bt_run,
+    bt_nobutton, 
+    bt_attack, 
+    bt_use, 
+    bt_nextweapon, 
+    bt_attack, 
+    bt_movebackward,
+    bt_strafeleft,
+    bt_moveforward, 
+    bt_straferight, 
+    bt_nextweapon, 
+    bt_esc, 
+    bt_nobutton, 
+    bt_nobutton, 
+    bt_nobutton, 
+    bt_nobutton,
 #else
     bt_attack,
     bt_strafe,
@@ -210,6 +247,9 @@ void   *demobuffer;
 int controlx, controly;         // range from -100 to 100 per tic
 #if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
 int gamecontrolstrafe;
+#endif
+#ifdef MOUSELOOK
+int mousecontrolx, mousecontroly;
 #endif
 
 #ifdef EXTRACONTROLS
@@ -494,8 +534,15 @@ void PollGameControllerButtons(void)
 
 void PollKeyboardMove (void)
 {
+#ifdef MOUSELOOK
+    int delta;
+    if (!alwaysrunenabled)
+        delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
+    else
+        delta = buttonstate[bt_run] ? BASEMOVE * tics : RUNMOVE * tics;
+#else	
     int delta = buttonstate[bt_run] ? RUNMOVE * (int)tics : BASEMOVE * (int)tics;
-
+#endif
     if (Keyboard(dirscan[di_north]))
         controly -= delta;
     if (Keyboard(dirscan[di_south]))
@@ -529,15 +576,27 @@ void PollMouseMove (void)
 #elif SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
     SDL_GetRelativeMouseState(&mousexmove, &mouseymove);
 #endif
-
-    controlx += mousexmove * 10 / (13 - mouseadjustment);
-#ifndef EXTRACONTROLS
-    controly += mouseymove * 20 / (13 - mouseadjustment);
+#ifdef MOUSELOOK
+    if (!mouselookenabled) {
+        controlx += mousexmove * 10 / (13 - mouseadjustment);
+        controly += mouseymove * 20 / (13 - mouseadjustment);
+    }
+    else {
+        mousecontrolx += mousexmove * 10 / (13 - mouseadjustment);
+        mousecontroly += mouseymove * 20 / (13 - mouseadjustment);
+    }
 #else
+    controlx += mousexmove * 10 / (13 - mouseadjustment);
+#endif
+#ifdef EXTRACONTROLS
     if (mousemoveenabled)
     {
         controly += mouseymove * 20 / (13 - mouseadjustment);
     }
+#else
+#ifndef MOUSELOOK	
+	controly += mouseymove * 20 / (13 - mouseadjustment);
+#endif
 #endif
 }
 
@@ -553,17 +612,36 @@ void PollMouseMove (void)
 void PollJoystickMove (void)
 {
     int joyx, joyy;
-	int delta = buttonstate[bt_run] ? RUNMOVE * (int)tics : BASEMOVE * (int)tics;
+#ifdef PSVITA
+    int joyx2, joyy2;
+#endif
+    int delta;
     IN_GetJoyDelta (&joyx, &joyy);
-
+#ifdef PSVITA
+    IN_GetJoyDelta2(&joyx2, &joyy2);
+#endif
+    delta = buttonstate[bt_run] ? RUNMOVE * (int)tics : BASEMOVE * (int)tics;
+#ifdef PSVITA
+    if (joyx > 64 || buttonstate[bt_straferight])
+        buttonstate[bt_straferight] = 1;
+    else if (joyx < -64 || buttonstate[bt_strafeleft])
+        buttonstate[bt_strafeleft] = 1;
+#else
     if (joyx > 64 || buttonstate[bt_turnright])
         controlx += delta;
     else if (joyx < -64  || buttonstate[bt_turnleft])
         controlx -= delta;
+#endif
     if (joyy > 64 || buttonstate[bt_movebackward])
         controly += delta;
     else if (joyy < -64 || buttonstate[bt_moveforward])
         controly -= delta;
+#ifdef PSVITA
+    if (joyx2 > 64 || buttonstate[bt_turnright])
+        controlx += delta;
+    else if (joyx2 < -64 || buttonstate[bt_turnleft])
+        controlx -= delta;
+#endif
 }
 
 
@@ -636,9 +714,9 @@ void PollControls (void)
     {
         // wait up to DEMOTICS Wolf tics
         size_t curtime = WL_GetTicks();
-		size_t timediff;
+		fixed timediff;
         lasttimecount += DEMOTICS;
-        timediff = (lasttimecount * 100) / 7 - curtime;
+        timediff = ((fixed)lasttimecount * 100) / 7 - (fixed)curtime;
         if(timediff > 0)
             SDL_Delay((unsigned int)timediff);
 
@@ -654,6 +732,10 @@ void PollControls (void)
     controly = 0;
 #if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
     gamecontrolstrafe = 0;
+#endif
+#ifdef MOUSELOOK
+    mousecontrolx = 0;
+    mousecontroly = 0;
 #endif
     memcpy(buttonheld, buttonstate, sizeof(buttonstate));
     memset(buttonstate, 0, sizeof(buttonstate));
@@ -676,8 +758,8 @@ void PollControls (void)
         if (demoptr == lastdemoptr)
             playstate = ex_completed;   // demo is done
 
-        controlx *= (int) tics;
-        controly *= (int) tics;
+        controlx *= (int)tics;
+        controly *= (int)tics;
 
         return;
     }
@@ -892,8 +974,8 @@ void PollControls (void)
         //
         // save info out to demo buffer
         //
-        controlx /= (int) tics;
-        controly /= (int) tics;
+        controlx /= (int)tics;
+        controly /= (int)tics;
 
         buttonbits = 0;
 
@@ -905,16 +987,16 @@ void PollControls (void)
                 buttonbits |= 1;
         }
 
-        *demoptr++ = buttonbits;
-        *demoptr++ = controlx;
-        *demoptr++ = controly;
+        *demoptr++ = (char)buttonbits;
+        *demoptr++ = (char)controlx;
+        *demoptr++ = (char)controly;
 
         if (demoptr >= lastdemoptr - 8)
             playstate = ex_completed;
         else
         {
-            controlx *= (int) tics;
-            controly *= (int) tics;
+            controlx *= (int)tics;
+            controly *= (int)tics;
         }
     }
 }
@@ -954,7 +1036,7 @@ void CenterWindow (unsigned short w, unsigned short h)
 void CheckKeys (void)
 {
     ScanCode scan;
-	static int wasPressed;
+	static boolean wasPressed;
     if (screenfaded || demoplayback)    // don't do anything with a faded screen
         return;
 
@@ -977,10 +1059,7 @@ void CheckKeys (void)
             Message("No clipping ON");
         else
             Message("No clipping OFF");
-        /*
-            UNCACHEGRCHUNK(STARTFONT + 1);
-            PM_CheckMainMem();
-        */
+
         if (noclip)
         {
             SD_PlaySound(DEATHSCREAM6SND);
@@ -997,13 +1076,13 @@ void CheckKeys (void)
     }
 #endif
 
-    wasPressed = 0;
-    if (Keyboard(sc_Tab) && Keyboard(sc_P)) //Fabien Sangalard + Ripper Picture Grabber.
+    wasPressed = false;
+    if (Keyboard(sc_Tab) && Keyboard(sc_P)) //Fabien´s Sangalard + Ripper´s Picture Grabber.
     {
         if (!wasPressed)
         {
-            wasPressed = 1;
-#ifdef CRT
+            wasPressed = true;
+#if defined(CRT)
             CRT_Screenshot();
 #elif defined(DEBUGKEYS)
             PictureGrabber();
@@ -1011,7 +1090,7 @@ void CheckKeys (void)
         }
         else
         {
-            wasPressed = 0;
+            wasPressed = false;
         }
     }
 //#endif
@@ -1124,7 +1203,7 @@ void CheckKeys (void)
     {
         int lastoffs = StopMusic();
         VWB_DrawPic (16 * 8, 80 - 2 * 8, PAUSEDPIC);
-        VH_UpdateScreen(screenBuffer);
+        VL_UpdateScreen(screenBuffer);
         IN_Ack ();
         Paused = false;
         ContinueMusic(lastoffs);
@@ -1228,7 +1307,7 @@ void CheckKeys (void)
     {
         ScanCode key;
         DrawFullmap();
-        VH_UpdateScreen(screen);
+        VL_UpdateScreen(screen);
 
         IN_ClearKeysDown();
         key = IN_WaitForKey();
@@ -1559,7 +1638,7 @@ void ContinueMusic (int offs)
 SDL_Color redshifts[NUMREDSHIFTS][256];
 SDL_Color whiteshifts[NUMWHITESHIFTS][256];
 
-int damagecount, bonuscount;
+fixed damagecount, bonuscount;
 boolean palshifted;
 
 /*
@@ -1670,14 +1749,14 @@ void StartDamageFlash (int damage)
 
 void UpdatePaletteShifts (void)
 {
-    int red, white;
+    fixed red, white;
 
     if (bonuscount)
     {
         white = bonuscount / WHITETICS + 1;
         if (white > NUMWHITESHIFTS)
             white = NUMWHITESHIFTS;
-        bonuscount -= (int)tics;
+        bonuscount -= (fixed)tics;
         if (bonuscount < 0)
             bonuscount = 0;
     }
@@ -1691,7 +1770,7 @@ void UpdatePaletteShifts (void)
         if (red > NUMREDSHIFTS)
             red = NUMREDSHIFTS;
 
-        damagecount -= (int)tics;
+        damagecount -= (fixed)tics;
         if (damagecount < 0)
             damagecount = 0;
     }
@@ -1700,17 +1779,17 @@ void UpdatePaletteShifts (void)
 
     if (red)
     {
-        VL_SetPalette (redshifts[red - 1], false);
+        VL_SetPalette(redshifts[red - 1], false);
         palshifted = true;
     }
     else if (white)
     {
-        VL_SetPalette (whiteshifts[white - 1], false);
+        VL_SetPalette(whiteshifts[white - 1], false);
         palshifted = true;
     }
     else if (palshifted)
     {
-        VL_SetPalette (gamepal, false);        // back to normal
+        VL_SetPalette(gamepal, false);        // back to normal
         palshifted = false;
     }
 }
@@ -1957,19 +2036,19 @@ think:
 =
 ===================
 */
-int funnyticount;
 
+size_t funnyticount;
 
 #ifdef FIXEDLOGICRATE
 double accumulator, frametime_spent = 0;
 double dt = 1.0f / 70.0f; // 70 FPS
-unsigned int oldtime = 0;
+size_t oldtime = 0;
 
 
 void ClockGameLogic(void)
 {
     size_t curtime;
-    unsigned int deltatime;
+    size_t deltatime;
     double time_to_pass;
     if (demorecord || demoplayback)
     {
@@ -1996,7 +2075,7 @@ void ClockGameLogic(void)
 }
 
 #ifdef LAGSIMULATOR
-unsigned int next_lag_spike = -1;
+size_t next_lag_spike = -1;
 
 
 void LagSimulator(void)
@@ -2215,7 +2294,7 @@ void PlayLoop (void)
         }
 #endif
 
-        gamestate.TimeCount += tics;
+        gamestate.TimeCount += (fixed)tics;
 #ifndef SEGA_SATURN
         UpdateSoundLoc ();      // JAB
 #endif

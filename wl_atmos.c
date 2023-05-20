@@ -18,7 +18,7 @@ typedef struct
 #define MAXPOINTS 400
 point3d_t points[MAXPOINTS];
 
-byte moon[100] =
+unsigned char moon[100] =
 {
      0,  0, 27, 18, 15, 16, 19, 29,  0,  0,
      0, 22, 16, 15, 15, 16, 16, 18, 24,  0,
@@ -43,12 +43,13 @@ byte moon[100] =
 
 void Init3DPoints (void)
 {
-    int       i,j;
-    float     length;
-    point3d_t *pt;
+    int       i;
 
     for (i = 0; i < MAXPOINTS; i++)
     {
+		int j;
+		float length;
+		point3d_t *pt;
         pt = &points[i];
 
         pt->x = 16384 - (rand() & 32767);
@@ -80,11 +81,10 @@ void Init3DPoints (void)
 
 void DrawStarSky (void)
 {
-    int       i,j;
+    int       i;
     point3d_t *pt;
-    byte      *dest;
-    byte      shade;
-    short   stopx,starty,stopy;
+    unsigned char      *dest;
+    unsigned char      shade;
     fixed     x,y,z;
     fixed     xx,yy;
     
@@ -104,7 +104,7 @@ void DrawStarSky (void)
         if (z <= 0)
             continue;
 
-        shade = (byte)(z >> 18);
+        shade = (unsigned char)(z >> 18);
 
         if (shade > 15)
             continue;
@@ -127,9 +127,9 @@ void DrawStarSky (void)
 
     if (xx > (scaleFactor * -10) && xx < viewwidth) 
     { 
-        stopx = 10 * scaleFactor;
-        starty = 0;
-        stopy = 10 * scaleFactor;
+        short   stopx = 10 * scaleFactor;
+        short   starty = 0;
+        short   stopy = 10 * scaleFactor;
         i = 0; 
 
         if (xx < 0)
@@ -144,6 +144,7 @@ void DrawStarSky (void)
 
         while (i < stopx)
         {
+            int j;
             for (j = starty; j < stopy; j++) 
                 vbuf[ylookup[yy + j] + xx + i] = moon[((j / scaleFactor) * 10) + (i / scaleFactor)];
 
@@ -200,7 +201,7 @@ void DrawRain (void)
         if (z <= 0)
             continue;
 
-        shade = (byte)(z >> 17);
+        shade = (unsigned char)(z >> 17);
 
         if (shade > 13)
             continue;
@@ -303,7 +304,7 @@ void DrawSnow (void)
         if (z <= 0)
             continue;
 
-        shade = (byte)(z >> 17);
+        shade = (unsigned char)(z >> 17);
 
         if (shade > 13)
             continue;

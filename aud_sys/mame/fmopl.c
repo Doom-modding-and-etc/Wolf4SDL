@@ -93,15 +93,14 @@ Revision History:
 #define M_PI 3.14159265358979323846
 #endif
 
-#ifdef USE_INLINE_C89
-#define INLINE
-#else
 #ifdef _MSC_VER
 #define INLINE __inline
+#elif defined(USE_INLINE_C89)
+#define INLINE
 #else
 #define INLINE inline
 #endif
-#endif
+
 
 /* output final shift */
 #if (OPL_SAMPLE_BITS==16)
@@ -2589,4 +2588,4 @@ void Y8950SetKeyboardHandler(int which,OPL_PORTHANDLER_W KeyboardHandler_w,OPL_P
 	OPL->keyboard_param = param;
 }
 
-#endif
+#endif //BUILD_Y8950

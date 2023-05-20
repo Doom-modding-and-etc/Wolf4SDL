@@ -54,7 +54,7 @@ EndScreen (int palette, int screen)
     SDL_Color pal[256];
     VWB_DrawPic (0,0,screen);
 #if !defined(SEGA_SATURN) && !defined(USE_SPRITES)
-    VH_UpdateScreen (screenBuffer);
+    VL_UpdateScreen (screenBuffer);
 #endif
     VL_ConvertPalette(grsegs[palette], pal, 256);
     VL_FadeIn (0, 255, pal, 30);
@@ -73,7 +73,7 @@ EndSpear (void)
 
     VWB_DrawPic (0,0,ENDSCREEN3PIC);
 #if !defined(SEGA_SATURN) && !defined(USE_SPRITES)
-    VH_UpdateScreen (screenBuffer);
+    VL_UpdateScreen (screenBuffer);
 #endif
     VL_ConvertPalette(grsegs[END3PALETTE], pal, 256);
     VL_FadeIn (0, 255, pal, 30);
@@ -86,7 +86,7 @@ EndSpear (void)
     US_CPrint (STR_ENDGAME1 "\n");
     US_CPrint (STR_ENDGAME2);
 #if !defined(SEGA_SATURN) && !defined(USE_SPRITES)
-    VH_UpdateScreen(screenBuffer);
+    VL_UpdateScreen(screenBuffer);
 #endif
     IN_UserInput(700);
 
@@ -96,7 +96,7 @@ EndSpear (void)
     US_CPrint (STR_ENDGAME3 "\n");
     US_CPrint (STR_ENDGAME4);
 #if !defined(SEGA_SATURN) && !defined(USE_SPRITES)
-    VH_UpdateScreen(screenBuffer);
+    VL_UpdateScreen(screenBuffer);
 #endif
     IN_UserInput(700);
 
@@ -149,23 +149,23 @@ Victory (void)
 #endif
     VWB_DrawPic (124, 44, BJCOLLAPSE1PIC);
 #if !defined(SEGA_SATURN) && !defined(USE_SPRITES)
-    VH_UpdateScreen(screenBuffer);
+    VL_UpdateScreen(screenBuffer);
 #endif
     VL_FadeIn (0, 255, gamepal, 30);
     VL_WaitVBL (2 * 70);
     VWB_DrawPic (124, 44, BJCOLLAPSE2PIC);
 #if !defined(SEGA_SATURN) && !defined(USE_SPRITES)
-    VH_UpdateScreen(screenBuffer);
+    VL_UpdateScreen(screenBuffer);
 #endif
     VL_WaitVBL (105);
     VWB_DrawPic (124, 44, BJCOLLAPSE3PIC);
 #if !defined(SEGA_SATURN) && !defined(USE_SPRITES)
-    VH_UpdateScreen(screenBuffer);
+    VL_UpdateScreen(screenBuffer);
 #endif
     VL_WaitVBL (105);
     VWB_DrawPic (124, 44, BJCOLLAPSE4PIC);
 #if !defined(SEGA_SATURN) && !defined(USE_SPRITES)
-    VH_UpdateScreen(screenBuffer);
+    VL_UpdateScreen(screenBuffer);
 #endif
     VL_WaitVBL (3 * 70);
 
@@ -251,15 +251,15 @@ Victory (void)
     i += 2 * 8;
     VWB_DrawPic (i, TIMEY * 8, L_NUM0PIC + (sec % 10));
 #if !defined(SEGA_SATURN) && !defined(USE_SPRITES)
-    VH_UpdateScreen(screenBuffer);
+    VL_UpdateScreen(screenBuffer);
 #endif
-    w3sitoa (kr, tempstr, 10);
+    wlitoa (kr, tempstr, 10);
     x = RATIOX + 24 - (int) strlen(tempstr) * 2;
     Write (x, RATIOY, tempstr);
-    w3sitoa(sr, tempstr, 10);
+    wlitoa(sr, tempstr, 10);
     x = RATIOX + 24 - (int) strlen(tempstr) * 2;
     Write(x, RATIOY + 2, tempstr);
-    w3sitoa(tr, tempstr, 10);
+    wlitoa(tr, tempstr, 10);
     x = RATIOX + 24 - (int) strlen(tempstr) * 2;
     Write (x, RATIOY + 4, tempstr);
 
@@ -290,7 +290,7 @@ Victory (void)
     fontnumber = 1;
 
 #if !defined(SEGA_SATURN) && !defined(USE_SPRITES)
-    VH_UpdateScreen(screenBuffer);
+    VL_UpdateScreen(screenBuffer);
 #endif
 #ifdef SEGA_SATURN
     DrawStatusBar(); // vbt ajout
@@ -335,7 +335,7 @@ PG13 (void)
 
     VWB_DrawPic (216, 110, PG13PIC);
 #if !defined(SEGA_SATURN) && !defined(USE_SPRITES)
-    VH_UpdateScreen(screenBuffer);
+    VL_UpdateScreen(screenBuffer);
 #endif
 
     VL_FadeIn (0, 255, gamepal, 30);
@@ -432,7 +432,7 @@ BJ_Breathe (void)
         which ^= 1;
         VWB_DrawPic (0, 16, pics[which]);
 #if !defined(SEGA_SATURN) && !defined(USE_SPRITES)
-        VH_UpdateScreen(screenBuffer);
+        VL_UpdateScreen(screenBuffer);
 #endif
         lastBreathTime = GetTimeCount();
         max = 35;
@@ -660,7 +660,7 @@ LevelCompleted (void)
         }
 
         gamestate.health = 100;
-        VH_UpdateScreen(screenBuffer);
+        VL_UpdateScreen(screenBuffer);
         VL_FadeIn(0, 255, gamepal, 30);
 
     }
@@ -712,7 +712,7 @@ LevelCompleted (void)
 #ifdef SEGA_SATURN
             Write(26 + SATURN_ADJUST / 8, 12, parTimes[gamestate.episode * 10 + mapon].timestr);
 #else
-            Write(26, 2, w3sitoa(gamestate.mapon + 1, tempstr, 10));
+            Write(26, 2, wlitoa(gamestate.mapon + 1, tempstr, 10));
 #endif
 #endif
 #ifdef MAPCONTROLPARTIME
@@ -791,7 +791,7 @@ LevelCompleted (void)
 #endif
 
 #if !defined(USE_SPRITES) && !defined(SEGA_SATURN)
-            VH_UpdateScreen(screenBuffer);
+            VL_UpdateScreen(screenBuffer);
 #endif
             VL_FadeIn(0, 255, gamepal, 30);
 #ifdef SEGA_SATURN
@@ -818,14 +818,14 @@ LevelCompleted (void)
             {
                 for (i = 0; i <= timeleft; i++)
                 {
-                    w3sitoa(i * PAR_AMOUNT, tempstr, 10);
+                    wlitoa(i * PAR_AMOUNT, tempstr, 10);
                     x = 36 - (int)strlen(tempstr) * 2;
                     Write(x, 7, tempstr);
                     if (!(i % (PAR_AMOUNT / 10)))
                         SD_PlaySound(ENDBONUS1SND);
                     if (!usedoublebuffering || !(i % (PAR_AMOUNT / 50)))
 #if !defined(USE_SPRITES) && !defined(SEGA_SATURN)                    
-                        VH_UpdateScreen(screenBuffer);
+                        VL_UpdateScreen(screenBuffer);
 #endif
                     while (SD_SoundPlaying())
                         BJ_Breathe();
@@ -833,7 +833,7 @@ LevelCompleted (void)
                         goto done;
                 }
 #if !defined(USE_SPRITES) && !defined(SEGA_SATURN)				
-                VH_UpdateScreen(screenBuffer);
+                VL_UpdateScreen(screenBuffer);
 #else
                 //		DrawStatusBar(); // vbt ajout				
 #endif
@@ -855,7 +855,7 @@ LevelCompleted (void)
             ratio = kr;
             for (i = 0; i <= ratio; i++)
             {
-                w3sitoa(i, tempstr, 10);
+                wlitoa(i, tempstr, 10);
                 x = RATIOXX - (int)strlen(tempstr) * 2;
 #ifdef SEGA_SATURN
                 Write(x + SATURN_ADJUST / 14, 7, tempstr);
@@ -866,7 +866,7 @@ LevelCompleted (void)
                     SD_PlaySound(ENDBONUS1SND);
                 if (!usedoublebuffering || !(i & 1))
 #if !defined(USE_SPRITES) && !defined(SEGA_SATURN)            
-                    VH_UpdateScreen(screenBuffer);
+                    VL_UpdateScreen(screenBuffer);
 #endif
 
                 while (SD_SoundPlaying())
@@ -880,7 +880,7 @@ LevelCompleted (void)
                 VL_WaitVBL(VBLWAIT);
                 SD_StopSound();
                 bonus += PERCENT100AMT;
-                w3sltoa(bonus, tempstr, 10);
+                wlltoa(bonus, tempstr, 10);
                 x = (RATIOXX - 1) - (int)strlen(tempstr) * 2;
 #ifdef SEGA_SATURN
                 Write(x + SATURN_ADJUST / 8, 7, tempstr);
@@ -888,7 +888,7 @@ LevelCompleted (void)
                 Write(x, 7, tempstr);
 #endif
 #if !defined(USE_SPRITES) && !defined(SEGA_SATURN)            
-                VH_UpdateScreen(screenBuffer);
+                VL_UpdateScreen(screenBuffer);
 #endif
                 SD_PlaySound(PERCENT100SND);
             }
@@ -902,7 +902,7 @@ LevelCompleted (void)
                 SD_PlaySound(ENDBONUS2SND);
 
 #if !defined(USE_SPRITES) && !defined(SEGA_SATURN)            
-            VH_UpdateScreen(screenBuffer);
+            VL_UpdateScreen(screenBuffer);
 #endif
             while (SD_SoundPlaying())
                 BJ_Breathe();
@@ -913,7 +913,7 @@ LevelCompleted (void)
             ratio = sr;
             for (i = 0; i <= ratio; i++)
             {
-                w3sitoa(i, tempstr, 10);
+                wlltoa(i, tempstr, 10);
                 x = RATIOXX - (int)strlen(tempstr) * 2;
 #ifdef SEGA_SATURN
                 Write(x + SATURN_ADJUST / 8, 16, tempstr);
@@ -924,7 +924,7 @@ LevelCompleted (void)
                     SD_PlaySound(ENDBONUS1SND);
                 if (!usedoublebuffering || !(i & 1))
 #if !defined(USE_SPRITES) && !defined(SEGA_SATURN)                
-                    VH_UpdateScreen(screenBuffer);
+                    VL_UpdateScreen(screenBuffer);
 #endif
                 while (SD_SoundPlaying())
                     BJ_Breathe();
@@ -937,7 +937,7 @@ LevelCompleted (void)
                 VL_WaitVBL(VBLWAIT);
                 SD_StopSound();
                 bonus += PERCENT100AMT;
-                w3sltoa(bonus, tempstr, 10);
+                wlltoa(bonus, tempstr, 10);
                 x = (RATIOXX - 1) - (int)strlen(tempstr) * 2;
 #ifdef SEGA_SATURN
                 Write(x + SATURN_WIDTH / 8, 7, tempstr);
@@ -945,7 +945,7 @@ LevelCompleted (void)
                 Write(x, 7, tempstr);
 #endif
 #if !defined(USE_SPRITES) && !defined(SEGA_SATURN)            
-                VH_UpdateScreen(screenBuffer);
+                VL_UpdateScreen(screenBuffer);
 #endif
                 SD_PlaySound(PERCENT100SND);
             }
@@ -958,7 +958,7 @@ LevelCompleted (void)
             else
                 SD_PlaySound(ENDBONUS2SND);
 #if !defined(USE_SPRITES) && !defined(SEGA_SATURN)            
-            VH_UpdateScreen(screenBuffer);
+            VL_UpdateScreen(screenBuffer);
 #endif
             while (SD_SoundPlaying())
                 BJ_Breathe();
@@ -969,7 +969,7 @@ LevelCompleted (void)
             ratio = tr;
             for (i = 0; i <= ratio; i++)
             {
-                w3sitoa(i, tempstr, 10);
+                wlitoa(i, tempstr, 10);
                 x = RATIOXX - (int)strlen(tempstr) * 2;
 #ifdef SEGA_SATURN
                 Write(x + SATURN_ADJUST / 8, 18, tempstr);
@@ -980,7 +980,7 @@ LevelCompleted (void)
                     SD_PlaySound(ENDBONUS1SND);
                 if (!usedoublebuffering || !(i & 1))
 #if !defined(USE_SPRITES) && !defined(SEGA_SATURN)            
-                    VH_UpdateScreen(screenBuffer);
+                    VL_UpdateScreen(screenBuffer);
 #endif
                 while (SD_SoundPlaying())
                     BJ_Breathe();
@@ -992,7 +992,7 @@ LevelCompleted (void)
                 VL_WaitVBL(VBLWAIT);
                 SD_StopSound();
                 bonus += PERCENT100AMT;
-                w3sltoa(bonus, tempstr, 10);
+                wlltoa(bonus, tempstr, 10);
                 x = (RATIOXX - 1) - (int)strlen(tempstr) * 2;
 #ifdef SEGA_SATURN
                 Write(x + SATURN_WIDTH / 8, 7, tempstr);
@@ -1000,7 +1000,7 @@ LevelCompleted (void)
                 Write(x, 7, tempstr);
 #endif
 #if !defined(USE_SPRITES) && !defined(SEGA_SATURN)            
-                VH_UpdateScreen(screenBuffer);
+                VL_UpdateScreen(screenBuffer);
 #endif
                 SD_PlaySound(PERCENT100SND);
             }
@@ -1013,7 +1013,7 @@ LevelCompleted (void)
             else
                 SD_PlaySound(ENDBONUS2SND);
 #if !defined(USE_SPRITES) && !defined(SEGA_SATURN)            
-            VH_UpdateScreen(screenBuffer);
+            VL_UpdateScreen(screenBuffer);
 #endif
             while (SD_SoundPlaying())
                 BJ_Breathe();
@@ -1022,21 +1022,21 @@ LevelCompleted (void)
             //
             // JUMP STRAIGHT HERE IF KEY PRESSED
             //
-        done:   w3sitoa(kr, tempstr, 10);
+        done:   wlitoa(kr, tempstr, 10);
         x = RATIOXX - (int)strlen(tempstr) * 2;
 #ifdef SEGA_SATURN
             Write(x + SATURN_WIDTH / 8, 14, tempstr);
 #else
             Write(x, 14, tempstr);
 #endif
-            w3sitoa(sr, tempstr, 10);
+            wlitoa(sr, tempstr, 10);
             x = RATIOXX - (int)strlen(tempstr) * 2;
 #ifdef SEGA_SATURN
             Write(x + SATURN_WIDTH / 8, 16, tempstr);
 #else
             Write(x, 16, tempstr);
 #endif
-            w3sitoa(tr, tempstr, 10);
+            wlitoa(tr, tempstr, 10);
             x = RATIOXX - (int)strlen(tempstr) * 2;
 #ifdef SEGA_SATURN
             Write(x + SATURN_WIDTH / 8, 18, tempstr);
@@ -1048,7 +1048,7 @@ LevelCompleted (void)
                 (PERCENT100AMT * (sr >= 100)) + (PERCENT100AMT * (tr >= 100));
 
             GivePoints(bonus);
-            w3sitoa(bonus, tempstr, 10);
+            wlitoa(bonus, tempstr, 10);
             x = 36 - (int)strlen(tempstr) * 2;
 #ifdef SEGA_SATURN
             Write(x + SEGA_SATURN / 8, 7, tempstr);
@@ -1116,7 +1116,7 @@ LevelCompleted (void)
 
             Write(10, 16, "15000 bonus!");
 #if !defined(USE_SPRITES) && !defined(SEGA_SATURN)            
-            VH_UpdateScreen(screenBuffer);
+            VL_UpdateScreen(screenBuffer);
 #endif
             VL_FadeIn(0, 255, gamepal, 30);
 
@@ -1128,7 +1128,7 @@ LevelCompleted (void)
 
     DrawScore ();
 #if !defined(USE_SPRITES) && !defined(SEGA_SATURN)            
-    VH_UpdateScreen(screenBuffer);
+    VL_UpdateScreen(screenBuffer);
 #else
     DrawStatusBar(); // vbt ajout
 
@@ -1206,7 +1206,7 @@ PreloadUpdate (unsigned current, unsigned total)
 
     }
 #if !defined(USE_SPRITES) && !defined(SEGA_SATURN)            
-    VH_UpdateScreen(screenBuffer);
+    VL_UpdateScreen(screenBuffer);
 #endif
 //      if (LastScan == sc_Escape)
 //      {
@@ -1237,7 +1237,7 @@ PreloadGraphics (void)
     WindowH = scaleFactor * 48;
 
 #if !defined(USE_SPRITES) && !defined(SEGA_SATURN)            
-    VH_UpdateScreen(screenBuffer);
+    VL_UpdateScreen(screenBuffer);
 #endif
 #ifdef SEGA_SATURN
     DrawStatusBar(); // vbt ajout
@@ -1374,7 +1374,7 @@ PreloadGraphics (void)
     slScrTransparent(0);
     slSynch();
 #endif
-    VH_UpdateScreen (screenBuffer);
+    VL_UpdateScreen (screenBuffer);
 }
 
 
@@ -1474,7 +1474,7 @@ DrawHighScores (void)
         //
         // level
         //
-        w3sitoa(s->completed, buffer, 10);
+        wlitoa(s->completed, buffer, 10);
 #ifndef SPEAR
         for (str = buffer; *str; str++)
             *str = *str + (129 - '0');  // Used fixed-width numbers (129...)
@@ -1496,7 +1496,7 @@ DrawHighScores (void)
 #ifndef UPLOAD
 #ifndef SPEAR
         PrintX -= 6;
-        w3sitoa(s->episode + 1, buffer1, 10);
+        wlitoa(s->episode + 1, buffer1, 10);
         US_Print ("E");
         US_Print (buffer1);
         US_Print ("/L");
@@ -1517,7 +1517,7 @@ DrawHighScores (void)
         //
         // score
         //
-        w3sitoa(s->score, buffer, 10);
+        wlitoa(s->score, buffer, 10);
 #ifndef SPEAR
         for (str = buffer; *str; str++)
             *str = *str + (129 - '0');  // Used fixed-width numbers (129...)
@@ -1566,7 +1566,7 @@ DrawHighScores (void)
     }
 
 #if !defined(USE_SPRITES) && !defined(SEGA_SATURN)            
-    VH_UpdateScreen(screenBuffer);
+    VL_UpdateScreen(screenBuffer);
 #endif
 
 #ifdef SPEAR
@@ -1638,7 +1638,7 @@ CheckHighScore (int score, unsigned short other)
         fontnumber = 1;
         VWB_Bar (PrintX - 2, PrintY - 2, 145, 15, 0x9c);
 #if !defined(USE_SPRITES) && !defined(SEGA_SATURN)            
-        VH_UpdateScreen(screenBuffer);
+        VL_UpdateScreen(screenBuffer);
 #endif        
         backcolor = 0x9c;
         fontcolor = 15;
@@ -1698,7 +1698,7 @@ NonShareware (void)
 #endif
     US_Print ("        Id Software\n");
 
-    VH_UpdateScreen(screenBuffer);
+    VL_UpdateScreen(screenBuffer);
     VL_FadeIn (0, 255, gamepal, 30);
     IN_Ack ();
 }
@@ -1865,7 +1865,7 @@ BackDoor (char *s)
             VWB_DrawPic (0, 20 * 8, COPYPROTBOXPIC);
             US_CPrint (GoodBoyStrs[i * 2]);
             US_CPrint (GoodBoyStrs[i * 2 + 1]);
-            VH_UpdateScreen (screenBuffer);
+            VL_UpdateScreen (screenBuffer);
             return 1;
         }
     }
@@ -1945,7 +1945,7 @@ CopyProtection (void)
                 US_CPrint (STR_ENEMY1 "\n");
                 US_CPrint (STR_ENEMY2 "\n\n");
 
-                VH_UpdateScreen (screenBuffer);
+                VL_UpdateScreen (screenBuffer);
                 VL_FadeIn (0, 255, gamepal, 30);
 
                 PrintX = 100;
@@ -1989,7 +1989,7 @@ CopyProtection (void)
                 US_CPrint (STR_MAN2);
                 sprintf(message, STR_MAN3 " \"%s\" " STR_MAN4, WordStr[whichword]);
                 US_CPrint (message);
-                VH_UpdateScreen (screenBuffer);
+                VL_UpdateScreen (screenBuffer);
                 VL_FadeIn (0, 255, gamepal, 30);
 
                 PrintX = 146;
@@ -2017,7 +2017,7 @@ CopyProtection (void)
                 PrintY += 25;
                 US_CPrint (MemberStr[whichmem * 2]);
                 US_CPrint (MemberStr[whichmem * 2 + 1]);
-                VH_UpdateScreen (screenBuffer);
+                VL_UpdateScreen (screenBuffer);
                 VL_FadeIn (0, 255, gamepal, 30);
 
                 PrintX = 100;
@@ -2059,7 +2059,7 @@ CopyProtection (void)
                 US_CPrint (MiscStr[whichone * 3]);
                 US_CPrint (MiscStr[whichone * 3 + 1]);
                 US_CPrint (MiscStr[whichone * 3 + 2]);
-                VH_UpdateScreen (screenBuffer);
+                VL_UpdateScreen (screenBuffer);
                 VL_FadeIn (0, 255, gamepal, 30);
 
                 PrintX = 146;
@@ -2089,7 +2089,7 @@ CopyProtection (void)
             US_CPrint (CopyProFailedStrs[whichline]);
             US_CPrint (CopyProFailedStrs[whichline + 1]);
 
-            VH_UpdateScreen (screenBuffer);
+            VL_UpdateScreen (screenBuffer);
             SD_PlaySound (NOWAYSND);
             IN_UserInput (TickBase * 6);
             VL_FadeOut (0, 255, 0, 0, 0, 30);

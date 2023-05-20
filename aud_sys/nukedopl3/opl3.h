@@ -47,14 +47,12 @@
 
 #endif
 
-#ifdef __cplusplus
-extern "C" {
+#ifdef _MSC_VER
+#define inline __inline
 #endif
 
-#ifdef DEPRECATED
-#include <stdint.h>
-#else
-#include <inttypes.h>
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 #ifndef OPL_ENABLE_STEREOEXT
@@ -64,124 +62,138 @@ extern "C" {
 #define OPL_WRITEBUF_SIZE   1024
 #define OPL_WRITEBUF_DELAY  2
 
+#if defined(USE_HEADER_TYPE) || defined(__GNUC__)
+#include <inttypes.h>
+#endif
+
 typedef struct _opl3_slot opl3_slot;
 typedef struct _opl3_channel opl3_channel;
 typedef struct _opl3_chip opl3_chip;
 
+#ifndef __GNUC__
+#ifdef OLD_MSVC
+typedef unsigned long long uint64_t;
+#else
+#ifndef DEVCPP
+typedef unsigned long long uint64_t;
+#endif
+#endif
+#endif
+
 struct _opl3_slot {
     opl3_channel *channel;
     opl3_chip *chip;
-    int16_t out;
-    int16_t fbmod;
-    int16_t *mod;
-    int16_t prout;
-    uint16_t eg_rout;
-    uint16_t eg_out;
-    uint8_t eg_inc;
-    uint8_t eg_gen;
-    uint8_t eg_rate;
-    uint8_t eg_ksl;
-    uint8_t *trem;
-    uint8_t reg_vib;
-    uint8_t reg_type;
-    uint8_t reg_ksr;
-    uint8_t reg_mult;
-    uint8_t reg_ksl;
-    uint8_t reg_tl;
-    uint8_t reg_ar;
-    uint8_t reg_dr;
-    uint8_t reg_sl;
-    uint8_t reg_rr;
-    uint8_t reg_wf;
-    uint8_t key;
-    uint32_t pg_reset;
-    uint32_t pg_phase;
-    uint16_t pg_phase_out;
-    uint8_t slot_num;
+    signed short out;
+    signed short fbmod;
+    signed short *mod;
+    signed short prout;
+    unsigned short eg_rout;
+    unsigned short eg_out;
+    unsigned char eg_inc;
+    unsigned char eg_gen;
+    unsigned char eg_rate;
+    unsigned char eg_ksl;
+    unsigned char *trem;
+    unsigned char reg_vib;
+    unsigned char reg_type;
+    unsigned char reg_ksr;
+    unsigned char reg_mult;
+    unsigned char reg_ksl;
+    unsigned char reg_tl;
+    unsigned char reg_ar;
+    unsigned char reg_dr;
+    unsigned char reg_sl;
+    unsigned char reg_rr;
+    unsigned char reg_wf;
+    unsigned char key;
+    unsigned int pg_reset;
+    unsigned int pg_phase;
+    unsigned short pg_phase_out;
+    unsigned char slot_num;
 };
 
 struct _opl3_channel {
     opl3_slot *slots[2];
     opl3_channel *pair;
     opl3_chip *chip;
-    int16_t *out[4];
+    signed short *out[4];
 
 #if OPL_ENABLE_STEREOEXT
-    int32_t leftpan;
-    int32_t rightpan;
+    signed int leftpan;
+    signed int rightpan;
 #endif
 
-    uint8_t chtype;
-    uint16_t f_num;
-    uint8_t block;
-    uint8_t fb;
-    uint8_t con;
-    uint8_t alg;
-    uint8_t ksv;
-    uint16_t cha, chb;
-    uint16_t chc, chd;
-    uint8_t ch_num;
+    unsigned char chtype;
+    unsigned short f_num;
+    unsigned char block;
+    unsigned char fb;
+    unsigned char con;
+    unsigned char alg;
+    unsigned char ksv;
+    unsigned short cha, chb;
+    unsigned short chc, chd;
+    unsigned char ch_num;
 };
 
 typedef struct _opl3_writebuf {
     uint64_t time;
-    uint16_t reg;
-    uint8_t data;
+    unsigned short reg;
+    unsigned char data;
 } opl3_writebuf;
 
 struct _opl3_chip {
     opl3_channel channel[18];
     opl3_slot slot[36];
-    uint16_t timer;
+    unsigned short timer;
     uint64_t eg_timer;
-    uint8_t eg_timerrem;
-    uint8_t eg_state;
-    uint8_t eg_add;
-    uint8_t newm;
-    uint8_t nts;
-    uint8_t rhy;
-    uint8_t vibpos;
-    uint8_t vibshift;
-    uint8_t tremolo;
-    uint8_t tremolopos;
-    uint8_t tremoloshift;
-    uint32_t noise;
-    int16_t zeromod;
-    int32_t mixbuff[4];
-    uint8_t rm_hh_bit2;
-    uint8_t rm_hh_bit3;
-    uint8_t rm_hh_bit7;
-    uint8_t rm_hh_bit8;
-    uint8_t rm_tc_bit3;
-    uint8_t rm_tc_bit5;
+    unsigned char eg_timerrem;
+    unsigned char eg_state;
+    unsigned char eg_add;
+    unsigned char newm;
+    unsigned char nts;
+    unsigned char rhy;
+    unsigned char vibpos;
+    unsigned char vibshift;
+    unsigned char tremolo;
+    unsigned char tremolopos;
+    unsigned char tremoloshift;
+    unsigned int noise;
+    signed short zeromod;
+    signed int mixbuff[4];
+    unsigned char rm_hh_bit2;
+    unsigned char rm_hh_bit3;
+    unsigned char rm_hh_bit7;
+    unsigned char rm_hh_bit8;
+    unsigned char rm_tc_bit3;
+    unsigned char rm_tc_bit5;
 
 #if OPL_ENABLE_STEREOEXT
-    uint8_t stereoext;
+    unsigned char stereoext;
 #endif
 
     /* OPL3L */
-    int32_t rateratio;
-    int32_t samplecnt;
-    int16_t oldsamples[4];
-    int16_t samples[4];
+    signed int rateratio;
+    signed int samplecnt;
+    signed short oldsamples[4];
+    signed short samples[4];
 
     uint64_t writebuf_samplecnt;
-    uint32_t writebuf_cur;
-    uint32_t writebuf_last;
+    unsigned int writebuf_cur;
+    unsigned int writebuf_last;
     uint64_t writebuf_lasttime;
     opl3_writebuf writebuf[OPL_WRITEBUF_SIZE];
 };
 
-OPL_API void OPL3_Generate(opl3_chip *chip, int16_t *buf);
-OPL_API void OPL3_GenerateResampled(opl3_chip *chip, int16_t *buf);
-OPL_API void OPL3_Reset(opl3_chip *chip, uint32_t samplerate);
-OPL_API void OPL3_WriteReg(opl3_chip *chip, uint16_t reg, uint8_t v);
-OPL_API void OPL3_WriteRegBuffered(opl3_chip *chip, uint16_t reg, uint8_t v);
-OPL_API void OPL3_WriteRegDelayed(opl3_chip* chip, uint16_t reg, uint8_t v, uint64_t delay);
-OPL_API void OPL3_GenerateStream(opl3_chip *chip, int16_t *sndptr, uint32_t numsamples);
-OPL_API void OPL3_Generate4Ch(opl3_chip *chip, int16_t *buf4);
-OPL_API void OPL3_Generate4ChResampled(opl3_chip *chip, int16_t *buf4);
-OPL_API void OPL3_Generate4ChStream(opl3_chip *chip, int16_t *sndptr1, int16_t *sndptr2, uint32_t numsamples);
+OPL_API void OPL3_Generate(opl3_chip *chip, signed short *buf);
+OPL_API void OPL3_GenerateResampled(opl3_chip *chip, signed short *buf);
+OPL_API void OPL3_Reset(opl3_chip *chip, unsigned int samplerate);
+OPL_API void OPL3_WriteReg(opl3_chip *chip, unsigned short reg, unsigned char v);
+OPL_API void OPL3_WriteRegBuffered(opl3_chip *chip, unsigned short reg, unsigned char v);
+OPL_API void OPL3_WriteRegDelayed(opl3_chip* chip, unsigned short reg, unsigned char v, uint64_t delay);
+OPL_API void OPL3_GenerateStream(opl3_chip *chip, signed short *sndptr, int numsamples);
+OPL_API void OPL3_Generate4Ch(opl3_chip *chip, signed short *buf4);
+OPL_API void OPL3_Generate4ChResampled(opl3_chip *chip, signed short *buf4);
+OPL_API void OPL3_Generate4ChStream(opl3_chip *chip, signed short *sndptr1, signed short *sndptr2, int numsamples);
 
 #ifdef __cplusplus
 }

@@ -469,6 +469,7 @@ int lwlib_vec3f_face_side(lwlib_TFace3f face, lwlib_TPlane3f plane, double eps)
 		return LWLIB_FACE_SIDE_BACK;
 
 	assert(0);
+	return 0;
 }
 
 lwlib_TBox3f lwlib_vec3f_face_box(lwlib_TFace3f face)

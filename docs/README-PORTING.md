@@ -1,4 +1,4 @@
-# PORTING (Last reviewed on: 19:03:2023)
+# PORTING (Last reviewed on: 03:28:2023)
 
   This document abords to how you can port with details about how to port/support Wolf4SDL into a new platform so i highly recomend to you for read this even this is a big text, before you start porting to other platform.
 
@@ -24,7 +24,7 @@
 
   but if you want to use `#ifndef`, use like this:
   `#ifndef SAMPLE_PLAT`
-  `/* The code that brokes or doesn´t work on your platform */`
+  `/* The code that doesn´t work on your platform */`
   `#endif`
   because if you use like this:
 

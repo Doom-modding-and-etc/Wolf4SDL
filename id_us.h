@@ -83,7 +83,7 @@ void			US_CPrintf(const char *formatStr, ...);
 void			US_PrintUnsigned(unsigned int n);
 void			US_PrintSigned(int n);
 boolean         US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
-                             int maxchars,int maxwidth);
+                             size_t maxchars,size_t maxwidth);
 
 void	        USL_PrintInCenter(const char *s,Rect r);
 

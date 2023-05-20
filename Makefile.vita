@@ -1,0 +1,61 @@
+TARGET		:= Wolf4SDL
+TITLE		:= WOLF4SDL1
+
+PREFIX  = arm-vita-eabi
+CC      = $(PREFIX)-gcc
+
+CFLAGS += -W -O2 -Wall -Wl,-q -g -Wpointer-arith -Wreturn-type -Wwrite-strings -Wcast-align -std=gnu99 \
+-Wimplicit-int -Wsequence-point -mtune=cortex-a9 -mfpu=neon  -I$(VITASDK)/$(PREFIX)/include/SDL -DPSVITA
+
+LDFLAGS += -lSDL_mixer -lSDL -lvitashark -lSceShaccCgExt -ltaihen_stub -lSceShaccCg_stub -lfreetype \
+	-lvorbisfile -lvorbis -logg -lspeexdsp -lmpg123 -lSceCommonDialog_stub -lSceAudio_stub -lSceLibKernel_stub \
+	-lFLAC -lmikmod -lpthread -lmathneon -lSceNet_stub -lSceNetCtl_stub -lpng -lSceDisplay_stub -lSceGxm_stub \
+	-lSceSysmodule_stub -lSceCtrl_stub -lSceTouch_stub -lSceMotion_stub -lm -lSceAppMgr_stub \
+	-lSceAppUtil_stub -lScePgf_stub -ljpeg -lSceRtc_stub -lScePower_stub -lcurl -lssl -lcrypto -lz \
+	-lSceKernelDmacMgr_stub -lSceHid_stub -lSceAudioIn_stub -lSceIme_stub 
+
+ID_ENGINE_SRCS += id_ca.c id_crt.o id_in.c id_pm.c id_sd.c id_udp.c id_us.c id_vh.c id_vieasm.c id_vl.c
+
+SRCS += aud_sys/mame/fmopl.c aud_sys/dosbox/dbopl.c aud_sys/nukedopl3/opl3.c $(ID_ENGINE_SRCS) psnprntf.c signon.c \
+wl_act1.c wl_act2.c wl_agent.c wl_atmos.c wl_cloudsky.c wl_debug.c wl_draw.c wl_game.c wl_inter.c \
+wl_main.c wl_menu.c wl_parallax.c wl_plane.c wl_play.c wl_scale.c wl_shade.c wl_state.c \
+wl_text.c wl_utils.c 
+
+DEPS = $(filter %.d, $(SRCS:.c=.d))
+OBJS = $(filter %.o, $(SRCS:.c=.o))
+
+.SUFFIXES:
+.SUFFIXES: .c .cpp .d .o
+
+Q ?= @
+
+ifndef NO_DEPS
+depend: $(DEPS)
+
+ifeq ($(findstring $(MAKECMDGOALS), clean depend Data),)
+-include $(DEPS)
+endif
+endif
+
+all: $(TARGET).vpk
+ 
+
+$(TARGET).vpk: $(TARGET).velf
+	vita-make-fself -c -s $< eboot.bin
+	vita-pack-vpk -s param.sfo -b eboot.bin 
+	vita-mksfoex -s TITLE_ID=$(TITLE) ATTRIBUTE2=12 "$(TARGET)" release_psvita/sce_sys/param.sfo 
+	--add release_psvita/sce_sys/icon0.png=sce_sys/icon0.png \
+	--add release_psvita/sce_sys/livearea/bg.png=sce_sys/livearea/contents/bg.png \
+	--add release_psvita/sce_sys/livearea/template.xml=sce_sys/livearea/contents/template.xml \
+	$(TARGET).vpk
+	
+%.velf: %.elf
+	cp $< $<.unstripped.elf
+	$(PREFIX)-strip -g $<
+	vita-elf-create $< $@
+
+$(TARGET).elf: $(OBJS)
+	$(CC) $(CFLAGS) $^ $(LDFLAGS) -o $@
+
+clean:
+	@rm -rf $(TARGET).velf $(TARGET).elf $(OBJS) param.sfo eboot.bin

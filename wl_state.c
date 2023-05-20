@@ -111,10 +111,10 @@ void SpawnNewObj (unsigned tilex, unsigned tiley, statetype *state)
     else
         newobj->ticcount = 0;
 
-    newobj->tilex = (short) tilex;
-    newobj->tiley = (short) tiley;
-    newobj->x = ((fixed)tilex<<TILESHIFT)+TILEGLOBAL/2;
-    newobj->y = ((fixed)tiley<<TILESHIFT)+TILEGLOBAL/2;
+    newobj->tilex = tilex;
+    newobj->tiley = tiley;
+    newobj->x = (tilex<<TILESHIFT)+TILEGLOBAL/2;
+    newobj->y = (tiley<<TILESHIFT)+TILEGLOBAL/2;
     newobj->dir = nodir;
 
     actorat[tilex][tiley] = newobj;
@@ -1847,3 +1847,4 @@ boolean SightPlayer (objtype *ob)
 
     return true;
 }
+//WL_STATE_C

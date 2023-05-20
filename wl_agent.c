@@ -89,12 +89,13 @@ void ClipMove(objtype* ob, int xmove, int ymove);
 void CheckWeaponChange(void)
 {
     int i, newWeapon = -1;
-
+#ifdef _arch_dreamcast 
+    int joyx, joyy;
+#endif   
     if (!gamestate.ammo)            // must use knife with no ammo
         return;
 
 #ifdef _arch_dreamcast
-    int joyx, joyy;
     IN_GetJoyFineDelta(&joyx, &joyy);
     if (joyx < -64)
         buttonstate[bt_prevweapon] = true;
@@ -151,6 +152,7 @@ void ControlMovement(objtype* ob)
 {
     int     angle;
     int     angleunits;
+    fixed speed;
 #ifdef SWITCH
     float strafespeed = 0;
 #endif
@@ -245,8 +247,12 @@ void ControlMovement(objtype* ob)
     //
     // side to side move
     //
+#ifdef MOUSELOOK
+	if (buttonstate[bt_strafe] || mouselookenabled)
+#else	
     if (buttonstate[bt_strafe])
-    {
+#endif    
+	{
         //
         // strafing
         //
@@ -269,9 +275,9 @@ void ControlMovement(objtype* ob)
     else
     {
         //
-        // not strafing
+        // not strafing and mouselook disabled when activated
         //
-        anglefrac += controlx;
+        anglefrac += (short)controlx;
         angleunits = anglefrac / ANGLESCALE;
         anglefrac -= angleunits * ANGLESCALE;
         ob->angle -= angleunits;
@@ -286,7 +292,6 @@ void ControlMovement(objtype* ob)
 #if SDL_MAJOR_VERSION == 2
     if (gamecontrolstrafe < 0)
     {
-        int speed;
         angle = ob->angle + ANGLES / 4;
         if (angle >= ANGLES)
             angle -= ANGLES;
@@ -294,19 +299,35 @@ void ControlMovement(objtype* ob)
         speed = -gamecontrolstrafe * MOVESCALE;
         if (controly != 0)
             speed = (speed * 70) / 100; // correct faster diagonal movement
-        Thrust(angle, speed);           // move to left
+        Thrust(angle, (int)speed);           // move to left
     }
     else if (gamecontrolstrafe > 0)
     {
-        int speed;
         angle = ob->angle - ANGLES / 4;
         if (angle < 0)
             angle += ANGLES;
 
-        speed = gamecontrolstrafe * MOVESCALE;
+        speed = (fixed)gamecontrolstrafe * MOVESCALE;
         if (controly != 0)
             speed = (speed * 70) / 100; // correct faster diagonal movement
-        Thrust(angle, speed);           // move to right
+        Thrust(angle, (int)speed);           // move to right
+    }
+#endif
+
+#ifdef MOUSELOOK
+    if (mouselookenabled) {
+        //
+        // mouselook enabled
+        //
+        anglefrac += mousecontrolx;
+        angleunits = anglefrac/ANGLESCALE;
+        anglefrac -= angleunits*ANGLESCALE;
+        ob->angle -= angleunits;
+
+        if (ob->angle >= ANGLES)
+            ob->angle -= ANGLES;
+        if (ob->angle < 0)
+            ob->angle += ANGLES;
     }
 #endif
 
@@ -315,16 +336,16 @@ void ControlMovement(objtype* ob)
     //
     if (controly < 0)
     {
-        int speed = -controly * MOVESCALE;
+        speed = -controly * MOVESCALE;
 #if SDL_MAJOR_VERSION == 2        
         if (gamecontrolstrafe != 0)
             speed = (speed * 70) / 100; // correct faster diagonal movement
 #endif   
-        Thrust(ob->angle, speed);       // move forwards
+        Thrust(ob->angle, (int)speed);       // move forwards
     }
     else if (controly > 0)
     {
-        int speed = controly * BACKMOVESCALE;
+        speed = (fixed)controly * BACKMOVESCALE;
         angle = ob->angle + ANGLES / 2;
         if (angle >= ANGLES)
             angle -= ANGLES;
@@ -333,7 +354,7 @@ void ControlMovement(objtype* ob)
 #endif
             speed = (speed * 70) / 100; // correct faster diagonal movement
         
-        Thrust(angle, speed);           // move backwards
+        Thrust(angle, (int)speed);           // move backwards
     }
 
     if (gamestate.victoryflag)              // watching the BJ actor
@@ -376,7 +397,7 @@ void StatusDrawPic(unsigned x, unsigned y, unsigned picnum)
 }
 
 #ifdef SEGA_SATURN
-inline void StatusDrawPicIndirect(unsigned x, unsigned y, unsigned picnum)
+wlinline void StatusDrawPicIndirect(unsigned x, unsigned y, unsigned picnum)
 {
 #if SATURN_WIDTH == 352	
     LatchDrawPicScaledCoordIndirect(2 + (screenWidth - scaleFactor * SATURN_WIDTH) / 16 + scaleFactor * x,
@@ -480,12 +501,12 @@ void UpdateFace(void)
 ===============
 */
 
-static void LatchNumber(int x, int y, unsigned width, int number)
+static void LatchNumber(int x, int y, size_t width, int number)
 {
-    unsigned length, c;
+    size_t length, c;
     char    str[20];
-    w3sltoa(number, str, 10);
-    length = (unsigned)strlen(str);
+    wlltoa(number, str, 10);
+    length = strlen(str);
 
     while (length < width)
     {
@@ -1136,8 +1157,8 @@ void VictoryTile(void)
 static fixed FixedByFracOrig(fixed a, fixed b)
 {
     int sign = 0;
-    fixed res = (fixed)(((int64_t)a * b) >> 16);
-;
+    fixed res;
+
     if (b == 65536) b = 65535;
     else if (b == -65536) b = 65535, sign = 1;
     else if (b < 0) b = (-b), sign = 1;
@@ -1147,7 +1168,9 @@ static fixed FixedByFracOrig(fixed a, fixed b)
         a = -a;
         sign = !sign;
     }
+
     res = (fixed)(((int64_t)a * b) >> 16);
+
 	if (sign)
         res = -res;
     return res;
@@ -1165,7 +1188,7 @@ void Thrust(int angle, int speed)
         funnyticount = 0;
 #endif
 
-    thrustspeed += speed;
+    thrustspeed += (int)speed;
     //
     // moving bounds speed
     //
@@ -1176,17 +1199,17 @@ void Thrust(int angle, int speed)
     xmove = FixedMul(speed, costable[angle]);
     ymove = -FixedMul(speed, sintable[angle]);
 #else
-    xmove = DEMOCHOOSE_ORIG_SDL(
+    xmove = (int)DEMOCHOOSE_ORIG_SDL(
         FixedByFracOrig(speed, costable[angle]),
         FixedMul(speed, costable[angle]));
-    ymove = DEMOCHOOSE_ORIG_SDL(
+    ymove = (int)DEMOCHOOSE_ORIG_SDL(
         -FixedByFracOrig(speed, sintable[angle]),
         -FixedMul(speed, sintable[angle]));
 #endif
     ClipMove(player, xmove, ymove);
 
-    player->tilex = (short)(player->x >> TILESHIFT);                // scale to tile values
-    player->tiley = (short)(player->y >> TILESHIFT);
+    player->tilex = (player->x >> TILESHIFT);                // scale to tile values
+    player->tiley = (player->y >> TILESHIFT);
 
     player->areanumber = MAPSPOT(player->tilex, player->tiley, 0) - AREATILE;
 
@@ -1414,8 +1437,8 @@ void SpawnPlayer(int tilex, int tiley, int dir)
 {
     player->obclass = playerobj;
     player->active = ac_yes;
-    player->tilex = tilex;
-    player->tiley = tiley;
+    player->tilex = (unsigned short)tilex;
+    player->tiley = (unsigned short)tiley;
 #if defined(EMBEDDED) && defined(SEGA_SATURN)
     player->areanumber = *(mapsegs[0] + farmapylookup[player->tiley] + player->tilex);
 #else
@@ -1453,7 +1476,7 @@ void SpawnPlayer(int tilex, int tiley, int dir)
 void    KnifeAttack(objtype* ob)
 {
     objtype* check, * closest;
-    int  dist;
+    fixed  dist;
 
     SD_PlaySound(ATKKNIFESND);
     // actually fire
@@ -1488,9 +1511,8 @@ void    KnifeAttack(objtype* ob)
 
 void    GunAttack(objtype* ob)
 {
-    int             bulletx, bullety;
-    short           bangle, damage, accuracy, numshots;
-    boolean         hit;
+    short           damage, accuracy, numshots;
+
     objtype* check;
     int i;
     switch (gamestate.weapon)
@@ -1522,11 +1544,12 @@ void    GunAttack(objtype* ob)
 
     for (i = 0; i < numshots; i++)
     {
-        bulletx = player->x;
-        bullety = player->y;
-        bangle = player->angle;
-
-        if (accuracy)
+        int bulletx = player->x;
+        int bullety = player->y;
+        short bangle = player->angle;
+		boolean         hit;
+        
+		if (accuracy)
         {
             if (US_RndT() > 127)
                 bangle -= US_RndT() % (accuracy + 1);
@@ -1589,10 +1612,10 @@ void    GunAttack(objtype* ob)
 #else
 void    GunAttack(objtype* ob)
 {
-    objtype* check, * closest, * oldclosest;
+    objtype* check, * closest;
     int      damage;
     int      dx, dy, dist;
-    int  viewdist;
+    fixed  viewdist;
 
     switch (gamestate.weapon)
     {
@@ -1617,7 +1640,7 @@ void    GunAttack(objtype* ob)
 
     while (1)
     {
-        oldclosest = closest;
+        objtype *oldclosest = closest;
 
         for (check = ob->next; check; check = check->next)
         {
@@ -1692,7 +1715,7 @@ void VictorySpin(void)
 
     if (player->y > desty)
     {
-        player->y -= (fixed)tics * 4096;
+        player->y -= (int)tics * 4096;
         if (player->y < desty)
             player->y = desty;
     }
@@ -1842,3 +1865,4 @@ void    T_Player(objtype* ob)
     player->tilex = (short)(player->x >> TILESHIFT);                // scale to tile values
     player->tiley = (short)(player->y >> TILESHIFT);
 }
+//WL_AGENT_C

@@ -168,22 +168,18 @@ static void YM3812UpdateOne(opl3_chip* which, short* stream, int length)
     if (length > 2048)
         length = 2048;
 
-    // Output is 16-bit stereo sound
-    OPL3_GenerateStream(which, buffer, length);
-    for (i = 0; i < length; i++)
-    {
-        // Scale volume
-        int sample = 2 * buffer[i];
-        if (sample > 16384) sample = 16384;
-        else if (sample < -16384) sample = -16384;
-#ifdef MIXER_SAMPLE_FORMAT_FLOAT
-        stream[i] = (float)buffer[2 * i] / 32767.0f;
-#elif defined (MIXER_SAMPLE_FORMAT_SINT16)
-        stream[i] = buffer[2 * i];
-#else
-        stream[i * 2] = stream[i * 2 + 1] = (short )sample;
-#endif
-    }
+     OPL3_GenerateStream(which, buffer, length);
+
+     // GenerateBlock3 generates a number of "length" 32-bit stereo samples
+      // so we only need to convert them to 16-bit samples
+     for (i = 0; i < length * 2; i++)  // * 2 for left/right channel
+     {
+        // Multiply by 4 to match loudness of MAME emulator.
+        short sample = buffer[i] << 2;
+        if (sample > 32767) sample = 32767;
+        else if (sample < -32768) sample = -32768;
+        stream[i] = sample;
+     }
 }
 #else
 
@@ -292,13 +288,11 @@ extern void	satStopMusic(void);
 extern 	void sound_cdda(int track, int loop);
 short	load_adx(char* filename);
 #endif
-
-void Delay (unsigned int wolfticks)
+wlinline void Delay (int wolfticks)
 {
     if (wolfticks > 0)
-        SDL_Delay ((wolfticks * 100) / 7);
+        SDL_Delay ((unsigned int)(wolfticks * 100) / 7);
 }
-
 #ifndef SEGA_SATURN
 static void SDL_SoundFinished(void)
 {
@@ -344,7 +338,7 @@ SDL_ShutPC(void)
 // Adapted from Chocolate Doom (chocolate-doom/pcsound/pcsound_sdl.c)
 #define SQUARE_WAVE_AMP 0x2000
 
-static void SDL_PCMixCallback(void *udata, unsigned char*stream, int len)
+static void SDL_PCMixCallback(int chan, void* stream, int len, void* udata)
 {
     static int current_remaining = 0;
     static int current_freq = 0;
@@ -562,12 +556,12 @@ void SD_PrepareSound(int which)
         if (which < 23)
             //		if(fileSize>8192 && fileSize<20000)
         {
-            mem_buf = (unsigned char*)SafeMalloc(fileSize);
+            mem_buf = SafeMalloc(fileSize);
             //CHECKMALLOCRESULT(mem_buf);
         }
         else
         {
-            mem_buf = (unsigned char*)lowsound;
+            mem_buf = lowsound;
             lowsound += (size_t)fileSize;
 
             if (lowsound % 4 != 0)
@@ -590,8 +584,8 @@ void SD_PrepareSound(int which)
 #endif	
 #else
     unsigned int i;
-	int page = DigiList[which].startpage;
-	int size = DigiList[which].length;
+	unsigned int page = DigiList[which].startpage;
+	unsigned int size = DigiList[which].length;
 	unsigned char *origsamples;
 	int destsamples = (int)((float)size * (float)param_samplerate
         / (float)ORIGSAMPLERATE);
@@ -609,10 +603,16 @@ void SD_PrepareSound(int which)
     origsamples = PM_GetSoundPage(page);
     if(origsamples + size >= PM_GetPageEnd())
         Quit("SD_PrepareSound(%i): Sound reaches out of page file!\n", which);
-
+#if defined(REINTERPRET_CAST)
+    wavebuffer = reinterpret_cast<unsigned char*>(SafeMalloc(sizeof(headchunk) + sizeof(wavechunk)
+        + destsamples * 2));     // dest are 16-bit samples
+#elif defined(STATIC_CAST)
+    wavebuffer = static_cast<unsigned char*>(SafeMalloc(sizeof(headchunk) + sizeof(wavechunk)
+        + destsamples * 2));     // dest are 16-bit samples
+#else
     wavebuffer = (unsigned char*)SafeMalloc(sizeof(headchunk) + sizeof(wavechunk)
         + destsamples * 2);     // dest are 16-bit samples
-
+#endif
     head.filelenminus8 = sizeof(head) + destsamples*2;  // (sizeof(dhead)-8 = 0)
     memcpy(wavebuffer, &head, sizeof(head));
     memcpy(wavebuffer+sizeof(head), &dhead, sizeof(dhead));
@@ -626,7 +626,7 @@ void SD_PrepareSound(int which)
     for(i=0; i<(unsigned int)destsamples; i++, cursample+=samplestep)
     {
         newsamples[i] = GetSample((float)size * (float)i / (float)destsamples,
-            origsamples, size);
+            origsamples, (int)size);
     }
 
     temp = SDL_RWFromMem(wavebuffer,
@@ -709,15 +709,20 @@ SDL_SetupDigi(void)
 	int i,page;
     unsigned short *soundInfoPage = (unsigned short *) (void *) PM_GetPage(ChunksInFile-1);
     NumDigi = (unsigned short) PM_GetPageSize(ChunksInFile - 1) / 4;
-
+#if defined(REINTERPRET_CAST)
+    DigiList = reinterpret_cast<digiinfo*>(SafeMalloc(NumDigi * sizeof(*DigiList)));
+#elif defined(STATIC_CAST)
+    DigiList = static_cast<digiinfo*>(SafeMalloc(NumDigi * sizeof(*DigiList)));
+#else
     DigiList = (digiinfo*)SafeMalloc(NumDigi * sizeof(*DigiList));
+#endif
     
     for(i = 0; i < NumDigi; i++)
     {
         // Calculate the size of the digi from the sizes of the pages between
         // the start page and the start page of the next sound
 		int lastPage;
-		int size = 0;
+		unsigned int size = 0;
         DigiList[i].startpage = soundInfoPage[i * 2];
         if((int) DigiList[i].startpage >= ChunksInFile - 1)
         {
@@ -986,13 +991,21 @@ void SDL_IMFMusicPlayer(void *udata, unsigned char *stream, int len)
         {
             if(numreadysamples<sampleslen)
             {
+#if defined(USE_DOSBOX) || defined(USE_NUKEDOPL)
+                YM3812UpdateOne(&oplChip, stream16, numreadysamples);
+#else
                 YM3812UpdateOne(oplChip, stream16, numreadysamples);
+#endif
                 stream16 += numreadysamples*2;
                 sampleslen -= numreadysamples;
             }
             else
             {
+#if defined(USE_DOSBOX) || defined(USE_NUKEDOPL)
+                YM3812UpdateOne(&oplChip, stream16, sampleslen);
+#else
                 YM3812UpdateOne(oplChip, stream16, sampleslen);
+#endif
                 numreadysamples -= sampleslen;
                 return;
             }
@@ -1081,7 +1094,7 @@ SD_Startup(void)
     if (SD_Started)
         return;
 
-    if(Mix_OpenAudio(param_samplerate, AUDIO_S16, 2, param_audiobuffer))
+    if(Mix_OpenAudio(param_samplerate, AUDIO_S16, 2, param_audiobuffer) < 0)
     {
         printf("Unable to open audio: %s\n", Mix_GetError());
         return;
@@ -1093,17 +1106,14 @@ SD_Startup(void)
     // Init music
 
     samplesPerMusicTick = param_samplerate / 700;    // SDL_t0FastAsmService played at 700Hz
-#ifdef USE_DOSBOX
-    YM3812Init(1, 3579545, param_samplerate);
-#else
     if(YM3812Init(1,3579545,param_samplerate))
     {
         printf("Unable to create virtual OPL!!\n");
     }
-#endif
+
     for(i=1;i<0xf6;i++)
-        YM3812Write(oplChip,i,0);
-    YM3812Write(oplChip,1,0x20); // Set WSE=1
+        alOut(i,0);
+    alOut(1,0x20); // Set WSE=1
 //    YM3812Write(0,8,0); // Set CSM=0 & SEL=0		 // already set in for statement
     Mix_HookMusic(SDL_IMFMusicPlayer, 0);
     Mix_ChannelFinished(SD_ChannelFinished);
@@ -1113,7 +1123,7 @@ SD_Startup(void)
     alTimeCount = 0;
 	
     // Add PC speaker sound mixer
-    Mix_SetPostMix(SDL_PCMixCallback, NULL);
+    Mix_RegisterEffect(MIX_CHANNEL_POST, SDL_PCMixCallback, NULL, NULL);
 
     SD_SetSoundMode(sdm_Off);
     SD_SetMusicMode(smm_Off);
@@ -1425,13 +1435,12 @@ void
 SD_ContinueMusic(int chunk, int startoffs)
 {
 #ifndef SEGA_SATURN
-    int i;
-
     SD_MusicOff();
 
     if (MusicMode == smm_AdLib)
     {
         int chunkLen = CA_CacheAudioChunk(chunk);
+        int i;
         sqHack = (unsigned short*)(void *) audiosegs[chunk];     // alignment is correct
         if(*sqHack == 0) sqHackLen = sqHackSeqLen = chunkLen;
         else sqHackLen = sqHackSeqLen = *sqHack++;

@@ -31,7 +31,7 @@ void *wsafe_malloc(size_t size, const char *fname, unsigned int line)
 =
 ===================
 */
-fixed FixedMul (fixed a, fixed b)
+wlinline fixed FixedMul (fixed a, fixed b)
 {
 #ifdef SEGA_SATURN
     return MTH_Mul2(a, b);
@@ -49,10 +49,9 @@ fixed FixedMul (fixed a, fixed b)
 =
 ===================
 */
-fixed FixedDiv (fixed a, fixed b)
+wlinline fixed FixedDiv (fixed a, fixed b)
 {
 	int64_t c = ((int64_t)a << FRACBITS) / (int64_t)b;
-
 	return (fixed)c;
 }
 
@@ -65,7 +64,7 @@ fixed FixedDiv (fixed a, fixed b)
 =
 ===================
 */
-unsigned short READWORD (unsigned char *ptr)
+wlinline unsigned short READWORD (unsigned char *ptr)
 {
     unsigned short val = ptr[0] | ptr[1] << 8;
 #ifdef SEGA_SATURN
@@ -83,12 +82,44 @@ unsigned short READWORD (unsigned char *ptr)
 =
 ===================
 */
-unsigned int READLONGWORD (unsigned char *ptr)
+wlinline unsigned int READLONGWORD (unsigned char *ptr)
 {
     unsigned int val = ptr[0] | ptr[1] << 8 | ptr[2] << 16 | ptr[3] << 24;
 
     return val;
 }
+
+
+/*
+===================
+=
+= wlitoa
+=
+= converts a char to a int value.
+=
+===================
+*/
+wlinline char* wlitoa(int value, char* string, int radix)
+{
+    w3ssnprintf(string, sizeof(string), "%d", value);
+    return string;
+}
+
+/*
+===================
+=
+= wlltoa
+=
+= converts a char to a long value.
+=
+===================
+*/
+wlinline char* wlltoa(long value, char* string, int radix)
+{
+    w3ssnprintf(string, sizeof(string), "%ld", value);
+    return string;
+}
+
 
 /*
 ===================

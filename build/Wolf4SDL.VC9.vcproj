@@ -175,8 +175,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="C:\SDL2\include"
-				PreprocessorDefinitions="_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;OLD_BOOL"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)..\3rdparty\&quot;;&quot;$(SolutionDir)..\3rdparty\uthash&quot;;C:\SDL2\include"
+				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;WINDOWS_IGNORE_PACKING_MISMATCH;USE_FIXEDPTC;_WIN32;C89;HAVE_M_PI;_USE_MATH_DEFINES;USE_HEADER;USE_INLINE_C99"
 				RuntimeLibrary="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
@@ -198,7 +198,7 @@
 				AdditionalLibraryDirectories="C:\SDL2\lib\x86"
 				GenerateDebugInformation="true"
 				SubSystem="2"
-				OptimizeReferences="2"
+				OptimizeReferences="1"
 				EnableCOMDATFolding="2"
 				EntryPointSymbol=""
 				RandomizedBaseAddress="1"
@@ -255,7 +255,7 @@
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)..\3rdparty\&quot;;&quot;$(SolutionDir)..\3rdparty\uthash&quot;;C:\SDL2\include"
 				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;WINDOWS_IGNORE_PACKING_MISMATCH;USE_FIXEDPTC;_WIN32;C89;HAVE_M_PI;_USE_MATH_DEFINES;USE_HEADER;USE_INLINE_C99"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
+				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
 				CompileAs="0"
 			/>
@@ -333,6 +333,18 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="nukedopl3"
+				>
+				<File
+					RelativePath="..\aud_sys\nukedopl3\opl3.c"
+					>
+				</File>
+				<File
+					RelativePath="..\aud_sys\nukedopl3\opl3.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="win"
@@ -384,10 +396,6 @@
 		</File>
 		<File
 			RelativePath="..\gfxv_wl6.h"
-			>
-		</File>
-		<File
-			RelativePath="..\gp2x.h"
 			>
 		</File>
 		<File

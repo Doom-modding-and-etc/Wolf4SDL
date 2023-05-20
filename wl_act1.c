@@ -666,7 +666,7 @@ void CloseDoor(int door)
 =====================
 */
 
-void OpenDoor(size_t door)
+void OpenDoor(unsigned int door)
 {
     if (doorobjlist[door].action == dr_open)
         doorobjlist[door].ticcount = 0;         // reset open time
@@ -1131,7 +1131,7 @@ void PushWall (int checkx, int checky, int dir)
         SD_PlaySound (NOWAYSND);
         return;
     }
-    actorat[checkx+dx][checky+dy] = (objtype *)(uintptr_t) (tilemap[checkx+dx][checky+dy] = oldtile);
+    actorat[checkx+dx][checky+dy] = (objtype *)(uintptr_t)oldtile;
 
     gamestate.secretcount++;
     pwallx = checkx;
@@ -1215,11 +1215,11 @@ void MovePWalls (void)
                 tilemap[pwallx][pwally] = oldtile;
                 return;
             }
-            actorat[pwallx+dx][pwally+dy] = (objtype *)(uintptr_t) (tilemap[pwallx+dx][pwally+dy] = oldtile);
+            actorat[pwallx+dx][pwally+dy] = (objtype *)(uintptr_t)oldtile;
             tilemap[pwallx+dx][pwally+dy] = BIT_WALL;
         }
     }
 
     pwallpos = (pwallstate/2)&63;
 }
-#endif
+#endif //SEGA_SATURN
