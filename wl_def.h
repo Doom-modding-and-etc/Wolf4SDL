@@ -150,6 +150,37 @@ void Quit(const char* errorStr, ...);
 #define wlinline 
 #endif
 
+// Uncomment the following line, if you get destination out of bounds
+// assertion errors and want to ignore them during debugging
+#ifdef SEGA_SATURN
+#define IGNORE_BAD_DEST
+#else
+//#define IGNORE_BAD_DEST
+#endif
+#ifdef IGNORE_BAD_DEST
+#ifdef SEGA_SATURN
+//#undef assert
+//#define assert(x) if(!(x))  { slPrint((char *)"asset test failed0", slLocate(10,20));return;}
+#define assert1(x) if(!(x)) { slPrint((char *)"asset test failed1", slLocate(10,20));return;}
+#define assert2(x) if(!(x)) { slPrint((char *)"asset test failed2", slLocate(10,20));return;}
+#define assert3(x) if(!(x)) { slPrint((char *)"asset test failed3", slLocate(10,20));return;}
+#define assert4(x) if(!(x)) { slPrint((char *)"asset test failed4", slLocate(10,20));return;}
+#define assert5(x) if(!(x)) { slPrint((char *)"asset test failed5", slLocate(10,20));return;}
+#define assert6(x) if(!(x)) { slPrint((char *)"asset test failed6", slLocate(10,20));return;}
+//#define assert7(x) if(!(x)) { slPrint((char *)"asset test failed7", slLocate(10,20));return;}
+#define assert8(x) if(!(x)) { slPrint((char *)"asset test failed8", slLocate(10,20));return;}
+#define wlassert(x) if(!(x)) return 0
+#else
+#define wlassert(x) if(!(x)) return
+#endif
+#else
+#if SDL_MAJOR_VERSION == 2
+#define wlassert(x) SDL_assert(x)
+#else
+#define wlassert(x) assert(x)
+#endif
+#endif
+
 #include "id_pm.h"
 #ifdef VIEASM
 #include "id_vieasm.h"

@@ -1962,7 +1962,7 @@ void VL_LatchToScreenScaledCoord(SDL_Surface* source, int xsrc, int ysrc,
     int width, int height, int scxdest, int scydest)
 {
     unsigned curPitch;
-    assert(scxdest >= 0 && scxdest + width * scaleFactor <= screenWidth
+    wlassert(scxdest >= 0 && scxdest + width * scaleFactor <= screenWidth
         && scydest >= 0 && scydest + height * scaleFactor <= screenHeight
         && "VL_LatchToScreenScaledCoord: Destination rectangle out of bounds!");
 

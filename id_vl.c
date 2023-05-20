@@ -5,34 +5,7 @@
 #ifdef CRT
 #include "id_crt.h"
 #endif
-// Uncomment the following line, if you get destination out of bounds
-// assertion errors and want to ignore them during debugging
-#ifdef SEGA_SATURN
-#define IGNORE_BAD_DEST
-#else
-//#define IGNORE_BAD_DEST
-#endif
-#ifdef IGNORE_BAD_DEST
-#ifdef SEGA_SATURN
-//#undef assert
-//#define assert(x) if(!(x))  { slPrint((char *)"asset test failed0", slLocate(10,20));return;}
-#define assert1(x) if(!(x)) { slPrint((char *)"asset test failed1", slLocate(10,20));return;}
-#define assert2(x) if(!(x)) { slPrint((char *)"asset test failed2", slLocate(10,20));return;}
-#define assert3(x) if(!(x)) { slPrint((char *)"asset test failed3", slLocate(10,20));return;}
-#define assert4(x) if(!(x)) { slPrint((char *)"asset test failed4", slLocate(10,20));return;}
-#define assert5(x) if(!(x)) { slPrint((char *)"asset test failed5", slLocate(10,20));return;}
-#define assert6(x) if(!(x)) { slPrint((char *)"asset test failed6", slLocate(10,20));return;}
-//#define assert7(x) if(!(x)) { slPrint((char *)"asset test failed7", slLocate(10,20));return;}
-#define assert8(x) if(!(x)) { slPrint((char *)"asset test failed8", slLocate(10,20));return;}
-#define assert_ret(x) if(!(x)) return 0
-#else
-#undef assert
-#define assert(x) if(!(x)) return
-#define assert_ret(x) if(!(x)) return 0
-#endif
-#else
-#define assert_ret(x) assert(x)
-#endif
+
 
 #if defined(_arch_dreamcast)
 boolean usedoublebuffering = false;
@@ -1139,7 +1112,7 @@ void VL_Plot (int x, int y, int color)
 {
     unsigned char *dest;
 
-    assert(x >= 0 && (unsigned) x < screenWidth
+    wlassert(x >= 0 && (unsigned) x < screenWidth
             && y >= 0 && (unsigned) y < screenHeight
             && "VL_Plot: Pixel out of bounds!");
 
@@ -1167,7 +1140,7 @@ unsigned char VL_GetPixel(int x, int y)
 {
     unsigned char col;
 
-    assert_ret(x >= 0 && (unsigned) x < screenWidth
+    wlassert(x >= 0 && (unsigned) x < screenWidth
             && y >= 0 && (unsigned) y < screenHeight
             && "VL_GetPixel: Pixel out of bounds!");
 #ifdef SEGA_SATURN
@@ -1320,7 +1293,7 @@ void VL_Hlin (unsigned x, unsigned y, unsigned width, int color)
 {
     unsigned char *dest;
 
-    assert(x >= 0 && x + width <= screenWidth
+    wlassert(x >= 0 && x + width <= screenWidth
             && y >= 0 && y < screenHeight
             && "VL_Hlin: Destination rectangle out of bounds!");
 
@@ -1347,7 +1320,7 @@ void VL_Vlin (int x, int y, int height, int color)
 {
     unsigned char *dest;
 
-	assert(x >= 0 && (unsigned) x < screenWidth
+    wlassert(x >= 0 && (unsigned) x < screenWidth
 			&& y >= 0 && (unsigned) y + height <= screenHeight
 			&& "VL_Vlin: Destination rectangle out of bounds!");
 
@@ -1386,7 +1359,7 @@ void VL_BarScaledCoord (int scx, int scy, int scwidth, int scheight, int color)
     unsigned char *dest;
 
 #ifndef SEGA_SATURN
-	assert(scx >= 0 && (unsigned) scx + scwidth <= screenWidth
+    wlassert(scx >= 0 && (unsigned) scx + scwidth <= screenWidth
 			&& scy >= 0 && (unsigned) scy + scheight <= screenHeight
 			&& "VL_BarScaledCoord: Destination rectangle out of bounds!");
 #endif
@@ -1531,7 +1504,7 @@ void VL_MemToScreenScaledCoord (unsigned char *source, int width, int height, in
     int i, j, sci, scj;
     unsigned m, n;
 
-    assert(destx >= 0 && destx + width * (int)scaleFactor <= (int)screenWidth
+    wlassert(destx >= 0 && destx + width * (int)scaleFactor <= (int)screenWidth
             && desty >= 0 && desty + height * (int)scaleFactor <= (int)screenHeight
             && "VL_MemToScreenScaledCoord: Destination rectangle out of bounds!");
 
@@ -1576,7 +1549,7 @@ void VL_MemToScreenScaledCoord2 (unsigned char *source, int origwidth, int origh
     int i, j, sci, scj;
     unsigned m, n;
 
-    assert(destx >= 0 && destx + width * (int)scaleFactor <= (int)screenWidth
+    wlassert(destx >= 0 && destx + width * (int)scaleFactor <= (int)screenWidth
             && desty >= 0 && desty + height * (int)scaleFactor <= (int)screenHeight
             && "VL_MemToScreenScaledCoord: Destination rectangle out of bounds!");
 

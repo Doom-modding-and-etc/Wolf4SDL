@@ -22,7 +22,7 @@ int GetParallaxStartTexture (void)
 {
     int startTex = ffDataBottomLeft;
 
-    assert(startTex >= 0 && startTex < PMSpriteStart);
+    wlassert(startTex >= 0 && startTex < PMSpriteStart);
 
     return startTex;
 }
@@ -39,7 +39,7 @@ int GetParallaxStartTexture (void)
         default: startTex =  0; break;
     }
 
-    assert(startTex >= 0 && startTex < PMSpriteStart);
+    wlassert(startTex >= 0 && startTex < PMSpriteStart);
 
     return startTex;
 }

@@ -89,7 +89,7 @@ int GetCloudSkyDefID (void)
 {
     int skyID = ffDataBottomLeft;
 
-    assert(skyID >= 0 && skyID < lengthof(cloudSkys));
+    wlassert(skyID >= 0 && skyID < lengthof(cloudSkys));
 
     return skyID;
 }
@@ -115,7 +115,7 @@ int GetCloudSkyDefID (void)
         default: skyID =  9; break;
     }
 
-    assert(skyID >= 0 && skyID < lengthof(cloudSkys));
+    wlassert(skyID >= 0 && skyID < lengthof(cloudSkys));
 
     return skyID;
 }
