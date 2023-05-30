@@ -49,7 +49,7 @@ Main features:
       supports any resolutions being multiples of 320x200 or 320x240,
       the default being 640x400.
       Wolf4SDL applies bilinear
-      or similar filtering using the crt and scaling feature(SDL2) through version.h, 
+      or similar filtering using the crt and scaling feature(SDL2 or SDL3) through version.h, 
       so you can feel the "vanilla moment", but if you want no filter just disable using version.h
 
  - Fully playable with only a game controller:
