@@ -55,4 +55,4 @@ void GP2X_MemoryInit (void);
 void GP2X_Shutdown (void);
 #endif
 
-#endif // GP2X_H
+#endif /* GP2X_H */

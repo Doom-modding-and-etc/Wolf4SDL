@@ -11,23 +11,22 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  */
-#ifndef _MSC_VER
+
 #include <stdint.h>
-#endif
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-//Use 8 handlers based on a small logatirmic wavetabe and an exponential table for volume
+/* Use 8 handlers based on a small logatirmic wavetabe and an exponential table for volume */
 #define WAVE_HANDLER	10
-//Use a logarithmic wavetable with an exponential table for volume
+/* Use a logarithmic wavetable with an exponential table for volume */
 #define WAVE_TABLELOG	11
-//Use a linear wavetable with a multiply table for volume
+/* Use a linear wavetable with a multiply table for volume */
 #define WAVE_TABLEMUL	12
 
-//Select the type of wave generator routine
+/* Select the type of wave generator routine */
 #define DBOPL_WAVE WAVE_TABLEMUL
 
 struct _Chip;
@@ -43,16 +42,16 @@ typedef short           Bit16s;
 typedef unsigned char   Bit8u;
 typedef char            Bit8s;
 
+#define DB_FASTCALL
+
 #if (DBOPL_WAVE == WAVE_HANDLER)
 typedef Bits ( DB_FASTCALL *WaveHandler) ( Bitu i, Bitu volume );
 #endif
 
-#define DB_FASTCALL
-
 typedef Bits (*VolumeHandler)(struct _Operator *self);
 typedef struct _Channel* (*SynthHandler)(struct _Channel *self, struct _Chip* chip, Bit32u samples, Bit32s* output );
 
-//Different synth modes that can generate blocks of data
+/* Different synth modes that can generate blocks of data */
 typedef enum {
 	sm2AM,
 	sm2FM,
@@ -68,13 +67,13 @@ typedef enum {
 	sm3Percussion,
 } SynthMode;
 
-//Shifts for the values contained in chandata variable
+/* Shifts for the values contained in chandata variable */
 enum {
 	SHIFT_KSLBASE = 16,
 	SHIFT_KEYCODE = 24,
 };
 
-//Masks for operator 20 values
+/* Masks for operator 20 values */
 enum {
         MASK_KSR = 0x10,
         MASK_SUSTAIN = 0x20,
@@ -94,40 +93,40 @@ struct _Operator {
 	VolumeHandler volHandler;
 
 #if (DBOPL_WAVE == WAVE_HANDLER)
-	WaveHandler waveHandler;	//Routine that generate a wave 
+	WaveHandler waveHandler;	/* Routine that generate a wave */
 #else
 	Bit16s* waveBase;
 	Bit32u waveMask;
 	Bit32u waveStart;
 #endif
-	Bit32u waveIndex;			//WAVE_BITS shifted counter of the frequency index
-	Bit32u waveAdd;				//The base frequency without vibrato
-	Bit32u waveCurrent;			//waveAdd + vibratao
+	Bit32u waveIndex;			/* WAVE_BITS shifted counter of the frequency index */
+	Bit32u waveAdd;				/* The base frequency without vibrato */
+	Bit32u waveCurrent;			/* waveAdd + vibrato */
 
-	Bit32u chanData;			//Frequency/octave and derived data coming from whatever channel controls this
-	Bit32u freqMul;				//Scale channel frequency with this, TODO maybe remove?
-	Bit32u vibrato;				//Scaled up vibrato strength
-	Bit32s sustainLevel;		//When stopping at sustain level stop here
-	Bit32s totalLevel;			//totalLevel is added to every generated volume
-	Bit32u currentLevel;		//totalLevel + tremolo
-	Bit32s volume;				//The currently active volume
+	Bit32u chanData;			/* Frequency/octave and derived data coming from whatever channel controls this */
+	Bit32u freqMul;				/* Scale channel frequency with this, TODO maybe remove? */
+	Bit32u vibrato;				/* Scaled up vibrato strength */
+	Bit32s sustainLevel;		/* When stopping at sustain level stop here */
+	Bit32s totalLevel;			/* totalLevel is added to every generated volume*/
+	Bit32u currentLevel;		/* totalLevel + tremolo */
+	Bit32s volume;				/* The currently active volume */
 	
-	Bit32u attackAdd;			//Timers for the different states of the envelope
+	Bit32u attackAdd;			/* Timers for the different states of the envelope */
 	Bit32u decayAdd;
 	Bit32u releaseAdd;
-	Bit32u rateIndex;			//Current position of the evenlope
+	Bit32u rateIndex;			/* Current position of the evenlope */
 
-	Bit8u rateZero;				//Bits for the different states of the envelope having no changes
-	Bit8u keyOn;				//Bitmask of different values that can generate keyon
-	//Registers, also used to check for changes
+	Bit8u rateZero;				/* Bits for the different states of the envelope having no changes */
+	Bit8u keyOn;				/* Bitmask of different values that can generate keyon */
+	/* Registers, also used to check for changes */
 	Bit8u reg20, reg40, reg60, reg80, regE0;
-	//Active part of the envelope we're in
+	/* Active part of the envelope we're in */
 	Bit8u state;
-	//0xff when tremolo is enabled
+	/* 0xff when tremolo is enabled */
 	Bit8u tremoloMask;
-	//Strength of the vibrato
+	/* Strength of the vibrato */
 	Bit8u vibStrength;
-	//Keep track of the calculated KSR so we can check for changes
+	/* Keep track of the calculated KSR so we can check for changes */
 	Bit8u ksr;
 };
 
@@ -136,15 +135,15 @@ typedef struct _Operator Operator;
 struct _Channel {
 	Operator op[2];
 	SynthHandler synthHandler;
-	Bit32u chanData;		//Frequency/octave and derived values
-	Bit32s old[2];			//Old data for feedback
+	Bit32u chanData;		/* Frequency/octave and derived values */
+ 	Bit32s old[2];			/* Old data for feedback */
 
-	Bit8u feedback;			//Feedback shift
-	Bit8u regB0;			//Register values to check for changes
+	Bit8u feedback;			/* Feedback shift */
+	Bit8u regB0;			/* Register values to check for changes */
 	Bit8u regC0;
-	//This should correspond with reg104, bit 6 indicates a Percussion channel, bit 7 indicates a silent channel
+	/* This should correspond with reg104, bit 6 indicates a Percussion channel, bit 7 indicates a silent channel */
 	Bit8u fourMask;
-	Bit8s maskLeft;		//Sign extended values for both channel's panning
+	Bit8s maskLeft;		/*Sign extended values for both channel's panning */
 	Bit8s maskRight;
 
 };
@@ -152,7 +151,7 @@ struct _Channel {
 typedef struct _Channel Channel;
 
 struct _Chip {
-	//This is used as the base counter for vibrato and tremolo
+	/* This is used as the base counter for vibrato and tremolo */
 	Bit32u lfoCounter;
 	Bit32u lfoAdd;
 	
@@ -161,14 +160,14 @@ struct _Chip {
 	Bit32u noiseAdd;
 	Bit32u noiseValue;
 
-	//Frequency scales for the different multiplications
+	/* Frequency scales for the different multiplications */
 	Bit32u freqMul[16];
-	//Rates for decay and release for rate of this chip
+	/* Rates for decay and release for rate of this chip */
 	Bit32u linearRates[76];
-	//Best match attack rates for the rate of this chip
+	/* Best match attack rates for the rate of this chip */
 	Bit32u attackRates[76];
 
-	//18 channels with 2 operators each
+	/* 18 channels with 2 operators each */
 	Channel chan[18];
 
 	Bit8u reg104;
@@ -182,9 +181,9 @@ struct _Chip {
 	Bit8u tremoloValue;
 	Bit8u vibratoStrength;
 	Bit8u tremoloStrength;
-	//Mask for allowed wave forms
+	/* Mask for allowed wave forms */
 	Bit8u waveFormMask;
-	//0 or -1 when enabled
+	/* 0 or -1 when enabled */
 	Bit8s opl3Active;
 
 };
@@ -208,11 +207,11 @@ void Chip__WriteReg(Chip *self, Bit32u reg, Bit8u val );
 void Chip__GenerateBlock2(Chip *self, Bitu total, Bit32s* output );
 void Chip__GenerateBlock3(Chip *self, Bitu total, Bit32s* output );
 
-// haleyjd 09/09/10: Not standard C.
+/* haleyjd 09/09/10: Not standard C. */
 #ifdef _MSC_VER
-#define inline __inline
+#define dbinline __inline
 #else
-#define inline 
+#define dbinline 
 #endif
 
 #ifdef __cplusplus

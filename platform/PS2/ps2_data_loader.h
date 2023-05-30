@@ -3,7 +3,7 @@
 
 #include "ps2_mc.h"
 
-//General Structure for the ps2 dualshock joystick.
+/* General Structure for the ps2 dualshock joystick. */
 /*
 typedef enum
 {
@@ -28,14 +28,14 @@ typedef enum
     btMax, //18
 } Control_Presses;
 */
-extern bool PS2_SDL_CreateWindow();
+extern boolean PS2_SDL_CreateWindow();
 extern void PS2_SDL_Shutdown();
 extern void PS2_SDL_LoaderStart(void);
 extern SDL_Surface* PS2_SDL_LoadBMP(const char* filename);
-extern bool PS2_SDL_LoadBitmapImgs();
+extern boolean PS2_SDL_LoadBitmapImgs();
 
 extern SDL_Surface *loader_surface;
 extern SDL_Surface *loader_image;
 extern SDL_Surface *loader_icn;
-//extern SDL_Surface *loader_image_btPresses[btMax];
+/* extern SDL_Surface *loader_image_btPresses[btMax]; */
 extern SDL_Window *loader_window;

@@ -1,8 +1,8 @@
-//
-// GP2X specific code
-//
-// by Pickle
-//
+/*
+** GP2X specific code
+**
+** by Pickle
+*/
 
 #include "gp2x.h"
 
@@ -105,10 +105,10 @@ void GP2X_ButtonDown( int button )
 
 	if( intButtonL & intButtonR )
 	{
-		// Status Bar
+		/* Status Bar */
 		SetKeyboard( SDLK_TAB, KEY_DOWN );
 
-		// Music Player (doesnt work, it appears the event's arnt happening soon enough)
+		/* Music Player (doesnt work, it appears the event's arnt happening soon enough) */
 		SetKeyboard( sc_M, KEY_DOWN );
 
 		SetKeyboard( SDLK_LALT, KEY_UP );
@@ -117,71 +117,71 @@ void GP2X_ButtonDown( int button )
 	}
 	else if( intButtonL & !intButtonR )
 	{
-		// Strafe Left
+		/* Strafe Left */
 		SetKeyboard( SDLK_LALT, KEY_DOWN );
 		SetKeyboard( SDLK_LEFT, KEY_DOWN );
 	}
 	else if( intButtonR & !intButtonL )
 	{
-		// Strafe Right
+		/* Strafe Right */
 		SetKeyboard( SDLK_LALT,  KEY_DOWN );
 		SetKeyboard( SDLK_RIGHT, KEY_DOWN );
 	}
 
-	// Left Direction
+	/* Left Direction */
 	if( intLeft  | intDownLeft  | intUpLeft   )
 	{
-		// UNstrafe
+		/* UNstrafe */
 		SetKeyboard( SDLK_LALT,  KEY_UP );
 		SetKeyboard( SDLK_RIGHT, KEY_UP );
-		// Turn
+		/* Turn */
 		SetKeyboard( SDLK_LEFT, KEY_DOWN );
 	}
 
-	// Right Direction
+	/* Right Direction */
 	if( intRight | intDownRight | intUpRight  )
 	{
-		// UNstrafe
+		/* UNstrafe */
 		SetKeyboard( SDLK_LALT, KEY_UP );
 		SetKeyboard( SDLK_LEFT, KEY_UP );
-		// Turn
+		/* Turn */
 		SetKeyboard( SDLK_RIGHT, KEY_DOWN );
 	}
 
-	// Up Direction
+	/* Up Direction */
 	if( intUp    | intUpRight   | intUpLeft   ) {
 		SetKeyboard( SDLK_UP, KEY_DOWN );
 	}
-	// Down Direction
+	/* Down Direction */
 	if( intDown  | intDownRight | intDownLeft ) {
 		SetKeyboard( SDLK_DOWN, KEY_DOWN );
 	}
 
 	if( intButtonSel & intButtonSrt ) {
-		// Pause
+		/* Pause */
 		SetKeyboard( SDLK_PAUSE, KEY_DOWN );
 	}
 	else if( intButtonL & intButtonSel ) {
-		fpscounter ^= 1;    // Turn On FPS Counter
+		fpscounter ^= 1;    /* Turn On FPS Counter */
 	}
 	else if( intButtonL & intButtonSrt ) {
 		Screenshot();
 	}
 	else if( intButtonSel & !intButtonSrt ) {
-		// Escape
+		/* Escape */
 		SetKeyboard( SDLK_ESCAPE, KEY_DOWN );
 	}
 	else if( !intButtonSel & intButtonSrt ) {
-		// Enter
+		/* Enter */
 		SetKeyboard( SDLK_RETURN, KEY_DOWN );
 	}
 
 	if( intButtonX   ) {
-		// Shoot
+		/* Shoot */
 		SetKeyboard( SDLK_LCTRL,  KEY_DOWN );
 	}
 	if( intButtonY   ) {
-		// Yes
+		/* Yes */
 		SetKeyboard( SDLK_y,      KEY_DOWN );
 
 		if( gamestate.chosenweapon == gamestate.bestweapon )
@@ -194,13 +194,13 @@ void GP2X_ButtonDown( int button )
 		}
 	}
 	if( intButtonA   ) {
-		// Open
+		/* Open */
 		SetKeyboard( SDLK_SPACE,  KEY_DOWN );
 	}
 	if( intButtonB   ) {
-		// No
+		/* No */
 		SetKeyboard( SDLK_n,      KEY_DOWN );
-		// Run
+		/* Run */
 		SetKeyboard( SDLK_LSHIFT, KEY_DOWN );
 	}
 }
@@ -310,7 +310,7 @@ void Screenshot( void )
 
 void SetKeyboard( unsigned int key, int press )
 {
-	// press = 1 = down, press = 0 = up
+	/* press = 1 = down, press = 0 = up */
 	if( press )
 	{
 		LastScan = key;

@@ -1,4 +1,4 @@
-// WL_PLANE.C
+/* WL_PLANE.C */
 
 #include "version.h"
 
@@ -53,16 +53,16 @@ void DrawSpan (short x1, short x2, short height)
     count = x2 - x1;
 
     if (!count)
-        return;                                                 // nothing to draw
+        return;                                                 /* nothing to draw */
 
 #ifdef USE_SHADING
     shade = shadetable[GetShade(height << 3)];
 #endif
     dest = vbuf + ylookup[centery - 1 - height] + x1;
-    rowofs = ylookup[(height << 1) + 1];                        // toprow to bottomrow delta
+    rowofs = ylookup[(height << 1) + 1];                        /* toprow to bottomrow delta */
 
     prestep = centerx - x1 + 1;
-    basedist = FixedDiv(scale,height + 1) >> 1;                 // distance to row projection
+    basedist = FixedDiv(scale,height + 1) >> 1;                 /* distance to row projection */
     stepscale = basedist / scale;
 
     xstep = FixedMul(stepscale,viewsin);
@@ -71,30 +71,30 @@ void DrawSpan (short x1, short x2, short height)
     xfrac = (viewx + FixedMul(basedist,viewcos)) - (xstep * prestep);
     yfrac = -(viewy - FixedMul(basedist,viewsin)) - (ystep * prestep);
 
-//
-// draw two spans simultaneously
-//
+/*
+** draw two spans simultaneously
+*/
     lastceilingpage = lastfloorpage = -1;
     lasttilex = lasttiley = 0;
 
-    //
-    // Beware - This loop is SLOW, and WILL cause framedrops on slower machines and/or on higher resolutions.
-    // I can't stress it enough: this is one of the worst loops in history! No amount of optimisation will
-    // change that! This loop SUCKS!
-    //
-    // Someday flats rendering will be re-written, but until then, YOU HAVE BEEN WARNED.
-    //
+    /*
+    ** Beware - This loop is SLOW, and WILL cause framedrops on slower machines and/or on higher resolutions.
+    ** I can't stress it enough: this is one of the worst loops in history! No amount of optimisation will
+    ** change that! This loop SUCKS!
+    **
+    ** Someday flats rendering will be re-written, but until then, YOU HAVE BEEN WARNED.
+    */
     while (count--)
     {
-        //
-        // get tile coords of texture
-        //
+        /*
+        ** get tile coords of texture
+        */
         tilex = (xfrac >> TILESHIFT) & (mapwidth - 1);
         tiley = ~(yfrac >> TILESHIFT) & (mapheight - 1);
 
-        //
-        // get floor & ceiling textures if it's a new tile
-        //
+        /*
+        ** get floor & ceiling textures if it's a new tile
+        */
         if (lasttilex != tilex || lasttiley != tiley)
         {
             lasttilex = tilex;
@@ -112,9 +112,9 @@ void DrawSpan (short x1, short x2, short height)
         {
             texture = ((xfrac >> FIXED2TEXSHIFT) & TEXTUREMASK) + (~(yfrac >> (FIXED2TEXSHIFT + TEXTURESHIFT)) & (TEXTURESIZE - 1));
 
-            //
-            // write ceiling pixel
-            //
+            /*
+            ** write ceiling pixel
+            */
             if (ceilingpage)
             {
                 if (lastceilingpage != ceilingpage)
@@ -129,9 +129,9 @@ void DrawSpan (short x1, short x2, short height)
 #endif
             }
 
-            //
-            // write floor pixel
-            //
+            /*
+            ** write floor pixel
+            */
             if (floorpage)
             {
                 if (lastfloorpage != floorpage)
@@ -182,16 +182,16 @@ void DrawSpan (short x1, short x2, short height)
     count = x2 - x1;
 
     if (!count)
-        return;                                         // nothing to draw
+        return;                                         /* nothing to draw */
 
 #ifdef USE_SHADING
     shade = shadetable[GetShade(height << 3)];
 #endif
     dest = vbuf + ylookup[centery - 1 - height] + x1;
-    rowofs = ylookup[(height << 1) + 1];                // toprow to bottomrow delta
+    rowofs = ylookup[(height << 1) + 1];                /* toprow to bottomrow delta */
 
     prestep = centerx - x1 + 1;
-    basedist = FixedDiv(scale,height + 1) >> 1;         // distance to row projection
+    basedist = FixedDiv(scale,height + 1) >> 1;         /* distance to row projection */
     stepscale = basedist / scale;
 
     xstep = FixedMul(stepscale,viewsin);
@@ -200,9 +200,9 @@ void DrawSpan (short x1, short x2, short height)
     xfrac = (viewx + FixedMul(basedist,viewcos)) - (xstep * prestep);
     yfrac = -(viewy - FixedMul(basedist,viewsin)) - (ystep * prestep);
 
-//
-// draw two spans simultaneously
-//
+/*
+** draw two spans simultaneously
+*/
 	while (count--)
 	{
 		texture = ((xfrac >> FIXED2TEXSHIFT) & TEXTUREMASK) + (~(yfrac >> (FIXED2TEXSHIFT + TEXTURESHIFT)) & (TEXTURESIZE - 1));
@@ -234,9 +234,9 @@ void DrawPlanes (void)
     int     x,y;
     short	height;
 
-//
-// loop over all columns
-//
+/*
+** loop over all columns
+*/
     y = centery;
 
     for (x = 0; x < viewwidth; x++)
@@ -245,17 +245,17 @@ void DrawPlanes (void)
 
         if (height < y)
         {
-            //
-            // more starts
-            //
+            /*
+            ** more starts
+            */
             while (y > height)
                 spanstart[--y] = x;
         }
         else if (height > y)
         {
-            //
-            // draw clipped spans
-            //
+            /*
+            ** draw clipped spans
+            */
             if (height > centery)
                 height = centery;
 
@@ -269,9 +269,9 @@ void DrawPlanes (void)
         }
     }
 
-    //
-    // draw spans
-    //
+    /*
+    ** draw spans
+    */
     height = centery;
 
     while (y < height)

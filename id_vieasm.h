@@ -6,11 +6,11 @@ BY GERARD 'ALUMIUN' WATSON
 #define ID_VIEASM_H_
 #include "wl_def.h"
 #ifdef VIEASM
-#include <SDL_mixer.h> // Duh.
-#include <string.h>    // For memset
-#include <stdio.h>     // For printf
+#include <SDL_mixer.h> /* Duh */.
+#include <string.h>    /* For memset */
+#include <stdio.h>     /* For printf */
 
-//#define VERBOSE        // Verbose mode?
+/* #define VERBOSE */        /* Verbose mode? */
 
 typedef struct
 {
@@ -18,8 +18,10 @@ typedef struct
     char* name;
 } sample;
 
-// These enums are now treated differently. Because there are no seperate devices,
-// any value other than sxm_Off will turn the device on, and SDSMode is no longer used.
+/* 
+** These enums are now treated differently. Because there are no seperate devices,
+** any value other than sxm_Off will turn the device on, and SDSMode is no longer used.
+*/
 typedef enum
 {
     sdm_Off,
@@ -65,7 +67,7 @@ typedef struct
         mWave, cWave,
         nConn,
 
-        // These are only for Muse - these bytes are really unused
+        /* These are only for Muse - these bytes are really unused */
         voice,
         mode;
     unsigned char    unused[3];
@@ -97,49 +99,49 @@ extern  boolean         AdLibPresent, SoundBlasterPresent, SBProPresent, SoundPo
 
 /* defines for management */
 
-#define ASM_ABSMAXCHANNELS 256              // Absolute maximum amount for maxchan in ASM_Open
+#define ASM_ABSMAXCHANNELS 256              /* Absolute maximum amount for maxchan in ASM_Open */
 
 /* #defined functions */
 
-// ASM_Start
-// Calls ASM_Open with parameters and good defaults
-// Has a max channel number of half of ASM_ABSMAXCHANNELS (128 by default)
+/* ASM_Start */
+/* Calls ASM_Open with parameters and good defaults */
+/* Has a max channel number of half of ASM_ABSMAXCHANNELS (128 by default) */
 
 #define ASM_Start(vol_sound, vol_music) ASM_Open(22050, 16, ASM_ABSMAXCHANNELS/2, 2048, vol_sound, vol_music)
 
-// ASM_HaltMusic
-// Ends music and frees it
+/* ASM_HaltMusic */
+/* Ends music and frees it */
 
 #define ASM_HaltMusic() Mix_HaltMusic()
 
-// ASM_PauseSound
-// Pauses all sound channels
+/* ASM_PauseSound */
+/* Pauses all sound channels */
 
 #define ASM_PauseSound() Mix_Pause(-1)
 
-// ASM_ResumeSound
-// Resumes all sound channels
+/* ASM_ResumeSound */
+/* Resumes all sound channels */
 
 #define ASM_ResumeSound() Mix_Resume(-1)
 
-// ASM_PauseMusic
-// Pauses music
+/* ASM_PauseMusic */
+/* Pauses music */
 
 #define ASM_PauseMusic() Mix_PauseMusic()
 
-// ASM_ResumeMusic
-// Resumes music
+/* ASM_ResumeMusic */
+/* Resumes music */
 
 #define ASM_ResumeMusic() Mix_ResumeMusic()
 
-// ASM_PlayDirect
-// Plays a sound directly at player location
+/* ASM_PlayDirect */
+/* Plays a sound directly at player location */
 
 #define ASM_PlayDirect(sample, ambient) ASM_PlaySound(sample, 0, 0, ambient)
 
-// ASM_AbortIfClosed
-// Checks if the device is open, returns if it isn't
-// Cunning lack of semi-colon means return values can be used appropriately :)
+/* ASM_AbortIfClosed */
+/* Checks if the device is open, returns if it isn't */
+/* Cunning lack of semi-colon means return values can be used appropriately :) */
 
 #ifdef VERBOSE
 #define ASM_AbortIfClosed if(!ASM_IsOpen()) printf("Not open.\n"); if(!ASM_IsOpen()) return
@@ -147,8 +149,8 @@ extern  boolean         AdLibPresent, SoundBlasterPresent, SBProPresent, SoundPo
 #define ASM_AbortIfClosed if(!ASM_IsOpen()) return
 #endif
 
-// ASM_Step
-// Check if the music switching needs to be checked
+/* ASM_Step */
+/* Check if the music switching needs to be checked */
 
 #define ASM_Step() ASM_AbortIfClosed; if (switching) ASM_SwitchStep()
 
@@ -180,9 +182,9 @@ extern void ASM_ChannelDone(int channel);
 extern int ASM_CurChannels(void);
 
 
-#define NUMAMBIENTS     ASM_ABSMAXCHANNELS  // Number of ambient sound slots
+#define NUMAMBIENTS     ASM_ABSMAXCHANNELS  /* Number of ambient sound slots */
 
-#define TickBase        70      // 70Hz per tick - used as a base for timer 0
+#define TickBase        70      /* 70Hz per tick - used as a base for timer 0 */
 
 #define GetTimeCount()  ((WL_GetTicks()*TickBase)/1000)
 
@@ -200,32 +202,32 @@ wlinline void Delay(int wolfticks);
 #define SD_GetVolume(snd, mus) ASM_ReturnVolume(snd, mus)
 #define SD_Reverse(reverse) ASM_ReverseStereo(reverse)
 
-// Functions
-extern  void    SD_Startup(void);                                           // DONE
-extern  void    SD_Shutdown(void);                                          // DONE
+/* Functions */
+extern  void    SD_Startup(void);                                           /* DONE */
+extern  void    SD_Shutdown(void);                                          /* DONE */
 
-extern  void    SD_PositionSound(int leftvol, int rightvol);                // DONE, basically the same
-extern  unsigned char    SD_PlaySound(soundnames sound);                             // DONE, just calls SD_PlayDigitized
-extern  void    SD_SetPosition(int channel, int leftpos, int rightpos);     // DONE, basically the same
-extern  void    SD_StopSound(void);                                         // DONE, just calls ASM_HaltSound()
+extern  void    SD_PositionSound(int leftvol, int rightvol);                /* DONE, basically the same */
+extern  unsigned char    SD_PlaySound(soundnames sound);                             /* DONE, just calls SD_PlayDigitized */
+extern  void    SD_SetPosition(int channel, int leftpos, int rightpos);     /* DONE, basically the same */
+extern  void    SD_StopSound(void);                                         /* DONE, just calls ASM_HaltSound() */
 
-extern  void    SD_StartMusic(int chunk);                                   // DONE
-extern  void    SD_ContinueMusic(int chunk, int startoffs);                 // DONE, but always starts at beginning (Sorry WSJ :p)
-extern  void    SD_MusicOn(void);                                           // DONE, just resumes
-extern void SD_FadeOutMusic(int fade);                                  // DONE
-extern  int     SD_MusicOff(void);                                          // DONE, just pauses
+extern  void    SD_StartMusic(int chunk);                                   /* DONE */
+extern  void    SD_ContinueMusic(int chunk, int startoffs);                 /* DONE, but always starts at beginning (Sorry WSJ :p) */
+extern  void    SD_MusicOn(void);                                           /* DONE, just resumes */
+extern void SD_FadeOutMusic(int fade);                                  /* DONE */
+extern  int     SD_MusicOff(void);                                          /* DONE, just pauses */
 
-extern  boolean    SD_MusicPlaying(void);                                      // DONE
-extern  boolean    SD_SetSoundMode(SDMode mode);                               // DONE
-extern  boolean    SD_SetMusicMode(SMMode mode);                               // DONE
+extern  boolean    SD_MusicPlaying(void);                                      /* DONE */
+extern  boolean    SD_SetSoundMode(SDMode mode);                               /* DONE */
+extern  boolean    SD_SetMusicMode(SMMode mode);                               /* DONE */
 extern void SD_SetDigiDevice(SDSMode mode);
-extern  int     SD_PlayDigitized(unsigned short which, int leftpos, int rightpos, boolean amb);   // DONE
+extern  int     SD_PlayDigitized(unsigned short which, int leftpos, int rightpos, boolean amb);   /* DONE */
 extern  void    CA_LoadAllSounds(void);
 
-// Ambient sound prototypes
+/* Ambient sound prototypes */
 
 extern  int     SD_AmbientSound(void);
 extern  void    SD_StopAmbient(int ambindex);
 
 #endif 
-#endif // _ID_VIEASM_H_
+#endif /* _ID_VIEASM_H_ */

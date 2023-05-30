@@ -49,6 +49,8 @@
 
 #ifdef _MSC_VER
 #define inline __inline
+#else
+#define inline
 #endif
 
 #ifdef __cplusplus

@@ -1,4 +1,4 @@
-// WL_UTILS.H
+/* WL_UTILS.H */
 
 #ifndef __WL_UTILS_H_
 #define __WL_UTILS_H_
@@ -42,4 +42,4 @@ extern void* memset4_fast(void*, long, size_t);
 short atan2fix(fixed x, fixed y);
 #endif
 
-#endif //__WL_UTILS_H_
+#endif /* __WL_UTILS_H_ */

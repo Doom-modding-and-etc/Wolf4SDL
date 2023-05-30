@@ -46,14 +46,6 @@
 #define OPL_SIN(x) ((signed int)(sin((x) * M_PI / 512.0) * 65536.0))
 #endif
 
-#ifdef USE_INLINE_C99
-#ifdef _MSC_VER
-#define inline __inline
-#else
-#define inline 
-#endif
-#endif
-
 /* Quirk: Some FM channels are output one sample later on the left side than the right. */
 #ifndef OPL_QUIRK_CHANNELSAMPLEDELAY
 #define OPL_QUIRK_CHANNELSAMPLEDELAY (!OPL_ENABLE_STEREOEXT)
@@ -560,7 +552,7 @@ static void OPL3_PhaseGenerate(opl3_slot *slot)
     opl3_chip *chip;
     unsigned short f_num;
     unsigned int basefreq;
-    unsigned char rm_xor, n_bit;
+    unsigned char n_bit;
     unsigned int noise;
     unsigned short phase;
 
@@ -614,7 +606,7 @@ static void OPL3_PhaseGenerate(opl3_slot *slot)
     }
     if (chip->rhy & 0x20)
     {
-        rm_xor = (chip->rm_hh_bit2 ^ chip->rm_hh_bit7)
+        unsigned char rm_xor = (chip->rm_hh_bit2 ^ chip->rm_hh_bit7)
                | (chip->rm_hh_bit3 ^ chip->rm_tc_bit5)
                | (chip->rm_tc_bit3 ^ chip->rm_tc_bit5);
         switch (slot->slot_num)
@@ -999,7 +991,7 @@ static void OPL3_ChannelWriteC0(opl3_channel *channel, unsigned char data)
     else
     {
         channel->cha = channel->chb = (unsigned short)~0;
-        // TODO: Verify on real chip if DAC2 output is disabled in compat mode
+        /* TODO: Verify on real chip if DAC2 output is disabled in compat mode */
         channel->chc = channel->chd = 0;
     }
 #if OPL_ENABLE_STEREOEXT
@@ -1073,10 +1065,10 @@ static void OPL3_ChannelKeyOff(opl3_channel *channel)
 static void OPL3_ChannelSet4Op(opl3_chip *chip, unsigned char data)
 {
     unsigned char bit;
-    unsigned char chnum;
     for (bit = 0; bit < 6; bit++)
     {
-        chnum = bit;
+        unsigned char chnum;
+		chnum = bit;
         if (bit >= 3)
         {
             chnum += 9 - 3;

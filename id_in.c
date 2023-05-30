@@ -1,3 +1,4 @@
+/*
 //
 //	ID Engine
 //	ID_IN.c - Input Manager
@@ -16,6 +17,7 @@
 //		LastASCII - The ASCII value of the last key pressed
 //	DEBUG - there are more globals
 //
+*/
 
 #include "wl_def.h"
 #ifndef SEGA_SATURN
@@ -34,9 +36,9 @@
 */
 
 #ifndef SEGA_SATURN
-//
-// configuration variables
-//
+/*
+** configuration variables
+*/
 boolean MousePresent;
 boolean forcegrabmouse;
 
@@ -44,23 +46,23 @@ volatile boolean KeyboardState[129];
 volatile int WheelPos=0;
 #endif
 
-// 	Global variables
+/* 	Global variables  */
 volatile boolean	Paused;
 volatile char		LastASCII;
 volatile ScanCode	LastScan;
 
-//KeyboardDef	KbdDefs = {0x1d,0x38,0x47,0x48,0x49,0x4b,0x4d,0x4f,0x50,0x51};
+/* KeyboardDef	KbdDefs = {0x1d,0x38,0x47,0x48,0x49,0x4b,0x4d,0x4f,0x50,0x51}; */
 static KeyboardDef KbdDefs = {
-    sc_Control,             // button0
-    sc_Alt,                 // button1
-    sc_Home,                // upleft
-    sc_UpArrow,             // up
-    sc_PgUp,                // upright
-    sc_LeftArrow,           // left
-    sc_RightArrow,          // right
-    sc_End,                 // downleft
-    sc_DownArrow,           // down
-    sc_PgDn                 // downright
+    sc_Control,             /* button0 */
+    sc_Alt,                 /* button1 */
+    sc_Home,                /* upleft  */
+    sc_UpArrow,             /* up      */
+    sc_PgUp,                /* upright */
+    sc_LeftArrow,           /* left    */
+    sc_RightArrow,          /* right   */
+    sc_End,                 /* downleft */
+    sc_DownArrow,           /* down    */
+    sc_PgDn                 /* downright */
 };
 
 static SDL_Joystick* Joystick;
@@ -81,47 +83,49 @@ boolean fullscreen = true;
                     LOCAL VARIABLES
 =============================================================================
 */
-unsigned char        ASCIINames[] =		// Unshifted ASCII for scan codes       // TODO: keypad
+unsigned char        ASCIINames[] =		/* Unshifted ASCII for scan codes */       /* TODO: keypad */
 {
-    //	 0   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F
-        0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,8  ,9  ,0  ,0  ,0  ,13 ,0  ,0  ,	// 0
-        0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,27 ,0  ,0  ,0  ,	// 1
-        ' ',0  ,0  ,0  ,0  ,0  ,0  ,39 ,0  ,0  ,'*','+',',','-','.','/',	// 2
-        '0','1','2','3','4','5','6','7','8','9',0  ,';',0  ,'=',0  ,0  ,	// 3
-        '`','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o',	// 4
-        'p','q','r','s','t','u','v','w','x','y','z','[',92 ,']',0  ,0  ,	// 5
-        0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,	// 6
-        0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0		// 7
+    /*	 0   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F    */
+        0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,8  ,9  ,0  ,0  ,0  ,13 ,0  ,0  ,	/* 0 */
+        0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,27 ,0  ,0  ,0  ,	/* 1 */
+        ' ',0  ,0  ,0  ,0  ,0  ,0  ,39 ,0  ,0  ,'*','+',',','-','.','/',	/* 2 */
+        '0','1','2','3','4','5','6','7','8','9',0  ,';',0  ,'=',0  ,0  ,	/* 3 */
+        '`','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o',	/* 4 */
+        'p','q','r','s','t','u','v','w','x','y','z','[',92 ,']',0  ,0  ,	/* 5 */
+        0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,	/* 6 */
+        0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0		/* 7 */
 };
-unsigned char ShiftNames[] =		// Shifted ASCII for scan codes
+
+unsigned char ShiftNames[] =		/* Shifted ASCII for scan codes */
 {
-    //	 0   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F
-        0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,8  ,9  ,0  ,0  ,0  ,13 ,0  ,0  ,	// 0
-        0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,27 ,0  ,0  ,0  ,	// 1
-        ' ',0  ,0  ,0  ,0  ,0  ,0  ,34 ,0  ,0  ,'*','+','<','_','>','?',	// 2
-        ')','!','@','#','$','%','^','&','*','(',0  ,':',0  ,'+',0  ,0  ,	// 3
-        '~','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O',	// 4
-        'P','Q','R','S','T','U','V','W','X','Y','Z','{','|','}',0  ,0  ,	// 5
-        0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,	// 6
-        0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0		// 7
+    /*	0   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F  */
+        0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,8  ,9  ,0  ,0  ,0  ,13 ,0  ,0  ,	/* 0 */
+        0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,27 ,0  ,0  ,0  ,	/* 1 */
+        ' ',0  ,0  ,0  ,0  ,0  ,0  ,34 ,0  ,0  ,'*','+','<','_','>','?',	/* 2 */
+        ')','!','@','#','$','%','^','&','*','(',0  ,':',0  ,'+',0  ,0  ,	/* 3 */
+        '~','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O',	/* 4 */
+        'P','Q','R','S','T','U','V','W','X','Y','Z','{','|','}',0  ,0  ,	/* 5 */
+        0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,	/* 6 */
+        0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0		/* 7 */
 };
-unsigned char SpecialNames[] =	// ASCII for 0xe0 prefixed codes
+
+unsigned char SpecialNames[] =	/* ASCII for 0xe0 prefixed codes */
 {
-    //	 0   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F
-        0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,	// 0
-        0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,13 ,0  ,0  ,0  ,	// 1
-        0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,	// 2
-        0  ,0  ,0  ,0  ,0  ,'/',0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,	// 3
-        0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,	// 4
-        0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,	// 5
-        0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,	// 6
-        0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0   	// 7
+    /*	0   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F   */
+        0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,	/* 0 */
+        0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,13 ,0  ,0  ,0  ,	/* 1 */
+        0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,	/* 2 */
+        0  ,0  ,0  ,0  ,0  ,'/',0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,	/* 3 */
+        0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,	/* 4 */
+        0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,	/* 5 */
+        0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,	/* 6 */
+        0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0   	/* 7 */
 };
 #endif
 
 static	boolean		IN_Started;
 
-static	Direction	DirTable[] =		// Quick lookup for total direction
+static	Direction	DirTable[] =		/* Quick lookup for total direction */
 {
     dir_NorthWest,	dir_North,	dir_NorthEast,
     dir_West,		dir_None,	dir_East,
@@ -281,12 +285,14 @@ int KeyboardLookup(int key)
 }
 
 #ifndef SEGA_SATURN
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //	INL_GetMouseButtons() - Gets the status of the mouse buttons from the
 //		mouse driver
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
 static int
 INL_GetMouseButtons(void)
 {
@@ -300,12 +306,14 @@ INL_GetMouseButtons(void)
     return buttons;
 }
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //	IN_GetJoyDelta() - Returns the relative movement of the specified
 //		joystick (from +/-127)
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
 void IN_GetJoyDelta(int* dx, int* dy)
 {
 	int x;
@@ -388,15 +396,20 @@ void IN_GetJoyDelta2(int* dx, int* dy)
     *dy = y;
 }
 #endif
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //	IN_GetJoyFineDelta() - Returns the relative movement of the specified
 //		joystick without dividing the results by 256 (from +/-127)
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
 void IN_GetJoyFineDelta(int* dx, int* dy)
 {
 	int x, y;
+#if defined(HAKCHI)
+    int bt;
+#endif
     if (!Joystick)
     {
         *dx = 0;
@@ -408,7 +421,7 @@ void IN_GetJoyFineDelta(int* dx, int* dy)
     x = SDL_JoystickGetAxis(Joystick, 0);
     y = SDL_JoystickGetAxis(Joystick, 1);
 #if defined(HAKCHI)
-    int bt=IN_JoyButtons();
+    bt=IN_JoyButtons();
     if(bt & (1<<12))
         x += 127;
     else if(bt & (1<<11))
@@ -528,10 +541,10 @@ static void processEvent(SDL_Event* event)
 	int intLastScan;
     switch (event->type)
     {
-        // exit if the window is closed
+        /* exit if the window is closed */
     case SDL_QUIT:
         Quit(NULL);
-
+        /* fall through */
     case SDL_MOUSEBUTTONDOWN:
     {
         if (event->button.button == 4)
@@ -546,7 +559,7 @@ static void processEvent(SDL_Event* event)
     }
     break;
 
-        // check for keypresses
+        /* check for keypresses */
     case SDL_KEYDOWN:
     {
         if (ToggleFullScreenKeyShortcut(&event->key.keysym))
@@ -596,7 +609,7 @@ static void processEvent(SDL_Event* event)
 
         sym = LastScan;
         if (sym >= 'a' && sym <= 'z')
-            sym -= 32;  // convert to uppercase
+            sym -= 32;  /* convert to uppercase */
 
         if (mod & (KMOD_SHIFT | KMOD_CAPS))
         {
@@ -634,11 +647,13 @@ static void processEvent(SDL_Event* event)
                 case SDLK_KP_4: key = SDLK_LEFT; break;
                 case SDLK_KP_6: key = SDLK_RIGHT; break;
                 case SDLK_KP_8: key = SDLK_UP; break;
+                default:
+                    break;
+                /* fall through */
                 }
             }
         }
-
-        KeyboardSet(key, 0);
+        KeyboardSet(key, 0);        
     }
 
 #if defined(GP2X)
@@ -653,7 +668,7 @@ static void processEvent(SDL_Event* event)
 
 #if SDL_MAJOR_VERSION == 2
 
-        // check for game controller events
+        /* check for game controller events */
     case SDL_CONTROLLERDEVICEADDED: {
         if (!GameController)
         {
@@ -677,7 +692,7 @@ static void processEvent(SDL_Event* event)
     case SDL_CONTROLLERBUTTONUP:
         if (GameController)
         {
-            GameControllerButtons[event->cbutton.button] = (boolean)event->cbutton.state == SDL_PRESSED;
+            GameControllerButtons[event->cbutton.button] = event->cbutton.state == SDL_PRESSED;
         }
         break;
     case SDL_CONTROLLERAXISMOTION:
@@ -697,7 +712,7 @@ static void processEvent(SDL_Event* event)
             if (event->caxis.axis == SDL_CONTROLLER_AXIS_TRIGGERRIGHT)
                 GameControllerButtons[bt_RightShoulder] = event->caxis.value == 32767;
         }
-        break;
+        break;    
 #endif
     }
 }
@@ -744,12 +759,13 @@ void IN_ProcessEvents()
 #endif
 }
 
-
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //	IN_Startup() - Starts up the Input Mgr
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
 void
 IN_Startup(void)
 {
@@ -766,7 +782,7 @@ IN_Startup(void)
         if (Joystick)
         {
             JoyNumButtons = SDL_JoystickNumButtons(Joystick);
-            if (JoyNumButtons > 32) JoyNumButtons = 32;      // only up to 32 buttons are supported
+            if (JoyNumButtons > 32) JoyNumButtons = 32;      /* only up to 32 buttons are supported */
             JoyNumHats = SDL_JoystickNumHats(Joystick);
             if (param_joystickhat < -1 || param_joystickhat >= JoyNumHats)
                 Quit("The joystickhat param must be between 0 and %i!", JoyNumHats - 1);
@@ -779,7 +795,7 @@ IN_Startup(void)
             {
                 JoyNumButtons = SDL_JoystickNumButtons(Joystick);
                 if (JoyNumButtons > 32)
-                    JoyNumButtons = 32; // only up to 32 buttons are supported
+                    JoyNumButtons = 32; /* only up to 32 buttons are supported */
                 JoyNumHats = SDL_JoystickNumHats(Joystick);
                 if (param_joystickhat < -1 || param_joystickhat >= JoyNumHats)
                     Quit("The joystickhat param must be between 0 and %i!", JoyNumHats - 1);
@@ -800,7 +816,7 @@ IN_Startup(void)
 #endif
     }
 
-    // I didn't find a way to ask libSDL whether a mouse is present, yet...
+    /* I didn't find a way to ask libSDL whether a mouse is present, yet... */
 #if defined(GP2X)
     MousePresent = false;
 #elif defined(_arch_dreamcast)
@@ -812,11 +828,13 @@ IN_Startup(void)
     IN_Started = true;
 }
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //	IN_Shutdown() - Shuts down the Input Mgr
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
 #ifndef SEGA_SATURN
 void
 IN_Shutdown(void)
@@ -824,10 +842,10 @@ IN_Shutdown(void)
     if (!IN_Started)
         return;
 
-#if SDL_MAJOR_VERSION == 1
+
     if (Joystick)
         SDL_JoystickClose(Joystick);
-#elif SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 2
     if (GameController)
         SDL_GameControllerClose(GameController);
 #endif
@@ -835,11 +853,13 @@ IN_Shutdown(void)
 }
 #endif
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //	IN_ClearKeysDown() - Clears the keyboard array
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
 void
 IN_ClearKeysDown(void)
 {
@@ -850,13 +870,14 @@ IN_ClearKeysDown(void)
     memset((void*)KeyboardState, 0, sizeof(KeyboardState));
 }
 
-
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //	IN_ReadControl() - Reads the device associated with the specified
 //		player and fills in the control info struct
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
 void
 IN_ReadControl(ControlInfo* info)
 {
@@ -895,7 +916,7 @@ IN_ReadControl(ControlInfo* info)
         buttons += 1 << 1;
 
 #if SDL_MAJOR_VERSION == 2
-    // read input from the game controller
+    /* read input from the game controller */
     if (GameControllerButtons[bt_DpadUp])
         my = motion_Up;
     else if (GameControllerButtons[bt_DpadDown])
@@ -943,12 +964,14 @@ IN_ReadControl(ControlInfo* info)
     info->dir = DirTable[((my + 1) * 3) + (mx + 1)];
 }
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //	IN_WaitForKey() - Waits for a scan code, then clears LastScan and
 //		returns the scan code
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
 #ifndef SEGA_SATURN
 ScanCode
 IN_WaitForKey(void)
@@ -961,12 +984,14 @@ IN_WaitForKey(void)
     return(result);
 }
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //	IN_WaitForASCII() - Waits for an ASCII char, then clears LastASCII and
 //		returns the ASCII value
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
 char
 IN_WaitForASCII(void)
 {
@@ -978,13 +1003,14 @@ IN_WaitForASCII(void)
     return(result);
 }
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //	IN_Ack() - waits for a button or key press.  If a button is down, upon
 // calling, it must be released for it to be recognized
 //
 ///////////////////////////////////////////////////////////////////////////
-
+*/
 boolean	btnstate[NUMBUTTONS];
 #endif
 void IN_StartAck(void)
@@ -992,9 +1018,9 @@ void IN_StartAck(void)
     int i;
 	int buttons;
     IN_ProcessEvents();
-    //
-    // get initial state of everything
-    //
+    /*
+    ** get initial state of everything
+    */
     IN_ClearKeysDown();
 #ifndef SEGA_SATURN
 #if SDL_MAJOR_VERSION == 2
@@ -1022,9 +1048,9 @@ boolean IN_CheckAck(void)
 #endif
 	int buttons;
     IN_ProcessEvents();
-    //
-    // see if something has been pressed
-    //
+    /*
+    ** see if something has been pressed
+    */
     if (LastScan)
         return true;
 #ifndef SEGA_SATURN
@@ -1047,7 +1073,7 @@ boolean IN_CheckAck(void)
         {
             if (!btnstate[i])
             {
-                // Wait until button has been released
+                /* Wait until button has been released */
                 do
                 {
                     IN_WaitAndProcessEvents();
@@ -1078,7 +1104,7 @@ void IN_Ack(void)
     } while (!IN_CheckAck());
 }
 
-
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //	IN_UserInput() - Waits for the specified delay time (in ticks) or the
@@ -1087,6 +1113,7 @@ void IN_Ack(void)
 //		button up.
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
 boolean IN_UserInput(size_t delay)
 {
     size_t	lasttime;
@@ -1103,7 +1130,7 @@ boolean IN_UserInput(size_t delay)
     return(false);
 }
 
-//===========================================================================
+/*===========================================================================*/
 #ifndef SEGA_SATURN
 /*
 ===================

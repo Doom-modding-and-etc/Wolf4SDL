@@ -1,9 +1,9 @@
-//
+/*
 //	ID Engine
 //	ID_US.h - Header file for the User Manager
 //	v1.0d1
 //	By Jason Blochowiak
-//
+*/
 
 #ifndef	__ID_US_H_
 #define	__ID_US_H_
@@ -11,7 +11,7 @@
 #ifdef	__DEBUG__
 #define	__DEBUG_UserMgr__
 #endif
-//#define	HELPTEXTLINKED
+/* #define	HELPTEXTLINKED */
 
 #define	MaxX	320
 #define	MaxY	200
@@ -24,7 +24,8 @@ typedef	struct
 {
     char	name[MaxHighName + 1];
     int	score;
-    unsigned short	completed,episode;
+    unsigned short	completed;
+    unsigned short episode;
 } HighScore;
 
 #define	MaxGameName		32
@@ -37,22 +38,22 @@ typedef	struct
     char	name[MaxGameName + 1];
 } SaveGame;
 
-#define	MaxString	128	// Maximum input string size
+#define	MaxString	128	/* Maximum input string size */
 
 typedef	struct
 {
     int	x,y,
         w,h,
         px,py;
-} WindowRec;	// Record used to save & restore screen windows
+} WindowRec;	/* Record used to save & restore screen windows */
 
-extern	boolean		ingame,		// Set by game code if a game is in progress
+extern	boolean		ingame,		/* Set by game code if a game is in progress */
 #ifndef SEGA_SATURN
-					loadedgame;	// Set if the current game was loaded
+					loadedgame;	/* Set if the current game was loaded */
 #endif
-extern	unsigned short		PrintX,PrintY;	// Current printing location in the window
-extern	unsigned short		WindowX,WindowY,// Current location of window
-					WindowW,WindowH;// Current size of window
+extern	unsigned short		PrintX,PrintY;	/* Current printing location in the window */
+extern	unsigned short		WindowX,WindowY,/* Current location of window */
+					WindowW,WindowH;/* Current size of window */
 
 extern	void		(*USL_MeasureString)(const char *, unsigned short*, unsigned short*);
 extern void			(*USL_DrawString)(const char *);

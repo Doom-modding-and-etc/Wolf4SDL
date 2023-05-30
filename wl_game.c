@@ -1,4 +1,4 @@
-// WL_GAME.C
+/* WL_GAME.C */
 #include <math.h>
 #include "wl_def.h"
 #ifndef SEGA_SATURN
@@ -14,7 +14,7 @@ short atan2fix(fixed x, fixed y);
 
 #ifdef USE_SPRITES
 unsigned int position_vram = ((SATURN_WIDTH + 64) * 64);
-//unsigned int static_items=0;
+/* unsigned int static_items=0; */
 extern unsigned char wall_buffer[(SATURN_WIDTH + 64) * 64];
 extern TEXTURE tex_spr[SPR_NULLSPRITE + SATURN_WIDTH];
 unsigned char texture_list[SPR_NULLSPRITE];
@@ -24,7 +24,7 @@ void readChunks(Sint32 fileId, unsigned int size, unsigned int* pageOffsets, uns
 unsigned char* PM_DecodeSprites2(unsigned int start, unsigned int endi, unsigned int* pageOffsets, word* pageLengths, unsigned char* ptr, int fileId);
 
 #undef atan2
-//#define atan2(a,b) slAtan(a,b)
+/* #define atan2(a,b) slAtan(a,b) */
 #define atan2(a,b) MTH_Atan(a,b)
 #endif
 
@@ -43,7 +43,7 @@ unsigned char* PM_DecodeSprites2(unsigned int start, unsigned int endi, unsigned
 
 boolean         ingame,fizzlein;
 gametype        gamestate;
-unsigned char            bordercol=VIEWCOLOR;        // color of the Change View/Ingame border
+unsigned char            bordercol=VIEWCOLOR;        /* color of the Change View/Ingame border */
 
 #ifdef SPEAR
 int             spearx,speary;
@@ -55,17 +55,17 @@ boolean         spearflag;
 int ffDataTopLeft, ffDataTopRight, ffDataBottomLeft, ffDataBottomRight;
 #endif
 
-//
-// ELEVATOR BACK MAPS - REMEMBER (-1)!!
-//
+/*
+** ELEVATOR BACK MAPS - REMEMBER (-1)!!
+*/
 int ElevatorBackTo[]={1,1,7,3,5,3};
 
 void SetupGameLevel (void);
 void DrawPlayScreen (void);
 void GameLoop (void);
-#ifdef PUSHOBJECT // Objects that can be pushed
-// Arrays for quick checking cardinal direction locations on the map
-char dx4dir[4] = { 0, 1, 0, -1 };  // dx & dy based on direction
+#ifdef PUSHOBJECT /* Objects that can be pushed */
+/* Arrays for quick checking cardinal direction locations on the map */
+char dx4dir[4] = { 0, 1, 0, -1 };  /* dx & dy based on direction */
 char dy4dir[4] = { -1, 0, 1,  0 };
 #endif
 /*
@@ -76,8 +76,8 @@ char dy4dir[4] = { -1, 0, 1,  0 };
 
 
 
-//===========================================================================
-//===========================================================================
+/* =========================================================================== */
+/* =========================================================================== */
 
 
 /*
@@ -136,22 +136,22 @@ SetSoundLoc(fixed gx,fixed gy)
     fixed   xt,yt;
     fixed     x,y;
 
-//
-// translate point to view centered coordinates
-//
+/*
+** translate point to view centered coordinates
+*/
     gx -= viewx;
     gy -= viewy;
 
-//
-// calculate newx
-//
+/*
+** calculate newx
+*/
     xt = FixedMul(gx,viewcos);
     yt = FixedMul(gy,viewsin);
     x = (xt - yt) >> TILESHIFT;
 
-//
-// calculate newy
-//
+/*
+** calculate newy
+*/
     xt = FixedMul(gx,viewsin);
     yt = FixedMul(gy,viewcos);
     y = (yt + xt) >> TILESHIFT;
@@ -249,9 +249,9 @@ static void ScanInfoPlane(void)
     unsigned short *start;
 
 #ifdef SEGA_SATURN
-    //-----------------------------------------------------------------------------------
-    unsigned char* itemmap = (unsigned char*)saturnChunk + 0x4000; // ne pas toucher
-    //-----------------------------------------------------------------------------------
+    /* ----------------------------------------------------------------------------------- */
+    unsigned char* itemmap = (unsigned char*)saturnChunk + 0x4000; /* ne pas toucher */
+    /* ----------------------------------------------------------------------------------- */
 #endif
 
     start = mapsegs[1];
@@ -328,17 +328,17 @@ static void ScanInfoPlane(void)
                 case 71:
                 case 72:
 #ifdef SPEAR
-                case 73:                        // TRUCK AND SPEAR!
+                case 73:                        /* TRUCK AND SPEAR! */
                 case 74:
-#elif defined(USE_DIR3DSPR)                     // just for the example
+#elif defined(USE_DIR3DSPR)                     /* just for the example */
                 case 73:
 #endif
                     SpawnStatic(x,y,tile-23);
                     break;
 
-//
-// P wall
-//
+/*
+** P wall
+*/
                 case 98:
 #ifndef SEGA_SATURN
                     if (!loadedgame)
@@ -354,9 +354,9 @@ static void ScanInfoPlane(void)
 #endif
 #endif
 
-//
-// guard
-//
+/*
+** guard
+*/
                 case 180:
                 case 181:
                 case 182:
@@ -364,6 +364,7 @@ static void ScanInfoPlane(void)
                     if (gamestate.difficulty<gd_hard)
                         break;
                     tile -= 36;
+                    /* fall through */
                 case 144:
                 case 145:
                 case 146:
@@ -371,6 +372,7 @@ static void ScanInfoPlane(void)
                     if (gamestate.difficulty<gd_medium)
                         break;
                     tile -= 36;
+                    /* fall through */
                 case 108:
                 case 109:
                 case 110:
@@ -386,6 +388,7 @@ static void ScanInfoPlane(void)
                     if (gamestate.difficulty<gd_hard)
                         break;
                     tile -= 36;
+                    /* fall through */
                 case 148:
                 case 149:
                 case 150:
@@ -393,6 +396,7 @@ static void ScanInfoPlane(void)
                     if (gamestate.difficulty<gd_medium)
                         break;
                     tile -= 36;
+                    /* fall through */
                 case 112:
                 case 113:
                 case 114:
@@ -403,9 +407,9 @@ static void ScanInfoPlane(void)
                 case 124:
                     SpawnDeadGuard (x,y);
                     break;
-//
-// officer
-//
+/*
+** officer
+*/
                 case 188:
                 case 189:
                 case 190:
@@ -413,6 +417,7 @@ static void ScanInfoPlane(void)
                     if (gamestate.difficulty<gd_hard)
                         break;
                     tile -= 36;
+                    /* fall through */
                 case 152:
                 case 153:
                 case 154:
@@ -420,6 +425,7 @@ static void ScanInfoPlane(void)
                     if (gamestate.difficulty<gd_medium)
                         break;
                     tile -= 36;
+                    /* fall through */
                 case 116:
                 case 117:
                 case 118:
@@ -435,6 +441,7 @@ static void ScanInfoPlane(void)
                     if (gamestate.difficulty<gd_hard)
                         break;
                     tile -= 36;
+                    /* fall through */
                 case 156:
                 case 157:
                 case 158:
@@ -442,6 +449,7 @@ static void ScanInfoPlane(void)
                     if (gamestate.difficulty<gd_medium)
                         break;
                     tile -= 36;
+                    /* fall through */
                 case 120:
                 case 121:
                 case 122:
@@ -450,9 +458,9 @@ static void ScanInfoPlane(void)
                     break;
 
 
-//
-// ss
-//
+/*
+** ss
+*/
                 case 198:
                 case 199:
                 case 200:
@@ -460,6 +468,7 @@ static void ScanInfoPlane(void)
                     if (gamestate.difficulty<gd_hard)
                         break;
                     tile -= 36;
+                    /* fall through */
                 case 162:
                 case 163:
                 case 164:
@@ -467,6 +476,7 @@ static void ScanInfoPlane(void)
                     if (gamestate.difficulty<gd_medium)
                         break;
                     tile -= 36;
+                    /* fall through */
                 case 126:
                 case 127:
                 case 128:
@@ -482,6 +492,7 @@ static void ScanInfoPlane(void)
                     if (gamestate.difficulty<gd_hard)
                         break;
                     tile -= 36;
+                    /* fall through */
                 case 166:
                 case 167:
                 case 168:
@@ -489,6 +500,7 @@ static void ScanInfoPlane(void)
                     if (gamestate.difficulty<gd_medium)
                         break;
                     tile -= 36;
+                    /* fall through */
                 case 130:
                 case 131:
                 case 132:
@@ -496,9 +508,9 @@ static void ScanInfoPlane(void)
                     SpawnPatrol(en_ss,x,y,tile-130);
                     break;
 
-//
-// dogs
-//
+/*
+** dogs
+*/
                 case 206:
                 case 207:
                 case 208:
@@ -506,6 +518,7 @@ static void ScanInfoPlane(void)
                     if (gamestate.difficulty<gd_hard)
                         break;
                     tile -= 36;
+                    /* fall through */
                 case 170:
                 case 171:
                 case 172:
@@ -513,6 +526,7 @@ static void ScanInfoPlane(void)
                     if (gamestate.difficulty<gd_medium)
                         break;
                     tile -= 36;
+                    /* fall through */
                 case 134:
                 case 135:
                 case 136:
@@ -528,6 +542,7 @@ static void ScanInfoPlane(void)
                     if (gamestate.difficulty<gd_hard)
                         break;
                     tile -= 36;
+                    /* fall through */
                 case 174:
                 case 175:
                 case 176:
@@ -535,6 +550,7 @@ static void ScanInfoPlane(void)
                     if (gamestate.difficulty<gd_medium)
                         break;
                     tile -= 36;
+                    /* fall through */
                 case 138:
                 case 139:
                 case 140:
@@ -542,9 +558,9 @@ static void ScanInfoPlane(void)
                     SpawnPatrol(en_dog,x,y,tile-138);
                     break;
 
-//
-// boss
-//
+/*
+** boss
+*/
 #ifndef SPEAR
                 case 214:
                     SpawnBoss (x,y);
@@ -589,9 +605,9 @@ static void ScanInfoPlane(void)
 
 #endif
 
-//
-// mutants
-//
+/*
+** mutants
+*/
                 case 252:
                 case 253:
                 case 254:
@@ -604,6 +620,7 @@ static void ScanInfoPlane(void)
                     if (gamestate.difficulty<gd_hard)
                         break;
                     tile -= 18;
+                    /* fall through */
                 case 234:
                 case 235:
                 case 236:
@@ -615,6 +632,7 @@ static void ScanInfoPlane(void)
                     if (gamestate.difficulty<gd_medium)
                         break;
                     tile -= 18;
+                    /* fall through */
                 case 216:
                 case 217:
                 case 218:
@@ -637,6 +655,7 @@ static void ScanInfoPlane(void)
                     if (gamestate.difficulty<gd_hard)
                         break;
                     tile -= 18;
+                    /* fall through */
                 case 238:
                 case 239:
                 case 240:
@@ -648,6 +667,7 @@ static void ScanInfoPlane(void)
                     if (gamestate.difficulty<gd_medium)
                         break;
                     tile -= 18;
+                    /* fall through */
                 case 220:
                 case 221:
                 case 222:
@@ -659,9 +679,9 @@ static void ScanInfoPlane(void)
 #endif
                     break;
 
-//
-// ghosts
-//
+/*
+** ghosts
+*/
 #ifndef SPEAR
                 case 224:
                     SpawnGhosts (en_blinky,x,y);
@@ -682,7 +702,7 @@ static void ScanInfoPlane(void)
 
 }
 
-//==========================================================================
+/* ========================================================================== */
 
 #ifdef SEGA_SATURN
 void VblIn(void);
@@ -729,9 +749,9 @@ void SetupGameLevel (void)
     else
         US_InitRndT (true);
 
-//
-// load the level
-//
+/*
+** load the level
+*/
     mapnum = gamestate.mapon+10*gamestate.episode;
 
     CA_CacheMap (mapnum);
@@ -740,10 +760,10 @@ void SetupGameLevel (void)
     mapheight = mapheaderseg[mapnum]->height;
 
 #ifdef USE_FEATUREFLAGS
-    // Temporary definition to make things clearer
+    /* Temporary definition to make things clearer */
     #define MXX MAPSIZE - 1
 
-    // Read feature flags data from map corners and overwrite corners with adjacent tiles
+    /* Read feature flags data from map corners and overwrite corners with adjacent tiles */
     ffDataTopLeft     = MAPSPOT(0,   0,   0); MAPSPOT(0,   0,   0) = MAPSPOT(1,       0,       0);
     ffDataTopRight    = MAPSPOT(MXX, 0,   0); MAPSPOT(MXX, 0,   0) = MAPSPOT(MXX,     1,       0);
     ffDataBottomRight = MAPSPOT(MXX, MXX, 0); MAPSPOT(MXX, MXX, 0) = MAPSPOT(MXX - 1, MXX,     0);
@@ -752,9 +772,9 @@ void SetupGameLevel (void)
     #undef MXX
 #endif
 
-//
-// copy the wall data to a data segment array
-//
+/*
+** copy the wall data to a data segment array
+*/
     memset (tilemap,0,sizeof(tilemap));
     memset (actorat,0,sizeof(actorat));
 #ifdef REVEALMAP
@@ -771,35 +791,38 @@ void SetupGameLevel (void)
             tile = *map++;
             if (tile< AMBUSHTILE)
             {
-                // solid wall
+                /* solid wall */
                 tilemap[x][y] = (unsigned char) tile;
                 actorat[x][y] = (objtype *)(uintptr_t) tile;
             }
             else
             {
-                // area floor
+                /* area floor */
                 tilemap[x][y] = 0;
                 actorat[x][y] = 0;
             }
         }
     }
 
-//
-// spawn doors
-//
-    InitActorList ();                       // start spawning things with a clean slate
+/*
+** spawn doors
+*/
+    InitActorList ();                       /* start spawning things with a clean slate */
     InitDoorList ();
     InitStaticList ();
 
 #if defined(SEGA_SATURN)
     char fname[13] = "VSWAP.";
-    //	Uint32 i=0;
+    /*	Uint32 i=0;  */
     unsigned char* Chunks;
     long fileSize;
-
-    strcat(fname, extension);
-
+    int i;
+    unsigned int* pageOffsets;
+    unsigned short* pageLengths;
     Sint32 fileId;
+    long pageDataSize;
+    unsigned char* itemmap; 
+    strcat(fname, extension);
 
     fileId = GFS_NameToId((char*)fname);
     fileSize = GetFileSize(fileId);
@@ -809,33 +832,33 @@ void SetupGameLevel (void)
     ChunksInFile = Chunks[0] | Chunks[1] << 8;
     PMSpriteStart = Chunks[2] | Chunks[3] << 8;
 
-    // vbt : on ne charge pas les sons !	
+    /* vbt : on ne charge pas les sons ! */
     ChunksInFile = Chunks[4] | Chunks[5] << 8;
 
-    unsigned int* pageOffsets = (unsigned int*)saturnChunk + 0x2000;
-    unsigned short* pageLengths = (unsigned short*)saturnChunk + (ChunksInFile + 1) * sizeof(int32_t);
+    pageOffsets = (unsigned int*)saturnChunk + 0x2000;
+    pageLengths = (unsigned short*)saturnChunk + (ChunksInFile + 1) * sizeof(int32_t);
 
-    for (int i = 0; i < ChunksInFile; i++)
+    for (i = 0; i < ChunksInFile; i++)
     {
         pageOffsets[i] = Chunks[6] << 0 | Chunks[7] << 8 | Chunks[8] << 16 | Chunks[9] << 24;
         Chunks += 4;
     }
 
-    for (int i = PMSpriteStart; i < ChunksInFile; i++)
+    for (i = PMSpriteStart; i < ChunksInFile; i++)
     {
         pageLengths[i - PMSpriteStart] = Chunks[6] | Chunks[7] << 8;
         Chunks += 2;
     }
 
-    //fread(pageLengths, sizeof(word), ChunksInFile, file);
-    long pageDataSize = fileSize - pageOffsets[0];
+    /* fread(pageLengths, sizeof(word), ChunksInFile, file); */
+    pageDataSize = fileSize - pageOffsets[0];
     if (pageDataSize > (unsigned int) -1)
         Quit("The page file \"%s\" is too large!", fname);
 
     pageOffsets[ChunksInFile] = fileSize;
 
-    unsigned char* itemmap = (unsigned char*)saturnChunk + 0x4000;
-    memset(itemmap, 0x00, 0x2000); // itemmap et itemmap communs, ne pas toucher � la taille du memset
+    itemmap = (unsigned char*)saturnChunk + 0x4000;
+    memset(itemmap, 0x00, 0x2000); /* itemmap et itemmap communs, ne pas toucher � la taille du memset */
 #endif
 
     map = mapsegs[0];
@@ -846,7 +869,7 @@ void SetupGameLevel (void)
             tile = *map++;
             if (tile >= DOORSTART && tile <= DOOREND)
             {
-                // door
+                /* door */
                 switch (tile)
                 {
                 case 90:
@@ -878,15 +901,15 @@ void SetupGameLevel (void)
         VL_ClearScreen(0);
 #endif
 
-//
-// spawn actors
-//
+/*
+** spawn actors
+*/
     ScanInfoPlane ();
 
 
-//
-// take out the ambush markers
-//
+/*
+** take out the ambush markers
+*/
     map = mapsegs[0];
     for (y=0;y<mapheight;y++)
     {
@@ -919,31 +942,31 @@ void SetupGameLevel (void)
             itemmap[statobjlist[i].shapenum + PMSpriteStart] = 1;
     }
     }
-    //-----------------------------------------------------------------------------------	
+    /* ----------------------------------------------------------------------------------- */
 
-    //-----------------------------------------------------------------------------------	
+    /* ----------------------------------------------------------------------------------- */
     slScrTransparent(0);
     slSynch();
     extern const void* TransList;
     memset((void*)TransList, 0x00, 0xf0 * 4 * 3);
 #else
-//
-// load floor/ceiling textures
-//
+/*
+** load floor/ceiling textures
+*/
 #if defined(USE_FLOORCEILINGTEX) && !defined(USE_MULTIFLATS)
     GetFlatTextures ();
 #endif
 
-//
-// have the caching manager load and purge stuff to make sure all marks
-// are in memory
-//
+/*
+** have the caching manager load and purge stuff to make sure all marks
+** are in memory
+*/
     CA_LoadAllSounds ();
 #endif
 }
 
 
-//==========================================================================
+/* ========================================================================== */
 
 
 /*
@@ -961,7 +984,7 @@ void DrawPlayBorderSides(void)
 	const int sh = screenHeight;
 	const int vw = viewwidth;
 	const int vh = viewheight;
-	const int px = scaleFactor; // size of one "pixel"
+	const int px = scaleFactor; /* size of one "pixel" */
 
 	const int h  = sh - px * STATUSLINES;
 	const int xl = sw / 2 - vw / 2;
@@ -971,29 +994,29 @@ void DrawPlayBorderSides(void)
 
     if(xl != 0)
     {
-        VL_BarScaledCoord (0,            0, xl - px,     h, bordercol);                 // left side
-        VL_BarScaledCoord (xl + vw + px, 0, xl - px * 2, h, bordercol);                 // right side
+        VL_BarScaledCoord (0,            0, xl - px,     h, bordercol);                 /* left side */
+        VL_BarScaledCoord (xl + vw + px, 0, xl - px * 2, h, bordercol);                 /* right side */
     }
 
     if(yl != 0)
     {
-        VL_BarScaledCoord (0, 0,            sw, yl - px, bordercol);                    // upper side
-        VL_BarScaledCoord (0, yl + vh + px, sw, yl - px, bordercol);                    // lower side
+        VL_BarScaledCoord (0, 0,            sw, yl - px, bordercol);                    /* upper side */
+        VL_BarScaledCoord (0, yl + vh + px, sw, yl - px, bordercol);                    /* lower side */
     }
 
     if(xl != 0)
     {
-        // Paint game view border lines
-        VL_BarScaledCoord (xl - px, yl - px, vw + px, px,          0);                      // upper border
-        VL_BarScaledCoord (xl,      yl + vh, vw + px, px,          bordercol - 2);          // lower border
-        VL_BarScaledCoord (xl - px, yl - px, px,      vh + px,     0);                      // left border
-        VL_BarScaledCoord (xl + vw, yl - px, px,      vh + px * 2, bordercol - 2);          // right border
-        VL_BarScaledCoord (xl - px, yl + vh, px,      px,          bordercol - 3);          // lower left highlight
+        /* Paint game view border lines */
+        VL_BarScaledCoord (xl - px, yl - px, vw + px, px,          0);                      /* upper border */
+        VL_BarScaledCoord (xl,      yl + vh, vw + px, px,          bordercol - 2);          /* lower border */
+        VL_BarScaledCoord (xl - px, yl - px, px,      vh + px,     0);                      /* left border */
+        VL_BarScaledCoord (xl + vw, yl - px, px,      vh + px * 2, bordercol - 2);          /* right border */
+        VL_BarScaledCoord (xl - px, yl + vh, px,      px,          bordercol - 3);          /* lower left highlight */
     }
     else
     {
-        // Just paint a lower border line
-        VL_BarScaledCoord (0, yl+vh, vw, px, bordercol-2);       // lower border
+        /* Just paint a lower border line */
+        VL_BarScaledCoord (0, yl+vh, vw, px, bordercol-2);       /* lower border */
     }
 }
 
@@ -1041,7 +1064,7 @@ void DrawStatusBorder (unsigned char color)
 
 void DrawPlayBorder (void)
 {
-	const int px = scaleFactor; // size of one "pixel"
+	const int px = scaleFactor; /* size of one "pixel" */
 	const int xl = screenWidth/2-viewwidth/2;
     const int yl = (screenHeight-px*STATUSLINES-viewheight)/2;
     
@@ -1090,12 +1113,12 @@ void DrawPlayBorder (void)
         slWindow(xl, yl, (xl + viewwidth) - 1, (yl + viewheight) - 1, 300, screenWidth / 2, (yl * 2 + viewheight) / 2);
 #endif
 
-        // Paint game view border lines
-        VL_BarScaledCoord(xl-px, yl-px, viewwidth+px, px, 0);                      // upper border
-        VL_BarScaledCoord(xl, yl+viewheight, viewwidth+px, px, bordercol-2);       // lower border
-        VL_BarScaledCoord(xl-px, yl-px, px, viewheight+px, 0);                     // left border
-        VL_BarScaledCoord(xl+viewwidth, yl-px, px, viewheight+2*px, bordercol-2);  // right border
-        VL_BarScaledCoord(xl-px, yl+viewheight, px, px, bordercol-3);              // lower left highlight
+        /* Paint game view border lines */
+        VL_BarScaledCoord(xl-px, yl-px, viewwidth+px, px, 0);                      /* upper border */
+        VL_BarScaledCoord(xl, yl+viewheight, viewwidth+px, px, bordercol-2);       /* lower border */
+        VL_BarScaledCoord(xl-px, yl-px, px, viewheight+px, 0);                     /* left border */
+        VL_BarScaledCoord(xl+viewwidth, yl-px, px, viewheight+2*px, bordercol-2);  /* right border */
+        VL_BarScaledCoord(xl-px, yl+viewheight, px, px, bordercol-3);              /* lower left highlight */
     }
     else
     {
@@ -1106,8 +1129,8 @@ void DrawPlayBorder (void)
 
         slWindow(0, 0, SATURN_WIDTH - 1, 239, 300, screenWidth / 2, screenHeight / 2);
 #endif
-        // Just paint a lower border line
-        VL_BarScaledCoord(0, yl+viewheight, viewwidth, px, bordercol-2);       // lower border
+        /* Just paint a lower border line */
+        VL_BarScaledCoord(0, yl+viewheight, viewwidth, px, bordercol-2);       /* lower border */
     }
 }
 
@@ -1141,7 +1164,7 @@ void DrawPlayScreen (void)
 #ifndef SEGA_SATURN
 void ShowActStatus()
 {
-    // Draw status bar without borders
+    /* Draw status bar without borders */
     unsigned char *source = grsegs[STATUSBARPIC];
     int	picnum = STATUSBARPIC - STARTPICS;
     int width = pictable[picnum].width;
@@ -1164,7 +1187,7 @@ void ShowActStatus()
 }
 
 
-//==========================================================================
+/* ========================================================================== */
 
 /*
 ==================
@@ -1186,7 +1209,7 @@ void StartDemoRecord (int levelnumber)
     lastdemoptr = demoptr+MAXDEMOSIZE;
 
     *demoptr = levelnumber;
-    demoptr += 4;                           // leave space for length
+    demoptr += 4;                           /* leave space for length */
     demorecord = true;
 }
 
@@ -1233,7 +1256,7 @@ void FinishDemoRecord (void)
     free(demobuffer);
 }
 
-//==========================================================================
+/* ========================================================================== */
 
 /*
 ==================
@@ -1313,7 +1336,7 @@ void RecordDemo (void) {return;}
 #endif
 
 
-//==========================================================================
+/* ========================================================================== */
 
 /*
 ==================
@@ -1329,9 +1352,9 @@ void PlayDemo (int demonumber)
 {
     int length;
 #ifdef DEMOSEXTERN
-// debug: load chunk
+/* debug: load chunk */
 #ifndef SPEARDEMO
-   //Wolf3s: Count better the num of demos using NUMDEMOS By wayneca.
+   /* Wolf3s: Count better the num of demos using NUMDEMOS By wayneca. */
     int dems[NUMDEMOS]={T_DEMO0,T_DEMO1,T_DEMO2,T_DEMO3};
 #else
     int dems[NUMDEMOS]={T_DEMO0};
@@ -1348,8 +1371,10 @@ void PlayDemo (int demonumber)
     gamestate.mapon = *demoptr++;
     gamestate.difficulty = gd_hard;
     length = READWORD((unsigned char *)demoptr);
-    // TODO: Seems like the original demo format supports 16 MB demos
-    //       But T_DEM00 and T_DEM01 of Wolf have a 0xd8 as third length size...
+    /* 
+    ** TODO: Seems like the original demo format supports 16 MB demos 
+    **       But T_DEM00 and T_DEM01 of Wolf have a 0xd8 as third length size...
+    */
     demoptr += 3;
     lastdemoptr = demoptr-4+length;
 
@@ -1376,7 +1401,7 @@ void PlayDemo (int demonumber)
     SD_StopDigitized ();
 }
 
-//==========================================================================
+/* ========================================================================== */
 
 /*
 ==================
@@ -1391,7 +1416,7 @@ void PlayDemo (int demonumber)
 void Died (void)
 {
     float   fangle;
-    fixed     dx,dy;
+ 
     int     iangle,curangle,clockwise,counter,change;
 
     if (screenfaded)
@@ -1400,20 +1425,21 @@ void Died (void)
         VL_FadeIn (0, 255, gamepal, 30);
     }
 
-    gamestate.weapon = (weapontype) -1;                     // take away weapon
+    gamestate.weapon = (weapontype) -1;                     /* take away weapon */
     SD_PlaySound (PLAYERDEATHSND);
 
-    //
-    // swing around to face attacker
-    //
+    /*
+    ** swing around to face attacker
+    */
     if(killerobj)
     {
+        fixed     dx, dy;
         dx = killerobj->x - player->x;
         dy = player->y - killerobj->y;
 #ifdef SEGA_SATURN
         fangle = atan2fix(dy, dx);
 #else
-        fangle = (float) atan2((float) dy, (float) dx);     // returns -pi to pi
+        fangle = (float) atan2((float) dy, (float) dx);     /* returns -pi to pi */
 #endif
         if (fangle<0)
             fangle = (float) (M_PI*2+fangle);
@@ -1445,9 +1471,9 @@ void Died (void)
 
     if (clockwise<counter)
     {
-        //
-        // rotate clockwise
-        //
+        /*
+        ** rotate clockwise
+        */
         if (curangle>iangle)
             curangle -= ANGLES;
         do
@@ -1467,9 +1493,9 @@ void Died (void)
     }
     else
     {
-        //
-        // rotate counterclockwise
-        //
+        /*
+        ** rotate counterclockwise
+        */
         if (curangle<iangle)
             curangle += ANGLES;
         do
@@ -1488,9 +1514,9 @@ void Died (void)
         } while (curangle != iangle);
     }
 
-    //
-    // fade to red
-    //
+    /*
+    ** fade to red
+    */
     FinishPaletteShifts ();
 
     if(usedoublebuffering) VL_UpdateScreen(screenBuffer);
@@ -1533,7 +1559,7 @@ void Died (void)
     }
 }
 
-//==========================================================================
+/* ========================================================================== */
 
 /*
 ===================
@@ -1554,14 +1580,15 @@ void GameLoop (void)
     clock_t start,end;
 #endif
 
-//TODO: Saturn.
-//gamestate.mapon = 8;
-//gamestate.mapon = 3;
-//gamestate.episode=3;
-//GiveWeapon (gamestate.bestweapon+2);
-//gamestate.ammo = 99;
-//gamestate.keys = 3;
-//vbt dernier niveau
+/* 
+** gamestate.mapon = 8;
+** gamestate.mapon = 3;
+** gamestate.episode=3;
+** GiveWeapon (gamestate.bestweapon+2);
+** gamestate.ammo = 99;
+** gamestate.keys = 3;
+** vbt dernier niveau
+*/
 
 restartgame:
     SD_StopDigitized ();
@@ -1569,7 +1596,7 @@ restartgame:
     VL_FadeOut (0, 255, 0, 0, 0, 30);
 #ifdef AUTOINTER
     ClearMScreen();
-    IntermissionScreens(); // Intermission Text - Shown when starting new game
+    IntermissionScreens(); /* Intermission Text - Shown when starting new game */
     SD_StopDigitized();
 #endif
     DrawPlayScreen ();
@@ -1596,7 +1623,7 @@ restartgame:
 #endif
 
 #ifdef SPEAR
-        if (gamestate.mapon == 20)      // give them the key allways
+        if (gamestate.mapon == 20)      /* give them the key allways */
         {
             gamestate.keys |= 1;
             DrawKeys ();
@@ -1620,7 +1647,7 @@ restartgame:
         gamestate.partime = (gamestate.partime * 4200) / 70;
 #endif
 
-        DrawLevel ();                        // ADDEDFIX 5 -  Chris Chokan
+        DrawLevel ();                        /* ADDEDFIX 5 -  Chris Chokan */
 
         ingame = true;
 #ifndef SEGA_SATURN
@@ -1632,14 +1659,14 @@ restartgame:
         else StartMusic ();
 #endif
         if (!died)
-            PreloadGraphics ();             // TODO: Let this do something useful!
+            PreloadGraphics ();             /* TODO: Let this do something useful! */
         else
         {
             died = false;
             fizzlein = true;
         }
 
-//        DrawLevel ();                     // ADDEDFIX 5 - moved up  Chris Chokan
+/*        DrawLevel ();          */           /* ADDEDFIX 5 - moved up  Chris Chokan */
 
 #ifdef SPEAR
 startplayloop:
@@ -1698,7 +1725,7 @@ startplayloop:
 
                 SD_StopDigitized ();
 
-                LevelCompleted ();              // do the intermission
+                LevelCompleted ();              /* do the intermission */
 #ifdef SEGA_SATURN
                 gamestate.keys = 3;
 #endif
@@ -1707,7 +1734,7 @@ startplayloop:
 #ifdef SPEARDEMO
                 if (gamestate.mapon == 1)
                 {
-                    died = true;                    // don't "get psyched!"
+                    died = true;                    /* don't "get psyched!" */
 
                     VL_FadeOut (0, 255, 0, 0, 0, 30);
 
@@ -1725,7 +1752,7 @@ startplayloop:
 #ifdef JAPDEMO
                 if (gamestate.mapon == 3)
                 {
-                    died = true;                    // don't "get psyched!"
+                    died = true;                    /* don't "get psyched!" */
 
                     VL_FadeOut ( 0, 255, 0, 0, 0, 30);
 
@@ -1743,15 +1770,15 @@ startplayloop:
                 gamestate.oldscore = gamestate.score;
 
 #ifndef SPEAR
-                //
-                // COMING BACK FROM SECRET LEVEL
-                //
+                /*
+                ** COMING BACK FROM SECRET LEVEL
+                */
                 if (gamestate.mapon == 9)
-                    gamestate.mapon = ElevatorBackTo[gamestate.episode];    // back from secret
+                    gamestate.mapon = ElevatorBackTo[gamestate.episode];    /* back from secret */
                 else
-                    //
-                    // GOING TO SECRET LEVEL
-                    //
+                    /*
+                    ** GOING TO SECRET LEVEL
+                    */
                     if (playstate == ex_secretlevel)
                         gamestate.mapon = 9;
 #else
@@ -1759,9 +1786,9 @@ startplayloop:
 #define FROMSECRET1             3
 #define FROMSECRET2             11
 
-                //
-                // GOING TO SECRET LEVEL
-                //
+                /*
+                ** GOING TO SECRET LEVEL
+                */
                 if (playstate == ex_secretlevel)
                     switch(gamestate.mapon)
                 {
@@ -1769,9 +1796,9 @@ startplayloop:
                     case FROMSECRET2: gamestate.mapon = 19; break;
                 }
                 else
-                    //
-                    // COMING BACK FROM SECRET LEVEL
-                    //
+                    /*
+                    ** COMING BACK FROM SECRET LEVEL
+                    */
                     if (gamestate.mapon == 18 || gamestate.mapon == 19)
                         switch(gamestate.mapon)
                     {
@@ -1780,12 +1807,12 @@ startplayloop:
                     }
 #endif
                     else
-                        //
-                        // GOING TO NEXT LEVEL
-                        //
+                        /*
+                        ** GOING TO NEXT LEVEL
+                        */
                         gamestate.mapon++;
 #ifdef AUTOINTER
-                IntermissionScreens(); // Intermission Screen If file exists
+                IntermissionScreens(); /* Intermission Screen If file exists */
                 SD_StopDigitized();
                 DrawPlayScreen();
 #endif
@@ -1793,7 +1820,7 @@ startplayloop:
 
             case ex_died:
                 Died ();
-                died = true;                    // don't "get psyched!"
+                died = true;                    /* don't "get psyched!" */
 
                 if (gamestate.lives > -1)
 #ifdef AUTOINTER
@@ -1801,11 +1828,11 @@ startplayloop:
                     VL_FadeOut(0, 255, 0, 0, 0, 30);
                     ClearMScreen();
                     SD_StopDigitized();
-                    IntermissionScreens(); // Intermission Text
+                    IntermissionScreens(); /* Intermission Text */
                     SD_StopDigitized();
                     DrawPlayScreen();
 #endif
-                    break;                          // more lives left
+                    break;                          /* more lives left */
 #ifdef AUTOINTER
                 }
 #endif

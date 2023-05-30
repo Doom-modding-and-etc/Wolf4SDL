@@ -129,7 +129,7 @@ enum CMESSAGE {
 
 typedef struct {
 	int type;
-//	int no;
+/*	int no; */
 	int data1;
 	int data2;
 	int data3;

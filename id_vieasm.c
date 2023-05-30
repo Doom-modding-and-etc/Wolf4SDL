@@ -24,21 +24,21 @@ PLEASE ALSO NOTE THAT THIS IS STILL A BETA. IT IS LIKELY TO HAVE LOTS OF BUGS.
 IF YOU FIND ANY, PLEASE TELL ME SO I CAN FIX THEM!
 */
 
-// Initialization stuff
+/* Initialization stuff */
 #include "id_vieasm.h"
 #ifdef VIEASM
-#include "asmcref.h"// Duh.
+#include "asmcref.h" /* Duh. */
 
-const char* ASM_Verstring = "v0.9.2 Beta";  // Version string
+const char* ASM_Verstring = "v0.9.2 Beta";  /* Version string */
 
-unsigned char sndvol, musvol;                       // Volumes for sound
-int origchannels, maxchannels, lastchan;    // Channel variables
-boolean chanused[ASM_ABSMAXCHANNELS];          // Is channel used?
-static Mix_Music* music = 0, * switchto = 0; // Music references
-int fadetime;                               // Milliseconds to fade in\out
-boolean deviceopen = false;                    // Is device open?
-boolean switching = false;                     // Is switching music tracks?
-boolean reversemode = false;                   // Reverse stereomode
+unsigned char sndvol, musvol;                       /* Volumes for sound */
+int origchannels, maxchannels, lastchan;    /* Channel variables */
+boolean chanused[ASM_ABSMAXCHANNELS];          /* Is channel used? */
+static Mix_Music* music = 0, * switchto = 0; /* Music references */
+int fadetime;                               /* Milliseconds to fade in\out */
+boolean deviceopen = false;                    /* Is device open? */
+boolean switching = false;                     /* Is switching music tracks? */
+boolean reversemode = false;                   /* Reverse stereomode */
 boolean nosound;
 
 SDMode      	SoundMode;
@@ -53,8 +53,8 @@ int ambientsnds[NUMAMBIENTS];
 boolean         AdLibPresent, SoundBlasterPresent, SBProPresent, SoundPositioned;
 globalsoundpos channelSoundPos[ASM_ABSMAXCHANNELS];
 
-// ASM_IsOpen
-// Returns true if the device is open, false otherwise
+/* ASM_IsOpen */
+/* Returns true if the device is open, false otherwise */
 boolean ASM_IsOpen(void)
 {
     return (deviceopen) ? true : false;
@@ -70,8 +70,8 @@ void ASM_AdjustChannels(int reqchan)
     }
 }
 
-// ASM_GetFreeChannel
-// Returns the first free channel, calls ASM_AdjustChannels if another is needed
+/* ASM_GetFreeChannel */
+/* Returns the first free channel, calls ASM_AdjustChannels if another is needed */
 
 int ASM_GetFreeChannel(void)
 {
@@ -87,9 +87,9 @@ int ASM_GetFreeChannel(void)
     return -1;
 }
 
-// ASM_ChannelDone
-// Callback for Mix_ChannelFinished
-// Turns off channel and adjust if necessary
+/* ASM_ChannelDone */
+/* Callback for Mix_ChannelFinished */
+/* Turns off channel and adjust if necessary */
 
 void ASM_ChannelDone(int channel)
 {
@@ -99,12 +99,12 @@ void ASM_ChannelDone(int channel)
         ASM_AdjustChannels(lastchan);
 }
 
-// ASM_Open
-// Opens audio device at given specs, clears used
+/* ASM_Open */
+/* Opens audio device at given specs, clears used */
 
 boolean ASM_Open(int frequency, int channels, int maxchan, int buffersize, unsigned char sndvolume, unsigned char musvolume, boolean reverse)
 {
-    if (ASM_IsOpen())       // Device is already open!
+    if (ASM_IsOpen())       /* Device is already open! */
         return false;
 #ifdef VERBOSE
     SDL_version compile_version;
@@ -170,8 +170,8 @@ boolean ASM_Open(int frequency, int channels, int maxchan, int buffersize, unsig
     return true;
 }
 
-// ASM_Close
-// Closes the audio device
+/* ASM_Close */
+/* Closes the audio device */
 
 void ASM_Close(void)
 {
@@ -182,8 +182,8 @@ void ASM_Close(void)
     deviceopen = false;
 }
 
-// ASM_HaltSound
-// Ends all playing sounds, clears all channels, frees all chunks, etc.
+/* ASM_HaltSound */
+/* Ends all playing sounds, clears all channels, frees all chunks, etc. */
 
 void ASM_HaltSound(void)
 {
@@ -194,8 +194,8 @@ void ASM_HaltSound(void)
     ASM_AdjustChannels(0);
 }
 
-// ASM_Pause
-// Pauses all sound
+/* ASM_Pause */
+/* Pauses all sound */
 
 void ASM_Pause(void)
 {
@@ -205,8 +205,8 @@ void ASM_Pause(void)
     ASM_PauseMusic();
 }
 
-// ASM_Resume
-// Resumes all sound
+/* ASM_Resume */
+/* Resumes all sound */
 
 void ASM_Resume(void)
 {
@@ -216,8 +216,8 @@ void ASM_Resume(void)
     ASM_ResumeMusic();
 }
 
-// ASM_Halt
-// Stops all sound, frees all chunks, etc.
+/* ASM_Halt */
+/* Stops all sound, frees all chunks, etc. */
 
 void ASM_Halt(void)
 {
@@ -227,8 +227,8 @@ void ASM_Halt(void)
     ASM_HaltMusic();
 }
 
-// ASM_PlayMusic
-// Plays a music sample from a file
+/* ASM_PlayMusic */
+/* Plays a music sample from a file */
 
 boolean ASM_PlayMusic(char* musfile)
 {
@@ -263,10 +263,12 @@ boolean ASM_PlayMusic(char* musfile)
     return true;
 }
 
-// ASM_ChangeVolume
-// Changes the volume of:
-//      Sound - iterates through each channel and sets volume accordingly
-//      Music - just calls Mix_VolumeMusic
+/* 
+** ASM_ChangeVolume 
+** Changes the volume of:
+**      Sound - iterates through each channel and sets volume accordingly
+**      Music - just calls Mix_VolumeMusic
+*/
 
 void ASM_ChangeVolume(unsigned char sndvolume, unsigned char musvolume)
 {
@@ -278,8 +280,8 @@ void ASM_ChangeVolume(unsigned char sndvolume, unsigned char musvolume)
     Mix_VolumeMusic(musvol);
 }
 
-// ASM_ReturnVolume
-// Takes two byte pointers and returns the internal sound and music volumes using them
+/* ASM_ReturnVolume */
+/* Takes two byte pointers and returns the internal sound and music volumes using them */
 
 void ASM_ReturnVolume(unsigned char* retsnd, unsigned char* retmus)
 {
@@ -292,8 +294,8 @@ void ASM_ReturnVolume(unsigned char* retsnd, unsigned char* retmus)
     *retmus = musvol;
 }
 
-// ASM_SwitchMus
-// Changes music to another track, either directly or via a fade-in/out
+/* ASM_SwitchMus */
+/* Changes music to another track, either directly or via a fade-in/out */
 
 boolean ASM_SwitchMus(char* loadmus, int fadems, boolean fade)
 {
@@ -332,8 +334,8 @@ boolean ASM_SwitchMus(char* loadmus, int fadems, boolean fade)
     return true;
 }
 
-// ASM_FadeInMus
-// Fades in a piece of music, stopping whatever was playing before it
+/* ASM_FadeInMus */
+/* Fades in a piece of music, stopping whatever was playing before it */
 
 boolean ASM_FadeInMus(char* loadmus, int fadems)
 {
@@ -360,8 +362,8 @@ boolean ASM_FadeInMus(char* loadmus, int fadems)
     return true;
 }
 
-// ASM_FadeOutMus
-// Fades out and stops the music currently playing
+/* ASM_FadeOutMus */
+/* Fades out and stops the music currently playing */
 
 void ASM_FadeOutMus(int fadems)
 {
@@ -373,8 +375,8 @@ void ASM_FadeOutMus(int fadems)
     Mix_FadeOutMusic(fadems);
 }
 
-// ASM_Cache
-// Loads a sound into memory and returns it as a sample
+/* ASM_Cache */
+/* Loads a sound into memory and returns it as a sample */
 
 sample ASM_Cache(char* sndfile, const char* name)
 {
@@ -402,9 +404,9 @@ sample ASM_Cache(char* sndfile, const char* name)
     return sound;
 }
 
-// ASM_CacheFromMem
-// Loads a sound from a pointer into a sample, returning that sample
-// Also frees the original data
+/* ASM_CacheFromMem */
+/* Loads a sound from a pointer into a sample, returning that sample */
+/* Also frees the original data */
 
 sample ASM_CacheFromMem(void* ptr, int size, const char* name)
 {
@@ -432,8 +434,8 @@ sample ASM_CacheFromMem(void* ptr, int size, const char* name)
 }
 
 
-// ASM_Uncache
-// Removes a sound from memory
+/* ASM_Uncache */
+/* Removes a sound from memory */
 
 void ASM_Uncache(sample sound)
 {
@@ -448,9 +450,9 @@ void ASM_Uncache(sample sound)
     sound.name = NULL;
 }
 
-// ASM_PlaySound
-// Play a sound in memory loaded with ASM_Cache or Mix_LoadWAV
-// Returns -1 on errors or channel number
+/* ASM_PlaySound */
+/* Play a sound in memory loaded with ASM_Cache or Mix_LoadWAV */
+/* Returns -1 on errors or channel number */
 
 int ASM_PlaySound(sample sound, int angle, unsigned char distance, boolean ambient)
 {
@@ -495,8 +497,8 @@ int ASM_PlaySound(sample sound, int angle, unsigned char distance, boolean ambie
     return chanon;
 }
 
-// ASM_StopChannel
-// Stops sound on a given channel
+/* ASM_StopChannel */
+/* Stops sound on a given channel */
 
 void ASM_StopChannel(int channel)
 {
@@ -505,8 +507,8 @@ void ASM_StopChannel(int channel)
     Mix_HaltChannel(channel);
 }
 
-// ASM_SwitchStep
-// Used each program step for switching music tracks
+/* ASM_SwitchStep */
+/* Used each program step for switching music tracks */
 
 void ASM_SwitchStep(void)
 {
@@ -515,7 +517,7 @@ void ASM_SwitchStep(void)
     if (Mix_PlayingMusic())
         return;
 
-    if (switching)       // If music is stopped and we want to switch
+    if (switching)       /* If music is stopped and we want to switch */
     {
         Mix_FreeMusic(music);
         music = switchto;
@@ -525,8 +527,8 @@ void ASM_SwitchStep(void)
     }
 }
 
-// ASM_ReverseStereo
-// Sets reverse stereo mode after initialization
+/* ASM_ReverseStereo */
+/* Sets reverse stereo mode after initialization */
 
 void ASM_ReverseStereo(boolean reverse)
 {
@@ -535,16 +537,16 @@ void ASM_ReverseStereo(boolean reverse)
     Mix_SetReverseStereo(MIX_CHANNEL_POST, (reverse) ? 1 : 0);
 }
 
-// ASM_CurChannels
-// Returns the number of channels allocated
+/* ASM_CurChannels */
+/* Returns the number of channels allocated */
 
 int ASM_CurChannels(void)
 {
     return lastchan;
 }
 
-// SD_MusIsOn
-// Returns true if music is on, false otherwise
+/* SD_MusIsOn */
+/* Returns true if music is on, false otherwise */
 boolean SD_MusIsOn(void)
 {
     return (MusicMode == smm_AdLib) ? true : false;
@@ -602,7 +604,7 @@ boolean SD_MusicPlaying(void)
     return Mix_PlayingMusic();
 }
 
-// This has changed slightly - it returns 0 on an error, 1 on a successful load
+/* This has changed slightly - it returns 0 on an error, 1 on a successful load */
 
 int CA_CacheAudioChunk(int chunk)
 {
@@ -847,4 +849,4 @@ wlinline void Delay(int wolfticks)
         SDL_Delay((unsigned int)wolfticks * 1000 / TickBase);
 }
 
-#endif //VIEASM
+#endif /* VIEASM */

@@ -1,4 +1,4 @@
-//PS2_DATA_LOADER.C
+/* PS2_DATA_LOADER.C */
 #include "ps2_data_loader.h"
 
 #include <ps2_printf.h>
@@ -8,14 +8,14 @@ Mix_Music *loader_mus;
 SDL_Surface *loader_surface = NULL;
 SDL_Surface *loader_image = NULL;
 SDL_Surface *loader_icn = NULL;
-//SDL_Surface *loader_image_btPresses[btMax];
+/* SDL_Surface *loader_image_btPresses[btMax]; */
 SDL_Window *loader_window = NULL;
 
 
-bool PS2_SDL_CreateWindow()
+boolean PS2_SDL_CreateWindow()
 {
     int ret;
-    bool success = true;
+    boolean success = true;
     ret = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER); //Initialize Video, Audio and Joystick.
     if(ret < 0)
     {
@@ -61,12 +61,12 @@ void PS2_SDL_LoaderStart()
     }
     else
     {
-        //Load the backgrund music.
+        /* Load the backgrund music. */
         Mix_OpenAudio(48000, MIX_DEFAULT_FORMAT, 2, 4096);
         loader_mus = Mix_LoadMUS("Loader/sounds/loader_music.wav");
         Mix_PlayMusic(loader_mus, -1); 
         
-        //Load the images in BMP only.
+        /* Load the images in BMP only. */
         loader_image = SDL_LoadBMP("Loader/background images/loader_image.bmp");
 
         loader_icn = SDL_LoadBMP("Loader/background images/loader_icon.bmp");
@@ -81,10 +81,10 @@ void PS2_SDL_LoaderStart()
         SDL_BlitSurface(loader_image, NULL, loader_surface, NULL);
         SDL_BlitSurface(loader_icn, NULL, loader_surface, &LoaderIcnRect);
 
-        //TODO: Setup game controller for ps2
+        /* TODO: Setup game controller for ps2 */
 /*
         //Loader event.
-        bool loader_quit = true;
+        boolean loader_quit = true;
 
         SDL_Event event;
 

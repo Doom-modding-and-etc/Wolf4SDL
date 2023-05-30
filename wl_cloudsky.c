@@ -1,4 +1,4 @@
-// WL_CLOUDSKY.C
+/* WL_CLOUDSKY.C */
 
 #include "version.h"
 
@@ -58,11 +58,11 @@ colormap_t colorMaps[] =
 
 const int numColorMaps = lengthof(colorMaps);
 
-//
-// The sky definitions which can be selected as defined by GetCloudSkyDefID() in wl_def.h
-// You can use <TAB>+Z in debug mode to find out suitable values for seed and colorMapIndex
-// Each entry consists of seed, speed, angle and colorMapIndex
-//
+/*
+** The sky definitions which can be selected as defined by GetCloudSkyDefID() in wl_def.h
+** You can use <TAB>+Z in debug mode to find out suitable values for seed and colorMapIndex
+** Each entry consists of seed, speed, angle and colorMapIndex
+*/
 cloudsky_t cloudSkys[] =
 {
     { 626,   800,  20,  0 },
@@ -84,7 +84,7 @@ cloudsky_t *curSky;
 
 #ifdef USE_FEATUREFLAGS
 
-// The lower left tile of every map determines the used cloud sky definition from cloudSkys.
+/* The lower left tile of every map determines the used cloud sky definition from cloudSkys. */
 int GetCloudSkyDefID (void)
 {
     int skyID = ffDataBottomLeft;
@@ -124,9 +124,9 @@ int GetCloudSkyDefID (void)
 
 void SplitS(unsigned size,unsigned x1,unsigned y1,unsigned x2,unsigned y2)
 {
-    //
-    // I don't even want to touch this abomination... O_o
-    //
+    /*
+    ** I don't even want to touch this abomination... O_o
+    */
    if(size==1) return;
    if(!skyc[((x1+size/2)*256+y1)])
    {
@@ -190,19 +190,19 @@ void InitSky (void)
 
     curSky = &cloudSkys[cloudskyid];
 
-    cloudx = cloudy = 0;                             // reset cloud position
+    cloudx = cloudy = 0;                             /* reset cloud position */
     memset (skyc,0,sizeof(skyc));
-    // funny water texture if used instead of memset ;D
-    // for (i = 0; i < 65536; i++)
-    //     skyc[i] = rand() % 32 * 8;
-
+    /* funny water texture if used instead of memset ;D
+    ** for (i = 0; i < 65536; i++)
+    **     skyc[i] = rand() % 32 * 8;
+    */
     srand (curSky->seed);
     skyc[0] = rand() % 256;
     SplitS (256,0,0,256,256);
 
-    //
-    // smooth the clouds a bit
-    //
+    /*
+    ** smooth the clouds a bit
+    */
     for (k = 0; k < 2; k++)
     {
         for (i = 0; i < 256; i++)
@@ -222,14 +222,14 @@ void InitSky (void)
         }
     }
 
-    //
-    // the following commented lines could be useful if you're trying to
-    // create a new color map. This will display your current color map
-    // in one repeating strip of the sky
-    //
-    // for (i = 0; i < 256; i++)
-    //     skyc[i] = skyc[i + 256] = skyc[i + 512] = i;
-
+    /*
+    ** the following commented lines could be useful if you're trying to
+    ** create a new color map. This will display your current color map
+    ** in one repeating strip of the sky
+    **
+    ** for (i = 0; i < 256; i++)
+           skyc[i] = skyc[i + 256] = skyc[i + 512] = i;
+    */
     if (curSky->colorMapIndex >= numColorMaps)
         Quit ("Illegal colorMapIndex for cloud sky def %u: %u",cloudskyid,curSky->colorMapIndex);
 
@@ -243,7 +243,7 @@ void InitSky (void)
             for (i = 0, index = -curEntry->startAndDir; i < curEntry->length; i++, index--)
             {
                 if (index < 0)
-                    index = 0;                       // don't go below the first color
+                    index = 0;                       /* don't go below the first color */
 
                 colormap[calcedCols++] = index;
             }
@@ -253,7 +253,7 @@ void InitSky (void)
             for (i = 0, index = curEntry->startAndDir; i < curEntry->length; i++, index++)
             {
                 if (index > 255)
-                    index = 255;                     // don't go above the last color
+                    index = 255;                     /* don't go above the last color */
 
                 colormap[calcedCols++] = index;
             }
@@ -290,12 +290,12 @@ void DrawCloudSpan (short x1, short x2, short height)
     count = x2 - x1;
 
     if (!count)
-        return;                                             // nothing to draw
+        return;                                             /* nothing to draw */
 
     dest = vbuf + ylookup[centery - 1 - height] + x1;
 
     prestep = centerx - x1 + 1;
-    basedist = FixedDiv(scale,height) << 2;                 // distance to row projection
+    basedist = FixedDiv(scale,height) << 2;                 /* distance to row projection */
     stepscale = basedist / scale;
 
     xstep = FixedMul(stepscale,viewsin);
@@ -335,9 +335,9 @@ void DrawCloudPlanes (void)
     cloudx += FixedMul(speed,sintable[curSky->angle]);
     cloudy -= FixedMul(speed,costable[curSky->angle]);
 
-//
-// loop over all columns
-//
+/*
+** loop over all columns
+*/
     y = centery;
 
     for (x = 0; x < viewwidth; x++)
@@ -346,17 +346,17 @@ void DrawCloudPlanes (void)
 
         if (height < y)
         {
-            //
-            // more starts
-            //
+            /*
+            ** more starts
+            */
             while (y > height)
                 spanstart[--y] = x;
         }
         else if (height > y)
         {
-            //
-            // draw clipped spans
-            //
+            /*
+            ** draw clipped spans
+            */
             if (height > centery)
                 height = centery;
 
@@ -370,9 +370,9 @@ void DrawCloudPlanes (void)
         }
     }
 
-    //
-    // draw spans
-    //
+    /*
+    ** draw spans
+    */
     height = centery;
 
     while (y < height)

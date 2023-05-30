@@ -1,5 +1,3 @@
-#ifdef _WIN32
-
 /*
     SDL_main.c, placed in the public domain by Sam Lantinga  4/13/98
 
@@ -162,22 +160,24 @@ static void cleanup_output(void)
 			{
 				if (readbytes != 0)
 				{
-					buf[readbytes] = 0;     // cut after last byte (<=16383)
+					buf[readbytes] = 0;     /* cut after last byte (<=16383) */
+#ifndef _XBOX					
 					MessageBox(NULL, buf, "Wolf4SDL", MB_OK);
+#endif
 				}
 				else
-					remove(stdoutPath);     // remove empty file
+					remove(stdoutPath);     /* remove empty file */
 			}
 #else
             if(readbytes != 0)
             {
-                buf[readbytes] = 0;     // cut after last byte (<=16383)
+                buf[readbytes] = 0;     /* cut after last byte (<=16383) */
 #ifndef _XBOX
                 MessageBox(NULL, buf, "Wolf4SDL", MB_OK);
 #endif
 			}
             else
-                remove(stdoutPath);     // remove empty file
+                remove(stdoutPath);     /* remove empty file */
 
 		}
 #endif
@@ -191,23 +191,24 @@ static void cleanup_output(void)
 
             if(readbytes != 0)
             {
-                buf[readbytes] = 0;     // cut after last byte (<=16383)
+                buf[readbytes] = 0;     /* cut after last byte (<=16383) */
 #ifndef _XBOX
                 MessageBox(NULL, buf, "Wolf4SDL", MB_OK);
 #endif
 			}
             else
-                remove(stderrPath);     // remove empty file
+                remove(stderrPath);     /* remove empty file */
 		}
 	}
 #endif
 #endif
 }
 
-//#if defined(_MSC_VER) && !defined(_WIN32_WCE)
-///* The VC++ compiler needs main defined */
-//#define console_main main
-//#endif
+/* #if defined(_MSC_VER) && !defined(_WIN32_WCE) 
+** /*The VC++ compiler needs main defined */ /*
+** #define console_main main
+** #endif
+*/
 
 #ifndef _XBOX
 /* This is where execution begins [console apps] */
@@ -396,5 +397,4 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, LPSTR szCmdLine, int sw)
 	return 0;
 }
 #endif
-#endif  // _WIN32
-#endif //SDL_WINMAIN_C
+#endif  /* _WIN32 */

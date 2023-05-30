@@ -1,4 +1,4 @@
-// ID_VL.C
+/* ID_VL.C */
 
 #include <string.h>
 #include "wl_def.h"
@@ -20,7 +20,6 @@ unsigned int     screenBits = 8;
 #else
 unsigned int      screenBits = 16;
 #endif
-//WIP:
 #elif defined(PS2)
 boolean usedoublebuffering = true;
 unsigned int screenWidth = 640;
@@ -30,7 +29,7 @@ unsigned int screenBits = 8;
 boolean usedoublebuffering = true;
 unsigned int screenWidth = 400;
 unsigned int screenHeight = 240;
-unsigned int screenBits = 32;      // use "best" color depth according to libSDL  // ADDEDFIX 0
+unsigned int screenBits = 32;      /* use "best" color depth according to libSDL */  /* ADDEDFIX 0 */
 #else
 boolean usedoublebuffering = true;
 #if defined(SCALE2X) 
@@ -47,7 +46,7 @@ unsigned int screenWidth = 640;
 unsigned int screenHeight = 405;
 #endif
 #endif
-unsigned int screenBits = 8;      // use "best" color depth according to libSDL
+unsigned int screenBits = 8;      /* use "best" color depth according to libSDL */
 #endif
 
 SDL_Surface *screen = NULL;
@@ -210,18 +209,18 @@ WRGB(38,  0, 34)
 #endif
 };
 
-// XOR masks for the pseudo-random number sequence starting with n=17 bits
+/* XOR masks for the pseudo-random number sequence starting with n=17 bits */
 static const size_t rndmasks[] = {
-    // n    XNOR from (starting at 1, not 0 as usual)
-0x00012000,     // 17   17,14
-0x00020400,     // 18   18,11
-0x00040023,     // 19   19,6,2,1
-0x00090000,     // 20   20,17
-0x00140000,     // 21   21,19
-0x00300000,     // 22   22,21
-0x00420000,     // 23   23,18
-0x00e10000,     // 24   24,23,22,17
-0x01200000,     // 25   25,22      (this is enough for 8191x4095)
+    /* n    XNOR from (starting at 1, not 0 as usual) */
+0x00012000,     /* 17   17,14 */
+0x00020400,     /* 18   18,11 */
+0x00040023,     /* 19   19,6,2,1 */
+0x00090000,     /* 20   20,17 */
+0x00140000,     /* 21   21,19 */
+0x00300000,     /* 22   22,21 */
+0x00420000,     /* 23   23,18 */
+0x00e10000,     /* 24   24,23,22,17 */
+0x01200000,     /* 25   25,22      (this is enough for 8191x4095) */
 };
 
 
@@ -229,9 +228,9 @@ static const size_t rndmasks[] = {
 CASSERT(lengthof(gamepal) == 256)
 #endif
 
-//===========================================================================
+/* ========================================================================== */
 
-// Returns the number of bits needed to represent the given value
+/* Returns the number of bits needed to represent the given value */
 static size_t log2_ceil(unsigned int x)
 {
     int n = 0;
@@ -261,9 +260,9 @@ void VL_Startup()
 
     rndbits = rndbits_x + rndbits_y;
     if (rndbits < 17)
-        rndbits = 17;       // no problem, just a bit slower
+        rndbits = 17;       /* no problem, just a bit slower */
     else if (rndbits > 25)
-        rndbits = 25;       // fizzle fade will not fill whole screen
+        rndbits = 25;       /* fizzle fade will not fill whole screen */
 
     rndmask = rndmasks[rndbits - 17];
 }
@@ -276,7 +275,7 @@ void VWL_MeasureString(const char* string, unsigned short* width, unsigned short
     * height = font->height;
 #endif
     for (*width = 0; *string; string++)
-        *width += font->width[*((unsigned char*)string)];	// proportional width
+        *width += font->width[*((unsigned char*)string)];	/* proportional width */
 
 }
 
@@ -334,9 +333,14 @@ boolean FizzleFade(SDL_Surface* source, int x1, int y1,
 {
 #ifdef SEGA_SATURN
 #if 1
-    unsigned x, y, frame, pixperframe;
-    int32_t  rndval, lastrndval;
+    unsigned x, y, p, frame, pixperframe;
+    int  rndval, lastrndval;
     int      first = 1;
+    unsigned char* srcptr;
+    unsigned char color;
+    unsigned char* destptr;
+    int i;
+    SDL_Rect rect;
 
     lastrndval = 0;
     pixperframe = width * height / frames;
@@ -344,21 +348,21 @@ boolean FizzleFade(SDL_Surface* source, int x1, int y1,
     IN_StartAck();
 
     frame = GetTimeCount();
-    unsigned char* srcptr = (unsigned char*)source->pixels;
-    unsigned char color = (srcptr[x1 + (y1 * width)] ? 0 : 4);
+    srcptr = (unsigned char*)source->pixels;
+    color = (srcptr[x1 + (y1 * width)] ? 0 : 4);
 
-    SDL_Rect rect = { x1,y1,width,height };
+    rect = { x1,y1,width,height };
 
     if (curSurface == screen)
     {
         curSurface = screenBuffer;
-        VL_BarScaledCoord(x1, y1, width, height, srcptr[x1 + (y1 * width)]); // vbt ajout
-        DrawStatusBar(); // vbt : ajout
+        VL_BarScaledCoord(x1, y1, width, height, srcptr[x1 + (y1 * width)]); /* vbt ajout */
+        DrawStatusBar(); /* vbt : ajout */
     }
     else
     {
-        VL_BarScaledCoord(x1, y1, width, height, color); // vbt ajout		
-        DrawStatusBar(); // vbt : ajout
+        VL_BarScaledCoord(x1, y1, width, height, color); /* vbt ajout */		
+        DrawStatusBar(); /* vbt : ajout */
         curSurface = screen;
     }
 
@@ -367,55 +371,60 @@ boolean FizzleFade(SDL_Surface* source, int x1, int y1,
         if (abortable && IN_CheckAck())
         {
 #ifndef USE_SPRITES
-            //            SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
-            //            SDL_UpdateRect(screen, 0, 0, 0, 0);
+            /*            SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
+            **            SDL_UpdateRect(screen, 0, 0, 0, 0);
+            */
 #endif
-// xxx			VGAClearScreen(); // vbt : maj du fond d'�cran
-            //curSurface = source;
-            VL_BarScaledCoord(x1, y1, width, height, color); // vbt ajout
+
+            /* xxx	VGAClearScreen(); /* vbt : maj du fond d'�cran * /
+            ** curSurface = source;
+            */
+            VL_BarScaledCoord(x1, y1, width, height, color); /* vbt ajout */
             return true;
         }
 
 
-        unsigned char* destptr = (unsigned char*)dest->pixels;
+        destptr = (unsigned char*)dest->pixels;
 
         rndval = lastrndval;
 
-        // When using double buffering, we have to copy the pixels of the last AND the current frame.
-        // Only for the first frame, there is no "last frame"
-        for (int i = first; i < 2; i++)
+        /* 
+        ** When using double buffering, we have to copy the pixels of the last AND the current frame.
+        ** Only for the first frame, there is no "last frame"
+        */
+        for (i = first; i < 2; i++)
         {
 
-            for (unsigned p = 0; p < pixperframe; p++)
+            for (p = 0; p < pixperframe; p++)
             {
-                //
-                // seperate random value into x/y pair
-                //
+                /*
+                ** seperate random value into x/y pair
+                */
 
                 x = rndval >> rndbits_y;
                 y = rndval & ((1 << rndbits_y) - 1);
 
-                //
-                // advance to next random element
-                //
+                /*
+                ** advance to next random element
+                */
 
                 rndval = (rndval >> 1) ^ (rndval & 1 ? 0 : rndmask);
 
                 if (x >= width || y >= height)
                 {
-                    if (rndval == 0)     // entire sequence has been completed
+                    if (rndval == 0)     /* entire sequence has been completed */
                         goto finished;
                     p--;
                     continue;
                 }
 
-                //
-                // copy one pixel
-                //
+                /*
+                ** copy one pixel
+                */
 
                 *(destptr + (y1 + y) * dest->pitch + x1 + x) = *(srcptr + (y1 + y) * source->pitch + x1 + x);
 
-                if (rndval == 0)		// entire sequence has been completed
+                if (rndval == 0)		/* entire sequence has been completed */
                     goto finished;
             }
 
@@ -426,7 +435,7 @@ boolean FizzleFade(SDL_Surface* source, int x1, int y1,
         SDL_BlitSurface(dest, &rect, source, &rect);
         frame++;
 
-        Delay(frame - GetTimeCount());        // don't go too fast
+        Delay(frame - GetTimeCount());        /* don't go too fast */
     } while (1);
 
 
@@ -465,36 +474,36 @@ finished:
         {
             rndval = lastrndval;
 
-            // When using double buffering, we have to copy the pixels of the last AND the current frame.
-            // Only for the first frame, there is no "last frame"
+            /* When using double buffering, we have to copy the pixels of the last AND the current frame. */
+            /* Only for the first frame, there is no "last frame" */
             for (i = first; i < 2; i++)
             {
                 for (p = 0; p < pixperframe; p++)
                 {
-                    //
-                    // seperate random value into x/y pair
-                    //
+                    /*
+                    ** seperate random value into x/y pair
+                    */
 
                     x = rndval >> rndbits_y;
                     y = rndval & ((1 << rndbits_y) - 1);
 
-                    //
-                    // advance to next random element
-                    //
+                    /*
+                    ** advance to next random element
+                    */
 
                     rndval = (rndval >> 1) ^ (rndval & 1 ? 0 : rndmask);
 
                     if (x >= width || y >= height)
                     {
-                        if (rndval == 0)     // entire sequence has been completed
+                        if (rndval == 0)     /* entire sequence has been completed */
                             goto finished;
                         p--;
                         continue;
                     }
 
-                    //
-                    // copy one pixel
-                    //
+                    /*
+                    ** copy one pixel
+                    */
 
                     if (screenBits == 8)
                     {
@@ -509,14 +518,14 @@ finished:
                             &fullcol, screen->format->BytesPerPixel);
                     }
 
-                    if (rndval == 0)		// entire sequence has been completed
+                    if (rndval == 0)		/* entire sequence has been completed */
                         goto finished;
                 }
 
                 if (!i || first) lastrndval = rndval;
             }
 
-            // If there is no double buffering, we always use the "first frame" case
+            /* If there is no double buffering, we always use the "first frame" case */
             if (usedoublebuffering) first = 0;
 
             VL_UnlockSurface(screen);
@@ -524,7 +533,7 @@ finished:
         }
         else
         {
-            // No surface, so only enhance rndval
+            /* No surface, so only enhance rndval */
             for (i = first; i < 2; i++)
             {
                 for (p = 0; p < pixperframe; p++)
@@ -537,7 +546,7 @@ finished:
         }
 
         frame++;
-        Delay((int)frame - (int)GetTimeCount());        // don't go too fast
+        Delay((int)frame - (int)GetTimeCount());        /* don't go too fast */
     } while (1);
 
 finished:
@@ -585,8 +594,10 @@ void VL_SetVGAPlaneMode (void)
 
     if (!screen)
     {
-        //        printf("Unable to set %ix%ix%i video mode: %s\n", screenWidth,
-        //            screenHeight, screenBits, SDL_GetError());
+        /*         
+        **        printf("Unable to set %ix%ix%i video mode: %s\n", screenWidth,
+        **            screenHeight, screenBits, SDL_GetError());
+        */
         SYS_Exit(1);
     }
 
@@ -596,13 +607,15 @@ void VL_SetVGAPlaneMode (void)
         screenBuffer = SDL_CreateRGBSurface(SDL_SWSURFACE, screenWidth, screenHeight, 8, 0, 0, 0, 0);
         if (!screenBuffer)
         {
-            //        printf("Unable to create screen buffer surface: %s\n", SDL_GetError());
+            /*        printf("Unable to create screen buffer surface: %s\n", SDL_GetError());          */
             SYS_Exit(1);
         }
 
-        //    SDL_ShowCursor(SDL_DISABLE);
-        //curSurface = screenBuffer;
-        //curPitch = screenBuffer->pitch;
+        /*    
+        **    SDL_ShowCursor(SDL_DISABLE);
+        ** curSurface = screenBuffer;
+        ** curPitch = screenBuffer->pitch;
+        */
     }
         SDL_SetColors(screen, gamepal, 0, 256);
     memcpyl(curpal, gamepal, sizeof(SDL_Color) * 256);
@@ -612,8 +625,10 @@ void VL_SetVGAPlaneMode (void)
     if (pixelangle == NULL) SafeMalloc(pixelangle) = (short*)malloc(screenWidth * sizeof(short));
 #else
 #ifdef CRT
-    //Fab's CRT Hack
-    //Adjust height so the screen is 4:3 aspect ratio
+    /* 
+    ** Fab's CRT Hack
+    ** Adjust height so the screen is 4:3 aspect ratio
+    */
     screenHeight = screenWidth * 3.0 / 4.0;
 #endif  
     SDL_WM_SetCaption(title, NULL);
@@ -645,7 +660,7 @@ void VL_SetVGAPlaneMode (void)
     memcpy(curpal, gamepal, sizeof(SDL_Color) * 256);
 
 #ifdef CRT  
-    //Fab's and Andr�s CRT Hack
+    /* Fab's and André´s CRT Hack */
     CRT_Init(screen);
 #endif 
     screenBuffer = SDL_CreateRGBSurface(SDL_SWSURFACE, screenWidth,
@@ -659,16 +674,18 @@ void VL_SetVGAPlaneMode (void)
 #endif
 #elif SDL_MAJOR_VERSION == 2
 #ifdef CRT
-    //Fab's CRT Hack:
-    //Adjust height so the screen is 4:3 aspect ratio
+    /* 
+    ** Fab's CRT Hack:
+    ** Adjust height so the screen is 4:3 aspect ratio
+    */
     screenHeight = screenWidth * 3 / 4;
 #endif     
 #if defined(SCALE2X) 
     window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, scaledScreenWidth, scaledScreenHeight,
-        (fullscreen ? SDL_WINDOW_FULLSCREEN : 0 | SDL_WINDOW_OPENGL));
+        (fullscreen ? SDL_WINDOW_FULLSCREEN : 0) | (SDL_WINDOW_OPENGL ? true : false));
 #else
     window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight,
-    (fullscreen ? SDL_WINDOW_FULLSCREEN : 0 | SDL_WINDOW_OPENGL));
+        (fullscreen ? SDL_WINDOW_FULLSCREEN : 0) | (SDL_WINDOW_OPENGL ? true : false));
 #endif
     SDL_PixelFormatEnumToMasks (SDL_PIXELFORMAT_ARGB8888, (int*)&screenBits, &r, &g, &b, &a);
 
@@ -688,13 +705,11 @@ void VL_SetVGAPlaneMode (void)
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 
-    SDL_ShowCursor(SDL_DISABLE);
-
     SDL_SetPaletteColors(screen->format->palette, gamepal, 0, 256);
     memcpy(curpal, gamepal, sizeof(SDL_Color) * 256);
     
 #ifdef CRT  
-    //Fab's and Andr�s CRT Hack
+    /* Fab's and André´s CRT Hack */
     CRT_Init(screen);
 #endif
     screenBuffer = SDL_CreateRGBSurface(0, screenWidth, screenHeight, 
@@ -708,7 +723,7 @@ void VL_SetVGAPlaneMode (void)
     SDL_SetPaletteColors(screenBuffer->format->palette, gamepal, 0, 256);
 
 #if defined(SCALE2X) 
-    // Create the intermediate texture that we render the screen surface into.
+    /* Create the intermediate texture that we render the screen surface into. */
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 #endif
     texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888,
@@ -720,8 +735,10 @@ void VL_SetVGAPlaneMode (void)
         exit(1);
     }
 
-    // Create the up-scaled texture that we render to the window. We use 'nearest' scaling here because depending on the
-    // window size, the texture may need to be scaled by a non-integer factor.
+    /*
+    ** Create the up-scaled texture that we render to the window. We use 'nearest' scaling here because depending on the
+    ** window size, the texture may need to be scaled by a non-integer factor.
+    */
 #if defined(SCALE2X) 
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
     SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
@@ -741,31 +758,12 @@ void VL_SetVGAPlaneMode (void)
 
     scaleFactor = screenWidth/320;
     if(screenHeight/200 < (unsigned int)scaleFactor) scaleFactor = screenHeight/200;
-#if defined(REINTERPRET_CAST)
-    ylookup = reinterpret_cast<unsigned int*>(SafeMalloc(screenHeight * sizeof(*ylookup)));
-    pixelangle = reinterpret_cast<short*>(SafeMalloc(screenWidth * sizeof(*pixelangle)));
-    wallheight = reinterpret_cast<short*>(SafeMalloc(screenWidth * sizeof(*wallheight)));
-#if defined(USE_FLOORCEILINGTEX) || defined(USE_CLOUDSKY)
-    spanstart = reinterpret_cast<short*>(SafeMalloc((screenHeight / 2) * sizeof(*spanstart)));
-#endif
-#elif defined(STATIC_CAST)
-    ylookup = static_cast<unsigned int*>(SafeMalloc(screenHeight * sizeof(*ylookup)));
-    pixelangle = static_cast<short*>(SafeMalloc(screenWidth * sizeof(*pixelangle)));
-    wallheight = static_cast<short*>(SafeMalloc(screenWidth * sizeof(*wallheight)));
-#if defined(USE_FLOORCEILINGTEX) || defined(USE_CLOUDSKY)
-    spanstart = static_cast<short*>(SafeMalloc((screenHeight / 2) * sizeof(*spanstart)));
-#endif
-#else
-    ylookup = (unsigned int*)SafeMalloc(screenHeight * sizeof(*ylookup));
-    pixelangle = (short*)SafeMalloc(screenWidth * sizeof(*pixelangle));
-    wallheight = (short*)SafeMalloc(screenWidth * sizeof(*wallheight));
-#if defined(USE_FLOORCEILINGTEX) || defined(USE_CLOUDSKY)
-    spanstart = (short*)SafeMalloc((screenHeight / 2) * sizeof(*spanstart));
-#endif
-#endif
 
+    ylookup = wlcast_conversion(unsigned int*, SafeMalloc(screenHeight * sizeof(*ylookup)));
+    pixelangle = wlcast_conversion(short*, SafeMalloc(screenWidth * sizeof(*pixelangle)));
+    wallheight = wlcast_conversion(short*, SafeMalloc(screenWidth * sizeof(*wallheight)));
 #if defined(USE_FLOORCEILINGTEX) || defined(USE_CLOUDSKY)
-    spanstart = SafeMalloc((screenHeight / 2) * sizeof(*spanstart));
+    spanstart = wlcast_conversion(short*, SafeMalloc((screenHeight / 2) * sizeof(*spanstart)));
 #endif
 
     for (i = 0; i < screenHeight; i++)
@@ -854,7 +852,7 @@ void VL_FillPalette (unsigned char red, unsigned char green, unsigned char blue)
     VL_SetPalette(pal, true);
 }
 
-//===========================================================================
+/* =========================================================================== */
 
 /*
 =================
@@ -910,9 +908,9 @@ void VL_SetColor(int color, unsigned char red, unsigned char green, unsigned cha
     }
 }
 
-//===========================================================================
+/* =========================================================================== */
 
-//===========================================================================
+/* =========================================================================== */
 
 /*
 =================
@@ -953,7 +951,7 @@ void VL_SetPalette(SDL_Color* palette, boolean forceupdate)
 }
 
 
-//===========================================================================
+/* =========================================================================== */
 
 /*
 =================
@@ -969,7 +967,7 @@ void VL_GetPalette (SDL_Color *palette)
 }
 
 
-//===========================================================================
+/* =========================================================================== */
 
 /*
 =================
@@ -984,7 +982,6 @@ void VL_GetPalette (SDL_Color *palette)
 void VL_FadeOut(int start, int end, unsigned char red, unsigned char green, unsigned char blue, int steps)
 {
 	int		    i,j,orig,delta;
-	SDL_Color   *origptr, *newptr;
 
     red = red * 255 / 63;
     green = green * 255 / 63;
@@ -994,11 +991,12 @@ void VL_FadeOut(int start, int end, unsigned char red, unsigned char green, unsi
 	VL_GetPalette(palette1);
 	memcpy(palette2, palette1, sizeof(SDL_Color) * 256);
 
-//
-// fade through intermediate frames
-//
+/*
+** fade through intermediate frames
+*/
 	for (i=0;i<steps;i++)
 	{
+        SDL_Color* origptr, * newptr;
 		origptr = &palette1[start];
 		newptr = &palette2[start];
 		for (j=start;j<=end;j++)
@@ -1020,9 +1018,9 @@ void VL_FadeOut(int start, int end, unsigned char red, unsigned char green, unsi
 		VL_SetPalette (palette2, true);
 	}
 
-//
-// final color
-//
+/*
+** final color
+*/
 	VL_FillPalette (red,green,blue);
 
 	screenfaded = true;
@@ -1045,9 +1043,9 @@ void VL_FadeIn (int start, int end, SDL_Color *palette, int steps)
 	VL_GetPalette(palette1);
 	memcpy(palette2, palette1, sizeof(SDL_Color) * 256);
 
-//
-// fade through intermediate frames
-//
+/*
+** fade through intermediate frames
+*/
 	for (i=0; i<steps; i++)
 	{
 		for (j=start;j<=end;j++)
@@ -1064,9 +1062,9 @@ void VL_FadeIn (int start, int end, SDL_Color *palette, int steps)
 		VL_SetPalette(palette2, true);
 	}
 
-//
-// final color
-//
+/*
+** final color
+*/
 	VL_SetPalette (palette, true);
 	screenfaded = false;
 }
@@ -1405,17 +1403,12 @@ void VL_DePlaneVGA (unsigned char *source, int width, int height)
 
     if (width & 3)
         Quit ("DePlaneVGA: width not divisible by 4!");
-#if defined(REINTERPRET_CAST)
-    temp = reinterpret_cast<unsigned char*>(SafeMalloc(size));
-#elif defined(STATIC_CAST)
-    temp = static_cast<unsigned char*>(SafeMalloc(size));
-#else
-    temp = (unsigned char*)SafeMalloc(size);
-#endif
 
-//
-// munge pic into the temp buffer
-//
+    temp = wlcast_conversion(unsigned char*, SafeMalloc(size));
+
+/*
+** munge pic into the temp buffer
+*/
     srcline = source;
     pwidth = width >> 2;
 
@@ -1432,9 +1425,9 @@ void VL_DePlaneVGA (unsigned char *source, int width, int height)
         }
     }
 
-//
-// copy the temp buffer back into the original source
-//
+/*
+** copy the temp buffer back into the original source
+*/
     memcpy (source,temp,size);
 
     free (temp);
@@ -1459,16 +1452,17 @@ wlinline void VL_MemToScreen (unsigned char *source, int width, int height, int 
 void VL_MemToScreenScaledCoord (unsigned char *source, int width, int height, int destx, int desty)
 {
 #ifdef SEGA_SATURN
-    //    assert5(destx >= 0 && destx + width * scaleFactor <= screenWidth
-    //            && desty >= 0 && desty + height * scaleFactor <= screenHeight
-    //            && "VL_MemToScreenScaledCoord: Destination rectangle out of bounds!");
-
-    //    VL_LockSurface(curSurface);
+    /*
+    **    assert5(destx >= 0 && destx + width * scaleFactor <= screenWidth
+    **            && desty >= 0 && desty + height * scaleFactor <= screenHeight
+    **            && "VL_MemToScreenScaledCoord: Destination rectangle out of bounds!");
+    */
+    /*    VL_LockSurface(curSurface);     */
     unsigned char* vbuf = (unsigned char*)curSurface->pixels + (desty * curPitch) + destx;
     unsigned char w2 = width >> 2;
     unsigned int mul = w2 * height;
 
-    //	if(scaleFactor == 1)
+    /*	if(scaleFactor == 1)   */
     {
         for (unsigned int j = 0; j < height; j++)
         {
@@ -1476,7 +1470,7 @@ void VL_MemToScreenScaledCoord (unsigned char *source, int width, int height, in
             {
                 vbuf[i] = source[(i >> 2) + (i & 3) * mul];
             }
-            //vbuf += curPitch;
+            /* vbuf += curPitch; */
             source += w2;
         }
     }
@@ -1497,7 +1491,7 @@ void VL_MemToScreenScaledCoord (unsigned char *source, int width, int height, in
                 }
             }
         }*/
-    VL_UnlockSurface(surface); // vbt utile pour signon screen
+    VL_UnlockSurface(surface); /* vbt utile pour signon screen */
 
 #else
     unsigned char *dest;
@@ -1574,7 +1568,7 @@ void VL_MemToScreenScaledCoord2 (unsigned char *source, int origwidth, int origh
     VL_UnlockSurface(screenBuffer);
 }
 
-//==========================================================================
+/* ========================================================================== */
 
 /*
 =================

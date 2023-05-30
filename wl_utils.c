@@ -1,4 +1,4 @@
-// WL_UTILS.C
+/* WL_UTILS.C */
 
 #include "wl_utils.h"
 

@@ -1,6 +1,6 @@
-// ID_CA.C
+/* ID_CA.C */
 
-// this has been customized for WOLF
+/* this has been customized for WOLF */
 
 /*
 =============================================================================
@@ -26,7 +26,7 @@ struct iovec
      size_t iov_len;    
 };
 #elif !defined(_arch_dreamcast) 
-#if defined(DEVCPP) || !defined(PSVITA)
+#if defined(DEVCPP) || !defined(__GNUC__)
     #include <io.h>
 #else
     #include <sys/uio.h>
@@ -45,7 +45,7 @@ void readChunks(Sint32 fileId, unsigned int size, unsigned int* pageOffsets, uns
 #define THREEBYTEGRSTARTS
 
 #ifdef SEGA_SATURN
-//#define HEAP_WALK 1
+/* #define HEAP_WALK 1 */
 #endif
 
 #if defined(HEAP_WALK) && defined(SEGA_SATURN)
@@ -56,62 +56,65 @@ extern Uint32  _sbrk(int size);
 void heapWalk(void)
 {
     Uint32 chunkNumber = 1;
-    // The __end__ linker symbol points to the beginning of the heap.
+    /* The __end__ linker symbol points to the beginning of the heap. */
     Uint32 chunkCurr = (Uint32)&end;
-    // __malloc_free_list is the head pointer to newlib-nano's link list of free chunks.
+    /* __malloc_free_list is the head pointer to newlib-nano's link list of free chunks. */
     Uint32 freeCurr = __malloc_free_list;
-    // Calling _sbrk() with 0 reserves no more memory but it returns the current top of heap.
+    /* Calling _sbrk() with 0 reserves no more memory but it returns the current top of heap. */
     Uint32 heapEnd = _sbrk(0);
 
-    //    printf("Heap Size: %lu\n", heapEnd - chunkCurr);
+    /*    printf("Heap Size: %lu\n", heapEnd - chunkCurr); */
     char msg[100];
     sprintf(msg, "Heap Size: %d  e%08x s%08x                  ", heapEnd - chunkCurr, heapEnd, chunkCurr);
-    //	FNT_Print256_2bpp((volatile Uint8 *)SS_FONT,(Uint8 *)toto,12,216);
+    /*	FNT_Print256_2bpp((volatile Uint8 *)SS_FONT,(Uint8 *)toto,12,216); */
     slPrint((char*)msg, slLocate(1, 3));
 
-    // Walk through the chunks until we hit the end of the heap.
+    /* Walk through the chunks until we hit the end of the heap. */
     while (chunkCurr < heapEnd)
     {
-        // Assume the chunk is in use.  Will update later.
+        /* Assume the chunk is in use.  Will update later. */
         int      isChunkFree = 0;
-        // The first 32-bit word in a chunk is the size of the allocation.  newlib-nano over allocates by 8 bytes.
-        // 4 bytes for this 32-bit chunk size and another 4 bytes to allow for 8 byte-alignment of returned pointer.
+        /* The first 32-bit word in a chunk is the size of the allocation.  newlib-nano over allocates by 8 bytes. */
+        /* 4 bytes for this 32-bit chunk size and another 4 bytes to allow for 8 byte-alignment of returned pointer. */
         Uint32 chunkSize = *(Uint32*)chunkCurr;
-        // The start of the next chunk is right after the end of this one.
+        /* The start of the next chunk is right after the end of this one. */
         Uint32 chunkNext = chunkCurr + chunkSize;
 
-        // The free list is sorted by address.
-        // Check to see if we have found the next free chunk in the heap.
+        /* The free list is sorted by address. */
+        /* Check to see if we have found the next free chunk in the heap. */
         if (chunkCurr == freeCurr)
         {
-            // Chunk is free so flag it as such.
+            /* Chunk is free so flag it as such. */
             isChunkFree = 1;
-            // The second 32-bit word in a free chunk is a pointer to the next free chunk (again sorted by address).
+            /* The second 32-bit word in a free chunk is a pointer to the next free chunk (again sorted by address). */
             freeCurr = *(Uint32*)(freeCurr + 4);
         }
 
-        // Skip past the 32-bit size field in the chunk header.
+        /* Skip past the 32-bit size field in the chunk header. */
         chunkCurr += 4;
-        // 8-byte align the data pointer.
+        /* 8-byte align the data pointer. */
         chunkCurr = (chunkCurr + 7) & ~7;
-        // newlib-nano over allocates by 8 bytes, 4 bytes for the 32-bit chunk size and another 4 bytes to allow for 8
-        // byte-alignment of the returned pointer.
+        /*
+        ** newlib-nano over allocates by 8 bytes, 4 bytes for the 32-bit chunk size and another 4 bytes to allow for 8
+        ** byte-alignment of the returned pointer.
+        */
         chunkSize -= 8;
-        //        printf("Chunk: %lu  Address: 0xlX  Size: %lu  %s\n", chunkNumber, chunkCurr, chunkSize, isChunkFree ? "CHUNK FREE" : "");
+        /*        printf("Chunk: %lu  Address: 0xlX  Size: %lu  %s\n", chunkNumber, chunkCurr, chunkSize, isChunkFree ? "CHUNK FREE" : "");       */
 
         sprintf(msg, "%d A%04x  S%04d %s", chunkNumber, chunkCurr, chunkSize, isChunkFree ? "CHUNK FREE" : "");
         if (chunkNumber < 20)
             slPrint((char*)msg, slLocate(0, chunkNumber * 10 + 10));
-        //	if(chunkNumber>=200)
-        //	slPrint((char *)msg,slLocate(0,chunkNumber-200));
-        //	if(chunkNumber>=230)
-        //	slPrint((char *)msg,slLocate(20,chunkNumber-230));
-
+        /*
+        **	if(chunkNumber>=200)
+        **	slPrint((char *)msg,slLocate(0,chunkNumber-200));
+        **	if(chunkNumber>=230)
+        **	slPrint((char *)msg,slLocate(20,chunkNumber-230));
+        */
         chunkCurr = chunkNext;
         chunkNumber++;
     }
 }
-#endif //To be continued...
+#endif 
 
 /*
 =============================================================================
@@ -121,7 +124,7 @@ void heapWalk(void)
 
 typedef struct
 {
-    unsigned short bit0,bit1;       // 0-255 is a character, > is a pointer to a node
+    unsigned short bit0,bit1;       /* 0-255 is a character, > is a pointer to a node */
 } huffnode;
 
 
@@ -129,7 +132,7 @@ typedef struct
 {
     unsigned short RLEWtag;
 #if MAPPLANES >= 4
-    unsigned short numplanes;       // unused, but WDC needs 2 bytes here for internal usage
+    unsigned short numplanes;       /* unused, but WDC needs 2 bytes here for internal usage */
 #endif
     int headeroffsets[NUMMAPS];
 } mapfiletype;
@@ -161,7 +164,7 @@ mapfiletype *tinf;
 =============================================================================
 */
 
-char extension[5]; // Need a string, not constant to change cache files
+char extension[5]; /* Need a string, not constant to change cache files */
 #ifndef SEGA_SATURN
 char graphext[5];
 char audioext[5];
@@ -213,7 +216,7 @@ void CA_CannotOpen(const char *string);
 static int  grstarts[NUMCHUNKS + 1];
 
 #if !defined(VIEASM) || !defined(SEGA_SATURN)
-static int* audiostarts; // array of offsets in audio / audiot
+static int* audiostarts; /* array of offsets in audio / audiot */
 #endif
 
 #ifdef GRHEADERLINKED
@@ -222,11 +225,11 @@ huffnode *grhuffman;
 huffnode grhuffman[255];
 #endif
 
-int    grhandle = -1;               // handle to EGAGRAPH
-int    maphandle = -1;              // handle to MAPTEMP / GAMEMAPS
+int    grhandle = -1;               /* handle to EGAGRAPH */
+int    maphandle = -1;              /* handle to MAPTEMP / GAMEMAPS */
 
 #if !defined(VIEASM) || !defined(SEGA_SATURN)
-int    audiohandle = -1;            // handle to AUDIOT / AUDIO
+int    audiohandle = -1;            /* handle to AUDIOT / AUDIO */
 #endif
 int   chunkcomplen,chunkexplen;
 
@@ -287,7 +290,7 @@ void CAL_GetGrChunkLength (int chunk)
 boolean CA_WriteFile (const char *filename, void *ptr, int length)
 {
     int handle;
-#if defined(_MSC_VER) || defined(DEVCPP)
+#if defined(DEVCPP)
 	handle = w3sopen(filename, O_CREAT | O_WRONLY | O_BINARY);
 #else
     handle = w3sopen(filename, O_CREAT | O_WRONLY | O_BINARY, 0644);
@@ -318,10 +321,10 @@ boolean CA_WriteFile (const char *filename, void *ptr, int length)
 
 boolean CA_LoadFile (const char *filename, void **ptr)
 {
-    int size;
+    intptr_t seek_size;
     
     int handle;
-#if defined(_MSC_VER) || defined(DEVCPP)
+#if defined(DEVCPP)
 	handle = w3sopen(filename, O_RDONLY | O_BINARY);
 #else
     handle = w3sopen(filename, O_RDONLY | O_BINARY, 0644);
@@ -329,11 +332,11 @@ boolean CA_LoadFile (const char *filename, void **ptr)
 	if (handle == -1)
         return false;
 
-    size = (int)w3slseek(handle, 0, SEEK_END);
+    seek_size = w3slseek(handle, 0, SEEK_END);
     w3slseek(handle, 0, SEEK_SET);
-    *ptr = SafeMalloc(size);
+    *ptr = SafeMalloc(seek_size);
 
-    if (!w3sread (handle,*ptr,size))
+    if (!w3sread (handle,*ptr,(unsigned int)seek_size))
     {
         w3sclose (handle);
         return false;
@@ -363,7 +366,7 @@ static void CAL_HuffExpand(unsigned char *source, unsigned char *dest, int lengt
         return;
     }
 
-    headptr = hufftable+254;        // head node is always node 254
+    headptr = hufftable+254;        /* head node is always node 254 */
 
 
 
@@ -434,7 +437,7 @@ void CAL_CarmackExpand (unsigned char *source, unsigned short *dest, int length)
         {
             count = ch&0xff;
             if (!count)
-            {                               // have to insert a word containing the tag byte
+            {                               /* have to insert a word containing the tag byte */
                 ch |= *inptr++;
                 *outptr++ = ch;
                 length--;
@@ -453,7 +456,7 @@ void CAL_CarmackExpand (unsigned char *source, unsigned short *dest, int length)
         {
             count = ch&0xff;
             if (!count)
-            {                               // have to insert a word containing the tag byte
+            {                               /* have to insert a word containing the tag byte */
                 ch |= *inptr++;
                 *outptr++ = ch;
                 length --;
@@ -494,9 +497,9 @@ int CA_RLEWCompress (unsigned short *source, int length, unsigned short *dest, u
 
     end = source + (length+1)/2;
 
-    //
-    // compress it
-    //
+    /*
+    ** compress it
+    */
     do
     {
         unsigned short count = 1;
@@ -508,18 +511,18 @@ int CA_RLEWCompress (unsigned short *source, int length, unsigned short *dest, u
         }
         if (count>3 || value == rlewtag)
         {
-            //
-            // send a tag / count / value string
-            //
+            /*
+            ** send a tag / count / value string
+            */
             *dest++ = rlewtag;
             *dest++ = count;
             *dest++ = value;
         }
         else
         {
-            //
-            // send word without compressing
-            //
+            /*
+            ** send word without compressing
+            */
             for (i=1;i<=count;i++)
                 *dest++ = value;
         }
@@ -544,22 +547,22 @@ void CA_RLEWexpand (unsigned short *source, unsigned short *dest, int length, un
     unsigned short count,i;
     unsigned short *end=dest+length/2;
 
-//
-// expand it
-//
+/*
+** expand it
+*/
     do
     {
         unsigned short value = *source++;
         if (value != rlewtag)
-            //
-            // uncompressed
-            //
+            /*
+            ** uncompressed
+            */
             *dest++=value;
         else
         {
-            //
-            // compressed string
-            //
+            /*
+            ** compressed string
+            */
             count = *source++;
             value = *source++;
             for (i=1;i<=count;i++)
@@ -589,12 +592,20 @@ void CAL_SetupGrFile (void)
 {
 #ifdef SEGA_SATURN
     char fname[13];
-    //int handle;
-//	unsigned int j=0;
+/*    
+    int handle;
+	unsigned int j=0;
+*/
     unsigned char* compseg;
     long fileSize;
+    long headersize;
     Sint32 fileId;
-
+    unsigned char x;
+    unsigned char data[lengthof(grstarts) * 3];
+    const unsigned char* d;
+    int* i;
+    int   chunkcomplen;
+    unsigned long k;
 #ifdef GRHEADERLINKED
 
     grhuffman = (huffnode*)&EGAdict;
@@ -602,9 +613,9 @@ void CAL_SetupGrFile (void)
 
 #else
 
-    //
-    // load ???dict.ext (huffman dictionary for graphics files)
-    //
+    /*
+    ** load ???dict.ext (huffman dictionary for graphics files)
+    */
 
     strcpy(fname, gdictname);
     strcat(fname, extension);
@@ -614,35 +625,37 @@ void CAL_SetupGrFile (void)
             fname[j]= toupper(fname[j]);
             j++;
         }*/
-        //	i=0;
-
-            //handle = open(fname, O_RDONLY | O_BINARY);
-            //if (handle == -1)
-        //	if(stat(fname, NULL))
-        //        CA_CannotOpen(fname);
-
+        /*	i=0; */
+/*
+            handle = open(fname, O_RDONLY | O_BINARY);
+            if (handle == -1)
+        	if(stat(fname, NULL))
+                CA_CannotOpen(fname);
+*/
     fileId = GFS_NameToId((char*)fname);
-    //	fileSize = GetFileSize(fileId);
+    /*	fileSize = GetFileSize(fileId);  */
     compseg = (unsigned char*)saturnChunk + 0x8000;
-    //	CHECKMALLOCRESULT(vbtHuff);
-    //slPrint((char *)"CAL_SetupGrFile1     ",slLocate(10,12));
-    GFS_Load(fileId, 0, (void*)compseg, sizeof(grhuffman)); // lecture VGADICT full
+    /* 
+    ** CHECKMALLOCRESULT(vbtHuff);
+    ** slPrint((char *)"CAL_SetupGrFile1     ",slLocate(10,12));
+    */
+    GFS_Load(fileId, 0, (void*)compseg, sizeof(grhuffman)); /* lecture VGADICT full */
     huffnode* grhuffmanptr = (huffnode*)grhuffman;
 
-    for (unsigned char x = 0; x < 255; x++)
+    for (x = 0; x < 255; x++)
     {
-        //	slPrint((char *)"CAL_SetupGrFile2     ",slLocate(10,12));	
+        /*	slPrint((char *)"CAL_SetupGrFile2     ",slLocate(10,12));	*/
         grhuffmanptr->bit0 = compseg[0] | (compseg[1] << 8);
         grhuffmanptr->bit1 = compseg[2] | (compseg[3] << 8);
         grhuffmanptr++;
         compseg += 4;
     }
-    //	j=0;
+    /*	j=0;  */
 
-        //read(handle, grhuffman, sizeof(grhuffman));
-        //close(handle);
+        /* read(handle, grhuffman, sizeof(grhuffman)); */
+        /* close(handle); */
 
-        // load the data offsets from ???head.ext
+        /* load the data offsets from ???head.ext */
     strcpy(fname, gheadname);
     strcat(fname, extension);
     /*
@@ -652,18 +665,23 @@ void CAL_SetupGrFile (void)
             j++;
         }
         j=0;*/
-
-        //handle = open(fname, O_RDONLY | O_BINARY);
-        //if (handle == -1)
-    //	if(stat(fname, NULL))
-    //        CA_CannotOpen(fname);
-    //slSynch();
-    //slPrint((char *)"CAL_SetupGrFile3     ",slLocate(10,12));
+/*
+        handle = open(fname, O_RDONLY | O_BINARY);
+        if (handle == -1)
+    	if(stat(fname, NULL))
+            CA_CannotOpen(fname);
+    slSynch();
+    slPrint((char *)"CAL_SetupGrFile3     ",slLocate(10,12));
+*/
     fileId = GFS_NameToId((char*)fname);
     fileSize = GetFileSize(fileId);
-    long headersize = fileSize;//lseek(handle, 0, SEEK_END);
-    //lseek(handle, 0, SEEK_SET);
-//headersize= 157*3;
+    headersize = fileSize;
+    
+    /*
+    ** lseek(handle, 0, SEEK_END);
+    ** lseek(handle, 0, SEEK_SET);
+    ** eadersize= 157*3;
+    */
 #if 0
     if (headersize / 3 != (long)(lengthof(grstarts) - numEpisodesMissing))
     {
@@ -684,26 +702,27 @@ void CAL_SetupGrFile (void)
         while (1);
     }
 #endif	
-    //slPrint((char *)"CAL_SetupGrFile4     ",slLocate(10,12));
-    unsigned char data[lengthof(grstarts) * 3];
-    GFS_Load(fileId, 0, (void*)data, sizeof(data)); // lecture de VGAHEAD full
-    //read(handle, data, sizeof(data));
-    //close(handle);
-
-    const unsigned char* d = data;
-    for (int* i = grstarts; i != endof(grstarts); ++i)
+    /* slPrint((char *)"CAL_SetupGrFile4     ",slLocate(10,12)); */
+    
+    GFS_Load(fileId, 0, (void*)data, sizeof(data)); /* lecture de VGAHEAD full  */
+    /*
+    ** read(handle, data, sizeof(data));
+    ** close(handle);
+    */
+    d = data;
+    for (i = grstarts; i != endof(grstarts); ++i)
     {
-        //	slPrint((char *)"CAL_SetupGrFile5     ",slLocate(10,12));	
+        /*	slPrint((char *)"CAL_SetupGrFile5     ",slLocate(10,12));	*/
         const int val = d[0] | d[1] << 8 | d[2] << 16;
         *i = (val == 0x00FFFFFF ? -1 : val);
         d += 3;
     }
 
 #endif
-    //slPrint((char *)"CAL_SetupGrFile6     ",slLocate(10,12));
-    //
-    // Open the graphics file, leaving it open until the game is finished
-    //
+    /* slPrint((char *)"CAL_SetupGrFile6     ",slLocate(10,12)); */
+    /*
+    ** Open the graphics file, leaving it open until the game is finished
+    */
     strcpy(fname, gfilename);
     strcat(fname, extension);
     /*
@@ -713,54 +732,56 @@ void CAL_SetupGrFile (void)
             j++;
         }
         j=0;*/
-
-        //grhandle = open(fname, O_RDONLY | O_BINARY);
-        //if (grhandle == -1)
-    //	if(stat(fname, NULL))
-    //        CA_CannotOpen(fname);
-
+/*
+**        grhandle = open(fname, O_RDONLY | O_BINARY);
+**        if (grhandle == -1)
+**    	  if(stat(fname, NULL))
+**            CA_CannotOpen(fname);
+*/
     grhandle = GFS_NameToId((char*)fname);
-    //	fileSize = GetFileSize(grhandle);
-    //
-    // load the pic and sprite headers into the arrays in the data segment
-    //
-    //slPrint((char *)"CAL_SetupGrFile7     ",slLocate(10,12));
+    /*	fileSize = GetFileSize(grhandle); */
+    /*
+    ** load the pic and sprite headers into the arrays in the data segment
+    */
+    /* slPrint((char *)"CAL_SetupGrFile7     ",slLocate(10,12)); */
     pictable = (pictabletype*)malloc(NUMPICS * sizeof(pictabletype));
 
-    int   chunkcomplen = CAL_GetGrChunkLength(STRUCTPIC);                // position file pointer
-    //	compseg =(byte*)malloc((chunkcomplen));
+    chunkcomplen = CAL_GetGrChunkLength(STRUCTPIC);                /* position file pointer */
+    /*	compseg =(byte*)malloc((chunkcomplen));  */
     compseg = (unsigned char*)saturnChunk;
-    //	CHECKMALLOCRESULT(compseg);
+    /*	CHECKMALLOCRESULT(compseg);  */
     GFS_Load(grhandle, 0, (void*)compseg, (chunkcomplen));
-    //    CAL_HuffExpand(&compseg[4], (byte*)pictable, NUMPICS * sizeof(pictabletype), grhuffman);
-    //slPrint((char *)"CAL_SetupGrFile8     ",slLocate(10,12));
+    /*    
+    ** CAL_HuffExpand(&compseg[4], (byte*)pictable, NUMPICS * sizeof(pictabletype), grhuffman);
+    ** slPrint((char *)"CAL_SetupGrFile8     ",slLocate(10,12));
+    */
     CAL_HuffExpand(&compseg[4], (unsigned char*)pictable, NUMPICS * sizeof(pictabletype), grhuffman);
-    //slPrint((char *)"CAL_SetupGrFile9     ",slLocate(10,12));
-    for (unsigned long k = 0; k < NUMPICS; k++)
+    /* slPrint((char *)"CAL_SetupGrFile9     ",slLocate(10,12)); */
+    for (k = 0; k < NUMPICS; k++)
     {
-        //slPrint((char *)"CAL_SetupGrFile10     ",slLocate(10,12));		
+        /* slPrint((char *)"CAL_SetupGrFile10     ",slLocate(10,12)); */
         pictable[k].height = SWAP_BYTES_16(pictable[k].height);
         pictable[k].width = SWAP_BYTES_16(pictable[k].width);
     }
-    //slPrint((char *)"CAL_SetupGrFile11     ",slLocate(10,12));	
+    /* slPrint((char *)"CAL_SetupGrFile11     ",slLocate(10,12)); */
     compseg = NULL;
-    // VBT correct
+    /* VBT correct */
 #else
     char fname[13];
     int handle;
     unsigned char *compseg;
-	long headersize;
+	intptr_t headersize;
 	int expectedsize;
 	unsigned char data[lengthof(grstarts) * 3];
 	const unsigned char* d;
 	int* i;
-//
-// load ???dict.ext (huffman dictionary for graphics files)
-//
+/*
+** load ???dict.ext (huffman dictionary for graphics files)
+*/
 
     strcpy(fname,gdictname);
     strcat(fname,graphext);
-#if defined(_MSC_VER) || defined(DEVCPP)
+#if defined(DEVCPP)
 	handle = w3sopen(fname, O_RDONLY | O_BINARY);
 #else
 	handle = w3sopen(fname, O_RDONLY | O_BINARY, 0644);
@@ -771,10 +792,10 @@ void CAL_SetupGrFile (void)
     w3sread(handle, grhuffman, sizeof(grhuffman));
     w3sclose(handle);
 
-    // load the data offsets from ???head.ext
+    /* load the data offsets from ???head.ext */
     strcpy(fname,gheadname);
     strcat(fname,graphext);
-#if defined(_MSC_VER) || defined(DEVCPP)
+#if defined(DEVCPP)
 	handle = w3sopen(fname, O_RDONLY | O_BINARY);
 #else
 	handle = w3sopen(fname, O_RDONLY | O_BINARY, 644);
@@ -782,7 +803,7 @@ void CAL_SetupGrFile (void)
 	if (handle == -1)
         CA_CannotOpen(fname);
 
-    headersize = (long)w3slseek(handle, 0, SEEK_END);
+    headersize = w3slseek(handle, 0, SEEK_END);
     w3slseek(handle, 0, SEEK_SET);
 
 	expectedsize = lengthof(grstarts);
@@ -806,12 +827,12 @@ void CAL_SetupGrFile (void)
         d += 3;
     }
 
-//
-// Open the graphics file
-//
+/*
+** Open the graphics file
+*/
     strcpy(fname,gfilename);
     strcat(fname,graphext);
-#if defined(_MSC_VER) || defined(DEVCPP)
+#if defined(DEVCPP)
 	grhandle = w3sopen(fname, O_RDONLY | O_BINARY);
 #else
 	grhandle = w3sopen(fname, O_RDONLY | O_BINARY, 0644);
@@ -820,25 +841,15 @@ void CAL_SetupGrFile (void)
         CA_CannotOpen(fname);
 
 
-//
-// load the pic and sprite headers into the arrays in the data segment
-//
-#if defined(REINTERPRET_CAST)
-    pictable = reinterpret_cast<pictabletype*>(SafeMalloc(NUMPICS * sizeof(*pictable)));
-#elif defined(STATIC_CAST)
-    pictable = static_cast<pictabletype*>(SafeMalloc(NUMPICS * sizeof(*pictable)));
-#else
-    pictable = (pictabletype*)SafeMalloc(NUMPICS * sizeof(*pictable));
-#endif
+/*
+** load the pic and sprite headers into the arrays in the data segment
+*/
+    pictable = wlcast_conversion(pictabletype*, SafeMalloc(NUMPICS * sizeof(*pictable)));
 
-    CAL_GetGrChunkLength(STRUCTPIC);                // position file pointer
-#if defined(REINTERPRET_CAST)
-    compseg = reinterpret_cast<unsigned char*>(SafeMalloc(chunkcomplen));
-#elif defined(STATIC_CAST)
-    compseg = static_cast<unsigned char*>(SafeMalloc(chunkcomplen));
-#else
-    compseg = (unsigned char*)SafeMalloc(chunkcomplen);
-#endif
+    CAL_GetGrChunkLength(STRUCTPIC);                /* position file pointer */
+
+    compseg = wlcast_conversion(unsigned char*, SafeMalloc(chunkcomplen));
+
     w3sread (grhandle,compseg,chunkcomplen);
     CAL_HuffExpand(compseg, (unsigned char*)pictable, NUMPICS * sizeof(*pictable), grhuffman);
     free(compseg);
@@ -849,7 +860,7 @@ void CAL_SetupGrFile (void)
 #endif
 }
 
-//==========================================================================
+/* ========================================================================== */
 
 
 /*
@@ -859,7 +870,6 @@ void CAL_SetupGrFile (void)
 =
 ======================
 */
-
 #ifdef SEGA_SATURN
 long CAL_SetupMapFile(void)
 #else
@@ -867,32 +877,30 @@ void CAL_SetupMapFile (void)
 #endif
 {
 #ifdef SEGA_SATURN
-#ifndef SEGA_SATURN
     int     i;
-#endif
     int length, pos;
     char fname[13];
     long fileSize;
-
-    //
-    // load maphead.ext (offsets and tileinfo for map file)
-    //
+    unsigned char* maphandleptr;
+    /*
+    ** load maphead.ext (offsets and tileinfo for map file)
+    */
     strcpy(fname, mheadname);
     strcat(fname, extension);
 
     Sint32 fileId;
 
     fileId = GFS_NameToId((char*)fname);
-    //	fileSize = GetFileSize(fileId); // utile
-    length = NUMMAPS * 4 + 2; // used to be "filelength(handle);"
-    //    mapfiletype *tinf=(mapfiletype *) malloc(sizeof(mapfiletype));
+    /*	fileSize = GetFileSize(fileId); */ /* utile */
+    length = NUMMAPS * 4 + 2; /* used to be "filelength(handle);" */
+    /*    mapfiletype *tinf=(mapfiletype *) malloc(sizeof(mapfiletype));    */
     mapfiletype* tinf = (mapfiletype*)saturnChunk;
     GFS_Load(fileId, 0, (void*)tinf, length);
-    //read(handle, tinf, length);
+    /* read(handle, tinf, length); */
 
-    //
-    // open the data file
-    //
+    /*
+    ** open the data file
+    */
 #ifdef CARMACIZED
     strcpy(fname, "GAMEMAPS.");
     strcat(fname, extension);
@@ -913,65 +921,67 @@ void CAL_SetupMapFile (void)
         CA_CannotOpen(fname);
 #endif
 
-    //
-    // load all map header
-    //
+    /*
+    ** load all map header
+    */
 
     pos = tinf->headeroffsets[mapnum];
-    //slPrintHex(pos, slLocate(10, 2));
-    //slPrintHex(fileSize, slLocate(10, 3));
-    if (pos < 0)                          // $FFFFFFFF start is a sparse map
+    /* 
+    ** slPrintHex(pos, slLocate(10, 2));
+    ** slPrintHex(fileSize, slLocate(10, 3));
+    */
+    if (pos < 0)                          /* $FFFFFFFF start is a sparse map */
         return fileSize;
 
 
     slPrintHex(pos, slLocate(10, 2));
 
-    unsigned char* maphandleptr = (unsigned char*)(((int)saturnChunk + length + (4 - 1)) & -4);
+    maphandleptr = (unsigned char*)(((int)saturnChunk + length + (4 - 1)) & -4);
 
     readChunks(maphandle, sizeof(maptype), &pos, maphandleptr, (unsigned char*)&mapheaderseg);
-    //	memcpy((memptr)&mapheaderseg,saturnChunk+0x500,sizeof(maptype));
+    /*	memcpy((memptr)&mapheaderseg,saturnChunk+0x500,sizeof(maptype));  */ 
 #ifndef EMBEDDED
     mapheaderseg[mapnum] = (maptype*)((saturnChunk + sizeof(mapfiletype) + fileSize + (8 - 1)) & -4);
-    //	CHECKMALLOCRESULT(mapheaderseg[mapnum]);
-    Safe_Malloc(mapheaderseg[mapnum]);
-        //read (maphandle,(memptr)mapheaderseg[i],sizeof(maptype));
+    /* CHECKMALLOCRESULT(mapheaderseg[mapnum]); */
+    SafeMalloc(mapheaderseg[mapnum]);
+        /* read (maphandle,(memptr)mapheaderseg[i],sizeof(maptype)); */
     memcpy((memptr)mapheaderseg[mapnum], maphandleptr, sizeof(maptype));
 
-    //
-    // allocate space for 3 64*64 planes
-    //
-    for (int i = 0; i < MAPPLANES; i++)
+    /*
+    ** allocate space for 3 64*64 planes
+    */
+    for (i = 0; i < MAPPLANES; i++)
     {
         mapheaderseg[mapnum]->planestart[i] = SWAP_BYTES_32(mapheaderseg[mapnum]->planestart[i]);
         mapheaderseg[mapnum]->planelength[i] = SWAP_BYTES_16(mapheaderseg[mapnum]->planelength[i]);
         mapsegs[i] = (unsigned short*)SATURN_MAPSEG_ADDR + (0x2000 * i);
-        //		mapsegs[i]=(word *) malloc(maparea*2);
+        /*		mapsegs[i]=(word *) malloc(maparea*2);       */
     }
     mapheaderseg[mapnum]->width = SWAP_BYTES_16(mapheaderseg[mapnum]->width);
     mapheaderseg[mapnum]->height = SWAP_BYTES_16(mapheaderseg[mapnum]->height);
 #else
 
-//
-// allocate space for 3 64*64 planes
-//
-//	if(mapheaderseg.width>0xff)
-    {
+/*
+** allocate space for 3 64*64 planes
+*/
+/*	if(mapheaderseg.width>0xff) */
+     {
         for (i = 0; i < MAPPLANES; i++)
         {
             mapheaderseg.planestart[i] = SWAP_BYTES_32(mapheaderseg.planestart[i]);
-           // slPrintHex(mapheaderseg.planestart[i], slLocate(10, 6 + i * 2));
+           /* slPrintHex(mapheaderseg.planestart[i], slLocate(10, 6 + i * 2)); */
             mapheaderseg.planelength[i] = SWAP_BYTES_16(mapheaderseg.planelength[i]);
-            //slPrintHex(mapheaderseg.planelength[i], slLocate(10, 6 + (i * 2) + 1));
-            //		mapsegs[i]=(word *)SATURN_MAPSEG_ADDR+(0x2000*i);
+            /* slPrintHex(mapheaderseg.planelength[i], slLocate(10, 6 + (i * 2) + 1));
+            **		mapsegs[i]=(word *)SATURN_MAPSEG_ADDR+(0x2000*i);
+            */
             if (mapsegs[i] == NULL) mapsegs[i] = (word*)malloc(maparea * 2);
-            //		mapsegs[i]=(word *) malloc(maparea*2);
+            /*		mapsegs[i]=(word *) malloc(maparea*2); */
         }
         mapheaderseg.width = SWAP_BYTES_16(mapheaderseg.width);
-        //slPrintHex(mapheaderseg.width, slLocate(10, 4));
+        /* slPrintHex(mapheaderseg.width, slLocate(10, 4)); */
         mapheaderseg.height = SWAP_BYTES_16(mapheaderseg.height);
     }
-    //slPrintHex(mapheaderseg.height, slLocate(10, 5));
-
+    /* slPrintHex(mapheaderseg.height, slLocate(10, 5)); */
 #endif
 
 
@@ -982,7 +992,7 @@ void CAL_SetupMapFile (void)
 
     return fileSize;
 #else
-    int     i;
+    int i;
     int handle;
     int pos;
 #if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
@@ -990,36 +1000,30 @@ void CAL_SetupMapFile (void)
 #else
     char fname[13];
 #endif
-//
-// load maphead.ext (offsets and tileinfo for map file)
-//
+/*
+** load maphead.ext (offsets and tileinfo for map file)
+*/
     strcpy(fname,mheadname);
     strcat(fname,extension);
-#if defined(_MSC_VER) || defined(DEVCPP)
+#if defined(DEVCPP)
 	handle = w3sopen(fname, O_RDONLY | O_BINARY);
 #else
 	handle = w3sopen(fname, O_RDONLY | O_BINARY, 0644);
 #endif
 	if (handle == -1)
         CA_CannotOpen(fname);
-#if defined(REINTERPRET_CAST)
-    tinf = reinterpret_cast<mapfiletype*>(SafeMalloc(sizeof(*tinf)));
-#elif defined(STATIC_CAST)
-    tinf = static_cast<mapfiletype*>(SafeMalloc(sizeof(*tinf)));
-#else
-    tinf = (mapfiletype*)SafeMalloc(sizeof(*tinf));
-#endif
+    tinf = wlcast_conversion(mapfiletype*, SafeMalloc(sizeof(*tinf)));
     
     w3sread(handle, tinf, sizeof(*tinf));
     w3sclose(handle);
 
-//
-// open the data file
-//
+/*
+** open the data file
+*/
 #ifdef CARMACIZED
     strcpy(fname, mfilecama);    
     strcat(fname, extension);
-#if defined(_MSC_VER) || defined(DEVCPP)
+#if defined(DEVCPP)
 	maphandle = w3sopen(fname, O_RDONLY | O_BINARY);
 #else
     maphandle = w3sopen(fname, O_RDONLY | O_BINARY, 0644);
@@ -1035,44 +1039,33 @@ void CAL_SetupMapFile (void)
         CA_CannotOpen(fname);
 #endif
 
-//
-// load all map header
-//
+/*
+** load all map header
+*/
     for (i=0;i<NUMMAPS;i++)
     {
         pos = tinf->headeroffsets[i];
-        if (pos<0)                          // $FFFFFFFF start is a sparse map
+        if (pos<0)                          /* $FFFFFFFF start is a sparse map */
             continue;
-#if defined(REINTERPRET_CAST)
-        mapheaderseg[i] = reinterpret_cast<maptype*>(SafeMalloc(sizeof(*mapheaderseg[i])));
-#elif defined(STATIC_CAST)
-        mapheaderseg[i] = static_cast<maptype*>(SafeMalloc(sizeof(*mapheaderseg[i])));
-#else
-        mapheaderseg[i] = (maptype*)SafeMalloc(sizeof(*mapheaderseg[i]));
-#endif
+
+        mapheaderseg[i] = wlcast_conversion(maptype*, SafeMalloc(sizeof(*mapheaderseg[i])));
 
         w3slseek(maphandle,pos,SEEK_SET);
         w3sread (maphandle,mapheaderseg[i],sizeof(*mapheaderseg[i]));
     }
 
-//
-// allocate space for 3 64*64 planes
-//
+/*
+** allocate space for 3 64*64 planes
+*/
     for (i = 0; i < MAPPLANES; i++)
     {
-#if defined(REINTERPRET_CAST)
-        mapsegs[i] = reinterpret_cast<unsigned short*>(SafeMalloc(MAPAREA * sizeof(*mapsegs[i])));
-#elif defined(STATIC_CAST)
-        mapsegs[i] = static_cast<unsigned short*>(SafeMalloc(MAPAREA * sizeof(*mapsegs[i])));
-#else
-        mapsegs[i] = (unsigned short*)SafeMalloc(MAPAREA * sizeof(*mapsegs[i]));
-#endif
+        mapsegs[i] = wlcast_conversion(unsigned short*, SafeMalloc(MAPAREA * sizeof(*mapsegs[i])));
     }
 #endif
 }
 
 
-//==========================================================================
+/* ========================================================================== */
 
 /*
 ======================
@@ -1084,15 +1077,15 @@ void CAL_SetupMapFile (void)
 #if !defined(VIEASM) || !defined(SEGA_SATURN)
 void CAL_SetupAudioFile (void)
 {
-#if defined(SWITCH) || defined(N3DS) || defined(PS2) || defined(SEGA_SATURN)
+#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
     char fname[13 + sizeof(DATADIR)];
 #else    
     char fname[13];
 #endif
 	void* ptr;
-//
-// load audiohed.ext (offsets for audio file)
-//
+/*
+** load audiohed.ext (offsets for audio file)
+*/
 #ifndef VIEASM
     strcpy(fname,aheadname);
 #endif
@@ -1103,12 +1096,12 @@ void CAL_SetupAudioFile (void)
         CA_CannotOpen(fname);
     audiostarts = (int*)ptr;
 
-//
-// open the data file
-//
+/*
+** open the data file
+*/
     strcpy(fname,afilename);
     strcat(fname,audioext);
-#if defined(_MSC_VER) || defined(DEVCPP)
+#if defined(DEVCPP)
 	audiohandle = w3sopen(fname, O_RDONLY | O_BINARY);
 #else
 	audiohandle = w3sopen(fname, O_RDONLY | O_BINARY, 0644);
@@ -1117,7 +1110,7 @@ void CAL_SetupAudioFile (void)
         CA_CannotOpen(fname);
 }
 #endif
-//==========================================================================
+/* ========================================================================== */
 
 
 /*
@@ -1161,7 +1154,7 @@ void CA_Startup (void)
 #endif
 }
 
-//==========================================================================
+/* ========================================================================== */
 
 #if !defined(SEGA_SATURN)
 /*
@@ -1176,7 +1169,7 @@ void CA_Startup (void)
 
 void CA_Shutdown (void)
 {
-    int i,start;
+    int i,start = 0;
 
     if (maphandle != -1)
         w3sclose(maphandle);
@@ -1225,7 +1218,7 @@ void CA_Shutdown (void)
         UNCACHEAUDIOCHUNK(start);
 }
 
-//===========================================================================
+/* =========================================================================== */
 
 /*
 ======================
@@ -1241,14 +1234,9 @@ int CA_CacheAudioChunk (int chunk)
     int size = audiostarts[chunk+1]-pos;
 
     if (audiosegs[chunk])
-        return size;                        // already in memory
-#if defined(REINTERPRET_CAST)
-    audiosegs[chunk] = reinterpret_cast<unsigned char*>(SafeMalloc(size));
-#elif defined(STATIC_CAST)
-    audiosegs[chunk] = static_cast<unsigned char*>(SafeMalloc(size));
-#else
-    audiosegs[chunk] = (unsigned char*)SafeMalloc(size);
-#endif
+        return size;                        /* already in memory */
+
+    audiosegs[chunk] = wlcast_conversion(unsigned char*, SafeMalloc(size));
 
     w3slseek(audiohandle,pos,SEEK_SET);
     w3sread(audiohandle,audiosegs[chunk],size);
@@ -1266,26 +1254,17 @@ void CA_CacheAdlibSoundChunk (int chunk)
 	AdLibSound *sound;
 
     if (audiosegs[chunk])
-        return;                        // already in memory
+        return;                        /* already in memory */
 
     w3slseek(audiohandle, pos, SEEK_SET);
-#if defined(REINTERPRET_CAST)
-    bufferseg = reinterpret_cast<unsigned char*>(SafeMalloc(ORIG_ADLIBSOUND_SIZE - 1));
-#elif defined(STATIC_CAST)
-    bufferseg = static_cast<unsigned char*>(SafeMalloc(ORIG_ADLIBSOUND_SIZE - 1));
-#else
-    bufferseg = (unsigned char*)SafeMalloc(ORIG_ADLIBSOUND_SIZE - 1);
-#endif
+
+    bufferseg = wlcast_conversion(unsigned char*, SafeMalloc(ORIG_ADLIBSOUND_SIZE - 1));
+    
     ptr = bufferseg;
 
-    w3sread(audiohandle, ptr, ORIG_ADLIBSOUND_SIZE - 1);   // without data[1]
-#if defined(REINTERPRET_CAST)
-    sound = reinterpret_cast<AdLibSound*>(SafeMalloc(size + sizeof(*sound) - ORIG_ADLIBSOUND_SIZE));
-#elif defined(STATIC_CAST)
-    sound = static_cast<AdLibSound*>(SafeMalloc(size + sizeof(*sound) - ORIG_ADLIBSOUND_SIZE));
-#else
-    sound = (AdLibSound*)SafeMalloc(size + sizeof(*sound) - ORIG_ADLIBSOUND_SIZE);
-#endif
+    w3sread(audiohandle, ptr, ORIG_ADLIBSOUND_SIZE - 1);   /* without data[1] */
+
+    sound = wlcast_conversion(AdLibSound*, SafeMalloc(size + sizeof(*sound) - ORIG_ADLIBSOUND_SIZE));
 
     sound->common.length = READLONGWORD(ptr);
     ptr += 4;
@@ -1311,14 +1290,14 @@ void CA_CacheAdlibSoundChunk (int chunk)
     sound->inst.unused[2] = *ptr++;
     sound->block = *ptr++;
 
-    w3sread(audiohandle, sound->data, size - ORIG_ADLIBSOUND_SIZE + 1);  // + 1 because of byte data[1]
+    w3sread(audiohandle, sound->data, size - ORIG_ADLIBSOUND_SIZE + 1);  /* + 1 because of byte data[1] */
 
     audiosegs[chunk]=(unsigned char *) sound;
 
     free (bufferseg);
 }
 
-//===========================================================================
+/* =========================================================================== */
 
 /*
 ======================
@@ -1356,7 +1335,7 @@ cachein:
     switch (SoundMode)
     {
         case sdm_Off:
-            start = STARTADLIBSOUNDS;   // needed for priorities...
+            start = STARTADLIBSOUNDS;   /* needed for priorities... */
             break;
         case sdm_PC:
             start = STARTPCSOUNDS;
@@ -1379,7 +1358,7 @@ cachein:
 }
 #endif
 #endif
-//===========================================================================
+/* =========================================================================== */
 
 
 /*
@@ -1398,18 +1377,18 @@ void CAL_ExpandGrChunk (int chunk, int *source)
 
     if (chunk >= STARTTILE8 && chunk < STARTEXTERNS)
     {
-        //
-        // expanded sizes of tile8/16/32 are implicit
-        //
+        /*
+        ** expanded sizes of tile8/16/32 are implicit
+        */
 
 #define BLOCK           64
 #define MASKBLOCK       128
 
-        if (chunk<STARTTILE8M)          // tile 8s are all in one chunk!
+        if (chunk<STARTTILE8M)          /* tile 8s are all in one chunk! */
             expanded = BLOCK*NUMTILE8;
         else if (chunk<STARTTILE16)
             expanded = MASKBLOCK*NUMTILE8M;
-        else if (chunk<STARTTILE16M)    // all other tiles are one/chunk
+        else if (chunk<STARTTILE16M)    /* all other tiles are one/chunk */
             expanded = BLOCK*4;
         else if (chunk<STARTTILE32)
             expanded = BLOCK*4;
@@ -1420,22 +1399,17 @@ void CAL_ExpandGrChunk (int chunk, int *source)
     }
     else
     {
-        //
-        // everything else has an explicit size longword
-        //
+        /*
+        ** everything else has an explicit size longword
+        */
         expanded = *source++;
     }
 
-    //
-    // allocate final space and decompress it
-    //
-#if defined(REINTERPRET_CAST)
-    grsegs[chunk] = reinterpret_cast<unsigned char*>(SafeMalloc(expanded));
-#elif defined(STATIC_CAST)
-    grsegs[chunk] = static_cast<unsigned char*>(SafeMalloc(expanded));
-#else
-    grsegs[chunk] = (unsigned char*)SafeMalloc(expanded);
-#endif
+    /*
+    ** allocate final space and decompress it
+    */
+
+    grsegs[chunk] = wlcast_conversion(unsigned char*, SafeMalloc(expanded));
 
     CAL_HuffExpand((unsigned char *) source, grsegs[chunk], expanded, grhuffman);
 }
@@ -1488,44 +1462,49 @@ void CA_CacheGrChunks (void)
     int *source;
     int     chunk,next;
 
+
     for (chunk = STRUCTPIC + 1; chunk < NUMCHUNKS; chunk++)
     {
-        if (grsegs[chunk])
-            continue;                             // already in memory
-
-        //
-        // load the chunk into a buffer
-        //
-        pos = GRFILEPOS(chunk);
-
-        if (pos<0)                              // $FFFFFFFF start is a sparse tile
-            continue;
-
-        next = chunk + 1;
-
-        while (GRFILEPOS(next) == -1)           // skip past any sparse tiles
-            next++;
-
-        compressed = GRFILEPOS(next)-pos;
-
 #ifdef SEGA_SATURN
         unsigned char* Chunks;
         unsigned short delta;
         unsigned int delta2;
         Uint16 i, j = 0;
+#endif
+
+        if (grsegs[chunk])
+            continue;                             /* already in memory */
+
+        /*
+        ** load the chunk into a buffer
+        */
+        pos = GRFILEPOS(chunk);
+
+        if (pos<0)                              /* $FFFFFFFF start is a sparse tile */
+            continue;
+
+        next = chunk + 1;
+
+        while (GRFILEPOS(next) == -1)           /* skip past any sparse tiles */
+            next++;
+
+        compressed = GRFILEPOS(next)-pos;
+
+#ifdef SEGA_SATURN
+
         delta = (unsigned short)(pos / 2048);
         delta2 = (pos - delta * 2048);
 
-        Chunks = (unsigned char*)saturnChunk;  // d?plac? pour pas ?craser de son
-        //	CHECKMALLOCRESULT(Chunks);
-        GFS_Load(grhandle, delta, (void*)Chunks, compressed + delta2); // lecture partielle ok
+        Chunks = (unsigned char*)saturnChunk;  /* d?plac? pour pas ?craser de son */
+        /*	CHECKMALLOCRESULT(Chunks);  */
+        GFS_Load(grhandle, delta, (void*)Chunks, compressed + delta2); /* lecture partielle ok */
         Chunks += delta2;
-        //TODO:
+        /* TODO: */
         if (compressed <= BUFFERSIZE)
         {
             for (i = 0; i < compressed; i += 4)
             {
-                // evite des erreurs d'alignement de pointeur ?			
+                /* evite des erreurs d'alignement de pointeur ?	*/		
                 bufferseg[j++] = Chunks[3] | (Chunks[2] << 8) | (Chunks[1] << 16) | (Chunks[0] << 24);
                 Chunks += 4;
             }
@@ -1534,12 +1513,12 @@ void CA_CacheGrChunks (void)
         else
         {
             source = (int*)malloc(compressed);
-            CHECKMALLOCRESULT(source);
-            //read(grhandle,source,compressed);
+            SafeMalloc(source);
+            /* read(grhandle,source,compressed); */
 
             for (i = 0; i < compressed; i += 4)
             {
-                // evite des erreurs d'alignement de pointeur ?				
+                /* evite des erreurs d'alignement de pointeur ? */				
                 source[j++] = Chunks[3] | (Chunks[2] << 8) | (Chunks[1] << 16) | (Chunks[0] << 24);
                 Chunks += 4;
             }
@@ -1557,13 +1536,9 @@ void CA_CacheGrChunks (void)
 #endif
 
         w3slseek(grhandle,pos,SEEK_SET);
-#if defined(REINTERPRET_CAST)
-        bufferseg = reinterpret_cast<int*>(SafeMalloc(compressed));
-#elif defined(STATIC_CAST)
-        bufferseg = static_cast<int*>(SafeMalloc(compressed));
-#else
-        bufferseg = (int*)SafeMalloc(compressed);
-#endif
+
+        bufferseg = wlcast_conversion(int*, SafeMalloc(compressed));
+        
         source = bufferseg;
 
         w3sread(grhandle,source,compressed);
@@ -1579,7 +1554,7 @@ void CA_CacheGrChunks (void)
 
 
 
-//==========================================================================
+/* ========================================================================== */
 
 
 /*
@@ -1612,11 +1587,11 @@ void CA_CacheMap (int mapnum)
     if (mapheaderseg[mapnum]->width != MAPSIZE || mapheaderseg[mapnum]->height != MAPSIZE)
         Quit ("CA_CacheMap: Map not %u*%u!",MAPSIZE,MAPSIZE);
 
-//
-// load the planes into the already allocated buffers
-//
+/*
+** load the planes into the already allocated buffers
+*/
 #ifdef SEGA_SATURN
-    //TODO: Adapt this...
+    /* TODO: Adapt this... */
     pos = GRFILEPOS(chunk);
     readChunks(grhandle, sizeof(chunkexplen), &pos, saturnChunk, (unsigned char*)&chunkexplen);
 #else
@@ -1636,13 +1611,9 @@ void CA_CacheMap (int mapnum)
 #ifndef SEGA_SATURN
         w3slseek(maphandle,pos,SEEK_SET);
 #endif
-#if defined(REINTERPRET_CAST)
-        bufferseg = reinterpret_cast<unsigned short*>(SafeMalloc(compressed));
-#elif defined(STATIC_CAST)
-        bufferseg = static_cast<unsigned short*>(SafeMalloc(compressed));
-#else
-        bufferseg = (unsigned short*)SafeMalloc(compressed);
-#endif
+
+        bufferseg = wlcast_conversion(unsigned short*, SafeMalloc(compressed));
+
         source = bufferseg;
 #ifdef SEGA_SATURN
         memcpy(source, &Chunks[pos], compressed);
@@ -1650,12 +1621,12 @@ void CA_CacheMap (int mapnum)
         w3sread(maphandle,source,compressed);
 #endif
 #ifdef CARMACIZED
-        //
-        // unhuffman, then unRLEW
-        // The huffman'd chunk has a two byte expanded length first
-        // The resulting RLEW chunk also does, even though it's not really
-        // needed
-        //
+        /*
+        ** unhuffman, then unRLEW
+        ** The huffman'd chunk has a two byte expanded length first
+        ** The resulting RLEW chunk also does, even though it's not really
+        ** needed
+        */
 #ifdef SEGA_SATURN
         expanded = source[0] | (source[1] << 8);
         source += 2;
@@ -1663,13 +1634,9 @@ void CA_CacheMap (int mapnum)
         expanded = *source;
         source++;
 #endif
-#if defined(REINTERPRET_CAST)
-        buffer2seg = reinterpret_cast<unsigned short*>(SafeMalloc(expanded));
-#elif defined(STATIC_CAST)
-        buffer2seg = static_cast<unsigned short*>(SafeMalloc(expanded));
-#else
-        buffer2seg = (unsigned short*)SafeMalloc(expanded);
-#endif
+
+        buffer2seg = wlcast_conversion(unsigned short*, SafeMalloc(expanded));
+
         CAL_CarmackExpand((unsigned char *) source, buffer2seg,expanded);
         CA_RLEWexpand(buffer2seg+1,dest,size,tinf->RLEWtag);
         free(buffer2seg);
@@ -1678,16 +1645,16 @@ void CA_CacheMap (int mapnum)
 #endif
 
 #else
-        //
-        // unRLEW, skipping expanded length
-        //
+        /*
+        ** unRLEW, skipping expanded length
+        */
         CA_RLEWexpand (source+1,dest,size,tinf->RLEWtag);
 #endif
         free(bufferseg);
     }
 }
 
-//===========================================================================
+/* =========================================================================== */
 
 #ifndef SEGA_SATURN
 void CA_CannotOpen(const char *string)

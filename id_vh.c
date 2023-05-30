@@ -6,37 +6,41 @@ int	    px,py;
 unsigned char	fontcolor,backcolor;
 int	    fontnumber;
 
-//==========================================================================
+/* ========================================================================== */
 
 void VWB_DrawPropString(const char* string)
 {
 #ifdef SEGA_SATURN
     fontstruct* font;
-    int		    width, step, height;
-    unsigned char* source, * dest;
+    int	height;
+    unsigned char* dest;
     unsigned char	    ch;
 
     unsigned char* vbuf = LOCK();
 
     font = (fontstruct*)grsegs[STARTFONT + fontnumber];
     font->height = SWAP_BYTES_16(font->height);
-    height = font->height;//SWAP_BYTES_16(font->height);//font->height;//font->height;//font->height;//SWAP_BYTES_16(font->height);
+    height = font->height;/* SWAP_BYTES_16(font->height);*/ /* font->height; */ /* font->height; */ /* font->height; */ /* SWAP_BYTES_16(font->height); */
 
     dest = vbuf + scaleFactor * (py * curPitch + px);
 
     while ((ch = (unsigned char)*string++) != 0)
     {
+        int width, step;
+        unsigned char* source;
         width = step = font->width[ch];
         source = ((unsigned char*)font) + SWAP_BYTES_16(font->location[ch]);
 
         while (width--)
         {
-            for (int i = 0; i < height; i++)
+            int i;
+            for (i = 0; i < height; i++)
             {
                 if (source[i * step])
                 {
-                    for (unsigned sy = 0; sy < scaleFactor; sy++)
-                        for (unsigned sx = 0; sx < scaleFactor; sx++)
+                    unsigned sy, sx;
+                    for (sy = 0; sy < scaleFactor; sy++)
+                        for (sx = 0; sx < scaleFactor; sx++)
                             dest[(scaleFactor * i + sy) * curPitch + sx] = fontcolor;
                 }
             }
@@ -67,7 +71,7 @@ void VWB_DrawPropString(const char* string)
 
 	while ((ch = (unsigned char)*string++)!=0)
 	{
-        int		     step;
+        int step;
         int width = step = font->width[ch];
         unsigned char* source = ((unsigned char *)font)+font->location[ch];
 		while (width--)
@@ -191,11 +195,11 @@ void LoadLatchMem(void)
 {
     int	i, width, height, start, end;
     unsigned char* src;
-    SDL_Surface* surf; //,*surf1;
+    SDL_Surface* surf; /* ,*surf1; */
 #if 0
-    //
-    // tile 8s
-    //
+    /*
+    ** tile 8s
+    */
     surf = SDL_CreateRGBSurface(SDL_HWSURFACE, 8 * 8,
         ((NUMTILE8 + 7) / 8) * 8, 8, 0, 0, 0, 0);
     if (surf == NULL)
@@ -217,9 +221,9 @@ void LoadLatchMem(void)
 
     latchpics[1] = surf;
 #endif	
-    //
-    // pics
-    //
+    /*
+    ** pics
+    */
     start = LATCHPICS_LUMP_START;
     end = LATCHPICS_LUMP_END;
 
@@ -233,19 +237,22 @@ void LoadLatchMem(void)
         {
             Quit("Unable to create surface for picture!");
         }
-        //       SDL_SetColors(surf, gamepal, 0, 256);
+        /*       SDL_SetColors(surf, gamepal, 0, 256);          */
         latchpics[2 + i - start] = surf;
         CA_CacheGrChunk(i);
         VL_MemToLatch(grsegs[i], width, height, surf, 0, 0);
         UNCACHEGRCHUNK(i);
-        // vbt 26/07/2020 free remis	
-        // vbt 15/08/2020 pas de free c'est les images de la barre de statut	
-        //		free(surf);
-        //		surf=NULL;
+        /* vbt 26/07/2020 free remis	
+        ** vbt 15/08/2020 pas de free c'est les images de la barre de statut	
+        ** free(surf);
+        ** surf=NULL;
+        */
     }
-    // vbt 26/07/2020 free remis	
-    // vbt 15/08/2020 utilisation de lowworkram
-    //free(surf1);
-    //surf1=NULL;
+    /* 
+    ** vbt 26/07/2020 free remis 
+    ** vbt 15/08/2020 utilisation de lowworkram 
+    ** free(surf1);
+    ** surf1=NULL;
+    */
 }
-#endif //ID_VH_C
+#endif /* ID_VH_C */

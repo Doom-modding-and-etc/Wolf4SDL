@@ -1,4 +1,4 @@
-// ID_PM.H
+/* ID_PM.H */
 
 #ifndef __ID_PM_H_
 #define __ID_PM_H_

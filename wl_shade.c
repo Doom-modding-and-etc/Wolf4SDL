@@ -5,7 +5,7 @@
 #include "wl_shade.h"
 
 typedef struct {
-    unsigned char destRed, destGreen, destBlue;   // values between 0 and 255
+    unsigned char destRed, destGreen, destBlue;   /* values between 0 and 255 */
     unsigned char fogStrength;
 } shadedef_t;
 
@@ -22,8 +22,10 @@ int LSHADE_flag;
 #ifndef MAPCONTROLLEDSHADE
 #ifdef USE_FEATUREFLAGS
 
-// The lower 8-bit of the upper left tile of every map determine
-// the used shading definition of shadeDefs.
+/* 
+** The lower 8-bit of the upper left tile of every map determine
+** the used shading definition of shadeDefs.
+*/
 static wlinline int GetShadeDefID()
 {
     int shadeID = ffDataTopLeft & 0x00ff;
@@ -53,8 +55,10 @@ static wlinline int GetShadeDefID()
 #endif
 #endif
 
-// Returns the palette index of the nearest matching color of the
-// given RGB color in given palette
+/*
+** Returns the palette index of the nearest matching color of the
+** given RGB color in given palette
+*/
 unsigned char GetColor(unsigned char red, unsigned char green, unsigned char blue, SDL_Color *palette)
 {
     int col;
@@ -78,8 +82,10 @@ unsigned char GetColor(unsigned char red, unsigned char green, unsigned char blu
     return mincol;
 }
 
-// Fade all colors in 32 steps down to the destination-RGB
-// (use gray for fogging, black for standard shading)
+/* 
+** Fade all colors in 32 steps down to the destination-RGB
+** (use gray for fogging, black for standard shading)
+*/
 void GenerateShadeTable(unsigned char destRed, unsigned char destGreen, unsigned char destBlue,
                         SDL_Color *palette, int fog)
 {
@@ -87,29 +93,29 @@ void GenerateShadeTable(unsigned char destRed, unsigned char destGreen, unsigned
 
     SDL_Color *palPtr = palette;
 
-    // Set the fog-flag
+    /* Set the fog-flag */
     LSHADE_flag=fog;
 
-    // Color loop
+    /* Color loop */
     for(i = 0; i < 256; i++, palPtr++)
     {
 		double curRed, curGreen, curBlue, redStep, greenStep, blueStep;
-        // Get original palette color
+        /* Get original palette color */
         curRed   = palPtr->r;
         curGreen = palPtr->g;
         curBlue  = palPtr->b;
 
-        // Calculate increment per step
+        /* Calculate increment per step */
         redStep   = ((double) destRed   - curRed)   / (SHADE_COUNT + 8);
         greenStep = ((double) destGreen - curGreen) / (SHADE_COUNT + 8);
         blueStep  = ((double) destBlue  - curBlue)  / (SHADE_COUNT + 8);
 
-        // Calc color for each shade of the current color
+        /* Calc color for each shade of the current color */
         for (shade = 0; shade < SHADE_COUNT; shade++)
         {
             shadetable[shade][i] = GetColor((unsigned char) curRed, (unsigned char) curGreen, (unsigned char) curBlue, palette);
 
-            // Inc to next shade
+            /* Inc to next shade */
             curRed   += redStep;
             curGreen += greenStep;
             curBlue  += blueStep;
@@ -156,9 +162,9 @@ int GetShade(int scale)
 {
     int shade;
 #ifdef MAPCONTROLLEDSHADE
-    if (tilemap[2][0]) return 0; // Turns shading or fog off
+    if (tilemap[2][0]) return 0; /* Turns shading or fog off */
 #endif
-    shade = (scale >> 1) / (((viewwidth * 3) >> 8) + 1 + LSHADE_flag);  // TODO: reconsider this...
+    shade = (scale >> 1) / (((viewwidth * 3) >> 8) + 1 + LSHADE_flag);  /* TODO: reconsider this... */
     if(shade > 32) shade = 32;
     else if(shade < 1) shade = 1;
     shade = 32 - shade;

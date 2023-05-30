@@ -9,33 +9,34 @@ BY GERARD 'ALUMIUN' WATSON
 
 #ifdef VIEASM
 
-// This table holds the file names for the sounds defined in AUDIOWL6.H.
-// Change these to suit your sounds and your AUDIOHED.WL6 or SOD file.
-// Currently these are set up for Wolfenstein, not SoD.
-
+/*
+** This table holds the file names for the sounds defined in AUDIOWL6.H.
+** Change these to suit your sounds and your AUDIOHED.WL6 or SOD file.
+** Currently these are set up for Wolfenstein, not SoD. 
+*/
 const char *sounddir = "sounds\\";
 
 const char *ASM_Soundnames[NUMSOUNDS] = 
 {
-	"HITWALLSND.wav",              // 0
-    "SELECTWPNSND.wav",            // 1
-    "SELECTITEMSND.wav",           // 2
+	"HITWALLSND.wav",              /* 0 */
+    "SELECTWPNSND.wav",            /* 1 */
+    "SELECTITEMSND.wav",           /* 2 */
 #ifdef SPEAR
-    "GHOSTSIGHTSND.wav", //3
+    "GHOSTSIGHTSND.wav",           /* 3 */
 #else
-    "HEARTBEATSND.wav",            // 3
+    "HEARTBEATSND.wav",            /* 3 */
 #endif
-    "MOVEGUN2SND.wav",             // 4
-    "MOVEGUN1SND.wav",             // 5
-    "NOWAYSND.wav",                // 6
-    "NAZIHITPLAYERSND.wav",        // 7
+    "MOVEGUN2SND.wav",             /* 4 */
+    "MOVEGUN1SND.wav",             /* 5 */
+    "NOWAYSND.wav",                /* 6 */
+    "NAZIHITPLAYERSND.wav",        /* 7 */
 #ifdef SPEAR
-    "MISSILEFIRESND.wav",          // 8
+    "MISSILEFIRESND.wav",          /* 8 */
 #else
-    "SCHABBSTHROWSND.wav",         // 8
+    "SCHABBSTHROWSND.wav",         /* 8 */
 #endif
-    "PLAYERDEATHSND.wav",          // 9
-    "DOGDEATHSND.wav",             // 10
+    "PLAYERDEATHSND.wav",          /* 9 */
+    "DOGDEATHSND.wav",             /* 10 */
     "ATKGATLINGSND.wav",           // 11
     "GETKEYSND.wav",               // 12
     "NOITEMSND.wav",               // 13
@@ -148,78 +149,79 @@ const char *ASM_Soundnames[NUMSOUNDS] =
 #endif
 };
 
-// This table holds the file names for the music defined in AUDIOWL6.H.
-// Change these to suit your music and your AUDIOHED.WL6 or SOD file.
-// Currently these are set up for Wolfenstein, not SoD.
-// Make sure you put the right format on the end here
-// Compatible extentions:
-//  -- WAV (If you're using WAVs for music, you're mad.)
-//  -- OGG
-//  -- MP3
-//  -- MID
-//  -- MOD, XM, IT, 669, S3M, MED
-
+/*
+** Initialize table holds the file names for the music defined in AUDIOWL6.H.
+** Change these to suit your music and your AUDIOHED.WL6 or SOD file.
+** Currently these are set up for Wolfenstein, not SoD.
+** Make sure you put the right format on the end here
+** Compatible extentions:
+**  -- WAV (If you're using WAVs for music, you're mad.)
+**  -- OGG
+**  -- MP3
+**  -- MID
+**  -- MOD, XM, IT, 669, S3M, MED
+*/
 const char *musicdir = "music\\";
 
 #ifdef SPEAR
 const char* ASM_Musicnames[NUMMUSICS] =
 {
-    "XFUNKIE.OGG",             // 0
-    "DUNGEON.OGG",             // 1
-    "XDEATH.OGG",              // 2
-    "GETTHEM.OGG",             // 3
-    "XTIPTOE.OGG",             // 4
-    "GOINGAFT.OGG",            // 5
-    "URAHERO.OGG",             // 6
-    "XTHEEND.OGG",             // 7
-    "NAZI_OMI.OGG",            // 8
-    "POW.OGG",                 // 9
-    "TWELFTH.OGG",             // 10
-    "SEARCHN.OGG",             // 11
-    "SUSPENSE.OGG",            // 12
-    "ZEROHOUR.OGG",            // 13
-    "WONDERIN.OGG",            // 14
-    "ULTIMATE.OGG",            // 15
-    "ENDLEVEL.OGG",            // 16
-    "XEVIL.OGG",               // 17
-    "XJAZNAZI.OGG",            // 18
-    "COPYPRO.OGG",             // 19
-    "XAWARD.OGG",              // 20
-    "XPUTIT_MUS.OGG",              // 21
-    "XGETYOU_MUS.OGG",             // 22
-    "XTOWER2_MUS.OGG",             // 23
+    "XFUNKIE.OGG",             /* 0 */
+    "DUNGEON.OGG",             /* 1 */
+    "XDEATH.OGG",              /* 2 */
+    "GETTHEM.OGG",             /* 3 */
+    "XTIPTOE.OGG",             /* 4 */
+    "GOINGAFT.OGG",            /* 5 */
+    "URAHERO.OGG",             /* 6 */
+    "XTHEEND.OGG",             /* 7 */
+    "NAZI_OMI.OGG",            /* 8 */
+    "POW.OGG",                 /* 9 */
+    "TWELFTH.OGG",             /* 10 */
+    "SEARCHN.OGG",             /* 11 */
+    "SUSPENSE.OGG",            /* 12 */
+    "ZEROHOUR.OGG",            /* 13 */
+    "WONDERIN.OGG",            /* 14 */
+    "ULTIMATE.OGG",            /* 15 */
+    "ENDLEVEL.OGG",            /* 16 */
+    "XEVIL.OGG",               /* 17 */
+    "XJAZNAZI.OGG",            /* 18 */
+    "COPYPRO.OGG",             /* 19 */
+    "XAWARD.OGG",              /* 20 */
+    "XPUTIT_MUS.OGG",          /* 21 */
+    "XGETYOU_MUS.OGG",         /* 22 */
+    "XTOWER2_MUS.OGG",         /* 23 */
 };
 #else
 const char *ASM_Musicnames[NUMMUSICS] = 
 {
-	"CORNER.OGG",              // 0
-	"DUNGEON.OGG",             // 1
-	"WARMARCH.OGG",            // 2
-	"GETTHEM.OGG",             // 3
-	"HEADACHE.OGG",            // 4
-	"HITLWLTZ.OGG",            // 5
-	"INTROCW3.OGG",            // 6
-	"NAZI_NOR.OGG",            // 7
-	"NAZI_OMI.OGG",            // 8
-	"POW.OGG",                 // 9
-	"SALUTE.OGG",              // 10
-	"SEARCHN.OGG",             // 11
-	"SUSPENSE.OGG",            // 12
-	"VICTORS.OGG",             // 13
-	"WONDERIN.OGG",            // 14
-	"FUNKYOU.OGG",             // 15
-	"ENDLEVEL.OGG",            // 16
-	"GOINGAFT.OGG",            // 17
-	"PREGNANT.OGG",            // 18
-	"ULTIMATE.OGG",            // 19
-	"NAZI_RAP.OGG",            // 20
-	"ZEROHOUR.OGG",            // 21
-	"TWELFTH.OGG",             // 22
-	"ROSTER.OGG",              // 23
-	"URAHERO.OGG",             // 24
-	"VICMARCH.OGG",            // 25
-	"PACMAN.OGG"               // 26
+	"CORNER.OGG",              /* 0 */
+	"DUNGEON.OGG",             /* 1 */
+	"WARMARCH.OGG",            /* 2 */
+	"GETTHEM.OGG",             /* 3 */
+	"HEADACHE.OGG",            /* 4 */
+	"HITLWLTZ.OGG",            /* 5 */
+	"INTROCW3.OGG",            /* 6 */
+	"NAZI_NOR.OGG",            /* 7 */
+	"NAZI_OMI.OGG",            /* 8 */
+	"POW.OGG",                 /* 9 */
+	"SALUTE.OGG",              /* 10 */
+	"SEARCHN.OGG",             /* 11 */
+	"SUSPENSE.OGG",            /* 12 */
+	"VICTORS.OGG",             /* 13 */
+	"WONDERIN.OGG",            /* 14 */
+	"FUNKYOU.OGG",             /* 15 */
+	"ENDLEVEL.OGG",            /* 16 */
+	"GOINGAFT.OGG",            /* 17 */
+	"PREGNANT.OGG",            /* 18 */
+	"ULTIMATE.OGG",            /* 19 */
+	"NAZI_RAP.OGG",            /* 20 */
+	"ZEROHOUR.OGG",            /* 21 */
+	"TWELFTH.OGG",             /* 22 */
+	"ROSTER.OGG",              /* 23 */
+	"URAHERO.OGG",             /* 24 */
+	"VICMARCH.OGG",            /* 25 */
+	"PACMAN.OGG"               /* 26 */
 };
 #endif
 #endif
-#endif  // _ASMCREF_H_
+#endif  /* _ASMCREF_H_ */

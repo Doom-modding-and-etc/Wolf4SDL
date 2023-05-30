@@ -1,4 +1,4 @@
-// WL_ATMOS.H
+/* WL_ATMOS.H */
 
 #ifndef _WL_ATMOS_H_
 #define _WL_ATMOS_H_

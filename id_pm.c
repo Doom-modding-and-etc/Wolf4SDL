@@ -1,4 +1,4 @@
-// ID_PM.C
+/* ID_PM.C */
 
 #include "wl_def.h"
 
@@ -70,10 +70,10 @@ void PM_Startup (void)
 #endif
     int ChunksInFile = 0;
     Chunks = (unsigned char*)saturnChunk;
-    //	CHECKMALLOCRESULT(Chunks);
+    /*	CHECKMALLOCRESULT(Chunks);  */
     GFS_Load(fileId, 0, (void*)Chunks, 0x80);
     ChunksInFile = Chunks[0] | Chunks[1] << 8;
-    //slPrintHex(ChunksInFile, slLocate(10, 18));
+    /* slPrintHex(ChunksInFile, slLocate(10, 18)); */
 #endif
     file = fopen(fname,"rb");
 
@@ -81,9 +81,9 @@ void PM_Startup (void)
         CA_CannotOpen(fname);
 
 
-    //
-    // read in header variables
-    //
+    /*
+    ** read in header variables
+    */
     fread (&ChunksInFile,sizeof(ChunksInFile),1,file);
 #ifdef SEGA_SATURN
     PMSpriteStart = Chunks[2] | Chunks[3] << 8;
@@ -94,7 +94,7 @@ void PM_Startup (void)
 #endif
 
 #ifdef SEGA_SATURN
-    // vbt : on ne charge pas les sons !	
+    /* vbt : on ne charge pas les sons ! */	
     ChunksInFile = PMSoundStart;
 
     PMPages = (unsigned char**)SafeMalloc((ChunksInFile + 1) * sizeof(unsigned char*));
@@ -102,37 +102,25 @@ void PM_Startup (void)
 #endif
    
 #ifdef SEGA_SATURN
-    //
-    // read in the chunk offsets
-    //
+    /*
+    ** read in the chunk offsets
+    */
     pageOffsets = (unsigned int*)saturnChunk;
 #else
-#if defined(REINTERPRET_CAST)
-    pageOffsets = reinterpret_cast<unsigned int*>(SafeMalloc((ChunksInFile + 1) * sizeof(*pageOffsets)));
-#elif defined(STATIC_CAST)
-    pageOffsets = static_cast<unsigned int*>(SafeMalloc((ChunksInFile + 1) * sizeof(*pageOffsets)));
-#else
-    pageOffsets = (unsigned int*)SafeMalloc((ChunksInFile + 1) * sizeof(*pageOffsets));
-#endif
+    pageOffsets = wlcast_conversion(unsigned int*, SafeMalloc((ChunksInFile + 1) * sizeof(*pageOffsets)));
 #endif
 #ifndef SEGA_SATURN
     fread (pageOffsets,sizeof(*pageOffsets),ChunksInFile,file);
 #endif
 
-    //
-    // read in the chunk lengths
-    //
+    /*
+    ** read in the chunk lengths
+    */
 
 #ifdef SEGA_SATURN
     pageLengths = (unsigned short*)saturnChunk + (ChunksInFile + 1) * sizeof(int);
 #else
-#if defined(REINTERPRET_CAST)
-    pageLengths = reinterpret_cast<unsigned short*>(SafeMalloc(ChunksInFile * sizeof(*pageLengths)));
-#elif defined(STATIC_CAST)
-    pageLengths = static_cast<unsigned short*>(SafeMalloc(ChunksInFile * sizeof(*pageLengths)));
-#else
-    pageLengths = (unsigned short*)SafeMalloc(ChunksInFile * sizeof(*pageLengths));
-#endif
+    pageLengths = wlcast_conversion(unsigned short*, SafeMalloc(ChunksInFile * sizeof(*pageLengths)));
 #endif
 #ifndef SEGA_SATURN
     fread (pageLengths,sizeof(*pageLengths),ChunksInFile,file);
@@ -152,27 +140,27 @@ void PM_Startup (void)
     pageOffsets[ChunksInFile] = filesize;
 
 #ifndef SEGA_SATURN
-    //
-    // check that all chunk offsets are valid
-    //
+    /*
+    ** check that all chunk offsets are valid
+    */
     for (i = 0; i < ChunksInFile; i++)
     {
         if (!pageOffsets[i])
-            continue;           // sparse page
+            continue;           /* sparse page */
 
         if (pageOffsets[i] < pageOffsets[0] || pageOffsets[i] >= (unsigned int)filesize)
             Quit ("PM_Startup: Illegal page offset for page %i: %u (filesize: %u)",i,pageOffsets[i],filesize);
     }
 
-    //
-    // calculate total amount of padding needed for sprites and sound info page
-    //
+    /*
+    ** calculate total amount of padding needed for sprites and sound info page
+    */
     padding = 0;
 
     for (i = PMSpriteStart; i < PMSoundStart; i++)
     {
         if (!pageOffsets[i])
-            continue;           // sparse page
+            continue;           /* sparse page */
 
         if (((pageOffsets[i] - pageOffsets[0]) + padding) & 1)
             padding++;
@@ -181,41 +169,29 @@ void PM_Startup (void)
     if (((pageOffsets[ChunksInFile - 1] - pageOffsets[0]) + padding) & 1)
         padding++;
 
-    //
-    // allocate enough memory to hold the whole page file
-    //
-#if defined(REINTERPRET_CAST)
-    PMPageData = reinterpret_cast<unsigned char*>(SafeMalloc(datasize + padding));
-#elif defined(STATIC_CAST)
-    PMPageData = static_cast<unsigned char*>(SafeMalloc(datasize + padding));
-#else
-    PMPageData = (unsigned char*)SafeMalloc(datasize + padding);
-#endif
+    /*
+    ** allocate enough memory to hold the whole page file
+    */
+    PMPageData = wlcast_conversion(unsigned char*, SafeMalloc(datasize + padding));
 
-    //
-    // [ChunksInFile + 1] pointers to page starts
-    // the last pointer points one byte after the last page
-    //
-#if defined(REINTERPRET_CAST)
-    PMPages = reinterpret_cast<unsigned char**>(SafeMalloc((ChunksInFile + 1) * sizeof(*PMPages)));
-#elif defined(STATIC_CAST)
-    PMPages = static_cast<unsigned char**>(SafeMalloc((ChunksInFile + 1) * sizeof(*PMPages)));
-#else
-    PMPages = (unsigned char**)SafeMalloc((ChunksInFile + 1) * sizeof(*PMPages));
-#endif
+    /*
+    ** [ChunksInFile + 1] pointers to page starts
+    ** the last pointer points one byte after the last page
+    */
+    PMPages = wlcast_conversion(unsigned char**, SafeMalloc((ChunksInFile + 1) * sizeof(*PMPages)));
 
-    //
-    // load pages and initialize PMPages pointers
-    //
+    /*
+    ** load pages and initialize PMPages pointers
+    */
     page = &PMPageData[0];
 
     for (i = 0; i < ChunksInFile; i++)
     {
         if ((i >= PMSpriteStart && i < PMSoundStart) || i == ChunksInFile - 1)
         {
-            //
-            // pad with zeros to make it 2-byte aligned
-            //
+            /*
+            ** pad with zeros to make it 2-byte aligned
+            */
             if ((page - &PMPageData[0]) & 1)
             {
                 *page++ = 0;
@@ -228,12 +204,12 @@ void PM_Startup (void)
         PMPages[i] = page;
 
         if (!pageOffsets[i])
-            continue;               // sparse page
+            continue;               /* sparse page */
 
-        //
-        // use specified page length when next page is sparse
-        // otherwise, calculate size from the offset difference between this and the next page
-        //
+        /*
+        ** use specified page length when next page is sparse
+        ** otherwise, calculate size from the offset difference between this and the next page
+        */
         if (!pageOffsets[i + 1])
             pagesize = pageLengths[i];
         else
@@ -245,9 +221,9 @@ void PM_Startup (void)
         page += pagesize;
     }
 #endif
-    //
-    // last page points after page buffer
-    //
+    /*
+    ** last page points after page buffer
+    */
     PMPages[ChunksInFile] = page;
 #ifndef SEGA_SATURN
     free (pageOffsets);
@@ -263,18 +239,25 @@ void PM_Startup (void)
 unsigned char* PM_DecodeSprites2(unsigned int start, unsigned int endi, unsigned int* pageOffsets, word* pageLengths, uint8_t* ptr, Sint32 fileId)
 {
     unsigned char* Chunks = (unsigned char*)saturnChunk + 0x9000;
-    unsigned char* bmpbuff = (unsigned char*)saturnChunk + 0xA000;	//0x00202000;
+    unsigned char* bmpbuff = (unsigned char*)saturnChunk + 0xA000;	/* 0x00202000; */
     unsigned int size;
-
-    for (unsigned int i = start; i < endi; i++)
+    unsigned int i;
+    for (i = start; i < endi; i++)
     {
+        int end;
+        unsigned char* sprdata8;
+        unsigned short* cmdptr;
+        unsigned char* sprptr;
+        int count_00;
+        int x, y;
+
         PMPages[i] = ptr;
 
         if (!pageOffsets[i])
-            continue;               // sparse page
+            continue;               /* sparse page */
 
-        // Use specified page length, when next page is sparse page.
-        // Otherwise, calculate size from the offset difference between this and the next page.
+        /* Use specified page length, when next page is sparse page. */
+        /* Otherwise, calculate size from the offset difference between this and the next page. */
 
         if (!pageOffsets[i + 1]) size = pageLengths[i - PMSpriteStart];
         else size = pageOffsets[i + 1] - pageOffsets[i];
@@ -282,12 +265,12 @@ unsigned char* PM_DecodeSprites2(unsigned int start, unsigned int endi, unsigned
         if (!size)
             continue;
 
-        int end = size;
+        end = size;
         if (size % 4 != 0)
         {
             end = ((size + (4 - 1)) & -4);
         }
-        //		memcpy(ptr,&Chunks[pageOffsets[i]],size);
+        /*		memcpy(ptr,&Chunks[pageOffsets[i]],size);       */
         readChunks(fileId, size, &pageOffsets[i], Chunks, ptr);
 
         memset(&ptr[size], 0x00, end - size);
@@ -296,32 +279,32 @@ unsigned char* PM_DecodeSprites2(unsigned int start, unsigned int endi, unsigned
         shape->leftpix = SWAP_BYTES_16(shape->leftpix);
         shape->rightpix = SWAP_BYTES_16(shape->rightpix);
 
-        unsigned char* bmpptr, * sprdata8;
-        unsigned short* cmdptr;
+        /* set the texel index to the first texel */
+        /*
+        ** unsigned char* sprptr = (unsigned char*)shape + (((((shape->rightpix) - (shape->leftpix)) + 1) * 2) + 4);
+        */
+        /* clear the buffers */
 
-        // set the texel index to the first texel
-        //unsigned char* sprptr = (unsigned char*)shape + (((((shape->rightpix) - (shape->leftpix)) + 1) * 2) + 4);
-        // clear the buffers
-
-        // setup a pointer to the column offsets	
+        /* setup a pointer to the column offsets */	
         cmdptr = shape->dataofs;
-        int count_00 = 63;
-        //		int count_01=0;
+        count_00 = 63;
+        /*		int count_01=0; */
 
-        for (int x = 0; x <= (shape->rightpix - shape->leftpix); x++)
+        for (x = 0; x <= (shape->rightpix - shape->leftpix); x++)
         {
             sprdata8 = ((unsigned char*)shape + *cmdptr);
             shape->dataofs[x] = SWAP_BYTES_16(shape->dataofs[x]);
             while ((sprdata8[0] | sprdata8[1] << 8) != 0)
             {
-                for (int y = (sprdata8[4] | sprdata8[5] << 8) / 2; y < (sprdata8[0] | sprdata8[1] << 8) / 2; y++)
+                for (y = (sprdata8[4] | sprdata8[5] << 8) / 2; y < (sprdata8[0] | sprdata8[1] << 8) / 2; y++)
                 {
                     unsigned int min_y = (sprdata8[4] | sprdata8[5] << 8) / 2;
                     if (min_y < count_00)
                         count_00 = min_y;
 
-                    //					if(min_y>count_01)
-                    //						count_01=min_y;					
+                    /*					if(min_y>count_01)
+                    **						count_01=min_y;					
+                    */
                 }
                 sprdata8 += 6;
             }
@@ -329,19 +312,20 @@ unsigned char* PM_DecodeSprites2(unsigned int start, unsigned int endi, unsigned
         }
         memset(bmpbuff, 0x00, (64 - count_00) << 6);
 
-       unsigned char *sprptr = (unsigned char*)shape + (((((shape->rightpix) - (shape->leftpix)) + 1) * 2) + 4);
+        sprptr = (unsigned char*)shape + (((((shape->rightpix) - (shape->leftpix)) + 1) * 2) + 4);
 
         cmdptr = shape->dataofs;
 
-        for (int x = (shape->leftpix); x <= (shape->rightpix); x++)
+        for (x = (shape->leftpix); x <= (shape->rightpix); x++)
         {
+            unsigned char* bmpptr;
             sprdata8 = ((unsigned char*)shape + *cmdptr);
             bmpptr = (unsigned char*)bmpbuff + x;
 
             while ((sprdata8[0] | sprdata8[1] << 8) != 0)
             {
-                for (int y = (sprdata8[4] | sprdata8[5] << 8) / 2; y < (sprdata8[0] | sprdata8[1] << 8) / 2; y++)
-                    //				for (int y = (sprdata8[4]|sprdata8[5]<<8)/2; y < count_01; y++)
+                for (y = (sprdata8[4] | sprdata8[5] << 8) / 2; y < (sprdata8[0] | sprdata8[1] << 8) / 2; y++)
+                    /*				for (int y = (sprdata8[4]|sprdata8[5]<<8)/2; y < count_01; y++) */
                 {
                     bmpptr[(y - count_00) << 6] = *sprptr++;
                     if (bmpptr[(y - count_00) << 6] == 0) bmpptr[(y - count_00) << 6] = 0xa0;
@@ -439,7 +423,7 @@ wlinline unsigned char* PM_GetTexture(int wallpic)
 
 wlinline unsigned short* PM_GetSprite(int shapenum)
 {
-    // correct alignment is enforced by PM_Startup()
+    /* correct alignment is enforced by PM_Startup() */
     return (unsigned short*)(void*)PM_GetPage(PMSpriteStart + shapenum);
 }
 #endif

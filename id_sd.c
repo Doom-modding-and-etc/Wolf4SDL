@@ -1,3 +1,4 @@
+/*
 //
 //      ID Engine
 //      ID_SD.c - Sound Manager for Wolfenstein 3D
@@ -26,6 +27,7 @@
 //                      NeedsDigitized - load digitized sounds?
 //                      NeedsMusic - load music?
 //
+*/
 
 #include "wl_def.h"
 
@@ -74,8 +76,10 @@ static void YM3812UpdateOne(Chip *which, short* stream, int length)
     Bit32s buffer[512 * 2];
     int i;
 
-    // length is at maximum samplesPerMusicTick = param_samplerate / 700
-    // so 512 is sufficient for a sample rate of 358.4 kHz (default 44.1 kHz)
+    /* 
+    ** length is at maximum samplesPerMusicTick = param_samplerate / 700
+    ** so 512 is sufficient for a sample rate of 358.4 kHz (default 44.1 kHz)
+    */
     if (length > 512)
         length = 512;
 
@@ -83,11 +87,13 @@ static void YM3812UpdateOne(Chip *which, short* stream, int length)
     {
         Chip__GenerateBlock3(&which, length, buffer);
 
-        // GenerateBlock3 generates a number of "length" 32-bit stereo samples
-        // so we only need to convert them to 16-bit samples
-        for (i = 0; i < length * 2; i++)  // * 2 for left/right channel
+        /* 
+        ** GenerateBlock3 generates a number of "length" 32-bit stereo samples
+        ** so we only need to convert them to 16-bit samples
+        */
+        for (i = 0; i < length * 2; i++)  /* * 2 for left/right channel */
         {
-            // Multiply by 4 to match loudness of MAME emulator.
+            /* Multiply by 4 to match loudness of MAME emulator. */
             Bit32s sample = buffer[i] << 2;
             if (sample > 32767) sample = 32767;
             else if (sample < -32768) sample = -32768;
@@ -98,12 +104,14 @@ static void YM3812UpdateOne(Chip *which, short* stream, int length)
     {
         Chip__GenerateBlock2(&which, length, buffer);
 
-        // GenerateBlock3 generates a number of "length" 32-bit mono samples
-        // so we need to convert them to 32-bit stereo samples
+        /* 
+        ** GenerateBlock2 generates a number of "length" 16-bit mono samples
+        ** so we need to convert them to 32-bit stereo samples
+        */
         for (i = 0; i < length; i++)
         {
-            // Multiply by 4 to match loudness of MAME emulator.
-            // Then upconvert to stereo.
+            /* Multiply by 4 to match loudness of MAME emulator. */
+            /* Then upconvert to stereo. */
             Bit32s sample = buffer[i] << 2;
             if (sample > 32767) sample = 32767;
             else if (sample < -32768) sample = -32768;
@@ -114,20 +122,24 @@ static void YM3812UpdateOne(Chip *which, short* stream, int length)
     int buffer[2048 * 2];
     int i;
 
-    // length should be at least the max. samplesPerMusicTick
-    // in Catacomb 3-D and Keen 4-6, which is param_samplerate / 700.
-    // So 512 is sufficient for a sample rate of 358.4 kHz, which is
-    // significantly higher than the OPL rate anyway.
+    /* 
+    ** length should be at least the max. samplesPerMusicTick
+    ** in Catacomb 3-D and Keen 4-6, which is param_samplerate / 700.
+    ** So 512 is sufficient for a sample rate of 358.4 kHz, which is
+    ** significantly higher than the OPL rate anyway.
+    */
     if (length > 2048)
         length = 2048;
 
     Chip__GenerateBlock2(which, length, buffer);
 
-    // GenerateBlock2 generates a number of "length" 32-bit mono samples
-    // so we only need to convert them to 16-bit mono samples
+    /* 
+    ** GenerateBlock2 generates a number of "length" 32-bit mono samples
+    ** so we only need to convert them to 16-bit mono samples
+    */
     for (i = 0; i < length; i++)
     {
-        // Scale volume
+        /* Scale volume */
         int sample = 2 * buffer[i];
         if (sample > 32767) sample = 32767;
         else if (sample < -32768) sample = -32768;
@@ -161,20 +173,24 @@ static void YM3812UpdateOne(opl3_chip* which, short* stream, int length)
     short buffer[2048 * 2];
     int i;
 
-    // length should be at least the max. samplesPerMusicTick
-    // in Catacomb 3-D and Keen 4-6, which is param_samplerate / 700.
-    // So 512 is sufficient for a sample rate of 358.4 kHz, which is
-    // significantly higher than the OPL rate anyway.
+    /* 
+    ** length should be at least the max. samplesPerMusicTick
+    ** in Catacomb 3-D and Keen 4-6, which is param_samplerate / 700.
+    ** So 512 is sufficient for a sample rate of 358.4 kHz, which is
+    ** significantly higher than the OPL rate anyway.
+    */
     if (length > 2048)
         length = 2048;
 
      OPL3_GenerateStream(which, buffer, length);
 
-     // GenerateBlock3 generates a number of "length" 32-bit stereo samples
-      // so we only need to convert them to 16-bit samples
-     for (i = 0; i < length * 2; i++)  // * 2 for left/right channel
+     /*
+     ** OPL3_GenerateStream generates a number of "length" 32-bit stereo samples
+     ** so we only need to convert them to 16-bit samples
+     */
+     for (i = 0; i < length * 2; i++)  /* * 2 for left/right channel */
      {
-        // Multiply by 4 to match loudness of MAME emulator.
+        /* Multiply by 4 to match loudness of MAME emulator. */
         short sample = buffer[i] << 2;
         if (sample > 32767) sample = 32767;
         else if (sample < -32768) sample = -32768;
@@ -213,7 +229,7 @@ typedef struct
 static Mix_Chunk *SoundChunks[ STARTMUSIC - STARTDIGISOUNDS];
 globalsoundpos channelSoundPos[MIX_CHANNELS];
 #endif
-//      Global variables
+/*      Global variables     */
         boolean       
 #ifndef SEGA_SATURN
                         AdLibPresent,
@@ -241,7 +257,7 @@ static  unsigned char          **SoundTable;
 #ifndef SEGA_SATURN
         int             DigiChannel[STARTMUSIC - STARTDIGISOUNDS];
 
-//      Internal variables
+/*      Internal variables      */
 static  boolean                 SD_Started;
 static  boolean                 nextsoundpos;
 static  soundnames              SoundNumber;
@@ -255,19 +271,19 @@ static  int                     RightPosition;
         digiinfo                *DigiList;
 static  boolean                 DigiPlaying;
 
-//      PC Sound variables
+/*      PC Sound variables     */
 static  volatile unsigned char           pcLastSample;
 static  unsigned char * volatile         pcSound;
 static  unsigned int                pcLengthLeft;
 
-//      AdLib variables
+/*      AdLib variables      */
 static  unsigned char * volatile         alSound;
 static  unsigned char                    alBlock;
 static  unsigned int                alLengthLeft;
 static  unsigned int                alTimeCount;
 static  Instrument              alZeroInst;
 
-//      Sequencer variables
+/*      Sequencer variables      */
 static  volatile boolean        sqActive;
 static  unsigned short         *sqHack;
 static  unsigned short         *sqHackPtr;
@@ -300,11 +316,13 @@ static void SDL_SoundFinished(void)
 	SoundPriority = 0;
 }
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //      SDL_PCPlaySound() - Plays the specified sound on the PC speaker
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
 static void
 SDL_PCPlaySound(PCSound *sound)
 {
@@ -313,29 +331,33 @@ SDL_PCPlaySound(PCSound *sound)
         pcSound = sound->data;
 }
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //      SDL_PCStopSound() - Stops the current sound playing on the PC Speaker
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
 static void
 SDL_PCStopSound(void)
 {
         pcSound = 0;
 }
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //      SDL_ShutPC() - Turns off the pc speaker
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
 static void
 SDL_ShutPC(void)
 {
         pcSound = 0;
 }
 
-// Adapted from Chocolate Doom (chocolate-doom/pcsound/pcsound_sdl.c)
+/* Adapted from Chocolate Doom (chocolate-doom/pcsound/pcsound_sdl.c) */
 #define SQUARE_WAVE_AMP 0x2000
 
 static void SDL_PCMixCallback(int chan, void* stream, int len, void* udata)
@@ -351,28 +373,28 @@ static void SDL_PCMixCallback(int chan, void* stream, int len, void* udata)
     int i;
     int nsamples;
 
-    // Number of samples is quadrupled, because of 16-bit and stereo
+    /* Number of samples is quadrupled, because of 16-bit and stereo */
 
     nsamples = len / 4;
 
     leftptr = (short *) stream;
     rightptr = ((short *) stream) + 1;
 
-    // Fill the output buffer
+    /* Fill the output buffer */
 
     for (i=0; i<nsamples; ++i)
     {
-        // Has this sound expired? If so, retrieve the next frequency
+        /* Has this sound expired? If so, retrieve the next frequency */
 
         while (current_remaining == 0) 
         {
             phase_offset = 0;
 
-            // Get the next frequency to play
+            /* Get the next frequency to play */
 
             if(pcSound)
             {
-                // The PC speaker sample rate is 140Hz (see SDL_t0SlowAsmService)
+                /* The PC speaker sample rate is 140Hz (see SDL_t0SlowAsmService) */
                 current_remaining = param_samplerate / 140;
 
                 if(*pcSound!=pcLastSample)
@@ -380,9 +402,11 @@ static void SDL_PCMixCallback(int chan, void* stream, int len, void* udata)
                     pcLastSample=*pcSound;
 					
                     if(pcLastSample)
-                        // The PC PIC counts down at 1.193180MHz
-                        // So pwm_freq = counter_freq / reload_value
-                        // reload_value = pcLastSample * 60 (see SDL_DoFX)
+                        /*
+                        ** The PC PIC counts down at 1.193180MHz
+                        ** So pwm_freq = counter_freq / reload_value
+                        ** reload_value = pcLastSample * 60 (see SDL_DoFX)
+                        */
                         current_freq = 1193180 / (pcLastSample * 60);
                     else
                         current_freq = 0;
@@ -404,11 +428,11 @@ static void SDL_PCMixCallback(int chan, void* stream, int len, void* udata)
             }
         }
 
-        // Set the value for this sample.
+        /* Set the value for this sample. */
 
         if (current_freq == 0)
         {
-            // Silence
+            /* Silence */
 
             this_value = 0;
         }
@@ -416,10 +440,11 @@ static void SDL_PCMixCallback(int chan, void* stream, int len, void* udata)
         {
             int frac;
 
-            // Determine whether we are at a peak or trough in the current
-            // sound.  Multiply by 2 so that frac % 2 will give 0 or 1 
-            // depending on whether we are at a peak or trough.
-
+            /*
+            ** Determine whether we are at a peak or trough in the current
+            ** sound.  Multiply by 2 so that frac % 2 will give 0 or 1 
+            ** depending on whether we are at a peak or trough.
+            */
             frac = (phase_offset * current_freq * 2) / param_samplerate;
 
             if ((frac % 2) == 0) 
@@ -436,7 +461,7 @@ static void SDL_PCMixCallback(int chan, void* stream, int len, void* udata)
 
         --current_remaining;
 
-        // Use the same value for the left and right channels.
+        /* Use the same value for the left and right channels. */
 
         *leftptr += this_value;
         *rightptr += this_value;
@@ -464,6 +489,8 @@ SD_StopDigitized(void)
         case sds_SoundBlaster:
             Mix_HaltChannel(-1);
             break;
+        default:
+            break;       
     }
 }
 
@@ -474,7 +501,7 @@ int SD_GetChannelForDigi(int which)
 
     channel = Mix_GroupAvailable(1);
     if(channel == -1) channel = Mix_GroupOldest(1);
-    if(channel == -1)           // All sounds stopped in the meantime?
+    if(channel == -1)           /* All sounds stopped in the meantime? */
         return Mix_GroupAvailable(1);
     return channel;
 }
@@ -491,11 +518,12 @@ void SD_SetPosition(int channel, int leftpos, int rightpos)
         case sds_SoundBlaster:
             Mix_SetPanning(channel, 255 - (leftpos * 28), 255 - (rightpos * 28));
             break;
+        default:
+            break;       
     }
 }
 
-
-short GetSample(float csample, unsigned char *samples, int size)
+static short GetSample(float csample, unsigned char *samples, int size)
 {
     float s0=0, s1=0, s2=0;
     int cursample = (int) csample;
@@ -527,15 +555,17 @@ void SD_PrepareSound(int which)
 
 
 #ifdef PONY
-    //	if(fileId>0)
+    /*	if(fileId>0)  */
     {
 
 
-        //		if(which <23)
-        //		if(fileSize>8192 && fileSize<20000)
+        /*		
+        **      if(which <23)
+        **		if(fileSize>8192 && fileSize<20000)
+        */
         {
 #ifndef USE_ADX				
-            //			load_8bit_pcm((Sint8*)filename, ORIGSAMPLERATE);
+            /*			load_8bit_pcm((Sint8*)filename, ORIGSAMPLERATE);           */
 #else
             load_adx((char*)filename);
 #endif			
@@ -554,10 +584,10 @@ void SD_PrepareSound(int which)
         fileSize = GetFileSize(fileId);
 
         if (which < 23)
-            //		if(fileSize>8192 && fileSize<20000)
+            /*		if(fileSize>8192 && fileSize<20000)       */
         {
             mem_buf = SafeMalloc(fileSize);
-            //CHECKMALLOCRESULT(mem_buf);
+            /* CHECKMALLOCRESULT(mem_buf); */
         }
         else
         {
@@ -603,22 +633,18 @@ void SD_PrepareSound(int which)
     origsamples = PM_GetSoundPage(page);
     if(origsamples + size >= PM_GetPageEnd())
         Quit("SD_PrepareSound(%i): Sound reaches out of page file!\n", which);
-#if defined(REINTERPRET_CAST)
-    wavebuffer = reinterpret_cast<unsigned char*>(SafeMalloc(sizeof(headchunk) + sizeof(wavechunk)
-        + destsamples * 2));     // dest are 16-bit samples
-#elif defined(STATIC_CAST)
-    wavebuffer = static_cast<unsigned char*>(SafeMalloc(sizeof(headchunk) + sizeof(wavechunk)
-        + destsamples * 2));     // dest are 16-bit samples
-#else
-    wavebuffer = (unsigned char*)SafeMalloc(sizeof(headchunk) + sizeof(wavechunk)
-        + destsamples * 2);     // dest are 16-bit samples
-#endif
-    head.filelenminus8 = sizeof(head) + destsamples*2;  // (sizeof(dhead)-8 = 0)
+    
+    wavebuffer = wlcast_conversion(unsigned char*, SafeMalloc(sizeof(headchunk) + sizeof(wavechunk)
+        + destsamples * 2));     /* dest are 16-bit samples */
+
+    head.filelenminus8 = sizeof(head) + destsamples*2;  /* (sizeof(dhead)-8 = 0) */
     memcpy(wavebuffer, &head, sizeof(head));
     memcpy(wavebuffer+sizeof(head), &dhead, sizeof(dhead));
 
-    // alignment is correct, as wavebuffer comes from malloc
-    // and sizeof(headchunk) % 4 == 0 and sizeof(wavechunk) % 4 == 0
+    /* 
+    ** alignment is correct, as wavebuffer comes from malloc
+    ** and sizeof(headchunk) % 4 == 0 and sizeof(wavechunk) % 4 == 0
+    */
     newsamples = (short *)(void *) (wavebuffer + sizeof(headchunk)
         + sizeof(wavechunk));
     cursample = 0.F;
@@ -693,6 +719,8 @@ SD_SetDigiDevice(SDSMode mode)
             if (!SoundBlasterPresent)
                 devicenotpresent = true;
             break;
+        default:
+            break;       
     }
 
     if (!devicenotpresent)
@@ -705,23 +733,21 @@ SD_SetDigiDevice(SDSMode mode)
 void
 SDL_SetupDigi(void)
 {
-    // Correct padding enforced by PM_Startup()
+    /* Correct padding enforced by PM_Startup() */
 	int i,page;
     unsigned short *soundInfoPage = (unsigned short *) (void *) PM_GetPage(ChunksInFile-1);
     NumDigi = (unsigned short) PM_GetPageSize(ChunksInFile - 1) / 4;
-#if defined(REINTERPRET_CAST)
-    DigiList = reinterpret_cast<digiinfo*>(SafeMalloc(NumDigi * sizeof(*DigiList)));
-#elif defined(STATIC_CAST)
-    DigiList = static_cast<digiinfo*>(SafeMalloc(NumDigi * sizeof(*DigiList)));
-#else
-    DigiList = (digiinfo*)SafeMalloc(NumDigi * sizeof(*DigiList));
-#endif
+
+    DigiList = wlcast_conversion(digiinfo*, SafeMalloc(NumDigi * sizeof(*DigiList)));
+
     
     for(i = 0; i < NumDigi; i++)
     {
-        // Calculate the size of the digi from the sizes of the pages between
-        // the start page and the start page of the next sound
-		int lastPage;
+        /* 
+        ** Calculate the size of the digi from the sizes of the pages between
+        ** the start page and the start page of the next sound
+		*/
+        int lastPage;
 		unsigned int size = 0;
         DigiList[i].startpage = soundInfoPage[i * 2];
         if((int) DigiList[i].startpage >= ChunksInFile - 1)
@@ -743,12 +769,14 @@ SDL_SetupDigi(void)
         for(page = PMSoundStart + DigiList[i].startpage; page < lastPage; page++)
             size += PM_GetPageSize(page);
 
-        // Don't include padding of sound info page, if padding was added
+        /* Don't include padding of sound info page, if padding was added */
         if(lastPage == ChunksInFile - 1 && PMSoundInfoPagePadded) size--;
 
-        // Patch lower 16-bit of size with size from sound info page.
-        // The original VSWAP contains padding which is included in the page size,
-        // but not included in the 16-bit size. So we use the more precise value.
+        /* Patch lower 16-bit of size with size from sound info page. */
+        /*
+        ** The original VSWAP contains padding which is included in the page size,
+        ** but not included in the 16-bit size. So we use the more precise value.
+        */
         if((size & 0xffff0000) != 0 && (size & 0xffff) < soundInfoPage[i * 2 + 1])
             size -= 0x10000;
         size = (size & 0xffff0000) | soundInfoPage[i * 2 + 1];
@@ -763,14 +791,17 @@ SDL_SetupDigi(void)
     }
 }
 
-//      AdLib Code
+/*      AdLib Code       */
 #ifndef SEGA_SATURN
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //      SDL_ALStopSound() - Turns off any sound effects playing through the
 //              AdLib card
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
+
 static void
 SDL_ALStopSound(void)
 {
@@ -782,8 +813,8 @@ static void
 SDL_AlSetFXInst(Instrument *inst)
 {
     unsigned char c,m;
-    m = 0;      // modulator cell for channel 0
-    c = 3;      // carrier cell for channel 0
+    m = 0;      /* modulator cell for channel 0 */
+    c = 3;      /* carrier cell for channel 0 */
     alOut(m + alChar,inst->mChar);
     alOut(m + alScale,inst->mScale);
     alOut(m + alAttack,inst->mAttack);
@@ -795,16 +826,19 @@ SDL_AlSetFXInst(Instrument *inst)
     alOut(c + alSus,inst->cSus);
     alOut(c + alWave,inst->cWave);
 
-    // Note: Switch commenting on these lines for old MUSE compatibility
-//    alOutInIRQ(alFeedCon,inst->nConn);
+    /* Note: Switch commenting on these lines for old MUSE compatibility */
+/*    alOutInIRQ(alFeedCon,inst->nConn);      */
     alOut(alFeedCon,0);
 }
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //      SDL_ALPlaySound() - Plays the specified sound on the AdLib card
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
+
 static void
 SDL_ALPlaySound(AdLibSound *sound)
 {
@@ -827,11 +861,14 @@ SDL_ALPlaySound(AdLibSound *sound)
     alSound = (unsigned char *)data;
 }
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //      SDL_ShutAL() - Shuts down the AdLib card for sound effects
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
+
 static void
 SDL_ShutAL(void)
 {
@@ -841,11 +878,14 @@ SDL_ShutAL(void)
     SDL_AlSetFXInst(&alZeroInst);
 }
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //      SDL_StartAL() - Starts up the AdLib card for sound effects
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
+
 static void
 SDL_StartAL(void)
 {
@@ -853,11 +893,14 @@ SDL_StartAL(void)
     SDL_AlSetFXInst(&alZeroInst);
 }
 
+/*
 ////////////////////////////////////////////////////////////////////////////
 //
 //      SDL_ShutDevice() - turns off whatever device was being used for sound fx
 //
 ////////////////////////////////////////////////////////////////////////////
+*/
+
 static void
 SDL_ShutDevice(void)
 {
@@ -869,15 +912,20 @@ SDL_ShutDevice(void)
         case sdm_AdLib:
             SDL_ShutAL();
             break;
+        default:
+            break;       
     }
     SoundMode = sdm_Off;
 }
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //      SDL_StartDevice() - turns on whatever device is to be used for sound fx
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
+
 static void
 SDL_StartDevice(void)
 {
@@ -886,18 +934,23 @@ SDL_StartDevice(void)
         case sdm_AdLib:
             SDL_StartAL();
             break;
+        default:
+            break;        
     }
     SoundNumber = (soundnames) 0;
     SoundPriority = 0;
 }
 
-//      Public routines
+/*      Public routines        */
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //      SD_SetSoundMode() - Sets which sound hardware to use for sound effects
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
+
 boolean
 SD_SetSoundMode(SDMode mode)
 {
@@ -940,11 +993,14 @@ SD_SetSoundMode(SDMode mode)
     return(result);
 }
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //      SD_SetMusicMode() - sets the device to use for background music
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
+
 boolean
 SD_SetMusicMode(SMMode mode)
 {
@@ -963,6 +1019,8 @@ SD_SetMusicMode(SMMode mode)
             if (AdLibPresent)
                 result = true;
             break;
+        default:
+            break;        
     }
 
     if (result)
@@ -973,17 +1031,16 @@ SD_SetMusicMode(SMMode mode)
 #endif 
 
 int numreadysamples = 0;
-unsigned char *curAlSound = 0;
-unsigned char *curAlSoundPtr = 0;
+unsigned char* curAlSoundPtr = 0;
 unsigned int curAlLengthLeft = 0;
 int soundTimeCounter = 5;
 int samplesPerMusicTick;
-
+unsigned char* curAlSound = 0;
 void SDL_IMFMusicPlayer(void *udata, unsigned char *stream, int len)
 {
     int stereolen = len>>1;
     int sampleslen = stereolen>>1;
-    short *stream16 = (short *) (void *) stream;    // expect correct alignment
+    short *stream16 = (short *) (void *) stream;    /* expect correct alignment */
 
     while(1)
     {
@@ -1062,31 +1119,36 @@ void SDL_IMFMusicPlayer(void *udata, unsigned char *stream, int len)
     }
 }
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //      SD_Startup() - starts up the Sound Mgr
 //              Detects all additional sound hardware and installs my ISR
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
+
 void
 SD_Startup(void)
 {
 #ifdef SEGA_SATURN
-    //   AdLibPresent = false;
+ /* AdLibPresent = false; */
     SoundBlasterPresent = true;
 
-    //    alTimeCount = 0;
-
-        //SD_SetSoundMode(sdm_PC);
-        //SD_SetMusicMode(sdm_PC);
-
+        /* 
+        ** alTimeCount = 0;
+        **
+        ** SD_SetSoundMode(sdm_PC);
+        ** SD_SetMusicMode(sdm_PC);
+        */
     SDL_AudioSpec desired, obtained;
     desired.freq = ORIGSAMPLERATE;
     desired.format = AUDIO_U8;
     desired.channels = 1;
-    //  desired.samples = 1024;
-    //  desired.userdata = NULL;
-
+    /*  
+    **   desired.samples = 1024;
+    **   desired.userdata = NULL;
+    */
     SDL_OpenAudio(&desired, &obtained);
 #else
     int     i;
@@ -1100,12 +1162,12 @@ SD_Startup(void)
         return;
     }
 
-    Mix_ReserveChannels(2);  // reserve player and boss weapon channels
-    Mix_GroupChannels(2, MIX_CHANNELS-1, 1); // group remaining channels
+    Mix_ReserveChannels(2);  /* reserve player and boss weapon channels */
+    Mix_GroupChannels(2, MIX_CHANNELS-1, 1); /* group remaining channels */
 
-    // Init music
+    /* Init music */
 
-    samplesPerMusicTick = param_samplerate / 700;    // SDL_t0FastAsmService played at 700Hz
+    samplesPerMusicTick = param_samplerate / 700;    /* SDL_t0FastAsmService played at 700Hz */
     if(YM3812Init(1,3579545,param_samplerate))
     {
         printf("Unable to create virtual OPL!!\n");
@@ -1113,8 +1175,8 @@ SD_Startup(void)
 
     for(i=1;i<0xf6;i++)
         alOut(i,0);
-    alOut(1,0x20); // Set WSE=1
-//    YM3812Write(0,8,0); // Set CSM=0 & SEL=0		 // already set in for statement
+    alOut(1,0x20); /* Set WSE=1 */
+    /* YM3812Write(0,8,0); /* Set CSM=0 & SEL=0	*/	 /* already set in for statement */
     Mix_HookMusic(SDL_IMFMusicPlayer, 0);
     Mix_ChannelFinished(SD_ChannelFinished);
     AdLibPresent = true;
@@ -1122,7 +1184,7 @@ SD_Startup(void)
 
     alTimeCount = 0;
 	
-    // Add PC speaker sound mixer
+    /* Add PC speaker sound mixer */
     Mix_RegisterEffect(MIX_CHANNEL_POST, SDL_PCMixCallback, NULL, NULL);
 
     SD_SetSoundMode(sdm_Off);
@@ -1134,12 +1196,15 @@ SD_Startup(void)
 #endif
 }
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //      SD_Shutdown() - shuts down the Sound Mgr
 //              Removes sound ISR and turns off whatever sound hardware was active
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
+
 void
 SD_Shutdown(void)
 {
@@ -1165,12 +1230,16 @@ SD_Shutdown(void)
 }
 
 #ifndef SEGA_SATURN
+
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //      SD_PositionSound() - Sets up a stereo imaging location for the next
 //              sound to be played. Each channel ranges from 0 to 15.
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
+
 void
 SD_PositionSound(int leftvol,int rightvol)
 {
@@ -1179,17 +1248,21 @@ SD_PositionSound(int leftvol,int rightvol)
     nextsoundpos = true;
 }
 #endif
+
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //      SD_PlaySound() - plays the specified sound on the appropriate hardware
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
+
 boolean
 SD_PlaySound(soundnames sound)
 {
 #ifdef SEGA_SATURN
-    //slPrint("SD_PlaySound",slLocate(10,9));		
-    //slPrintHex(sound,slLocate(24,9));		
+    /* slPrint("SD_PlaySound",slLocate(10,9)); */		
+    /* slPrintHex(sound,slLocate(24,9)); */	
 #ifdef PONY
 #ifndef USE_ADX	
     if (Mix_PlayChannel(DigiMap[sound], NULL, 0) == -1)
@@ -1197,7 +1270,7 @@ SD_PlaySound(soundnames sound)
     return Mix_PlayChannel(sound, NULL, 0);
 #endif
 #else
-    Mix_Chunk* sample = SoundChunks[DigiMap[sound]];	 //DigiMap[sound]
+    Mix_Chunk* sample = SoundChunks[DigiMap[sound]];	 /* DigiMap[sound] */
     if (Mix_PlayChannel(0, sample, 0) == -1)
 #endif	
 #else
@@ -1265,10 +1338,12 @@ SD_PlaySound(soundnames sound)
             SDL_PCPlaySound((PCSound *)s);
             break;
         case sdm_AdLib:
-            curAlSound = alSound = 0;                //ADDEDFIX: Tricob
+            curAlSound = alSound = 0;                /* ADDEDFIX: Tricob */
             alOut(alFreqH, 0);
             SDL_ALPlaySound((AdLibSound *)s);
             break;
+        default:
+            break;        
     }
 
     SoundNumber = sound;
@@ -1278,12 +1353,15 @@ SD_PlaySound(soundnames sound)
 #endif
 }
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //      SD_SoundPlaying() - returns the sound number that's playing, or 0 if
 //              no sound is playing
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
+
 unsigned short
 SD_SoundPlaying(void)
 {
@@ -1296,12 +1374,12 @@ SD_SoundPlaying(void)
     {
         if (slPCMStat(&m_dat[i]))
         {
-            //			slSndFlush() ;
-                        //slSynch(); // vbt remis 26/05 // necessaire sinon reste planré à la fin du niveau
+                        /* slSndFlush(); */
+                        /* slSynch(); */ /* vbt remis 26/05 */ /* necessaire sinon reste planré à la fin du niveau */
             return true;
         }
     }
-    ////slPrintHex(SoundMode,slLocate(10,3));
+    /* slPrintHex(SoundMode,slLocate(10,3)); */
 #endif
 
     return false;
@@ -1316,6 +1394,8 @@ SD_SoundPlaying(void)
         case sdm_AdLib:
             result = alSound? true : false;
             break;
+        default:
+            break;        
     }
 
     if (result)
@@ -1325,11 +1405,14 @@ SD_SoundPlaying(void)
 #endif
 }
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //      SD_StopSound() - if a sound is playing, stops it
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
+
 void
 SD_StopSound(void)
 {
@@ -1345,6 +1428,8 @@ SD_StopSound(void)
         case sdm_AdLib:
             SDL_ALStopSound();
             break;
+        default:
+            break;        
     }
 
     SoundPositioned = false;
@@ -1353,11 +1438,14 @@ SD_StopSound(void)
 #endif
 }
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //      SD_WaitSoundDone() - waits until the current sound is done playing
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
+
 void
 SD_WaitSoundDone(void)
 {
@@ -1367,11 +1455,14 @@ SD_WaitSoundDone(void)
 #endif
 }
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //      SD_MusicOn() - turns on the sequencer
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
+
 void
 SD_MusicOn(void)
 {
@@ -1380,12 +1471,15 @@ SD_MusicOn(void)
 #endif
 }
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //      SD_MusicOff() - turns off the sequencer and any playing notes
 //      returns the last music offset for music continue
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
+
 int
 SD_MusicOff(void)
 {
@@ -1400,6 +1494,8 @@ SD_MusicOff(void)
             for (i = 0;i < sqMaxTracks;i++)
                 alOut(alFreqH + i + 1, 0);
             break;
+        default:
+            break;    
     }
 
     return (int) (sqHackPtr-sqHack);
@@ -1408,11 +1504,14 @@ SD_MusicOff(void)
 #endif
 }
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //      SD_StartMusic() - starts playing the music pointed to
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
+
 void
 SD_StartMusic(int chunk)
 {
@@ -1421,7 +1520,7 @@ SD_StartMusic(int chunk)
     if (MusicMode == smm_AdLib)
     {
         int chunkLen = CA_CacheAudioChunk(chunk);
-        sqHack = (unsigned short *)(void *) audiosegs[chunk];     // alignment is correct
+        sqHack = (unsigned short *)(void *) audiosegs[chunk];     /* alignment is correct */
         if(*sqHack == 0) sqHackLen = sqHackSeqLen = chunkLen;
         else sqHackLen = sqHackSeqLen = *sqHack++;
         sqHackPtr = sqHack;
@@ -1441,14 +1540,14 @@ SD_ContinueMusic(int chunk, int startoffs)
     {
         int chunkLen = CA_CacheAudioChunk(chunk);
         int i;
-        sqHack = (unsigned short*)(void *) audiosegs[chunk];     // alignment is correct
+        sqHack = (unsigned short*)(void *) audiosegs[chunk];     /* alignment is correct */
         if(*sqHack == 0) sqHackLen = sqHackSeqLen = chunkLen;
         else sqHackLen = sqHackSeqLen = *sqHack++;
         sqHackPtr = sqHack;
 
         if (startoffs >= sqHackLen)
         {
-            startoffs = 0; //ADDEDFIX: Andy, improved by Chris Chokan
+            startoffs = 0; /* ADDEDFIX: Andy, improved by Chris Chokan */
         }
 /*
         else
@@ -1456,15 +1555,15 @@ SD_ContinueMusic(int chunk, int startoffs)
             Quit("SD_StartMusic: Illegal startoffs provided!");
         }
 */
-        // fast forward to correct position
-        // (needed to reconstruct the instruments)
+        /* fast forward to correct position */
+        /* (needed to reconstruct the instruments) */
 
         for(i = 0; i < startoffs; i += 2)
         {
             unsigned char reg = *(unsigned char *)sqHackPtr;
             unsigned char val = *(((unsigned char *)sqHackPtr) + 1);
-            if(reg >= 0xb1 && reg <= 0xb8) val &= 0xdf;           // disable play note flag
-            else if(reg == 0xbd) val &= 0xe0;                     // disable drum flags
+            if(reg >= 0xb1 && reg <= 0xb8) val &= 0xdf;           /* disable play note flag */
+            else if(reg == 0xbd) val &= 0xe0;                     /* disable drum flags */
 
             alOut(reg,val);
             sqHackPtr += 2;
@@ -1480,30 +1579,38 @@ SD_ContinueMusic(int chunk, int startoffs)
 #endif
 }
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //      SD_FadeOutMusic() - starts fading out the music. Call SD_MusicPlaying()
 //              to see if the fadeout is complete
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
+
 void
 SD_FadeOutMusic(void)
 {
     switch (MusicMode)
     {
         case smm_AdLib:
-            // DEBUG - quick hack to turn the music off
+            /* DEBUG - quick hack to turn the music off */
             SD_MusicOff();
             break;
+        default: 
+            break;   
     }
 }
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //      SD_MusicPlaying() - returns true if music is currently playing, false if
 //              not
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
+
 boolean
 SD_MusicPlaying(void)
 {

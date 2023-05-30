@@ -1,4 +1,4 @@
-//PS2_MAIN.C
+/* PS2_MAIN.C */
 #include "ps2_mc.h"
 #include "ps2_modules.h"
 #include "ps2_data_loader.h"
@@ -19,10 +19,11 @@ void PS2_Started()
     PS2_Load_RPC_Patches();
     ps2_printf_XY("Loading modules...", 4, 20, 20);
 	PS2_Load_Modules();
-    //ps2_printf("Loading MC...", 4);
-    //PS2_Load_Memory_Card();
-    //ps2_printf_XY("Loading the Loader", 4, 20, 20);
-    //PS2_SDL_LoaderStart();
+    /* ps2_printf("Loading MC...", 4);
+    ** PS2_Load_Memory_Card();
+    ** ps2_printf_XY("Loading the Loader", 4, 20, 20);
+    ** PS2_SDL_LoaderStart();
+    */
 }
 
 void PS2_Shutdown()

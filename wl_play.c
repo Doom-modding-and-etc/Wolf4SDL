@@ -1,4 +1,4 @@
-// WL_PLAY.C
+/* WL_PLAY.C */
 
 #include "wl_def.h"
 
@@ -23,7 +23,7 @@
 =============================================================================
 */
 
-boolean madenoise;              // true when shooting or screaming
+boolean madenoise;              /* true when shooting or screaming */
 
 exit_t playstate;
 
@@ -53,7 +53,7 @@ boolean singlestep, godmode, noclip, ammocheat, mapreveal;
 #endif
 int     extravbls;
 
-tiletype tilemap[MAPSIZE][MAPSIZE]; // wall values only
+tiletype tilemap[MAPSIZE][MAPSIZE]; /* wall values only */
 boolean     spotvis[MAPSIZE][MAPSIZE];
 objtype *actorat[MAPSIZE][MAPSIZE];
 #ifdef REVEALMAP
@@ -63,21 +63,19 @@ boolean     mapseen[MAPSIZE][MAPSIZE];
 boolean lagging = true;
 #endif
 
-//
-// replacing refresh manager
-//
+/*
+** replacing refresh manager
+*/
 unsigned short     mapwidth,mapheight;
 size_t tics;
 
-//
-// control info
-//
+/*
+** control info
+*/
 #ifndef SEGA_SATURN
 boolean mouseenabled, joystickenabled;
 #endif
-#ifdef MOUSELOOK
 boolean mouselookenabled, alwaysrunenabled;
-#endif
 int dirscan[4] =
 {
     sc_UpArrow,
@@ -241,20 +239,19 @@ char *demoptr, *lastdemoptr;
 #ifndef SEGA_SATURN
 void   *demobuffer;
 #endif
-//
-// current user input
-//
-int controlx, controly;         // range from -100 to 100 per tic
+/*
+** current user input
+*/
+int controlx, controly;         /* range from -100 to 100 per tic */
 #if SDL_MAJOR_VERSION == 2
 int gamecontrolstrafe;
 #endif
-#ifdef MOUSELOOK
 int mousecontrolx, mousecontroly;
-#endif
+
 
 #ifdef EXTRACONTROLS
 int controlstrafe;
-#endif // EXTRACONTROLS
+#endif /* EXTRACONTROLS */
 boolean buttonstate[NUMBUTTONS];
 
 int lastgamemusicoffset = 0;
@@ -266,7 +263,7 @@ extern SPRITE user_walls[MAX_WALLS];
 extern char texture_list[SPR_NULLSPRITE];
 #endif
 
-//===========================================================================
+/* =========================================================================== */
 
 
 void CenterWindow (unsigned short w, unsigned short h);
@@ -288,14 +285,14 @@ void PlayLoop (void);
 #ifndef SEGA_SATURN
 objtype dummyobj;
 #endif
-//
-// LIST OF SONGS FOR EACH VERSION
-//
+/*
+** LIST OF SONGS FOR EACH VERSION
+*/
 int songs[] = {
 #ifndef SPEAR
-    //
-    // Episode One
-    //
+    /*
+    ** Episode One
+    */
     GETTHEM_MUS,
     SEARCHN_MUS,
     POW_MUS,
@@ -305,12 +302,12 @@ int songs[] = {
     POW_MUS,
     SUSPENSE_MUS,
 
-    WARMARCH_MUS,               // Boss level
-    CORNER_MUS,                 // Secret level
+    WARMARCH_MUS,               /* Boss level */
+    CORNER_MUS,                 /* Secret level */
 
-    //
-    // Episode Two
-    //
+    /*
+    ** Episode Two
+    */
     NAZI_OMI_MUS,
     PREGNANT_MUS,
     GOINGAFT_MUS,
@@ -320,12 +317,12 @@ int songs[] = {
     HEADACHE_MUS,
     GOINGAFT_MUS,
 
-    WARMARCH_MUS,               // Boss level
-    DUNGEON_MUS,                // Secret level
+    WARMARCH_MUS,               /* Boss level */
+    DUNGEON_MUS,                /* Secret level */
 
-    //
-    // Episode Three
-    //
+    /*
+    ** Episode Three
+    */
     INTROCW3_MUS,
     NAZI_RAP_MUS,
     TWELFTH_MUS,
@@ -335,12 +332,12 @@ int songs[] = {
     TWELFTH_MUS,
     ZEROHOUR_MUS,
 
-    ULTIMATE_MUS,               // Boss level
-    PACMAN_MUS,                 // Secret level
+    ULTIMATE_MUS,               /* Boss level */
+    PACMAN_MUS,                 /* Secret level */
 
-    //
-    // Episode Four
-    //
+    /*
+    ** Episode Four
+    */
     GETTHEM_MUS,
     SEARCHN_MUS,
     POW_MUS,
@@ -350,12 +347,12 @@ int songs[] = {
     POW_MUS,
     SUSPENSE_MUS,
 
-    WARMARCH_MUS,               // Boss level
-    CORNER_MUS,                 // Secret level
+    WARMARCH_MUS,               /* Boss level */
+    CORNER_MUS,                 /* Secret level */
 
-    //
-    // Episode Five
-    //
+    /*
+    ** Episode Five
+    */
     NAZI_OMI_MUS,
     PREGNANT_MUS,
     GOINGAFT_MUS,
@@ -365,12 +362,12 @@ int songs[] = {
     HEADACHE_MUS,
     GOINGAFT_MUS,
 
-    WARMARCH_MUS,               // Boss level
-    DUNGEON_MUS,                // Secret level
+    WARMARCH_MUS,               /* Boss level */
+    DUNGEON_MUS,                /* Secret level */
 
-    //
-    // Episode Six
-    //
+    /*
+    ** Episode Six
+    */
     INTROCW3_MUS,
     NAZI_RAP_MUS,
     TWELFTH_MUS,
@@ -380,41 +377,42 @@ int songs[] = {
     TWELFTH_MUS,
     ZEROHOUR_MUS,
 
-    ULTIMATE_MUS,               // Boss level
-    FUNKYOU_MUS                 // Secret level
+    ULTIMATE_MUS,               /* Boss level */
+    FUNKYOU_MUS                 /* Secret level */
 #else
-
+    /*
     //////////////////////////////////////////////////////////////
     //
     // SPEAR OF DESTINY TRACKS
     //
     //////////////////////////////////////////////////////////////
+    */
     XTIPTOE_MUS,
     XFUNKIE_MUS,
     XDEATH_MUS,
-    XGETYOU_MUS,                // DON'T KNOW
-    ULTIMATE_MUS,               // Trans Grosse
+    XGETYOU_MUS,                /* DON'T KNOW */
+    ULTIMATE_MUS,               /* Trans Grosse */
 
     DUNGEON_MUS,
     GOINGAFT_MUS,
     POW_MUS,
     TWELFTH_MUS,
-    ULTIMATE_MUS,               // Barnacle Wilhelm BOSS
+    ULTIMATE_MUS,               /* Barnacle Wilhelm BOSS */
 
     NAZI_OMI_MUS,
     GETTHEM_MUS,
     SUSPENSE_MUS,
     SEARCHN_MUS,
     ZEROHOUR_MUS,
-    ULTIMATE_MUS,               // Super Mutant BOSS
+    ULTIMATE_MUS,               /* Super Mutant BOSS */
 
     XPUTIT_MUS,
-    ULTIMATE_MUS,               // Death Knight BOSS
+    ULTIMATE_MUS,               /* Death Knight BOSS */
 
-    XJAZNAZI_MUS,               // Secret level
-    XFUNKIE_MUS,                // Secret level (DON'T KNOW)
+    XJAZNAZI_MUS,               /* Secret level */
+    XFUNKIE_MUS,                /* Secret level (DON'T KNOW) */
 
-    XEVIL_MUS                   // Angel of Death BOSS
+    XEVIL_MUS                   /* Angel of Death BOSS */
 #endif
 };
 
@@ -533,15 +531,13 @@ void PollGameControllerButtons(void)
 
 void PollKeyboardMove (void)
 {
-#ifdef MOUSELOOK
+
     int delta;
     if (!alwaysrunenabled)
-        delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
+        delta = buttonstate[bt_run] ? RUNMOVE * (int)tics : BASEMOVE * (int)tics;
     else
-        delta = buttonstate[bt_run] ? BASEMOVE * tics : RUNMOVE * tics;
-#else	
-    int delta = buttonstate[bt_run] ? RUNMOVE * (int)tics : BASEMOVE * (int)tics;
-#endif
+        delta = buttonstate[bt_run] ? BASEMOVE * (int)tics : RUNMOVE * (int)tics;
+
     if (Keyboard(dirscan[di_north]))
         controly -= delta;
     if (Keyboard(dirscan[di_south]))
@@ -575,7 +571,7 @@ void PollMouseMove (void)
 #else
     SDL_GetRelativeMouseState(&mousexmove, &mouseymove);
 #endif
-#ifdef MOUSELOOK
+
     if (!mouselookenabled) {
         controlx += mousexmove * 10 / (13 - mouseadjustment);
         controly += mouseymove * 20 / (13 - mouseadjustment);
@@ -584,18 +580,12 @@ void PollMouseMove (void)
         mousecontrolx += mousexmove * 10 / (13 - mouseadjustment);
         mousecontroly += mouseymove * 20 / (13 - mouseadjustment);
     }
-#else
-    controlx += mousexmove * 10 / (13 - mouseadjustment);
-#endif
+
 #ifdef EXTRACONTROLS
     if (mousemoveenabled)
     {
         controly += mouseymove * 20 / (13 - mouseadjustment);
     }
-#else
-#ifndef MOUSELOOK	
-	controly += mouseymove * 20 / (13 - mouseadjustment);
-#endif
 #endif
 }
 
@@ -706,12 +696,12 @@ void PollControls (void)
 
     IN_ProcessEvents();
 
-//
-// get timing info for last frame
-//
-    if (demoplayback || demorecord)   // demo recording and playback needs to be constant
+/*
+** get timing info for last frame
+*/
+    if (demoplayback || demorecord)   /* demo recording and playback needs to be constant */
     {
-        // wait up to DEMOTICS Wolf tics
+        /* wait up to DEMOTICS Wolf tics */
         size_t curtime = WL_GetTicks();
 		fixed timediff;
         lasttimecount += DEMOTICS;
@@ -719,8 +709,8 @@ void PollControls (void)
         if(timediff > 0)
             SDL_Delay((unsigned int)timediff);
 
-        if(timediff < -2 * DEMOTICS)       // more than 2-times DEMOTICS behind?
-            lasttimecount = (curtime * 7) / 100;    // yes, set to current timecount
+        if(timediff < -2 * DEMOTICS)       /* more than 2-times DEMOTICS behind? */
+            lasttimecount = (curtime * 7) / 100;    /* yes, set to current timecount */
 
         tics = DEMOTICS;
     }
@@ -732,18 +722,17 @@ void PollControls (void)
 #if SDL_MAJOR_VERSION == 2
     gamecontrolstrafe = 0;
 #endif
-#ifdef MOUSELOOK
     mousecontrolx = 0;
     mousecontroly = 0;
-#endif
+
     memcpy(buttonheld, buttonstate, sizeof(buttonstate));
     memset(buttonstate, 0, sizeof(buttonstate));
 
     if (demoplayback)
     {
-        //
-        // read commands from demo buffer
-        //
+        /*
+        ** read commands from demo buffer
+        */
         buttonbits = *demoptr++;
         for (i = 0; i < NUMBUTTONS; i++)
         {
@@ -755,7 +744,7 @@ void PollControls (void)
         controly = *demoptr++;
 
         if (demoptr == lastdemoptr)
-            playstate = ex_completed;   // demo is done
+            playstate = ex_completed;   /* demo is done */
 
         controlx *= (int)tics;
         controly *= (int)tics;
@@ -764,15 +753,15 @@ void PollControls (void)
     }
 
 
-//
-// get button states
-//
+/*
+** get button states
+*/
 #if defined(SWITCH) 
     padUpdate(&pad);
 
     kDown = padGetButtons(&pad);
 
-    //u32 kToggle = hidKeysDown(CONTROLLER_P1_AUTO);
+    /* u32 kToggle = hidKeysDown(CONTROLLER_P1_AUTO); */
 
     if((kDown & HidNpadButton_A) || (kDown & HidNpadButton_ZR))
         buttonstate[bt_attack] = true;
@@ -802,7 +791,7 @@ void PollControls (void)
 
     kDown = hidKeysHeld();
 
-    //u32 kToggle = hidKeysDown(CONTROLLER_P1_AUTO);
+    /* u32 kToggle = hidKeysDown(CONTROLLER_P1_AUTO); */
 
     if((kDown & KEY_A) || (kDown & KEY_ZR))
         buttonstate[bt_attack] = true;
@@ -839,11 +828,11 @@ void PollControls (void)
         PollJoystickButtons();
 #endif
 #endif
-//
-// get movements
-//
+/*
+** get movements
+*/
 #if defined(SWITCH)
-    // keyboard movement code
+    /* keyboard movement code */
     delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
 	
     if((kDown & HidNpadButton_Up))
@@ -855,7 +844,7 @@ void PollControls (void)
     if((kDown & HidNpadButton_Right))
         controlx += delta;
 
-    //Read the joysticks' position
+    /* Read the joysticks' position */
     pos_left = padGetStickPos(&pos_left, 0);
     pos_right = padGetStickPos(&pos_right, 1);
 
@@ -908,7 +897,7 @@ void PollControls (void)
         controlx += delta;
     }
 #elif defined(N3DS)
-    // keyboard movement code
+    /* keyboard movement code */
     delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
 
     if((kDown & KEY_DUP))
@@ -945,9 +934,9 @@ void PollControls (void)
     if (joystickenabled)
         PollJoystickMove ();
 #endif
-//
-// bound movement to a maximum
-//
+/*
+** bound movement to a maximum
+*/
     max = 100 * (int)tics;
     min = -max;
     if (controlx > max)
@@ -970,15 +959,15 @@ void PollControls (void)
 
     if (demorecord)
     {
-        //
-        // save info out to demo buffer
-        //
+        /*
+        ** save info out to demo buffer
+        */
         controlx /= (int)tics;
         controly /= (int)tics;
 
         buttonbits = 0;
 
-        // TODO: Support 32-bit buttonbits
+        /* TODO: Support 32-bit buttonbits */
         for (i = NUMBUTTONS - 1; i >= 0; i--)
         {
             buttonbits <<= 1;
@@ -1002,16 +991,18 @@ void PollControls (void)
 
 
 
-//==========================================================================
+/* ========================================================================== */
 
 
-
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //      CenterWindow() - Generates a window of a given width & height in the
 //              middle of the screen
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
+
 #ifndef SEGA_SATURN
 #define MAXX    320
 #define MAXY    160
@@ -1021,7 +1012,7 @@ void CenterWindow (unsigned short w, unsigned short h)
     US_DrawWindow (((MAXX / 8) - w) / 2, ((MAXY / 8) - h) / 2, w, h);
 }
 #endif
-//===========================================================================
+/* =========================================================================== */
 
 
 /*
@@ -1036,14 +1027,14 @@ void CheckKeys (void)
 {
     ScanCode scan;
 	static boolean wasPressed;
-    if (screenfaded || demoplayback)    // don't do anything with a faded screen
+    if (screenfaded || demoplayback)    /* don't do anything with a faded screen */
         return;
 
     scan = LastScan;
 
 #ifdef DEBUGKEYS
     if (Keyboard(sc_Tab) &&
-        Keyboard(sc_N))			// N = no clip
+        Keyboard(sc_N))			/* N = no clip */
     {
         noclip ^= 1;
         WindowH = 160;
@@ -1071,12 +1062,12 @@ void CheckKeys (void)
         noclip ^= 1;
         DrawPlayBorderSides();
         IN_ClearKeysDown();
-        return;	// return 1;
+        return;	/* return 1; */
     }
 #endif
 
     wasPressed = false;
-    if (Keyboard(sc_Tab) && Keyboard(sc_P)) //Fabien´s Sangalard + Ripper´s Picture Grabber.
+    if (Keyboard(sc_Tab) && Keyboard(sc_P)) /* FabienÂ´s Sangalard + RipperÂ´s Picture Grabber. */
     {
         if (!wasPressed)
         {
@@ -1092,24 +1083,24 @@ void CheckKeys (void)
             wasPressed = false;
         }
     }
-//#endif
+/* #endif */
 #ifndef SEGA_SATURN
 #if defined(GOD_MODE) || defined(SPEAR)
-    //
-    // SECRET CHEAT CODE: TAB-G-F10
-    //
+    /*
+    ** SECRET CHEAT CODE: TAB-G-F10
+    */
     if (Keyboard(sc_Tab) && Keyboard(sc_G) && Keyboard(sc_F10)) 
     {
 
         SD_StopDigitized();
-        // CA_CacheGrChunk(STARTFONT + 1);
+        /* CA_CacheGrChunk(STARTFONT + 1); */
         CA_CacheGrChunks();
         ClearSplitVWB();
 
         if (godmode)
         {
             Message ("God mode OFF");
-            //Better use sound.
+            /* Better use sound. */
             SD_PlaySound (DEATHSCREAM1SND);
         }
         else
@@ -1126,9 +1117,9 @@ void CheckKeys (void)
     }
 #endif
 
-    //
-    // SECRET CHEAT CODE: 'MLI'
-    //
+    /*
+    ** SECRET CHEAT CODE: 'MLI'
+    */
     if (Keyboard(sc_M) && Keyboard(sc_L) && Keyboard(sc_I))
     {
         gamestate.health = 100;
@@ -1157,9 +1148,9 @@ void CheckKeys (void)
     }
 #endif
 
-    //
-    // OPEN UP DEBUG KEYS
-    //
+    /*
+    ** OPEN UP DEBUG KEYS
+    */
 #ifdef DEBUGKEYS
     if (Keyboard(sc_BackSpace) && Keyboard(sc_LShift) && Keyboard(sc_Alt) && param_debugmode)
     {
@@ -1176,9 +1167,9 @@ void CheckKeys (void)
 #endif
 
 #ifndef SEGA_SATURN
-    //
-    // TRYING THE KEEN CHEAT CODE!
-    //
+    /*
+    ** TRYING THE KEEN CHEAT CODE!
+    */
     if (Keyboard(sc_B) && Keyboard(sc_A) && Keyboard(sc_T))
     {
         SD_StopDigitized();
@@ -1194,9 +1185,9 @@ void CheckKeys (void)
         if (viewsize < 18)
             DrawPlayBorder();
     }
-//
-// pause key weirdness can't be checked as a scan code
-//
+/*
+** pause key weirdness can't be checked as a scan code
+*/
     if(buttonstate[bt_pause]) Paused = true;
     if(Paused)
     {
@@ -1207,19 +1198,19 @@ void CheckKeys (void)
         Paused = false;
         ContinueMusic(lastoffs);
         if (MousePresent && IN_IsInputGrabbed())
-            IN_CenterMouse();     // Clear accumulated mouse movement
+            IN_CenterMouse();     /* Clear accumulated mouse movement */
         lasttimecount = GetTimeCount();
         return;
     }
 
-//
-// F1-F7/ESC to enter control panel
-//
+/*
+** F1-F7/ESC to enter control panel
+*/
     if (
 #ifndef DEBCHECK
            scan == sc_F10 ||
 #endif
-           scan == sc_F9 || scan == sc_F7 || scan == sc_F8)     // pop up quit dialog
+           scan == sc_F9 || scan == sc_F7 || scan == sc_F8)     /* pop up quit dialog */
     {
         SD_StopDigitized ();
         ClearSplitVWB ();
@@ -1260,13 +1251,13 @@ void CheckKeys (void)
 #endif
         lasttimecount = GetTimeCount();
         if (MousePresent && IN_IsInputGrabbed())
-            IN_CenterMouse();     // Clear accumulated mouse movement
+            IN_CenterMouse();     /* Clear accumulated mouse movement */
         return;
     }
 
-//
-// TAB-? debug keys
-//
+/*
+** TAB-? debug keys
+*/
 #ifdef DEBUGKEYS
 #ifndef SEGA_SATURN
     if (Keyboard(sc_Tab) && DebugOk)
@@ -1275,10 +1266,10 @@ void CheckKeys (void)
         SETFONTCOLOR (0, 15);
         if (DebugKeys () && viewsize < 20)
         {
-            DrawPlayBorder ();       // dont let the blue borders flash
+            DrawPlayBorder ();       /* dont let the blue borders flash */
 
             if (MousePresent && IN_IsInputGrabbed())
-                IN_CenterMouse();     // Clear accumulated mouse movement
+                IN_CenterMouse();     /* Clear accumulated mouse movement */
 
             lasttimecount = GetTimeCount();
         }
@@ -1293,15 +1284,15 @@ void CheckKeys (void)
         ViewMap ();
 
         if (MousePresent && IN_IsInputGrabbed())
-            IN_CenterMouse();     // Clear accumulated mouse movement
+            IN_CenterMouse();     /* Clear accumulated mouse movement */
 
         lasttimecount = GetTimeCount();
     }
 #endif
 #ifdef AUTOMAP
-//
-// Display full automap
-//
+/*
+** Display full automap
+*/
     if (Keyboard(sc_M))
     {
         ScanCode key;
@@ -1315,14 +1306,15 @@ void CheckKeys (void)
         IN_ClearKeysDown();
 
         if (MousePresent && IN_IsInputGrabbed())
-            IN_CenterMouse();     // Clear accumulated mouse movement
+            IN_CenterMouse();     /* Clear accumulated mouse movement */
         lasttimecount = GetTimeCount();
         return;
     }
 #endif
 #ifdef COMPASS
-    //------------------
-    // Compass
+    /* ------------------ 
+    ** Compass 
+    *-------------------*/
     if (Keyboard(sc_C))
     {
         compass ^= true;
@@ -1333,7 +1325,7 @@ void CheckKeys (void)
 }
 
 
-//===========================================================================
+/* =========================================================================== */
 
 /*
 #############################################################################
@@ -1376,9 +1368,9 @@ void InitActorList (void)
 {
     int i;
 
-//
-// init the actor lists
-//
+/*
+** init the actor lists
+*/
     for (i = 0; i < MAXACTORS; i++)
     {
         objlist[i].prev = &objlist[i + 1];
@@ -1393,15 +1385,14 @@ void InitActorList (void)
 #ifndef SEGA_SATURN
     objcount = 0;
 #endif
-//
-// give the player the first free spots
-//
+/*
+** give the player the first free spots
+*/
     GetNewActor ();
     player = newobj;
-
 }
 
-//===========================================================================
+/* =========================================================================== */
 
 /*
 =========================
@@ -1428,7 +1419,7 @@ void GetNewActor (void)
 
     if (lastobj)
         lastobj->next = newobj;
-    newobj->prev = lastobj;     // new->next is already NULL from memset
+    newobj->prev = lastobj;     /* new->next is already NULL from memset */
 
     newobj->active = ac_no;
     lastobj = newobj;
@@ -1437,7 +1428,7 @@ void GetNewActor (void)
 #endif
 }
 
-//===========================================================================
+/* =========================================================================== */
 
 /*
 =========================
@@ -1457,22 +1448,22 @@ void RemoveObj (objtype * gone)
 
     gone->state = NULL;
 
-//
-// fix the next object's back link
-//
+/*
+** fix the next object's back link
+*/
     if (gone == lastobj)
         lastobj = (objtype *) gone->prev;
     else
         gone->next->prev = gone->prev;
 
-//
-// fix the previous object's forward link
-//
+/*
+** fix the previous object's forward link
+*/
     gone->prev->next = gone->next;
 
-//
-// add it back in to the free list
-//
+/*
+** add it back in to the free list
+*/
     gone->prev = objfreelist;
     objfreelist = gone;
 
@@ -1519,7 +1510,7 @@ int StopMusic(void)
 #endif
 }
 
-//==========================================================================
+/* ========================================================================== */
 
 
 /*
@@ -1534,7 +1525,7 @@ void StartMusic()
 {
 #ifdef MAPPEDCONTROLLEDMUSIC
     int holder;
-    //static musicnames lastmusicchunk;
+    /* static musicnames lastmusicchunk; */
 #endif
     SD_MusicOff();
 
@@ -1553,7 +1544,7 @@ void ContinueMusic(int offs)
 {
 #ifdef MAPCONTROLLEDMUSIC
     int holder;
-    //static musicnames lastmusicchunk;
+    /* static musicnames lastmusicchunk; */
 #endif
     SD_MusicOff();
 #ifdef MAPCONTROLLEDMUSIC
@@ -1586,7 +1577,7 @@ void StartMusic ()
 {
 #ifdef MAPCONTROLLEDMUSIC
     int holder;
-    //static musicnames lastmusicchunk;
+    /* static musicnames lastmusicchunk; */
 #endif
     SD_MusicOff();
 #ifdef MAPCONTROLLEDMUSIC
@@ -1604,7 +1595,7 @@ void ContinueMusic (int offs)
 {
 #ifdef MAPCONTROLLEDMUSIC
     int holder;
-    //static musicnames lastmusicchunk;
+    /* static musicnames lastmusicchunk; */
 #endif
     SD_MusicOff();
 #ifdef MAPCONTROLLEDMUSIC
@@ -1654,9 +1645,9 @@ void InitRedShifts (void)
     int i, j, delta;
 
 
-//
-// fade through intermediate frames
-//
+/*
+** fade through intermediate frames
+*/
     for (i = 1; i <= NUMREDSHIFTS; i++)
     {
         workptr = redshifts[i - 1];
@@ -1720,7 +1711,7 @@ void ClearPaletteShifts (void)
 
 void StartBonusFlash (void)
 {
-    bonuscount = NUMWHITESHIFTS * WHITETICS;    // white shift palette
+    bonuscount = NUMWHITESHIFTS * WHITETICS;    /* white shift palette */
 }
 
 
@@ -1788,7 +1779,7 @@ void UpdatePaletteShifts (void)
     }
     else if (palshifted)
     {
-        VL_SetPalette(gamepal, false);        // back to normal
+        VL_SetPalette(gamepal, false);        /* back to normal */
         palshifted = false;
     }
 }
@@ -1843,9 +1834,9 @@ void DoActor(objtype* ob)
     if (!(ob->flags & (FL_NONMARK | FL_NEVERMARK)))
         clear_actor(ob->tilex, ob->tiley);
 
-    //
-    // non transitional object
-    //
+    /*
+    ** non transitional object
+    */
 
     if (!ob->ticcount)
     {
@@ -1871,13 +1862,13 @@ void DoActor(objtype* ob)
         return;
     }
 
-    //
-    // transitional object
-    //
+    /*
+    ** transitional object
+    */
     ob->ticcount -= (short)tics;
     while (ob->ticcount <= 0)
     {
-        think = (void (*)(objtype*)) ob->state->action;        // end of state action
+        think = (void (*)(objtype*)) ob->state->action;        /* end of state action */
         if (think)
         {
             think(ob);
@@ -1906,9 +1897,9 @@ void DoActor(objtype* ob)
     }
 
 think:
-    //
-    // think
-    //
+    /*
+    ** think
+    */
     think = (void (*)(objtype*)) ob->state->think;
     if (think)
     {
@@ -1940,9 +1931,9 @@ void DoActor (objtype * ob)
     if (!(ob->flags & (FL_NONMARK | FL_NEVERMARK)))
         actorat[ob->tilex][ob->tiley] = NULL;
 
-//
-// non transitional object
-//
+/*
+** non transitional object
+*/
 
     if (!ob->ticcount)
     {
@@ -1967,13 +1958,13 @@ void DoActor (objtype * ob)
         return;
     }
 
-//
-// transitional object
-//
+/*
+** transitional object
+*/
     ob->ticcount -= (short) tics;
     while (ob->ticcount <= 0)
     {
-        think = (void (*)(objtype *)) ob->state->action;        // end of state action
+        think = (void (*)(objtype *)) ob->state->action;        /* end of state action */
         if (think)
         {
             think (ob);
@@ -2002,9 +1993,9 @@ void DoActor (objtype * ob)
     }
 
 think:
-    //
-    // think
-    //
+    /*
+    ** think
+    */
     think = (void (*)(objtype *)) ob->state->think;
     if (think)
     {
@@ -2025,7 +2016,7 @@ think:
     actorat[ob->tilex][ob->tiley] = ob;
 }
 #endif
-//==========================================================================
+/* ========================================================================== */
 
 
 /*
@@ -2040,7 +2031,7 @@ size_t funnyticount;
 
 #ifdef FIXEDLOGICRATE
 double accumulator, frametime_spent = 0;
-double dt = 1.0f / 70.0f; // 70 FPS
+double dt = 1.0f / 70.0f; /* 70 FPS */
 size_t oldtime = 0;
 
 
@@ -2062,14 +2053,16 @@ void ClockGameLogic(void)
     oldtime = curtime;
     time_to_pass = (double)(deltatime / 1000.0f);
 
-    // Choking, do not overload the timestep
-    // to avoid grinding to a halt
+    /*
+    ** Choking, do not overload the timestep
+    ** to avoid grinding to a halt
+    */
     if (time_to_pass > dt * 10)
     {
         time_to_pass = dt * 10;
     }
 
-    // Add some frametime to spend
+    /* Add some frametime to spend */
     accumulator += time_to_pass;
 }
 
@@ -2126,7 +2119,7 @@ void PlayLoop (void)
     ClearPaletteShifts ();
 
     if (MousePresent && IN_IsInputGrabbed())
-        IN_CenterMouse();         // Clear accumulated mouse movement
+        IN_CenterMouse();         /* Clear accumulated mouse movement */
 
     if (demoplayback)
         IN_StartAck();
@@ -2134,33 +2127,33 @@ void PlayLoop (void)
     printf("LOOP HERE\n");
 #endif    
 #ifdef SEGA_SATURN
-    DrawStatusBar(); // vbt : ajout
+    DrawStatusBar(); /* vbt : ajout */
 #endif
 #ifdef FIXEDLOGICRATE
     do
     {
-        // Break from the playloop if starting game
+        /* Break from the playloop if starting game */
         if (startgame || loadedgame)
             break;
 
 #ifdef LAGSIMULATOR
-        // Do some lagging
+        /* Do some lagging */
         LagSimulator();
 #endif
-        // Clock the logictime that has stacked up
+        /* Clock the logictime that has stacked up */
         ClockGameLogic();
 
-        // Loop while there is time left to simulate
+        /* Loop while there is time left to simulate */
         while (accumulator >= dt)
         {
-            //
-            // start a logic frame
-            //
+            /*
+            ** start a logic frame
+            */
             PollControls();
 
-            //
-            // actor thinking
-            //
+            /*
+            ** actor thinking
+            */
             madenoise = false;
 
             MoveDoors();
@@ -2171,9 +2164,9 @@ void PlayLoop (void)
 
             UpdatePaletteShifts();
 
-            //
-            // MAKE FUNNY FACE IF BJ DOESN'T MOVE FOR AWHILE
-            //
+            /*
+            ** MAKE FUNNY FACE IF BJ DOESN'T MOVE FOR AWHILE
+            */
 #ifdef SPEAR
             funnyticount += tics;
             if (funnyticount > 30l * 70)
@@ -2219,7 +2212,7 @@ void PlayLoop (void)
                     playstate = ex_completed;
             }
 #endif
-            // Abort demo?
+            /* Abort demo? */
             if (demoplayback)
             {
                 if (IN_CheckAck())
@@ -2229,33 +2222,33 @@ void PlayLoop (void)
                 }
             }
 
-            // Advance timer
+            /* Advance timer */
             gamestate.TimeCount += tics;
 
-            // Debug keys
+            /* Debug keys */
             CheckKeys();
 
-            // End of one frame
+            /* End of one frame */
             frametime_spent += dt;
             accumulator -= dt;
             frameon += tics;
         }
 
-        // Only refresh screen once per frame, instead of once per logic frame
+        /* Only refresh screen once per frame, instead of once per logic frame */
         ThreeDRefresh();
 
-        UpdateSoundLoc();      // JAB
+        UpdateSoundLoc();      /* JAB */
         if (screenfaded)
             VL_FadeIn(0, 255, gamepal, 30);
 
-        // Do single stepping outside of the game logic loop
+        /* Do single stepping outside of the game logic loop */
         if (singlestep)
         {
             VL_WaitVBL(singlestep);
             lasttimecount = GetTimeCount();
         }
 
-        // Extra vbls left outside of game logic
+        /* Extra vbls left outside of game logic */
         if (extravbls)
             VL_WaitVBL(extravbls);
     }
@@ -2264,9 +2257,9 @@ void PlayLoop (void)
     {
         PollControls ();
 
-//
-// actor thinking
-//
+/*
+** actor thinking
+*/
         madenoise = false;
 
         MoveDoors ();
@@ -2279,9 +2272,9 @@ void PlayLoop (void)
 
         ThreeDRefresh ();
 
-        //
-        // MAKE FUNNY FACE IF BJ DOESN'T MOVE FOR AWHILE
-        //
+        /*
+        ** MAKE FUNNY FACE IF BJ DOESN'T MOVE FOR AWHILE
+        */
 #ifdef SPEAR
         funnyticount += tics;
         if (funnyticount > 30l * 70)
@@ -2295,16 +2288,16 @@ void PlayLoop (void)
 
         gamestate.TimeCount += (fixed)tics;
 #ifndef SEGA_SATURN
-        UpdateSoundLoc ();      // JAB
+        UpdateSoundLoc ();      /* JAB */
 #endif
         if (screenfaded)
             VL_FadeIn (0, 255, gamepal, 30);
 
         CheckKeys ();
 
-//
-// debug aids
-//
+/*
+** debug aids
+*/
 #ifndef SEGA_SATURN
         if (singlestep)
         {

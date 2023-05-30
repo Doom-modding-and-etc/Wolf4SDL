@@ -182,6 +182,7 @@
       <AdditionalLibraryDirectories>C:\SDL2\lib\x64</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_mixer.lib;SDL2_net.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
     <ClCompile>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WINDOWS_IGNORE_PACKING_MISMATCH;USE_FIXEDPTC;_WIN32;HAVE_M_PI;_USE_MATH_DEFINES;USE_HEADER</PreprocessorDefinitions>

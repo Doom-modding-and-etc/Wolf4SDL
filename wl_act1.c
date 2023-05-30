@@ -1,4 +1,4 @@
-// WL_ACT1.C
+/* WL_ACT1.C */
 
 #include "wl_def.h"
 
@@ -17,109 +17,111 @@ typedef struct
 {
     short      picnum;
     wl_stat_t  type;
-    unsigned int   specialFlags;    // they are ORed to the statobj_t flags
-} statinfo_t;
+    unsigned int   specialFlags;    /* they are ORed to the statobj_t flags */
+} statinfo_t;  
 
 statinfo_t statinfo[] =
 {
-    {SPR_STAT_0},                           // puddle          spr1v
-    {SPR_STAT_1,block},                     // Green Barrel    "
-    {SPR_STAT_2,block},                     // Table/chairs    "
-    {SPR_STAT_3,block,FL_FULLBRIGHT},       // Floor lamp      "
-    {SPR_STAT_4,none,FL_FULLBRIGHT},        // Chandelier      "
-    {SPR_STAT_5,block},                     // Hanged man      "
-    {SPR_STAT_6,bo_alpo},                   // Bad food        "
-    {SPR_STAT_7,block},                     // Red pillar      "
-    //
-    // NEW PAGE
-    //
-    {SPR_STAT_8,block},                     // Tree            spr2v
-    {SPR_STAT_9},                           // Skeleton flat   "
-    {SPR_STAT_10,block},                    // Sink            " (SOD:gibs)
-    {SPR_STAT_11,block},                    // Potted plant    "
-    {SPR_STAT_12,block},                    // Urn             "
-    {SPR_STAT_13,block},                    // Bare table      "
-    {SPR_STAT_14,none,FL_FULLBRIGHT},       // Ceiling light   "
+    {SPR_STAT_0},                           /* puddle          spr1v */
+    {SPR_STAT_1,block},                     /* Green Barrel    " */
+    {SPR_STAT_2,block},                     /* Table/chairs    " */
+    {SPR_STAT_3,block,FL_FULLBRIGHT},       /* Floor lamp      " */
+    {SPR_STAT_4,none,FL_FULLBRIGHT},        /* Chandelier      " */
+    {SPR_STAT_5,block},                     /* Hanged man      " */
+    {SPR_STAT_6,bo_alpo},                   /* Bad food        " */
+    {SPR_STAT_7,block},                     /* Red pillar      " */
+    /*
+    ** NEW PAGE
+    */
+    {SPR_STAT_8,block},                     /* Tree            spr2v */
+    {SPR_STAT_9},                           /* Skeleton flat   " */
+    {SPR_STAT_10,block},                    /* Sink            " (SOD:gibs) */
+    {SPR_STAT_11,block},                    /* Potted plant    " */
+    {SPR_STAT_12,block},                    /* Urn             " */
+    {SPR_STAT_13,block},                    /* Bare table      " */
+    {SPR_STAT_14,none,FL_FULLBRIGHT},       /* Ceiling light   " */
     #ifndef SPEAR
-    {SPR_STAT_15},                          // Kitchen stuff   " (SOD: {SPR_STAT_15,block},{Gibs!} Bloody Cage)
+    {SPR_STAT_15},                          /* Kitchen stuff   " (SOD: {SPR_STAT_15,block},{Gibs!} Bloody Cage) */
     #else
-    {SPR_STAT_15,block},                    // Gibs!
+    {SPR_STAT_15,block},                    /* Gibs! */
     #endif
-    //
-    // NEW PAGE
-    //
-    {SPR_STAT_16,block},                    // suit of armor   spr3v
-    {SPR_STAT_17,block},                    // Hanging cage    "
-    {SPR_STAT_18,block},                    // SkeletoninCage  "
-    {SPR_STAT_19},                          //  Pile of Bones  "
-    {SPR_STAT_20,bo_key1},                  // Key 1           "
-    {SPR_STAT_21,bo_key2},                  // Key 2           "
-    {SPR_STAT_22,block},                    // bed            (SOD: Bloody Cage w/Skulls)
-    {SPR_STAT_23},                          // Water bowl
-    //
-    // NEW PAGE
-    //
-    {SPR_STAT_24,bo_food},                  // Chicken Dinner       spr4v
-    {SPR_STAT_25,bo_firstaid},              // First aid       "
-    {SPR_STAT_26,bo_clip},                  // Clip            "
-    {SPR_STAT_27,bo_machinegun},            // Machine gun     "
-    {SPR_STAT_28,bo_chaingun},              // Gatling gun     "
-    {SPR_STAT_29,bo_cross},                 // Cross           "
-    {SPR_STAT_30,bo_chalice},               // Chalice         "
-    {SPR_STAT_31,bo_bible},                 // Treasure Chest  "
-    //
-    // NEW PAGE
-    //
-    {SPR_STAT_32,bo_crown},                 // crown           spr5v
-    {SPR_STAT_33,bo_fullheal,FL_FULLBRIGHT},// one up          "
-    {SPR_STAT_34,bo_gibs},                  // Bloody Bones    "
-    {SPR_STAT_35,block},                    // barrel          "
-    {SPR_STAT_36,block},                    // well            "
-    {SPR_STAT_37,block},                    // Empty well      "
-    {SPR_STAT_38,bo_gibs},                  // Blood Puddle    "
-    {SPR_STAT_39,block},                    // flag            "
-    //
-    // NEW PAGE
-    //
+    /*
+    ** NEW PAGE
+    */
+    {SPR_STAT_16,block},                    /* suit of armor   spr3v */
+    {SPR_STAT_17,block},                    /* Hanging cage    " */
+    {SPR_STAT_18,block},                    /* SkeletoninCage  " */
+    {SPR_STAT_19},                          /* Pile of Bones   " */
+    {SPR_STAT_20,bo_key1},                  /* Key 1           " */
+    {SPR_STAT_21,bo_key2},                  /* Key 2           " */
+    {SPR_STAT_22,block},                    /* bed            (SOD: Bloody Cage w/Skulls) */
+    {SPR_STAT_23},                          /* Water bowl */
+    /*
+    ** NEW PAGE
+    */
+    {SPR_STAT_24,bo_food},                  /* Chicken Dinner       spr4v */
+    {SPR_STAT_25,bo_firstaid},              /* First aid       " */
+    {SPR_STAT_26,bo_clip},                  /* Clip            " */
+    {SPR_STAT_27,bo_machinegun},            /* Machine gun     " */
+    {SPR_STAT_28,bo_chaingun},              /* Gatling gun     " */
+    {SPR_STAT_29,bo_cross},                 /* Cross           " */
+    {SPR_STAT_30,bo_chalice},               /* Chalice         " */
+    {SPR_STAT_31,bo_bible},                 /* Treasure Chest  " */
+    /*
+    ** NEW PAGE
+    */
+    {SPR_STAT_32,bo_crown},                 /* crown           spr5v */
+    {SPR_STAT_33,bo_fullheal,FL_FULLBRIGHT},/* one up          " */
+    {SPR_STAT_34,bo_gibs},                  /* Bloody Bones    " */
+    {SPR_STAT_35,block},                    /* barrel          " */
+    {SPR_STAT_36,block},                    /* well            " */
+    {SPR_STAT_37,block},                    /* Empty well      " */
+    {SPR_STAT_38,bo_gibs},                  /* Blood Puddle    " */
+    {SPR_STAT_39,block},                    /* flag            " */
+    /*
+    ** NEW PAGE
+    */
     #ifndef SPEAR
-    {SPR_STAT_40,block},                    // Call Apogee         (SOD: {SPR_STAT_40},Red Light)
+    {SPR_STAT_40,block},                    /* Call Apogee         (SOD: {SPR_STAT_40},Red Light) */
     #else
-    {SPR_STAT_40},                          // Red light
+    {SPR_STAT_40},                          /* Red light */
     #endif
-    //
-    // NEW PAGE
-    //
-    {SPR_STAT_41},                          // junk            "
-    {SPR_STAT_42},                          // junk            "
-    {SPR_STAT_43},                          // junk            "
+    /*
+    ** NEW PAGE
+    */
+    {SPR_STAT_41},                          /* junk            " */
+    {SPR_STAT_42},                          /* junk            " */
+    {SPR_STAT_43},                          /* junk            " */
     #ifndef SPEAR
-    {SPR_STAT_44},                          // pots            " (SOD: {SPR_STAT_44,block},{Gibs!} Bloody Mass/Wooden Cross/Goat Skull)
+    {SPR_STAT_44},                          /* pots            " (SOD: {SPR_STAT_44,block},{Gibs!} Bloody Mass/Wooden Cross/Goat Skull) */
     #else
-    {SPR_STAT_44,block},                    // Gibs!
+    {SPR_STAT_44,block},                    /* Gibs! */
     #endif
-    {SPR_STAT_45,block},                    // stove           " (SOD: {gibs} Bloody Well)
-    {SPR_STAT_46,block},                    // spears          " (SOD: {gibs} Demon Statue)
-    {SPR_STAT_47},                          // vines           "
-    //
-    // NEW PAGE
-    //
+    {SPR_STAT_45,block},                    /* stove           " (SOD: {gibs} Bloody Well) */
+    {SPR_STAT_46,block},                    /* spears          " (SOD: {gibs} Demon Statue) */
+    {SPR_STAT_47},                          /* vines           " */
+    /*
+    ** NEW PAGE
+    */
     #ifdef SPEAR
-    {SPR_STAT_48,block},                    // marble pillar
-    {SPR_STAT_49,bo_25clip},                // bonus 25 clip
-    {SPR_STAT_50,block},                    // truck
-    {SPR_STAT_51,bo_spear},                 // SPEAR OF DESTINY!
+    {SPR_STAT_48,block},                    /* marble pillar */
+    {SPR_STAT_49,bo_25clip},                /* bonus 25 clip */
+    {SPR_STAT_50,block},                    /* truck */
+    {SPR_STAT_51,bo_spear},                 /* SPEAR OF DESTINY! */
     #endif
 
-    {SPR_STAT_26,bo_clip2},                 // Clip            "
+    {SPR_STAT_26,bo_clip2},                 /* Clip            " */
 #ifndef SEGA_SATURN
 #ifdef USE_DIR3DSPR
-    // These are just two examples showing the new way of using dir 3d sprites.
-    // You can find the allowed values in the objflag_t enum in wl_def.h.
+    /* 
+    ** These are just two examples showing the new way of using dir 3d sprites.
+    ** You can find the allowed values in the objflag_t enum in wl_def.h.
+    */
     {SPR_STAT_47,none,FL_DIR_VERT_MID},
     {SPR_STAT_47,block,FL_DIR_HORIZ_MID},
 #endif
 #endif
-    {-1}                                    // terminator
+    {-1}                                    /* terminator */
 };
 
 /*
@@ -156,12 +158,14 @@ void SpawnStatic (int tilex, int tiley, int type)
     switch (statinfo[type].type)
     {
         case block:
+
 #if defined(EMBEDDED) && defined(SEGA_SATURN)
-            //			actorat[tilex][tiley] = 1;	// consider it a blocking tile
-            set_wall_at(tilex, tiley, 1);	// consider it a blocking tile
+            /*	actorat[tilex][tiley] = 1;  */	/* consider it a blocking tile */
+            set_wall_at(tilex, tiley, 1);	/* consider it a blocking tile */
 #else		
-            actorat[tilex][tiley] = (objtype*)BIT_WALL;          // consider it a blocking tile
+            actorat[tilex][tiley] = (objtype*)BIT_WALL;          /* consider it a blocking tile */           
 #endif
+            /* fall through */
 
         case none:
             laststatobj->flags = 0;
@@ -173,9 +177,10 @@ void SpawnStatic (int tilex, int tiley, int type)
         case    bo_crown:
         case    bo_fullheal:
 #ifndef SEGA_SATURN
-            if (!loadedgame)
+            if (!loadedgame)     
 #endif
                 gamestate.treasuretotal++;
+                /* fall through */
 
         case    bo_firstaid:
         case    bo_key1:
@@ -192,12 +197,14 @@ void SpawnStatic (int tilex, int tiley, int type)
         case    bo_spear:
             laststatobj->flags = FL_BONUS;
             break;
+        default:
+            break;
     }
-#ifdef PUSHOBJECT // Pushable Static Object Item
+#ifdef PUSHOBJECT /* Pushable Static Object Item */
     if (MAPSPOT(tilex, tiley, 0) == PUSHITEMMARKER)
     {
-        laststatobj->pushable = 1;     // Make Item Pushable or True
-        ResetFloorCode(tilex, tiley);  // Reset the Floor code to a valid Floor code value
+        laststatobj->pushable = 1;     /* Make Item Pushable or True */
+        ResetFloorCode(tilex, tiley);  /* Reset the Floor code to a valid Floor code value */
     }
 #endif
 
@@ -209,14 +216,15 @@ void SpawnStatic (int tilex, int tiley, int type)
         Quit ("Too many static objects!\n");
 }
 
-#ifdef PUSHOBJECT // Objects that can be pushed
+#ifdef PUSHOBJECT /* Objects that can be pushed */
 /* ============ Reset Floor Code ================ */
-// Replace Any Map Modifier Code with a valid Floor Code Value
+/* Replace Any Map Modifier Code with a valid Floor Code Value */
 void ResetFloorCode(int tilex, int tiley)
 {
-    int x, y;
+    int x;
     for (x = di_north; x <= di_west; x++)
     {
+        int y;
         y = MAPSPOT(tilex + dx4dir[x], tiley + dy4dir[x], 0);
         if (y >= AREATILE && y <= (AREATILE + NUMAREAS - 1))
         {
@@ -243,36 +251,36 @@ void PlaceItemType (int itemtype, int tilex, int tiley)
     int type;
     statobj_t *spot;
 
-    //
-    // find the item number
-    //
+    /*
+    ** find the item number
+    */
     for (type=0; ; type++)
     {
-        if (statinfo[type].picnum == -1)                    // end of list
+        if (statinfo[type].picnum == -1)                    /* end of list */
             Quit ("PlaceItemType: couldn't find type!");
-        if (statinfo[type].type == itemtype)
+        if (statinfo[type].type == (wl_stat_t)itemtype)
             break;
     }
 
-    //
-    // find a spot in statobjlist to put it in
-    //
+    /*
+    ** find a spot in statobjlist to put it in
+    */
     for (spot=&statobjlist[0]; ; spot++)
     {
         if (spot==laststatobj)
         {
             if (spot == &statobjlist[MAXSTATS])
-                return;                                     // no free spots
-            laststatobj++;                                  // space at end
+                return;                                     /* no free spots */
+            laststatobj++;                                  /* space at end */
             break;
         }
 
-        if (spot->shapenum == -1)                           // -1 is a free spot
+        if (spot->shapenum == -1)                           /* -1 is a free spot */
             break;
     }
-    //
-    // place it
-    //
+    /*
+    ** place it
+    */
     spot->shapenum = statinfo[type].picnum;
     spot->tilex = tilex;
     spot->tiley = tiley;
@@ -307,12 +315,12 @@ doorobj_t       doorobjlist[MAXDOORS],*lastdoorobj;
 short           doornum;
 
 #ifdef BLAKEDOORS
-unsigned short      ldoorposition[MAXDOORS], rdoorposition[MAXDOORS];   // leading edge of door 0=closed
+unsigned short      ldoorposition[MAXDOORS], rdoorposition[MAXDOORS];   /* leading edge of door 0=closed */
 #endif
-unsigned short            doorposition[MAXDOORS];             // leading edge of door 0=closed
+unsigned short            doorposition[MAXDOORS];             /* leading edge of door 0=closed */
 
 
-                                                    // 0xffff = fully open
+                                                    /* 0xffff = fully open */
 
 unsigned char            areaconnect[NUMAREAS][NUMAREAS];
 
@@ -395,7 +403,7 @@ void SpawnDoor (int tilex, int tiley, boolean vertical, int lock)
     if (doornum==MAXDOORS)
         Quit ("64+ doors on level!");
 
-    doorposition[doornum] = 0;              // doors start out fully closed
+    doorposition[doornum] = 0;              /* doors start out fully closed */
     lastdoorobj->tilex = tilex;
     lastdoorobj->tiley = tiley;
     lastdoorobj->vertical = vertical;
@@ -403,25 +411,25 @@ void SpawnDoor (int tilex, int tiley, boolean vertical, int lock)
     lastdoorobj->action = dr_closed;
 
 #ifdef SEGA_SATURN
-    set_door_actor(tilex, tiley, doornum);	// consider it a solid wall
+    set_door_actor(tilex, tiley, doornum);	/* consider it a solid wall */
 #else
-    actorat[tilex][tiley] = (objtype *)(uintptr_t)(doornum | BIT_DOOR);   // consider it a solid wall
+    actorat[tilex][tiley] = (objtype *)(uintptr_t)(doornum | BIT_DOOR);   /* consider it a solid wall */
 #endif
-    //
-    // make the door tile a special tile, and mark the adjacent tiles
-    // for door sides
-    //
+    /*
+    ** make the door tile a special tile, and mark the adjacent tiles
+    ** for door sides
+    */
     tilemap[tilex][tiley] = doornum | BIT_DOOR;
     map = &MAPSPOT(tilex,tiley,0);
     if (vertical)
     {
-        *map = *(map-1);                        // set area number
+        *map = *(map-1);                        /* set area number */
         tilemap[tilex][tiley-1] |= BIT_WALL;
         tilemap[tilex][tiley+1] |= BIT_WALL;
     }
     else
     {
-        *map = *(map-mapwidth);                                 // set area number
+        *map = *(map-mapwidth);                                 /* set area number */
         tilemap[tilex-1][tiley] |= BIT_WALL;
         tilemap[tilex+1][tiley] |= BIT_WALL;
     }
@@ -442,9 +450,9 @@ void CloseDoor(int door)
     int     tilex, tiley, area;
     objtype* check;
 
-    //
-    // don't close on anything solid
-    //
+    /*
+    ** don't close on anything solid
+    */
     tilex = doorobjlist[door].tilex;
     tiley = doorobjlist[door].tiley;
 
@@ -488,20 +496,20 @@ void CloseDoor(int door)
     }
 
 
-    //
-    // play door sound if in a connected area
-    //
+    /*
+    ** play door sound if in a connected area
+    */
     area = MAPSPOT(tilex, tiley, 0) - AREATILE;
 
     if (areabyplayer[area])
     {
-        PlaySoundLocTile(CLOSEDOORSND, doorobjlist[door].tilex, doorobjlist[door].tiley); // JAB
+        PlaySoundLocTile(CLOSEDOORSND, doorobjlist[door].tilex, doorobjlist[door].tiley); /* JAB */
     }
 
     doorobjlist[door].action = dr_closing;
-    //
-    // make the door space solid
-    //
+    /*
+    ** make the door space solid
+    */
     set_door_actor(tilex, tiley, door);
 }
 
@@ -513,7 +521,7 @@ void SpawnDoor(int tilex, int tiley, boolean vertical, int lock)
     if (doornum == MAXDOORS)
         Quit("64+ doors on level!");
 #ifndef BLAKEDOORS
-    doorposition[doornum] = 0;              // doors start out fully closed
+    doorposition[doornum] = 0;              /* doors start out fully closed */
 #endif
 
 #ifdef BLAKEDOORS
@@ -528,13 +536,13 @@ void SpawnDoor(int tilex, int tiley, boolean vertical, int lock)
     }
     if (lastdoorobj->doubledoor)
     {
-        ldoorposition[doornum] = 0x7fff;      // doors start out fully closed
+        ldoorposition[doornum] = 0x7fff;      /* doors start out fully closed */
         rdoorposition[doornum] = 0x8000;
     }
     else
     {
-        ldoorposition[doornum] = 0;      // doors start out fully closed
-        rdoorposition[doornum] = 0; // this will function like the original doorposition[]
+        ldoorposition[doornum] = 0;      /* doors start out fully closed */
+        rdoorposition[doornum] = 0; /* this will function like the original doorposition[] */
     }
 #endif
 
@@ -545,36 +553,29 @@ void SpawnDoor(int tilex, int tiley, boolean vertical, int lock)
     lastdoorobj->action = dr_closed;
 
 #ifdef SEGA_SATURN
-    set_door_actor(tilex, tiley, doornum);	// consider it a solid wall
+    set_door_actor(tilex, tiley, doornum);	/* consider it a solid wall */
 #else
-    actorat[tilex][tiley] = (objtype*)(uintptr_t)(doornum | BIT_DOOR);   // consider it a solid wall
+    actorat[tilex][tiley] = (objtype*)(uintptr_t)(doornum | BIT_DOOR);   /* consider it a solid wall */
 #endif
-    //
-    // make the door tile a special tile, and mark the adjacent tiles
-    // for door sides
-    //
+    /*
+    ** make the door tile a special tile, and mark the adjacent tiles
+    ** for door sides
+    */
     tilemap[tilex][tiley] = doornum | BIT_DOOR;
     map = &MAPSPOT(tilex, tiley, 0);
     if (vertical)
     {
-        *map = *(map - 1);                        // set area number
+        *map = *(map - 1);                        /* set area number */
         tilemap[tilex][tiley - 1] |= BIT_WALL;
         tilemap[tilex][tiley + 1] |= BIT_WALL;
     }
     else
     {
-        *map = *(map - mapwidth);                                 // set area number
+        *map = *(map - mapwidth);                                 /* set area number */
         tilemap[tilex - 1][tiley] |= BIT_WALL;
         tilemap[tilex + 1][tiley] |= BIT_WALL;
     }
 
-//	made this change so more than 64 walls can exist
-#ifdef WIP
-    if (vertical)
-        *map = *(map - 1);						// set area number
-    else
-        *map = *(map - mapwidth);				// set area number
-#endif
     doornum++;
     lastdoorobj++;
 }
@@ -592,9 +593,9 @@ void CloseDoor(int door)
     int     tilex, tiley, area;
     objtype* check;
 
-    //
-    // don't close on anything solid
-    //
+    /*
+    ** don't close on anything solid
+    */
     tilex = doorobjlist[door].tilex;
     tiley = doorobjlist[door].tiley;
 
@@ -638,25 +639,25 @@ void CloseDoor(int door)
     }
 
 
-    //
-    // play door sound if in a connected area
-    //
+    /*
+    ** play door sound if in a connected area
+    */
     area = MAPSPOT(tilex, tiley, 0) - AREATILE;
 
     if (areabyplayer[area])
     {
-        PlaySoundLocTile(CLOSEDOORSND, doorobjlist[door].tilex, doorobjlist[door].tiley); // JAB
+        PlaySoundLocTile(CLOSEDOORSND, doorobjlist[door].tilex, doorobjlist[door].tiley); /* JAB */
     }
 
     doorobjlist[door].action = dr_closing;
-    //
-    // make the door space solid
-    //
+    /*
+    ** make the door space solid
+    */
     actorat[tilex][tiley] = (objtype*)(uintptr_t)(door | BIT_DOOR);
 }
 
 #endif
-//===========================================================================
+/* =========================================================================== */
 
 /*
 =====================
@@ -669,9 +670,9 @@ void CloseDoor(int door)
 void OpenDoor(unsigned int door)
 {
     if (doorobjlist[door].action == dr_open)
-        doorobjlist[door].ticcount = 0;         // reset open time
+        doorobjlist[door].ticcount = 0;         /* reset open time */
     else
-        doorobjlist[door].action = dr_opening;  // start it opening
+        doorobjlist[door].action = dr_opening;  /* start it opening */
 }
 
 /*
@@ -700,7 +701,7 @@ void OperateDoor (int door)
                 SD_PlaySound(NOWAYSND);
 #else
             if(doorposition[door]==0)
-                SD_PlaySound(NOWAYSND);  // ADDEDFIX 9       // locked
+                SD_PlaySound(NOWAYSND);  /* ADDEDFIX 9 */      /* locked */
 #endif
             return;
         }
@@ -720,7 +721,7 @@ void OperateDoor (int door)
 }
 
 
-//===========================================================================
+/* =========================================================================== */
 
 /*
 ===============
@@ -764,9 +765,9 @@ void DoorOpening (int door)
 #endif
     if (!position)
     {
-        //
-        // door is just starting to open, so connect the areas
-        //
+        /*
+        ** door is just starting to open, so connect the areas
+        */
         map = &MAPSPOT(doorobjlist[door].tilex,doorobjlist[door].tiley,0);
 
         if (doorobjlist[door].vertical)
@@ -791,22 +792,22 @@ void DoorOpening (int door)
                 ConnectAreas ();
 
             if (areabyplayer[area1])
-                PlaySoundLocTile(OPENDOORSND,doorobjlist[door].tilex,doorobjlist[door].tiley);  // JAB
+                PlaySoundLocTile(OPENDOORSND,doorobjlist[door].tilex,doorobjlist[door].tiley);  /* JAB */
         }
     }
 
-    //
-    // slide the door by an adaptive amount
-    //
+    /*
+    ** slide the door by an adaptive amount
+    */
 #ifdef BLAKEDOORS
     if (doorobjlist[door].doubledoor)
     {
         position += (tics << 10) / 2;
         if (position >= 0x7fff)
         {
-            //
-            // door is all the way open
-            //
+            /*
+            ** door is all the way open
+            */
             position = 0x7fff;
             doorobjlist[door].ticcount = 0;
             doorobjlist[door].action = dr_open;
@@ -821,9 +822,9 @@ void DoorOpening (int door)
     position += (int)tics<<10;
     if (position >= 0xffff)
     {
-        //
-        // door is all the way open
-        //
+        /*
+        ** door is all the way open
+        */
         position = 0xffff;
         doorobjlist[door].ticcount = 0;
         doorobjlist[door].action = dr_open;
@@ -869,7 +870,7 @@ void DoorClosing (int door)
     if ( ((int)(uintptr_t)actorat[tilex][tiley] != (door | BIT_DOOR))
         || (player->tilex == tilex && player->tiley == tiley) )
 #endif
-    {                       // something got inside the door
+    {                       /* something got inside the door */
         OpenDoor (door);
         return;
     };
@@ -877,29 +878,29 @@ void DoorClosing (int door)
 #ifndef BLAKEDOORS
     position = doorposition[door];
 
-    //
-    // slide the door by an adaptive amount
-    //
+    /*
+    ** slide the door by an adaptive amount
+    */
     position -= (int)tics << 10;
 #else
     if (doorobjlist[door].doubledoor)
     {
         position = 0x7fff - ldoorposition[door];
-        // slide the door by an adaptive amount
+        /* slide the door by an adaptive amount */
         position -= (tics << 10) / 2;
     }
     else
     {
         position = rdoorposition[door];
-        // slide the door by an adaptive amount
+        /* slide the door by an adaptive amount */
         position -= (tics << 10);
     }
 #endif
     if (position <= 0)
     {
-        //
-        // door is closed all the way, so disconnect the areas
-        //
+        /*
+        ** door is closed all the way, so disconnect the areas
+        */
         position = 0;
 
         doorobjlist[door].action = dr_closed;
@@ -962,7 +963,7 @@ void MoveDoors (void)
 {
     int door;
 
-    if (gamestate.victoryflag)              // don't move door during victory sequence
+    if (gamestate.victoryflag)              /* don't move door during victory sequence */
         return;
 
     for (door = 0; door < doornum; door++)
@@ -992,7 +993,7 @@ void MoveDoors (void)
 */
 
 unsigned short pwallstate;
-unsigned short pwallpos;                  // amount a pushable wall has been moved (0-63)
+unsigned short pwallpos;                  /* amount a pushable wall has been moved (0-63) */
 unsigned short pwallx,pwally;
 unsigned char pwalldir;
 tiletype pwalltile;
@@ -1036,8 +1037,8 @@ void PushWall(int checkx, int checky, int dir)
     pwalltile = tilemap[pwallx][pwally];
     tilemap[pwallx][pwally] = BIT_WALL;
     tilemap[pwallx + dx][pwally + dy] = BIT_WALL;
-    MAPSPOT(pwallx, pwally, 1) = 0;   // remove P tile info
-    MAPSPOT(pwallx, pwally, 0) = MAPSPOT(player->tilex, player->tiley, 0); // set correct floorcode (BrotherTank's fix) TODO: use a better method...
+    MAPSPOT(pwallx, pwally, 1) = 0;   /* remove P tile info */
+    MAPSPOT(pwallx, pwally, 0) = MAPSPOT(player->tilex, player->tiley, 0); /* set correct floorcode (BrotherTank's fix) TODO: use a better method... */
 
     SD_PlaySound(PUSHWALLSND);
 }
@@ -1063,25 +1064,25 @@ void MovePWalls(void)
 
     if (pwallstate / 128 != oldblock)
     {
-        // block crossed into a new block
+        /* block crossed into a new block */
         oldtile = pwalltile;
 
-        //
-        // the tile can now be walked into
-        //
+        /*
+        ** the tile can now be walked into
+        */
         tilemap[pwallx][pwally] = 0;
         actorat[pwallx][pwally] = 0;
-        MAPSPOT(pwallx, pwally, 0) = player->areanumber + AREATILE;    // TODO: this is unnecessary, and makes a mess of mapsegs
+        MAPSPOT(pwallx, pwally, 0) = player->areanumber + AREATILE;    /* TODO: this is unnecessary, and makes a mess of mapsegs */
 
         int dx = dirs[pwalldir][0], dy = dirs[pwalldir][1];
-        //
-        // see if it should be pushed farther
-        //
-        if (pwallstate >= 256)            // only move two tiles fix
+        /*
+        ** see if it should be pushed farther
+        */
+        if (pwallstate >= 256)            /* only move two tiles fix */
         {
-            //
-            // the block has been pushed two tiles
-            //
+            /*
+            ** the block has been pushed two tiles
+            */
             pwallstate = 0;
             tilemap[pwallx + dx][pwally + dy] = oldtile;
             return;
@@ -1142,8 +1143,8 @@ void PushWall (int checkx, int checky, int dir)
     pwalltile = tilemap[pwallx][pwally];
     tilemap[pwallx][pwally] = BIT_WALL;
     tilemap[pwallx+dx][pwally+dy] = BIT_WALL;
-    MAPSPOT(pwallx,pwally,1) = 0;   // remove P tile info
-    MAPSPOT(pwallx,pwally,0) = MAPSPOT(player->tilex,player->tiley,0); // set correct floorcode (BrotherTank's fix) TODO: use a better method...
+    MAPSPOT(pwallx,pwally,1) = 0;   /* remove P tile info */
+    MAPSPOT(pwallx,pwally,0) = MAPSPOT(player->tilex,player->tiley,0); /* set correct floorcode (BrotherTank's fix) TODO: use a better method... */
 
     SD_PlaySound (PUSHWALLSND);
 }
@@ -1160,7 +1161,7 @@ void PushWall (int checkx, int checky, int dir)
 
 void MovePWalls (void)
 {
-    int oldblock,oldtile;
+    int oldblock;
 
     if (!pwallstate)
         return;
@@ -1172,27 +1173,28 @@ void MovePWalls (void)
     if (pwallstate/128 != oldblock)
     {
 		int dx, dy;
-        // block crossed into a new block
+        int oldtile;
+        /* block crossed into a new block */
         oldtile = pwalltile;
 
-        //
-        // the tile can now be walked into
-        //
+        /*
+        ** the tile can now be walked into
+        */
         tilemap[pwallx][pwally] = 0;
         actorat[pwallx][pwally] = 0;
-        MAPSPOT(pwallx,pwally,0) = player->areanumber+AREATILE;    // TODO: this is unnecessary, and makes a mess of mapsegs
+        MAPSPOT(pwallx,pwally,0) = player->areanumber+AREATILE;    /* TODO: this is unnecessary, and makes a mess of mapsegs */
 
         dx=dirs[pwalldir][0];
 		dy=dirs[pwalldir][1];
 
-        //
-        // see if it should be pushed farther
-        //
-        if (pwallstate>=256)            // only move two tiles fix
+        /*
+        ** see if it should be pushed farther
+        */
+        if (pwallstate>=256)            /* only move two tiles fix */
         {
-            //
-            // the block has been pushed two tiles
-            //
+            /*
+            ** the block has been pushed two tiles
+            */
             pwallstate = 0;
             tilemap[pwallx+dx][pwally+dy] = oldtile;
             return;
@@ -1222,4 +1224,4 @@ void MovePWalls (void)
 
     pwallpos = (pwallstate/2)&63;
 }
-#endif //SEGA_SATURN
+#endif /* SEGA_SATURN */

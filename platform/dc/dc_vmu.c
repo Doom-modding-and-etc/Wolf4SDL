@@ -69,7 +69,7 @@ int DC_SaveToVMU(char *src, int tp) {
     zipdata = (uint8*)malloc(zipsize);
     compress(zipdata, &zipsize, data, filesize);
 
-    // Required VMU header
+    /* Required VMU header */
 #ifndef SPEAR
     strcpy(pkg.desc_short, "Wolf4SDL\\DC");
     if(tp == 1)
@@ -118,7 +118,7 @@ int DC_LoadFromVMU(char *dst) {
     strcpy(src, "/vmu/a1/");
     strcat(src, dst);
 
-    // Remove VMU header
+    /* Remove VMU header */
     file = fs_open(src, O_RDONLY);
     if(file == 0) return -1;
     filesize = fs_total(file);

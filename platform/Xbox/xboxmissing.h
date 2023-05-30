@@ -7,7 +7,6 @@ extern "C" {
 
 char* getenv(const char* szKey);
 int putenv(const char* szKey);
-//char* getcwd(const char* szKey);
 void XExit(void);
 void backslash(char *s);
 void XFreeMem(void);

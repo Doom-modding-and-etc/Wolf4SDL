@@ -5,10 +5,10 @@ ID_ENGINE_OBJS = id_ca.o id_crt.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vl.
  
 #Wolf Files
 WL_OBJS = wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o \
- wl_game.o wl_inter.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o \
+wl_game.o wl_inter.o wl_main.o wl_menu.o wl_parallax.o wl_plane.o wl_play.o wl_scale.o \
 wl_shade.o wl_state.o wl_text.o wl_utils.o 
 
-PS2_OBJS = Platform/PS2/ps2_modules.o Platform/PS2/ps2_mc.o Platform/PS2/ps2_main.o Platform/PS2/ps2_data_loader.o
+PS2_OBJS = platform/PS2/ps2_modules.o platform/PS2/ps2_mc.o platform/PS2/ps2_main.o platform/PS2/ps2_data_loader.o
 
 EE_OBJS = $(PS2_OBJS) aud_sys/dosbox/dbopl.o aud_sys/mame/fmopl.o aud_sys/nukedopl3/opl3.o $(ID_ENGINE_OBJS) $(WL_OBJS)
 
@@ -17,7 +17,7 @@ EE_LDFLAGS = -L$(PS2SDK)/ports/lib -L$(PS2SDK)/iop/lib/ -L$(PS2SDK)/ee/lib/ -L$(
 SDL2_LIBS = -lSDL2main -lSDL2_mixer -lSDL2 -lmodplug -lmikmod -logg -lopusfile -lopus -lstdc++ 
 EE_LIBS = $(SDL2_LIBS) -lcdvd -lm -lkernel -lps2_printf -ldebug -lmc -lc -lhdd -lpoweroff -lps2_drivers -lgskit -ldmakit -lpadx -lmtap -laudsrv -lfileXio -linput -lpatches
 EE_DEFINES = -DPS2 -DUSE_SYS
-EE_CFLAGS = $(EE_DEFINES) -Wall -W -g -Wwrite-strings -Wcast-align -std=gnu99 -Wimplicit-int -Wsequence-point 
+EE_CFLAGS = $(EE_DEFINES) -Wall -W -g -Wwrite-strings -Wcast-align -std=gnu89 -Wimplicit-int -Wsequence-point 
 
 EE_OBJS_DIR = obj/
 

@@ -76,16 +76,14 @@ Revision History:
 		verify volume of the FM part on the Y8950
 */
 
-#include "../../version.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
 
-//#include "driver.h"		/* use M.A.M.E. */
+/*#include "driver.h" */		/* use M.A.M.E. */
 
-//#include "ymdeltat.h"
+/* #include "ymdeltat.h" */
 
 #include "fmopl.h"
 
@@ -93,13 +91,9 @@ Revision History:
 #define M_PI 3.14159265358979323846
 #endif
 
-#ifdef _MSC_VER
-#define INLINE __inline
-#elif defined(USE_INLINE_C89)
-#define INLINE
-#else
-#define INLINE inline
-#endif
+
+#define INLINE fminline
+
 
 
 /* output final shift */
@@ -732,7 +726,7 @@ static INLINE void advance_lfo(FM_OPL *OPL)
 
 	/* LFO */
 	OPL->lfo_am_cnt += OPL->lfo_am_inc;
-	if (OPL->lfo_am_cnt >= (LFO_AM_TAB_ELEMENTS<<LFO_SH) )	/* lfo_am_table is 210 elements long */
+	if (OPL->lfo_am_cnt >= (UINT32)(LFO_AM_TAB_ELEMENTS<<LFO_SH) )	/* lfo_am_table is 210 elements long */
 		OPL->lfo_am_cnt -= (LFO_AM_TAB_ELEMENTS<<LFO_SH);
 
 	tmp = lfo_am_table[ OPL->lfo_am_cnt >> LFO_SH ];
@@ -848,7 +842,7 @@ static INLINE void advance(FM_OPL *OPL)
 		/* Phase Generator */
 		if(op->vib)
 		{
-			UINT8 block;
+			
 			unsigned int block_fnum = CH->block_fnum;
 
 			unsigned int fnum_lfo   = (block_fnum&0x0380) >> 7;
@@ -857,6 +851,7 @@ static INLINE void advance(FM_OPL *OPL)
 
 			if (lfo_fn_table_index_offset)	/* LFO phase modulation active */
 			{
+				UINT8 block;
 				block_fnum += lfo_fn_table_index_offset;
 				block = (block_fnum&0x1c00) >> 10;
 				op->Cnt += (OPL->fn_tab[block_fnum&0x03ff] >> (7-block)) * op->mul;
@@ -1778,14 +1773,16 @@ static void OPLMute(FM_OPL *OPL,int channel,BOOL mute)
 			CH->SLOT[SLOT2].volume = MAX_ATT_INDEX;
 			CH->SLOT[SLOT2].state = EG_OFF;
 
-			ChannelMuted[channel]=3;			// muted + keyon flag
+			ChannelMuted[channel]=3;			// muted + keyon flag  
+
 		}
 		else
 		{
 			MessageBox(NULL,"HmMEMmSDUHSoi","arghl",MB_OK);
-			ChannelMuted[channel]=2;			// muted
+			ChannelMuted[channel]=2;			// muted 
 		}
-	}*/
+	}
+*/
 }
 
 #ifdef LOG_CYM_FILE
@@ -1914,7 +1911,7 @@ static FM_OPL *OPLCreate(int type, int clock, int rate)
 	/* clear */
 	memset(ptr,0,state_size);
 
-	OPL  = (FM_OPL *)(void *)ptr;   // ptr comes from malloc, so it is correctly aligned
+	OPL  = (FM_OPL *)(void *)ptr;   /* ptr comes from malloc, so it is correctly aligned */
 	ptr += sizeof(FM_OPL);
 #if BUILD_Y8950
 	if (type&OPL_TYPE_ADPCM)
@@ -1959,7 +1956,9 @@ static void OPLSetUpdateHandler(FM_OPL *OPL,OPL_UPDATEHANDLER UpdateHandler,int 
 	OPL->UpdateParam = param;
 }
 
-#if defined(BUILD_YM3526) || defined(BUILD_Y8950)
+#ifndef BUILD_YM3812
+
+#if defined(BUILD_YM3526) || defined(BUILD_Y8950) || !defined(BUILD_YM3812)
 
 static int OPLWrite(FM_OPL *OPL,int a,int v)
 {
@@ -1975,6 +1974,7 @@ static int OPLWrite(FM_OPL *OPL,int a,int v)
 	return OPL->status>>7;
 }
 
+#endif
 #endif
 
 static unsigned char OPLRead(FM_OPL *OPL,int a)
@@ -2217,7 +2217,7 @@ void YM3812UpdateOne(int which, INT16 *buffer, int length)
 		}
 		lt = output[0];
 
-//		lt >>= FINAL_SH;
+/*		lt >>= FINAL_SH; */
 		lt<<=2;
 
 		/* limit check */
@@ -2237,9 +2237,9 @@ void YM3812UpdateOne(int which, INT16 *buffer, int length)
             lt += 128;
         #endif*/
 
-//		buf[i] = lt;
+/*  buf[i] = lt; */
 
-		buf[i*2] = lt;          // stereo version
+		buf[i*2] = lt;          /* stereo version */
 		buf[i*2+1] = lt;
 		advance(OPL);
 	}
@@ -2588,4 +2588,4 @@ void Y8950SetKeyboardHandler(int which,OPL_PORTHANDLER_W KeyboardHandler_w,OPL_P
 	OPL->keyboard_param = param;
 }
 
-#endif //BUILD_Y8950
+#endif /* BUILD_Y8950 */
