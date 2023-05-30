@@ -1,4 +1,4 @@
-// WL_DRAW.C
+/* WL_DRAW.C */
 
 #include "wl_def.h"
 
@@ -27,19 +27,19 @@
 #ifdef AUTOMAP
 boolean automap[MAPSIZE][MAPSIZE];
 
-#define AUTOSCALE 1         // The scale of the automap view
-#define FULLSCALE 2         // The scale of the enlarged automap view
-#define AUTORANGE 20        // The range (in tiles) of the automap view from the player in each direction
-#define AUTOOFFSET 5        // The distance from the corner of the screen to draw the automap
+#define AUTOSCALE 1         /* The scale of the automap view */
+#define FULLSCALE 2         /* The scale of the enlarged automap view */
+#define AUTORANGE 20        /* The range (in tiles) of the automap view from the player in each direction */
+#define AUTOOFFSET 5        /* The distance from the corner of the screen to draw the automap */
 
-#define WALLCOLOUR 145      // The colour used to draw walls and unexplored areas
-#define EMPTYCOLOUR 154     // The colour used to draw empty space
-#define DOORCOLOUR 95       // The colour used to draw a closed door
-#define OPNDRCOLOUR 104     // The colour used to draw an open door
-#define PLAYERCOLOUR 120    // The colour used to draw the player
+#define WALLCOLOUR 145      /* The colour used to draw walls and unexplored areas */
+#define EMPTYCOLOUR 154     /* The colour used to draw empty space */
+#define DOORCOLOUR 95       /* The colour used to draw a closed door */
+#define OPNDRCOLOUR 104     /* The colour used to draw an open door */
+#define PLAYERCOLOUR 120    /* The colour used to draw the player */
 
-#define DRAWENEMIES       // Have the automap draw visible, active enemies
-#define ENEMYCOLOUR 32      // The colour to draw visible, active enemies
+#define DRAWENEMIES       /* Have the automap draw visible, active enemies */
+#define ENEMYCOLOUR 32      /* The colour to draw visible, active enemies */
 unsigned char* scr = NULL;
 #endif
 
@@ -57,18 +57,18 @@ short *spanstart;
 
 short *wallheight;
 
-//
-// math tables
-//
+/*
+** math tables
+*/
 short *pixelangle;
 int    finetangent[FINEANGLES/4];
 fixed sintable[ANGLES+ANGLES/4];
 fixed *costable = sintable+(ANGLES/4);
 
-//
-// refresh variables
-//
-fixed   viewx,viewy;                    // the focal point
+/*
+** refresh variables
+*/
+fixed   viewx,viewy;                    /* the focal point */
 short   viewangle;
 fixed   viewsin,viewcos;
 
@@ -94,16 +94,16 @@ unsigned char *postsource;
 unsigned char *postsourcesky;
 #endif
 
-//
-// wall optimization variables
-//
-int     lastside;               // true for vertical
+/*
+** wall optimization variables
+*/
+int     lastside;               /* true for vertical */
 unsigned short    lasttilehit;
 int     lasttexture;
 
-//
-// ray tracing variables
-//
+/*
+** ray tracing variables
+*/
 short    focaltx,focalty;
 unsigned int xpartialup,xpartialdown,ypartialup,ypartialdown;
 
@@ -149,42 +149,44 @@ unsigned short    horizwall[MAXWALLTILES],vertwall[MAXWALLTILES];
 */
 
 
-//
-// transform actor
-//
+/*
+** transform actor
+*/
 void TransformActor (objtype *ob)
 {
     fixed gx,gy,gxt,gyt,nx,ny;
 
-//
-// translate point to view centered coordinates
-//
+/*
+** translate point to view centered coordinates
+*/
     gx = ob->x-viewx;
     gy = ob->y-viewy;
 
-//
-// calculate newx
-//
+/*
+** calculate newx
+*/
     gxt = FixedMul(gx,viewcos);
     gyt = FixedMul(gy,viewsin);
-    nx = gxt-gyt-ACTORSIZE;         // fudge the shape forward a bit, because
-                                    // the midpoint could put parts of the shape
-                                    // into an adjacent wall
+    nx = gxt-gyt-ACTORSIZE;         /* 
+                                    ** fudge the shape forward a bit, because
+                                    ** the midpoint could put parts of the shape
+                                    ** into an adjacent wall
+                                    */
 
-//
-// calculate newy
-//
+/*
+** calculate newy
+*/
     gxt = FixedMul(gx,viewsin);
     gyt = FixedMul(gy,viewcos);
     ny = gyt+gxt;
 
-//
-// calculate perspective ratio
-//
+/*
+** calculate perspective ratio
+*/
     ob->transx = nx;
     ob->transy = ny;
 
-    if (nx<MINDIST)                 // too close, don't overflow the divide
+    if (nx<MINDIST)                 /* too close, don't overflow the divide */
     {
         ob->viewheight = 0;
         return;
@@ -192,13 +194,13 @@ void TransformActor (objtype *ob)
 
     ob->viewx = (unsigned short)(centerx + ny*scale/nx);
 
-//
-// calculate height (heightnumerator/(nx>>8))
-//
+/*
+** calculate height (heightnumerator/(nx>>8))
+*/
     ob->viewheight = (unsigned short)(heightnumerator/(nx>>8));
 }
 
-//==========================================================================
+/* ========================================================================== */
 
 /*
 ========================
@@ -225,31 +227,31 @@ boolean TransformTile (int tx, int ty, short *dispx, short *dispheight)
 {
     fixed gx,gy,gxt,gyt,nx,ny;
 
-//
-// translate point to view centered coordinates
-//
+/*
+** translate point to view centered coordinates
+*/
     gx = ((int)tx<<TILESHIFT)+0x8000-viewx;
     gy = ((int)ty<<TILESHIFT)+0x8000-viewy;
 
-//
-// calculate newx
-//
+/*
+** calculate newx
+*/
     gxt = FixedMul(gx,viewcos);
     gyt = FixedMul(gy,viewsin);
-    nx = gxt-gyt-0x2000;            // 0x2000 is size of object
+    nx = gxt-gyt-0x2000;            /* 0x2000 is size of object */
 
-//
-// calculate newy
-//
+/*
+** calculate newy
+*/
     gxt = FixedMul(gx,viewsin);
     gyt = FixedMul(gy,viewcos);
     ny = gyt+gxt;
 
 
-//
-// calculate height / perspective ratio
-//
-    if (nx<MINDIST)                 // too close, don't overflow the divide
+/*
+** calculate height / perspective ratio
+*/
+    if (nx<MINDIST)                 /* too close, don't overflow the divide */
         *dispheight = 0;
     else
     {
@@ -257,17 +259,17 @@ boolean TransformTile (int tx, int ty, short *dispx, short *dispheight)
         *dispheight = (short)(heightnumerator/(nx>>8));
     }
 
-//
-// see if it should be grabbed
-//
+/*
+** see if it should be grabbed
+*/
     if (nx<TILEGLOBAL && ny>-TILEGLOBAL/2 && ny<TILEGLOBAL/2)
         return true;
     else
         return false;
 }
 
-//==========================================================================
-
+/* ========================================================================== */
+ 
 /*
 ====================
 =
@@ -283,22 +285,22 @@ short CalcHeight (void)
     short height;
     fixed   gx,gy,gxt,gyt,nx;
 
-//
-// translate point to view centered coordinates
-//
+/*
+** translate point to view centered coordinates
+*/
     gx = xintercept - viewx;
     gy = yintercept - viewy;
 
-//
-// calculate nx
-//
+/*
+** calculate nx
+*/
     gxt = FixedMul(gx,viewcos);
     gyt = FixedMul(gy,viewsin);
     nx = gxt - gyt;
 
-//
-// calculate perspective ratio
-//
+/*
+** calculate perspective ratio
+*/
 #ifdef BANDEDHOLOWALLS
     if (nx < MINDIST)
         nx = MINDIST - ((nx / 36) & 3);
@@ -309,7 +311,7 @@ short CalcHeight (void)
         height = 0;
 #else
     if (nx < MINDIST)
-        nx = MINDIST;             // don't let divide overflow
+        nx = MINDIST;             /* don't let divide overflow */
 
     height = (short)(heightnumerator / (nx >> 8));
 #endif
@@ -317,7 +319,7 @@ short CalcHeight (void)
     return height;
 }
 
-//==========================================================================
+/* ========================================================================== */
 
 /*
 ===================
@@ -489,9 +491,9 @@ void HitVertWall (void)
 
     if (lastside == 1 && lasttilehit == tilehit && !(tilehit & BIT_WALL))
     {
-        //
-        // in the same wall type as last time, so use the last postsource
-        //
+        /*
+        ** in the same wall type as last time, so use the last postsource
+        */
         if (texture != lasttexture)
         {
             postsource += texture - lasttexture;
@@ -506,9 +508,9 @@ void HitVertWall (void)
 
         if (tilehit & BIT_WALL)
         {
-            //
-            // check for adjacent doors
-            //
+            /*
+            ** check for adjacent doors
+            */
             if (tilemap[xtile - xtilestep][yinttile] & BIT_DOOR)
                 wallpic = DOORWALL + 3;
             else
@@ -555,9 +557,9 @@ void HitHorizWall (void)
 
     if (lastside == 0 && lasttilehit == tilehit && !(tilehit & BIT_WALL))
     {
-        //
-        // in the same wall type as last time, so use the last postsource
-        //
+        /*
+        ** in the same wall type as last time, so use the last postsource
+        */
         if (texture != lasttexture)
         {
             postsource += texture - lasttexture;
@@ -572,9 +574,9 @@ void HitHorizWall (void)
 
         if (tilehit & BIT_WALL)
         {
-            //
-            // check for adjacent doors
-            //
+            /*
+            ** check for adjacent doors
+            */
             if (tilemap[xinttile][ytile - ytilestep] & BIT_DOOR)
                 wallpic = DOORWALL + 2;
             else
@@ -592,7 +594,7 @@ void HitHorizWall (void)
     ScalePost ();
 }
 
-//==========================================================================
+/* ========================================================================== */
 
 /*
 ====================
@@ -612,7 +614,7 @@ void HitHorizDoor (void)
 #ifdef BLAKEDOORS
     if (doorobjlist[doornum].doubledoor)
     {
-        if (leftside)//left
+        if (leftside) /* left */
             texture = ((xintercept + 0x7fff - ldoorposition[doornum]) >> FIXED2TEXSHIFT) & TEXTUREMASK;
         else
             texture = ((xintercept + 0x8000 + ldoorposition[doornum]) >> FIXED2TEXSHIFT) & TEXTUREMASK;
@@ -629,9 +631,9 @@ void HitHorizDoor (void)
 
     if (lasttilehit == tilehit)
     {
-        //
-        // in the same door as last time, so use the last postsource
-        //
+        /*
+        ** in the same door as last time, so use the last postsource
+        */
         if (texture != lasttexture)
         {
             postsource += texture - lasttexture;
@@ -665,7 +667,7 @@ void HitHorizDoor (void)
     ScalePost ();
 }
 
-//==========================================================================
+/* ========================================================================== */
 
 /*
 ====================
@@ -684,10 +686,10 @@ void HitVertDoor (void)
 #ifdef BLAKEDOORS
     if (doorobjlist[doornum].doubledoor)
     {
-        if (leftside)//left
+        if (leftside)/* left */
             texture = ((yintercept + 0x7fff - ldoorposition[doornum]) >> FIXED2TEXSHIFT) & TEXTUREMASK;
         else
-            //texture = ( (yintercept+0x8000+ldoorposition[doornum]) >> TEXTUREFROMFIXEDSHIFT) &TEXTUREMASK;
+            /* texture = ( (yintercept+0x8000+ldoorposition[doornum]) >> TEXTUREFROMFIXEDSHIFT) &TEXTUREMASK; */
             texture = ((yintercept + 0x8000 + ldoorposition[doornum]) >> FIXED2TEXSHIFT) & TEXTUREMASK;
     }
     else
@@ -702,9 +704,9 @@ void HitVertDoor (void)
 
     if (lasttilehit == tilehit)
     {
-        //
-        // in the same door as last time, so use the last postsource
-        //
+        /*
+        ** in the same door as last time, so use the last postsource
+        */
         if (texture != lasttexture)
         {
             postsource += texture - lasttexture;
@@ -738,7 +740,7 @@ void HitVertDoor (void)
     ScalePost ();
 }
 
-//==========================================================================
+/* ========================================================================== */
 
 unsigned char vgaCeiling[]=
 {
@@ -799,7 +801,7 @@ void VGAClearScreen (void)
 #endif
 }
 
-//==========================================================================
+/* ========================================================================== */
 
 /*
 =====================
@@ -813,9 +815,10 @@ int CalcRotate (objtype *ob)
 {
     int angle, viewangle;
 
-    // this isn't exactly correct, as it should vary by a trig value,
-    // but it is close enough with only eight rotations
-
+    /* 
+    ** this isn't exactly correct, as it should vary by a trig value,
+    ** but it is close enough with only eight rotations
+    */
 #ifdef FIXCALCROTATE
     viewangle = (int)( player->angle + (centerx - ob->viewx) / (8 * viewwidth / 320.0) );
 #else
@@ -834,8 +837,8 @@ int CalcRotate (objtype *ob)
     while (angle<0)
         angle+=ANGLES;
 
-    if (ob->state->rotate == 2)             // 2 rotation pain frame
-        return 0;               // pain with shooting frame bugfix
+    if (ob->state->rotate == 2)             /* 2 rotation pain frame */
+        return 0;               /* pain with shooting frame bugfix */
 
     return angle/(ANGLES/8);
 }
@@ -858,8 +861,10 @@ typedef struct
     short      viewx,
                viewheight,
                shapenum;
-    short      flags;          // this must be changed to uint32_t, when you
-                               // you need more than 16-flags for drawing
+    short      flags;          /*
+                               ** this must be changed to uint32_t, when you
+                               ** you need more than 16-flags for drawing
+                               */
 #ifdef USE_DIR3DSPR
     statobj_t *transsprite;
 #endif
@@ -879,27 +884,27 @@ void DrawScaleds (void)
 
     visptr = &vislist[0];
 
-//
-// place static objects
-//
+/*
+** place static objects
+*/
     for (statptr = &statobjlist[0] ; statptr !=laststatobj ; statptr++)
     {
         if ((visptr->shapenum = statptr->shapenum) == -1)
-            continue;                                               // object has been deleted
+            continue;                                               /* object has been deleted */
 
         if (!*statptr->visspot)
-            continue;                                               // not visable
+            continue;                                               /* not visable */
 
         if (TransformTile (statptr->tilex,statptr->tiley,
             &visptr->viewx,&visptr->viewheight) && statptr->flags & FL_BONUS)
         {
             GetBonus (statptr);
             if(statptr->shapenum == -1)
-                continue;                                           // object has been taken
+                continue;                                           /* object has been taken */
         }
 
         if (!visptr->viewheight)
-            continue;                                               // to close to the object
+            continue;                                               /* to close to the object */
 
 #ifdef USE_DIR3DSPR
         if(statptr->flags & FL_DIR_MASK)
@@ -908,27 +913,27 @@ void DrawScaleds (void)
             visptr->transsprite=NULL;
 #endif
 
-        if (visptr < &vislist[MAXVISABLE-1])    // don't let it overflow
+        if (visptr < &vislist[MAXVISABLE-1])    /* don't let it overflow */
         {
             visptr->flags = (short) statptr->flags;
             visptr++;
         }
     }
 
-//
-// place active objects
-//
+/*
+** place active objects
+*/
     for (obj = player->next;obj;obj=obj->next)
     {
         if ((visptr->shapenum = obj->state->shapenum)==0)
-            continue;                                               // no shape
+            continue;                                               /* no shape */
 
         visspot = &spotvis[obj->tilex][obj->tiley];
         tilespot = &tilemap[obj->tilex][obj->tiley];
 
-        //
-        // could be in any of the nine surrounding tiles
-        //
+        /*
+        ** could be in any of the nine surrounding tiles
+        */
         if (*visspot
             || ( *(visspot-1) && !*(tilespot-1) )
             || ( *(visspot+1) && !*(tilespot+1) )
@@ -942,17 +947,17 @@ void DrawScaleds (void)
             obj->active = ac_yes;
             TransformActor (obj);
             if (!obj->viewheight)
-                continue;                                               // too close or far away
+                continue;                                               /* too close or far away */
 
             visptr->viewx = obj->viewx;
             visptr->viewheight = obj->viewheight;
             if (visptr->shapenum == -1)
-                visptr->shapenum = obj->temp1;  // special shape
+                visptr->shapenum = obj->temp1;  /* special shape */
 
             if (obj->state->rotate)
                 visptr->shapenum += CalcRotate (obj);
 
-            if (visptr < &vislist[MAXVISABLE-1])    // don't let it overflow
+            if (visptr < &vislist[MAXVISABLE-1])    /* don't let it overflow */
             {
                 visptr->flags = (short) obj->flags;
 #ifdef USE_DIR3DSPR
@@ -966,13 +971,13 @@ void DrawScaleds (void)
             obj->flags &= ~FL_VISIBLE;
     }
 
-//
-// draw from back to front
-//
+/*
+** draw from back to front
+*/
     numvisable = (int) (visptr-&vislist[0]);
 
     if (!numvisable)
-        return;                                                                 // no visable objects
+        return;                                                                 /* no visable objects */
 
     for (i = 0; i<numvisable; i++)
     {
@@ -986,9 +991,9 @@ void DrawScaleds (void)
                 farthest = visstep;
             }
         }
-        //
-        // draw farthest
-        //
+        /*
+        ** draw farthest
+        */
 #ifdef USE_DIR3DSPR
         if (farthest->transsprite)
             Transform3DShape(farthest->transsprite);
@@ -1005,7 +1010,7 @@ void DrawScaleds (void)
     }
 }
 
-//==========================================================================
+/* ========================================================================== */
 
 /*
 ==============
@@ -1046,11 +1051,11 @@ void DrawPlayerWeapon (void)
     if (demorecord || demoplayback)
         SimpleScaleShape(viewwidth/2,SPR_DEMO,viewheight+1);
 #ifdef COMPASS
-//
-// Check direction and draw compass (if enabled)
-// Scale the compass as half of the normal size
-// and place it to the right (top of everything)...
-// 
+/*
+** Check direction and draw compass (if enabled)
+** Scale the compass as half of the normal size
+** and place it to the right (top of everything)...
+*/ 
 #ifdef CHRIS
     if (compass)
     {
@@ -1058,46 +1063,46 @@ void DrawPlayerWeapon (void)
     }
 #else
     if (compass) {
-        if (player->angle < 110 && player->angle >= 70)      //NORTH:      70 - 110 deg
+        if (player->angle < 110 && player->angle >= 70)      /* NORTH:      70 - 110 deg */
         {
             SimpleScaleShape(viewwidth - 100, SPR_DIR_N, (viewheight + 64) / 2);
         }
-        else if (player->angle < 70 && player->angle >= 20)   //NORTHEAST:  20 - 70 deg
+        else if (player->angle < 70 && player->angle >= 20)   /* NORTHEAST:  20 - 70 deg */
         {
             SimpleScaleShape(viewwidth - 100, SPR_DIR_NE, (viewheight + 64) / 2);
         }
-        else if (player->angle < 340 && player->angle >= 290) //SOUTHEAST:  290 - 340 deg
+        else if (player->angle < 340 && player->angle >= 290) /* SOUTHEAST:  290 - 340 deg */
         {
             SimpleScaleShape(viewwidth - 100, SPR_DIR_SE, (viewheight + 64) / 2);
         }
-        else if (player->angle < 290 && player->angle >= 250) //SOUTH:      250 - 290 deg
+        else if (player->angle < 290 && player->angle >= 250) /* SOUTH:      250 - 290 deg */
         {
             SimpleScaleShape(viewwidth - 100, SPR_DIR_S, (viewheight + 64) / 2);
         }
-        else if (player->angle < 250 && player->angle >= 200) //SOUTHWEST:  200 - 250 deg
+        else if (player->angle < 250 && player->angle >= 200) /* SOUTHWEST:  200 - 250 deg */
         {
             SimpleScaleShape(viewwidth - 100, SPR_DIR_SW, (viewheight + 64) / 2);
         }
-        else if (player->angle < 160 && player->angle >= 110)  //NORTHWEST: 110 - 160 deg
+        else if (player->angle < 160 && player->angle >= 110)  /* NORTHWEST: 110 - 160 deg */
         {
             SimpleScaleShape(viewwidth - 100, SPR_DIR_NW, (viewheight + 64) / 2);
         }
-        else if (player->angle < 200 && player->angle >= 160) //WEST:       160 - 200 deg
+        else if (player->angle < 200 && player->angle >= 160) /* WEST:       160 - 200 deg */
         {
             SimpleScaleShape(viewwidth - 100, SPR_DIR_W, (viewheight + 64) / 2);
         }
-        else                                             //EAST:       0 - 20 & 340 - 360 deg
+        else                                             /* EAST:       0 - 20 & 340 - 360 deg */
         {
             SimpleScaleShape(viewwidth - 100, SPR_DIR_E, (viewheight + 64) / 2);
         }
     }
 #endif
 #endif
-    //---
+    /* --- */
 }
 
 
-//==========================================================================
+/* ========================================================================== */
 
 
 /*
@@ -1113,14 +1118,14 @@ void CalcTics (void)
 #ifndef FIXEDLOGICRATE
     size_t curtime;
 #endif
-//
-// calculate tics since last refresh for adaptive timing
-//
+/*
+** calculate tics since last refresh for adaptive timing
+*/
     if (lasttimecount > GetTimeCount())
-        lasttimecount = GetTimeCount();    // if the game was paused a LONG time
+        lasttimecount = GetTimeCount();    /* if the game was paused a LONG time */
 
 #ifdef FIXEDLOGICRATE
-    // The logic rate is always fixed
+    /* The logic rate is always fixed */
     tics = 1;
     lasttimecount += tics;
 #else
@@ -1128,7 +1133,7 @@ void CalcTics (void)
     tics = (curtime * 7) / 100 - lasttimecount;
     if(!tics)
     {
-        // wait until end of current tic
+        /* wait until end of current tic */
         SDL_Delay(((((unsigned int)lasttimecount + 1) * 100) / 7 - (unsigned int)curtime));
         tics = 1;
     }
@@ -1141,7 +1146,7 @@ void CalcTics (void)
 }
 
 
-//==========================================================================
+/* ========================================================================== */
 
 
 /*
@@ -1163,28 +1168,28 @@ void WallRefresh (void)
 {
     short   angle;
     int       xstep,ystep;
-    fixed     xinttemp,yinttemp;                            // holds temporary intercept position
+    fixed     xinttemp,yinttemp;                            /* holds temporary intercept position */
     unsigned int  xpartial,ypartial;
     doorobj_t *door;
-    int       pwallposnorm,pwallposinv,pwallposi;           // holds modified pwallpos
+    int       pwallposnorm,pwallposinv,pwallposi;           /* holds modified pwallpos */
     boolean      passdoor;
 
     for (pixx = 0; pixx < viewwidth; pixx++)
     {
-        //
-        // setup to trace a ray through pixx view pixel
-        //
-        angle = midangle + pixelangle[pixx];                // delta for this pixel
+        /*
+        ** setup to trace a ray through pixx view pixel
+        */
+        angle = midangle + pixelangle[pixx];                /* delta for this pixel */
 
-        if (angle < 0)                                      // -90 - -1 degree arc
-            angle += ANG360;                                // -90 is the same as 270
-        if (angle >= ANG360)                                // 360-449 degree arc
-            angle -= ANG360;                                // -449 is the same as 89
+        if (angle < 0)                                      /* -90 - -1 degree arc */
+            angle += ANG360;                                /* -90 is the same as 270 */
+        if (angle >= ANG360)                                /* 360-449 degree arc */
+            angle -= ANG360;                                /* -449 is the same as 89 */
 
-        //
-        // setup xstep/ystep based on angle
-        //
-        if (angle < ANG90)                                  // 0-89 degree arc
+        /*
+        ** setup xstep/ystep based on angle
+        */
+        if (angle < ANG90)                                  /* 0-89 degree arc */
         {
             xtilestep = 1;
             ytilestep = -1;
@@ -1193,7 +1198,7 @@ void WallRefresh (void)
             xpartial = xpartialup;
             ypartial = ypartialdown;
         }
-        else if (angle < ANG180)                            // 90-179 degree arc
+        else if (angle < ANG180)                            /* 90-179 degree arc */
         {
             xtilestep = -1;
             ytilestep = -1;
@@ -1202,7 +1207,7 @@ void WallRefresh (void)
             xpartial = xpartialdown;
             ypartial = ypartialdown;
         }
-        else if (angle < ANG270)                            // 180-269 degree arc
+        else if (angle < ANG270)                            /* 180-269 degree arc */
         {
             xtilestep = -1;
             ytilestep = 1;
@@ -1211,7 +1216,7 @@ void WallRefresh (void)
             xpartial = xpartialdown;
             ypartial = ypartialup;
         }
-        else if (angle < ANG360)                            // 270-359 degree arc
+        else if (angle < ANG360)                            /* 270-359 degree arc */
         {
             xtilestep = 1;
             ytilestep = 1;
@@ -1221,9 +1226,9 @@ void WallRefresh (void)
             ypartial = ypartialup;
         }
 
-        //
-        // initialise variables for intersection testing
-        //
+        /*
+        ** initialise variables for intersection testing
+        */
         yintercept = FixedMul(ystep,xpartial) + viewy;
         yinttile = yintercept >> TILESHIFT;
         xtile = focaltx + xtilestep;
@@ -1234,18 +1239,18 @@ void WallRefresh (void)
 
         texdelta = 0;
 
-        //
-        // special treatment when player is in back tile of pushwall
-        //
+        /*
+        ** special treatment when player is in back tile of pushwall
+        */
         if (tilemap[focaltx][focalty] == BIT_WALL)
         {
-            if (pwalldir == di_east && xtilestep == 1 || pwalldir == di_west && xtilestep == -1)
+            if ((pwalldir == di_east && xtilestep == 1) || (pwalldir == di_west && xtilestep == -1))
             {
                 yinttemp = yintercept - ((ystep * (64 - pwallpos)) >> 6);
 
-                //
-                //  trace hit vertical pushwall back?
-                //
+                /*
+                **  trace hit vertical pushwall back?
+                */
                 if (yinttemp >> TILESHIFT == focalty)
                 {
                     if (pwalldir == di_east)
@@ -1260,13 +1265,13 @@ void WallRefresh (void)
                     continue;
                 }
             }
-            else if (pwalldir == di_south && ytilestep == 1 || pwalldir == di_north && ytilestep == -1)
+            else if ((pwalldir == di_south && ytilestep == 1) || (pwalldir == di_north && ytilestep == -1))
             {
                 xinttemp = xintercept - ((xstep * (64 - pwallpos)) >> 6);
 
-                //
-                // trace hit horizontal pushwall back?
-                //
+                /*
+                ** trace hit horizontal pushwall back?
+                */
                 if (xinttemp >> TILESHIFT == focaltx)
                 {
                     if (pwalldir == di_south)
@@ -1283,34 +1288,34 @@ void WallRefresh (void)
             }
         }
 
-//
-// trace along this angle until we hit a wall
-//
-// CORE LOOP!
-//
+/*
+** trace along this angle until we hit a wall
+**
+** CORE LOOP!
+**/
         while (1)
         {
-            //
-            // check intersections with vertical walls
-            //
+            /*
+            ** check intersections with vertical walls
+            */
             if ((ytilestep == -1 && yinttile <= ytile) || (ytilestep == 1 && yinttile >= ytile))
                 goto horizentry;
 vertentry:
 #ifdef REVEALMAP
             mapseen[xtile][yinttile] = true;
 #endif
-            //
-            // get the wall value from tilemap
-            //
+            /*
+            ** get the wall value from tilemap
+            */
             if (tilemap[xtile][ytile] && (xtile - xtilestep) == xinttile && (ytile - ytilestep) == yinttile)
             {
-                //
-                // exactly in the wall corner, so use the last tile
-                //
+                /*
+                ** exactly in the wall corner, so use the last tile
+                */
                 tilehit = lasttilehit;
 
                 if (tilehit & BIT_DOOR)
-                    passdoor = false;                        // don't let the trace continue if it's a door
+                    passdoor = false;                        /* don't let the trace continue if it's a door */
             }
             else
             {
@@ -1324,29 +1329,29 @@ vertentry:
             {
                 if (tilehit & BIT_DOOR)
                 {
-                    //
-                    // hit a vertical door, so find which coordinate the door would be
-                    // intersected at, and check to see if the door is open past that point
-                    //
+                    /*
+                    ** hit a vertical door, so find which coordinate the door would be
+                    ** intersected at, and check to see if the door is open past that point
+                    */
                     door = &doorobjlist[tilehit & ~BIT_DOOR];
 
                     if (door->action == dr_open)
-                        goto passvert;                       // door is open, continue tracing
+                        goto passvert;                       /* door is open, continue tracing */
 
-                    yinttemp = yintercept + (ystep >> 1);    // add halfstep to current intercept position
+                    yinttemp = yintercept + (ystep >> 1);    /* add halfstep to current intercept position */
 
-                    //
-                    // midpoint is outside tile, so it hit the side of the wall before a door
-                    //
+                    /*
+                    ** midpoint is outside tile, so it hit the side of the wall before a door
+                    */
                     if (yinttemp >> TILESHIFT != yinttile && passdoor)
                         goto passvert;
 
                     if (door->action != dr_closed)
                     {
-                        //
-                        // the trace hit the door plane at pixel position yintercept, see if the door is
-                        // closed that much
-                        //
+                        /*
+                        ** the trace hit the door plane at pixel position yintercept, see if the door is
+                        ** closed that much
+                        */
 #ifdef BLAKEDOORS
                         SetLeftDoorSide();
                         if ((unsigned short)yinttemp <= ldoorposition[tilehit & ~BIT_DOOR])
@@ -1363,16 +1368,15 @@ vertentry:
 #ifdef BLAKEDOORS
 drawvdoor:
 #endif
-
                     yintercept = yinttemp;
                     xintercept = ((fixed)xtile << TILESHIFT) + (TILEGLOBAL/2);
                     HitVertDoor();
                 }
                 else if (tilehit == BIT_WALL)
                 {
-                    //
-                    // hit a sliding vertical wall
-                    //
+                    /*
+                    ** hit a sliding vertical wall
+                    */
                     if (pwalldir == di_west || pwalldir == di_east)
                     {
                         if (pwalldir == di_west)
@@ -1386,8 +1390,8 @@ drawvdoor:
                             pwallposinv = 64 - pwallpos;
                         }
 
-                        if (pwalldir == di_east && xtile == pwallx && yinttile == pwally
-                         || pwalldir == di_west && !(xtile == pwallx && yinttile == pwally))
+                        if ((pwalldir == di_east && xtile == pwallx && yinttile == pwally)
+                         || (pwalldir == di_west && !(xtile == pwallx && yinttile == pwally)))
                         {
                             yinttemp = yintercept + ((ystep * pwallposnorm) >> 6);
 
@@ -1423,18 +1427,18 @@ drawvdoor:
                         else
                             pwallposi = pwallpos;
 
-                        if (pwalldir == di_south && (unsigned short)yintercept < (pwallposi << 10)
-                         || pwalldir == di_north && (unsigned short)yintercept > (pwallposi << 10))
+                        if ((pwalldir == di_south && (unsigned short)yintercept < (pwallposi << 10))
+                         || (pwalldir == di_north && (unsigned short)yintercept > (pwallposi << 10)))
                         {
                             if (xtile == pwallx && yinttile == pwally)
                             {
-                                if (pwalldir == di_south && (int)((unsigned short)yintercept) + ystep < (pwallposi << 10)
-                                 || pwalldir == di_north && (int)((unsigned short)yintercept) + ystep > (pwallposi << 10))
+                                if ((pwalldir == di_south && (int)((unsigned short)yintercept) + ystep < (pwallposi << 10))
+                                 || (pwalldir == di_north && (int)((unsigned short)yintercept) + ystep > (pwallposi << 10)))
                                     goto passvert;
 
-                                //
-                                // set up a horizontal intercept position
-                                //
+                                /*
+                                ** set up a horizontal intercept position
+                                */
                                 if (pwalldir == di_south)
                                     yintercept = (yinttile << TILESHIFT) + (pwallposi << 10);
                                 else
@@ -1467,13 +1471,13 @@ drawvdoor:
                             }
                             else
                             {
-                                if (pwalldir == di_south && (int)((unsigned short)yintercept) + ystep > (pwallposi << 10)
-                                 || pwalldir == di_north && (int)((unsigned short)yintercept) + ystep < (pwallposi << 10))
+                                if ((pwalldir == di_south && (int)((unsigned short)yintercept) + ystep > (pwallposi << 10))
+                                 || (pwalldir == di_north && (int)((unsigned short)yintercept) + ystep < (pwallposi << 10)))
                                     goto passvert;
 
-                                //
-                                // set up a horizontal intercept position
-                                //
+                                /*
+                                ** set up a horizontal intercept position
+                                */
                                 if (pwalldir == di_south)
                                     yintercept = (yinttile << TILESHIFT) - ((64 - pwallpos) << 10);
                                 else
@@ -1499,9 +1503,9 @@ drawvdoor:
             }
 
 passvert:
-            //
-            // mark the tile as visible and setup for next step
-            //
+            /*
+            ** mark the tile as visible and setup for next step
+            */
             spotvis[xtile][yinttile] = true;
             xtile += xtilestep;
             yintercept += ystep;
@@ -1512,9 +1516,9 @@ passvert:
 
         while (1)
         {
-            //
-            // check intersections with horizontal walls
-            //
+            /*
+            ** check intersections with horizontal walls
+            */
             if ((xtilestep == -1 && xinttile <= xtile) || (xtilestep == 1 && xinttile >= xtile))
                 goto vertentry;
 
@@ -1522,18 +1526,18 @@ horizentry:
 #ifdef REVEALMAP
             mapseen[xinttile][ytile] = true;
 #endif
-            //
-            // get the wall value from tilemap
-            //
+            /*
+            ** get the wall value from tilemap
+            */
             if (tilemap[xtile][ytile] && (xtile - xtilestep) == xinttile && (ytile - ytilestep) == yinttile)
             {
-                //
-                // exactly in the wall corner, so use the last tile
-                //
+                /*
+                ** exactly in the wall corner, so use the last tile
+                */
                 tilehit = lasttilehit;
 
                 if (tilehit & BIT_DOOR)
-                    passdoor = false;                        // don't let the trace continue if it's a door
+                    passdoor = false;                        /* don't let the trace continue if it's a door */
             }
             else
             {
@@ -1547,30 +1551,30 @@ horizentry:
             {
                 if (tilehit & BIT_DOOR)
                 {
-                    //
-                    // hit a horizontal door, so find which coordinate the door would be
-                    // intersected at, and check to see if the door is open past that point
-                    //
+                    /*
+                    ** hit a horizontal door, so find which coordinate the door would be
+                    ** intersected at, and check to see if the door is open past that point
+                    */
                     door = &doorobjlist[tilehit & ~BIT_DOOR];
 
                     if (door->action == dr_open)
-                        goto passhoriz;                      // door is open, continue tracing
+                        goto passhoriz;                      /* door is open, continue tracing */
 
-                    xinttemp = xintercept + (xstep >> 1);    // add half step to current intercept position
+                    xinttemp = xintercept + (xstep >> 1);    /* add half step to current intercept position */
 
-                    //
-                    // midpoint is outside tile, so it hit the side of the wall before a door
-                    //
+                    /*
+                    ** midpoint is outside tile, so it hit the side of the wall before a door
+                    */
 
                     if (xinttemp >> TILESHIFT != xinttile && passdoor)
                         goto passhoriz;
 
                     if (door->action != dr_closed)
                     {
-                        //
-                        // the trace hit the door plane at pixel position xintercept, see if the door is
-                        // closed that much
-                        //
+                        /*
+                        ** the trace hit the door plane at pixel position xintercept, see if the door is
+                        ** closed that much
+                        */
 #ifdef BLAKEDOORS
                         SetLeftDoorSide();
                         if ((unsigned short)xinttemp <= ldoorposition[tilehit & ~BIT_DOOR])
@@ -1594,9 +1598,9 @@ horizentry:
                 }
                 else if (tilehit == BIT_WALL)
                 {
-                    //
-                    // hit a sliding horizontal wall
-                    //
+                    /*
+                    ** hit a sliding horizontal wall
+                    */
                     if (pwalldir == di_north || pwalldir == di_south)
                     {
                         if (pwalldir == di_north)
@@ -1610,8 +1614,8 @@ horizentry:
                             pwallposinv = 64 - pwallpos;
                         }
 
-                        if (pwalldir == di_south && xinttile == pwallx && ytile == pwally
-                         || pwalldir == di_north && !(xinttile == pwallx && ytile == pwally))
+                        if ((pwalldir == di_south && xinttile == pwallx && ytile == pwally )
+                         || (pwalldir == di_north && !(xinttile == pwallx && ytile == pwally)))
                         {
                             xinttemp = xintercept + ((xstep * pwallposnorm) >> 6);
 
@@ -1647,18 +1651,18 @@ horizentry:
                         else
                             pwallposi = pwallpos;
 
-                        if (pwalldir == di_east && (unsigned short)xintercept < (pwallposi << 10)
-                         || pwalldir == di_west && (unsigned short)xintercept > (pwallposi << 10))
+                        if ((pwalldir == di_east && (unsigned short)xintercept < (pwallposi << 10))
+                         || (pwalldir == di_west && (unsigned short)xintercept > (pwallposi << 10)))
                         {
                             if (xinttile == pwallx && ytile == pwally)
                             {
-                                if (pwalldir == di_east && (int)((unsigned short)xintercept) + xstep < (pwallposi << 10)
-                                 || pwalldir == di_west && (int)((unsigned short)xintercept) + xstep > (pwallposi << 10))
+                                if ((pwalldir == di_east && (int)((unsigned short)xintercept) + xstep < (pwallposi << 10))
+                                 || (pwalldir == di_west && (int)((unsigned short)xintercept) + xstep > (pwallposi << 10)))
                                     goto passhoriz;
 
-                                //
-                                // set up a vertical intercept position
-                                //
+                                /*
+                                ** set up a vertical intercept position
+                                */
                                 yintercept -= (ystep * (64 - pwallpos)) >> 6;
                                 yinttile = yintercept >> TILESHIFT;
 
@@ -1692,13 +1696,13 @@ horizentry:
                             }
                             else
                             {
-                                if (pwalldir == di_east && (int)((unsigned short)xintercept) + xstep > (pwallposi << 10)
-                                 || pwalldir == di_west && (int)((unsigned short)xintercept) + xstep < (pwallposi << 10))
+                                if ((pwalldir == di_east && (int)((unsigned short)xintercept) + xstep > (pwallposi << 10))
+                                 || (pwalldir == di_west && (int)((unsigned short)xintercept) + xstep < (pwallposi << 10)))
                                     goto passhoriz;
 
-                                //
-                                // set up a vertical intercept position
-                                //
+                                /*
+                                ** set up a vertical intercept position
+                                */
                                 yintercept -= (ystep * pwallpos) >> 6;
                                 yinttile = yintercept >> TILESHIFT;
 
@@ -1725,9 +1729,9 @@ horizentry:
             }
 
 passhoriz:
-            //
-            // mark the tile as visible and setup for next step
-            //
+            /*
+            ** mark the tile as visible and setup for next step
+            */
             spotvis[xinttile][ytile] = true;
             ytile += ytilestep;
             xintercept += xstep;
@@ -1764,10 +1768,10 @@ void Setup3DView (void)
     ypartialdown = viewy&(TILEGLOBAL-1);
     ypartialup = TILEGLOBAL-ypartialdown;
 
-    lastside = -1;                  // no optimization on the first post
+    lastside = -1;                  /* no optimization on the first post */
 }
 
-//==========================================================================
+/* ========================================================================== */
 
 /*
 ========================
@@ -1782,16 +1786,16 @@ void ThreeDRefresh (void)
 #ifdef AUTOMAP
     int x, y;
 #endif
-//
-// clear out the traced array
-//
+/*
+** clear out the traced array
+*/
     memset(spotvis,0,MAPAREA);
-#ifdef PLAYDEMOLIKEORIGINAL      // ADDEDFIX 30 - Chris
+#ifdef PLAYDEMOLIKEORIGINAL      /* ADDEDFIX 30 - Chris */
     if (DEMOCOND_SDL)
 #endif
     if (!tilemap[player->tilex][player->tiley] ||
          tilemap[player->tilex][player->tiley] & BIT_DOOR)
-    spotvis[player->tilex][player->tiley] = true;       // Detect all sprites over player fix
+    spotvis[player->tilex][player->tiley] = true;       /* Detect all sprites over player fix */
 #ifdef REVEALMAP
     mapseen[player->tilex][player->tiley] = true;
 #endif
@@ -1803,9 +1807,9 @@ void ThreeDRefresh (void)
 
     Setup3DView ();
 
-//
-// follow the walls from there to the right, drawing as we go
-//
+/*
+** follow the walls from there to the right, drawing as we go
+*/
     VGAClearScreen ();
 #if defined(USE_FEATUREFLAGS) && defined(USE_STARSKY)
     if(GetFeatureFlags() & FF_STARSKY)
@@ -1831,10 +1835,10 @@ void ThreeDRefresh (void)
     DrawPlanes ();
 #endif
 
-//
-// draw all the scaled images
-//
-    DrawScaleds();                  // draw scaled stuff
+/*
+** draw all the scaled images
+*/
+    DrawScaleds();                  /* draw scaled stuff */
 
 #if defined(USE_FEATUREFLAGS) && defined(USE_RAIN)
     if(GetFeatureFlags() & FF_RAIN)
@@ -1845,7 +1849,7 @@ void ThreeDRefresh (void)
         DrawSnow();
 #endif
 
-    DrawPlayerWeapon ();    // draw player's hands
+    DrawPlayerWeapon ();    /* draw player's hands */
 #ifdef AUTOMAP
     for (x = 0; x < MAPSIZE; x++)
         for (y = 0; y < MAPSIZE; y++)
@@ -1861,16 +1865,16 @@ void ThreeDRefresh (void)
     VL_UnlockSurface(screenBuffer);
     vbuf = NULL;
 
-//
-// show screen and time last cycle
-//
+/*
+** show screen and time last cycle
+*/
 
     if (fizzlein)
     {
         FizzleFade(screenBuffer, 0, 0, screenWidth, screenHeight, 20, false);
         fizzlein = false;
 
-        lasttimecount = GetTimeCount();          // don't make a big tic count
+        lasttimecount = GetTimeCount();          /* don't make a big tic count */
     }
     else
     {
@@ -1911,7 +1915,7 @@ void ThreeDRefresh (void)
 #endif
     }
 #ifdef FIXEDLOGICRATE
-    // When using fixed game logic, this must be elsewhere
+    /* When using fixed game logic, this must be elsewhere */
     frameon += tics;
 #endif
 #endif
@@ -2015,12 +2019,10 @@ void DrawFullmap(void)
                     DrawTile(sx + dx, sy + dy, ts, ts, EMPTYCOLOUR);
                 else if (tilemap[x][y] >= 128)
                 {
-#ifndef BLAKEDOORS
                     if (!doorposition[tilemap[x][y] - 128])
                         DrawTile(sx + dx, sy + dy, ts, ts, DOORCOLOUR);
                     else
                         DrawTile(sx + dx, sy + dy, ts, ts, OPNDRCOLOUR);
-#endif
                 }
                 else
                     DrawTile(sx + dx, sy + dy, ts, ts, WALLCOLOUR);
@@ -2046,4 +2048,4 @@ void DrawFullmap(void)
     VL_UnlockSurface(screenBuffer);
     scr = NULL;
 }
-#endif //AUTOMAP
+#endif /* AUTOMAP */

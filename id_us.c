@@ -1,4 +1,4 @@
-//
+/*
 //	ID Engine
 //	ID_US.c - User Manager - General routines
 //	v1.1d1
@@ -18,15 +18,15 @@
 //		PrintX, PrintY - Where the User Mgr will print (global coords)
 //		WindowX,WindowY,WindowW,WindowH - The dimensions of the current
 //			window
-//
+*/
 
 #include "wl_def.h"
 
-//	Global variables
-		unsigned short		PrintX,PrintY;
-		unsigned short		WindowX,WindowY,WindowW,WindowH;
+/*	Global variables   */
+unsigned short		PrintX,PrintY;
+unsigned short		WindowX,WindowY,WindowW,WindowH;
 
-//	Internal variables
+/*	Internal variables  */
 #define	ConfigVersion	1
 
 static	boolean		US_Started;
@@ -71,31 +71,34 @@ static unsigned char rndtable[] = {
 	197, 242,  98,  43,  39, 175, 254, 145, 190,  84, 118, 222, 187, 136,
 	120, 163, 236, 249 };
 
-//	Internal routines
+/*	Internal routines  */
 
-//	Public routines
+/*	Public routines  */
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //	US_Startup() - Starts the User Mgr
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
 void US_Startup()
 {
 	if (US_Started)
 		return;
 
-	US_InitRndT(true);		// Initialize the random number generator
+	US_InitRndT(true);		/* Initialize the random number generator */
 
 	US_Started = true;
 }
 
-
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //	US_Shutdown() - Shuts down the User Mgr
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
 void
 US_Shutdown(void)
 {
@@ -105,9 +108,10 @@ US_Shutdown(void)
 	US_Started = false;
 }
 
-//	Window/Printing routines
+/*	Window/Printing routines  */
 
 #ifndef SEGA_SATURN
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //	US_SetPrintRoutines() - Sets the routines used to measure and print
@@ -115,6 +119,7 @@ US_Shutdown(void)
 //		between masked and non-masked fonts
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
 void
 US_SetPrintRoutines(void (*measure)(const char *, unsigned short *, unsigned short *),
     void (*print)(const char *))
@@ -124,12 +129,14 @@ US_SetPrintRoutines(void (*measure)(const char *, unsigned short *, unsigned sho
 }
 #endif
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //	US_Print() - Prints a string in the current window. Newlines are
 //		supported.
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
 void
 US_Print(const char *sorg)
 {
@@ -169,11 +176,13 @@ US_Print(const char *sorg)
 #endif
 }
 #ifndef SEGA_SATURN
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //	US_PrintUnsigned() - Prints an unsigned long
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
 void
 US_PrintUnsigned(unsigned int n)
 {
@@ -183,11 +192,13 @@ US_PrintUnsigned(unsigned int n)
 	US_Print(buffer);
 }
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //	US_PrintSigned() - Prints a signed long
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
 void
 US_PrintSigned(int n)
 {
@@ -195,11 +206,13 @@ US_PrintSigned(int n)
 	US_Print(wlltoa((long)n,buffer,10));
 }
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //	USL_PrintInCenter() - Prints a string in the center of the given rect
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
 void
 USL_PrintInCenter(const char *s,Rect r)
 {
@@ -215,11 +228,13 @@ USL_PrintInCenter(const char *s,Rect r)
 	USL_DrawString(s);
 }
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //	US_PrintCentered() - Prints a string centered in the current window.
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
 void
 US_PrintCentered(const char *s)
 {
@@ -234,12 +249,14 @@ US_PrintCentered(const char *s)
 }
 #endif
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //	US_CPrintLine() - Prints a string centered on the current line and
 //		advances to the next line. Newlines are not supported.
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
 void
 US_CPrintLine(const char *s)
 {
@@ -255,12 +272,14 @@ US_CPrintLine(const char *s)
 	PrintY += h;
 }
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //  US_CPrint() - Prints a string centered in the current window.
 //      Newlines are supported.
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
 void
 US_CPrint(const char *sorg)
 {
@@ -290,13 +309,16 @@ US_CPrint(const char *sorg)
 	sstart = true;
 #endif
 }
+
 #ifndef SEGA_SATURN
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //  US_Printf() - Prints a formatted string in the current window.
 //      Newlines are supported.
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
 
 void US_Printf(const char *formatStr, ...)
 {
@@ -311,12 +333,14 @@ void US_Printf(const char *formatStr, ...)
     US_Print(strbuf);
 }
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //  US_CPrintf() - Prints a formatted string centered in the current window.
 //      Newlines are supported.
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
 
 void US_CPrintf(const char *formatStr, ...)
 {
@@ -332,12 +356,15 @@ void US_CPrintf(const char *formatStr, ...)
 }
 #endif
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //	US_ClearWindow() - Clears the current window to white and homes the
 //		cursor
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
+
 void
 US_ClearWindow(void)
 {
@@ -346,11 +373,14 @@ US_ClearWindow(void)
 	PrintY = WindowY;
 }
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //	US_DrawWindow() - Draws a frame and sets the current window parms
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
+
 void
 US_DrawWindow(unsigned short x, unsigned short y, unsigned short w, unsigned short h)
 {
@@ -380,25 +410,32 @@ US_DrawWindow(unsigned short x, unsigned short y, unsigned short w, unsigned sho
 	for (i = sy + 8;i <= sy + sh - 8;i += 8)
 		VWB_DrawTile8(sx,i,3),VWB_DrawTile8(sx + sw,i,4);
 }
+
 #ifndef SEGA_SATURN
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //	US_CenterWindow() - Generates a window of a given width & height in the
 //		middle of the screen
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
+
 void
 US_CenterWindow(unsigned short w, unsigned short h)
 {
 	US_DrawWindow(((MaxX / 8) - w) / 2,((MaxY / 8) - h) / 2,w,h);
 }
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //	US_SaveWindow() - Saves the current window parms into a record for
 //		later restoration
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
+
 void
 US_SaveWindow(WindowRec *win)
 {
@@ -411,12 +448,15 @@ US_SaveWindow(WindowRec *win)
 	win->py = PrintY;
 }
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //	US_RestoreWindow() - Sets the current window parms to those held in the
 //		record
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
+
 void
 US_RestoreWindow(WindowRec *win)
 {
@@ -429,17 +469,20 @@ US_RestoreWindow(WindowRec *win)
 	PrintY = win->py;
 }
 #endif
-//	Input routines
+/*	Input routines  */
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //	USL_XORICursor() - XORs the I-bar text cursor. Used by US_LineInput()
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
+
 static void
 USL_XORICursor(int x,int y,const char *s, unsigned short cursor)
 {
-	static	boolean	status;		// VGA doesn't XOR...
+	static	boolean	status;		/* VGA doesn't XOR... */
 	char	buf[MaxString];
 	
 	unsigned short	w,h;
@@ -478,7 +521,9 @@ char USL_RotateChar(char ch, int dir)
     else if(i >= numChars) i = 0;
     return charSet[i];
 }
+
 #ifndef SEGA_SATURN
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 //	US_LineInput() - Gets a line of user input at (x,y), the string defaults
@@ -489,6 +534,8 @@ char USL_RotateChar(char ch, int dir)
 //		returned
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
+
 boolean
 US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 				size_t maxchars,size_t maxwidth)
@@ -498,7 +545,7 @@ US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 				done,result;
 
 	char		s[MaxString],olds[MaxString];
-	size_t        cursor, len;
+	size_t        cursor, len = 0;
 	unsigned short		i,
 		w, h;
 	unsigned char	    temp;
@@ -516,7 +563,7 @@ US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 
 	cursorvis = done = false;
 	lasttime = lastdirtime = lastdirmovetime = GetTimeCount();
-	lastbuttontime = lasttime + TickBase / 4;	// 250 ms => first button press accepted after 500 ms
+	lastbuttontime = lasttime + TickBase / 4;	/* 250 ms => first button press accepted after 500 ms */
 	LastASCII = key_None;
 	LastScan = sc_None;
 
@@ -540,7 +587,7 @@ US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 		checkkey = true;
 		curtime = GetTimeCount();
 
-		// After each direction change accept the next change after 250 ms and then everz 125 ms
+		/* After each direction change accept the next change after 250 ms and then everz 125 ms */
 		if(ci.dir != lastdir || curtime - lastdirtime > TickBase / 4 && curtime - lastdirmovetime > TickBase / 8)
 		{
 			if(ci.dir != lastdir)
@@ -555,7 +602,7 @@ US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 				case dir_West:
 					if(cursor)
 					{
-						// Remove trailing whitespace if cursor is at end of string
+						/* Remove trailing whitespace if cursor is at end of string */
 						if(s[cursor] == ' ' && s[cursor + 1] == 0)
 							s[cursor] = 0;
 						cursor--;
@@ -602,25 +649,27 @@ US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 					redraw = true;
 					checkkey = false;
 					break;
+				default:	
+					break;			
 			}
 		}
 
-		if((curtime - lastbuttontime) > TickBase / 4)   // 250 ms
+		if((curtime - lastbuttontime) > TickBase / 4)   /* 250 ms */
 		{
-			if(ci.button0)             // acts as return
+			if(ci.button0)             /* acts as return */
 			{
 				strcpy(buf,s);
 				done = true;
 				result = true;
 				checkkey = false;
 			}
-			if(ci.button1 && escok)    // acts as escape
+			if(ci.button1 && escok)    /* acts as escape */
 			{
 				done = true;
 				result = false;
 				checkkey = false;
 			}
-			if(ci.button2)             // acts as backspace
+			if(ci.button2)             /* acts as backspace */
 			{
 				lastbuttontime = curtime;
 				if(cursor)
@@ -696,13 +745,15 @@ US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 					cursormoved = true;
 					break;
 
-				case sc_5: //0x4c:	// Keypad 5 // TODO: hmmm...
+				case sc_5: /* 0x4c: */	/* Keypad 5 */ /* TODO: hmmm... */
 				case sc_UpArrow:
 				case sc_DownArrow:
 				case sc_PgUp:
 				case sc_PgDn:
 				case sc_Insert:
 					c = key_None;
+					break;
+				default:
 					break;
 			}
 
@@ -746,7 +797,7 @@ US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 
 			cursormoved = false;
 		}
-		if (curtime - lasttime > TickBase / 2)    // 500 ms
+		if (curtime - lasttime > TickBase / 2)    /* 500 ms */
 		{
 			lasttime = curtime;
 
@@ -774,6 +825,7 @@ US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 }
 #endif
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 // US_InitRndT - Initializes the pseudo random number generator.
@@ -781,6 +833,8 @@ US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 //      current time
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
+
 void US_InitRndT(int randomize)
 {
     if(randomize)
@@ -789,11 +843,14 @@ void US_InitRndT(int randomize)
         rndindex = 0;
 }
 
+/*
 ///////////////////////////////////////////////////////////////////////////
 //
 // US_RndT - Returns the next 8-bit pseudo random number
 //
 ///////////////////////////////////////////////////////////////////////////
+*/
+
 int US_RndT()
 {
     rndindex = (rndindex+1)&0xff;

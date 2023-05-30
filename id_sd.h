@@ -1,9 +1,9 @@
-//
+/*
 //      ID Engine
 //      ID_SD.h - Sound Manager Header
 //      Version for Wolfenstein
 //      By Jason Blochowiak
-//
+*/
 
 #ifndef __ID_SD_H_
 #define __ID_SD_H_
@@ -17,7 +17,7 @@
 #endif
 
 
-#define TickBase        70      // 70Hz per tick - used as a base for timer 0
+#define TickBase        70      /* 70Hz per tick - used as a base for timer 0 */
 
 typedef enum
 {
@@ -50,7 +50,7 @@ typedef struct
 #endif
 #define ORIG_SOUNDCOMMON_SIZE 6
 
-//      PC Sound stuff
+/*      PC Sound stuff  */
 #define pcTimer         0x42
 #define pcTAccess       0x43
 #define pcSpeaker       0x61
@@ -65,18 +65,19 @@ typedef struct
 } PCSound;
 #endif
 
-//      Register addresses
-// Operator stuff
+/* Register addresses */
+/* Operator stuff     */
+
 #define alChar          0x20
 #define alScale         0x40
 #define alAttack        0x60
 #define alSus           0x80
 #define alWave          0xe0
-// Channel stuff
+/* Channel stuff */
 #define alFreqL         0xa0
 #define alFreqH         0xb0
 #define alFeedCon       0xc0
-// Global stuff
+/* Global stuff */
 #define alEffects       0xbd
 
 #ifndef SEGA_SATURN
@@ -89,7 +90,7 @@ typedef struct
             mWave,cWave,
             nConn,
 
-            // These are only for Muse - these bytes are really unused
+            /* These are only for Muse - these bytes are really unused */
             voice,
             mode;
     unsigned char    unused[3];
@@ -108,9 +109,9 @@ typedef struct
 
 #define ORIG_ADLIBSOUND_SIZE (ORIG_SOUNDCOMMON_SIZE + ORIG_INSTRUMENT_SIZE + 2)
 #endif
-//
-//      Sequencing stuff
-//
+/*
+**      Sequencing stuff
+*/
 #define sqMaxTracks     10
 
 #ifndef SEGA_SATURN
@@ -136,7 +137,7 @@ typedef struct
 extern globalsoundpos channelSoundPos[];
 #endif
 
-// Global variables
+/* Global variables */
 extern  boolean         
 #ifndef SEGA_SATURN
                         AdLibPresent,
@@ -158,7 +159,7 @@ extern  int             DigiChannel[];
 #endif
 
 
-// Function prototypes
+/* Function prototypes */
 extern wlinline void  Delay (int wolfticks);
 extern  void    SD_Startup(void),
                 SD_Shutdown(void);
@@ -195,4 +196,4 @@ extern  int     SD_PlayDigitized(unsigned short which,int leftpos,int rightpos);
 extern  void    SD_StopDigitized(void);
 #endif
 
-#endif //__ID_SD_H_
+#endif /* __ID_SD_H_ */

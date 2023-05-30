@@ -1,4 +1,4 @@
-//PS2_MC.C
+/* PS2_MC.C */
 
 
 #include "ps2_mc.h"
@@ -9,7 +9,7 @@
 boolean PS2_Init_Memory_Card_Type()
 {
     int ret;
-    boolean success = true; //Initialize the memory;
+    boolean success = true; /* Initialize the memory; */
 
 #ifdef USE_MC
     ret = mcInit(MC_TYPE_MC);
@@ -89,7 +89,7 @@ boolean PS2_Init_Memory_Card_Type()
 
 void PS2_Get_Memory_Card0_Info()
 {
-    bool success = true;
+    boolean success = true;
     int ret;
     int type, free, info;
     ret = mcGetInfo(0, 0, &type, &free, &info);
@@ -102,14 +102,14 @@ void PS2_Get_Memory_Card0_Info()
     {
         mcSync(0, NULL, &ret);
         ps2_printf("mcGetInfo returned %d\n", 4, ret);
-	    ps2_printf("Type: %d Free: %d Format: %d\n\n", 4, type, free, info);//Cosmito
+	    ps2_printf("Type: %d Free: %d Format: %d\n\n", 4, type, free, info);/* Cosmito */
         return success = true;
     }
 }
 
 void PS2_Get_Memory_Card1_Info()
 {
-    bool success;
+    boolean success;
     int ret;
     int type, free, info;  
     ret = mcGetInfo(1, 1, &type, &free, &info);
@@ -122,7 +122,7 @@ void PS2_Get_Memory_Card1_Info()
     {
         mcSync(0, NULL, &ret);
         ps2_printf("mcGetInfo returned %d\n", 3, ret);
-	    ps2_printf("Type: %d Free: %d Format: %d\n\n", 3, type, free, info);//Cosmito
+	    ps2_printf("Type: %d Free: %d Format: %d\n\n", 3, type, free, info);/* Cosmito */
         return success = true;
     }
 }
@@ -131,12 +131,12 @@ void PS2_SaveFile_Memory_Card0(const char* filename)
 {
     sceMcTblGetDir dir;
     int ret, fd;
-    bool success;
-    PS2_Init_Memory_Card_Type(); //Get the what type of memory card;
+    boolean success;
+    PS2_Init_Memory_Card_Type(); /* Get the what type of memory card; */
 
-    mcGetDir(0, 0, "mc0:data", NULL, NULL, NULL); //
+    mcGetDir(0, 0, "mc0:data", NULL, NULL, NULL); 
     fd = open(filename, O_RDWR);
-    //TBD: Add write here:
+    /* TBD: Add write here: */
     close(fd);
     mcClose(0);
 }
@@ -145,12 +145,11 @@ void PS2_SaveFile_Memory_Card1(const char *filename)
 {
     sceMcTblGetDir dir;
     int ret, fd;
-    PS2_Init_Memory_Card_Type(); //Get the what type of memory card;
+    PS2_Init_Memory_Card_Type(); /* Get the what type of memory card; */
     mcGetDir(0, 0, "mc1:data/", NULL, NULL, NULL); 
  
-
     fd = open(filename, O_RDWR);
-    //TBD: Add write here:
+    /* TBD: Add write here: */
     close(fd);
     mcClose(0);
 }

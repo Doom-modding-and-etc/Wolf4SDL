@@ -1,12 +1,10 @@
 #ifndef __FMOPL_H_
 #define __FMOPL_H_
 
-#ifdef USE_INLINE_C99
 #ifdef _MSC_VER
-#define inline __inline
+#define fminline __inline
 #else
-#define inline __inline__
-#endif
+#define fminline 
 #endif
 
 #define HAS_YM3812 1

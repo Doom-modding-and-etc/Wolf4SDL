@@ -1,4 +1,4 @@
-// ID_UDP.C
+/* ID_UDP.C */
 
 /*
 =============================================================================
@@ -35,7 +35,7 @@ struct iovec
 
 typedef struct Peer_s
 {
-    //struct Peer_s Vec;
+    /* struct Peer_s Vec; */
     int uid;
     IPaddress address;
     DataLayer protState;
@@ -153,42 +153,42 @@ void serializeEnum(Stream* stream, int *x)
     serializeInt(x);
 }
 
-inline void serializeStreamInt(Stream* stream, int* x)
+wlinline void serializeStreamInt(Stream* stream, int* x)
 {
     x = stream;
     serializeInt(x);
 }
 
-inline void serializeStreamShort(Stream* stream, short* x)
+wlinline void serializeStreamShort(Stream* stream, short* x)
 {
     x = stream;
     serializeShort(x);
 }
 
-inline void serializeStreamUnsignedChar(Stream* stream, unsigned char* x)
+wlinline void serializeStreamUnsignedChar(Stream* stream, unsigned char* x)
 {
     x = stream;
     serializeUnsignedChar(x);
 }
 
-inline void serializeStreamUnisgnedInt(Stream* stream, unsigned int* x)
+wlinline void serializeStreamUnisgnedInt(Stream* stream, unsigned int* x)
 {
     x = stream;
     serializeUnsignedInt(x);
 }
 
-inline void serializeStreanUnsignedLong(Stream* stream, unsigned long* x)
+wlinline void serializeStreanUnsignedLong(Stream* stream, unsigned long* x)
 {
     x = stream;
     serializeUnsignedLong(x);
 }
 
-inline void serializeWeaponEnum(Stream* stream, Weapon* x)
+wlinline void serializeWeaponEnum(Stream* stream, Weapon* x)
 {
     serializeEnum(stream, x);
 }
 
-inline void serializeKey(Stream* stream, Key* x)
+wlinline void serializeKey(Stream* stream, Key* x)
 {
     serializeEnum(stream, x);
 }
@@ -209,7 +209,7 @@ void serializeMask(Stream* stream)
     stream->set->mask;
 }
 
-inline void serializeSet(Stream* stream, Set* x)
+wlinline void serializeSet(Stream* stream, Set* x)
 {
 
     x = stream->set;
@@ -223,7 +223,7 @@ void serializePlayerEvent(Stream* stream)
     stream->move->angle;
 }
 
-inline void serializePlayerEventStream(Stream* stream, Move* x)
+wlinline void serializePlayerEventStream(Stream* stream, Move* x)
 {
     x = stream->move;
     serializePlayerEvent(x);
@@ -234,7 +234,7 @@ void serializeWeaponSwitch(Stream* stream)
     stream->weaponSwitch;
 }
 
-inline void serializeWeaponSwitchStream(Stream* stream, WeaponSwitch* x)
+wlinline void serializeWeaponSwitchStream(Stream* stream, WeaponSwitch* x)
 {
     x = stream->weaponSwitch;
     serializeWeaponSwitch(x);
@@ -246,7 +246,7 @@ void serializePlayerEvent_Pickup(Stream* stream)
     stream->pick->y;
 }
 
-inline void serializePlayerEvent_PickupStream(Stream* stream, Pickup* x)
+wlinline void serializePlayerEvent_PickupStream(Stream* stream, Pickup* x)
 {
     x = stream->pick;
     serializePlayerEvent_Pickup(x);
@@ -281,7 +281,7 @@ void serializePlayerItself(Stream* stream)
     stream->playerItself->eventIndices;
 }
 
-inline void serializePlayer(Stream* stream, Player* x)
+wlinline void serializePlayer(Stream* stream, Player* x)
 {
     x = stream->playerItself;
     serializePlayerItself(x);
@@ -310,7 +310,7 @@ void serialize_DataLayer(Stream* stream)
     stream->dataLayer->players;
 }
 
-inline void serialize_DataLayerStream(Stream* stream, DataLayer* x)
+wlinline void serialize_DataLayerStream(Stream* stream, DataLayer* x)
 {
     x = stream->dataLayer;
     serialize_DataLayer(x);
@@ -353,14 +353,14 @@ typedef void (*Callback)(void);
 Callback fns[] =
 {
 #ifdef WIP
-    UDP_txPoll, // tx
-    UDP_rxPoll, // rx
+    UDP_txPoll, /* tx */
+    UDP_rxPoll, /* rx */
 #endif
-    UDP_finishRxWaitPoll, // finishRxWait
+    UDP_finishRxWaitPoll, /* finishRxWait */
 };
 
 
-//TODO: PollState cur = tx;
+/* TODO: PollState cur = tx; */
 PollState cur = finishRxWait;
 
 int udp_tics = 0;
@@ -420,19 +420,18 @@ void UDP_startup(void)
         Quit("SDLNet_Init: %s\n", SDLNet_GetError());
     }
 
-    // create a UDPsocket on port
+    /* create a UDPsocket on port */
     udpsock = SDLNet_UDP_Open(port);
     if (!udpsock)
     {
         Quit("SDLNet_UDP_Open: %s\n", SDLNet_GetError());
     }
 
-    // Bind addresses to channel
+    /* Bind addresses to channel */
     for (i; i < 0; i++)
     {
         Peer peer = peers[i];
-
-        const int ret = SDLNet_UDP_Bind(udpsock, channel,
+        int ret = SDLNet_UDP_Bind(udpsock, channel,
             &peer.address);
         if (ret != channel)
         {
@@ -440,7 +439,7 @@ void UDP_startup(void)
         }
     }
 
-    // allocate tx packet for this client
+    /* allocate tx packet for this client */
     packet = SDLNet_AllocPacket(maxpacketsize);
     if (!packet)
     {
@@ -748,7 +747,7 @@ boolean UDP_check(const char *arg)
             return true;
         }
 
-        //peers.push_back(Peer(uid, address));
+        /* peers.push_back(Peer(uid, address)); */
 
         return true;
     }

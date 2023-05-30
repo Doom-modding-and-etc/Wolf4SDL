@@ -999,7 +999,7 @@ static void OPLWriteReg(FM_OPL *OPL, int r, int v)
 		case 0x04:	/* IRQ clear / mask and Timer enable */
 			if(v&0x80)
 			{	/* IRQ flag clear */
-				//OPL_STATUS_RESET(OPL,0x7f);
+				/* OPL_STATUS_RESET(OPL,0x7f); */
 
 				OPL_STATUS_RESET(OPL,0x7f-0x08); /* don't reset BFRDY flag or we will have to call deltat module to set the flag */
 			}
@@ -1489,13 +1489,13 @@ static void YM3812UpdateOne(int which, int length)
 extern "C" int fmopl_core_control(void)
 {
 	int type,current,d1,d2,d3;
-//	int no;
+/*	int no;  */
 	if(!Active) return 0;
 	while( *NExecutedMessages < *NSubmittedMessages)
 	{
 		current=(*NExecutedMessages+1) % ((int) MSG_BUF_SIZE);
 		type=MessageBuffer[current].type;
-//		no=MessageBuffer[current].no;
+/*		no=MessageBuffer[current].no;         */
 		d1=MessageBuffer[current].data1;
 		d2=MessageBuffer[current].data2;
 		d3=MessageBuffer[current].data3;

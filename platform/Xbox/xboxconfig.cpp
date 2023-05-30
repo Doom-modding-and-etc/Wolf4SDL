@@ -17,7 +17,7 @@ int result;
 
 void XboxLoadConfig (void)
  {
-  int result = CFG_OpenFile("D:\\xbox.cfg", &config );
+  result = CFG_OpenFile("D:\\xbox.cfg", &config );
   Uint32 flags = SDL_INIT_VIDEO;
 
   /* CFG_OpenFile returns value, that allows you to check if everything went right, or do we have problems */

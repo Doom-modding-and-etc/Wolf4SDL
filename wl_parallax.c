@@ -1,4 +1,4 @@
-// WL_PARALLAX.C
+/* WL_PARALLAX.C */
 
 #include "version.h"
 
@@ -17,12 +17,12 @@ static int GetParallaxStartTexture()
 
 #ifdef USE_FEATUREFLAGS
 
-// The lower left tile of every map determines the start texture of the parallax sky.
+/* The lower left tile of every map determines the start texture of the parallax sky. */
 int GetParallaxStartTexture (void)
 {
     int startTex = ffDataBottomLeft;
 
-    assert(startTex >= 0 && startTex < PMSpriteStart);
+    wlassert(startTex >= 0 && startTex < PMSpriteStart);
 
     return startTex;
 }
@@ -39,7 +39,7 @@ int GetParallaxStartTexture (void)
         default: startTex =  0; break;
     }
 
-    assert(startTex >= 0 && startTex < PMSpriteStart);
+    wlassert(startTex >= 0 && startTex < PMSpriteStart);
 
     return startTex;
 }
@@ -74,7 +74,7 @@ void DrawParallax (void)
         short toppix = centery - (wallheight[x] >> 3);
 
         if (toppix <= 0)
-            continue;                // nothing to draw
+            continue;                /* nothing to draw */
 
         angle = pixelangle[x] + midangle;
 

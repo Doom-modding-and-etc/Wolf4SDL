@@ -92,9 +92,9 @@
  MessageBuffer[n].data3=k; \
  (*NSubmittedMessages)++; \
  }
- //if((*NSubmittedMessages) % (int) 500 ==0)
-// LOG_MSG("OPL2: %d %d %d\n",*NSubmittedMessages,*NExecutedMessages,*NSubmittedMessages-*NExecutedMessages);
-
+/*if((*NSubmittedMessages) % (int) 500 ==0)
+** LOG_MSG("OPL2: %d %d %d\n",*NSubmittedMessages,*NExecutedMessages,*NSubmittedMessages-*NExecutedMessages);
+*/
 
 
 
@@ -344,7 +344,7 @@ static void OPLWriteReg(FM_OPLlite *OPL, int r, int v)
 			break;
 
 		default:
-			//logerror("FMOPL.C: write to unknown register: %02x\n",r);
+			/* logerror("FMOPL.C: write to unknown register: %02x\n",r); */
 			break;
 		}
 		break;
@@ -483,19 +483,17 @@ static int OPLTimerOver(FM_OPLlite *OPL,int c)
 
 static FM_OPLlite *OPLlite_YM3812[MAX_OPL_CHIPS];
 
-extern "C" {
-	static int Status940=0;
-	static int g_hMemory=0;
-	static volatile unsigned short *g_pusRegs;
-	static unsigned char *g_pSharedMemory = 0;
-	void UpdateThreadEntry(void);
-	void Pause940(int n);
-	void Reset940(int yes);
-	void Startup940();
-	void Shutdown940();
-	void CleanUp(void);
-	void InitSharedMemory();
-}
+static int Status940=0;
+static int g_hMemory=0;
+static volatile unsigned short *g_pusRegs;
+static unsigned char *g_pSharedMemory = 0;
+void UpdateThreadEntry(void);
+void Pause940(int n);
+void Reset940(int yes);
+void Startup940();
+void Shutdown940();
+void CleanUp(void);
+void InitSharedMemory();
 
 void Pause940(int n)
 {
@@ -523,7 +521,7 @@ void Startup940()
 	g_pusRegs[0x3B44>>1] = 0xffff;
 	g_pusRegs[0x3B46>>1] = 0xffff;
 
-	// load code940.bin
+	/* load code940.bin */
 	nLen = 0;
 	fp = fopen("code940.bin", "r");
 	if(!fp) {
@@ -558,10 +556,12 @@ void Shutdown940()
 void CleanUp(void)
 {
 	Status940--;
-	//if(Status940>0) return;
+	/* if(Status940>0) return; */
 
-	//if(g_pSharedMemory)
-	//	munmap(g_pSharedMemory, 0xF80000);
+	/*
+	** if(g_pSharedMemory)
+	**	munmap(g_pSharedMemory, 0xF80000);
+	*/
 	g_pSharedMemory  = 0;
 	Shutdown940();
 	close(g_hMemory);
@@ -765,7 +765,7 @@ void YM3812UpdateOne(int which, INT16 *buffer, int length)
 			lt=Amp( SharedBuffer[which][ bufpos+i ] );
 
 			buffer[2*i]=lt;
-			buffer[2*i+1]=lt; //for stereo
+			buffer[2*i+1]=lt; /* for stereo */
 		}
 		(*BufReadPos[which])+=ncopy;
 	}

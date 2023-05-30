@@ -1,18 +1,18 @@
-// ID_VL.H
+/* ID_VL.H */
 
 #ifndef __ID_VL_H_
 #define __ID_VL_H_
 
-// wolf compatbility
+/* wolf compatbility */
 #include "wl_def.h"
 void Quit (const char *error,...);
 
-//===========================================================================
+/* =========================================================================== */
 
 #define CHARWIDTH		2
 #define TILEWIDTH		4
 
-//===========================================================================
+/* =========================================================================== */
 
 extern SDL_Surface *screen, *screenBuffer;
 #ifdef SAVE_GAME_SCREENSHOT
@@ -46,14 +46,14 @@ extern  unsigned int *ylookup;
 
 extern SDL_Color gamepal[256];
 
-//===========================================================================
+/* =========================================================================== */
 
-//
-// VGA hardware routines
-//
+/*
+** VGA hardware routines
+*/
 
 #ifdef SEGA_SATURN
-#define VL_WaitVBL(a)	wait_vblank(a*1)  //SDL_Delay((a)*8)
+#define VL_WaitVBL(a)	wait_vblank(a*1)  /* SDL_Delay((a)*8) */
 #else
 #define VL_WaitVBL(a)        SDL_Delay(((unsigned int)a)*8)
 #endif

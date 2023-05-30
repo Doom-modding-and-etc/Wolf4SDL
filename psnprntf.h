@@ -38,11 +38,11 @@ int pvsnfmt_double(pvsnfmt_vars* info, double d);
 enum
 {
 	FLAG_DEFAULT = 0x00,
-	FLAG_LEFT_ALIGN = 0x01, // -
-	FLAG_SIGNED = 0x02, // +
-	FLAG_ZERO_PAD = 0x04, // 0
-	FLAG_SIGN_PAD = 0x08, // ' '
-	FLAG_HASH = 0x10 // #
+	FLAG_LEFT_ALIGN = 0x01, /* - */
+	FLAG_SIGNED = 0x02, /* + */
+	FLAG_ZERO_PAD = 0x04, /* 0 */
+	FLAG_SIGN_PAD = 0x08, /* ' ' */
+	FLAG_HASH = 0x10 /* # */
 };
  /* Portable strnlen function (doesn't exist on all systems!) */
 size_t pstrnlen(const char* s, size_t count);

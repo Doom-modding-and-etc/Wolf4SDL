@@ -1,4 +1,4 @@
-// WL_SCALE.C
+/* WL_SCALE.C */
 
 #include "wl_def.h"
 
@@ -57,19 +57,19 @@ void ScaleLine (fixed x, fixed toppix, fixed fracstep, unsigned char* linesrc, u
             startpix = endpix;
 
             if (startpix >= viewheight)
-                break;                          // off the bottom of the view area
+                break;                          /* off the bottom of the view area */
 
             frac += fracstep;
             endpix = (frac >> FRACBITS) + toppix;
 
             if (endpix < 0)
-                continue;                       // not into the view area
+                continue;                       /* not into the view area */
 
             if (startpix < 0)
-                startpix = 0;                   // clip upper boundary
+                startpix = 0;                   /* clip upper boundary */
 
             if (endpix > viewheight)
-                endpix = viewheight;            // clip lower boundary
+                endpix = viewheight;            /* clip lower boundary */
 
 #ifdef USE_SHADING
             if (curshades)
@@ -88,15 +88,15 @@ void ScaleLine (fixed x, fixed toppix, fixed fracstep, unsigned char* linesrc, u
             }
         }
 
-        linecmds += 6;                          // next segment list
+        linecmds += 6;                          /* next segment list */
     }
 }
 
 #ifdef SEGA_SATURN
-//==========================================================================
+/*==========================================================================*/
 wlinline void ScaleShapeDemo(int xcenter, int shapenum, unsigned width)
 {
-    unsigned char* surfacePtr = (unsigned char*)PM_GetSprite(shapenum); // + ((0) * source->pitch) + 0;
+    unsigned char* surfacePtr = (unsigned char*)PM_GetSprite(shapenum); /* + ((0) * source->pitch) + 0; */
     unsigned char* nextSurfacePtr = (unsigned char*)PM_GetSprite(shapenum + 1);
     unsigned int height = (nextSurfacePtr - surfacePtr) >> 6;
 
@@ -104,12 +104,12 @@ wlinline void ScaleShapeDemo(int xcenter, int shapenum, unsigned width)
     {
         loadActorTexture(shapenum, height << 6, surfacePtr);
     }
-    //--------------------------------------------------------------------------------------------
+    /*--------------------------------------------------------------------------------------------*/
     TEXTURE* txptr = &tex_spr[SATURN_WIDTH + 1 + shapenum];
-    // correct on touche pas		
+    /* correct on touche pas */		
     SPRITE user_sprite;
     user_sprite.CTRL = FUNC_Sprite | _ZmCC;
-    user_sprite.PMOD = CL256Bnk | ECdis;// | ECenb | SPdis;  // pas besoin pour les sprites
+    user_sprite.PMOD = CL256Bnk | ECdis;/* | ECenb | SPdis; */  /* pas besoin pour les sprites */
     user_sprite.SRCA = ((txptr->CGadr));
     user_sprite.COLR = 256;
 
@@ -119,8 +119,8 @@ wlinline void ScaleShapeDemo(int xcenter, int shapenum, unsigned width)
     user_sprite.XB = width;
     user_sprite.YB = width * height / 64;
     user_sprite.GRDA = 0;
-    slSetSprite(&user_sprite, toFIXED(10));	// � remettre // ennemis et objets
-    //--------------------------------------------------------------------------------------------	
+    slSetSprite(&user_sprite, toFIXED(10));	/* � remettre */ /* ennemis et objets */
+    /*--------------------------------------------------------------------------------------------*/
 }
 wlinline void ScaleShape(int xcenter, int shapenum, unsigned width)
 {
@@ -133,33 +133,34 @@ wlinline void ScaleShape(int xcenter, int shapenum, unsigned width)
     else
         curshades = shadetable[GetShade(width)];
 #endif
-    scalel = width / 8;                 // low three bits are fractional
-    if (!scalel) return;   // too close or far away
+    scalel = width / 8;                 /* low three bits are fractional */
+    if (!scalel) return;   /* too close or far away */
     pixwidth = scalel * SPRITESCALEFACTOR;
 
-    //shapenum=SPR_DEMO+45;
-    //shapenum=SPR_STAT_49-1;
+    /* shapenum=SPR_DEMO+45;
+    **shapenum=SPR_STAT_49-1;
+    */
 #ifdef USE_SPRITES
-    unsigned char* surfacePtr = (unsigned char*)PM_GetSprite(shapenum); // + ((0) * source->pitch) + 0;
+    unsigned char* surfacePtr = (unsigned char*)PM_GetSprite(shapenum); /* + ((0) * source->pitch) + 0; */
     unsigned char* nextSurfacePtr = (unsigned char*)PM_GetSprite(shapenum + 1);
     unsigned int height = (nextSurfacePtr - surfacePtr) >> 6;
-    //	unsigned int height=64;
+    /*	unsigned int height=64;  */
 
     int* val = (int*)surfacePtr;
-    //slPrintHex((int)val,slLocate(10,15));	
-    //	slPrintHex(height,slLocate(10,16));
-    //slPrintHex(shapenum,slLocate(10,17));
-
+    /* slPrintHex((int)val,slLocate(10,15));	
+    **	slPrintHex(height,slLocate(10,16));
+    ** slPrintHex(shapenum,slLocate(10,17));
+    */
     if (!texture_list[shapenum])
     {
         loadActorTexture(shapenum, height << 6, surfacePtr);
     }
-    //--------------------------------------------------------------------------------------------
+    /*--------------------------------------------------------------------------------------------*/
     TEXTURE* txptr = &tex_spr[SATURN_WIDTH + 1 + shapenum];
-    // correct on touche pas		
+    /* correct on touche pas */		
     SPRITE user_sprite;
     user_sprite.CTRL = FUNC_Sprite | _ZmCC;
-    user_sprite.PMOD = CL256Bnk | ECdis;// | ECenb | SPdis;  // pas besoin pour les sprites
+    user_sprite.PMOD = CL256Bnk | ECdis;/* | ECenb | SPdis; */  /* pas besoin pour les sprites */
     user_sprite.SRCA = ((txptr->CGadr));
     user_sprite.COLR = 256;
 
@@ -169,8 +170,8 @@ wlinline void ScaleShape(int xcenter, int shapenum, unsigned width)
     user_sprite.XB = pixwidth;
     user_sprite.YB = pixwidth * height / 64;
     user_sprite.GRDA = 0;
-    slSetSprite(&user_sprite, toFIXED(0 + (SATURN_SORT_VALUE - pixwidth / 2)));	// � remettre // ennemis et objets
-    //--------------------------------------------------------------------------------------------	
+    slSetSprite(&user_sprite, toFIXED(0 + (SATURN_SORT_VALUE - pixwidth / 2)));	/* � remettre */ /* ennemis et objets */
+    /* -------------------------------------------------------------------------------------------- */	
 #else
     unsigned char* vbuf = LOCK() + screenofs;
     t_compshape* shape;
@@ -214,7 +215,7 @@ wlinline void ScaleShape(int xcenter, int shapenum, unsigned width)
                         endy >>= 1;
                         newstart = READWORD(line);
                         starty = READWORD(line) >> 1;
-                        //                        j=starty;
+                        /*                        j=starty;             */
                         ycnt = j * pixwidth;
                         screndy = (ycnt >> 6) + upperedge;
                         if (screndy < 0) vmem = vbuf + lpix;
@@ -277,10 +278,10 @@ void ScaleShape (int xcenter, int shapenum, int height)
     fixed     x1,x2,actx;
     fixed       frac,fracstep;
 
-    scale = height >> 3;        // low three bits are fractional
+    scale = height >> 3;        /* low three bits are fractional */
 
     if (!scale)
-        return;                 // too close or far away
+        return;                 /* too close or far away */
 
     linesrc = PM_GetSpritePage(shapenum);
     shape = (compshape_t *)linesrc;
@@ -302,25 +303,25 @@ void ScaleShape (int xcenter, int shapenum, int height)
 
     for (i = shape->leftpix; i <= shape->rightpix; i++)
     {
-        //
-        // calculate edges of the shape
-        //
+        /*
+        ** calculate edges of the shape
+        */
         x1 = x2;
 
         if (x1 >= viewwidth)
-            break;                // off the right side of the view area
+            break;                /* off the right side of the view area */
 
         frac += fracstep;
         x2 = (frac >> FRACBITS) + actx;
 
         if (x2 < 0)
-            continue;             // not into the view area
+            continue;             /* not into the view area */
 
         if (x1 < 0)
-            x1 = 0;               // clip left boundary
+            x1 = 0;               /* clip left boundary */
 
         if (x2 > viewwidth)
-            x2 = viewwidth;       // clip right boundary
+            x2 = viewwidth;       /* clip right boundary */
 
         while (x1 < x2)
         {
@@ -376,9 +377,9 @@ void SimpleScaleShape (int xcenter, int shapenum, int height)
 
     for (i = shape->leftpix; i <= shape->rightpix; i++)
     {
-        //
-        // calculate edges of the shape
-        //
+        /*
+        ** calculate edges of the shape
+        */
         x1 = x2;
 
         frac += fracstep;
@@ -524,14 +525,14 @@ void Transform3DShape (statobj_t *statptr)
     fixed nx1,nx2,ny1,ny2;
     int   viewx1,viewx2;
     fixed diradd;
-    fixed gy1,gy2,gx,gyt1,gyt2,gxt;
-    fixed gx1,gx2,gy,gxt1,gxt2,gyt;
+    fixed gx,gyt1,gyt2,gxt;
+    fixed gy,gxt1,gxt2,gyt;
 
-    //
-    // the following values for "diradd" aren't optimized yet
-    // if you have problems with sprites being visible through wall edges
-    // where they shouldn't, you can try to adjust these values and SIZEADD
-    //
+    /*
+    ** the following values for "diradd" aren't optimized yet
+    ** if you have problems with sprites being visible through wall edges
+    ** where they shouldn't, you can try to adjust these values and SIZEADD
+    */
     switch (statptr->flags & FL_DIR_POS_MASK)
     {
         case FL_DIR_POS_FW: diradd = 0x7ff0 + 0x8000; break;
@@ -544,25 +545,26 @@ void Transform3DShape (statobj_t *statptr)
 
     if (statptr->flags & FL_DIR_VERT_FLAG)
     {
-        //
-        // translate point to view centered coordinates
-        //
+        /*
+        ** translate point to view centered coordinates
+        */
+        fixed gy1, gy2;
         gy1 = (((fixed)statptr->tiley) << TILESHIFT) + 0x8000 - viewy - 0x8000L - SIZEADD;
         gy2 = gy1 + 0x10000L + (2 * SIZEADD);
         gx = (((fixed)statptr->tilex) << TILESHIFT) + diradd - viewx;
 
-        //
-        // calculate nx
-        //
+        /*
+        ** calculate nx
+        */
         gxt = FixedMul(gx,viewcos);
         gyt1 = FixedMul(gy1,viewsin);
         gyt2 = FixedMul(gy2,viewsin);
         nx1 = gxt - gyt1;
         nx2 = gxt - gyt2;
 
-        //
-        // calculate ny
-        //
+        /*
+        ** calculate ny
+        */
         gxt = FixedMul(gx,viewsin);
         gyt1 = FixedMul(gy1,viewcos);
         gyt2 = FixedMul(gy2,viewcos);
@@ -572,25 +574,26 @@ void Transform3DShape (statobj_t *statptr)
     else
     {
         
-        //
-        // translate point to view centered coordinates
-        //
+        /*
+        ** translate point to view centered coordinates
+        */
+        fixed gx1, gx2
         gx1 = (((fixed)statptr->tilex) << TILESHIFT) + 0x8000 - viewx - 0x8000L - SIZEADD;
         gx2 = gx1 + 0x10000L + (2 * SIZEADD);
         gy = (((fixed)statptr->tiley) << TILESHIFT) + diradd - viewy;
 
-        //
-        // calculate nx
-        //
+        /*
+        ** calculate nx
+        */
         gxt1 = FixedMul(gx1,viewcos);
         gxt2 = FixedMul(gx2,viewcos);
         gyt = FixedMul(gy,viewsin);
         nx1 = gxt1 - gyt;
         nx2 = gxt2 - gyt;
 
-        //
-        // calculate ny
-        //
+        /*
+        ** calculate ny
+        */
         gxt1 = FixedMul(gx1,viewsin);
         gxt2 = FixedMul(gx2,viewsin);
         gyt = FixedMul(gy,viewcos);
@@ -599,11 +602,11 @@ void Transform3DShape (statobj_t *statptr)
     }
 
     if (nx1 < 0 || nx2 < 0)
-        return;              // TODO: Clip on viewplane
+        return;              /* TODO: Clip on viewplane */
 
-    //
-    // calculate perspective ratio
-    //
+    /*
+    ** calculate perspective ratio
+    */
     if (nx1 >= 0 && nx1 <= 1792) nx1 = 1792;
     if (nx1 < 0 && nx1 >= -1792) nx1 = -1792;
     if (nx2 >= 0 && nx2 <= 1792) nx2 = 1792;

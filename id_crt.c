@@ -1,21 +1,22 @@
-// File: id_crt.c
-// Project: Wolf4SDL
-// Author: Andr� Guilherme
-// Creation date: 2022-07-11 
-// Description: 
-// This file fixes the crt bug
-// using 4:3 and Makes support of screenshot.
-// Note: This file is heavyly modified of the following repo: 
-// https://github.com/fabiensanglard/Chocolate-Wolfenstein-3D/blob/master/crt.h
-// Credits for the following pepole: Fabien sanglard and zZeck
-// and the original file creation date: 2014-08-26.
-
+/* File: id_crt.c
+** Project: Wolf4SDL
+** Author: Andr� Guilherme
+** Original Creation date: 2014-08-26.
+** Modification date: 2022-07-11 
+** Description: 
+** This file fixes the crt bug
+** using 4:3 and Makes support of screenshot.
+** Note: This file is heavyly modified of the following repo: 
+** https://github.com/fabiensanglard/Chocolate-Wolfenstein-3D/blob/master/crt.h
+** Credits for the following pepole: Fabien sanglard and zZeck
+** and the original file creation date: 2014-08-26.
+*/
 
 #include "wl_def.h"
 #ifdef CRT
 #include <SDL.h>
 
-// Win32
+/* Win32 */
 #if SDL_MAJOR_VERSION == 1
 #if defined(XBOX)
 #include <fakeglx09.h>
@@ -46,20 +47,20 @@ void CRT_Init(int _width)
     height = _width * 3 / 4;
 
 #if SDL_MAJOR_VERSION == 1  
-    //Alloc the OpenGL texture where the screen will be uploaded each frame.
+    /* Alloc the OpenGL texture where the screen will be uploaded each frame. */
     glGenTextures(1, &crtTexture);
     glBindTexture(GL_TEXTURE_2D, crtTexture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexImage2D(
-        GL_TEXTURE_2D,         // target
-        0,                     // level, 0 = base, no minimap,
-        GL_RGB,                // internalformat
-        screenWidth,                   // width
-        screenHeight,                   // height
-        0,                     // border, always 0 in OpenGL ES
-        GL_RGB,                // format
-        GL_UNSIGNED_BYTE,      // type
+        GL_TEXTURE_2D,         /* target */
+        0,                     /* level, 0 = base, no minimap, */
+        GL_RGB,                /* internalformat */
+        320,                   /* width */
+        200,                   /* height */
+        0,                     /* border, always 0 in OpenGL ES */
+        GL_RGB,                /* format */
+        GL_UNSIGNED_BYTE,      /* type */
         0
     );
 
@@ -81,12 +82,12 @@ void CRT_Init(int _width)
     SDL_GetTextureColorMod(texture, (unsigned char *)0xFF, (unsigned char *)0xFF, (unsigned char *)0xFF);
     SDL_UpdateTexture(texture, NULL, screen->pixels, screenWidth * sizeof(Uint32));
 #ifdef SCALE2X
-    // Render the intermediate texture into the up-scaled texture using 'nearest' integer scaling.
+    /* Render the intermediate texture into the up-scaled texture using 'nearest' integer scaling. */
     SDL_SetRenderTarget(renderer, upscaledTexture);
 #endif    
     SDL_RenderCopy(renderer, texture, NULL, NULL);
 #ifdef SCALE2X
-    // Finally render this up-scaled texture to the window using linear scaling.
+    /* Finally render this up-scaled texture to the window using linear scaling. */
     SDL_SetRenderTarget(renderer, NULL);
     SDL_RenderCopy(renderer, upscaledTexture, NULL, NULL);
 #endif
@@ -97,9 +98,9 @@ void CRT_Init(int _width)
 void CRT_DAC(void) 
 {
 #if SDL_MAJOR_VERSION == 1
-    // Grab the screen framebuffer from SDL
+    /* Grab the screen framebuffer from SDL */
     int i;
-    //Convert palette based framebuffer to RGB for OpenGL
+    /* Convert palette based framebuffer to RGB for OpenGL */
     unsigned char* pixelPointer = coloredFrameBuffer;
     
     screen = screenBuffer;
@@ -112,7 +113,7 @@ void CRT_DAC(void)
         *pixelPointer++ = gamepal[paletteIndex].b;
     }
 
-    //Upload texture
+    /* Upload texture */
     glBindTexture(GL_TEXTURE_2D, crtTexture);
     glTexSubImage2D(GL_TEXTURE_2D,
         0,
@@ -124,7 +125,7 @@ void CRT_DAC(void)
         GL_UNSIGNED_BYTE,
         coloredFrameBuffer);
 
-    //Draw a quad with the texture
+    /* Draw a quad with the texture */
     glBegin(GL_QUADS);
     glTexCoord2f(0, 1); glVertex3i(0, 0, 0);
     glTexCoord2f(0, 0); glVertex3i(0, height, 0);
@@ -132,7 +133,7 @@ void CRT_DAC(void)
     glTexCoord2f(1, 1); glVertex3i(width, 0, 0);
     glEnd();
 
-    //Flip buffer
+    /* Flip buffer */
     SDL_GL_SwapBuffers();
 #elif SDL_MAJOR_VERSION == 2
     texture = SDL_CreateTextureFromSurface(renderer, screenBuffer);

@@ -1,4 +1,4 @@
-// WL_INTER.C
+/* WL_INTER.C */
 
 #include "wl_def.h"
 
@@ -14,7 +14,7 @@ void readChunks(int fileId, unsigned int size, unsigned int* pageOffsets, unsign
 
 void Write (int x, int y, const char *string);
 
-//==========================================================================
+/* ========================================================================== */
 
 /*
 ==================
@@ -38,15 +38,17 @@ ClearSplitVWB (void)
 }
 
 
-//==========================================================================
+/* ========================================================================== */
 
 #ifdef SPEAR
 #ifndef SPEARDEMO
+/*
 ////////////////////////////////////////////////////////
 //
 // End of Spear of Destiny
 //
 ////////////////////////////////////////////////////////
+*/
 
 void
 EndScreen (int palette, int screen)
@@ -116,7 +118,7 @@ EndSpear (void)
 #endif
 #endif
 
-//==========================================================================
+/* ========================================================================== */
 
 /*
 ==================
@@ -200,7 +202,7 @@ Victory (void)
     Write (RATIOX, RATIOY + 4, STR_RATTREASURE);
 #endif
 #ifdef SEGA_SATURN
-    DrawPlayScreen(); // vbt ajout
+    DrawPlayScreen(); /* vbt ajout */
     VWB_Bar(0, 0, SATURN_WIDTH, screenHeight / scaleFactor - STATUSLINES + 1, VIEWCOLOR);
     if (bordercol != VIEWCOLOR)
         DrawStatusBorder(VIEWCOLOR);
@@ -266,9 +268,9 @@ Victory (void)
 #ifndef SPANISH
 #ifndef UPLOAD
 #ifndef SPEAR
-    //
-    // TOTAL TIME VERIFICATION CODE
-    //
+    /*
+    ** TOTAL TIME VERIFICATION CODE
+    */
     if (gamestate.difficulty >= gd_medium)
     {
         VWB_DrawPic (30 * 8, TIMEY * 8, C_TIMECODEPIC);
@@ -293,7 +295,7 @@ Victory (void)
     VL_UpdateScreen(screenBuffer);
 #endif
 #ifdef SEGA_SATURN
-    DrawStatusBar(); // vbt ajout
+    DrawStatusBar(); /* vbt ajout */
 #endif
 
     VL_FadeIn (0, 255, gamepal, 30);
@@ -304,7 +306,7 @@ Victory (void)
     if(screenHeight % 200 != 0)
         VL_ClearScreen(0);
 
-    MainMenu[savegame].active = 0;  // ADDEDFIX 3 - Tricob
+    MainMenu[savegame].active = 0;  /* ADDEDFIX 3 - Tricob */
 
 #ifndef SPEAR
     EndText ();
@@ -312,11 +314,11 @@ Victory (void)
     EndSpear ();
 #endif
 
-#endif // SPEARDEMO
+#endif /* SPEARDEMO */
 }
 
 
-//==========================================================================
+/* ========================================================================== */
 
 #ifndef JAPAN
 /*
@@ -331,7 +333,7 @@ void
 PG13 (void)
 {
     VL_FadeOut (0, 255, 0, 0, 0, 30);
-    VWB_Bar (0, 0, 320, 200, 0x82);     // background
+    VWB_Bar (0, 0, 320, 200, 0x82);     /* background */
 
     VWB_DrawPic (216, 110, PG13PIC);
 #if !defined(SEGA_SATURN) && !defined(USE_SPRITES)
@@ -346,7 +348,7 @@ PG13 (void)
 #endif
 
 
-//==========================================================================
+/* ========================================================================== */
 
 void
 Write (int x, int y, const char *string)
@@ -394,7 +396,7 @@ Write (int x, int y, const char *string)
                 case ' ':
                     break;
 
-                case 0x3a:     // ':'
+                case 0x3a:     /* ':' */
                     VWB_DrawPic (nx, ny, L_COLONPIC);
                     nx += 8;
                     continue;
@@ -412,9 +414,9 @@ Write (int x, int y, const char *string)
 }
 
 
-//
-// Breathe Mr. BJ!!!
-//
+/*
+** Breathe Mr. BJ!!!
+*/
 void
 BJ_Breathe (void)
 {
@@ -422,7 +424,7 @@ BJ_Breathe (void)
     int pics[2] = { L_GUYPIC, L_GUY2PIC };
 
 #ifdef SEGA_SATURN
-    DrawStatusBar(); // vbt : ajout
+    DrawStatusBar(); /* vbt : ajout */
 #endif
 
     SDL_Delay(5);
@@ -438,7 +440,7 @@ BJ_Breathe (void)
         max = 35;
     }
 #ifdef SEGA_SATURN
-    slSynch();	// vbt 19/08/20 ajout pour eviter plantage ecran fin niveau
+    slSynch();	/* vbt 19/08/20 ajout pour eviter plantage ecran fin niveau */
 #endif
 }
 
@@ -489,16 +491,16 @@ LevelCompleted (void)
     }
     switch (tilemap[62][0] >= 1 && tilemap[62][0] <= 3)
     {
-    case 1: // 15
+    case 1: /* 15 */
         times_time += .25;
         times_timestr[3] = '1';
         times_timestr[4] = '5';
         break;
-    case 2: // 30
+    case 2: /* 30 */
         times_time += .5;
         times_timestr[3] = '3';
         break;
-    case 3: // 45
+    case 3: /* 45 */
         times_time += .75;
         times_timestr[3] = '4';
         times_timestr[4] = '5';
@@ -507,9 +509,9 @@ LevelCompleted (void)
 #else
     times parTimes[] = {
 #ifndef SPEAR
-        //
-        // Episode One Par Times
-        //
+        /*
+        ** Episode One Par Times
+        */
         {1.5, "01:30"},
         {2, "02:00"},
         {2, "02:00"},
@@ -518,12 +520,12 @@ LevelCompleted (void)
         {3, "03:00"},
         {2.5, "02:30"},
         {2.5, "02:30"},
-        {0, "??:??"},           // Boss level
-        {0, "??:??"},           // Secret level
+        {0, "??:??"},           /* Boss level */
+        {0, "??:??"},           /* Secret level */
 
-        //
-        // Episode Two Par Times
-        //
+        /*
+        ** Episode Two Par Times
+        */
         {1.5, "01:30"},
         {3.5, "03:30"},
         {3, "03:00"},
@@ -535,9 +537,9 @@ LevelCompleted (void)
         {0, "??:??"},
         {0, "??:??"},
 
-        //
-        // Episode Three Par Times
-        //
+        /**
+        ** Episode Three Par Times
+        */
         {1.5, "01:30"},
         {1.5, "01:30"},
         {2.5, "02:30"},
@@ -549,9 +551,9 @@ LevelCompleted (void)
         {0, "??:??"},
         {0, "??:??"},
 
-        //
-        // Episode Four Par Times
-        //
+        /*
+        ** Episode Four Par Times
+        */
         {2, "02:00"},
         {2, "02:00"},
         {1.5, "01:30"},
@@ -563,9 +565,9 @@ LevelCompleted (void)
         {0, "??:??"},
         {0, "??:??"},
 
-        //
-        // Episode Five Par Times
-        //
+        /*
+        ** Episode Five Par Times
+        */
         {2.5, "02:30"},
         {1.5, "01:30"},
         {2.5, "02:30"},
@@ -577,9 +579,9 @@ LevelCompleted (void)
         {0, "??:??"},
         {0, "??:??"},
 
-        //
-        // Episode Six Par Times
-        //
+        /*
+        ** Episode Six Par Times
+        */
         {6.5, "06:30"},
         {4, "04:00"},
         {4.5, "04:30"},
@@ -591,33 +593,33 @@ LevelCompleted (void)
         {0, "??:??"},
         {0, "??:??"}
 #else
-        //
-        // SPEAR OF DESTINY TIMES
-        //
+        /*
+        ** SPEAR OF DESTINY TIMES
+        */
         {1.5, "01:30"},
         {3.5, "03:30"},
         {2.75, "02:45"},
         {3.5, "03:30"},
-        {0, "??:??"},           // Boss 1
+        {0, "??:??"},           /* Boss 1 */
         {4.5, "04:30"},
         {3.25, "03:15"},
         {2.75, "02:45"},
         {4.75, "04:45"},
-        {0, "??:??"},           // Boss 2
+        {0, "??:??"},           /* Boss 2 */
         {6.5, "06:30"},
         {4.5, "04:30"},
         {2.75, "02:45"},
         {4.5, "04:30"},
         {6, "06:00"},
-        {0, "??:??"},           // Boss 3
+        {0, "??:??"},           /* Boss 3 */
         {6, "06:00"},
-        {0, "??:??"},           // Boss 4
-        {0, "??:??"},           // Secret level 1
-        {0, "??:??"},           // Secret level 2
+        {0, "??:??"},           /* Boss 4 */
+        {0, "??:??"},           /* Secret level 1 */
+        {0, "??:??"},           /* Secret level 2 */
 #endif
     };
 #endif
-    ClearSplitVWB ();           // set up for double buffering in split screen
+    ClearSplitVWB ();           /* set up for double buffering in split screen */
 #ifdef SEGA_SATURN   
     slScrTransparent(2);
     slSynch();
@@ -633,9 +635,9 @@ LevelCompleted (void)
 
     StartCPMusic (ENDLEVEL_MUS);
 
-//
-// do the intermission
-//
+/*
+** do the intermission
+*/
     IN_ClearKeysDown ();
     IN_StartAck ();
 
@@ -746,12 +748,12 @@ LevelCompleted (void)
 #endif
 #endif
 
-            //
-            // PRINT TIME
-            //
+            /*
+            ** PRINT TIME
+            */
             sec = (int)gamestate.TimeCount / 70;
 
-            if (sec > 99 * 60)      // 99 minutes max
+            if (sec > 99 * 60)      /* 9 minutes max */
                 sec = 99 * 60;
 #ifdef MAPCONTROLPARTIME
             if (gamestate.TimeCount < times_time * 4200)
@@ -795,12 +797,12 @@ LevelCompleted (void)
 #endif
             VL_FadeIn(0, 255, gamepal, 30);
 #ifdef SEGA_SATURN
-            DrawStatusBar(); // vbt : ajout
+            DrawStatusBar(); /* vbt : ajout */
 #endif
 
-            //
-            // FIGURE RATIOS OUT BEFOREHAND
-            //
+            /*
+            ** FIGURE RATIOS OUT BEFOREHAND
+            */
             kr = sr = tr = 0;
             if (gamestate.killtotal)
                 kr = (gamestate.killcount * 100) / gamestate.killtotal;
@@ -810,9 +812,9 @@ LevelCompleted (void)
                 tr = (gamestate.treasurecount * 100) / gamestate.treasuretotal;
 
 
-            //
-            // PRINT TIME BONUS
-            //
+            /*
+            ** PRINT TIME BONUS
+            */
             bonus = timeleft * PAR_AMOUNT;
             if (bonus)
             {
@@ -835,7 +837,7 @@ LevelCompleted (void)
 #if !defined(USE_SPRITES) && !defined(SEGA_SATURN)				
                 VL_UpdateScreen(screenBuffer);
 #else
-                //		DrawStatusBar(); // vbt ajout				
+                /*		DrawStatusBar(); */ /* vbt ajout */				
 #endif
 
                 SD_PlaySound(ENDBONUS2SND);
@@ -849,9 +851,9 @@ LevelCompleted (void)
 #else
 #define RATIOXX                37
 #endif
-            //
-            // KILL RATIO
-            //
+            /*
+            ** KILL RATIO
+            */
             ratio = kr;
             for (i = 0; i <= ratio; i++)
             {
@@ -907,9 +909,9 @@ LevelCompleted (void)
             while (SD_SoundPlaying())
                 BJ_Breathe();
 
-            //
-            // SECRET RATIO
-            //
+            /*
+            ** SECRET RATIO
+            */
             ratio = sr;
             for (i = 0; i <= ratio; i++)
             {
@@ -963,9 +965,9 @@ LevelCompleted (void)
             while (SD_SoundPlaying())
                 BJ_Breathe();
 
-            //
-            // TREASURE RATIO
-            //
+            /*
+            ** TREASURE RATIO
+            */
             ratio = tr;
             for (i = 0; i <= ratio; i++)
             {
@@ -1019,9 +1021,9 @@ LevelCompleted (void)
                 BJ_Breathe();
 
 
-            //
-            // JUMP STRAIGHT HERE IF KEY PRESSED
-            //
+            /*
+            ** JUMP STRAIGHT HERE IF KEY PRESSED
+            */
         done:   wlitoa(kr, tempstr, 10);
         x = RATIOXX - (int)strlen(tempstr) * 2;
 #ifdef SEGA_SATURN
@@ -1055,9 +1057,9 @@ LevelCompleted (void)
 #else
             Write(x, 7, tempstr);
 #endif
-            //
-            // SAVE RATIO INFORMATION FOR ENDGAME
-            //
+            /*
+            ** SAVE RATIO INFORMATION FOR ENDGAME
+            */
             LevelRatios[gamestate.mapon].kill = kr;
             LevelRatios[gamestate.mapon].secret = sr;
             LevelRatios[gamestate.mapon].treasure = tr;
@@ -1130,7 +1132,7 @@ LevelCompleted (void)
 #if !defined(USE_SPRITES) && !defined(SEGA_SATURN)            
     VL_UpdateScreen(screenBuffer);
 #else
-    DrawStatusBar(); // vbt ajout
+    DrawStatusBar(); /* vbt ajout */
 
 #endif
 
@@ -1139,9 +1141,9 @@ LevelCompleted (void)
     while (!IN_CheckAck ())
         BJ_Breathe ();
 
-//
-// done
-//
+/*
+** done
+*/
 #ifdef SPEARDEMO
     if (gamestate.mapon == 1)
     {
@@ -1176,7 +1178,7 @@ LevelCompleted (void)
 
 
 
-//==========================================================================
+/* ========================================================================== */
 
 
 /*
@@ -1200,7 +1202,7 @@ PreloadUpdate (unsigned current, unsigned total)
     if (w)
     {
         VL_BarScaledCoord (WindowX + scaleFactor * 5, WindowY + WindowH - scaleFactor * 3,
-            w, scaleFactor * 2, 0x37);       //SECONDCOLOR);
+            w, scaleFactor * 2, 0x37);       /* SECONDCOLOR); */
         VL_BarScaledCoord (WindowX + scaleFactor * 5, WindowY + WindowH - scaleFactor * 3,
             w - scaleFactor * 1, scaleFactor * 1, 0x32);
 
@@ -1208,12 +1210,14 @@ PreloadUpdate (unsigned current, unsigned total)
 #if !defined(USE_SPRITES) && !defined(SEGA_SATURN)            
     VL_UpdateScreen(screenBuffer);
 #endif
-//      if (LastScan == sc_Escape)
-//      {
-//              IN_ClearKeysDown();
-//              return(true);
-//      }
-//      else
+/*      
+**      if (LastScan == sc_Escape)
+**      {
+**              IN_ClearKeysDown();
+**              return(true);
+**      }
+**      else
+*/
     return (false);
 }
 
@@ -1221,7 +1225,7 @@ void
 PreloadGraphics (void)
 {
     DrawLevel ();
-    ClearSplitVWB ();           // set up for double buffering in split screen
+    ClearSplitVWB ();           /* set up for double buffering in split screen */
 #ifdef SEGA_SATURN
     slScrTransparent(2);
     slSynch();
@@ -1242,7 +1246,7 @@ PreloadGraphics (void)
 #ifdef SEGA_SATURN
     DrawStatusBar(); // vbt ajout
 #endif
-
+/*
 #ifdef SEGA_SATURN
 #if 0
     //----------------------------------------------------------------------
@@ -1361,7 +1365,7 @@ PreloadGraphics (void)
     //----------------------------------------------------------------------
 #endif
 #endif
-
+*/
     VL_FadeIn (0, 255, gamepal, 30);
 
     PreloadUpdate (10, 10);
@@ -1378,7 +1382,7 @@ PreloadGraphics (void)
 }
 
 
-//==========================================================================
+/* ========================================================================== */
 
 /*
 ==================
@@ -1453,9 +1457,9 @@ DrawHighScores (void)
     {
         PrintY = 76 + (16 * i);
 
-        //
-        // name
-        //
+        /*
+        ** name
+        */
 #ifndef SPEAR
 #ifdef SEGA_SATURN
         PrintX = SATURN_ADJUST + 4 * 8;
@@ -1471,13 +1475,13 @@ DrawHighScores (void)
 #endif
         US_Print (s->name);
 
-        //
-        // level
-        //
+        /*
+        ** level
+        */
         wlitoa(s->completed, buffer, 10);
 #ifndef SPEAR
         for (str = buffer; *str; str++)
-            *str = *str + (129 - '0');  // Used fixed-width numbers (129...)
+            *str = *str + (129 - '0');  /* Used fixed-width numbers (129...) */
         USL_MeasureString (buffer, &w, &h);
 #ifdef SEGA_SATURN
         PrintX = SATURN_ADJUST + (22 * 8) - w;
@@ -1514,13 +1518,13 @@ DrawHighScores (void)
 #endif
             US_Print (buffer);
 
-        //
-        // score
-        //
+        /*
+        ** score
+        */
         wlitoa(s->score, buffer, 10);
 #ifndef SPEAR
         for (str = buffer; *str; str++)
-            *str = *str + (129 - '0');  // Used fixed-width numbers (129...)
+            *str = *str + (129 - '0');  /* Used fixed-width numbers (129...) */
         USL_MeasureString (buffer, &w, &h);
 #ifdef SEGA_SATURN
         PrintX = SATURN_ADJUST + (34 * 8) - 8 - w;
@@ -1538,11 +1542,11 @@ DrawHighScores (void)
         US_Print (buffer);
 
 #ifdef APOGEE_1_0
-//#ifndef UPLOAD
+/* #ifndef UPLOAD */
 #ifndef SPEAR
-        //
-        // verification #
-        //
+        /*
+        ** verification #
+        */
         if (!i)
         {
             char temp = (((s->score >> 28) & 0xf) ^ ((s->score >> 24) & 0xf)) + 'A';
@@ -1561,7 +1565,7 @@ DrawHighScores (void)
             SETFONTCOLOR (15, 0x29);
         }
 #endif
-//#endif
+/* #endif */
 #endif
     }
 
@@ -1574,7 +1578,7 @@ DrawHighScores (void)
 #endif
 }
 
-//===========================================================================
+/* =========================================================================== */
 
 
 /*
@@ -1592,7 +1596,7 @@ CheckHighScore (int score, unsigned short other)
     int n;
     HighScore myscore;
 
-    memset(myscore.name, 0, sizeof(myscore.name));	// clear the string buffer
+    memset(myscore.name, 0, sizeof(myscore.name));	/* clear the string buffer */
     strcpy (myscore.name, "");
     myscore.score = score;
     myscore.episode = gamestate.episode;
@@ -1622,9 +1626,9 @@ CheckHighScore (int score, unsigned short other)
 
     if (n != -1)
     {
-        //
-        // got a high score
-        //
+        /*
+        ** got a high score
+        */
         PrintY = 76 + (16 * n);
 #ifndef SPEAR
         PrintX = 4 * 8;
@@ -1659,11 +1663,14 @@ CheckHighScore (int score, unsigned short other)
 #ifndef UPLOAD
 #ifndef SPEAR
 #ifndef JAPAN
+/*
 ////////////////////////////////////////////////////////
 //
 // NON-SHAREWARE NOTICE
 //
 ////////////////////////////////////////////////////////
+*/
+
 void
 NonShareware (void)
 {
@@ -1709,11 +1716,15 @@ NonShareware (void)
 #ifdef SPEAR
 #ifndef GOODTIMES
 #ifndef SPEARDEMO
+
+/*
 ////////////////////////////////////////////////////////
 //
 // COPY PROTECTION FOR FormGen
 //
 ////////////////////////////////////////////////////////
+*/
+
 char CopyProFailedStrs[][100] = {
     STR_COPY1,
     STR_COPY2,
@@ -1926,9 +1937,9 @@ CopyProtection (void)
         quiztype = US_RndT () % totaltypes;
         switch (quiztype)
         {
-            //
-            // BOSSES QUIZ
-            //
+            /*
+            ** BOSSES QUIZ
+            */
             case debriefing:
             {
 				size_t inputlen;
@@ -1975,9 +1986,9 @@ CopyProtection (void)
                 break;
             }
 
-            //
-            // MANUAL CHECK
-            //
+            /*
+            ** MANUAL CHECK
+            */
             case checkmanual:
             {
                 while (wordpicked[whichword = US_RndT () % 5]);
@@ -2004,9 +2015,9 @@ CopyProtection (void)
                 break;
             }
 
-            //
-            // STAFF QUIZ
-            //
+            /*
+            ** STAFF QUIZ
+            */
             case staffquiz:
             {
 				size_t inputlen;
@@ -2046,9 +2057,9 @@ CopyProtection (void)
                 break;
             }
 
-            //
-            // MISCELLANEOUS QUESTIONS
-            //
+            /*
+            ** MISCELLANEOUS QUESTIONS
+            */
             case miscquiz:
             {
                 while (whichpicked[whichone = US_RndT () & 3]);
@@ -2075,9 +2086,9 @@ CopyProtection (void)
             }
         }
 
-        //
-        // IF NO MATCH, WE'VE GOT A (MINOR) PROBLEM!
-        //
+        /*
+        ** IF NO MATCH, WE'VE GOT A (MINOR) PROBLEM!
+        */
 
         if (!match)
         {
@@ -2118,13 +2129,13 @@ CopyProtection (void)
     }
 
    SD_StopDigitized ();
- //   ShutdownId ();
+ /*   ShutdownId ();    */
 
- //   printf ("%s\n", DosMessages[US_RndT () % 9]);
- //   exit (1);
+ /*   printf ("%s\n", DosMessages[US_RndT () % 9]);   */
+ /*   exit (1);   */
 }
-#endif //SEGA_SATURN
-#endif // SPEARDEMO
-#endif // GOODTIMES
-#endif // SPEAR
-//===========================================================================
+#endif /* SEGA_SATURN */
+#endif /* SPEARDEMO */
+#endif /* GOODTIMES */
+#endif /* SPEAR */
+/* =========================================================================== */

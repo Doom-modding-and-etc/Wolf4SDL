@@ -79,26 +79,26 @@ typedef struct
 
 typedef struct PlayerEvent_Movement
 {
-    //struct PlayerEvent_Movement Vec;
+    /* struct PlayerEvent_Movement Vec; */
     int x, y;
     short angle;
 } Move;
 
 typedef struct PlayerEvent_WeaponSwitch
 {
-    //struct PlayerEvent_WeaponSwitch Vec;
+    /* struct PlayerEvent_WeaponSwitch Vec; */
     Weapon weapon;
 } WeaponSwitch;
 
 typedef struct PlayerEvent_Pickup
 {
-    //struct PlayerEvent_Pickup Vec;
+    /* struct PlayerEvent_Pickup Vec; */
     unsigned char x, y;
 } Pickup;
 
 typedef struct PlayerEvent_Attack
 {
-    //struct PlayerEvent_Attack Vec;
+    /* struct PlayerEvent_Attack Vec; */
     unsigned char count;
     int peeruid;
 } Attack;
@@ -110,7 +110,7 @@ typedef struct PlayerEvent_HasPeerUid
 
 typedef struct PlayerEvent_PlayerItself
 {
-    //struct PlayerEvent_PlayerItself Vec;
+    /* struct PlayerEvent_PlayerItself Vec; */
     int peeruid;
     short health;
     short ammo;
@@ -162,21 +162,21 @@ void serializeUnsignedInt(unsigned int* x);
 
 void serializeUnsignedLong(unsigned long* x);
 
-inline void serializeStreamInt(Stream* stream, int* x);
+wlinline void serializeStreamInt(Stream* stream, int* x);
 
-inline void serializeStreamShort(Stream* stream, short* x);
+wlinline void serializeStreamShort(Stream* stream, short* x);
 
-inline void serializeStreamUnsignedChar(Stream* stream, unsigned char* x);
+wlinline void serializeStreamUnsignedChar(Stream* stream, unsigned char* x);
 
-inline void serializeStreamUnisgnedInt(Stream* stream, unsigned int* x);
+wlinline void serializeStreamUnisgnedInt(Stream* stream, unsigned int* x);
 
-inline void serializeStreanUnsignedLong(Stream* stream, unsigned long* x);
+wlinline void serializeStreanUnsignedLong(Stream* stream, unsigned long* x);
 
 void serializeEnum(Stream* stream, int *x);
 
-inline void serializeWeaponEnum(Stream* stream, Weapon* x);
+wlinline void serializeWeaponEnum(Stream* stream, Weapon* x);
 
-inline void serializeKey(Stream* stream, Key* x);
+wlinline void serializeKey(Stream* stream, Key* x);
 
 void add(int x);
 
@@ -184,27 +184,27 @@ const boolean has(int x);
 
 void serializeMask(Stream* stream);
 
-inline void serializeSet(Stream* stream, Set* x);
+wlinline void serializeSet(Stream* stream, Set* x);
 
 void serializePlayerEvent(Stream* stream);
 
-inline void serializePlayerEventStream(Stream* stream, Move* x);
+wlinline void serializePlayerEventStream(Stream* stream, Move* x);
 
 void serializeWeaponSwitch(Stream* stream);
 
-inline void serializeWeaponSwitchStream(Stream* stream, WeaponSwitch* x);
+wlinline void serializeWeaponSwitchStream(Stream* stream, WeaponSwitch* x);
 
 void serializePlayerEvent_Pickup(Stream* stream);
 
-inline void serializePlayerEvent_PickupStream(Stream* stream, Pickup* x);
+wlinline void serializePlayerEvent_PickupStream(Stream* stream, Pickup* x);
 
 void serializePlayerEvent_Attack(Stream* stream);
 
-inline void serializePlayerEvent_AttackStream(Stream* stream, Attack* x);
+wlinline void serializePlayerEvent_AttackStream(Stream* stream, Attack* x);
 
 void serializePlayerItself(Stream* stream);
 
-inline void serializePlayer(Stream* stream, Player* x);
+wlinline void serializePlayer(Stream* stream, Player* x);
 
 const boolean CPlayer(const Player* player);
 /*
@@ -231,7 +231,7 @@ Player& getPlayer(Player::Vec& players, Pred pred)
 */
 void serialize_DataLayer(Stream* stream);
 
-inline void serialize_DataLayerStream(Stream* stream, DataLayer* x);
+wlinline void serialize_DataLayerStream(Stream* stream, DataLayer* x);
 
 #endif
 #endif

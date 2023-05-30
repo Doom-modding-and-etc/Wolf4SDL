@@ -1,4 +1,4 @@
-// WL_CLOUDSKY.H
+/* WL_CLOUDSKY.H */
 
 #if defined(USE_CLOUDSKY) && !defined(_WL_CLOUDSKY_H_)
 #define _WL_CLOUDSKY_H_

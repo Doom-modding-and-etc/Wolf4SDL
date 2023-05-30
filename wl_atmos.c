@@ -1,4 +1,4 @@
-// WL_ATMOS.H
+/* WL_ATMOS.C */
 
 #include "version.h"
 
@@ -85,7 +85,7 @@ void DrawStarSky (void)
     point3d_t *pt;
     unsigned char      *dest;
     unsigned char      shade;
-    fixed     x,y,z;
+    fixed     x,z;
     fixed     xx,yy;
     
     dest = vbuf;
@@ -95,6 +95,7 @@ void DrawStarSky (void)
 
     for (i = 0; i < MAXPOINTS; i++)
     {
+        fixed y;
         pt = &points[i];
 
         x = pt->x * viewcos + pt->z * viewsin;
@@ -223,10 +224,10 @@ void DrawRain (void)
         if (xx >= 0 && xx < viewwidth && yy > 0 && yy < viewheight)
         {
 #if defined(USE_FLOORCEILINGTEX) && defined(FIXRAINSNOWLEAKS)
-            //
-            // Find the rain's tile coordinate
-            // NOTE: This sometimes goes over the map edges
-            //
+            /*
+            ** Find the rain's tile coordinate
+            ** NOTE: This sometimes goes over the map edges
+            */
             prestep = centerx - xx + 1;
             basedist = FixedDiv(scale,(height >> 3) + 1) >> 1;
             stepscale = basedist / scale;
@@ -240,9 +241,9 @@ void DrawRain (void)
             tilex = (xfrac >> TILESHIFT) & (mapwidth - 1);
             tiley = ~(yfrac >> TILESHIFT) & (mapheight - 1);
 
-            //
-            // is there a ceiling tile?
-            //
+            /*
+            ** is there a ceiling tile?
+            */
             if (MAPSPOT(tilex,tiley, 2) >> 8)
                 continue;
 #endif
@@ -326,10 +327,10 @@ void DrawSnow (void)
         if (xx > 0 && xx < viewwidth && yy > 0 && yy < viewheight)
         {
 #if defined(USE_FLOORCEILINGTEX) && defined(FIXRAINSNOWLEAKS)
-            //
-            // Find the snow's tile coordinate
-            // NOTE: This sometimes goes over the map edges
-            //
+            /*
+            ** Find the snow's tile coordinate
+            ** NOTE: This sometimes goes over the map edges
+            */
             prestep = centerx - xx + 1;
             basedist = FixedDiv(scale,(height >> 3) + 1) >> 1;
             stepscale = basedist / scale;
@@ -343,9 +344,9 @@ void DrawSnow (void)
             tilex = (xfrac >> TILESHIFT) & (mapwidth - 1);
             tiley = ~(yfrac >> TILESHIFT) & (mapheight - 1);
 
-            //
-            // is there a ceiling tile?
-            //
+            /*
+            ** is there a ceiling tile?
+            */
             if (MAPSPOT(tilex,tiley,2) >> 8)
                 continue;
 #endif

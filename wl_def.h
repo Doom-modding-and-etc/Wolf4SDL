@@ -4,6 +4,7 @@
 #include "version.h"
 
 
+
 #include <fcntl.h>
 #include <assert.h>
 #include <math.h>
@@ -74,14 +75,14 @@
 #endif
 
 #if defined(GP2X) || defined(GP2X_940)
-#include "Platform/GP2X/gp2x.h"
+#include "platform/GP2X/gp2x.h"
 #elif defined(PS2)
-#include "Platform/PS2/ps2_main.h"
+#include "platform/PS2/ps2_main.h"
 #elif defined(_arch_dreamcast)
-#include "Platform/dc/dc_main.h"
-#include "Platform/dc/dc_vmu.h"
+#include "platform/dc/dc_main.h"
+#include "platform/dc/dc_vmu.h"
 #elif defined(XBOX)
-#include "Platform/xbox/xboxmissing.h"
+#include "platform/xbox/xboxmissing.h"
 #endif
 
 #ifdef USE_HEADER
@@ -140,14 +141,38 @@ typedef struct
 
 void Quit(const char* errorStr, ...);
 
-#if defined(_MSC_VER)
-#define wlinline __inline
-#elif defined(__GNUC__)
-#define wlinline __inline__
-#elif defined(C99)
-#define wlinline inline
+#if defined(C89)
+#define wlinline
 #else
-#define wlinline 
+#define wlinline __inline__ 
+#endif
+
+/* Uncomment the following line, if you get destination out of bounds
+** assertion errors and want to ignore them during debugging
+*/
+#ifdef SEGA_SATURN
+#define IGNORE_BAD_DEST
+#else
+/* #define IGNORE_BAD_DEST */
+#endif
+#ifdef IGNORE_BAD_DEST
+#ifdef SEGA_SATURN
+/* #undef assert */
+/* #define assert(x) if(!(x))  { slPrint((char *)"asset test failed0", slLocate(10,20));return;} */
+#define assert1(x) if(!(x)) { slPrint((char *)"asset test failed1", slLocate(10,20));return;}
+#define assert2(x) if(!(x)) { slPrint((char *)"asset test failed2", slLocate(10,20));return;}
+#define assert3(x) if(!(x)) { slPrint((char *)"asset test failed3", slLocate(10,20));return;}
+#define assert4(x) if(!(x)) { slPrint((char *)"asset test failed4", slLocate(10,20));return;}
+#define assert5(x) if(!(x)) { slPrint((char *)"asset test failed5", slLocate(10,20));return;}
+#define assert6(x) if(!(x)) { slPrint((char *)"asset test failed6", slLocate(10,20));return;}
+/* #define assert7(x) if(!(x)) { slPrint((char *)"asset test failed7", slLocate(10,20));return;} */
+#define assert8(x) if(!(x)) { slPrint((char *)"asset test failed8", slLocate(10,20));return;}
+#define wlassert(x) if(!(x)) return 0
+#else
+#define wlassert(x) if(!(x)) return
+#endif
+#else
+#define wlassert(x) assert(x)
 #endif
 
 #include "id_pm.h"
@@ -179,26 +204,51 @@ void Quit(const char* errorStr, ...);
 =============================================================================
 */
 
-// Defines which version shall be built and configures supported extra features
+/* Defines which version shall be built and configures supported extra features */
 #ifdef SEGA_SATURN
 #define SATURN_WIDTH 320
 #define SATURN_HEIGHT 200
 #define SATURN_SORT_VALUE 240
 #define SATURN_MAPSEG_ADDR 0x2002EA000
 #define SATURN_CHUNK_ADDR 0x002F0000
-// 240 pour du 320, 264 pour du 352
+/* 240 pour du 320, 264 pour du 352 */
 #define		LINE_COLOR_TABLE		(VDP2_VRAM_A0	+ 0x1f400)
 #endif
 
 #define MAPSPOT(x,y,plane) (mapsegs[(plane)][((y) << MAPSHIFT) + (x)])
 
 #ifdef MATH
-#define abs(x)          ((int)(x) > 0 ? (x) : -(x))
-#define labs(x)         ((int)(x) > 0 ? (x) : -(x))
+#define abs(x)          ((x) > 0 ? (x) : -(x))
+#define labs(x)         ((x) > 0 ? (x) : -(x))
 #endif
+
+#ifdef ORIGINAL
 #define lengthof(x)     (sizeof((x)) / sizeof(*(x)))
+#else
+#define lengthof(x)     SDL_arraysize(x)
+#endif
 #define endof(x)        ((x) + lengthof((x)))
 
+/*
+** Converts a type for match the declaration for avoid warnings.
+*/
+#ifdef ORIGINAL
+#if defined(REINTERPRET_CAST)
+#define wlcast_conversion(type, expression) reinterpret_cast<type>(expression)
+#elif defined(STATIC_CAST)
+#define wlcast_conversion(type, expression) static_cast<type>(expression)
+#else
+#define wlcast_conversion(type, expression) ((type)(expression))
+#endif
+#else
+#if defined(REINTERPRET_CAST)
+#define wlcast_conversion SDL_reinterpret_cast
+#elif defined(STATIC_CAST)
+#define wlcast_conversion SDL_static_cast
+#else
+#define wlcast_conversion(type, expression) ((type)(expression))
+#endif
+#endif
 /*
 =============================================================================
 
@@ -219,15 +269,15 @@ void Quit(const char* errorStr, ...);
 #define BIT_DOOR        (1 << (WALLSHIFT + 1))
 #define BIT_ALLTILES    (1 << (WALLSHIFT + 2))
 
-// the door is the last picture before the sprites
+/* the door is the last picture before the sprites */
 #define DOORWALL        (PMSpriteStart - 8)
-#define DOORSTART       90          // WALL - first door code
-#define DOOREND         101         // WALL - last door code
+#define DOORSTART       90          /* WALL - first door code */
+#define DOOREND         101         /* WALL - last door code */
 
-#define MAXACTORS       150         // max number of nazis, etc / map
-#define MAXSTATS        400         // max number of lamps, bonus, etc
-#define MAXDOORS        64          // max number of sliding doors
-#define MAXWALLTILES    70          // max number of wall tiles
+#define MAXACTORS       150         /* max number of nazis, etc / map */
+#define MAXSTATS        400         /* max number of lamps, bonus, etc */
+#define MAXDOORS        64          /* max number of sliding doors */
+#define MAXWALLTILES    70          /* max number of wall tiles */
 
 #ifdef SEGA_SATURN
 #ifndef SPEAR
@@ -243,14 +293,14 @@ typedef unsigned short tiletype;
 typedef unsigned char tiletype;
 #endif
 
-//
-// tile constants
-//
+/*
+** tile constants
+*/
 
 #define ICONARROWS      90
 #define PUSHABLETILE    98
-#define EXITTILE        99          // at end of castle
-#define AREATILE        107         // first of NUMAREAS floor tiles
+#define EXITTILE        99          /* at end of castle */
+#define AREATILE        107         /* first of NUMAREAS floor tiles */
 #define NUMAREAS        37
 #define ELEVATORTILE    21
 #define AMBUSHTILE      106
@@ -259,7 +309,7 @@ typedef unsigned char tiletype;
 #define NUMBERCHARS     9
 
 
-//----------------
+/* ---------------- */
 
 #define EXTRAPOINTS     40000
 
@@ -272,14 +322,14 @@ typedef unsigned char tiletype;
 #endif
 
 #ifndef SPEAR
-#define LRpack      8       // # of levels to store in endgame
+#define LRpack      8       /* # of levels to store in endgame */
 #else
 #define LRpack      20
 #endif
 
-#define PLAYERSIZE      MINDIST         // player radius
-#define MINACTORDIST    0x10000l        // minimum dist from player center
-                                        // to any actor center
+#define PLAYERSIZE      MINDIST         /* player radius */
+#define MINACTORDIST    0x10000l        /* minimum dist from player center */
+                                        /* to any actor center */
 #ifndef M_PI
 #define M_PI              3.141592657
 #endif
@@ -294,7 +344,7 @@ typedef unsigned char tiletype;
 #define TILESHIFT       16l
 #define UNSIGNEDSHIFT   8
 
-#define ANGLES          360             // must be divisable by 4
+#define ANGLES          360             /* must be divisable by 4 */
 #define ANGLEQUAD       (ANGLES/4)
 #define FINEANGLES      3600
 #define ANG90           (FINEANGLES/4)
@@ -389,7 +439,7 @@ static wlinline void clearmapbit(mapbitmap m, int x, int y)
   (obj_actor_at(x, y) ? actorat[x][y] & 0xff : actorat[x][y] & 0x7f)
 #endif
 
-// object flag values
+/* object flag values */
 
 typedef enum
 {
@@ -403,9 +453,10 @@ typedef enum
     FL_NONMARK = 0x00000080,
     FL_FULLBRIGHT = 0x00000100,
 #ifdef USE_DIR3DSPR
-    // you can choose one of the following values in wl_act1.cpp
-    // to make a static sprite a directional 3d sprite
-    // (see example at the end of the statinfo array)
+    /* you can choose one of the following values in wl_act1.cpp
+    ** to make a static sprite a directional 3d sprite
+    ** (see example at the end of the statinfo array)
+    */
     FL_DIR_HORIZ_MID = 0x00000200,
     FL_DIR_HORIZ_FW = 0x00000400,
     FL_DIR_HORIZ_BW = 0x00000600,
@@ -413,7 +464,7 @@ typedef enum
     FL_DIR_VERT_FW = 0x00000c00,
     FL_DIR_VERT_BW = 0x00000e00,
 
-    // these values are just used to improve readability of code
+    /* these values are just used to improve readability of code */
     FL_DIR_NONE = 0x00000000,
     FL_DIR_POS_MID = 0x00000200,
     FL_DIR_POS_FW = 0x00000400,
@@ -422,13 +473,13 @@ typedef enum
     FL_DIR_VERT_FLAG = 0x00000800,
     FL_DIR_MASK = 0x00000e00,
 #endif
-    // next free bit is   0x00001000
+    /* next free bit is   0x00001000 */
 } objflag_t;
 
 
-//
-// sprite constants
-//
+/*
+** sprite constants
+*/
 
 enum
 {
@@ -436,9 +487,9 @@ enum
 #ifndef APOGEE_1_0
     SPR_DEATHCAM,
 #endif
-    //
-    // static sprites
-    //
+    /*
+    ** static sprites
+    */
     SPR_STAT_0, SPR_STAT_1, SPR_STAT_2, SPR_STAT_3,
     SPR_STAT_4, SPR_STAT_5, SPR_STAT_6, SPR_STAT_7,
 
@@ -461,9 +512,9 @@ enum
     SPR_STAT_48, SPR_STAT_49, SPR_STAT_50, SPR_STAT_51,
 #endif
 
-    //
-    // guard
-    //
+    /*
+    ** guard
+    */
     SPR_GRD_S_1, SPR_GRD_S_2, SPR_GRD_S_3, SPR_GRD_S_4,
     SPR_GRD_S_5, SPR_GRD_S_6, SPR_GRD_S_7, SPR_GRD_S_8,
 
@@ -484,9 +535,9 @@ enum
 
     SPR_GRD_SHOOT1, SPR_GRD_SHOOT2, SPR_GRD_SHOOT3,
 
-    //
-    // dogs
-    //
+    /*
+    ** dogs
+    */
     SPR_DOG_W1_1, SPR_DOG_W1_2, SPR_DOG_W1_3, SPR_DOG_W1_4,
     SPR_DOG_W1_5, SPR_DOG_W1_6, SPR_DOG_W1_7, SPR_DOG_W1_8,
 
@@ -504,9 +555,9 @@ enum
 
 
 
-    //
-    // ss
-    //
+    /*
+    ** ss
+    */
     SPR_SS_S_1, SPR_SS_S_2, SPR_SS_S_3, SPR_SS_S_4,
     SPR_SS_S_5, SPR_SS_S_6, SPR_SS_S_7, SPR_SS_S_8,
 
@@ -527,9 +578,9 @@ enum
 
     SPR_SS_SHOOT1, SPR_SS_SHOOT2, SPR_SS_SHOOT3,
 
-    //
-    // mutant
-    //
+    /*
+    ** mutant
+    */
     SPR_MUT_S_1, SPR_MUT_S_2, SPR_MUT_S_3, SPR_MUT_S_4,
     SPR_MUT_S_5, SPR_MUT_S_6, SPR_MUT_S_7, SPR_MUT_S_8,
 
@@ -550,9 +601,9 @@ enum
 
     SPR_MUT_SHOOT1, SPR_MUT_SHOOT2, SPR_MUT_SHOOT3, SPR_MUT_SHOOT4,
 
-    //
-    // officer
-    //
+    /*
+    ** officer
+    */
     SPR_OFC_S_1, SPR_OFC_S_2, SPR_OFC_S_3, SPR_OFC_S_4,
     SPR_OFC_S_5, SPR_OFC_S_6, SPR_OFC_S_7, SPR_OFC_S_8,
 
@@ -574,41 +625,41 @@ enum
     SPR_OFC_SHOOT1, SPR_OFC_SHOOT2, SPR_OFC_SHOOT3,
 
 #ifndef SPEAR
-    //
-    // ghosts
-    //
+    /*
+    ** ghosts
+    */
     SPR_BLINKY_W1, SPR_BLINKY_W2, SPR_PINKY_W1, SPR_PINKY_W2,
     SPR_CLYDE_W1, SPR_CLYDE_W2, SPR_INKY_W1, SPR_INKY_W2,
 
-    //
-    // hans
-    //
+    /*
+    ** hans
+    */
     SPR_BOSS_W1, SPR_BOSS_W2, SPR_BOSS_W3, SPR_BOSS_W4,
     SPR_BOSS_SHOOT1, SPR_BOSS_SHOOT2, SPR_BOSS_SHOOT3, SPR_BOSS_DEAD,
 
     SPR_BOSS_DIE1, SPR_BOSS_DIE2, SPR_BOSS_DIE3,
 
-    //
-    // schabbs
-    //
+    /*
+    ** schabbs
+    */
     SPR_SCHABB_W1, SPR_SCHABB_W2, SPR_SCHABB_W3, SPR_SCHABB_W4,
     SPR_SCHABB_SHOOT1, SPR_SCHABB_SHOOT2,
 
     SPR_SCHABB_DIE1, SPR_SCHABB_DIE2, SPR_SCHABB_DIE3, SPR_SCHABB_DEAD,
     SPR_HYPO1, SPR_HYPO2, SPR_HYPO3, SPR_HYPO4,
 
-    //
-    // fake
-    //
+    /*
+    ** fake
+    */
     SPR_FAKE_W1, SPR_FAKE_W2, SPR_FAKE_W3, SPR_FAKE_W4,
     SPR_FAKE_SHOOT, SPR_FIRE1, SPR_FIRE2,
 
     SPR_FAKE_DIE1, SPR_FAKE_DIE2, SPR_FAKE_DIE3, SPR_FAKE_DIE4,
     SPR_FAKE_DIE5, SPR_FAKE_DEAD,
 
-    //
-    // hitler
-    //
+    /*
+    ** hitler
+    */
     SPR_MECHA_W1, SPR_MECHA_W2, SPR_MECHA_W3, SPR_MECHA_W4,
     SPR_MECHA_SHOOT1, SPR_MECHA_SHOOT2, SPR_MECHA_SHOOT3, SPR_MECHA_DEAD,
 
@@ -620,26 +671,26 @@ enum
     SPR_HITLER_DIE1, SPR_HITLER_DIE2, SPR_HITLER_DIE3, SPR_HITLER_DIE4,
     SPR_HITLER_DIE5, SPR_HITLER_DIE6, SPR_HITLER_DIE7,
 
-    //
-    // giftmacher
-    //
+    /*
+    ** giftmacher
+    */
     SPR_GIFT_W1, SPR_GIFT_W2, SPR_GIFT_W3, SPR_GIFT_W4,
     SPR_GIFT_SHOOT1, SPR_GIFT_SHOOT2,
 
     SPR_GIFT_DIE1, SPR_GIFT_DIE2, SPR_GIFT_DIE3, SPR_GIFT_DEAD,
 #endif
-    //
-    // Rocket, smoke and small explosion
-    //
+    /*
+    ** Rocket, smoke and small explosion
+    */
     SPR_ROCKET_1, SPR_ROCKET_2, SPR_ROCKET_3, SPR_ROCKET_4,
     SPR_ROCKET_5, SPR_ROCKET_6, SPR_ROCKET_7, SPR_ROCKET_8,
 
     SPR_SMOKE_1, SPR_SMOKE_2, SPR_SMOKE_3, SPR_SMOKE_4,
     SPR_BOOM_1, SPR_BOOM_2, SPR_BOOM_3,
 
-    //
-    // Angel of Death's DeathSparks(tm)
-    //
+    /*
+    ** Angel of Death's DeathSparks(tm)
+    */
 #ifdef SPEAR
     SPR_HROCKET_1, SPR_HROCKET_2, SPR_HROCKET_3, SPR_HROCKET_4,
     SPR_HROCKET_5, SPR_HROCKET_6, SPR_HROCKET_7, SPR_HROCKET_8,
@@ -651,25 +702,25 @@ enum
 #endif
 
 #ifndef SPEAR
-    //
-    // gretel
-    //
+    /*
+    ** gretel
+    */
     SPR_GRETEL_W1, SPR_GRETEL_W2, SPR_GRETEL_W3, SPR_GRETEL_W4,
     SPR_GRETEL_SHOOT1, SPR_GRETEL_SHOOT2, SPR_GRETEL_SHOOT3, SPR_GRETEL_DEAD,
 
     SPR_GRETEL_DIE1, SPR_GRETEL_DIE2, SPR_GRETEL_DIE3,
 
-    //
-    // fat face
-    //
+    /*
+    ** fat face
+    */
     SPR_FAT_W1, SPR_FAT_W2, SPR_FAT_W3, SPR_FAT_W4,
     SPR_FAT_SHOOT1, SPR_FAT_SHOOT2, SPR_FAT_SHOOT3, SPR_FAT_SHOOT4,
 
     SPR_FAT_DIE1, SPR_FAT_DIE2, SPR_FAT_DIE3, SPR_FAT_DEAD,
 
-    //
-    // bj
-    //
+    /*
+    ** bj
+    */
 #ifdef APOGEE_1_0
     SPR_BJ_W1 = 360,
 #elif defined(APOGEE_1_1) && defined(UPLOAD)
@@ -680,53 +731,53 @@ enum
     SPR_BJ_W2, SPR_BJ_W3, SPR_BJ_W4,
     SPR_BJ_JUMP1, SPR_BJ_JUMP2, SPR_BJ_JUMP3, SPR_BJ_JUMP4,
 #else
-    //
-    // THESE ARE FOR 'SPEAR OF DESTINY'
-    //
+    /*
+    ** THESE ARE FOR 'SPEAR OF DESTINY'
+    */
 
-    //
-    // Trans Grosse
-    //
+    /*
+    ** Trans Grosse
+    */
     SPR_TRANS_W1, SPR_TRANS_W2, SPR_TRANS_W3, SPR_TRANS_W4,
     SPR_TRANS_SHOOT1, SPR_TRANS_SHOOT2, SPR_TRANS_SHOOT3, SPR_TRANS_DEAD,
 
     SPR_TRANS_DIE1, SPR_TRANS_DIE2, SPR_TRANS_DIE3,
 
-    //
-    // Wilhelm
-    //
+    /*
+    ** Wilhelm
+    */
     SPR_WILL_W1, SPR_WILL_W2, SPR_WILL_W3, SPR_WILL_W4,
     SPR_WILL_SHOOT1, SPR_WILL_SHOOT2, SPR_WILL_SHOOT3, SPR_WILL_SHOOT4,
 
     SPR_WILL_DIE1, SPR_WILL_DIE2, SPR_WILL_DIE3, SPR_WILL_DEAD,
 
-    //
-    // UberMutant
-    //
+    /*
+    ** UberMutant
+    */
     SPR_UBER_W1, SPR_UBER_W2, SPR_UBER_W3, SPR_UBER_W4,
     SPR_UBER_SHOOT1, SPR_UBER_SHOOT2, SPR_UBER_SHOOT3, SPR_UBER_SHOOT4,
 
     SPR_UBER_DIE1, SPR_UBER_DIE2, SPR_UBER_DIE3, SPR_UBER_DIE4,
     SPR_UBER_DEAD,
 
-    //
-    // Death Knight
-    //
+    /*
+    ** Death Knight
+    */
     SPR_DEATH_W1, SPR_DEATH_W2, SPR_DEATH_W3, SPR_DEATH_W4,
     SPR_DEATH_SHOOT1, SPR_DEATH_SHOOT2, SPR_DEATH_SHOOT3, SPR_DEATH_SHOOT4,
 
     SPR_DEATH_DIE1, SPR_DEATH_DIE2, SPR_DEATH_DIE3, SPR_DEATH_DIE4,
     SPR_DEATH_DIE5, SPR_DEATH_DIE6, SPR_DEATH_DEAD,
 
-    //
-    // Ghost
-    //
+    /*
+    ** Ghost
+    */
     SPR_SPECTRE_W1, SPR_SPECTRE_W2, SPR_SPECTRE_W3, SPR_SPECTRE_W4,
     SPR_SPECTRE_F1, SPR_SPECTRE_F2, SPR_SPECTRE_F3, SPR_SPECTRE_F4,
 
-    //
-    // Angel of Death
-    //
+    /*
+    ** Angel of Death
+    */
     SPR_ANGEL_W1, SPR_ANGEL_W2, SPR_ANGEL_W3, SPR_ANGEL_W4,
     SPR_ANGEL_SHOOT1, SPR_ANGEL_SHOOT2, SPR_ANGEL_TIRED1, SPR_ANGEL_TIRED2,
 
@@ -735,9 +786,9 @@ enum
 
 #endif
 
-    //
-    // player attack frames
-    //
+    /*
+    ** player attack frames
+    */
     SPR_KNIFEREADY, SPR_KNIFEATK1, SPR_KNIFEATK2, SPR_KNIFEATK3,
     SPR_KNIFEATK4,
 
@@ -750,8 +801,8 @@ enum
     SPR_CHAINREADY, SPR_CHAINATK1, SPR_CHAINATK2, SPR_CHAINATK3,
     SPR_CHAINATK4,
 #ifdef COMPASS
-    SPR_DIR_N, SPR_DIR_NE, SPR_DIR_E, SPR_DIR_SE,      //Directions N-SE
-    SPR_DIR_S, SPR_DIR_SW, SPR_DIR_W, SPR_DIR_NW,      //Directions S-NW
+    SPR_DIR_N, SPR_DIR_NE, SPR_DIR_E, SPR_DIR_SE,      /* Directions N-SE */
+    SPR_DIR_S, SPR_DIR_SW, SPR_DIR_W, SPR_DIR_NW,      /* Directions S-NW */
 #endif
 };
 
@@ -907,45 +958,51 @@ typedef struct statestruct
 typedef struct statestruct
 {
     boolean rotate;
-    short   shapenum;           // a shapenum of -1 means get from ob->temp1
+    short   shapenum;           /* a shapenum of -1 means get from ob->temp1 */
     short   tictime;
     void    (*think) (void*), (*action) (void*);
     struct  statestruct* next;
 } statetype;
 #endif
-//---------------------
-//
-// trivial actor structure
-//
-//---------------------
+
+/*
+**---------------------
+**
+** trivial actor structure
+**
+**---------------------
+*/
 
 typedef struct statstruct
 {
     unsigned char      tilex, tiley;
-    short     shapenum;           // if shapenum == -1 the obj has been removed
+    short     shapenum;           /* if shapenum == -1 the obj has been removed */
     unsigned char* visspot;
     unsigned int flags;
     unsigned char      itemnumber;
-#ifdef PUSHOBJECT // Objects that can be pushed
+#ifdef PUSHOBJECT /* Objects that can be pushed */
     unsigned char      pushable;
 #endif   
 } statobj_t;
 
-#ifdef PUSHOBJECT // Objects that can be pushed
-// Place this value on the floor below an item that you want to be pushable
-#define PUSHITEMMARKER    145   // Add this value to your mapdata defines - change value if required
+#ifdef PUSHOBJECT /* Objects that can be pushed */
+/* Place this value on the floor below an item that you want to be pushable */
+#define PUSHITEMMARKER    145   /* Add this value to your mapdata defines - change value if required */
 
 
 extern  void ResetFloorCode(int tilex, int tiley);
-// Arrays for quick checking locations on the map
+/* Arrays for quick checking locations on the map */
 extern  char            dx4dir[4];
 extern  char            dy4dir[4];
 #endif
-//---------------------
-//
-// door actor structure
-//
-//---------------------
+
+/*
+---------------------
+**
+** door actor structure
+**
+**---------------------
+*/
 
 typedef enum
 {
@@ -968,11 +1025,13 @@ typedef struct doorstruct
 } doorobj_t;
 
 
-//--------------------
-//
-// thinking actor structure
-//
-//--------------------
+/*
+**--------------------
+**
+** thinking actor structure
+**
+**--------------------
+*/
 
 typedef struct objstruct
 {
@@ -986,9 +1045,9 @@ typedef struct objstruct
     int		state; /* stateenum */
 #endif
 
-    unsigned int    flags;              // FL_SHOOTABLE, etc
+    unsigned int    flags;              /* FL_SHOOTABLE, etc */
 
-    unsigned int     distance;           // if negative, wait for that door to open
+    unsigned int     distance;           /* if negative, wait for that door to open */
     dirtype     dir;
 
     int       x, y;
@@ -997,7 +1056,7 @@ typedef struct objstruct
 
     short       viewx;
     unsigned short        viewheight;
-    fixed       transx, transy;      // in global coord
+    fixed       transx, transy;      /* in global coord */
 
     short       angle;
     short       hitpoints;
@@ -1058,12 +1117,13 @@ enum
     gd_hard
 };
 
-//---------------
-//
-// gamestate structure
-//
-//---------------
-
+/*
+**---------------
+**
+** gamestate structure
+**
+**---------------
+*/
 typedef struct
 {
     short       difficulty;
@@ -1082,7 +1142,7 @@ typedef struct
         secrettotal, treasuretotal, killtotal;
     size_t     TimeCount;
     int     killx, killy;
-    boolean     victoryflag;            // set during victory animations
+    boolean     victoryflag;            /* set during victory animations */
 #ifdef MAPCONTROLPARTIME
     float       partime;
 #endif
@@ -1146,16 +1206,16 @@ extern boolean reversestereo;
 extern boolean allowwindow;
 #endif
 extern  int      mouseadjustment;
-//
-// derived constants
-//
+/*
+** derived constants
+*/
 extern  int      heightnumerator;
 extern  fixed    scale;
 
 #ifndef SEGA_SATURN
-//
-// command line parameter variables
-//
+/*
+** command line parameter variables
+*/
 extern  boolean  param_debugmode;
 extern  boolean  param_nowait;
 extern  int      param_difficulty;
@@ -1222,7 +1282,7 @@ void    PlayDemo(int demonumber);
 void    RecordDemo(void);
 
 
-// JAB
+/* JAB */
 #ifndef SEGA_SATURN
 #define PlaySoundLocTile(s,tx,ty) PlaySoundLocGlobal(s,(((fixed)(tx) << TILESHIFT) + (TILEGLOBAL/2)),(((fixed)ty << TILESHIFT) + (TILEGLOBAL/2)))
 #endif
@@ -1248,7 +1308,7 @@ void    UpdateSoundLoc(void);
 
 #define JOYSCALE    2
 
-extern  size_t     funnyticount;           // FOR FUNNY BJ FACE
+extern  size_t     funnyticount;           /* FOR FUNNY BJ FACE */
 
 extern  exit_t      playstate;
 
@@ -1263,13 +1323,13 @@ extern boolean compass;
 extern  objtype     objlist[MAXACTORS];
 extern  objtype* newobj, * player, * objfreelist, * killerobj;
 
-extern  tiletype    tilemap[MAPSIZE][MAPSIZE];      // wall values only
+extern  tiletype    tilemap[MAPSIZE][MAPSIZE];      /* wall values only */
 extern  boolean        spotvis[MAPSIZE][MAPSIZE];
 #ifdef SEGA_SATURN
 extern  int         actorat[MAPSIZE][MAPSIZE];
 extern	unsigned	farmapylookup[MAPSIZE];
 extern statetype gamestates[MAXSTATES];
-//extern	objtype 	objlist[MAXACTORS],*new,*obj,*player,*lastobj,
+/* extern	objtype 	objlist[MAXACTORS],*new,*obj,*player,*lastobj, */
 extern	objtype* neww;
 #else
 extern  objtype* actorat[MAPSIZE][MAPSIZE];
@@ -1278,7 +1338,7 @@ extern  objtype* actorat[MAPSIZE][MAPSIZE];
 extern  boolean        mapseen[MAPSIZE][MAPSIZE];
 #endif
 #ifdef HIGHLIGHTPUSHWALLS
-//todo saturn: noclip does not affect anything...
+/* todo saturn: noclip does not affect anything... */
 extern  boolean  singlestep, godmode, noclip, ammocheat, mapreveal, highlightmode;
 #else
 extern  boolean  singlestep, godmode, noclip, ammocheat, mapreveal;
@@ -1299,18 +1359,16 @@ extern  int         lastgamemusicoffset;
 extern int gamecontrolstrafe;
 #endif
 
-//
-// control info
-//
+/*
+** control info
+*/
 #ifndef SEGA_SATURN
 extern  boolean     mouseenabled, joystickenabled;
 #endif
 #ifdef EXTRACONTROLS
 extern  boolean     mousemoveenabled;
 #endif
-#ifdef MOUSELOOK
 extern  boolean mouselookenabled, alwaysrunenabled;
-#endif
 extern  int         dirscan[4];
 extern  int         buttonscan[NUMBUTTONS];
 #ifndef SEGA_SATURN
@@ -1320,13 +1378,11 @@ extern  boolean     buttonheld[NUMBUTTONS];
 #endif
 extern  int         viewsize;
 
-//
-// current user input
-//
-extern  int         controlx, controly;              // range from -100 to 100
-#ifdef MOUSELOOK
+/*
+** current user input
+*/
+extern  int         controlx, controly;              /* range from -100 to 100 */
 extern  int         mousecontrolx,mousecontroly;
-#endif
 extern  boolean     buttonstate[NUMBUTTONS];
 
 extern  boolean     demorecord, demoplayback;
@@ -1425,18 +1481,18 @@ extern  short* spanstart;
 #ifndef SEGA_SATURN
 extern  short* wallheight;
 #endif
-//
-// math tables
-//
+/*
+** math tables
+*/
 extern  short* pixelangle;
 extern  int finetangent[FINEANGLES / 4];
 extern  fixed   sintable[ANGLES + ANGLES / 4];
 extern  fixed* costable;
 
-//
-// refresh variables
-//
-extern  fixed   viewx, viewy;                    // the focal point
+/*
+** refresh variables
+*/
+extern  fixed   viewx, viewy;                    /* the focal point */
 extern  fixed   viewsin, viewcos;
 
 extern  int     postx;
@@ -1445,9 +1501,9 @@ extern  unsigned char* postsource;
 extern  short   midangle;
 
 extern  unsigned short    horizwall[MAXWALLTILES], vertwall[MAXWALLTILES];
-//todo saturn:
+/* todo saturn: */
 #ifdef SEGA_SATURN
-void ScalePost(int postx, int texture, byte* postsource, byte* tilemapaddr, ray_struc* ray);
+void ScalePost(int postx, int texture, unsigned char* postsource, unsigned char* tilemapaddr, ray_struc* ray);
 #else
 void    ScalePost(void);
 #endif
@@ -1470,11 +1526,11 @@ typedef struct
 {
     unsigned short leftpix, rightpix;
     unsigned short dataofs[64];
-    // table data after dataofs[rightpix-leftpix+1]
+    /* table data after dataofs[rightpix-leftpix+1] */
 } compshape_t;
 
 #ifdef USE_SHADING
-void ScaleShape(short xcenter, short shapenum, short height, unsigned int flags);
+void ScaleShape(int xcenter, int shapenum, int height, unsigned int flags);
 #else
 void ScaleShape(int xcenter, int shapenum, int height);
 #endif
@@ -1522,16 +1578,16 @@ boolean CheckSight(objtype* ob);
 =============================================================================
 */
 
-//
-// player state info
-//
+/*
+** player state info
+*/
 extern  int thrustspeed;
 #ifdef SWITCH
 extern int JOYSTICK_DEAD_ZONE;
 extern int JOYSTICK_MAX_ZONE;
 extern HidAnalogStickState pos_left, pos_right;
 #endif
-extern  unsigned short     plux, pluy;         // player coordinates scaled to unsigned
+extern  unsigned short     plux, pluy;         /* player coordinates scaled to unsigned */
 extern  objtype* LastAttacker;
 extern statetype s_player;
 extern  short    anglefrac;
@@ -1577,7 +1633,7 @@ extern  short       doornum;
 #endif
 
 #ifdef BLAKEDOORS
-extern  unsigned short      ldoorposition[MAXDOORS], rdoorposition[MAXDOORS];   // leading edge of door 0=closed
+extern  unsigned short      ldoorposition[MAXDOORS], rdoorposition[MAXDOORS];   /* leading edge of door 0=closed */
 #endif
 extern  unsigned short      doorposition[MAXDOORS];
 
@@ -1586,7 +1642,7 @@ extern  unsigned char      areaconnect[NUMAREAS][NUMAREAS];
 extern  boolean   areabyplayer[NUMAREAS];
 
 extern unsigned short     pwallstate;
-extern unsigned short     pwallpos;        // amount a pushable wall has been moved (0-63)
+extern unsigned short     pwallpos;        /* amount a pushable wall has been moved (0-63) */
 extern unsigned short     pwallx, pwally;
 extern unsigned char     pwalldir;
 extern tiletype pwalltile;
@@ -1693,9 +1749,9 @@ extern  statetype s_hboom2;
 extern  statetype s_hboom3;
 #endif
 
-//
-// guards
-//
+/*
+** guards
+*/
 
 extern  statetype s_grdstand;
 
@@ -1729,9 +1785,9 @@ extern  statetype s_grddie2;
 extern  statetype s_grddie3;
 extern  statetype s_grddie4;
 
-//
-// ghosts
-//
+/*
+** ghosts
+*/
 extern  statetype s_blinkychase1;
 extern  statetype s_blinkychase2;
 extern  statetype s_inkychase1;
@@ -1741,9 +1797,9 @@ extern  statetype s_pinkychase2;
 extern  statetype s_clydechase1;
 extern  statetype s_clydechase2;
 
-//
-// dogs
-//
+/*
+** dogs
+*/
 extern  statetype s_dogpath1;
 extern  statetype s_dogpath1s;
 extern  statetype s_dogpath2;
@@ -1771,9 +1827,9 @@ extern  statetype s_dogdie3;
 extern  statetype s_dogdead;
 
 
-//
-// officers
-//
+/*
+** officers
+*/
 
 extern  statetype s_ofcstand;
 
@@ -1807,9 +1863,9 @@ extern  statetype s_ofcdie3;
 extern  statetype s_ofcdie4;
 extern  statetype s_ofcdie5;
 
-//
-// mutant
-//
+/*
+** mutant
+*/
 
 extern  statetype s_mutstand;
 
@@ -1843,9 +1899,9 @@ extern  statetype s_mutdie3;
 extern  statetype s_mutdie4;
 extern  statetype s_mutdie5;
 
-//
-// SS
-//
+/*
+** SS
+*/
 
 extern  statetype s_ssstand;
 
@@ -1882,9 +1938,9 @@ extern  statetype s_ssdie3;
 extern  statetype s_ssdie4;
 
 #ifndef SPEAR
-//
-// hans
-//
+/*
+** hans
+*/
 extern  statetype s_bossstand;
 
 extern  statetype s_bosschase1;
@@ -1908,9 +1964,9 @@ extern  statetype s_bossshoot6;
 extern  statetype s_bossshoot7;
 extern  statetype s_bossshoot8;
 
-//
-// gretel
-//
+/*
+** gretel
+*/
 extern  statetype s_gretelstand;
 
 extern  statetype s_gretelchase1;
@@ -1943,9 +1999,9 @@ extern  statetype s_gretelshoot8;
 =============================================================================
 */
 #ifdef SPEAR
-//
-// angel
-//
+/*
+** angel
+*/
 extern  statetype s_angelstand;
 
 extern  statetype s_angelchase1;
@@ -1986,9 +2042,9 @@ extern  statetype s_spark2;
 extern  statetype s_spark3;
 extern  statetype s_spark4;
 
-//
-// trans
-//
+/*
+** trans
+*/
 extern  statetype s_transstand;
 
 extern  statetype s_transchase1;
@@ -2039,9 +2095,9 @@ extern  statetype s_ubershoot5;
 extern  statetype s_ubershoot6;
 extern  statetype s_ubershoot7;
 
-//
-// will
-//
+/*
+** will
+*/
 extern  statetype s_willstand;
 
 extern  statetype s_willchase1;
@@ -2065,9 +2121,9 @@ extern  statetype s_willshoot4;
 extern  statetype s_willshoot5;
 extern  statetype s_willshoot6;
 
-//
-// death
-//
+/*
+** death
+*/
 extern  statetype s_deathstand;
 
 extern  statetype s_deathchase1;
@@ -2093,9 +2149,9 @@ extern  statetype s_deathshoot3;
 extern  statetype s_deathshoot4;
 extern  statetype s_deathshoot5;
 
-//
-// spectre
-//
+/*
+** spectre
+*/
 extern  statetype s_spectrewait1;
 extern  statetype s_spectrewait2;
 extern  statetype s_spectrewait3;
@@ -2115,9 +2171,9 @@ extern  statetype s_spectrewake;
 
 #endif
 
-//
-// schabb
-//
+/*
+** schabb
+*/
 extern  statetype s_schabbstand;
 
 extern  statetype s_schabbchase1;
@@ -2144,9 +2200,9 @@ extern  statetype s_needle4;
 
 extern  statetype s_schabbdeathcam;
 
-//
-// gift
-//
+/*
+** gift
+*/
 extern  statetype s_giftstand;
 
 extern  statetype s_giftchase1;
@@ -2177,9 +2233,9 @@ extern  statetype s_boom1;
 extern  statetype s_boom2;
 extern  statetype s_boom3;
 
-//
-// fat
-//
+/*
+** fat
+*/
 extern  statetype s_fatstand;
 
 extern  statetype s_fatchase1;
@@ -2219,9 +2275,9 @@ extern  statetype s_fatdeathcam;
 */
 
 
-//
-// fake
-//
+/*
+** fake
+*/
 extern  statetype s_fakestand;
 
 extern  statetype s_fakechase1;
@@ -2252,9 +2308,9 @@ extern  statetype s_fire1;
 extern  statetype s_fire2;
 
 
-//
-// hitler
-//
+/*
+** hitler
+*/
 extern  statetype s_mechachase1;
 extern  statetype s_mechachase1s;
 extern  statetype s_mechachase2;
@@ -2311,9 +2367,9 @@ extern  statetype s_hitlerdeathcam;
 ============================================================================
 */
 
-//
-// BJ victory
-//
+/*
+** BJ victory
+*/
 
 extern  statetype s_bjrun1;
 extern  statetype s_bjrun1s;
@@ -2397,16 +2453,18 @@ extern  void    LogDiscScreens(char* choice);
 */
 
 #ifdef USE_FEATUREFLAGS
-// The currently available feature flags
+/* The currently available feature flags */
 #define FF_STARSKY      0x0001
 #define FF_PARALLAXSKY  0x0002
 #define FF_CLOUDSKY     0x0004
 #define FF_RAIN         0x0010
 #define FF_SNOW         0x0020
 
-// The ffData... variables contain the 16-bit values of the according corners of the current level.
-// The corners are overwritten with adjacent tiles after initialization in SetupGameLevel
-// to avoid interpretation as e.g. doors.
+/* 
+** The ffData... variables contain the 16-bit values of the according corners of the current level.
+** The corners are overwritten with adjacent tiles after initialization in SetupGameLevel
+** to avoid interpretation as e.g. doors.
+*/
 extern int ffDataTopLeft, ffDataTopRight, ffDataBottomLeft, ffDataBottomRight;
 
 /*************************************************************
@@ -2417,7 +2475,7 @@ extern int ffDataTopLeft, ffDataTopRight, ffDataBottomLeft, ffDataBottomRight;
  * ffDataBottomRight: high byte: ceiling texture - low byte: floor texture
  *************************************************************/
 
- // The feature flags are stored as a wall in the upper right corner of each level
+/* The feature flags are stored as a wall in the upper right corner of each level */
 static wlinline unsigned short GetFeatureFlags(void)
 {
     return ffDataTopRight;
@@ -2438,4 +2496,4 @@ void GetFlatTextures(void);
 void DrawParallax(void);
 #endif
 
-#endif //__WL_DEF_H_
+#endif /* __WL_DEF_H_ */

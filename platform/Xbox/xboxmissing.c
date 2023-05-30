@@ -110,7 +110,7 @@ void XFreeMem(void)
 	MEMORYSTATUS stat;
 	static char         g_debugLoggerString[1024];
 
-    // Get the memory status.
+    /* Get the memory status. */
     GlobalMemoryStatus( &stat );
 	sprintf(g_debugLoggerString, "Free Mem = %d\n", (int)(stat.dwAvailPhys));
 	OutputDebugString(g_debugLoggerString);

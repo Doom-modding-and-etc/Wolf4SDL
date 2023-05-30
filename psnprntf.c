@@ -1,11 +1,12 @@
-//=============================================================================
-// psnprintf
-//
-// Portable snprintf
-//
-// Amongst other things, tries to always guarantee the buffer will be null-
-// terminated, which some implementations do not do.
-//=============================================================================
+/*=============================================================================
+** psnprintf
+**
+** Portable snprintf
+**
+** Amongst other things, tries to always guarantee the buffer will be null-
+** terminated, which some implementations do not do.
+** =============================================================================
+*/
 
 #include <string.h> /* for memset */
 #include <stdarg.h> /* for va_list */
@@ -460,7 +461,7 @@ int pvsnfmt_int(pvsnfmt_vars *info, pvsnfmt_intparm_t *ip) {
 #define POP() \
     *(--stackpos)
 
-    // haleyjd: init this array for safety
+    /* haleyjd: init this array for safety */
     memset(numstack, 0, sizeof(numstack));
 
     /* Retrieve value */
@@ -479,7 +480,7 @@ int pvsnfmt_int(pvsnfmt_vars *info, pvsnfmt_intparm_t *ip) {
             numbersigned = 0;
             break;
         case 'p':
-            unumber = (size_t)(ip->p); // FIXME: Not x64 friendly
+            unumber = (size_t)(ip->p); /* FIXME: Not x64 friendly */
             numbersigned = 0;
         }
         break;
@@ -497,7 +498,7 @@ int pvsnfmt_int(pvsnfmt_vars *info, pvsnfmt_intparm_t *ip) {
             numbersigned = 0;
             break;
         case 'p':
-            unumber = (size_t)(ip->p); // FIXME: Not x64 friendly
+            unumber = (size_t)(ip->p); /* FIXME: Not x64 friendly */
             numbersigned = numbersigned;
         }
         break;
@@ -515,7 +516,7 @@ int pvsnfmt_int(pvsnfmt_vars *info, pvsnfmt_intparm_t *ip) {
             numbersigned = 0;
             break;
         case 'p':
-            unumber = (size_t)(ip->p); // FIXME: Not x64 friendly
+            unumber = (size_t)(ip->p); /* FIXME: Not x64 friendly */
             numbersigned = 0;
         }
     } /* switch fmt to retrieve number */
@@ -774,7 +775,7 @@ typedef union DBLBITS_u {
  */
 
 int pvsnfmt_double(pvsnfmt_vars *info, double d) {
-    char *digits;
+
     int sign = 0;
     int dec;
     double value = d;
@@ -783,17 +784,14 @@ int pvsnfmt_double(pvsnfmt_vars *info, double d) {
     int pad = 0;
     int totallen;
     char signchar = 0;
-    int leadingzeros = 0;
-
-    int printdigits; /* temporary var used in different contexts */
-
+    
     int flags = info->flags;
     int width = info->width;
     const char fmt = *(info->fmt);
     int precision = info->precision;
 
     /* Check for special values first */
-    char *special = 0;
+    const char *special = 0;
     if(ISSNAN(value)) {
         special = "NaN";
     }
@@ -834,7 +832,7 @@ int pvsnfmt_double(pvsnfmt_vars *info, double d) {
 
         totallen += pad ;
 
-        // haleyjd 05/07/08: this was forgotten!
+        /* haleyjd 05/07/08: this was forgotten! */
         if(info->nmax <= 1) {
             return totallen;
         }
@@ -905,6 +903,9 @@ int pvsnfmt_double(pvsnfmt_vars *info, double d) {
     }
 
     if(fmt == 'f') {
+        char* digits;
+        int leadingzeros = 0;
+        int printdigits; /* temporary var used in different contexts */
         if(precision == UNKNOWN_PRECISION) {
             precision = 6;
         }

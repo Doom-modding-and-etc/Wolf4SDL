@@ -1,9 +1,9 @@
-//
-//	ID Engine
-//	ID_IN.h - Header file for Input Manager
-//	v1.0d1
-//	By Jason Blochowiak
-//
+/*
+**	ID Engine
+**	ID_IN.h - Header file for Input Manager
+**	v1.0d1
+**	By Jason Blochowiak
+*/
 
 #ifndef	__ID_IN_H_
 #define	__ID_IN_H_
@@ -36,8 +36,8 @@ typedef	int		ScanCode;
 #define	sc_None			0
 #define	sc_Bad			0xff
 #define	sc_Return		SDLK_MINUS
-#define	sc_Enter		sc_Return // ZR
-#define	sc_Escape		SDLK_PLUS //SDLK_j // ZL
+#define	sc_Enter		sc_Return /* ZR */
+#define	sc_Escape		SDLK_PLUS /* SDLK_j */ /* ZL */
 #define	sc_Space		SDLK_b
 #define	sc_BackSpace	SDLK_BACKSPACE
 #define	sc_Tab			SDLK_TAB
@@ -132,7 +132,7 @@ typedef	int		ScanCode;
 #define bt_touchpad SDL_CONTROLLER_BUTTON_TOUCHPAD
 #define bt_Max SDL_CONTROLLER_BUTTON_MAX
 
-//Axis stuff
+/* Axis stuff */
 #define gc_axis_invalid SDL_CONTROLLER_AXIS_INVALID
 #define gc_axis_leftx SDL_CONTROLLER_AXIS_LEFTX
 #define gc_axis_lefty SDL_CONTROLLER_AXIS_LEFTY
@@ -263,7 +263,7 @@ typedef	int		ScanCode;
 #define bt_touchpad SDL_CONTROLLER_BUTTON_TOUCHPAD
 #define bt_Max SDL_CONTROLLER_BUTTON_MAX
 
-//Axis stuff
+/* Axis stuff */
 #define gc_axis_invalid SDL_CONTROLLER_AXIS_INVALID
 #define gc_axis_leftx SDL_CONTROLLER_AXIS_LEFTX
 #define gc_axis_lefty SDL_CONTROLLER_AXIS_LEFTY
@@ -393,7 +393,7 @@ typedef	int		ScanCode;
 #define bt_touchpad SDL_CONTROLLER_BUTTON_TOUCHPAD
 #define bt_Max SDL_CONTROLLER_BUTTON_MAX
 
-//Axis stuff
+/* Axis stuff */
 #define gc_axis_invalid SDL_CONTROLLER_AXIS_INVALID
 #define gc_axis_leftx SDL_CONTROLLER_AXIS_LEFTX
 #define gc_axis_lefty SDL_CONTROLLER_AXIS_LEFTY
@@ -514,7 +514,7 @@ typedef	struct
 	unsigned short joyMultXH, joyMultYH;
 } JoystickDef;
 
-//Global variables
+/* Global variables */
 extern volatile boolean KeyboardState[129];
 extern boolean MousePresent;
 extern volatile boolean Paused;
@@ -529,12 +529,12 @@ boolean Keyboard(int key);
 void KeyboardSet(int key, boolean state);
 int KeyboardLookup(int key);
 
-// Function prototypes
+/* Function prototypes */
 #define	IN_KeyDown(code)	(Keyboard((code)))
 #define	IN_ClearKey(code)	{KeyboardSet(code, false);\
 							if (code == LastScan) LastScan = sc_None;}
 
-// DEBUG - put names in prototypes
+/* DEBUG - put names in prototypes */
 extern	void		IN_Startup(void), IN_Shutdown(void);
 extern	void		IN_ClearKeysDown(void);
 extern	void		IN_ReadControl(ControlInfo*);

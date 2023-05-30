@@ -22,10 +22,10 @@ void DC_DrawString(int x, int y, char *string)
 
 void DC_CLS()
 {
-	int x, y, ofs;
+	int x, y;
 	for(y = 0; y < 480; y++)
 	{
-		ofs = (640 * y);
+		int ofs = (640 * y);
 		for(x = 0; x < 640; x++)
 			vram_s[ofs + x] = 0;
 	}
@@ -379,12 +379,12 @@ void DC_CheckParameters()	{
 	if(!fp)
 		return;
 
-	// Get file length
+	/* Get file length */
 	fseek(fp, 0, SEEK_END);
 	length = ftell(fp);
 	fseek(fp, 0, SEEK_SET);
 
-	// Read file
+	/* Read file */
 	buf = (char *)malloc(length + 2);
 	fread(buf, 1, length, fp);
 	buf[length]=0;

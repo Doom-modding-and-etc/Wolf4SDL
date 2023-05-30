@@ -1,24 +1,25 @@
-// Emacs style mode select   -*- C -*-
-//-----------------------------------------------------------------------------
-//
-// Copyright(C) 2022-2023 André Guilherme 
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
-// 02111-1307, USA.
-//
-//-----------------------------------------------------------------------------
+/* Emacs style mode select   -*- C -*-
+** -----------------------------------------------------------------------------
+**
+** Copyright(C) 2022-2023 André Guilherme 
+**
+** This program is free software; you can redistribute it and/or
+** modify it under the terms of the GNU General Public License
+** as published by the Free Software Foundation; either version 2
+** of the License, or (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program; if not, write to the Free Software
+** Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+** 02111-1307, USA.
+**
+** -----------------------------------------------------------------------------
+*/
 
 #ifdef _MSC_VER
 #include <io.h>
@@ -32,7 +33,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef C89 //Adding again because some platforms don´t support stdbool.h
+#ifdef C89 /* Adding again because some platforms don´t support stdbool.h */
 
 #define false 0
 #define true 1
@@ -40,7 +41,7 @@
 typedef unsigned char boolean;
 #endif
 #else
-#include <stdbool.h> //for true and false.
+#include <stdbool.h> /* for true and false. */
 #ifndef _MSC_VER
 typedef unsigned char boolean;
 #endif
@@ -89,7 +90,11 @@ char* w3sstrupr(char* str);
 char* w3sstrlwr(char* str);
 #define w3sstrcasecmp strcasecmp
 #define w3sstrncasecmp strncasecmp
+#ifdef __USE_LARGEFILE64
+#define w3slseek lseek64
+#else
 #define w3slseek lseek
+#endif
 #define w3sunlink unlink
 #endif
 
@@ -117,6 +122,6 @@ int w3svsnprintf(char* buf, size_t buf_len, const char* s, va_list args);
 #define min(num1, num2) ((num1)<(num2)?(num1):(num2))
 #endif
 
-#ifdef C99
+#ifndef M_PI
 #define M_PI 3.14159265358979323846
-#endif //C89
+#endif /* M_PI */

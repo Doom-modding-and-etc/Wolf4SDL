@@ -20,8 +20,8 @@ endif
 
 CFLAGS_SDL ?= $(shell $(SDL_CONFIG) --cflags)
 LDFLAGS_SDL ?= $(shell $(SDL_CONFIG) --libs)
-CFLAGS += -O2 -Wall -W -g -Wpointer-arith -Wreturn-type -Wwrite-strings -Wcast-align -std=gnu99 \
--Wimplicit-int -Wsequence-point -DOLD $(CFLAGS_SDL)
+CFLAGS += -O2 -Wall -W -g -Wpointer-arith -Wreturn-type -Wwrite-strings -Wcast-align -std=c89 \
+-Wimplicit-int -Wsequence-point $(CFLAGS_SDL)
 
 LDFLAGS += $(LDFLAGS_SDL) -lm
 ifeq ($(SDL_MAJOR_VERSION),1)

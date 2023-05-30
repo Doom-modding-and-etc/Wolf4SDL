@@ -1,12 +1,13 @@
-// File: id_crt.h
-// Project: Wolf4SDL
-// Original author: Fabien sanglard 
-// Modificaton author: André Guilherme 
-// Original Creation date: 2014-08-26.
-// Description: 
-// Header file for the whole contents
-// Note: This file is heavly modified on: 
-// https://github.com/fabiensanglard/Chocolate-Wolfenstein-3D/blob/master/crt.h
+/* File: id_crt.h
+** Project: Wolf4SDL
+** Original author: Fabien sanglard 
+** Modificaton author: AndrÃ© Guilherme 
+** Original Creation date: 2014-08-26.
+** Description: 
+** Header file for the whole contents
+** Note: This file is heavly modified on: 
+** https://github.com/fabiensanglard/Chocolate-Wolfenstein-3D/blob/master/crt.h
+*/
 
 #ifndef ID_CRT_H
 #define ID_CRT_H
@@ -14,7 +15,8 @@
 /*
  * CRT aspect ratio is 4:3, height will be infered.
  */
-void CRT_Init(int _width); //TODO: Add height support.
+void CRT_Init(int _width); /* TODO: Add height support. */
+
 /*
  *   Trigger the Digital To Analogic convertion
  */

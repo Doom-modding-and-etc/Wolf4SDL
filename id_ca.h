@@ -1,7 +1,7 @@
 #ifndef __ID_CA_H_
 #define __ID_CA_H_
 
-//===========================================================================
+/* =========================================================================== */
 
 #define NUMMAPS         60
 #define MAPPLANES       3
@@ -9,7 +9,7 @@
 #ifndef VIEASM
 #define UNCACHEAUDIOCHUNK(chunk) {if(audiosegs[chunk]) {free(audiosegs[chunk]); audiosegs[chunk]=NULL;}}
 #endif
-//===========================================================================
+/* =========================================================================== */
 
 typedef struct
 {
@@ -19,7 +19,7 @@ typedef struct
     char    name[16];
 } maptype;
 
-//===========================================================================
+/* =========================================================================== */
 
 extern  unsigned short *mapsegs[MAPPLANES];
 extern  maptype *mapheaderseg[NUMMAPS];
@@ -37,7 +37,7 @@ extern  char  audioext[5];
 #endif
 #endif
 
-//===========================================================================
+/* =========================================================================== */
 
 boolean CA_LoadFile (const char *filename, void **ptr);
 boolean CA_WriteFile (const char *filename, void *ptr, int length);
@@ -59,4 +59,4 @@ void CA_CacheMap (int mapnum);
 
 void CA_CannotOpen(const char *name);
 
-#endif //__ID_CA_H_
+#endif /* __ID_CA_H_ */

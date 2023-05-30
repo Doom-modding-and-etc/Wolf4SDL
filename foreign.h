@@ -62,10 +62,8 @@
 #define	STR_GAMEPAD	"Gravis GamePad Enabled"
 #define	STR_SENS	"Mouse Sensitivity"
 #define	STR_CUSTOM	"Customize controls"
-#ifdef MOUSELOOK
 #define	STR_MLOOK	"Mouselook Enabled"
 #define	STR_ALRUN	"Always Run"
-#endif
 
 #define	STR_DADDY	"Can I play, Daddy?"
 #define	STR_HURTME	"Don't hurt me."

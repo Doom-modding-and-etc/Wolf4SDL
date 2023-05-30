@@ -1,4 +1,4 @@
-// WL_UTILS.C
+/* WL_UTILS.C */
 
 #include "wl_utils.h"
 
@@ -22,6 +22,7 @@ void *wsafe_malloc(size_t size, const char *fname, unsigned int line)
 
     return ptr;
 }
+
 /*
 ===================
 =

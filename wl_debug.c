@@ -1,4 +1,4 @@
-// WL_DEBUG.C
+/* WL_DEBUG.C */
 
 #ifdef _MSC_VER
 	#include <io.h>
@@ -46,13 +46,13 @@ int DebugKeys (void);
 
 void CountObjects (void)
 {
-    //int     i,total,count,active,inactive,doors;
+    /* int     i,total,count,active,inactive,doors; */
     int	i, total, count, active, inactive, lgdoors, lsdoors, edoors, ndoors, doors;
     char str[60];
     objtype *obj;
 
     CenterWindow (17,7);
-    //active = inactive = count = doors = 0;
+    /* active = inactive = count = doors = 0; */
     active = inactive = count = lgdoors = lsdoors = edoors = ndoors = doors = 0;
 
     US_Print("Total statics    :");
@@ -68,7 +68,7 @@ void CountObjects (void)
         if (statobjlist[i].shapenum != -1)
             count++;
         else
-            doors++;        //debug
+            doors++;        /* debug */
     }
     US_PrintUnsigned (count);
 
@@ -121,7 +121,7 @@ void CountObjects (void)
 }
 
 
-//===========================================================================
+/* =========================================================================== */
 #ifndef SEGA_SATURN
 /*
 ===================
@@ -142,16 +142,16 @@ void PictureGrabber (void)
         fname[7] = i % 10 + '0';
         fname[6] = (i / 10) % 10 + '0';
         fname[5] = i / 100 + '0';
-#if defined(_MSC_VER) || defined(DEVCPP)
+#if defined(DEVCPP)
         file = w3sopen(fname, O_RDONLY | O_BINARY);
 #else
         file = w3sopen(fname, O_RDONLY | O_BINARY, 644);
 #endif
-        if(file == -1) break;       // file does not exist, so use that filename
+        if(file == -1) break;       /* file does not exist, so use that filename */
         w3sclose(file);
     }
 
-    // overwrites WSHOT999.BMP if all wshot files exist
+    /* overwrites WSHOT999.BMP if all wshot files exist */
 
     SDL_SaveBMP(screenBuffer, fname);
 
@@ -193,18 +193,18 @@ void BasicOverhead (void)
     DrawPlayBorder ();
 #endif
 
-    //
-    // right side (raw)
-    //
+    /*
+    ** right side (raw)
+    */
     for (y = 0; y < mapheight; y++)
     {
         for (x = 0; x < mapwidth; x++)
             VWB_Bar ((x * zoom) + offx,(y * zoom) + offy,zoom,zoom,(unsigned char)(uintptr_t)actorat[x][y]);
     }
 
-    //
-    // left side (filtered)
-    //
+    /*
+    ** left side (filtered)
+    */
     offx -= 128;
 
     for (y = 0; y < mapheight; y++)
@@ -220,7 +220,7 @@ void BasicOverhead (void)
                 if (spotvis[x][y])
                     color = 111;
                 else
-                    color = 0;      // nothing
+                    color = 0;      /* nothing */
             }
             else if (MAPSPOT(x,y,1) == PUSHABLETILE)
                 color = 171;
@@ -304,9 +304,9 @@ void ShapeTest (void)
         {
             if (i < PMSpriteStart)
             {
-                //
-                // draw the wall
-                //
+                /*
+                ** draw the wall
+                */
                 vbuf = VL_LockSurface(screenBuffer);
                
                 if (!vbuf)
@@ -317,7 +317,7 @@ void ShapeTest (void)
 
                 centery = screenHeight / 2;
                 oldviewheight = viewheight;
-                viewheight = 0x7fff;            // quick hack to skip clipping
+                viewheight = 0x7fff;            /* quick hack to skip clipping */
 
                 for (x = 0, j = 0; x < TEXTURESIZE * scaleFactor; x++, j++, postx++)
                 {
@@ -339,9 +339,9 @@ void ShapeTest (void)
             }
             else if (i < PMSoundStart)
             {
-                //
-                // draw the sprite
-                //
+                /*
+                ** draw the sprite
+                */
                 vbuf = VL_LockSurface(screenBuffer);
 
                 if (!vbuf)
@@ -349,7 +349,7 @@ void ShapeTest (void)
 
                 centery = screenHeight / 2;
                 oldviewheight = viewheight;
-                viewheight = 0x7fff;            // quick hack to skip clipping
+                viewheight = 0x7fff;            /* quick hack to skip clipping */
 
                 SimpleScaleShape (screenWidth / 2,i - PMSpriteStart,64 * scaleFactor);
 
@@ -361,11 +361,11 @@ void ShapeTest (void)
             }
             else if (i == ChunksInFile - 1)
             {
-                //
-                // display sound info
-                //
+                /*
+                ** display sound info
+                */
                 US_Print ("\n\n Number of sounds: ");
-#ifndef VIEASM //WIP
+#ifndef VIEASM 
                 US_PrintUnsigned(NumDigi);
 
                 for (l = j = 0; j < NumDigi; j++)
@@ -380,13 +380,13 @@ void ShapeTest (void)
             else
             {
 #ifndef VIEASM
-                //
-                // display sounds
-                //
+                /*
+                ** display sounds
+                */
                 for (j = 0; j < NumDigi; j++)
                 {
                     if (j == NumDigi - 1)
-                        k = ChunksInFile - 1;    // don't let it overflow
+                        k = ChunksInFile - 1;    /* don't let it overflow */
                     else
                         k = DigiList[j + 1].startpage;
 
@@ -442,19 +442,19 @@ void ShapeTest (void)
                     i--;
                 break;
 
-            case sc_W:      // Walls
+            case sc_W:      /* Walls */
                 i = 0;
                 break;
 
-            case sc_S:      // Sprites
+            case sc_S:      /* Sprites */
                 i = PMSpriteStart;
                 break;
 
-            case sc_D:      // Digitized
+            case sc_D:      /* Digitized */
                 i = PMSoundStart;
                 break;
 
-            case sc_I:      // Digitized info
+            case sc_I:      /* Digitized info */
                 i = ChunksInFile - 1;
                 break;
 
@@ -477,7 +477,7 @@ void ShapeTest (void)
 }
 
 
-//===========================================================================
+/* =========================================================================== */
 
 
 /*
@@ -493,7 +493,7 @@ int DebugKeys (void)
     boolean esc;
     int level;
 
-    if (Keyboard(sc_B))             // B = border color
+    if (Keyboard(sc_B))             /* B = border color */
     {
         CenterWindow(20,3);
         PrintY+=6;
@@ -522,12 +522,12 @@ int DebugKeys (void)
         }
         return 1;
     }
-    if (Keyboard(sc_C))             // C = count objects
+    if (Keyboard(sc_C))             /* C = count objects */
     {
         CountObjects();
         return 1;
     }
-    if (Keyboard(sc_D))             // D = Darkone's FPS counter
+    if (Keyboard(sc_D))             /* D = Darkone's FPS counter */
     {
         CenterWindow (22,2);
         if (fpscounter)
@@ -539,10 +539,10 @@ int DebugKeys (void)
         fpscounter ^= 1;
         return 1;
     }
-    if (Keyboard(sc_E))             // E = quit level
+    if (Keyboard(sc_E))             /* E = quit level */ 
         playstate = ex_completed;
 
-    if (Keyboard(sc_F))             // F = facing spot
+    if (Keyboard(sc_F))             /* F = facing spot */
     {
         char str[60];
         CenterWindow (14,6);
@@ -566,8 +566,8 @@ int DebugKeys (void)
         IN_Ack();
         return 1;
     }
-#if 0 //Removed.
-    if (Keyboard(sc_G))             // G = god mode
+#if 0 /* Removed. */
+    if (Keyboard(sc_G))             /* G = god mode */
     {
         CenterWindow (12,2);
         if (godmode == 0)
@@ -586,12 +586,12 @@ int DebugKeys (void)
         return 1;
     }
 #endif
-    if (Keyboard(sc_H))             // H = hurt self
+    if (Keyboard(sc_H))             /* H = hurt self */
     {
         IN_ClearKeysDown ();
         TakeDamage (16,NULL);
     }
-    else if (Keyboard(sc_I))        // I = item cheat
+    else if (Keyboard(sc_I))        /* I = item cheat */
     {
         CenterWindow (12,3);
         US_PrintCentered ("Free items!");
@@ -607,7 +607,7 @@ int DebugKeys (void)
         IN_Ack ();
         return 1;
     }
-    else if (Keyboard(sc_K))        // K = give keys
+    else if (Keyboard(sc_K))        /* K = give keys */
     {
         CenterWindow(16,3);
         PrintY+=6;
@@ -622,16 +622,16 @@ int DebugKeys (void)
         }
         return 1;
     }
-    else if (Keyboard(sc_L))        // L = level ratios
+    else if (Keyboard(sc_L))        /* L = level ratios */
     {
         unsigned char x,start,end=LRpack;
 
-        if (end == 8)   // wolf3d
+        if (end == 8)   /* wolf3d */
         {
             CenterWindow(17,10);
             start = 0;
         }
-        else            // sod
+        else            /* sod */
         {
             CenterWindow(17,12);
             start = 0; end = 10;
@@ -666,7 +666,7 @@ again:
         return 1;
     }
 #ifdef REVEALMAP
-    else if (Keyboard(sc_M))        // M = Map reveal
+    else if (Keyboard(sc_M))        /* M = Map reveal */
     {
         mapreveal ^= true;
         CenterWindow (18,3);
@@ -680,7 +680,7 @@ again:
     }
 #endif
 #if defined(FIXEDLOGICRATE) && defined(LAGSIMULATOR)
-    else if (Keyboard(sc_M))        // M = lag simulator
+    else if (Keyboard(sc_M))        /* M = lag simulator */
     {
         lagging ^= 1;
         CenterWindow(18, 3);
@@ -695,7 +695,7 @@ again:
 #endif
 
 #if 0
-    else if (Keyboard(sc_N))        // N = no clip
+    else if (Keyboard(sc_N))        /* N = no clip */
     {
         noclip^=1;
         CenterWindow (18,3);
@@ -709,23 +709,24 @@ again:
     }
 #endif 
 #ifndef VIEWMAP
-    else if (Keyboard(sc_O))        // O = basic overhead
+    else if (Keyboard(sc_O))        /* O = basic overhead */
     {
         BasicOverhead();
         return 1;
     }
 #endif
-/*
+#if 0
 #ifndef SEGA_SATURN
-    else if(Keyboard(sc_P))         // P = Ripper's picture grabber
+    else if(Keyboard(sc_P))         /* P = Ripper's picture grabber */
     {
         PictureGrabber();
         return 1;
     }
 #endif
-*/
+#endif
+
 #ifdef AUTOMAP
-    else if (Keyboard(sc_Tab) && Keyboard(sc_M))        // Tab + m = full map
+    else if (Keyboard(sc_Tab) && Keyboard(sc_M))        /* Tab + m = full map */
     {
         memset(automap, 1, sizeof(automap));
         CenterWindow(12, 3);
@@ -736,9 +737,9 @@ again:
    }
 #endif
 
-    else if (Keyboard(sc_Q))        // Q = fast quit
+    else if (Keyboard(sc_Q))        /* Q = fast quit */
         Quit (NULL);
-    else if (Keyboard(sc_S))        // S = slow motion
+    else if (Keyboard(sc_S))        /* S = slow motion */
     {
         CenterWindow(30,3);
         PrintY+=6;
@@ -755,12 +756,12 @@ again:
         }
         return 1;
     }
-    else if (Keyboard(sc_T))        // T = shape test
+    else if (Keyboard(sc_T))        /* T = shape test */
     {
         ShapeTest ();
         return 1;
     }
-    else if (Keyboard(sc_V))        // V = extra VBLs
+    else if (Keyboard(sc_V))        /* V = extra VBLs */
     {
         CenterWindow(30,3);
         PrintY+=6;
@@ -775,7 +776,7 @@ again:
         }
         return 1;
     }
-    else if (Keyboard(sc_W))        // W = warp to level
+    else if (Keyboard(sc_W))        /* W = warp to level */
     {
         CenterWindow(26,3);
         PrintY+=6;
@@ -801,17 +802,17 @@ again:
         }
         return 1;
     }
-    else if (Keyboard(sc_X))        // X = item cheat
+    else if (Keyboard(sc_X))        /* X = item cheat */
     {
         CenterWindow (12,3);
         US_PrintCentered ("Extra stuff!");
         VL_UpdateScreen(screenBuffer);
-        // DEBUG: put stuff here
+        /* DEBUG: put stuff here */
         IN_Ack ();
         return 1;
     }
 #ifdef HIGHLIGHTPUSHWALLS
-    else if (Keyboard(sc_Y)) {   // Y = highlight pushwalls
+    else if (Keyboard(sc_Y)) {   /* Y = highlight pushwalls */
         CenterWindow(15, 2);
         if (highlightmode == 0) {
             US_PrintCentered("Glow Pushwalls ON");
@@ -886,8 +887,8 @@ again:
 
 #if defined(VIEWMAP) || !defined(SEGA_SATURN)
 
-#define COL_FLOOR   0x19                // empty area color
-#define COL_SECRET  WHITE               // pushwall color
+#define COL_FLOOR   0x19                /* empty area color */
+#define COL_SECRET  WHITE               /* pushwall color */
 
 
 short maporgx,maporgy;
@@ -952,7 +953,7 @@ void DrawMapWall (short sx, short sy, short wallpic)
 
 void DrawMapDoor (short sx, short sy, short doornum)
 {
-    int doorpage;
+    int doorpage = 0;
 
     switch (doorobjlist[doornum].lock)
     {
@@ -990,7 +991,7 @@ void DrawMapSprite (short sx, short sy, short shapenum)
     compshape_t *shape;
     unsigned char *linesrc;
     unsigned char *src;
-    unsigned char* linecmds;
+
     short     end,start,top;
 
     linesrc = PM_GetSpritePage(shapenum);
@@ -998,9 +999,10 @@ void DrawMapSprite (short sx, short sy, short shapenum)
 
     for (x = shape->leftpix; x <= shape->rightpix; x++)
     {
-        //
-        // reconstruct sprite and draw it
-        //
+        /*
+        ** reconstruct sprite and draw it
+        */
+        unsigned char* linecmds;
         linecmds = &linesrc[shape->dataofs[x - shape->leftpix]];
 
         for (end = READWORD(linecmds) >> 1; end; end = READWORD(linecmds) >> 1)
@@ -1014,7 +1016,7 @@ void DrawMapSprite (short sx, short sy, short shapenum)
                     *(vbuf + ylookup[sy + (start / tilewallratio)] + (sx + (x / tilewallratio))) = *src;
             }
 
-            linecmds += 6;                          // next segment list
+            linecmds += 6;                          /* next segment list */
         }
     }
 }
@@ -1088,9 +1090,9 @@ void OverheadRefresh (void)
 
             if (tile)
             {
-                //
-                // draw walls
-                //
+                /*
+                ** draw walls
+                */
                 if (tile < BIT_DOOR && tile != BIT_WALL)
                 {
                     if (DebugOk && Keyboard(sc_P) && MAPSPOT(x,y,1) == PUSHABLETILE)
@@ -1104,9 +1106,9 @@ void OverheadRefresh (void)
                 {
                     DrawMapFloor (sx,sy,COL_FLOOR);
 
-                    //
-                    // draw actors & static objects
-                    //
+                    /*
+                    ** draw actors & static objects
+                    */
                     if (DebugOk && ISPOINTER(tile))
                     {
                         obj = (objtype *)tile;
@@ -1139,13 +1141,13 @@ void OverheadRefresh (void)
         }
     }
 
-    //
-    // cover the empty bar at the bottom of the screen if necessary
-    //
+    /*
+    ** cover the empty bar at the bottom of the screen if necessary
+    */
     if (screenHeight != (viewtiley * tilesize))
         DrawMapBorder ();
 
-    VL_WaitVBL (3);                // don't scroll too fast
+    VL_WaitVBL (3);                /* don't scroll too fast */
 
     VL_UnlockSurface (screenBuffer);
     vbuf = NULL;
@@ -1217,9 +1219,9 @@ void ViewMap (void)
 
     do
     {
-        //
-        // let user pan around
-        //
+        /*
+        ** let user pan around
+        */
         PollControls ();
 
         if (controlx < 0 && maporgx > 0)

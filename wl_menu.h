@@ -1,6 +1,6 @@
-//
-// WL_MENU.H
-//
+/*
+** WL_MENU.H
+*/
 #ifndef __WL_MENU_H_
 #define __WL_MENU_H_
 
@@ -11,7 +11,7 @@
 #define BORD2COLOR      0x93
 #define DEACTIVE        0x9b
 #define BKGDCOLOR       0x9d
-//#define STRIPE                0x9c
+/* #define STRIPE                0x9c */
 
 #define MenuFadeOut()   VL_FadeOut(0,255,0,0,51,10)
 
@@ -44,8 +44,8 @@
 #endif
 #define SENSITIVE       60
 #if N3DS
-#define CENTERX         //((int) screenWidth / 2)
-#define CENTERY         //((int) screenHeight / 2)
+#define CENTERX         /* ((int) screenWidth / 2) */
+#define CENTERY         /* ((int) screenHeight / 2) */
 #else
 #define CENTERX         ((int) screenWidth / 2)
 #define CENTERY         ((int) screenHeight / 2)
@@ -103,11 +103,7 @@
 #define CTL_Y   86
 #endif
 #define CTL_W   284
-#ifdef MOUSELOOK
 #define CTL_H   86
-#else
-#define CTL_H   60
-#endif
 #ifdef SAVE_GAME_SCREENSHOT
 #define LSM_X   10
 #else
@@ -149,9 +145,9 @@
 #define CST_SPC 60
 
 
-//
-// TYPEDEFS
-//
+/*
+** TYPEDEFS
+*/
 typedef struct {
                 short x,y,amount,curpos,indent;
                 } CP_iteminfo;
@@ -169,9 +165,9 @@ typedef struct {
 extern CP_itemtype MainMenu[];
 extern CP_iteminfo MainItems;
 
-//
-// FUNCTION PROTOTYPES
-//
+/*
+** FUNCTION PROTOTYPES
+*/
 
 void US_ControlPanel(ScanCode);
 
@@ -233,9 +229,8 @@ void DrawCustKeybd(int hilight);
 void DrawCustKeys(int hilight);
 #ifdef EXTRACONTROLS
 void DrawCustExtra(int hilight);
-
 void PrintCustExtra(int i);
-#endif // EXTRACONTROLS
+#endif /* EXTRACONTROLS */
 void PrintCustMouse(int i);
 void PrintCustJoy(int i);
 void PrintCustKeybd(int i);
@@ -268,9 +263,9 @@ void FreeMusic(void);
 
 
 #ifndef EXTRACONTROLS
-enum { MOUSE, JOYSTICK, KEYBOARDBTNS, KEYBOARDMOVE };        // FOR INPUT TYPES
+enum { MOUSE, JOYSTICK, KEYBOARDBTNS, KEYBOARDMOVE };        /* FOR INPUT TYPES */
 #else
-enum { MOUSE, JOYSTICK, KEYBOARDBTNS, KEYBOARDMOVE, KEYBOARDEXTRA };        // FOR INPUT TYPES
+enum { MOUSE, JOYSTICK, KEYBOARDBTNS, KEYBOARDMOVE, KEYBOARDEXTRA };        /* FOR INPUT TYPES */
 #endif
 enum menuitems
 {
@@ -292,9 +287,9 @@ enum menuitems
         quit
 };
 
-//
-// WL_INTER
-//
+/*
+** WL_INTER
+*/
 typedef struct {
                 int kill,secret,treasure;
                 int time;

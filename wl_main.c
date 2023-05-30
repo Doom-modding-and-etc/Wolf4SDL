@@ -1,4 +1,4 @@
-// WL_MAIN.C
+/* WL_MAIN.C */
 
 #ifdef _MSC_VER
     #include <io.h>
@@ -43,10 +43,10 @@ extern unsigned char signon[];
 */
 
 
-#define FOCALLENGTH     (0x5700l)               // in global coordinates
-#define VIEWGLOBAL      0x10000                 // globals visable flush to wall
+#define FOCALLENGTH     (0x5700l)               /* in global coordinates */
+#define VIEWGLOBAL      0x10000                 /* globals visable flush to wall */
 
-#define VIEWWIDTH       256                     // size of view window
+#define VIEWWIDTH       256                     /* size of view window */
 #define VIEWHEIGHT      144
 
 /*
@@ -58,7 +58,7 @@ extern unsigned char signon[];
 */
 #ifdef EXTRACONTROLS
 boolean     mousemoveenabled;
-#endif // EXTRACONTROLS
+#endif /* EXTRACONTROLS */
 
 #ifdef SWITCH
 PadState pad;
@@ -68,16 +68,16 @@ char    str[80];
 int     dirangle[9] = {0,ANGLES/8,2*ANGLES/8,3*ANGLES/8,4*ANGLES/8,
                        5*ANGLES/8,6*ANGLES/8,7*ANGLES/8,ANGLES};
 
-//
-// proejection variables
-//
+/*
+** proejection variables
+*/
 fixed    focallength;
 unsigned int screenofs;
 int      viewscreenx, viewscreeny;
 int      viewwidth;
 int      viewheight;
 short    centerx,centery;
-int      shootdelta;           // pixels away from centerx a target can be
+int      shootdelta;           /* pixels away from centerx a target can be */
 fixed    scale;
 int  heightnumerator;
 
@@ -98,22 +98,22 @@ char    configdir[256] = "";
 #endif
 char    configname[13] = "config.";
 
-//
-// Command line parameter variables
-//
+/*
+** Command line parameter variables
+*/
 boolean param_debugmode = false;
 boolean param_nowait = false;
-int     param_difficulty = 1;           // default is "normal"
-int     param_tedlevel = -1;            // default is not to start a level
+int     param_difficulty = 1;           /* default is "normal" */
+int     param_tedlevel = -1;            /* default is not to start a level */
 int     param_joystickindex = 0;
 
 #if defined(_arch_dreamcast)
 int     param_joystickhat = 0;
-unsigned int     param_samplerate = 11025;       // higher samplerates result in "out of memory"
+unsigned int     param_samplerate = 11025;       /* higher samplerates result in "out of memory" */
 int     param_audiobuffer = 1024;
 #elif defined(GP2X_940)
 int     param_joystickhat = -1;
-unsigned int     param_samplerate = 11025;       // higher samplerates result in "out of memory"
+unsigned int     param_samplerate = 11025;       /* higher samplerates result in "out of memory" */
 int     param_audiobuffer = 128;
 #elif defined(SWITCH)
 int     param_joystickhat = -1;
@@ -173,7 +173,7 @@ void ReadConfig(void)
         w3ssnprintf((char*)configpath, sizeof(configpath), "%s/%s", configdir, configname);
     else
         strcpy((char*)configpath, configname);
-#if defined(_MSC_VER) || defined(DEVCPP)
+#if defined(DEVCPP)
     file = w3sopen((const char*)configpath, O_CREAT | O_WRONLY | O_BINARY);
 #else
     file = w3sopen((const char*)configpath, O_CREAT | O_WRONLY | O_BINARY, 0644);
@@ -181,9 +181,9 @@ void ReadConfig(void)
 
     if (file != -1)
     {
-        //
-        // valid config file
-        //
+        /*
+        ** valid config file
+        */
         unsigned short tmp;
 #ifndef EXTRACONTROLS
 		boolean dummyJoypadEnabled;
@@ -220,16 +220,16 @@ void ReadConfig(void)
 #endif
         w3sread(file,&viewsize,sizeof(viewsize));
         w3sread(file,&mouseadjustment,sizeof(mouseadjustment));
-#ifdef MOUSELOOK
-        //To keep backwards compatibility with older save files, we try to
-        //detect if there is still info to read from the file. If so, we
-        //assume it's the mouselook setting. If not, we simply close the file.
+        /* 
+        ** To keep backwards compatibility with older save files, we try to
+        ** detect if there is still info to read from the file. If so, we
+        ** assume it's the mouselook setting. If not, we simply close the file.
+        */
         if (w3sread(file,&mouselookenabled,sizeof(mouselookenabled)) != sizeof(mouselookenabled))
             printf ("Original Wolf4SDL config file detected (missing mouselook setting)\n");
 
         if (w3sread(file,&alwaysrunenabled,sizeof(alwaysrunenabled)) != sizeof(alwaysrunenabled))
-            printf ("Original Wolf4SDL config file detected (missing alwaysrun setting)\n");
-#endif		
+            printf ("Original Wolf4SDL config file detected (missing alwaysrun setting)\n");		
 #ifdef EXTRACONTROLS
         w3sread(file, &mousemoveenabled, sizeof(mousemoveenabled));
         w3sread(file, &dummyMouseMoveEnabled, sizeof(dummyMouseMoveEnabled));
@@ -252,7 +252,7 @@ void ReadConfig(void)
         if ((sds == sds_SoundBlaster && !SoundBlasterPresent))
             sds = sds_Off;
 
-        // make sure values are correct
+        /* make sure values are correct */
 
         if(mouseenabled)
         {
@@ -263,25 +263,21 @@ void ReadConfig(void)
         {
             joystickenabled = true;
         }
-#ifdef MOUSELOOK
         if(mouselookenabled) mouselookenabled=true;
-        if(alwaysrunenabled) alwaysrunenabled=true;
-#endif	
+        if(alwaysrunenabled) alwaysrunenabled=true;	
 #ifdef EXTRACONTROLS
         if (mousemoveenabled)
         {
             mousemoveenabled = true;
         }
-#endif // EXTRACONTROLS
+#endif /* EXTRACONTROLS */
         if (!MousePresent)
         {
             mouseenabled = false;
 #ifdef EXTRACONTROLS
             mousemoveenabled = false;
 #endif
-#ifdef MOUSELOOK
 			mouselookenabled = false;
-#endif
         }
         if (!IN_JoyPresent())
             joystickenabled = false;
@@ -300,9 +296,9 @@ void ReadConfig(void)
     }
     else
     {
-        //
-        // no config file, so select by hardware
-        //
+        /*
+        ** no config file, so select by hardware
+        */
 noconfig:
         if (SoundBlasterPresent || AdLibPresent)
         {
@@ -326,18 +322,14 @@ noconfig:
 #ifdef EXTRACONTROLS
             mousemoveenabled = true;
 #endif
-#ifdef MOUSELOOK
 			mouselookenabled = true;
-#endif
         }
         if (IN_JoyPresent())
             joystickenabled = true;
 
-        viewsize = 19;                          // start with a good size
+        viewsize = 19;                          /* start with a good size */
         mouseadjustment=5;
-#ifdef MOUSELOOK
-		alwaysrunenabled = false;
-#endif	
+		alwaysrunenabled = false;	
 #ifdef VIEASM
         soundvol = 100;
         musicvol = 100;
@@ -375,10 +367,10 @@ void WriteConfig(void)
         w3ssnprintf((char*)configpath, sizeof(configpath), "%s/%s", configdir, configname);
     else
         strcpy((char*)configpath, configname);
-#if defined(_MSC_VER) || defined(DEVCPP)
+#if defined(DEVCPP)
     file = w3sopen((const char*)configpath, O_CREAT | O_WRONLY | O_BINARY);
 #else
-    file = w3sopen(configpath, O_CREAT | O_WRONLY | O_BINARY, 0644);
+    file = w3sopen((const char*)configpath, O_CREAT | O_WRONLY | O_BINARY, 0644);
 #endif   
     if (file != -1)
     {
@@ -410,15 +402,15 @@ void WriteConfig(void)
 #endif
         w3swrite(file,&viewsize,sizeof(viewsize));
         w3swrite(file,&mouseadjustment,sizeof(mouseadjustment));
-#ifdef MOUSELOOK
-        //Mouselookenabled state is saved last, so if this config file is used
-        //with original Wold4SDL, this property is simply ignored.
-        write(file,&mouselookenabled,sizeof(mouselookenabled));
-        write(file,&alwaysrunenabled,sizeof(alwaysrunenabled));
-#endif	
+        /* 
+        ** Mouselookenabled state is saved last, so if this config file is used
+        ** with original Wold4SDL, this property is simply ignored.
+        */
+        w3swrite(file,&mouselookenabled,sizeof(mouselookenabled));
+        w3swrite(file,&alwaysrunenabled,sizeof(alwaysrunenabled));
 #ifdef EXTRACONTROLS
         w3swrite(file, &mousemoveenabled, sizeof(mousemoveenabled));
-#endif // EXTRACONTROLS
+#endif /* EXTRACONTROLS */
 #ifdef VIEASM
         w3swrite(file, &soundvol, sizeof(soundvol));
         w3swrite(file, &musicvol, sizeof(musicvol));
@@ -435,7 +427,7 @@ void WriteConfig(void)
 }
 
 
-//===========================================================================
+/* =========================================================================== */
 
 /*
 =====================
@@ -474,7 +466,7 @@ void NewGame (int difficulty,int episode)
 void ResetPlayer(void)
 {
     int ammoAmount, healthAmount;
-    if (tilemap[63][1] == 0) { // Start with a specific weapon
+    if (tilemap[63][1] == 0) { /* Start with a specific weapon */
         gamestate.weapon = gamestate.bestweapon = gamestate.chosenweapon = wp_knife;
     }
     else if (tilemap[63][1] == 1) {
@@ -486,14 +478,14 @@ void ResetPlayer(void)
     else if (tilemap[63][1] >= 3) {
         gamestate.weapon = gamestate.bestweapon = gamestate.chosenweapon = wp_chaingun;
     }
-    ammoAmount = tilemap[63][2]; //Start with a specific amount of ammo
+    ammoAmount = tilemap[63][2]; /* Start with a specific amount of ammo */
     if (ammoAmount > 99) {
         gamestate.ammo = 99;
     }
     else {
         gamestate.ammo = ammoAmount;
     }
-    if (tilemap[63][3] == 0) {   // Start with a certain percentage of health
+    if (tilemap[63][3] == 0) {   /* Start with a certain percentage of health */
         healthAmount = 25;
     }
     else if (tilemap[63][3] == 1) {
@@ -509,7 +501,7 @@ void ResetPlayer(void)
 }
 #endif
 
-//===========================================================================
+/* =========================================================================== */
 
 void DiskFlopAnim(int x,int y)
 {
@@ -517,7 +509,7 @@ void DiskFlopAnim(int x,int y)
     if (!x && !y)
         return;
     VWB_DrawPic(x,y,C_DISKLOADING1PIC+which);
-    if (!usedoublebuffering) VL_UpdateScreen(screenBuffer);    // ADDEDFIX 4 - Chris
+    if (!usedoublebuffering) VL_UpdateScreen(screenBuffer);    /* ADDEDFIX 4 - Chris */
     which^=1;
 }
 
@@ -591,9 +583,10 @@ boolean SaveTheGame(FILE *file,int x,int y)
     fwrite (areaconnect,sizeof(areaconnect),1,file);
     fwrite (areabyplayer,sizeof(areabyplayer),1,file);
 
-    // player object needs special treatment as it's in WL_AGENT.CPP and not in
-    // WL_ACT2.CPP which could cause problems for the relative addressing
-
+    /*
+    ** player object needs special treatment as it's in WL_AGENT.CPP and not in
+    ** WL_ACT2.CPP which could cause problems for the relative addressing
+    */
     ob = player;
     DiskFlopAnim(x,y);
     memcpy(&nullobj,ob,sizeof(nullobj));
@@ -607,7 +600,7 @@ boolean SaveTheGame(FILE *file,int x,int y)
         nullobj.state=(statetype *) ((uintptr_t)nullobj.state-(uintptr_t)&s_grdstand);
         fwrite(&nullobj,sizeof(nullobj),1,file);
     }
-    nullobj.active = ac_badobject;          // end of file marker
+    nullobj.active = ac_badobject;          /* end of file marker */
     DiskFlopAnim(x,y);
     fwrite(&nullobj,sizeof(nullobj),1,file);
 
@@ -654,9 +647,9 @@ boolean SaveTheGame(FILE *file,int x,int y)
     fwrite (&pwallpos,sizeof(pwallpos),1,file);
     checksum = DoChecksum((unsigned char *)&pwallpos,sizeof(pwallpos),checksum);
 
-    //
-    // WRITE OUT CHECKSUM
-    //
+    /*
+    ** WRITE OUT CHECKSUM
+    */
     fwrite (&checksum,sizeof(checksum),1,file);
 
     fwrite (&lastgamemusicoffset,sizeof(lastgamemusicoffset),1,file);
@@ -664,7 +657,7 @@ boolean SaveTheGame(FILE *file,int x,int y)
     return(true);
 }
 
-//===========================================================================
+/* =========================================================================== */
 
 /*
 ==================
@@ -735,7 +728,7 @@ boolean LoadTheGame(FILE *file,int x,int y)
             break;
         GetNewActor ();
         nullobj.state=(statetype *) ((uintptr_t)nullobj.state+(uintptr_t)&s_grdstand);
-        // don't copy over the links
+        /* don't copy over the links */
         memcpy (newobj,&nullobj,sizeof(nullobj)-8);
     }
 
@@ -782,7 +775,7 @@ boolean LoadTheGame(FILE *file,int x,int y)
     fread (&pwallpos,sizeof(pwallpos),1,file);
     checksum = DoChecksum((unsigned char *)&pwallpos,sizeof(pwallpos),checksum);
 
-    if (gamestate.secretcount)      // assign valid floorcodes under moved pushwalls
+    if (gamestate.secretcount)      /* assign valid floorcodes under moved pushwalls */
     {
         unsigned short *map, *obj; unsigned short tile, sprite;
         map = mapsegs[0]; obj = mapsegs[1];
@@ -807,7 +800,7 @@ boolean LoadTheGame(FILE *file,int x,int y)
             }
     }
 
-    Thrust(0,0);    // set player->areanumber to the floortile you're standing on
+    Thrust(0,0);    /* set player->areanumber to the floortile you're standing on */
 
     fread (&oldchecksum,sizeof(oldchecksum),1,file);
 
@@ -836,7 +829,7 @@ boolean LoadTheGame(FILE *file,int x,int y)
     return true;
 }
 
-//===========================================================================
+/* =========================================================================== */
 
 /*
 ==========================
@@ -853,7 +846,7 @@ void ShutdownId (void)
 #ifdef LWUDPCOMMS
     UDP_shutdown ();
 #endif
-    US_Shutdown ();         // This line is completely useless...
+    US_Shutdown ();         /* This line is completely useless... */
 #if defined(SWITCH) || defined (N3DS)
     printf("US_Shutdown DONE\n");
 #elif defined(PS2)
@@ -899,8 +892,8 @@ void ShutdownId (void)
 }
 
 
-//===========================================================================
-
+/* =========================================================================== */
+ 
 /*
 ==================
 =
@@ -920,9 +913,9 @@ void BuildTables (void)
 {
 	float angle;
     float anglestep;
-    //
-    // calculate fine tangents
-    //
+    /*
+    ** calculate fine tangents
+    */
 
     int i;
     for(i=0;i<FINEANGLES/8;i++)
@@ -932,10 +925,10 @@ void BuildTables (void)
         finetangent[FINEANGLES/4-1-i]=(int)((1/tang)*GLOBAL1);
     }
 
-    //
-    // costable overlays sintable with a quarter phase shift
-    // ANGLES is assumed to be divisable by four
-    //
+    /*
+    ** costable overlays sintable with a quarter phase shift
+    ** ANGLES is assumed to be divisable by four
+    */
 
     angle=0;
     anglestep=(float)(M_PI/2/ANGLEQUAD);
@@ -954,7 +947,7 @@ void BuildTables (void)
 #endif
 }
 
-//===========================================================================
+/* =========================================================================== */
 
 
 /*
@@ -976,27 +969,27 @@ void CalcProjection (int focal)
 
     focallength = focal;
     facedist = focal+MINDIST;
-    halfview = viewwidth/2;                                 // half view in pixels
+    halfview = viewwidth/2;                                 /* half view in pixels */
 
-    //
-    // calculate scale value for vertical height calculations
-    // and sprite x calculations
-    //
+    /*
+    ** calculate scale value for vertical height calculations
+    ** and sprite x calculations
+    */
     scale = (fixed) (halfview*facedist/(VIEWGLOBAL/2));
 
-    //
-    // divide heightnumerator by a posts distance to get the posts height for
-    // the heightbuffer.  The pixel height is height>>2
-    //
+    /*
+    ** divide heightnumerator by a posts distance to get the posts height for
+    ** the heightbuffer.  The pixel height is height>>2
+    */
     heightnumerator = (int)(TILEGLOBAL*scale)>>6;
 
-    //
-    // calculate the angle offset from view angle of each pixel's ray
-    //
+    /*
+    ** calculate the angle offset from view angle of each pixel's ray
+    */
 
     for (i=0;i<halfview;i++)
     {
-        // start 1/2 pixel over, so viewangle bisects two middle pixels
+        /* start 1/2 pixel over, so viewangle bisects two middle pixels */
         double  tang = (int)i*VIEWGLOBAL/viewwidth/facedist;
         float   angle = (float) atan(tang);
         int intang = (int) (angle*radtoint);
@@ -1007,7 +1000,7 @@ void CalcProjection (int focal)
 
 
 
-//===========================================================================
+/* =========================================================================== */
 
 /*
 ===================
@@ -1033,7 +1026,7 @@ void SetupWalls (void)
     }
 }
 
-//===========================================================================
+/* =========================================================================== */
 
 /*
 ==========================
@@ -1043,7 +1036,7 @@ void SetupWalls (void)
 ==========================
 */
 
-void SignonScreen (void)                        // VGA version
+void SignonScreen (void)                        /* VGA version */
 {
     VL_SetVGAPlaneMode ();
 
@@ -1114,8 +1107,8 @@ void FinishSignon (void)
 #endif
 }
 
-//===========================================================================
-
+/* =========================================================================== */
+ 
 /*
 =====================
 =
@@ -1124,14 +1117,16 @@ void FinishSignon (void)
 =====================
 */
 
-// channel mapping:
-//  -1: any non reserved channel
-//   0: player weapons
-//   1: boss weapons
+/*
+** channel mapping:
+**  -1: any non reserved channel
+**   0: player weapons
+**   1: boss weapons
+*/
 
 static int wolfdigimap[] =
     {
-        // These first sounds are in the upload version
+        /* These first sounds are in the upload version */
 #ifndef SPEAR
         HALTSND,                0,  -1,
         DOGBARKSND,             1,  -1,
@@ -1158,7 +1153,7 @@ static int wolfdigimap[] =
         YEAHSND,                32, -1,
 
 #ifndef UPLOAD
-        // These are in all other episodes
+        /* These are in all other episodes */
         DOGDEATHSND,            16, -1,
         AHHHGSND,               17, -1,
         DIESND,                 18, -1,
@@ -1175,24 +1170,24 @@ static int wolfdigimap[] =
         MECHSTEPSND,            31, -1,
 
         SCHEISTSND,             33, -1,
-        DEATHSCREAM4SND,        34, -1,         // AIIEEE
-        DEATHSCREAM5SND,        35, -1,         // DEE-DEE
-        DONNERSND,              36, -1,         // EPISODE 4 BOSS DIE
-        EINESND,                37, -1,         // EPISODE 4 BOSS SIGHTING
-        ERLAUBENSND,            38, -1,         // EPISODE 6 BOSS SIGHTING
-        DEATHSCREAM6SND,        39, -1,         // FART
-        DEATHSCREAM7SND,        40, -1,         // GASP
-        DEATHSCREAM8SND,        41, -1,         // GUH-BOY!
-        DEATHSCREAM9SND,        42, -1,         // AH GEEZ!
-        KEINSND,                43, -1,         // EPISODE 5 BOSS SIGHTING
-        MEINSND,                44, -1,         // EPISODE 6 BOSS DIE
-        ROSESND,                45, -1,         // EPISODE 5 BOSS DIE
+        DEATHSCREAM4SND,        34, -1,         /* AIIEEE */
+        DEATHSCREAM5SND,        35, -1,         /* DEE-DEE */
+        DONNERSND,              36, -1,         /* EPISODE 4 BOSS DIE */
+        EINESND,                37, -1,         /* EPISODE 4 BOSS SIGHTING */
+        ERLAUBENSND,            38, -1,         /* EPISODE 6 BOSS SIGHTING */
+        DEATHSCREAM6SND,        39, -1,         /* FART */
+        DEATHSCREAM7SND,        40, -1,         /* GASP */
+        DEATHSCREAM8SND,        41, -1,         /* GUH-BOY! */
+        DEATHSCREAM9SND,        42, -1,         /* AH GEEZ! */
+        KEINSND,                43, -1,         /* EPISODE 5 BOSS SIGHTING */
+        MEINSND,                44, -1,         /* EPISODE 6 BOSS DIE */
+        ROSESND,                45, -1,         /* EPISODE 5 BOSS DIE */
 
 #endif
 #else
-//
-// SPEAR OF DESTINY DIGISOUNDS
-//
+/*
+** SPEAR OF DESTINY DIGISOUNDS
+*/
         HALTSND,                0,  -1,
         CLOSEDOORSND,           2,  -1,
         OPENDOORSND,            3,  -1,
@@ -1211,14 +1206,14 @@ static int wolfdigimap[] =
         NAZIFIRESND,            17, -1,
         SLURPIESND,             18, -1,
         LEVELDONESND,           22, -1,
-        DEATHSCREAM4SND,        23, -1,         // AIIEEE
-        DEATHSCREAM3SND,        23, -1,         // DOUBLY-MAPPED!!!
-        DEATHSCREAM5SND,        24, -1,         // DEE-DEE
-        DEATHSCREAM6SND,        25, -1,         // FART
-        DEATHSCREAM7SND,        26, -1,         // GASP
-        DEATHSCREAM8SND,        27, -1,         // GUH-BOY!
-        DEATHSCREAM9SND,        28, -1,         // AH GEEZ!
-        GETGATLINGSND,          38, -1,         // Got Gat replacement
+        DEATHSCREAM4SND,        23, -1,         /* AIIEEE */
+        DEATHSCREAM3SND,        23, -1,         /* DOUBLY-MAPPED!!! */
+        DEATHSCREAM5SND,        24, -1,         /* DEE-DEE */
+        DEATHSCREAM6SND,        25, -1,         /* FART */
+        DEATHSCREAM7SND,        26, -1,         /* GASP */
+        DEATHSCREAM8SND,        27, -1,         /* GUH-BOY! */
+        DEATHSCREAM9SND,        28, -1,         /* AH GEEZ! */
+        GETGATLINGSND,          38, -1,         /* Got Gat replacement */
 
 #ifndef SPEARDEMO
         DOGBARKSND,             1,  -1,
@@ -1226,16 +1221,16 @@ static int wolfdigimap[] =
         SPIONSND,               19, -1,
         NEINSOVASSND,           20, -1,
         DOGATTACKSND,           21, -1,
-        TRANSSIGHTSND,          29, -1,         // Trans Sight
-        TRANSDEATHSND,          30, -1,         // Trans Death
-        WILHELMSIGHTSND,        31, -1,         // Wilhelm Sight
-        WILHELMDEATHSND,        32, -1,         // Wilhelm Death
-        UBERDEATHSND,           33, -1,         // Uber Death
-        KNIGHTSIGHTSND,         34, -1,         // Death Knight Sight
-        KNIGHTDEATHSND,         35, -1,         // Death Knight Death
-        ANGELSIGHTSND,          36, -1,         // Angel Sight
-        ANGELDEATHSND,          37, -1,         // Angel Death
-        GETSPEARSND,            39, -1,         // Got Spear replacement
+        TRANSSIGHTSND,          29, -1,         /* Trans Sight */
+        TRANSDEATHSND,          30, -1,         /* Trans Death */
+        WILHELMSIGHTSND,        31, -1,         /* Wilhelm Sight */
+        WILHELMDEATHSND,        32, -1,         /* Wilhelm Death */
+        UBERDEATHSND,           33, -1,         /* Uber Death */
+        KNIGHTSIGHTSND,         34, -1,         /* Death Knight Sight */
+        KNIGHTDEATHSND,         35, -1,         /* Death Knight Death */
+        ANGELSIGHTSND,          36, -1,         /* Angel Sight */
+        ANGELDEATHSND,          37, -1,         /* Angel Death */
+        GETSPEARSND,            39, -1,         /* Got Spear replacement */
 #endif
 #endif
         LASTSOUND
@@ -1248,9 +1243,7 @@ void InitDigiMap (void)
 
     for (map = wolfdigimap; *map != LASTSOUND; map += 3)
     {
-#ifdef VIEASM
-
-#else
+#ifndef VIEASM
         DigiMap[map[0]] = map[1];
         DigiChannel[map[1]] = map[2];
 #endif
@@ -1328,15 +1321,15 @@ void DoJukebox(void)
             ULTIMATE_MUS,
             PACMAN_MUS
 #else
-            XFUNKIE_MUS,             // 0
-            XDEATH_MUS,              // 2
-            XTIPTOE_MUS,             // 4
-            XTHEEND_MUS,             // 7
-            XEVIL_MUS,               // 17
-            XJAZNAZI_MUS,            // 18
-            XPUTIT_MUS,              // 21
-            XGETYOU_MUS,             // 22
-            XTOWER2_MUS              // 23
+            XFUNKIE_MUS,             /* 0 */
+            XDEATH_MUS,              /* 2 */
+            XTIPTOE_MUS,             /* 4 */
+            XTHEEND_MUS,             /* 7 */
+            XEVIL_MUS,               /* 17 */
+            XJAZNAZI_MUS,            /* 18 */
+            XPUTIT_MUS,              /* 21 */
+            XGETYOU_MUS,             /* 22 */
+            XTOWER2_MUS              /* 23 */
 #endif
         };
 
@@ -1424,7 +1417,7 @@ static void InitGame()
 #elif defined(PS2)
     ps2_printf_XY("GAME START", 4, 20, 20);
 #endif
-    // initialize SDL
+    /* initialize SDL */
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
     {
         printf("Unable to init SDL: %s\n", SDL_GetError());
@@ -1512,7 +1505,7 @@ static void InitGame()
     UDP_startup();
 #endif
 
-    // TODO: Will any memory checking be needed someday??
+    /* TODO: Will any memory checking be needed someday?? */
 #ifdef NOTYET
 #ifndef SPEAR
     if (mminfo.mainmem < 235000L)
@@ -1531,18 +1524,18 @@ static void InitGame()
 #endif
 
 
-//
-// build some tables
-//
+/*
+** build some tables
+*/
     InitDigiMap ();
 
     ReadConfig ();
 
     SetupSaveGames();
 
-//
-// HOLDING DOWN 'M' KEY?
-//
+/*
+** HOLDING DOWN 'M' KEY?
+*/
 	IN_ProcessEvents();
 
 #ifndef SPEARDEMO
@@ -1554,22 +1547,22 @@ static void InitGame()
     else
 #endif
 
-//
-// draw intro screen stuff
-//
+/*
+** draw intro screen stuff
+*/
     IntroScreen ();
 
-//
-// load in and lock down some basic chunks
-//
-    BuildTables ();          // trig tables
+/*
+** load in and lock down some basic chunks
+*/
+    BuildTables ();          /* trig tables */
     SetupWalls ();
 
     NewViewSize (viewsize);
 
-//
-// initialize variables
-//
+/*
+** initialize variables
+*/
     InitRedShifts ();
 #ifndef SPEARDEMO
     if(!didjukebox)
@@ -1582,7 +1575,7 @@ static void InitGame()
 #endif
 }
 
-//===========================================================================
+/* =========================================================================== */
 
 /*
 ==========================
@@ -1594,8 +1587,8 @@ static void InitGame()
 
 boolean SetViewSize (unsigned width, unsigned height)
 {
-    viewwidth = width&~15;                  // must be divisable by 16
-    viewheight = height&~1;                 // must be even
+    viewwidth = width&~15;                  /* must be divisable by 16 */
+    viewheight = height&~1;                 /* must be even */
     centerx = viewwidth/2-1;
     centery = viewheight / 2;
     shootdelta = viewwidth/10;
@@ -1608,9 +1601,9 @@ boolean SetViewSize (unsigned width, unsigned height)
         screenofs = viewscreeny*screenWidth+viewscreenx;
     }
 
-//
-// calculate trace angles and projection constants
-//
+/*
+** calculate trace angles and projection constants
+*/
     CalcProjection (FOCALLENGTH);
 
     return true;
@@ -1661,7 +1654,7 @@ void NewViewSize (int width)
 
 
 
-//===========================================================================
+/* =========================================================================== */
 
 /*
 ==========================
@@ -1685,7 +1678,7 @@ void Quit (const char *errorStr, ...)
     }
     else error[0] = 0;
 
-    if (!pictable)  // don't try to display the red box before it's loaded
+    if (!pictable)  /* don't try to display the red box before it's loaded */
     {
         ShutdownId();
         if (error)
@@ -1729,7 +1722,7 @@ void Quit (const char *errorStr, ...)
     {
 #ifdef NOTYET
         #ifndef JAPAN
-        memcpy((unsigned char *)0xb8000,screen+7,24*160); // 24 for SPEAR/UPLOAD compatibility
+        memcpy((unsigned char *)0xb8000,screen+7,24*160); /* 24 for SPEAR/UPLOAD compatibility */
         #endif
         SetTextCursor(0,23);
 #endif
@@ -1741,7 +1734,7 @@ void Quit (const char *errorStr, ...)
 #endif
 }
 
-//===========================================================================
+/* =========================================================================== */
 
 
 
@@ -1757,9 +1750,9 @@ void Quit (const char *errorStr, ...)
 static void DemoLoop()
 {
     int LastDemo = 0;
-//
-// check for launch from ted
-//
+/*
+** check for launch from ted
+*/
     if (param_tedlevel != -1)
     {
         param_nowait = true;
@@ -1778,9 +1771,9 @@ static void DemoLoop()
     }
 
 
-//
-// main game cycle
-//
+/*
+** main game cycle
+*/
 
 #ifndef DEMOTEST
 
@@ -1816,9 +1809,9 @@ static void DemoLoop()
     {
         while (!param_nowait)
         {
-//
-// title page
-//
+/*
+** title page
+*/
 #ifndef DEMOTEST
 
 #ifdef SPEAR
@@ -1838,18 +1831,18 @@ static void DemoLoop()
             if (IN_UserInput(TickBase*15))
                 break;
             VL_FadeOut (0, 255, 0, 0, 0, 30);
-//
-// credits page
-//
+/*
+** credits page
+*/
             VWB_DrawPic (0,0,CREDITSPIC);
             VL_UpdateScreen(screenBuffer);
             VL_FadeIn (0, 255, gamepal, 30);
             if (IN_UserInput(TickBase*10))
                 break;
             VL_FadeOut (0, 255, 0, 0, 0, 30);
-//
-// high scores
-//
+/*
+** high scores
+*/
             DrawHighScores ();
             VL_UpdateScreen (screenBuffer);
             VL_FadeIn (0, 255, gamepal, 30);
@@ -1857,9 +1850,9 @@ static void DemoLoop()
             if (IN_UserInput(TickBase*10))
                 break;
 #endif
-//
-// demo
-//
+/*
+** demo
+*/
 
 
             #ifndef SPEARDEMO
@@ -1902,7 +1895,7 @@ static void DemoLoop()
 }
 
 
-//===========================================================================
+/* =========================================================================== */
 
 #define IFARG(str) if(!strcmp(arg, (str)))
 
@@ -1956,11 +1949,11 @@ void CheckParameters(int argc, char *argv[])
             }
             else
             {
-				unsigned factor;
+				unsigned int factor;
                 screenWidth = atoi(argv[++i]);
                 screenHeight = atoi(argv[++i]);
                 factor = screenWidth / 320;
-                if(screenWidth % 320 || screenHeight != 200 * factor && screenHeight != 240 * factor)
+                if((screenWidth % 320) || (screenHeight != 200 * factor && screenHeight != 240 * factor))
                     printf("Screen size must be a multiple of 320x200 or 320x240!\n"), hasError = true;
             }
         }
@@ -2032,7 +2025,7 @@ void CheckParameters(int argc, char *argv[])
                 printf("The joystick option is missing the index argument!\n");
                 hasError = true;
             }
-            else param_joystickindex = atoi(argv[i]);   // index is checked in InitGame
+            else param_joystickindex = atoi(argv[i]);   /* index is checked in InitGame */
         }
         else IFARG("--joystickhat")
         {
@@ -2112,7 +2105,7 @@ void CheckParameters(int argc, char *argv[])
 #ifdef LWUDPCOMMS
         else IFARG(UDP_check(arg))
         {
-                                    // do nothing
+                                    /* do nothing */
         }
 #endif
         else hasError = true;
@@ -2192,7 +2185,7 @@ void CheckParameters(int argc, char *argv[])
 int main (int argc, char *argv[])
 {
 #ifdef SWITCH
-    // nxlink
+    /* nxlink */
     socketInitializeDefault();
 	nxlinkStdio();
 
