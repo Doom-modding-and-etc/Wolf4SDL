@@ -8,12 +8,9 @@
 
 void PS2_Started()
 {
-#ifdef RESET_IOP
+#ifdef IOP
     ps2_printf_XY("Reset IOP", 4, 20, 20);
     resetIOP();
-#else
-    ps2_printf_XY("Init RPC", 4, 20, 20);
-    initRPC();
 #endif
     ps2_printf_XY("Load SBV Patches...", 4, 20, 20);
     PS2_Load_RPC_Patches();
