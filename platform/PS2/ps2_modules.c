@@ -9,17 +9,13 @@
 void resetIOP()
 {
     SifInitRpc(0);
+#ifdef RESET_IOP	
     while (!SifIopReset("", 0)){};
+#else
+    while (!SifIopReset(NULL, 0)) {};
+#endif
     while (!SifIopSync()){};
     SifInitRpc(0);
-}
-#else
-void initRPC()
-{
-  SifInitRpc(0);
-  while (!SifIopReset(NULL, 0)) {};
-  while (!SifIopSync()){};
-  SifInitRpc(0);
 }
 #endif
 
