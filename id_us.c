@@ -549,7 +549,7 @@ US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 	unsigned short		i,
 		w, h;
 	unsigned char	    temp;
-	size_t	lasttime, lastdirtime, lastbuttontime, lastdirmovetime;
+	uintptr_t	lasttime, lastdirtime, lastbuttontime, lastdirmovetime;
 	
 	Direction   lastdir = dir_None;
 
@@ -573,7 +573,7 @@ US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 		boolean checkkey;
 		ScanCode	sc;
 		char		c;
-		size_t	curtime;
+		uintptr_t	curtime;
 		ReadAnyControl(&ci);
 
 		if (cursorvis)

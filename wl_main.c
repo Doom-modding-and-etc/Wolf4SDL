@@ -1293,7 +1293,7 @@ CP_itemtype MusicMenu[]=
 void DoJukebox(void)
 {
     int which,lastsong=-1;
-    size_t start;
+    uintptr_t start;
     unsigned songs[]=
         {
 #ifndef SPEAR

@@ -1060,7 +1060,7 @@ typedef struct objstruct
 
     short       angle;
     short       hitpoints;
-    size_t     speed;
+    uintptr_t     speed;
 
     short       temp1, temp2, hidden;
     struct objstruct* next, * prev;
@@ -1140,7 +1140,7 @@ typedef struct
 
     short       episode, secretcount, treasurecount, killcount,
         secrettotal, treasuretotal, killtotal;
-    size_t     TimeCount;
+    uintptr_t     TimeCount;
     int     killx, killy;
     boolean     victoryflag;            /* set during victory animations */
 #ifdef MAPCONTROLPARTIME
@@ -1308,7 +1308,7 @@ void    UpdateSoundLoc(void);
 
 #define JOYSCALE    2
 
-extern  size_t     funnyticount;           /* FOR FUNNY BJ FACE */
+extern  uintptr_t     funnyticount;           /* FOR FUNNY BJ FACE */
 
 extern  exit_t      playstate;
 
@@ -1350,7 +1350,7 @@ extern  int         controlstrafe;
 extern  int  extravbls;
 #endif
 extern  unsigned short        mapwidth, mapheight;
-extern  size_t    tics;
+extern  uintptr_t    tics;
 #ifndef SEGA_SATURN
 extern  int         lastgamemusicoffset;
 #endif
@@ -1468,7 +1468,7 @@ extern boolean lagging;
 
 extern  unsigned char* vbuf;
 
-extern  size_t lasttimecount;
+extern  uintptr_t lasttimecount;
 extern  int frameon;
 extern  boolean fizzlein, fpscounter;
 #ifdef AUTOMAP

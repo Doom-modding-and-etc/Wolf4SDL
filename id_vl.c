@@ -80,8 +80,8 @@ SDL_Color palette1[256], palette2[256];
 SDL_Color curpal[256];
 
 
-static size_t rndbits_y;
-static size_t rndmask;
+static uintptr_t rndbits_y;
+static uintptr_t rndmask;
 
 
 #define CASSERT(x) extern int ASSERT_COMPILE[((x) != 0) * 2 - 1];
@@ -210,7 +210,7 @@ WRGB(38,  0, 34)
 };
 
 /* XOR masks for the pseudo-random number sequence starting with n=17 bits */
-static const size_t rndmasks[] = {
+static const uintptr_t rndmasks[] = {
     /* n    XNOR from (starting at 1, not 0 as usual) */
 0x00012000,     /* 17   17,14 */
 0x00020400,     /* 18   18,11 */
@@ -231,7 +231,7 @@ CASSERT(lengthof(gamepal) == 256)
 /* ========================================================================== */
 
 /* Returns the number of bits needed to represent the given value */
-static size_t log2_ceil(unsigned int x)
+static uintptr_t log2_ceil(unsigned int x)
 {
     int n = 0;
     unsigned int v = 1;
@@ -254,8 +254,8 @@ static size_t log2_ceil(unsigned int x)
 
 void VL_Startup()
 {
-    size_t rndbits_x = log2_ceil(screenWidth);
-    size_t rndbits;
+    uintptr_t rndbits_x = log2_ceil(screenWidth);
+    uintptr_t rndbits;
     rndbits_y = log2_ceil(screenHeight);
 
     rndbits = rndbits_x + rndbits_y;
@@ -329,7 +329,7 @@ void VL_Shutdown (void)
 */
 
 boolean FizzleFade(SDL_Surface* source, int x1, int y1,
-    unsigned int width, unsigned int height, unsigned int frames, boolean abortable)
+    uintptr_t width, uintptr_t height, uintptr_t frames, boolean abortable)
 {
 #ifdef SEGA_SATURN
 #if 1
@@ -444,9 +444,9 @@ finished:
     return false;
 #endif
 #else
-    size_t x, y, p, pixperframe, frame;
-    size_t  rndval = 0, lastrndval = 0;
-    size_t      i, first = 1;
+    uintptr_t x, y, p, pixperframe, frame;
+    uintptr_t  rndval = 0, lastrndval = 0;
+    intptr_t      i, first = 1;
     unsigned char* srcptr;
     pixperframe = width * height / frames;
 
@@ -1176,7 +1176,7 @@ unsigned char VL_GetPixel(int x, int y)
 SDL_Surface* SDL_DuplicateSurface(SDL_Surface* surf)
 {
     SDL_Surface* cpy;
-    size_t size;
+    uintptr_t size;
     cpy = (SDL_Surface*)malloc(sizeof(SDL_Surface));
     memcpy((SDL_Surface*)cpy, (SDL_Surface*)surf, sizeof(SDL_Surface));
     cpy->format = (SDL_PixelFormat*)malloc(sizeof(SDL_PixelFormat));

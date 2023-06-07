@@ -507,7 +507,7 @@ extern	void		IN_Startup(void), IN_Shutdown(void);
 extern	void		IN_ClearKeysDown(void);
 extern	void		IN_ReadControl(ControlInfo*);
 extern  void        IN_Ack(void);
-extern	boolean		IN_UserInput(size_t delay);
+extern	boolean		IN_UserInput(uintptr_t delay);
 extern	char		IN_WaitForASCII(void);
 extern	ScanCode	IN_WaitForKey(void);
 extern	const char* IN_GetScanName(ScanCode);

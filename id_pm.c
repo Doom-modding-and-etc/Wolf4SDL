@@ -45,16 +45,16 @@ void PM_Startup (void)
     unsigned char     *page;
     unsigned int*pageOffsets;
     unsigned int pagesize;
-    int 
+    long 
 #ifndef SEGA_SATURN
     filesize,
 #endif
     datasize;
     FILE *file;
 #if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
-    char fname[13 + sizeof(DATADIR)] = DATADIR "vswap.";
+    const char fname[13 + sizeof(DATADIR)] = DATADIR "vswap.";
 #else   
-    char fname[13] = "vswap.";
+    const char fname[13] = "vswap.";
 #endif 
 #ifdef SEGA_SATURN
     unsigned char Chunks;

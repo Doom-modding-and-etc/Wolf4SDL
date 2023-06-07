@@ -238,7 +238,7 @@ SDMode oldsoundmode;
 #endif
 
 
-static int GRFILEPOS(const size_t idx)
+static int GRFILEPOS(const uintptr_t idx)
 {
 #ifdef SEGA_SATURN
     #define assert8(x) if(!(x)) { slPrint((char *)"asset test failed8", slLocate(10,20));return;}
