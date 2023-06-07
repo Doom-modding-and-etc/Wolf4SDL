@@ -1851,7 +1851,7 @@ CP_LoadGame (int quick)
                 strcpy(loadpath, name);
 
             file = fopen (loadpath, "rb");
-            fseek (file, 32, SEEK_SET);
+            w3sfseek (file, 32, SEEK_SET);
             loadedgame = true;
             LoadTheGame (file, 0, 0);
             loadedgame = false;
@@ -1890,7 +1890,7 @@ CP_LoadGame (int quick)
                 strcpy(loadpath, name);
 
             file = fopen (loadpath, "rb");
-            fseek (file, 32, SEEK_SET);
+            w3sfseek (file, 32, SEEK_SET);
 
             DrawLSAction (0);
             loadedgame = true;
@@ -2162,7 +2162,7 @@ CP_SaveGame (int quick)
             strcpy (input, &SaveGameNames[which][0]);
 
             fwrite (input, 1, 32, file);
-            fseek (file, 32, SEEK_SET);
+            w3sfseek (file, 32, SEEK_SET);
             SaveTheGame (file, 0, 0);
 #ifdef SAVE_GAME_SCREENSHOT
             bmpName[7] = which + '0';
@@ -2261,7 +2261,7 @@ CP_SaveGame (int quick)
                 w3sunlink (savepath);
                 file = fopen (savepath, "wb");
                 fwrite (input, 32, 1, file);
-                fseek (file, 32, SEEK_SET);
+                w3sfseek (file, 32, SEEK_SET);
 
                 DrawLSAction (1);
                 SaveTheGame (file, LSA_X + 8, LSA_Y + 5);
