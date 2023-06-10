@@ -2834,7 +2834,7 @@ void
 EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*PrintRtn) (int),
                int type)
 {
-    int j, z, exit, tick, redraw, which, x, picked;
+    int j, z, exit, tick, redraw, which = 0, x, picked;
     uintptr_t lastFlashTime;
     ControlInfo ci;
 
@@ -4637,7 +4637,9 @@ GetYorN (int x, int y, int pic)
 void
 Message (const char *string)
 {
-    int h = 0, w = 0, mw = 0, i, len = (int) strlen(string);
+    int h = 0, w = 0, mw = 0;
+    size_t i;
+    size_t len = strlen(string);
     fontstruct *font;
 
     fontnumber = 1;

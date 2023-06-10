@@ -360,7 +360,8 @@ Write (int x, int y, const char *string)
         L_UPIC, L_VPIC, L_WPIC, L_XPIC, L_YPIC, L_ZPIC
     };
 
-    int i, ox, nx, ny, len = (int) strlen(string);
+    int i, ox, nx, ny;
+    size_t len = strlen(string);
     char ch;
 
     ox = nx = x * 8;

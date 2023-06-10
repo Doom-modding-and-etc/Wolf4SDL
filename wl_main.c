@@ -361,7 +361,7 @@ void WriteConfig(void)
 #endif
 
     if(configdir[0])
-        w3ssnprintf((char*)configpath, sizeof(configpath), "%s/%s", configdir, configname);
+        w3ssnprintf(configpath, sizeof(configpath), "%s/%s", configdir, configname);
     else
         strcpy((char*)configpath, configname);
 #if defined(DEVCPP)
@@ -2077,7 +2077,7 @@ void CheckParameters(int argc, char *argv[])
             }
             else
             {
-                unsigned int len = (unsigned int)strlen(argv[i]);
+                size_t len = strlen(argv[i]);
                 if(len + 2 > sizeof(configdir))
                 {
                     printf("The config directory is too long!\n");
