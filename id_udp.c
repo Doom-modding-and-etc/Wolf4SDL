@@ -4,12 +4,14 @@
 =============================================================================
 ID_UDP.C NOTE:
 This file was ported to C by me André Guilherme to match the Wolf4SDL Coding
-standards, this is an very early stage and you may be can find bugs.
-You will need a SDL_net library to make this file work properly
+standards, this is an early stage support and you may find bugs.
+You will need a SDL_net library to make this source ile work properly
 =============================================================================
 */
 
 #include "wl_def.h"
+#include <stdint.h>
+#include <stdio.h>
 #ifdef LWUDPCOMMS
 #ifndef SEGA_SATURN
 #include <sys/types.h>
@@ -35,22 +37,11 @@ struct iovec
 
 typedef struct Peer_s
 {
-    /* struct Peer_s Vec; */
     int uid;
     IPaddress address;
     DataLayer protState;
     boolean expectingResp;
 }Peer;
-
-typedef struct 
-{
-    int uid;
-}PeerHasUid;
-
-typedef struct 
-{
-    boolean expectingResp;
-}SetPeerExpectingResp;
 
 /*
 =============================================================================
@@ -61,12 +52,11 @@ typedef struct
 */
 
 Stream* NetStream;
-Parameter* Comms_param;
 
-const int channel = 0;
-const int maxpacketsize = 1024;
-const int maxWaitResponseTics = 30;
-
+int channel = 0;
+int maxpacketsize = 1024;
+uintptr_t maxWaitResponseTics = 30;
+uintptr_t udp_tics = 0;
 unsigned short port = 0;
 int peeruid = 0;
 UDPsocket udpsock;
@@ -86,13 +76,11 @@ boolean server = false;
 */
 
 
-const boolean CSetPeerExpectingResp(Peer* peer);
+boolean CSetPeerExpectingResp(Peer* peer);
 
-const boolean CPlayer(const Player* player);
+boolean CPlayer(Player* player);
 
-const boolean CPeer(Peer* peer);
-
-
+boolean CPeer(Peer* peer);
 
 /*
 =====================================================================
@@ -101,7 +89,7 @@ const boolean CPeer(Peer* peer);
 
 =====================================================================
 */
-void serializeRaw(void* p, size_t sz)
+static void serializeRaw(void* p, size_t sz)
 {
     Stream stream;
     if (sz > stream.sizeleft)
@@ -122,149 +110,140 @@ void serializeRaw(void* p, size_t sz)
     stream.sizeleft -= sz;
 }
 
-void serializeInt(int* x)
+static void serializeInt(int* x)
 {
     serializeRaw(x, sizeof(x));
 }
 
-void serializeShort(short* x)
+static void serializeShort(short* x)
 {
     serializeRaw(x, sizeof(x));
 }
 
-void serializeUnsignedChar(unsigned char* x)
+static void serializeUnsignedChar(unsigned char* x)
 {
     serializeRaw(x, sizeof(x));
 }
 
-void serializeUnsignedInt(unsigned int* x)
+static void serializeUnsignedInt(unsigned int* x)
 {
     serializeRaw(x, sizeof(x));
 }
 
-void serializeUnsignedLong(unsigned long* x)
+static void serializeUnsignedLong(unsigned long* x)
 {
     serializeRaw(x, sizeof(x));
 }
 
-void serializeEnum(Stream* stream, int *x)
+static void serializeEnum(Stream* stream, int *x)
 {
-    x = stream;
+    x = (int*)stream;
     serializeInt(x);
 }
 
-wlinline void serializeStreamInt(Stream* stream, int* x)
+static wlinline void serializeStreamInt(Stream* stream, int* x)
 {
-    x = stream;
+    x = (int*)stream;
     serializeInt(x);
 }
 
-wlinline void serializeStreamShort(Stream* stream, short* x)
+static wlinline void serializeStreamShort(Stream* stream, short* x)
 {
-    x = stream;
+    x = (short*)stream;
     serializeShort(x);
 }
 
-wlinline void serializeStreamUnsignedChar(Stream* stream, unsigned char* x)
+static wlinline void serializeStreamUnsignedChar(Stream* stream, unsigned char* x)
 {
-    x = stream;
+    x = (unsigned char*)stream;
     serializeUnsignedChar(x);
 }
 
-wlinline void serializeStreamUnisgnedInt(Stream* stream, unsigned int* x)
+static wlinline void serializeStreamUnisgnedInt(Stream* stream, unsigned int* x)
 {
-    x = stream;
+    x = (unsigned int*)stream;
     serializeUnsignedInt(x);
 }
 
-wlinline void serializeStreanUnsignedLong(Stream* stream, unsigned long* x)
+static wlinline void serializeStreanUnsignedLong(Stream* stream, unsigned long* x)
 {
-    x = stream;
+    x = (unsigned long*)stream;
     serializeUnsignedLong(x);
 }
 
-wlinline void serializeWeaponEnum(Stream* stream, Weapon* x)
+static wlinline void serializeWeaponEnum(Stream* stream, Weapon* x)
 {
-    serializeEnum(stream, x);
+    serializeEnum(stream, (int*)x);
 }
 
-wlinline void serializeKey(Stream* stream, Key* x)
+static wlinline void serializeKey(Stream* stream, Key* x)
 {
-    serializeEnum(stream, x);
+    serializeEnum(stream, (int*)x);
 }
 
-
-void add(int x)
+static void serializeMask(Stream* stream)
 {
-    NetStream->set->mask |= (1 << x);
+    stream->mask;
 }
 
-const boolean has(int x)
+static wlinline void serializeSet(Stream* stream, Player* x)
 {
-    return (NetStream->set->mask & (1 << x)) != 0;
+    x->mask = stream->mask;
+    serializeMask((Stream*)x);
 }
 
-void serializeMask(Stream* stream)
+static void serializePlayerEvent(Stream* stream)
 {
-    stream->set->mask;
+    stream->playerItself->mvx;
+    stream->playerItself->mvy;
+    stream->playerItself->mvangle;
 }
 
-wlinline void serializeSet(Stream* stream, Set* x)
+static wlinline void serializePlayerEventStream(Stream* stream, Player* x)
 {
-
-    x = stream->set;
-    serializeMask(x);
+    x->mvx = stream->playerItself->mvx;
+    x->mvy = stream->playerItself->mvy;
+    x->mvangle = stream->playerItself->mvangle;
+    serializePlayerEvent((Stream*)x);
 }
 
-void serializePlayerEvent(Stream* stream)
+static void serializeWeaponSwitch(Stream* stream)
 {
-    stream->move->x;
-    stream->move->y;
-    stream->move->angle;
+    stream->playerItself->weapon;
 }
 
-wlinline void serializePlayerEventStream(Stream* stream, Move* x)
+static wlinline void serializeWeaponSwitchStream(Stream* stream, Player* x)
 {
-    x = stream->move;
-    serializePlayerEvent(x);
+    x->weapon = stream->playerItself->weapon;
+    serializeWeaponSwitch((Stream*)x);
 }
 
-void serializeWeaponSwitch(Stream* stream)
+static void serializePlayerEvent_Pickup(Stream* stream)
 {
-    stream->weaponSwitch;
+    stream->playerItself->picx;
+    stream->playerItself->picy;
 }
 
-wlinline void serializeWeaponSwitchStream(Stream* stream, WeaponSwitch* x)
+static wlinline void serializePlayerEvent_PickupStream(Stream* stream, Player* x)
 {
-    x = stream->weaponSwitch;
-    serializeWeaponSwitch(x);
+    x->picx = stream->playerItself->picx;
+    x->picy = stream->playerItself->picy;
+    serializePlayerEvent_Pickup((Stream*)x);
 }
 
-void serializePlayerEvent_Pickup(Stream* stream)
+static void serializePlayerEvent_Attack(Stream* stream)
 {
-    stream->pick->x;
-    stream->pick->y;
+    stream->playerItself->count;
 }
 
-wlinline void serializePlayerEvent_PickupStream(Stream* stream, Pickup* x)
+static wlinline void serializePlayerEvent_AttackStream(Stream* stream, Player* x)
 {
-    x = stream->pick;
-    serializePlayerEvent_Pickup(x);
+    x->count = stream->playerItself->count;
+
+    serializePlayerEvent_Attack((Stream*)x);
 }
 
-void serializePlayerEvent_Attack(Stream* stream)
-{
-    stream->attack->count;
-    stream->attack->peeruid;
-}
-
-inline void serializePlayerEvent_AttackStream(Stream* stream, Attack* x)
-{
-    x = stream->attack;
-    serializePlayerEvent_Attack(x);
-}
-
-void serializePlayerItself(Stream* stream)
+static void serializePlayerItself(Stream* stream)
 {
     stream->playerItself->peeruid;
     stream->playerItself->health;
@@ -274,46 +253,47 @@ void serializePlayerItself(Stream* stream)
     stream->playerItself->y;
     stream->playerItself->angle;
     stream->playerItself->keys;
-    stream->playerItself->moveEvents;
-    stream->playerItself->weaponSwitchEvents;
-    stream->playerItself->pickupEvents;
-    stream->playerItself->attackEvents;
+    stream->playerItself->mvx;
+    stream->playerItself->mvy;
+    stream->playerItself->mvangle;
+    stream->playerItself->atx;
+    stream->playerItself->aty;
+    stream->playerItself->count;
     stream->playerItself->eventIndices;
+    stream->playerItself->picx;
+    stream->playerItself->picy;
 }
 
-wlinline void serializePlayer(Stream* stream, Player* x)
+static wlinline void serializePlayer(Stream* stream, Player* x)
 {
     x = stream->playerItself;
-    serializePlayerItself(x);
+    serializePlayerItself((Stream*)x);
 }
 
-const boolean CPlayer(const Player* player)
+boolean CPlayer(Player* player)
 {
-    return player->hasuid == peeruid;
+    return player->peeruid == peeruid;
 }
 
-
-const boolean CPeer(Peer* peer)
+boolean CPeer(Peer* peer)
 {
     return peer->uid = peeruid;
 }
 
-const boolean CSetPeerExpectingResp(Peer* peer)
+boolean CSetPeerExpectingResp(Peer* peer)
 {
     return peer->expectingResp = foundPeerNoResp;
 }
 
-void serialize_DataLayer(Stream* stream)
+static void serialize_DataLayer(Stream* stream)
 {
-    stream->dataLayer->sendingPeerUid;
-    stream->dataLayer->packetSeqNum;
-    stream->dataLayer->players;
+    stream->dataLayer;
 }
 
-wlinline void serialize_DataLayerStream(Stream* stream, DataLayer* x)
+static wlinline void serialize_DataLayerStream(Stream* stream, DataLayer* x)
 {
     x = stream->dataLayer;
-    serialize_DataLayer(x);
+    serialize_DataLayer((Stream*)x);
 }
 
 /*
@@ -323,86 +303,168 @@ wlinline void serialize_DataLayerStream(Stream* stream, DataLayer* x)
 
 =====================================================================
 */
-#ifdef WIP
-void UDP_txPoll(void);
-void UDP_rxPoll(void);
-#endif
-void UDP_finishRxWaitPoll(void);
-void UDP_poll(void);
-
 void fillPacket(DataLayer* protState, UDPpacket* packet);
-#ifdef WIP
-boolean addPlayerTo(int peeruid, DataLayer& protState);
-void syncPlayerStateTo(DataLayer& protState);
-void prepareStateForSending(DataLayer& protState);
-#endif
+boolean addPlayerTo(int peeruid, DataLayer protState);
+void syncPlayerStateTo(DataLayer* protState);
+void prepareStateForSending(DataLayer protState);
 void parsePacket(DataLayer* protState);
-void handleStateReceived(DataLayer* rxProtState);
+void handleStateReceived(DataLayer rxProtState);
 
-typedef enum Poll
+typedef enum
 {
-#ifdef WIP
-   tx,
-   rx,
-#endif
-   finishRxWait,
+    tx,
+    rx,
+    finishRxWait,
 }PollState;
 
 typedef void (*Callback)(void);
 
+PollState cur = tx;
+
+void set(PollState x, uintptr_t duration)
+{
+    cur = x;
+    udp_tics = duration;
+}
+
+void UDP_txPoll(void)
+{
+    int numsent;
+    if (!foundPeerNoResp)
+    {
+        prepareStateForSending(protState);
+    }
+    fillPacket(&protState, packet);
+
+    numsent = SDLNet_UDP_Send(udpsock,
+        packet->channel, packet);
+    if (!numsent)
+    {
+        printf("SDLNet_UDP_Send: %s\n", SDLNet_GetError());
+    }
+    set(rx, maxWaitResponseTics);
+}
+
+
+void UDP_rxPoll(void)
+{
+getmore:
+    if (SDLNet_UDP_Recv(udpsock, packet) == -1)
+    {
+        printf("SDLNet_UDP_Recv: %s\n", SDLNet_GetError());
+    }
+    else
+    {
+        DataLayer rxProtState;
+        parsePacket(&rxProtState);
+        handleStateReceived(rxProtState);
+        goto getmore;
+    }
+
+    udp_tics -= tics;
+    if (udp_tics < 0)
+    {
+        if (peers != CSetPeerExpectingResp)
+        {
+            foundPeerNoResp = true;
+
+            set(tx, 0);
+        }
+        else
+        {
+            foundPeerNoResp = false;
+            packetSeqNum++;
+
+            set(tx, 0);
+            /*
+                        std::for_each(peers.begin(), peers.end(),
+                            SetPeerExpectingResp(true));
+            */
+        }
+    }
+    else
+    {
+        if (peers == CSetPeerExpectingResp < 0)
+        {
+            foundPeerNoResp = false;
+            packetSeqNum++;
+
+            set(finishRxWait, udp_tics);
+            /*
+                        std::for_each(peers.begin(), peers.end(),
+                            SetPeerExpectingResp(true));
+            */
+        }
+    }
+}
+
+void UDP_finishRxWaitPoll(void)
+{
+    udp_tics += tics;
+    if (tics < 0)
+    {
+        set(tx, 0);
+    }
+}
+
 Callback fns[] =
 {
-#ifdef WIP
     UDP_txPoll, /* tx */
     UDP_rxPoll, /* rx */
-#endif
     UDP_finishRxWaitPoll, /* finishRxWait */
 };
 
-
-/* TODO: PollState cur = tx; */
-PollState cur = finishRxWait;
-
-int udp_tics = 0;
-
-void set(PollState x, int duration)
-{
-     cur = x;
-     udp_tics = duration;
-}
-
 void UDP_poll(void)
 {
-     fns[cur]();
+    fns[cur]();
 }
 
-boolean is(PollState x) 
+static boolean isPoll(PollState x) 
 { 
     return cur == x; 
 }
 
-/*
-    inline boolean hasPeerWithUid(Peer::Vec &peers, int peeruid)
-    {
-        return std::find_if(peers.begin(), peers.end(),
-            PeerHasUid(peeruid)) != peers.end();
-    }
+static boolean findPlayer(Player* players, int pred)
+{
+    if (players->peeruid != pred)
+        return false;
+    return true;
+}
 
-    Peer &peerWithUid(Peer::Vec &peers, int peeruid)
+static Player* getPlayer(Player players, int pred)
+{
+    Player* it = &players;
+    it->peeruid = pred;
+    if (!it)
     {
-        Peer::Vec::iterator it = std::find_if(peers.begin(),
-            peers.end(), PeerHasUid(peeruid));
-        if (it == peers.end())
-        {
-            printf("no peer found with specified uid");
-        }
-        return *it;
+        printf("no player found");;
     }
-*/
+    return it;
+}
+
+static wlinline boolean hasPeerWithUid(Peer peers, int peeruid)
+{
+    if(peers.uid != peeruid)
+	    return false;
+
+     return true;
+}
+
+static Peer *peerWithUid(Peer *peers, int peeruid)
+{
+    peers->uid = peeruid;
+    if (!peers->uid)
+    {
+        printf("no peer found with specified uid");
+    }
+    return (Peer*)peers->uid;
+}
+
 
 void UDP_startup(void)
 {
     size_t i = 0;
+#ifdef DEBUG
     SDL_version compile_version;
     const SDL_version *link_version = SDLNet_Linked_Version();
     SDL_NET_VERSION(&compile_version);
@@ -414,6 +476,7 @@ void UDP_startup(void)
             link_version->major,
             link_version->minor,
             link_version->patch);
+#endif
 
     if (SDLNet_Init() == -1)
     {
@@ -447,11 +510,7 @@ void UDP_startup(void)
     }
 
     packet->channel = channel;
-#ifdef WIP
     set(server ? tx : rx, 0);
-#else 
-    set(server == finishRxWait, 0);
-#endif
 }
 
 void UDP_shutdown(void)
@@ -469,24 +528,34 @@ void UDP_shutdown(void)
 
     SDLNet_Quit();
 }
-/*
-boolean addPayerTo(int peeruid, DataLayer* protState)
-{
-    if (!findPlayer(protState-players, PlayerHasPeerUid(peeruid)))
-    {
-        protState.players.push_back(Player(peeruid));
-        return true;
-    }
 
+static void fillPacket(DataLayer* protState, UDPpacket* packet)
+{
+    Stream stream;
+    stream.data = packet->data;
+    stream.sizeleft = maxpacketsize;
+    stream.dir = out;
+
+    packet->len = maxpacketsize - stream.sizeleft;
+}
+
+static boolean addPlayerTo(int peeruid, DataLayer protState)
+{
+    if (!findPlayer(&protState.players, peeruid))
+    {
+        int array[1000], size = 0;
+	    array[size] = CPlayer(&protState.players);
+        size++;    
+       return true;
+    }
     return false;
 }
 
-void syncPlayerStateTo(DataLayer *protState)
+static void syncPlayerStateTo(DataLayer *protState)
 {
-    if (findPlayer(protState->players, PlayerHasPeerUid(peeruid)))
+    if (findPlayer(&protState->players, peeruid))
     {
-        Player *protPlayer = getPlayer(protState->players,
-            PlayerHasPeerUid(peeruid));
+        Player *protPlayer = getPlayer(protState->players, peeruid);
         protPlayer->x = player->x;
         protPlayer->y = player->y;
         protPlayer->angle = player->angle;
@@ -510,58 +579,43 @@ void syncPlayerStateTo(DataLayer *protState)
     }
 }
 
-
-void prepareStateForSending(DataLayer &protState)
+static void prepareStateForSending(DataLayer protState)
 {
+    size_t i;
     protState.sendingPeerUid = peeruid;
     protState.packetSeqNum = packetSeqNum;
 
-    // get all peer players in one vector
-    Player::Vec peerPlayers;
-    for (Peer::Vec::iterator it = peers.begin(); it != peers.end(); ++it)
+    /* get all peer players in one vector */
+    for (i = 0; i < 0; ++i)
     {
-        Peer &peer = *it;
-        Player::Vec &players = peer.protState.players;
-        if (players.size() < 1)
+        Peer *peer = peerWithUid(peers, protState.sendingPeerUid);
+        Player *players = &peer->protState.players;
+        if (players->count < 1)
             continue;
-
-        peerPlayers.push_back(players[0]);
     }
 
-    // update server state
-    // TODO: resolve event conflicts between players
-    for (Player::Vec::size_type i = 0; i < peerPlayers.size(); i++)
+    /* update server state */
+    /* TODO: resolve event conflicts between players */
+    for (i = 0; i < 0; i)
     {
-        Player &peerPlayer = peerPlayers[i];
-        const int uid = peerPlayer.peeruid;
+        Player peerPlayer;
+        int uid = peerPlayer.peeruid;
 
         if (addPlayerTo(uid, protState))
         {
-            Player &protPlayer = getPlayer(protState.players,
-                PlayerHasPeerUid(uid));
-            protPlayer = peerPlayer;
+            Player *protPlayer = getPlayer(protState.players, uid);
+            protPlayer = &peerPlayer;
         }
         else
         {
-            Player &protPlayer = getPlayer(protState.players,
-                PlayerHasPeerUid(uid));
+            Player *protPlayer = getPlayer(protState.players, uid);
 
-            protPlayer = peerPlayer;
+            protPlayer = &peerPlayer;
         }
     }
 }
-*/
-void fillPacket(DataLayer *protState, UDPpacket *packet)
-{
-    Stream stream;
-    stream.data = packet->data;
-    stream.sizeleft = maxpacketsize;
-    stream.dir = out;
 
-    packet->len = maxpacketsize - stream.sizeleft;
-}
-
-void parsePacket(DataLayer *rxProtState)
+static void parsePacket(DataLayer *rxProtState)
 {
    Stream stream;
    stream.data = packet->data;
@@ -570,119 +624,32 @@ void parsePacket(DataLayer *rxProtState)
 
    stream.dataLayer = rxProtState;
 }
-/*
-void handleStateReceived(DataLayer &rxProtState)
-{
-    const int uid = rxProtState.sendingPeerUid;
 
-    if (!hasPeerWithUid(peers, uid))
+static void handleStateReceived(DataLayer rxProtState)
+{
+    int uid = rxProtState.sendingPeerUid;
+    Peer *peer;
+    if (!hasPeerWithUid(peers[uid], uid))
     {
-        // unknown peer so ignore packet
+        /* unknown peer so ignore packet */
         return;
     }
 
-    Peer &peer = peerWithUid(peers, uid);
+    peer = peerWithUid(peers, uid);
     if (rxProtState.packetSeqNum != packetSeqNum)
     {
-        // ignore packet with wrong sequence number
+        /* ignore packet with wrong sequence number */
         return;
     }
 
-    peer.expectingResp = false;
-    peer.protState = rxProtState;
-}
-
-void UDP_txPoll(void)
-{
-    int numsent;
-    if (!foundPeerNoResp)
-    {
-        prepareStateForSending(protState);
-    }
-    fillPacket(protState, packet);
-
-    numsent = SDLNet_UDP_Send(udpsock,
-        packet->channel, packet);
-    if (!numsent)
-    {
-        printf("SDLNet_UDP_Send: %s\n", SDLNet_GetError());
-    }
-
-    set(rx, maxWaitResponseTics);
-}
-
-          
-void UDP_rxPoll(void)
-{
-getmore:
-    int numrecv = SDLNet_UDP_Recv(udpsock, packet);
-    if (numrecv == -1)
-    {
-        printf("SDLNet_UDP_Recv: %s\n", SDLNet_GetError());
-    }
-    else if (numrecv)
-    {
-        DataLayer rxProtState;
-        parsePacket(rxProtState);
-        handleStateReceived(rxProtState);
-
-        goto getmore;
-    }
-
-    udp_tics -= tics;
-    if (udp_tics < 0)
-    {
-        if (std::find_if(peers.begin(), peers.end(),
-            PeerIsExpectingResp()) != peers.end())
-        {
-            foundPeerNoResp = true;
-
-            set(tx, 0);
-        }
-        else
-        {
-            foundPeerNoResp = false;
-            packetSeqNum++;
-
-            set(tx, 0);
-
-            std::for_each(peers.begin(), peers.end(),
-                SetPeerExpectingResp(true));
-        }
-    }
-    else
-    {
-        if (std::find_if(peers.begin(), peers.end(),
-            PeerIsExpectingResp()) == peers.end())
-        {
-            foundPeerNoResp = false;
-            packetSeqNum++;
-
-            set(finishRxWait, udp_tics);
-
-            std::for_each(peers.begin(), peers.end(),
-                SetPeerExpectingResp(true));
-        }
-    }
-}
-*/
-
-void UDP_finishRxWaitPoll(void)
-{
-    udp_tics += tics;
-    if (tics < 0)
-    {
-#ifdef WIP
-        set(tx, 0);
-#endif
-    }
+    peer->expectingResp = false;
+    peer->protState = rxProtState;
 }
 
 void UDP_pollState(void)
 {
     UDP_poll();
 }
-
 
 /*
 =====================================================================
@@ -694,19 +661,19 @@ void UDP_pollState(void)
 
 #define IFARG(str) if(!strcmp(arg, (str)))
 
-boolean UDP_check(const char *arg)
+boolean UDP_check(char *arg)
 {
     IFARG("--port")
     {
-        if(++Comms_param->i >= Comms_param->argc)
+        if(++NetStream->param->i >= NetStream->param->argc)
         {
             printf("The port option is missing the udp server port "
                 "argument!\n");
-            Comms_param->hasError = true;
+            NetStream->param->hasError = true;
         }
         else
         {
-            port = atoi(Comms_param->argv[Comms_param->i]);
+            port = atoi(NetStream->param->argv[NetStream->param->i]);
         }
 
         return true;
@@ -714,28 +681,28 @@ boolean UDP_check(const char *arg)
     else IFARG("--addpeer")
     {
         IPaddress address;
-        const int uid = atoi(Comms_param->argv[Comms_param->i]);
-        const char* host = Comms_param->argv[Comms_param->i];
-        const int port = atoi(Comms_param->argv[Comms_param->i]);
+        const char* host = NetStream->param->argv[NetStream->param->i];
+        int uid = atoi(host);
+        int port = atoi(host);
 
-        if(++Comms_param->i >= Comms_param->argc)
+        if(++NetStream->param->i >= NetStream->param->argc)
         {
             printf("The addpeer option is missing the uid argument!\n");
-            Comms_param->hasError = true;
+            NetStream->param->hasError = true;
             return true;
         }
 
-        if(++Comms_param->i >= Comms_param->argc)
+        if(++NetStream->param->i >= NetStream->param->argc)
         {
             printf("The addpeer option is missing the host argument!\n");
-            Comms_param->hasError = true;
+            NetStream->param->hasError = true;
             return true;
         }
 
-        if(++Comms_param->i >= Comms_param->argc)
+        if(++NetStream->param->i >= NetStream->param->argc)
         {
             printf("The addpeer option is missing the port argument!\n");
-            Comms_param->hasError = true;
+            NetStream->param->hasError = true;
             return true;
         }
 
@@ -743,25 +710,24 @@ boolean UDP_check(const char *arg)
         {
             printf("IP address could not be resolved "
                 "from %s:%d!\n", host, port);
-            Comms_param->hasError = true;
+            NetStream->param->hasError = true;
             return true;
         }
-
-        /* peers.push_back(Peer(uid, address)); */
+/*        peers.push_back(Peer(uid, address));    */
 
         return true;
     }
     else IFARG("--peeruid")
     {
-        if(++Comms_param->i >= Comms_param->argc)
+        if(++NetStream->param->i >= NetStream->param->argc)
         {
             printf("The peeruid option is missing the uid "
                 "argument!\n");
-            Comms_param->hasError = true;
+            NetStream->param->hasError = true;
         }
         else
         {
-           peeruid = atoi(Comms_param->argv[Comms_param->i]);
+           peeruid = atoi(NetStream->param->argv[NetStream->param->i]);
         }
 
         return true;
