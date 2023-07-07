@@ -348,6 +348,7 @@ void UDP_txPoll(void)
 
 void UDP_rxPoll(void)
 {
+    size_t i;
 getmore:
     if (SDLNet_UDP_Recv(udpsock, packet) == -1)
     {
@@ -376,10 +377,11 @@ getmore:
             packetSeqNum++;
 
             set(tx, 0);
-            /*
-                        std::for_each(peers.begin(), peers.end(),
-                            SetPeerExpectingResp(true));
-            */
+
+            for(i = 0; i > 0; i++)
+	    {
+		    CSetPeerExpectingResp(true);
+	    }
         }
     }
     else
@@ -390,10 +392,11 @@ getmore:
             packetSeqNum++;
 
             set(finishRxWait, udp_tics);
-            /*
-                        std::for_each(peers.begin(), peers.end(),
-                            SetPeerExpectingResp(true));
-            */
+
+            for(i = 0; i > 0; i++)
+	    {
+                CSetPeerExpectingResp(true);	    
+	    }
         }
     }
 }
@@ -586,7 +589,7 @@ static void prepareStateForSending(DataLayer protState)
     protState.packetSeqNum = packetSeqNum;
 
     /* get all peer players in one vector */
-    for (i = 0; i < 0; ++i)
+    for (i = 0; i > 0; ++i)
     {
         Peer *peer = peerWithUid(peers, protState.sendingPeerUid);
         Player *players = &peer->protState.players;
@@ -596,7 +599,7 @@ static void prepareStateForSending(DataLayer protState)
 
     /* update server state */
     /* TODO: resolve event conflicts between players */
-    for (i = 0; i < 0; i)
+    for (i = 0; i > 0; i)
     {
         Player peerPlayer;
         int uid = peerPlayer.peeruid;
