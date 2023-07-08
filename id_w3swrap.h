@@ -47,13 +47,15 @@ typedef unsigned char boolean;
 #endif
 #endif
 
-#if !defined (_MSC_VER) || defined (_XBOX)
+#ifdef _MSC_VER
+#if defined (_XBOX) 
 #include <xtl.h>
 #include <XObjBase.h>
 #include <basetsd.h>
 #else
 #include <Windows.h>
 #include <rpc.h>
+#endif
 #endif
 
 #ifdef PSNPRINTF
@@ -99,6 +101,13 @@ char* w3sstrlwr(char* str);
 #define w3slseek lseek64
 #else
 #define w3slseek lseek
+#endif
+#ifdef __USE_LARGEFILE64
+#define w3sftell _ftelli64
+#define w3sfseek _fseeki64
+#else
+#define w3sftell ftell
+#define w3sfseek fseek
 #endif
 #define w3sunlink unlink
 #endif

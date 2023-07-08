@@ -19,19 +19,20 @@ loaded into the data segment
     #include <io.h>
 #elif defined(SWITCH)
 	#include <sys/_iovec.h>
-#elif defined(N3DS) || defined(PS2) 
+#elif defined(N3DS)
 struct iovec 
 {
      void *iov_base;     
      size_t iov_len;    
 };
+#elif defined(PS2)
+    #include <unistd.h>
 #elif !defined(_arch_dreamcast) 
-#if defined(DEVCPP) || !defined(__GNUC__)
+#if defined(DEVCPP)
     #include <io.h>
 #else
     #include <sys/uio.h>
 #endif
-    #include <unistd.h>
 #endif
 #endif
 
