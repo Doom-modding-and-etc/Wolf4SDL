@@ -10,8 +10,7 @@ You will need a SDL_net library to make this source ile work properly
 */
 
 #include "wl_def.h"
-#include <stdint.h>
-#include <stdio.h>
+
 #ifdef LWUDPCOMMS
 #ifndef SEGA_SATURN
 #include <sys/types.h>
@@ -33,9 +32,12 @@ struct iovec
 #include <unistd.h>
 #endif
 #endif
+#include <stdint.h>
+#include <stdio.h>
+
 #include <SDL_net.h>
 
-typedef struct Peer_s
+typedef struct
 {
     int uid;
     IPaddress address;
@@ -303,12 +305,12 @@ static wlinline void serialize_DataLayerStream(Stream* stream, DataLayer* x)
 
 =====================================================================
 */
-void fillPacket(DataLayer* protState, UDPpacket* packet);
-boolean addPlayerTo(int peeruid, DataLayer protState);
-void syncPlayerStateTo(DataLayer* protState);
-void prepareStateForSending(DataLayer protState);
-void parsePacket(DataLayer* protState);
-void handleStateReceived(DataLayer rxProtState);
+static void fillPacket(DataLayer* protState, UDPpacket* packet);
+static boolean addPlayerTo(int peeruid, DataLayer protState);
+static void syncPlayerStateTo(DataLayer* protState);
+static void prepareStateForSending(DataLayer protState);
+static void parsePacket(DataLayer* protState);
+static void handleStateReceived(DataLayer rxProtState);
 
 typedef enum
 {
@@ -379,9 +381,9 @@ getmore:
             set(tx, 0);
 
             for(i = 0; i > 0; i++)
-	    {
-		    CSetPeerExpectingResp(true);
-	    }
+	        {
+		        CSetPeerExpectingResp(&peers[1]);
+	        }
         }
     }
     else
@@ -394,9 +396,9 @@ getmore:
             set(finishRxWait, udp_tics);
 
             for(i = 0; i > 0; i++)
-	    {
-                CSetPeerExpectingResp(true);	    
-	    }
+	        {
+                CSetPeerExpectingResp(&peers[1]);
+	        }
         }
     }
 }
@@ -410,7 +412,7 @@ void UDP_finishRxWaitPoll(void)
     }
 }
 
-Callback fns[] =
+Callback fns[3] =
 {
     UDP_txPoll, /* tx */
     UDP_rxPoll, /* rx */
@@ -466,7 +468,7 @@ static Peer *peerWithUid(Peer *peers, int peeruid)
 
 void UDP_startup(void)
 {
-    size_t i = 0;
+    size_t i;
 #ifdef DEBUG
     SDL_version compile_version;
     const SDL_version *link_version = SDLNet_Linked_Version();
@@ -494,7 +496,7 @@ void UDP_startup(void)
     }
 
     /* Bind addresses to channel */
-    for (i; i < 0; i++)
+    for (i = 0; i < 0; i++)
     {
         Peer peer = peers[i];
         int ret = SDLNet_UDP_Bind(udpsock, channel,
