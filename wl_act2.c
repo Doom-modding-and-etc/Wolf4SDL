@@ -436,7 +436,7 @@ void T_Projectile (objtype *ob)
 {
     int deltax,deltay;
     int     damage = 0;
-    size_t speed;
+    uintptr_t speed;
 #ifdef SEEKER_MISSILES
     if (ob->obclass == rocketobj || ob->obclass == hrocketobj)
         HomeToPlayer(ob);
@@ -1350,7 +1350,7 @@ void SpawnWill (int tilex, int tiley)
 
 void T_Will (objtype *ob)
 {
-    size_t move;
+    uintptr_t move;
     int     dx,dy,dist;
     boolean dodge;
 
@@ -2125,7 +2125,7 @@ void T_GiftThrow (objtype *ob)
 
 void T_Schabb (objtype *ob)
 {
-    size_t move;
+    uintptr_t move;
     int     dx,dy,dist;
     boolean dodge;
 
@@ -2217,7 +2217,7 @@ void T_Schabb (objtype *ob)
 
 void T_Gift (objtype *ob)
 {
-    size_t move;
+    uintptr_t move;
     int     dx,dy,dist;
     boolean dodge;
 
@@ -2309,7 +2309,7 @@ void T_Gift (objtype *ob)
 
 void T_Fat (objtype *ob)
 {
-    size_t move;
+    uintptr_t move;
     int     dx,dy,dist;
     boolean dodge;
 
@@ -2654,7 +2654,7 @@ void T_FakeFire (objtype *ob)
 
 void T_Fake (objtype *ob)
 {
-    size_t move;
+    uintptr_t move;
 
     if (CheckLine(ob))                      /* got a shot at player? */
     {
@@ -2749,7 +2749,7 @@ CHASE
 
 void T_Chase (objtype *ob)
 {
-	size_t move;
+	uintptr_t move;
 	int target;
     int     dx,dy,dist,chance;
     boolean dodge;
@@ -2920,7 +2920,7 @@ void T_Chase (objtype *ob)
 
 void T_Ghosts (objtype *ob)
 {
-    size_t move;
+    uintptr_t move;
 
     if (ob->dir == nodir)
     {
@@ -2968,7 +2968,7 @@ void T_Ghosts (objtype *ob)
 
 void T_DogChase (objtype *ob)
 {
-    size_t    move;
+    uintptr_t    move;
     int    dx,dy;
 
 
@@ -3076,7 +3076,7 @@ void SelectPathDir (objtype *ob)
 
 void T_Path (objtype *ob)
 {
-    size_t    move;
+    uintptr_t    move;
 
     if (SightPlayer (ob))
         return;
@@ -3087,7 +3087,6 @@ void T_Path (objtype *ob)
         if (ob->dir == nodir)
             return;                                 /* all movement is blocked */
     }
-
 
     move = ob->speed*tics;
 
@@ -3373,9 +3372,9 @@ void SpawnBJVictory (void)
 
 void T_BJRun (objtype *ob)
 {
-    size_t    move;
+    uintptr_t    move;
 
-    move = BJRUNSPEED*(int)tics;
+    move = BJRUNSPEED*tics;
 
     while (move)
     {
@@ -3411,10 +3410,10 @@ void T_BJRun (objtype *ob)
 
 void T_BJJump (objtype *ob)
 {
-    int    move;
+    intptr_t    move;
 
-    move = BJJUMPSPEED*(int)tics;
-    MoveObj (ob,move);
+    move = BJJUMPSPEED*tics;
+    MoveObj (ob,(int)move);
 }
 
 

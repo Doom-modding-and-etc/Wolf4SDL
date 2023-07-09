@@ -67,7 +67,7 @@ boolean lagging = true;
 ** replacing refresh manager
 */
 unsigned short     mapwidth,mapheight;
-size_t tics;
+uintptr_t tics;
 
 /*
 ** control info
@@ -703,15 +703,15 @@ void PollControls (void)
     if (demoplayback || demorecord)   /* demo recording and playback needs to be constant */
     {
         /* wait up to DEMOTICS Wolf tics */
-        size_t curtime = WL_GetTicks();
-		fixed timediff;
+        uintptr_t curtime = WL_GetTicks();
+	    intptr_t timediff;
         lasttimecount += DEMOTICS;
-        timediff = ((fixed)lasttimecount * 100) / 7 - (fixed)curtime;
+        timediff = ((intptr_t)lasttimecount * 100) / 7 - (intptr_t)curtime;
         if(timediff > 0)
             SDL_Delay((unsigned int)timediff);
 
         if(timediff < -2 * DEMOTICS)       /* more than 2-times DEMOTICS behind? */
-            lasttimecount = (curtime * 7) / 100;    /* yes, set to current timecount */
+            lasttimecount = GetTimeCount();    /* yes, set to current timecount */
 
         tics = DEMOTICS;
     }
@@ -2028,18 +2028,18 @@ think:
 ===================
 */
 
-size_t funnyticount;
+uintptr_t funnyticount;
 
 #ifdef FIXEDLOGICRATE
 double accumulator, frametime_spent = 0;
 double dt = 1.0f / 70.0f; /* 70 FPS */
-size_t oldtime = 0;
+uintptr_t oldtime = 0;
 
 
 void ClockGameLogic(void)
 {
-    size_t curtime;
-    size_t deltatime;
+    uintptr_t curtime;
+    uintptr_t deltatime;
     double time_to_pass;
     if (demorecord || demoplayback)
     {
@@ -2068,7 +2068,7 @@ void ClockGameLogic(void)
 }
 
 #ifdef LAGSIMULATOR
-size_t next_lag_spike = -1;
+uintptr_t next_lag_spike = -1;
 
 
 void LagSimulator(void)
@@ -2287,7 +2287,7 @@ void PlayLoop (void)
         }
 #endif
 
-        gamestate.TimeCount += (fixed)tics;
+        gamestate.TimeCount += tics;
 #ifndef SEGA_SATURN
         UpdateSoundLoc ();      /* JAB */
 #endif

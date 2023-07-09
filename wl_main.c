@@ -170,13 +170,13 @@ void ReadConfig(void)
 #endif
 
     if(configdir[0])
-        w3ssnprintf((char*)configpath, sizeof(configpath), "%s/%s", configdir, configname);
+        w3ssnprintf(configpath, sizeof(configpath), "%s/%s", configdir, configname);
     else
-        strcpy((char*)configpath, configname);
+        strcpy(configpath, configname);
 #if defined(DEVCPP)
-    file = w3sopen((const char*)configpath, O_CREAT | O_WRONLY | O_BINARY);
+    file = w3sopen(configpath, O_CREAT | O_WRONLY | O_BINARY);
 #else
-    file = w3sopen((const char*)configpath, O_CREAT | O_WRONLY | O_BINARY, 0644);
+    file = w3sopen(configpath, O_CREAT | O_WRONLY | O_BINARY, 0644);
 #endif
 
     if (file != -1)
@@ -364,9 +364,9 @@ void WriteConfig(void)
 #endif
 
     if(configdir[0])
-        w3ssnprintf((char*)configpath, sizeof(configpath), "%s/%s", configdir, configname);
+        w3ssnprintf(configpath, sizeof(configpath), "%s/%s", configdir, configname);
     else
-        strcpy((char*)configpath, configname);
+        strcpy(configpath, configname);
 #if defined(DEVCPP)
     file = w3sopen((const char*)configpath, O_CREAT | O_WRONLY | O_BINARY);
 #else
@@ -1296,7 +1296,7 @@ CP_itemtype MusicMenu[]=
 void DoJukebox(void)
 {
     int which,lastsong=-1;
-    size_t start;
+    uintptr_t start;
     unsigned songs[]=
         {
 #ifndef SPEAR
@@ -2082,7 +2082,7 @@ void CheckParameters(int argc, char *argv[])
             }
             else
             {
-                unsigned int len = (unsigned int)strlen(argv[i]);
+                size_t len = strlen(argv[i]);
                 if(len + 2 > sizeof(configdir))
                 {
                     printf("The config directory is too long!\n");

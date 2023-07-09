@@ -1254,9 +1254,9 @@ void IN_Ack(void)
 //
 ///////////////////////////////////////////////////////////////////////////
 */
-boolean IN_UserInput(size_t delay)
+boolean IN_UserInput(uintptr_t delay)
 {
-    size_t	lasttime;
+    uintptr_t	lasttime;
 
     lasttime = GetTimeCount();
     IN_StartAck();

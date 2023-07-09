@@ -45,11 +45,11 @@ unsigned char* scr = NULL;
 
 unsigned char *vbuf;
 
-size_t        lasttimecount;
+uintptr_t        lasttimecount;
 int        frameon;
 boolean fpscounter;
 
-size_t fps_frames=0, fps_time=0, fps=0;
+uintptr_t fps_frames=0, fps_time=0, fps=0;
 
 #if defined(USE_FLOORCEILINGTEX) || defined(USE_CLOUDSKY)
 short *spanstart;
@@ -1116,7 +1116,7 @@ void DrawPlayerWeapon (void)
 void CalcTics (void)
 {
 #ifndef FIXEDLOGICRATE
-    size_t curtime;
+    uintptr_t curtime;
 #endif
 /*
 ** calculate tics since last refresh for adaptive timing
@@ -1130,7 +1130,7 @@ void CalcTics (void)
     lasttimecount += tics;
 #else
     curtime = WL_GetTicks();
-    tics = (curtime * 7) / 100 - lasttimecount;
+    tics = GetTimeCount() - lasttimecount;
     if(!tics)
     {
         /* wait until end of current tic */

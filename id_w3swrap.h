@@ -37,7 +37,7 @@
 
 #define false 0
 #define true 1
-#ifndef _WIN32
+#ifndef _MSC_VER
 typedef unsigned char boolean;
 #endif
 #else
@@ -48,7 +48,7 @@ typedef unsigned char boolean;
 #endif
 
 #ifdef _MSC_VER
-#ifdef _XBOX
+#if defined (_XBOX) 
 #include <xtl.h>
 #include <XObjBase.h>
 #include <basetsd.h>
@@ -56,7 +56,7 @@ typedef unsigned char boolean;
 #include <Windows.h>
 #include <rpc.h>
 #endif
-#endif 
+#endif
 
 #ifdef PSNPRINTF
 #include "psnprntf.h"
@@ -73,6 +73,13 @@ typedef unsigned char boolean;
 #define w3sstrcasecmp _stricmp
 #define w3sstrncasecmp _strnicmp
 #define w3sstrlwr _strlwr
+#ifdef _WIN64
+#define w3sftell _ftelli64
+#define w3sfseek _fseeki64
+#else
+#define w3sftell ftell
+#define w3sfseek fseek
+#endif
 #ifdef _WIN64
 #define w3slseek _lseeki64
 #else
@@ -94,6 +101,13 @@ char* w3sstrlwr(char* str);
 #define w3slseek lseek64
 #else
 #define w3slseek lseek
+#endif
+#ifdef __USE_LARGEFILE64
+#define w3sftell _ftelli64
+#define w3sfseek _fseeki64
+#else
+#define w3sftell ftell
+#define w3sfseek fseek
 #endif
 #define w3sunlink unlink
 #endif

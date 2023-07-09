@@ -75,7 +75,7 @@ void VL_RenderTextures();
 void	VL_MeasurePropString(const char* string, unsigned short* width, unsigned short* height);
 
 boolean FizzleFade(SDL_Surface* source, int x1, int y1,
-	unsigned int width, unsigned int height, unsigned int frames, boolean abortable);
+	uintptr_t width, uintptr_t height, uintptr_t frames, boolean abortable);
 
 void VL_Shutdown (void);
 

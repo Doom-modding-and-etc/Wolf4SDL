@@ -733,7 +733,7 @@ void
 BossKey (void)
 {
     int i;
-    size_t lastBlinkTime;
+    uintptr_t lastBlinkTime;
 
     SD_MusicOff ();
 
@@ -1851,7 +1851,7 @@ CP_LoadGame (int quick)
                 strcpy(loadpath, name);
 
             file = fopen (loadpath, "rb");
-            fseek (file, 32, SEEK_SET);
+            w3sfseek (file, 32, SEEK_SET);
             loadedgame = true;
             LoadTheGame (file, 0, 0);
             loadedgame = false;
@@ -1890,7 +1890,7 @@ CP_LoadGame (int quick)
                 strcpy(loadpath, name);
 
             file = fopen (loadpath, "rb");
-            fseek (file, 32, SEEK_SET);
+            w3sfseek (file, 32, SEEK_SET);
 
             DrawLSAction (0);
             loadedgame = true;
@@ -2162,7 +2162,7 @@ CP_SaveGame (int quick)
             strcpy (input, &SaveGameNames[which][0]);
 
             fwrite (input, 1, 32, file);
-            fseek (file, 32, SEEK_SET);
+            w3sfseek (file, 32, SEEK_SET);
             SaveTheGame (file, 0, 0);
 #ifdef SAVE_GAME_SCREENSHOT
             bmpName[7] = which + '0';
@@ -2261,7 +2261,7 @@ CP_SaveGame (int quick)
                 w3sunlink (savepath);
                 file = fopen (savepath, "wb");
                 fwrite (input, 32, 1, file);
-                fseek (file, 32, SEEK_SET);
+                w3sfseek (file, 32, SEEK_SET);
 
                 DrawLSAction (1);
                 SaveTheGame (file, LSA_X + 8, LSA_Y + 5);
@@ -2834,8 +2834,8 @@ void
 EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*PrintRtn) (int),
                int type)
 {
-    int j, z, exit, tick, redraw, which, x, picked;
-    size_t lastFlashTime;
+    int j, z, exit, tick, redraw, which = 0, x, picked;
+    uintptr_t lastFlashTime;
     ControlInfo ci;
 
 
@@ -4003,7 +4003,7 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
 {
     static int redrawitem = 1, lastitem = -1;
     int i, x, y, basey, exit, which, shape;
-    size_t lastBlinkTime, timer;
+    uintptr_t lastBlinkTime, timer;
     ControlInfo ci;
 
 
@@ -4300,11 +4300,11 @@ DrawGun (CP_iteminfo * item_i, CP_itemtype * items, int x, int *y, int which, in
 */
 
 void
-TicDelay (size_t count)
+TicDelay (uintptr_t count)
 {
     ControlInfo ci;
 
-    size_t startTime = GetTimeCount ();
+    uintptr_t startTime = GetTimeCount ();
     do
     {
         SDL_Delay(5);
@@ -4501,7 +4501,7 @@ int
 Confirm (const char *string)
 {
     int xit = 0, x, y, tick = 0;
-    size_t lastBlinkTime;
+    uintptr_t lastBlinkTime;
     int whichsnd[2] = { ESCPRESSEDSND, SHOOTSND };
     ControlInfo ci;
 
@@ -4637,7 +4637,9 @@ GetYorN (int x, int y, int pic)
 void
 Message (const char *string)
 {
-    int h = 0, w = 0, mw = 0, i, len = (int) strlen(string);
+    int h = 0, w = 0, mw = 0;
+    size_t i;
+    size_t len = strlen(string);
     fontstruct *font;
 
     fontnumber = 1;

@@ -16,8 +16,6 @@
 #define WL_GetTicks() SDL_GetTicks()
 #endif
 
-#define GetTicks() ((WL_GetTicks()*7)/100)
-
 #define GetTimeCount()  ((WL_GetTicks()*7)/100)
 
 #define ISPOINTER(x) ((((uintptr_t)(x)) & ~0xffff) != 0)

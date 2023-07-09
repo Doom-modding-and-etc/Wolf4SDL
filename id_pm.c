@@ -45,14 +45,14 @@ void PM_Startup (void)
     unsigned char     *page;
     unsigned int*pageOffsets;
     unsigned int pagesize;
-    int 
+    intptr_t 
 #ifndef SEGA_SATURN
     filesize,
 #endif
     datasize;
     FILE *file;
 #if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
-    char fname[13 + sizeof(DATADIR)] = DATADIR "vswap.";
+    const char fname[13 + sizeof(DATADIR)] = DATADIR "vswap.";
 #else   
     char fname[13] = "vswap.";
 #endif 
@@ -126,8 +126,8 @@ void PM_Startup (void)
     fread (pageLengths,sizeof(*pageLengths),ChunksInFile,file);
 #endif
 #ifndef SEGA_SATURN
-    fseek (file,0,SEEK_END);
-    filesize = ftell(file);
+    w3sfseek (file,0,SEEK_END);
+    filesize = w3sftell(file);
     datasize = filesize - pageOffsets[0];
 
     if (datasize < 0)
@@ -137,7 +137,7 @@ void PM_Startup (void)
     if (pageDataSize > (size_t) -1)
         Quit("The page file \"%s\" is too large!", fname);
 #endif
-    pageOffsets[ChunksInFile] = filesize;
+    pageOffsets[ChunksInFile] = (unsigned int)filesize;
 
 #ifndef SEGA_SATURN
     /*
@@ -215,7 +215,7 @@ void PM_Startup (void)
         else
             pagesize = pageOffsets[i + 1] - pageOffsets[i];
 
-        fseek (file,pageOffsets[i],SEEK_SET);
+        w3sfseek (file,(intptr_t)pageOffsets[i],SEEK_SET);
         fread (page,sizeof(*page),pagesize,file);
 
         page += pagesize;

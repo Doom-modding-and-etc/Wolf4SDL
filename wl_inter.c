@@ -3,7 +3,7 @@
 #include "wl_def.h"
 
 LRstruct LevelRatios[LRpack];
-size_t lastBreathTime = 0;
+uintptr_t lastBreathTime = 0;
 
 #ifdef SEGA_SATURN
 extern unsigned char* wallData;
@@ -360,7 +360,8 @@ Write (int x, int y, const char *string)
         L_UPIC, L_VPIC, L_WPIC, L_XPIC, L_YPIC, L_ZPIC
     };
 
-    int i, ox, nx, ny, len = (int) strlen(string);
+    int i, ox, nx, ny;
+    size_t len = strlen(string);
     char ch;
 
     ox = nx = x * 8;
@@ -420,7 +421,8 @@ Write (int x, int y, const char *string)
 void
 BJ_Breathe (void)
 {
-    static int which = 0, max = 10;
+    static int which = 0;
+    uintptr_t max = 10;
     int pics[2] = { L_GUYPIC, L_GUY2PIC };
 
 #ifdef SEGA_SATURN
@@ -429,7 +431,7 @@ BJ_Breathe (void)
 
     SDL_Delay(5);
 
-    if (GetTimeCount () - lastBreathTime > (size_t)max)
+    if (GetTimeCount () - lastBreathTime > max)
     {
         which ^= 1;
         VWB_DrawPic (0, 16, pics[which]);
