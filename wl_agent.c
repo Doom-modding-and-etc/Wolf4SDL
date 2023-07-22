@@ -186,13 +186,21 @@ void ControlMovement(objtype* ob)
 #ifdef SWITCH
 			Thrust(angle, (strafespeed*2) * MOVESCALE * (int)tics);
 #else
+#ifdef CSGO_STRAFE
+            Thrust(angle, RUNMOVE * MOVESCALE * (int)tics * 0.6f);
+#else
             Thrust(angle, RUNMOVE * MOVESCALE * (int)tics);
+#endif
 #endif
         else
 #ifdef SWITCH
 			Thrust(angle, strafespeed * MOVESCALE * (int)tics);
 #else
+#ifdef CSGO_STRAFE
+            Thrust(angle, BASEMOVE * MOVESCALE * (int)tics * 0.6f);
+#else
             Thrust(angle, BASEMOVE * MOVESCALE * (int)tics);
+#endif
 #endif
     }
 
@@ -203,15 +211,23 @@ void ControlMovement(objtype* ob)
             angle += ANGLES;
         if (buttonstate[bt_run])
 #ifdef SWITCH	
-			Thrust(angle, (strafespeed*2) * MOVESCALE * (int)tics );
+            Thrust(angle, (strafespeed * 2) * MOVESCALE * (int)tics);
 #else		
+#ifdef CSGO_STRAFE
+            Thrust(angle, RUNMOVE * MOVESCALE * (int)tics * 0.6f);
+#else
             Thrust(angle, RUNMOVE * MOVESCALE * (int)tics);
+#endif
 #endif
 		else
 #ifdef SWITCH
 			Thrust(angle, strafespeed * MOVESCALE * (int)tics);
 #else
+#ifdef CSGO_STRAFE
+            Thrust(angle, BASEMOVE * MOVESCALE * (int)tics * 0.6f);
+#else
             Thrust(angle, BASEMOVE * MOVESCALE * (int)tics);
+#endif
 #endif
     }
 #ifdef EXTRACONTROLS

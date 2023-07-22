@@ -822,7 +822,7 @@ int CalcRotate (objtype *ob)
 #ifdef FIXCALCROTATE
     viewangle = (int)( player->angle + (centerx - ob->viewx) / (8 * viewwidth / 320.0) );
 #else
-    viewangle = player->angle + (centerx - ob->viewx)/8;
+    viewangle = player->angle + (centerx - ob->viewx) / (8 * viewwidth / 320); /* Correct fix for high resolutions */
 #endif
 
 

@@ -194,6 +194,24 @@ int buttonjoy[32] =
     bt_nobutton, 
     bt_nobutton, 
     bt_nobutton,
+#elif defined(GAMEBOY_ZERO)
+     /* GBZ controller */
+     bt_nobutton, 
+     bt_nobutton, 
+     bt_nobutton, 
+     bt_attack, 
+     bt_esc, 
+     bt_run,
+     bt_nobutton, 
+     bt_nextweapon,
+     bt_straferight, 
+     bt_nobutton, 
+     bt_strafeleft, 
+     bt_use, 
+     bt_pause, 
+     bt_nobutton, 
+     bt_nobutton, 
+     bt_nobutton
 #else
     bt_attack,
     bt_strafe,
@@ -548,6 +566,29 @@ void PollKeyboardMove (void)
         controlx += delta;
 }
 
+#ifdef CSGO_STRAFE
+/*
+===================
+=
+= PollKeyboardMoveStrafe
+=
+===================
+*/
+
+void PollKeyboardMoveStrafe(void)
+{
+    int delta = buttonstate[bt_run] ? RUNMOVE * (int)tics : BASEMOVE * (int)tics;
+
+    if (Keyboard(dirscan[di_north]))
+        controly -= delta;
+    if (Keyboard(dirscan[di_south]))
+        controly += delta;
+    if (Keyboard(dirscan[di_west]))
+        buttonstate[bt_strafeleft] = true;
+    if (Keyboard(dirscan[di_east]))
+        buttonstate[bt_straferight] = true;
+}
+#endif
 
 /*
 ===================
@@ -923,7 +964,14 @@ void PollControls (void)
     controlx += cx * 10/(13-mouseadjustment);
 	controly += cy * 20/(13-mouseadjustment);	
 #else
+#ifdef CSGO_STRAFE
+    if (mouseenabled && IN_IsInputGrabbed())
+        PollKeyboardMoveStrafe();
+    else
+        PollKeyboardMove();
+#else
     PollKeyboardMove();
+#endif
 #if SDL_MAJOR_VERSION == 2
     PollGameControllerMove();
 #endif

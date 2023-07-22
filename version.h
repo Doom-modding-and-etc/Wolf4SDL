@@ -56,7 +56,7 @@
 /* #define LWUDPCOMMS */            /* Enables UDP networked communications for multiplayer support */
 /* #define CRT */ /* Makes the screen fixed in 4:3 */
 /* #define SCALE2X */ /*The screen will be scaled in 2x with linear filter. This guy needs to work with CRT defined or else it won´t work.. */
-#define FIXCALCROTATE         /* Apply a modified version of Ginyu's fix to make CalcRotate more accurate at high resolutions */
+/* #define FIXCALCROTATE */         /* Apply a modified version of Ginyu's fix to make CalcRotate more accurate at high resolutions */
 /* #define VIEASM */ /* Activates: VODKA-INDUCED ENTERTAINMENT ADVANCED SOUND MANAGER v0.9.2(Warning: only works with .wav and .ogg placed in sounds/ follow the asmcref.h for more details). */
 /* #define BANDEDHOLOWALLS */    /* Use the old DOS-style "banded" wall drawing behaviour when inside walls */
 /* #define USE_DOSBOX */  /* Replaces fmopl sound and uses DOSBOX Sound instead. */
@@ -91,6 +91,12 @@
 /* By: WallHack */
 /* #define COMPASS */ /* Add the compass */
 /* end */
+/* By: ncornette(aka: Nicolas Cornette) */
+/* #define CSGO_STRAFE */ /* Hack to enable CS-Like WASD keys strafe + Mouse. */
+/* end */
+/* By: FraserChapman */
+/* #define GAMEBOY_ZERO */ /* Replaces keyboard buttons to GAMEBOY_ZERO buttons */
+/* */
 
 #if defined(SWITCH) 
 #define DATADIR "/switch/wolf4sdl/wolf3d/"
