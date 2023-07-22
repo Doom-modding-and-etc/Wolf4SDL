@@ -199,7 +199,7 @@ static void YM3812UpdateOne(opl3_chip* which, short* stream, int length)
 }
 #else
 
-static const int oplChip = 0;
+static int oplChip = 0;
 
 #endif
 

@@ -774,7 +774,7 @@ void CAL_SetupGrFile (void)
 	intptr_t headersize;
 	int expectedsize;
 	unsigned char data[lengthof(grstarts) * 3];
-	const unsigned char* d;
+	unsigned char* d;
 	int* i;
 /*
 ** load ???dict.ext (huffman dictionary for graphics files)
@@ -823,7 +823,7 @@ void CAL_SetupGrFile (void)
     d = data;
     for (i = grstarts; i != endof(grstarts); ++i)
     {
-        const int val = d[0] | d[1] << 8 | d[2] << 16;
+        int val = d[0] | d[1] << 8 | d[2] << 16;
         *i = (val == 0x00FFFFFF ? -1 : val);
         d += 3;
     }
