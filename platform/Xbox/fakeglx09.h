@@ -27,13 +27,13 @@ NOTE:
 #ifndef H_FAKEGLWRAPPER
 #define H_FAKEGLWRAPPER
 
-#include "../../version.h" //Da luz start... 
-
+#include "../../version.h"
+ 
 #include <xtl.h>
 #include <xgraphics.h>
 #include <windef.h>
 
-// inconsistent dll linkage warning
+/* inconsistent dll linkage warning */
 #pragma warning (disable: 4273)
 
 typedef unsigned int GLenum;
@@ -1067,8 +1067,8 @@ typedef void GLvoid;
 #define GL_EXT_paletted_texture 1
 #define GL_WIN_swap_hint 1
 #define GL_WIN_draw_range_elements 1
-// #define GL_WIN_phong_shading 1
-// #define GL_WIN_specular_fog 1
+/* #define GL_WIN_phong_shading 1 */
+/* #define GL_WIN_specular_fog 1 */
 
 /* EXT_vertex_array */
 #define GL_VERTEX_ARRAY_EXT 0x8074
@@ -1514,7 +1514,7 @@ typedef void (*PFNGLGETCOLORTABLEPARAMETERIVEXTPROC)
 typedef void (*PFNGLGETCOLORTABLEPARAMETERFVEXTPROC)
  (GLenum target, GLenum pname, GLfloat *params);
 
-// wgl interface
+/* wgl interface */
 HGLRC WINAPI wglCreateContext (HDC hdc);
 BOOL WINAPI wglDeleteContext (HGLRC hglrc);
 HGLRC WINAPI wglGetCurrentContext (VOID);
@@ -1522,28 +1522,28 @@ HDC WINAPI wglGetCurrentDC (VOID);
 BOOL WINAPI wglMakeCurrent (HDC hdc, HGLRC hglrc);
 PROC WINAPI wglGetProcAddress (LPCSTR s);
 
-// override SPF
+/* override SPF */
 BOOL WINAPI SetPixelFormat (HDC hdc, int format, CONST /*PIXELFORMATDESCRIPTOR*/int * ppfd);
 
-// our fake CDS replacement
+/* our fake CDS replacement */
 LONG ChangeDisplaySettings_FakeGL (/*LPDEVMODE*/int lpDevMode, DWORD dwflags);
 
-// remove cds
-//#ifdef ChangeDisplaySettings
-//#undef ChangeDisplaySettings
-#define ChangeDisplaySettings ChangeDisplaySettings_FakeGL //MARTY
-//#endif
+/* remove cds */
+/* #ifdef ChangeDisplaySettings */
+/* #undef ChangeDisplaySettings */ 
+#define ChangeDisplaySettings ChangeDisplaySettings_FakeGL /* MARTY */
+/* #endif */
 
-// replacement for GDI SwapBuffers
-int FakeSwapBuffers (void); //MARTY
+/* replacement for GDI SwapBuffers */
+int FakeSwapBuffers (void); /* MARTY */
 
-// replacement for mode resets
+/* replacement for mode resets */
 void D3D_ResetMode (int width, int height, int bpp, BOOL windowed);
 
 #define DISP_CHANGE_SUCCESSFUL 0
 
-// extension defines
-// these are renamed so as to not clash with defines in the program
+/* extension defines */
+/* these are renamed so as to not clash with defines in the program */
 #define GLD3D_UNSIGNED_BYTE_3_3_2            0x8032
 #define GLD3D_UNSIGNED_SHORT_4_4_4_4         0x8033
 #define GLD3D_UNSIGNED_SHORT_5_5_5_1         0x8034
@@ -2391,4 +2391,4 @@ void D3D_ResetMode (int width, int height, int bpp, BOOL windowed);
 #define GLD3D_TEXTURE_MAX_ANISOTROPY_EXT     0x84FE
 #define GLD3D_MAX_TEXTURE_MAX_ANISOTROPY_EXT 0x84FF
 
-#endif //H_FAKEGLWRAPPER
+#endif /* H_FAKEGLWRAPPER */

@@ -263,10 +263,9 @@ TODOs:
  - Prepare SDL3 Support
  - Support to sega saturn: wl_draw.c, wl_main.c and wl_menu.c
  - Support OpenBSD
- - Port LWLIB to C
  - Fix Nintendo Switch movement
  - Fix nukedopl3 when compiling with old Visual C++
- - Support real crt filters(This should be on v2.4)
+ - Support real crt filters
 
 Known bugs:
 -----------
