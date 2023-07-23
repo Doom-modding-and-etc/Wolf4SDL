@@ -233,13 +233,11 @@ void ControlMovement(objtype* ob)
 #ifdef EXTRACONTROLS
     if (buttonstate[bt_moveforward])
     {
-        int delta = buttonstate[bt_run] ? RUNMOVE * (int)tics : BASEMOVE * (int)tics;
-        controly = delta;
         angle = ob->angle - ANGLES;
         if (angle < 0)
             angle += ANGLES;
 
-        if (controly)
+        if (controlstrafe)
             Thrust(angle, RUNMOVE * MOVESCALE * (int)tics);
         else
             Thrust(angle, BASEMOVE * MOVESCALE * (int)tics);
@@ -247,13 +245,11 @@ void ControlMovement(objtype* ob)
 
     if (buttonstate[bt_movebackward])
     {
-        int delta = buttonstate[bt_run] ? RUNMOVE * (int)tics : BASEMOVE * (int)tics;
-        controly = delta;
-        angle = ob->angle - ANGLES;
+        angle = ob->angle - ANGLES / 2;
         if (angle < 0)
-            angle =- ANGLES;
+            angle += ANGLES;
 
-        if (controly)
+        if (controlstrafe)
             Thrust(angle, RUNMOVE * MOVESCALE * (int)tics);
         else
             Thrust(angle, BASEMOVE * MOVESCALE * (int)tics);
