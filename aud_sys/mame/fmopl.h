@@ -6,7 +6,6 @@
 #else
 #define fminline 
 #endif
-
 #define HAS_YM3812 1
 
 /* --- select emulation chips --- */
@@ -42,6 +41,9 @@ typedef void (*OPL_UPDATEHANDLER)(int param,int min_interval_us);
 typedef void (*OPL_PORTHANDLER_W)(int param,unsigned char data);
 typedef unsigned char (*OPL_PORTHANDLER_R)(int param);
 
+#ifdef __cplusplsus
+extern "C" {
+#endif
 
 #if BUILD_YM3812
 
@@ -50,7 +52,7 @@ void YM3812Shutdown(void);
 void YM3812ResetChip(int which);
 int  YM3812Write(int which, int a, int v);
 unsigned char YM3812Read(int which, int a);
-void YM3812Mute(int which,int channel,BOOL mute);
+void YM3812Mute(int which, int channel, BOOL mute);
 int  YM3812TimerOver(int which, int c);
 void YM3812UpdateOne(int which, INT16 *buffer, int length);
 
@@ -114,5 +116,8 @@ void Y8950SetUpdateHandler (int which, OPL_UPDATEHANDLER UpdateHandler, int para
 
 #endif
 
+#ifdef __cplusplus
+
+#endif
 
 #endif /* __FMOPL_H_ */
