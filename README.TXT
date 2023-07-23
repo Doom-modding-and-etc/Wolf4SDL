@@ -270,7 +270,7 @@ TODOs:
 
 Known bugs:
 -----------
- - After Hans Grosse level, the game crashes on the next Boss level
+ - The ending of the episode, Game crashes
  - Boss dissapers after moving on his initial position
  
 Troubleshooting:
