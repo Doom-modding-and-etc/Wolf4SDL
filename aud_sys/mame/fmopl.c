@@ -13,7 +13,6 @@ Revision History:
 
 07-23-2023 André Guilherme
  - Update to MAME 0.092s
- - Unraise volume to instead use other api to raise it
  - Add __cplusplus flag
 
 06-05-2004 Ripper:
@@ -1282,8 +1281,6 @@ static void OPLCloseTable( void )
 #endif
 }
 
-
-
 static void OPL_initalize(FM_OPL *OPL)
 {
 	int i;
@@ -1597,9 +1594,11 @@ static void OPLWriteReg(FM_OPL *OPL, int r, int v)
 			}
 			break;
 #endif
+#ifdef VANILLA
 		default:
 			logerror("FMOPL.C: write to unknown register: %02x\n", r); 
 			break;
+#endif
 		}
 		break;
 	case 0x20:	/* am ON, vib ON, ksr, eg_type, mul */
@@ -1697,7 +1696,7 @@ static void OPLWriteReg(FM_OPL *OPL, int r, int v)
 		/* update */
 		if(CH->block_fnum != (UINT32)block_fnum)
 		{
-			UINT8 block  = block_fnum >> 10;
+			UINT8 block = block_fnum >> 10;
 
 			CH->block_fnum = block_fnum;
 
@@ -2222,7 +2221,7 @@ void YM3812UpdateOne(int which, INT16 *buffer, int length)
 #ifdef VANILLA
 		lt >>= FINAL_SH;
 #else
-		lt >>= 2;
+		lt <<= 2;
 #endif
 		/* limit check */
 		lt = limit( lt , MAXOUT, MINOUT );
