@@ -2354,7 +2354,6 @@ CP_Control ()
                 ShootSnd ();
                 break;
 
-#ifndef EXTRACONTROLS
 
             case CTL_MOUSELOOK:
                 mouselookenabled ^= true;
@@ -2369,7 +2368,7 @@ CP_Control ()
                 CusItems.curpos = -1;
                 ShootSnd();
                 break;
-
+#ifndef EXTRACONTROLS
             case CTL_JOYENABLE:
                 joystickenabled ^= true;
                 DrawCtlScreen();
@@ -2377,20 +2376,6 @@ CP_Control ()
                 ShootSnd();
                 break;
 #else
-            case CTL_MOUSELOOK:
-                mouselookenabled ^= true;
-                DrawCtlScreen ();
-                CusItems.curpos = -1;
-                ShootSnd ();
-                break;
-
-            case CTL_ALWAYSRUN:
-                alwaysrunenabled ^= true;
-                DrawCtlScreen ();
-                CusItems.curpos = -1;
-                ShootSnd ();
-				break;
-
             case CTL_MOUSEMOVEENABLE:
                 mousemoveenabled ^= true;
                 DrawCtlScreen();
@@ -2618,7 +2603,7 @@ DrawCtlScreen (void)
         VWB_DrawPic (x, y, C_NOTSELECTEDPIC);
 
     y = CTL_Y + 29;
-#ifndef EXTRACONTROLS
+
     if (mouselookenabled)
         VWB_DrawPic(x, y, C_SELECTEDPIC);
     else
@@ -2630,6 +2615,7 @@ DrawCtlScreen (void)
     else
         VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
 
+#ifndef EXTRACONTROLS
     y = CTL_Y + 55;
     if (joystickenabled)
         VWB_DrawPic(x, y, C_SELECTEDPIC);
@@ -2643,18 +2629,6 @@ DrawCtlScreen (void)
         VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
 #endif
 #else
-
-    if (mouselookenabled)
-        VWB_DrawPic (x, y, C_SELECTEDPIC);
-    else
-        VWB_DrawPic (x, y, C_NOTSELECTEDPIC);
-
-    y = CTL_Y + 42;
-    if (alwaysrunenabled)
-        VWB_DrawPic (x, y, C_SELECTEDPIC);
-    else
-        VWB_DrawPic (x, y, C_NOTSELECTEDPIC);
-
     y = CTL_Y + 55;
 
     if (mousemoveenabled)
