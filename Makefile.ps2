@@ -1,7 +1,7 @@
 EE_BIN = Wolf4SDL.elf
 
 #Id Tech 0 files
-ID_ENGINE_OBJS = id_ca.o id_crt.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vl.o id_w3swrap.o psnprntf.o signon.o
+ID_ENGINE_OBJS = id_ca.o id_crt.o id_haptic.o id_in.o id_pm.o id_sd.o id_us.o id_vh.o id_vl.o id_w3swrap.o psnprntf.o signon.o
  
 #Wolf Files
 WL_OBJS = wl_act1.o wl_act2.o wl_agent.o wl_atmos.o wl_cloudsky.o wl_debug.o wl_draw.o \

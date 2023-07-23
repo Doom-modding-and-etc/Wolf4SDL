@@ -96,7 +96,10 @@
 /* end */
 /* By: FraserChapman */
 /* #define GAMEBOY_ZERO */ /* Replaces keyboard buttons to GAMEBOY_ZERO buttons */
-/* */
+/* end */
+/* By: ksv1986(aka: Andrey Kuleshov) */
+/* #define HAPTIC_SUPPORT */ /* Enables the Haptic support(atm it only supports XInput rumble) */
+/* end */
 
 #if defined(SWITCH) 
 #define DATADIR "/switch/wolf4sdl/wolf3d/"

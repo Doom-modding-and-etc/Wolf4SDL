@@ -89,7 +89,10 @@ Additional features:
       floor and ceiling textures, high resolution textures/sprites,
       parallax sky, cloud sky and outside atmosphere features, which
       can be easily activated in version.h.
-
+  
+  - Haptic Support:
+	  Wolf4SDL support haptic only for xinput
+ 
 
 The following versions of Wolfenstein 3D data files are currently supported
 by the source code (choose the version by commenting/uncommenting lines in

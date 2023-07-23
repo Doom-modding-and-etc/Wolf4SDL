@@ -1760,6 +1760,9 @@ void ClearPaletteShifts (void)
 void StartBonusFlash (void)
 {
     bonuscount = NUMWHITESHIFTS * WHITETICS;    /* white shift palette */
+#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)
+    HAPTIC_WeakRumble();
+#endif
 }
 
 
@@ -1774,6 +1777,9 @@ void StartBonusFlash (void)
 void StartDamageFlash (int damage)
 {
     damagecount += damage;
+#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)
+    HAPTIC_StrongRumble();
+#endif
 }
 
 
@@ -1828,6 +1834,9 @@ void UpdatePaletteShifts (void)
     else if (palshifted)
     {
         VL_SetPalette(gamepal, false);        /* back to normal */
+#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)
+        HAPTIC_StopRumble();
+#endif
         palshifted = false;
     }
 }
@@ -1849,6 +1858,9 @@ void FinishPaletteShifts (void)
     {
         palshifted = 0;
         VL_SetPalette (gamepal, true);
+#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)    
+        HAPTIC_StopRumble();
+#endif
     }
 }
 

@@ -172,6 +172,9 @@ enum
 #else
     CTL_JOYENABLE, 
 #endif
+#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)
+    CTL_FEEDBACK,
+#endif
     CTL_CUSTOMIZE 
 };
 #endif
@@ -195,6 +198,9 @@ CP_itemtype CtlMenu[] = {
     {0, STR_MLOOK, 0},
     {1, STR_ALRUN, 0},
     {0, STR_JOYEN, 0},
+#endif
+#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)
+    {0, STR_FEEDBACK, 0},
 #endif
     {1, STR_CUSTOM, (int(*)(int))CustomControls}
 #endif
@@ -312,7 +318,7 @@ CP_iteminfo MainItems = { MENU_X, MENU_Y, lengthof(MainMenu), STARTITEM, 24 },
             SndItems  = { SM_X, SM_Y1, lengthof(SndMenu), 0, 52 },
             LSItems   = { LSM_X, LSM_Y, lengthof(LSMenu), 0, 24 },
             CtlItems  = { CTL_X, CTL_Y, lengthof(CtlMenu), -1, 56 },
-            CusItems  = { 8, CST_Y + 13 * 2, lengthof(CusMenu), -1, 0},
+            CusItems  = { 8, CST_Y + ITEM_H * 2, lengthof(CusMenu), -1, 0},
 #ifndef SPEAR
             NewEitems = { NE_X, NE_Y, lengthof(NewEmenu), 0, 88 },
 #endif
@@ -1773,9 +1779,9 @@ DrawSoundMenu (void)
             }
 
             if (on)
-                VWB_DrawPic (SM_X + 24, SM_Y1 + i * 13 + 2, C_SELECTEDPIC);
+                VWB_DrawPic (SM_X + 24, SM_Y1 + i * ITEM_H + 2, C_SELECTEDPIC);
             else
-                VWB_DrawPic (SM_X + 24, SM_Y1 + i * 13 + 2, C_NOTSELECTEDPIC);
+                VWB_DrawPic (SM_X + 24, SM_Y1 + i * ITEM_H + 2, C_NOTSELECTEDPIC);
         }
 
     DrawMenuGun (&SndItems);
@@ -1802,7 +1808,7 @@ DrawLSAction (int which)
     fontnumber = 1;
     SETFONTCOLOR (0, TEXTCOLOR);
     PrintX = LSA_X + 46;
-    PrintY = LSA_Y + 13;
+    PrintY = LSA_Y + ITEM_H;
 
     if (!which)
         US_Print (STR_LOADING "...");
@@ -1990,10 +1996,10 @@ void
 PrintLSEntry (int w, int color)
 {
     SETFONTCOLOR (color, BKGDCOLOR);
-    DrawOutline (LSM_X + LSItems.indent, LSM_Y + w * 13, LSM_W - LSItems.indent - 15, 11, color,
+    DrawOutline (LSM_X + LSItems.indent, LSM_Y + w * ITEM_H, LSM_W - LSItems.indent - 15, 11, color,
                  color);
     PrintX = LSM_X + LSItems.indent + 2;
-    PrintY = LSM_Y + w * 13 + 1;
+    PrintY = LSM_Y + w * ITEM_H + 1;
     fontnumber = 0;
 
     if (SaveGamesAvail[w])
@@ -2242,12 +2248,12 @@ CP_SaveGame (int quick)
 
             fontnumber = 0;
             if (!SaveGamesAvail[which])
-                VWB_Bar (LSM_X + LSItems.indent + 1, LSM_Y + which * 13 + 1,
+                VWB_Bar (LSM_X + LSItems.indent + 1, LSM_Y + which * ITEM_H + 1,
                          LSM_W - LSItems.indent - 16, 10, BKGDCOLOR);
             VL_UpdateScreen (screenBuffer);
 
             if (US_LineInput
-                (LSM_X + LSItems.indent + 2, LSM_Y + which * 13 + 1, input, input, true, 31,
+                (LSM_X + LSItems.indent + 2, LSM_Y + which * ITEM_H + 1, input, input, true, 31,
                  LSM_W - LSItems.indent - 30))
             {
                 SaveGamesAvail[which] = 1;
@@ -2281,7 +2287,7 @@ CP_SaveGame (int quick)
                 char loadpath[300];
                 char bmpName[13] = BMP_SAVE;
 #endif
-                VWB_Bar (LSM_X + LSItems.indent + 1, LSM_Y + which * 13 + 1,
+                VWB_Bar (LSM_X + LSItems.indent + 1, LSM_Y + which * ITEM_H + 1,
                          LSM_W - LSItems.indent - 16, 10, BKGDCOLOR);
                 PrintLSEntry (which, HIGHLIGHT);
 #ifdef SAVE_GAME_SCREENSHOT
@@ -2392,7 +2398,18 @@ CP_Control ()
                 ShootSnd();
                 break;
 #endif
-
+#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)
+            case CTL_FEEDBACK:
+                hapticEnabled ^= 1;
+                if (hapticEnabled)
+                    HAPTIC_WeakRumble();
+                else
+                    HAPTIC_StopRumble();
+                DrawCtlScreen();
+                CusItems.curpos = -1;
+                ShootSnd();
+                break;
+#endif
 
             case CTL_MOUSESENS:
             case CTL_CUSTOMIZE:
@@ -2565,7 +2582,12 @@ DrawCtlScreen (void)
 
 #ifndef EXTRACONTROLS
     if (IN_JoyPresent())
+    {
         CtlMenu[CTL_JOYENABLE].active = 1;
+#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)
+        CtlMenu[CTL_FEEDBACK].active = HAPTIC_Present();
+#endif
+    }
 #endif
 
     if (MousePresent)
@@ -2609,11 +2631,17 @@ DrawCtlScreen (void)
         VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
 
     y = CTL_Y + 55;
-
     if (joystickenabled)
         VWB_DrawPic(x, y, C_SELECTEDPIC);
     else
         VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)
+    y = CTL_Y + 55;
+    if (hapticEnabled)
+        VWB_DrawPic(x, y, C_SELECTEDPIC);
+    else
+        VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+#endif
 #else
 
     if (mouselookenabled)
@@ -2840,7 +2868,7 @@ EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*Prin
 
 
     ShootSnd ();
-    PrintY = CST_Y + 13 * index;
+    PrintY = CST_Y + ITEM_H * index;
     IN_ClearKeysDown ();
     exit = 0;
     redraw = 1;
@@ -2859,7 +2887,7 @@ EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*Prin
         if (redraw)
         {
             x = CST_START + CST_SPC * which;
-            DrawWindow (5, PrintY - 1, 310, 13, BKGDCOLOR);
+            DrawWindow (5, PrintY - 1, 310, ITEM_H, BKGDCOLOR);
 
             DrawRtn (1);
             DrawWindow (x - 2, PrintY, CST_SPC, 11, TEXTCOLOR);
@@ -3095,7 +3123,7 @@ EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*Prin
 
     SD_PlaySound (ESCPRESSEDSND);
     WaitKeyUp ();
-    DrawWindow (5, PrintY - 1, 310, 13, BKGDCOLOR);
+    DrawWindow (5, PrintY - 1, 310, ITEM_H, BKGDCOLOR);
 }
 
 /**
@@ -3109,17 +3137,17 @@ void
 FixupCustom (int w)
 {
     static int lastwhich = -1;
-    int y = CST_Y + 26 + w * 13;
+    int y = CST_Y + 26 + w * ITEM_H;
 
 
     VWB_Hlin (7, 32, y - 1, DEACTIVE);
     VWB_Hlin (7, 32, y + 12, BORD2COLOR);
 #ifndef SPEAR
     VWB_Hlin (7, 32, y - 2, BORDCOLOR);
-    VWB_Hlin (7, 32, y + 13, BORDCOLOR);
+    VWB_Hlin (7, 32, y + ITEM_H, BORDCOLOR);
 #else
     VWB_Hlin (7, 32, y - 2, BORD2COLOR);
-    VWB_Hlin (7, 32, y + 13, BORD2COLOR);
+    VWB_Hlin (7, 32, y + ITEM_H, BORD2COLOR);
 #endif
 
     switch (w)
@@ -3152,15 +3180,15 @@ FixupCustom (int w)
 
     if (lastwhich >= 0)
     {
-        y = CST_Y + 26 + lastwhich * 13;
+        y = CST_Y + 26 + lastwhich * ITEM_H;
         VWB_Hlin (7, 32, y - 1, DEACTIVE);
         VWB_Hlin (7, 32, y + 12, BORD2COLOR);
 #ifndef SPEAR
         VWB_Hlin (7, 32, y - 2, BORDCOLOR);
-        VWB_Hlin (7, 32, y + 13, BORDCOLOR);
+        VWB_Hlin (7, 32, y + ITEM_H, BORDCOLOR);
 #else
         VWB_Hlin (7, 32, y - 2, BORD2COLOR);
-        VWB_Hlin (7, 32, y + 13, BORD2COLOR);
+        VWB_Hlin (7, 32, y + ITEM_H, BORD2COLOR);
 #endif
 
         if (lastwhich != w)
@@ -3248,7 +3276,7 @@ DrawCustomScreen (void)
     PrintY = CST_Y;
     US_CPrint ("Mouse\n");
 #else
-    PrintY = CST_Y + 13;
+    PrintY = CST_Y + ITEM_H;
     VWB_DrawPic (128, 48, C_MOUSEPIC);
 #endif
 
@@ -3273,7 +3301,7 @@ DrawCustomScreen (void)
     US_Print (STR_CSTRAFE "\n");
 #endif
 
-    DrawWindow (5, PrintY - 1, 310, 13, BKGDCOLOR);
+    DrawWindow (5, PrintY - 1, 310, ITEM_H, BKGDCOLOR);
     DrawCustMouse (0);
     US_Print ("\n");
 
@@ -3285,7 +3313,7 @@ DrawCustomScreen (void)
     SETFONTCOLOR (READCOLOR, BKGDCOLOR);
     US_CPrint ("Joystick/Gravis GamePad\n");
 #else
-    PrintY += 13;
+    PrintY += ITEM_H;
     VWB_DrawPic (40, 88, C_JOYSTICKPIC);
 #endif
 
@@ -3313,7 +3341,7 @@ DrawCustomScreen (void)
     PrintX = CST_START + CST_SPC * 3;
     US_Print (STR_CSTRAFE "\n");
 #endif
-    DrawWindow (5, PrintY - 1, 310, 13, BKGDCOLOR);
+    DrawWindow (5, PrintY - 1, 310, ITEM_H, BKGDCOLOR);
     DrawCustJoy (0);
     US_Print ("\n");
 #else
@@ -3326,7 +3354,7 @@ DrawCustomScreen (void)
     PrintX = CST_START + CST_SPC * 3;
     US_Print(STR_CSTRAFE "\n");
 #endif
-    DrawWindow(5, PrintY - 1, 310, 13, BKGDCOLOR);
+    DrawWindow(5, PrintY - 1, 310, ITEM_H, BKGDCOLOR);
     DrawCustJoy(0);
     US_Print("\n");
 
@@ -3337,7 +3365,7 @@ DrawCustomScreen (void)
     SETFONTCOLOR (READCOLOR, BKGDCOLOR);
     US_CPrint ("Keyboard\n");
 #else
-    PrintY += 13;
+    PrintY += ITEM_H;
 #endif
     SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
 #ifdef SPANISH
@@ -3359,7 +3387,7 @@ DrawCustomScreen (void)
     PrintX = CST_START + CST_SPC * 3;
     US_Print (STR_CSTRAFE "\n");
 #endif
-    DrawWindow (5, PrintY - 1, 310, 13, BKGDCOLOR);
+    DrawWindow (5, PrintY - 1, 310, ITEM_H, BKGDCOLOR);
     DrawCustKeybd (0);
     US_Print ("\n");
 
@@ -3387,7 +3415,7 @@ DrawCustomScreen (void)
     PrintX = CST_START + CST_SPC * 3;
     US_Print (STR_BKWD "\n");
 #endif
-    DrawWindow (5, PrintY - 1, 310, 13, BKGDCOLOR);
+    DrawWindow (5, PrintY - 1, 310, ITEM_H, BKGDCOLOR);
     DrawCustKeys (0);
 #ifdef EXTRACONTROLS
     US_Print("\n");
@@ -3410,7 +3438,7 @@ DrawCustomScreen (void)
     US_Print("Prev");
     PrintX = CST_START + CST_SPC * 3;
     US_Print("Next \n");
-    DrawWindow(5, PrintY - 1, 310, 13, BKGDCOLOR);
+    DrawWindow(5, PrintY - 1, 310, ITEM_H, BKGDCOLOR);
     DrawCustExtra(0);
 #endif /* EXTRACONTROLS */
 
@@ -3464,7 +3492,7 @@ DrawCustMouse (int hilight)
     else
         CusMenu[0].active = 1;
 
-    PrintY = CST_Y + 13 * 2;
+    PrintY = CST_Y + ITEM_H * 2;
     for (i = 0; i < 4; i++)
         PrintCustMouse (i);
 }
@@ -3503,7 +3531,7 @@ DrawCustJoy (int hilight)
     else
         CusMenu[3].active = 1;
 
-    PrintY = CST_Y + 13 * 5;
+    PrintY = CST_Y + ITEM_H * 5;
     for (i = 0; i < 4; i++)
         PrintCustJoy (i);
 }
@@ -3527,9 +3555,9 @@ DrawCustKeybd (int hilight)
     SETFONTCOLOR (color, BKGDCOLOR);
 
 #ifndef EXTRACONTROLS
-    PrintY = CST_Y + 13 * 8;
+    PrintY = CST_Y + ITEM_H * 8;
 #else
-    PrintY = CST_Y + 13 * 5;
+    PrintY = CST_Y + ITEM_H * 5;
 #endif
     for (i = 0; i < 4; i++)
         PrintCustKeybd (i);
@@ -3554,9 +3582,9 @@ DrawCustKeys (int hilight)
     SETFONTCOLOR (color, BKGDCOLOR);
 
 #ifndef EXTRACONTROLS
-    PrintY = CST_Y + 13 * 10;
+    PrintY = CST_Y + ITEM_H * 10;
 #else
-    PrintY = CST_Y + 13 * 7;
+    PrintY = CST_Y + ITEM_H * 7;
 #endif
     for (i = 0; i < 4; i++)
         PrintCustKeys (i);
@@ -3580,7 +3608,7 @@ void DrawCustExtra(int hilight)
         color = HIGHLIGHT;
     SETFONTCOLOR(color, BKGDCOLOR);
 
-    PrintY = CST_Y + 13 * 10;
+    PrintY = CST_Y + ITEM_H * 10;
     for (i = 0; i < 4; i++)
         PrintCustExtra(i);
 }
@@ -4525,7 +4553,7 @@ Confirm (const char *string)
             switch (tick)
             {
                 case 0:
-                    VWB_Bar (x, y, 8, 13, TEXTCOLOR);
+                    VWB_Bar (x, y, 8, ITEM_H, TEXTCOLOR);
                     break;
                 case 1:
                     PrintX = x;
@@ -4972,7 +5000,7 @@ DrawMenuGun (CP_iteminfo * iteminfo)
 
 
     x = iteminfo->x;
-    y = iteminfo->y + iteminfo->curpos * 13 - 2;
+    y = iteminfo->y + iteminfo->curpos * ITEM_H - 2;
     VWB_DrawPic (x, y, C_CURSOR1PIC);
 }
 

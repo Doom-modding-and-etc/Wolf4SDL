@@ -320,6 +320,7 @@
     <ClCompile Include="aud_sys\nukedopl3\opl3.c" />
     <ClCompile Include="id_crt.c" />
     <ClCompile Include="id_ca.c" />
+    <ClCompile Include="id_haptic.c" />
     <ClCompile Include="id_in.c" />
     <ClCompile Include="id_pm.c" />
     <ClCompile Include="id_sd.c" />
@@ -374,6 +375,7 @@
     <ClInclude Include="gfxv_sod.h" />
     <ClInclude Include="gfxv_wl6.h" />
     <ClInclude Include="id_ca.h" />
+    <ClInclude Include="id_haptic.h" />
     <ClInclude Include="id_in.h" />
     <ClInclude Include="id_pm.h" />
     <ClInclude Include="id_sd.h" />
