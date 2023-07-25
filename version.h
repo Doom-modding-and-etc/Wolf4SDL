@@ -61,6 +61,7 @@
 /* #define BANDEDHOLOWALLS */    /* Use the old DOS-style "banded" wall drawing behaviour when inside walls */
 /* #define USE_DOSBOX */  /* Replaces fmopl sound and uses DOSBOX Sound instead. */
 /* #define USE_NUKEDOPL */ /* Replaces fmopl sound and uses NUKEDOPL instead. */ 
+/* #define USE_FBNEO_FMOPL */ /* Replaces fmopl sound and uses FBNEO_FMOPL instead. */
 /* #define GOD_MODE */ /* Use godmode */
 /* #define FIXEDLOGICRATE */       /* Enables framerate independent game logic (aka: uncapped refreshrate) (by Codetech84) */
 /* #define LAGSIMULATOR */         /* Enables lag simulator debug option, depends on fixed logic rate (by Codetech84) */

@@ -46,6 +46,8 @@
 #include "aud_sys/dosbox/dbopl.h"
 #elif defined(USE_NUKEDOPL)
 #include "aud_sys/nukedopl3/opl3.h"
+#elif defined(USE_FBNEO_FMOPL)
+#include "aud_sys/fbneo/fmoplneo.h"
 #else
 #include "aud_sys/mame/fmopl.h"
 #endif

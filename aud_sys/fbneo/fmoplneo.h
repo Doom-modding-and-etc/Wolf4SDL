@@ -30,18 +30,19 @@ typedef unsigned char BOOLEAN;
 
 #if (OPL_SAMPLE_BITS==16)
 typedef INT16 OPLSAMPLE;
-#elif (OPL_SAMPLE_BITS==8)
+#endif
+#if (OPL_SAMPLE_BITS==8)
 typedef INT8 OPLSAMPLE;
 #endif
 
 
-typedef void (*OPL_TIMERHANDLER)(int channel,double interval_Sec);
+typedef void (*OPL_TIMERHANDLER)(int n,int channel,double interval_Sec);
 typedef void (*OPL_IRQHANDLER)(int param,int irq);
-typedef void (*OPL_UPDATEHANDLER)(int param,int min_interval_us);
+typedef void (*OPL_UPDATEHANDLER)(INT32 param,INT32 min_interval_us);
 typedef void (*OPL_PORTHANDLER_W)(int param,unsigned char data);
 typedef unsigned char (*OPL_PORTHANDLER_R)(int param);
 
-#ifdef __cplusplsus
+#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -114,6 +115,13 @@ void Y8950SetTimerHandler (int which, OPL_TIMERHANDLER TimerHandler, int channel
 void Y8950SetIRQHandler (int which, OPL_IRQHANDLER IRQHandler, int param);
 void Y8950SetUpdateHandler (int which, OPL_UPDATEHANDLER UpdateHandler, int param);
 
+#endif
+#ifdef FBNEO
+#define FM_OPL_SAVESTATE_YM3812		1
+#define FM_OPL_SAVESTATE_YM3526		2
+#define FM_OPL_SAVESTATE_Y8950		3
+
+void FMOPLScan(INT32 nType, INT32 which, INT32 nAction, INT32 *pnMin);
 #endif
 
 #ifdef __cplusplus
