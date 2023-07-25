@@ -117,7 +117,7 @@ void Y8950SetUpdateHandler (int which, OPL_UPDATEHANDLER UpdateHandler, int para
 #endif
 
 #ifdef __cplusplus
-
+};
 #endif
 
 #endif /* __FMOPL_H_ */
