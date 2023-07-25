@@ -1101,6 +1101,35 @@ void DrawPlayerWeapon (void)
     /* --- */
 }
 
+boolean crosshair = false;
+
+void DrawCrosshair (void)
+{
+    int c;
+    int h;
+    int f;
+    int i;
+
+    if (gamestate.victoryflag || gamestate.weapon < wp_pistol)
+        return;
+
+    c = (gamestate.health >= 50) ? 2 : (gamestate.health >= 25) ? 6 : 4;
+    h = (viewsize == 21 && ingame) ? screenHeight : screenHeight - scaleFactor * STATUSLINES;
+
+    f = scaleFactor - 1;
+
+    for (i = -f; i <= f; i++)
+    {
+        VL_Hlin(screenWidth / 2 - 2 * scaleFactor,
+            h / 2 + i,
+            4 * scaleFactor + 1,
+            c);
+        VL_Vlin(screenWidth / 2 + i,
+            h / 2 - 2 * scaleFactor,
+            4 * scaleFactor + 1,
+            c);
+    }
+}
 
 /* ========================================================================== */
 
@@ -1850,6 +1879,8 @@ void ThreeDRefresh (void)
 #endif
 
     DrawPlayerWeapon ();    /* draw player's hands */
+	if (crosshair)
+        DrawCrosshair ();
 #ifdef AUTOMAP
     for (x = 0; x < MAPSIZE; x++)
         for (y = 0; y < MAPSIZE; y++)

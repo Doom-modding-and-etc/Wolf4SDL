@@ -108,7 +108,7 @@
 #if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)
 #define CTL_H   100
 #else
-#define CTL_H   86
+#define CTL_H   100
 #endif
 #ifdef SAVE_GAME_SCREENSHOT
 #define LSM_X   10

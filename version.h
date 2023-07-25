@@ -49,7 +49,8 @@
 /* #define DEBUGKEYS */           /* Comment this out to compile without the Tab debug keys */
 #define ARTSEXTERN
 #define DEMOSEXTERN
-#define PLAYDEMOLIKEORIGINAL  /* When playing or recording demos, several bug fixes do not take 
+#define PLAYDEMOLIKEORIGINAL  /* 
+                              ** When playing or recording demos, several bug fixes do not take 
                               ** effect to let the original demos work as in the original Wolf3D v1.4 
                               ** (actually better, as the second demo rarely worked)
                               */
@@ -62,6 +63,7 @@
 /* #define USE_DOSBOX */  /* Replaces fmopl sound and uses DOSBOX Sound instead. */
 /* #define USE_NUKEDOPL */ /* Replaces fmopl sound and uses NUKEDOPL instead. */ 
 /* #define USE_FBNEO_FMOPL */ /* Replaces fmopl sound and uses FBNEO_FMOPL instead. */
+/* #define USE_AUDIO_CVT */  /* Replaces original implmentation of wave file reading to a modern way by Fabian Greffrath */
 /* #define GOD_MODE */ /* Use godmode */
 /* #define FIXEDLOGICRATE */       /* Enables framerate independent game logic (aka: uncapped refreshrate) (by Codetech84) */
 /* #define LAGSIMULATOR */         /* Enables lag simulator debug option, depends on fixed logic rate (by Codetech84) */

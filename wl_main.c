@@ -236,7 +236,11 @@ void ReadConfig(void)
         w3sread(file, &musicvol, sizeof(musicvol));
         w3sread(file, &reversestereo, sizeof(reversestereo));
 #endif
-
+        /* [FG] toggle crosshair */
+        if (w3sread(file,&crosshair,sizeof(crosshair))<0)
+        {
+            crosshair = false;
+        }
         w3sclose(file);
 
         if ((sd == sdm_AdLib || sm == smm_AdLib) && !AdLibPresent
@@ -262,6 +266,7 @@ void ReadConfig(void)
         }
         if(mouselookenabled) mouselookenabled=true;
         if(alwaysrunenabled) alwaysrunenabled=true;	
+		if(crosshair) crosshair = true;
 #ifdef EXTRACONTROLS
         if (mousemoveenabled)
         {
@@ -332,6 +337,7 @@ noconfig:
         musicvol = 100;
         reversestereo = false;
 #endif
+		crosshair = false;
     }
 
     SD_SetMusicMode (sm);
@@ -413,6 +419,8 @@ void WriteConfig(void)
         w3swrite(file, &musicvol, sizeof(musicvol));
         w3swrite(file, &reversestereo, sizeof(reversestereo));
 #endif
+		/* [FG] toggle crosshair */
+        w3swrite(file,&crosshair,sizeof(crosshair));
         w3sclose(file);
     }
 #ifdef _arch_dreamcast

@@ -1474,6 +1474,7 @@ extern  boolean fizzlein, fpscounter;
 #ifdef AUTOMAP
 extern boolean automap[MAPSIZE][MAPSIZE];
 #endif
+extern boolean crosshair;
 
 #if defined(USE_FLOORCEILINGTEX) || defined(USE_CLOUDSKY)
 extern  short* spanstart;

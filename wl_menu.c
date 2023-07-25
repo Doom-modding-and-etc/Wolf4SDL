@@ -175,6 +175,7 @@ enum
 #if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)
     CTL_FEEDBACK,
 #endif
+	CTL_CROSSHAIR, /* [FG] toggle crosshair */ 
     CTL_CUSTOMIZE 
 };
 #endif
@@ -202,6 +203,7 @@ CP_itemtype CtlMenu[] = {
 #if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)
     {0, STR_FEEDBACK, 0},
 #endif
+    {1, STR_CROSSHAIR, 0}, /* [FG] toggle crosshair */
     {1, STR_CUSTOM, (int(*)(int))CustomControls}
 #endif
 };
@@ -2368,6 +2370,15 @@ CP_Control ()
                 CusItems.curpos = -1;
                 ShootSnd();
                 break;
+				
+            /* [FG] toggle crosshair */
+            case CTL_CROSSHAIR:
+                crosshair ^= 1;
+                DrawCtlScreen ();
+                CusItems.curpos = -1;
+                ShootSnd ();
+                break;				
+				
 #ifndef EXTRACONTROLS
             case CTL_JOYENABLE:
                 joystickenabled ^= true;
@@ -2615,19 +2626,13 @@ DrawCtlScreen (void)
     else
         VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
 
+
 #ifndef EXTRACONTROLS
     y = CTL_Y + 55;
     if (joystickenabled)
         VWB_DrawPic(x, y, C_SELECTEDPIC);
     else
         VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
-#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)
-    y = CTL_Y + 55;
-    if (hapticEnabled)
-        VWB_DrawPic(x, y, C_SELECTEDPIC);
-    else
-        VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
-#endif
 #else
     y = CTL_Y + 55;
 
@@ -2636,8 +2641,27 @@ DrawCtlScreen (void)
     else
         VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
 #endif
+#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)
+    y = CTL_Y + 68;
+    if (hapticEnabled)
+        VWB_DrawPic(x, y, C_SELECTEDPIC);
+    else
+        VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
 
-
+    /* [FG] toggle crosshair */
+    y = CTL_Y + 76;
+    if (crosshair)
+        VWB_DrawPic(x, y, C_SELECTEDPIC);
+    else
+        VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+#else
+    /* [FG] toggle crosshair */
+    y = CTL_Y + 68;
+    if (crosshair)
+        VWB_DrawPic(x, y, C_SELECTEDPIC);
+    else
+        VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+#endif
     /*
     ** PICK FIRST AVAILABLE SPOT
     */
