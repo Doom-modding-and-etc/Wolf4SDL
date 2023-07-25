@@ -88,7 +88,13 @@ boolean         US_LineInput(int x,int y,char *buf,const char *def,boolean escok
 
 void	        USL_PrintInCenter(const char *s,Rect r);
 
-void            US_InitRndT(int randomize);
+int    US_Random(int range);
+#ifdef USE_SDL
+void            US_InitRndT(boolean randomize);
 int             US_RndT();
+#else
+void US_InitRndT(boolean randomize);
+int US_RndT();
+#endif
 
 #endif

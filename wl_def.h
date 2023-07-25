@@ -11,7 +11,9 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
-
+#ifndef USE_SDL
+#include <time.h>
+#endif
 #include <SDL.h>
 
 #ifdef N3DS

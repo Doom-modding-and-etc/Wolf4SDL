@@ -2649,7 +2649,7 @@ DrawCtlScreen (void)
         VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
 
     /* [FG] toggle crosshair */
-    y = CTL_Y + 76;
+    y = CTL_Y + 81;
     if (crosshair)
         VWB_DrawPic(x, y, C_SELECTEDPIC);
     else

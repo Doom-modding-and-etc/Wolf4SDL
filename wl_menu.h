@@ -104,9 +104,9 @@
 #else
 #define CTL_Y   86
 #endif
-#define CTL_W   284
+#define CTL_W   295
 #if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)
-#define CTL_H   100
+#define CTL_H   120
 #else
 #define CTL_H   100
 #endif
