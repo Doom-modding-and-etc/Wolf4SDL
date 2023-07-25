@@ -23,6 +23,9 @@
     <Filter Include="aud_sys\nukedopl3">
       <UniqueIdentifier>{2eb22d8e-ea6f-40cc-8331-fbaa19aa3429}</UniqueIdentifier>
     </Filter>
+    <Filter Include="aud_sys\fbneo">
+      <UniqueIdentifier>{8d6fb588-62af-45c4-8ab6-e86e84d83c37}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="aud_sys\dosbox\dbopl.c">
@@ -69,6 +72,9 @@
       <Filter>aud_sys\mame</Filter>
     </ClCompile>
     <ClCompile Include="id_haptic.c" />
+    <ClCompile Include="aud_sys\fbneo\fmopl.c">
+      <Filter>aud_sys\fbneo</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="win\resource.h">
@@ -105,6 +111,9 @@
       <Filter>aud_sys\mame</Filter>
     </ClInclude>
     <ClInclude Include="id_haptic.h" />
+    <ClInclude Include="aud_sys\fbneo\fmopl.h">
+      <Filter>aud_sys\fbneo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3rdparty\fixedptc.h" />
