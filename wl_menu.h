@@ -60,14 +60,16 @@
 #define MENU_Y  55
 
 #define MENU_W  178
+#define ITEM_H  13
+#define MENU_PAD    3
 #ifndef SPEAR
 #ifndef GOODTIMES
-#define MENU_H  13*10+6
+#define MENU_H  ITEM_H*10+6
 #else
-#define MENU_H  13*9+6
+#define MENU_H  ITEM_H*9+6
 #endif
 #else
-#define MENU_H  13*9+6
+#define MENU_H  ITEM_H*9+6
 #endif
 
 #ifdef SEGA_SATURN
@@ -80,17 +82,17 @@
 
 #define SM_Y1   20
 #ifdef VIEASM
-#define SM_H1   3*13-7
-#define SM_Y2   SM_Y1+4*13
-#define SM_H2   3*13-7
-#define SM_Y3   SM_Y2+4*13
+#define SM_H1   3*ITEM_H-7
+#define SM_Y2   SM_Y1+4*ITEM_H
+#define SM_H2   3*ITEM_H-7
+#define SM_Y3   SM_Y2+4*ITEM_H
 #else
-#define SM_H1   4*13-7
-#define SM_Y2   SM_Y1+5*13
-#define SM_H2   4*13-7
-#define SM_Y3   SM_Y2+5*13
+#define SM_H1   4*ITEM_H-7
+#define SM_Y2   SM_Y1+5*ITEM_H
+#define SM_H2   4*ITEM_H-7
+#define SM_Y3   SM_Y2+5*ITEM_H
 #endif
-#define SM_H3   3*13-7
+#define SM_H3   3*ITEM_H-7
 
 #if N3DS
 #define CTL_X   CENTERX - (160 - 24)
@@ -102,8 +104,12 @@
 #else
 #define CTL_Y   86
 #endif
-#define CTL_W   284
-#define CTL_H   86
+#define CTL_W   295
+#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)
+#define CTL_H   120
+#else
+#define CTL_H   100
+#endif
 #ifdef SAVE_GAME_SCREENSHOT
 #define LSM_X   10
 #else
@@ -111,7 +117,7 @@
 #endif
 #define LSM_Y   55
 #define LSM_W   175
-#define LSM_H   10*13+10
+#define LSM_H   10*ITEM_H+10
 
 #ifdef SAVE_GAME_SCREENSHOT
 #define LSP_X   184
@@ -128,7 +134,7 @@
 #endif
 #define NM_Y    100
 #define NM_W    225
-#define NM_H    13*4+15
+#define NM_H    ITEM_H*4+15
 
 #define NE_X    10
 #define NE_Y    23

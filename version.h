@@ -49,18 +49,21 @@
 /* #define DEBUGKEYS */           /* Comment this out to compile without the Tab debug keys */
 #define ARTSEXTERN
 #define DEMOSEXTERN
-#define PLAYDEMOLIKEORIGINAL  /* When playing or recording demos, several bug fixes do not take 
+#define PLAYDEMOLIKEORIGINAL  /* 
+                              ** When playing or recording demos, several bug fixes do not take 
                               ** effect to let the original demos work as in the original Wolf3D v1.4 
                               ** (actually better, as the second demo rarely worked)
                               */
 /* #define LWUDPCOMMS */            /* Enables UDP networked communications for multiplayer support */
 /* #define CRT */ /* Makes the screen fixed in 4:3 */
 /* #define SCALE2X */ /*The screen will be scaled in 2x with linear filter. This guy needs to work with CRT defined or else it won´t work.. */
-#define FIXCALCROTATE         /* Apply a modified version of Ginyu's fix to make CalcRotate more accurate at high resolutions */
+/* #define FIXCALCROTATE */         /* Apply a modified version of Ginyu's fix to make CalcRotate more accurate at high resolutions */
 /* #define VIEASM */ /* Activates: VODKA-INDUCED ENTERTAINMENT ADVANCED SOUND MANAGER v0.9.2(Warning: only works with .wav and .ogg placed in sounds/ follow the asmcref.h for more details). */
 /* #define BANDEDHOLOWALLS */    /* Use the old DOS-style "banded" wall drawing behaviour when inside walls */
 /* #define USE_DOSBOX */  /* Replaces fmopl sound and uses DOSBOX Sound instead. */
 /* #define USE_NUKEDOPL */ /* Replaces fmopl sound and uses NUKEDOPL instead. */ 
+/* #define USE_FBNEO_FMOPL */ /* Replaces fmopl sound and uses FBNEO_FMOPL instead. */
+/* #define USE_AUDIO_CVT */  /* Replaces original implmentation of wave file reading to a modern way by Fabian Greffrath */
 /* #define GOD_MODE */ /* Use godmode */
 /* #define FIXEDLOGICRATE */       /* Enables framerate independent game logic (aka: uncapped refreshrate) (by Codetech84) */
 /* #define LAGSIMULATOR */         /* Enables lag simulator debug option, depends on fixed logic rate (by Codetech84) */
@@ -90,6 +93,15 @@
 /* #define SAVE_GAME_SCREENSHOT */ /* Add screenshot save support. */
 /* By: WallHack */
 /* #define COMPASS */ /* Add the compass */
+/* end */
+/* By: ncornette(aka: Nicolas Cornette) */
+/* #define CSGO_STRAFE */ /* Hack to enable CS-Like WASD keys strafe + Mouse. */
+/* end */
+/* By: FraserChapman */
+/* #define GAMEBOY_ZERO */ /* Replaces keyboard buttons to GAMEBOY_ZERO buttons */
+/* end */
+/* By: ksv1986(aka: Andrey Kuleshov) */
+/* #define HAPTIC_SUPPORT */ /* Enables the Haptic support(atm it only supports XInput rumble) */
 /* end */
 
 #if defined(SWITCH) 

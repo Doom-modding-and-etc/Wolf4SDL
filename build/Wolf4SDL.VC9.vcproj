@@ -415,6 +415,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\id_haptic.c"
+			>
+		</File>
+		<File
+			RelativePath="..\id_haptic.h"
+			>
+		</File>
+		<File
 			RelativePath="..\id_in.c"
 			>
 		</File>

@@ -239,7 +239,11 @@ void ReadConfig(void)
         w3sread(file, &musicvol, sizeof(musicvol));
         w3sread(file, &reversestereo, sizeof(reversestereo));
 #endif
-
+        /* [FG] toggle crosshair */
+        if (w3sread(file,&crosshair,sizeof(crosshair))<0)
+        {
+            crosshair = false;
+        }
         w3sclose(file);
 
         if ((sd == sdm_AdLib || sm == smm_AdLib) && !AdLibPresent
@@ -265,6 +269,7 @@ void ReadConfig(void)
         }
         if(mouselookenabled) mouselookenabled=true;
         if(alwaysrunenabled) alwaysrunenabled=true;	
+		if(crosshair) crosshair = true;
 #ifdef EXTRACONTROLS
         if (mousemoveenabled)
         {
@@ -335,6 +340,7 @@ noconfig:
         musicvol = 100;
         reversestereo = false;
 #endif
+		crosshair = false;
     }
 
     SD_SetMusicMode (sm);
@@ -416,6 +422,8 @@ void WriteConfig(void)
         w3swrite(file, &musicvol, sizeof(musicvol));
         w3swrite(file, &reversestereo, sizeof(reversestereo));
 #endif
+		/* [FG] toggle crosshair */
+        w3swrite(file,&crosshair,sizeof(crosshair));
         w3sclose(file);
     }
 #ifdef _arch_dreamcast
@@ -870,6 +878,14 @@ void ShutdownId (void)
 #elif defined(PS2)
     ps2_printf_XY("IN_Shutdown DONE\n", 4, 20, 20);
 #endif        
+#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)
+    HAPTIC_Shutdown();
+#if defined(SWITCH) || defined (N3DS)
+    printf("HAPTIC_Shutdown DONE\n");
+#elif defined(PS2)
+    ps2_printf_XY("HAPTIC_Shutdown DONE\n", 4, 20, 20);
+#endif   
+#endif
     VL_Shutdown ();
 #if defined(SWITCH) || defined (N3DS)
     printf("VL_Shutdown DONE\n");
@@ -1476,6 +1492,14 @@ static void InitGame()
     printf("IN Started DONE\n");
 #elif defined(PS2)
     ps2_printf_XY("IN Started DONE\n", 4, 20, 20);
+#endif
+#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)
+    HAPTIC_Startup ();
+#if defined(SWITCH) || defined (N3DS) 
+    printf("HAPTIC Started DONE\n");
+#elif defined(PS2)
+    ps2_printf_XY("HAPTIC Started DONE\n", 4, 20, 20);
+#endif
 #endif
     PM_Startup ();
 #if defined(SWITCH) || defined (N3DS) 

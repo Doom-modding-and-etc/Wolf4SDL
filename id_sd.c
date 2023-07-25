@@ -46,6 +46,8 @@
 #include "aud_sys/dosbox/dbopl.h"
 #elif defined(USE_NUKEDOPL)
 #include "aud_sys/nukedopl3/opl3.h"
+#elif defined(USE_FBNEO_FMOPL)
+#include "aud_sys/fbneo/fmoplneo.h"
 #else
 #include "aud_sys/mame/fmopl.h"
 #endif
@@ -199,10 +201,13 @@ static void YM3812UpdateOne(opl3_chip* which, short* stream, int length)
 }
 #else
 
-static const int oplChip = 0;
+static int oplChip = 0;
 
 #endif
-
+#ifdef USE_AUDIO_CVT
+static unsigned short mix_format;
+static int mix_channels;
+#else
 typedef struct
 {
 	char RIFF[4];
@@ -224,9 +229,14 @@ typedef struct
     unsigned int chunklength;
 } wavechunk;
 #endif
+#endif
 
 #ifndef SEGA_SATURN
+#ifdef USE_AUDIO_CVT
+static Mix_Chunk SoundChunks[STARTMUSIC - STARTDIGISOUNDS] = { 0 };
+#else
 static Mix_Chunk *SoundChunks[ STARTMUSIC - STARTDIGISOUNDS];
+#endif
 globalsoundpos channelSoundPos[MIX_CHANNELS];
 #endif
 /*      Global variables     */
@@ -523,6 +533,7 @@ void SD_SetPosition(int channel, int leftpos, int rightpos)
     }
 }
 
+#ifndef USE_AUDIO_CVT
 static short GetSample(float csample, unsigned char *samples, int size)
 {
     float s0=0, s1=0, s2=0;
@@ -540,6 +551,7 @@ static short GetSample(float csample, unsigned char *samples, int size)
     else if(intval > 32767) intval = 32767;
     return (short) intval;
 }
+#endif
 #endif
 
 void SD_PrepareSound(int which)
@@ -613,6 +625,45 @@ void SD_PrepareSound(int which)
     }
 #endif	
 #else
+#ifdef USE_AUDIO_CVT
+    SDL_AudioCVT cvt;
+    unsigned int page;
+    unsigned int size;
+    unsigned char* origsamples;
+    Mix_Chunk* chunk;
+
+    if (DigiList == NULL)
+        Quit("SD_PrepareSound(%i): DigiList not initialized!\n", which);
+
+    origsamples = PM_GetSoundPage(page);
+    if (origsamples + size >= PM_GetPageEnd())
+        Quit("SD_PrepareSound(%i): Sound reaches out of page file!\n", which);
+
+    if (SDL_BuildAudioCVT(&cvt,
+        AUDIO_U8, 1, ORIGSAMPLERATE,
+        mix_format, mix_channels, param_samplerate) < 0)
+    {
+        Quit("SDL_BuildAudioCVT: %s\n", SDL_GetError());
+    }
+
+    cvt.len = (int)size;
+    cvt.buf = (Uint8*)malloc(cvt.len * cvt.len_mult);
+    /* [FG] clear buffer(cvt.len * cvt.len_mult >= cvt.len_cvt) */
+    memset(cvt.buf, 0, cvt.len * cvt.len_mult);
+    memcpy(cvt.buf, origsamples, cvt.len);
+
+    if (SDL_ConvertAudio(&cvt) < 0)
+    {
+        free(cvt.buf);
+        Quit("SDL_ConvertAudio: %s\n", SDL_GetError());
+    }
+
+    chunk = &SoundChunks[which];
+    chunk->allocated = 1;
+    chunk->volume = MIX_MAX_VOLUME;
+    chunk->abuf = cvt.buf;
+    chunk->alen = cvt.len_cvt;
+#else
     unsigned int i;
 	unsigned int page = DigiList[which].startpage;
 	unsigned int size = DigiList[which].length;
@@ -662,13 +713,14 @@ void SD_PrepareSound(int which)
 
     free(wavebuffer);
 #endif
+#endif
 }
 
 #ifndef SEGA_SATURN
 int SD_PlayDigitized(unsigned short which,int leftpos,int rightpos)
 {
-	Mix_Chunk *sample;
-	int channel;
+    Mix_Chunk *sample;
+    int channel;
     if (!DigiMode)
         return 0;
 
@@ -679,9 +731,13 @@ int SD_PlayDigitized(unsigned short which,int leftpos,int rightpos)
     SD_SetPosition(channel, leftpos,rightpos);
 
     DigiPlaying = true;
-
+#ifdef USE_AUDIO_CVT
+    sample = &SoundChunks[which];
+    if(sample->abuf == NULL)
+#else
     sample = SoundChunks[which];
     if(sample == NULL)
+#endif
     {
         printf("SoundChunks[%i] is NULL!\n", which);
         return 0;
@@ -1219,7 +1275,12 @@ SD_Shutdown(void)
 
     for(i = 0; i < STARTMUSIC - STARTDIGISOUNDS; i++)
     {
+#ifdef USE_AUDIO_CVT
+        if(SoundChunks[i].abuf) free(SoundChunks[i].abuf);
+        memset(&SoundChunks[i], 0, sizeof(SoundChunks[i]));
+#else
         if(SoundChunks[i]) Mix_FreeChunk(SoundChunks[i]);
+#endif
     }
 
     free (DigiList);

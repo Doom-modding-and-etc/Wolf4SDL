@@ -980,15 +980,15 @@ void SetupGameLevel (void)
 */
 void DrawPlayBorderSides(void)
 {
-	const int sw = screenWidth;
-	const int sh = screenHeight;
-	const int vw = viewwidth;
-	const int vh = viewheight;
-	const int px = scaleFactor; /* size of one "pixel" */
+    int sw = screenWidth;
+	int sh = screenHeight;
+	int vw = viewwidth;
+	int vh = viewheight;
+    int px = scaleFactor; /* size of one "pixel" */
 
-	const int h  = sh - px * STATUSLINES;
-	const int xl = sw / 2 - vw / 2;
-	const int yl = (h - vh) / 2;
+    int h  = sh - px * STATUSLINES;
+	int xl = sw / 2 - vw / 2;
+	int yl = (h - vh) / 2;
 
     if(viewsize == 21) return;
 
@@ -1064,16 +1064,16 @@ void DrawStatusBorder (unsigned char color)
 
 void DrawPlayBorder (void)
 {
-	const int px = scaleFactor; /* size of one "pixel" */
-	const int xl = screenWidth/2-viewwidth/2;
-    const int yl = (screenHeight-px*STATUSLINES-viewheight)/2;
+	int px = scaleFactor; /* size of one "pixel" */
+	int xl = screenWidth/2-viewwidth/2;
+    int yl = (screenHeight-px*STATUSLINES-viewheight)/2;
     
 	if (bordercol != VIEWCOLOR)
         DrawStatusBorder(bordercol);
     else
     {
 #ifdef SEGA_SATURN
-        const int statusborderw = (screenWidth - px * SATURN_WIDTH) / 2;
+        int statusborderw = (screenWidth - px * SATURN_WIDTH) / 2;
 
 #if SATURN_WIDTH == 352
         VL_BarScaledCoord(0, screenHeight - px * STATUSLINES,
@@ -1087,7 +1087,7 @@ void DrawPlayBorder (void)
             statusborderw + px * 8, px * STATUSLINES, bordercol);
 #endif
 #else
-        const int statusborderw = (screenWidth-px*320)/2;
+        int statusborderw = (screenWidth-px*320)/2;
 
         VL_BarScaledCoord (0, screenHeight-px*STATUSLINES,
             statusborderw+px*8, px*STATUSLINES, bordercol);

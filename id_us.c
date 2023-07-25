@@ -47,7 +47,7 @@ static	boolean		US_Started;
 						{"John Romero",10000,1},
 						{"Jay Wilbur",10000,1},
 					};
-
+#ifndef USE_SDL
 int rndindex = 0;
 
 static unsigned char rndtable[] = {
@@ -70,6 +70,7 @@ static unsigned char rndtable[] = {
 	 17,  46,  52, 231, 232,  76,  31, 221,  84,  37, 216, 165, 212, 106,
 	197, 242,  98,  43,  39, 175, 254, 145, 190,  84, 118, 222, 187, 136,
 	120, 163, 236, 249 };
+#endif
 
 /*	Internal routines  */
 
@@ -825,6 +826,14 @@ US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 }
 #endif
 
+#ifndef USE_SDL
+int US_Random(int range)
+{
+	return (range * rand()) / RAND_MAX;
+}
+#endif
+
+#ifdef USE_SDL
 /*
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -835,9 +844,9 @@ US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
 ///////////////////////////////////////////////////////////////////////////
 */
 
-void US_InitRndT(int randomize)
+void US_InitRndT(boolean randomize)
 {
-    if(randomize)
+	if(randomize)
         rndindex = (WL_GetTicks() >> 4) & 0xff;
     else
         rndindex = 0;
@@ -856,3 +865,36 @@ int US_RndT()
     rndindex = (rndindex+1)&0xff;
     return rndtable[rndindex];
 }
+#else
+/*
+///////////////////////////////////////////////////////////////////////////
+//
+// US_InitRndT - Initializes the pseudo random number generator.
+//      If randomize is true, the seed will be initialized depending on the
+//      current time
+//
+///////////////////////////////////////////////////////////////////////////
+*/
+
+void US_InitRndT(boolean randomize)
+{
+	if (randomize)
+		srand((unsigned)time(0));
+	else
+		srand(0);
+}
+
+/*
+///////////////////////////////////////////////////////////////////////////
+//
+// US_RndT - Returns the next 8-bit pseudo random number
+//
+///////////////////////////////////////////////////////////////////////////
+*/
+
+int US_RndT()
+{
+	return US_Random(256);
+}
+
+#endif

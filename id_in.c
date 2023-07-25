@@ -65,7 +65,7 @@ static KeyboardDef KbdDefs = {
     sc_PgDn                 /* downright */
 };
 
-static SDL_Joystick* Joystick;
+SDL_Joystick* Joystick;
 int JoyNumButtons;
 static int JoyNumHats;
 #if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3

@@ -186,13 +186,21 @@ void ControlMovement(objtype* ob)
 #ifdef SWITCH
 			Thrust(angle, (strafespeed*2) * MOVESCALE * (int)tics);
 #else
+#ifdef CSGO_STRAFE
+            Thrust(angle, RUNMOVE * MOVESCALE * (int)tics * 0.6f);
+#else
             Thrust(angle, RUNMOVE * MOVESCALE * (int)tics);
+#endif
 #endif
         else
 #ifdef SWITCH
 			Thrust(angle, strafespeed * MOVESCALE * (int)tics);
 #else
+#ifdef CSGO_STRAFE
+            Thrust(angle, BASEMOVE * MOVESCALE * (int)tics * 0.6f);
+#else
             Thrust(angle, BASEMOVE * MOVESCALE * (int)tics);
+#endif
 #endif
     }
 
@@ -203,27 +211,33 @@ void ControlMovement(objtype* ob)
             angle += ANGLES;
         if (buttonstate[bt_run])
 #ifdef SWITCH	
-			Thrust(angle, (strafespeed*2) * MOVESCALE * (int)tics );
+            Thrust(angle, (strafespeed * 2) * MOVESCALE * (int)tics);
 #else		
+#ifdef CSGO_STRAFE
+            Thrust(angle, RUNMOVE * MOVESCALE * (int)tics * 0.6f);
+#else
             Thrust(angle, RUNMOVE * MOVESCALE * (int)tics);
+#endif
 #endif
 		else
 #ifdef SWITCH
 			Thrust(angle, strafespeed * MOVESCALE * (int)tics);
 #else
+#ifdef CSGO_STRAFE
+            Thrust(angle, BASEMOVE * MOVESCALE * (int)tics * 0.6f);
+#else
             Thrust(angle, BASEMOVE * MOVESCALE * (int)tics);
+#endif
 #endif
     }
 #ifdef EXTRACONTROLS
     if (buttonstate[bt_moveforward])
     {
-        int delta = buttonstate[bt_run] ? RUNMOVE * (int)tics : BASEMOVE * (int)tics;
-        controly = delta;
         angle = ob->angle - ANGLES;
         if (angle < 0)
             angle += ANGLES;
 
-        if (controly)
+        if (controlstrafe)
             Thrust(angle, RUNMOVE * MOVESCALE * (int)tics);
         else
             Thrust(angle, BASEMOVE * MOVESCALE * (int)tics);
@@ -231,13 +245,11 @@ void ControlMovement(objtype* ob)
 
     if (buttonstate[bt_movebackward])
     {
-        int delta = buttonstate[bt_run] ? RUNMOVE * (int)tics : BASEMOVE * (int)tics;
-        controly = delta;
-        angle = ob->angle - ANGLES;
+        angle = ob->angle - ANGLES / 2;
         if (angle < 0)
-            angle =- ANGLES;
+            angle += ANGLES;
 
-        if (controly)
+        if (controlstrafe)
             Thrust(angle, RUNMOVE * MOVESCALE * (int)tics);
         else
             Thrust(angle, BASEMOVE * MOVESCALE * (int)tics);

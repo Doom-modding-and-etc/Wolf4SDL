@@ -11,7 +11,9 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
-
+#ifndef USE_SDL
+#include <time.h>
+#endif
 #include <SDL.h>
 
 #ifdef N3DS
@@ -194,7 +196,7 @@ void Quit(const char* errorStr, ...);
 #endif
 #include "wl_menu.h"
 #include "wl_utils.h"
-
+#include "id_haptic.h"
 
 /*
 =============================================================================
@@ -1474,6 +1476,7 @@ extern  boolean fizzlein, fpscounter;
 #ifdef AUTOMAP
 extern boolean automap[MAPSIZE][MAPSIZE];
 #endif
+extern boolean crosshair;
 
 #if defined(USE_FLOORCEILINGTEX) || defined(USE_CLOUDSKY)
 extern  short* spanstart;

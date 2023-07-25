@@ -36,8 +36,8 @@ Main features:
        - Zipit Z2
 	   
  - AdLib sounds and music:
-      This port includes the OPL2 emulator from MAME and DOSBOX plus the OPL3 Emulator from nukedyt, so you can not only
-      hear the AdLib sounds but also music without any AdLib-compatible
+      This port includes the OPL2 emulator from MAME, DOSBOX, the OPL3 Emulator from nukedyt and OPL2 emulator from FBAlpha(now: FBNeo) 
+	  so you can not only hear the AdLib sounds but also music without any AdLib-compatible
       soundcard in near to perfect quality!
 
  - Multichannel digitized sounds:
@@ -89,7 +89,10 @@ Additional features:
       floor and ceiling textures, high resolution textures/sprites,
       parallax sky, cloud sky and outside atmosphere features, which
       can be easily activated in version.h.
-
+  
+  - Haptic Support:
+	  Wolf4SDL support haptic only for xinput
+ 
 
 The following versions of Wolfenstein 3D data files are currently supported
 by the source code (choose the version by commenting/uncommenting lines in
@@ -260,14 +263,13 @@ TODOs:
  - Prepare SDL3 Support
  - Support to sega saturn: wl_draw.c, wl_main.c and wl_menu.c
  - Support OpenBSD
- - Port LWLIB to C
  - Fix Nintendo Switch movement
  - Fix nukedopl3 when compiling with old Visual C++
- - Support real crt filters(This should be on v2.4)
+ - Support real crt filters
 
 Known bugs:
 -----------
- - After Hans Grosse level, the game crashes on the next Boss level
+ - The ending of the episode, Game crashes
  - Boss dissapers after moving on his initial position
  
 Troubleshooting:
@@ -284,6 +286,7 @@ Credits:
  - Special thanks to the DOSBox team for providing a GPL'ed OPL2/3 emulator!
  - Special thanks to the MAME developement team for providing the source code
    of the OPL2 emulator!
+ - Special thanks to the FBAlpha(now: FBNeo) for the OPL2 source code based on MAME´S OPL2
  - Ultra special many thanks to the prboom+ team for providing the c port of dosbox opl
  - Speacial thanks to AryanWolf3d for upgrade this source port
  - Many thanks to "Der Tron" for hosting the svn repository, making Wolf4SDL
