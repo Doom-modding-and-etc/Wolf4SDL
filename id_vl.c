@@ -529,7 +529,7 @@ finished:
             if (usedoublebuffering) first = 0;
 
             VL_UnlockSurface(screen);
-            VL_UpdateScreen(screen);
+            VL_UpdateScreen(screenBuffer);
         }
         else
         {
@@ -888,7 +888,7 @@ void VL_SetColor(int color, unsigned char red, unsigned char green, unsigned cha
         CRT_Init(screen);
         CRT_DAC();
 #else
-        VL_UpdateScreen(screen);
+        VL_UpdateScreen(screenBuffer);
 #endif
 
 #elif SDL_MAJOR_VERSION == 2
@@ -896,12 +896,11 @@ void VL_SetColor(int color, unsigned char red, unsigned char green, unsigned cha
     else
     {
         SDL_SetPaletteColors(screenBuffer->format->palette, &col, color, 1);
-        SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
 #ifdef CRT        
         CRT_Init(screen);
         CRT_DAC();
 #else
-        VL_UpdateScreen(screen);
+        VL_UpdateScreen(screenBuffer);
 #endif
 #endif
 #endif
@@ -932,9 +931,7 @@ void VL_SetPalette(SDL_Color* palette, boolean forceupdate)
         SDL_SetPalette(screenBuffer, SDL_LOGPAL, palette, 0, 256);
         if(forceupdate)
         {
-            SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
-
-	        VL_UpdateScreen(screen);
+	        VL_UpdateScreen(screenBuffer);
 #else
         SDL_SetPaletteColors(screen->format->palette, palette, 0, 256);
     else
@@ -942,9 +939,7 @@ void VL_SetPalette(SDL_Color* palette, boolean forceupdate)
         SDL_SetPaletteColors(screenBuffer->format->palette, palette, 0, 256);
         if (forceupdate)
         {
-            SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
-
-            VL_UpdateScreen(screen);
+            VL_UpdateScreen(screenBuffer);
 #endif
         }
     }
