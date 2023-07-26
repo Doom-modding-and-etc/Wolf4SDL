@@ -534,7 +534,7 @@ finished:
             if (usedoublebuffering) first = 0;
 
             VL_UnlockSurface(screen);
-            VL_UpdateScreen(screenBuffer);
+            VL_UpdateScreen(screen);
         }
         else
         {
@@ -972,7 +972,6 @@ void VL_SetColor(int color, unsigned char red, unsigned char green, unsigned cha
     else
     {
         SDL_SetPalette(screenBuffer, SDL_LOGPAL, &col, color, 1);
-
 #ifdef CRT        
         CRT_Init(screen);
         CRT_DAC();
@@ -1020,7 +1019,7 @@ void VL_SetPalette(SDL_Color* palette, boolean forceupdate)
         SDL_SetPalette(screenBuffer, SDL_LOGPAL, palette, 0, 256);
         if(forceupdate)
         {
-	        VL_UpdateScreen(screenBuffer);
+            VL_UpdateScreen(screenBuffer);
 #else
         SDL_SetPaletteColors(screen->format->palette, palette, 0, 256);
     else

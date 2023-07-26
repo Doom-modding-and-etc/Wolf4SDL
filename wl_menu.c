@@ -2181,7 +2181,7 @@ CP_SaveGame (int quick)
                 strcpy(picpath, bmpName);
         }
 
-            unlink(picpath);
+            w3sunlink(picpath);
             SDL_SaveBMP(lastGameSurface, picpath);
 #endif
             fclose (file);
