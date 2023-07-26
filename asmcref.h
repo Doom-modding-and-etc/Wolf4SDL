@@ -37,115 +37,115 @@ const char *ASM_Soundnames[NUMSOUNDS] =
 #endif
     "PLAYERDEATHSND.wav",          /* 9 */
     "DOGDEATHSND.wav",             /* 10 */
-    "ATKGATLINGSND.wav",           // 11
-    "GETKEYSND.wav",               // 12
-    "NOITEMSND.wav",               // 13
-    "WALK1SND.wav",                // 14
-    "WALK2SND.wav",                // 15
-    "TAKEDAMAGESND.wav",           // 16
-    "GAMEOVERSND.wav",             // 17
-    "OPENDOORSND.wav",             // 18
-    "CLOSEDOORSND.wav",            // 19
-    "DONOTHINGSND.wav",            // 20
-    "HALTSND.wav",                 // 21
-    "DEATHSCREAM2SND.wav",         // 22
-    "ATKKNIFESND.wav",             // 23
-    "ATKPISTOLSND.wav",            // 24
-    "DEATHSCREAM3SND.wav",         // 25
-    "ATKMACHINEGUNSND.wav",        // 26
-    "HITENEMYSND.wav",             // 27
-    "SHOOTDOORSND.wav",            // 28
-    "DEATHSCREAM1SND.wav",         // 29
-    "GETMACHINESND.wav",           // 30
-    "GETAMMOSND.wav",              // 31
-    "SHOOTSND.wav",                // 32
-    "HEALTH1SND.wav",              // 33
-    "HEALTH2SND.wav",              // 34
-    "BONUS1SND.wav",               // 35
-    "BONUS2SND.wav",               // 36
-    "BONUS3SND.wav",               // 37
-    "GETGATLINGSND.wav",           // 38
-    "ESCPRESSEDSND.wav",           // 39
-    "LEVELDONESND.wav",            // 40
-    "DOGBARKSND.wav",              // 41
-    "ENDBONUS1SND.wav",            // 42
-    "ENDBONUS2SND.wav",            // 43
-    "BONUS1UPSND.wav",             // 44
-    "BONUS4SND.wav",               // 45
-    "PUSHWALLSND.wav",             // 46
-    "NOBONUSSND.wav",              // 47
-    "PERCENT100SND.wav",           // 48
-    "BOSSACTIVESND.wav",           // 49
-    "MUTTISND.wav",                // 50
-    "SCHUTZADSND.wav",             // 51
-    "AHHHGSND.wav",                // 52
+    "ATKGATLINGSND.wav",           /* 11 */
+    "GETKEYSND.wav",               /* 12 */
+    "NOITEMSND.wav",               /* 13 */
+    "WALK1SND.wav",                /* 14 */
+    "WALK2SND.wav",                /* 15 */
+    "TAKEDAMAGESND.wav",           /* 16 */
+    "GAMEOVERSND.wav",             /* 17 */
+    "OPENDOORSND.wav",             /* 18 */
+    "CLOSEDOORSND.wav",            /* 19 */
+    "DONOTHINGSND.wav",            /* 20 */
+    "HALTSND.wav",                 /* 21 */
+    "DEATHSCREAM2SND.wav",         /* 22 */
+    "ATKKNIFESND.wav",             /* 23 */
+    "ATKPISTOLSND.wav",            /* 24 */
+    "DEATHSCREAM3SND.wav",         /* 25 */
+    "ATKMACHINEGUNSND.wav",        /* 26 */
+    "HITENEMYSND.wav",             /* 27 */
+    "SHOOTDOORSND.wav",            /* 28 */
+    "DEATHSCREAM1SND.wav",         /* 29 */
+    "GETMACHINESND.wav",           /* 30 */
+    "GETAMMOSND.wav",              /* 31 */
+    "SHOOTSND.wav",                /* 32 */
+    "HEALTH1SND.wav",              /* 33 */
+    "HEALTH2SND.wav",              /* 34 */
+    "BONUS1SND.wav",               /* 35 */
+    "BONUS2SND.wav",               /* 36 */
+    "BONUS3SND.wav",               /* 37 */
+    "GETGATLINGSND.wav",           /* 38 */
+    "ESCPRESSEDSND.wav",           /* 39 */
+    "LEVELDONESND.wav",            /* 40 */
+    "DOGBARKSND.wav",              /* 41 */
+    "ENDBONUS1SND.wav",            /* 42 */
+    "ENDBONUS2SND.wav",            /* 43 */
+    "BONUS1UPSND.wav",             /* 44 */
+    "BONUS4SND.wav",               /* 45 */
+    "PUSHWALLSND.wav",             /* 46 */
+    "NOBONUSSND.wav",              /* 47 */
+    "PERCENT100SND.wav",           /* 48 */
+    "BOSSACTIVESND.wav",           /* 49 */
+    "MUTTISND.wav",                /* 50 */
+    "SCHUTZADSND.wav",             /* 51 */
+    "AHHHGSND.wav",                /* 52 */
 #ifdef SPEAR
-    "DEATHSCREAM5SND.wav",         // 53
-    "DEATHSCREAM7SND.wav",         // 54
-    "DEATHSCREAM8SND.wav",         // 55
+    "DEATHSCREAM5SND.wav",         /* 53 */
+    "DEATHSCREAM7SND.wav",         /* 54 */
+    "DEATHSCREAM8SND.wav",         /* 55 */
 #else
-    "DIESND.wav",                  // 53
-    "EVASND.wav",                  // 54
-    "GUTENTAGSND.wav",             // 55
+    "DIESND.wav",                  /* 53 */
+    "EVASND.wav",                  /* 54 */
+    "GUTENTAGSND.wav",             /* 55 */
 #endif
-    "LEBENSND.wav",                // 56
+    "LEBENSND.wav",                /* 56 */
 #ifdef SPEAR
-    "DEATHSCREAM6SND.wav",         // 57
+    "DEATHSCREAM6SND.wav",         /* 57 */
 #else
-    "SCHEISTSND.wav",              // 57
+    "SCHEISTSND.wav",              /* 57 */
 #endif
-    "NAZIFIRESND.wav",             // 58
-    "BOSSFIRESND.wav",             // 59
-    "SSFIRESND.wav",               // 60
-    "SLURPIESND.wav",              // 61
+    "NAZIFIRESND.wav",             /* 58 */
+    "BOSSFIRESND.wav",             /* 59 */
+    "SSFIRESND.wav",               /* 60 */
+    "SLURPIESND.wav",              /* 61 */
 #ifdef SPEAR
-    "GHOSTFADESND.wav",            // 62
-    "DEATHSCREAM9SND.wav",         // 63
-    "GETAMMOBOXSND.wav",           // 64
-    "ANGELSIGHTSND.wav",           // 65
+    "GHOSTFADESND.wav",            /* 62 */
+    "DEATHSCREAM9SND.wav",         /* 63 */
+    "GETAMMOBOXSND.wav",           /* 64 */
+    "ANGELSIGHTSND.wav",           /* 65 */
 #else
-    "TOT_HUNDSND.wav",             // 62
-    "MEINGOTTSND.wav",             // 63
-    "SCHABBSHASND.wav",            // 64
-    "HITLERHASND.wav",             // 65
+    "TOT_HUNDSND.wav",             /* 62 */
+    "MEINGOTTSND.wav",             /* 63 */
+    "SCHABBSHASND.wav",            /* 64 */
+    "HITLERHASND.wav",             /* 65 */
 #endif
-    "SPIONSND.wav",                // 66
-    "NEINSOVASSND.wav",            // 67
-    "DOGATTACKSND.wav",            // 68
+    "SPIONSND.wav",                /* 66 */
+    "NEINSOVASSND.wav",            /* 67 */
+    "DOGATTACKSND.wav",            /* 68 */
 #ifdef SPEAR
-    "ANGELFIRESND.wav",            // 69
-    "TRANSSIGHTSND.wav",           // 70
-    "TRANSDEATHSND.wav",           // 71
-    "WILHELMSIGHTSND.wav",         // 72
-    "WILHELMDEATHSND.wav",         // 73
-    "UBERDEATHSND.wav",            // 74
-    "KNIGHTSIGHTSND.wav",          // 75
-    "KNIGHTDEATHSND.wav",          // 76
-    "ANGELDEATHSND.wav",           // 77
-    "KNIGHTMISSILESND.wav",        // 78
-    "GETSPEARSND.wav",             // 79
-    "ANGELTIREDSND.wav",           // 80
+    "ANGELFIRESND.wav",            /* 69 */
+    "TRANSSIGHTSND.wav",           /* 70 */
+    "TRANSDEATHSND.wav",           /* 71 */
+    "WILHELMSIGHTSND.wav",         /* 72 */
+    "WILHELMDEATHSND.wav",         /* 73 */
+    "UBERDEATHSND.wav",            /* 74 */
+    "KNIGHTSIGHTSND.wav",          /* 75 */
+    "KNIGHTDEATHSND.wav",          /* 76 */
+    "ANGELDEATHSND.wav",           /* 77 */
+    "KNIGHTMISSILESND.wav",        /* 78 */
+    "GETSPEARSND.wav",             /* 79 */
+    "ANGELTIREDSND.wav",           /* 80 */
 #else
-    "FLAMETHROWERSND.wav",         // 69
-    "MECHSTEPSND.wav",             // 70
-    "GOOBSSND.wav",                // 71
-    "YEAHSND.wav",                 // 72
+    "FLAMETHROWERSND.wav",         /* 69 */
+    "MECHSTEPSND.wav",             /* 70 */
+    "GOOBSSND.wav",                /* 71 */
+    "YEAHSND.wav",                 /* 72 */
 #endif
 #ifndef APOGEE_1_0
-    "DEATHSCREAM4SND.wav",         // 73
-    "DEATHSCREAM5SND.wav",         // 74
-    "DEATHSCREAM6SND.wav",         // 75
-    "DEATHSCREAM7SND.wav",         // 76
-    "DEATHSCREAM8SND.wav",         // 77
-    "DEATHSCREAM9SND.wav",         // 78
-    "DONNERSND.wav",               // 79
-    "EINESND.wav",                 // 80
-    "ERLAUBENSND.wav",             // 81
-    "KEINSND.wav",                 // 82
-    "MEINSND.wav",                 // 83
-    "ROSESND.wav",                 // 84
-    "MISSILEFIRESND.wav",          // 85
-    "MISSILEHITSND.wav"            // 86
+    "DEATHSCREAM4SND.wav",         /* 73 */
+    "DEATHSCREAM5SND.wav",         /* 74 */
+    "DEATHSCREAM6SND.wav",         /* 75 */
+    "DEATHSCREAM7SND.wav",         /* 76 */
+    "DEATHSCREAM8SND.wav",         /* 77 */
+    "DEATHSCREAM9SND.wav",         /* 78 */
+    "DONNERSND.wav",               /* 79 */
+    "EINESND.wav",                 /* 80 */
+    "ERLAUBENSND.wav",             /* 81 */
+    "KEINSND.wav",                 /* 82 */
+    "MEINSND.wav",                 /* 83 */
+    "ROSESND.wav",                 /* 84 */
+    "MISSILEFIRESND.wav",          /* 85 */
+    "MISSILEHITSND.wav"            /* 86 */
 #endif
 };
 
