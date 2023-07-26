@@ -763,10 +763,10 @@ void VL_SetVGAPlaneMode (void)
     screenHeight = screenWidth * 3 / 4;
 #endif     
 #if defined(SCALE2X) 
-    window = SDL_CreateWindowWithPosition(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, scaledScreenWidth, scaledScreenHeight,
+    window = SDL_CreateWindow(title, scaledScreenWidth, scaledScreenHeight,
         (fullscreen ? SDL_WINDOW_FULLSCREEN : 0) | (SDL_WINDOW_OPENGL ? true : false));
 #else
-    window = SDL_CreateWindowWithPosition(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight,
+    window = SDL_CreateWindow(title, screenWidth, screenHeight,
         (fullscreen ? SDL_WINDOW_FULLSCREEN : 0) | (SDL_WINDOW_OPENGL ? true : false));
 #endif
     SDL_GetMasksForPixelFormatEnum(SDL_PIXELFORMAT_ARGB8888, &screenBits, &r, &g, &b, &a);

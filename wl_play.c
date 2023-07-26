@@ -599,8 +599,11 @@ void PollKeyboardMoveStrafe(void)
 
 void PollMouseMove (void)
 {
+#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 1) || (SDL_MAJOR_VERSION == 2) 
     int mousexmove, mouseymove;
-
+#else
+    float mousexmove, mouseymove;
+#endif
 #if SDL_MAJOR_VERSION == 1
     SDL_GetMouseState(&mousexmove, &mouseymove);
     if(IN_IsInputGrabbed())
@@ -608,9 +611,12 @@ void PollMouseMove (void)
 
     mousexmove -= screenWidth / 2;
     mouseymove -= screenHeight / 2;
-#elif SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
+#elif SDL_MAJOR_VERSION == 2 
+    SDL_GetRelativeMouseState(&mousexmove, &mouseymove);
+#else
     SDL_GetRelativeMouseState(&mousexmove, &mouseymove);
 #endif
+#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 1) || (SDL_MAJOR_VERSION == 2) 
     if (!mouselookenabled) {
         controlx += mousexmove * 10 / (13 - mouseadjustment);
         controly += mouseymove * 20 / (13 - mouseadjustment);
@@ -625,6 +631,23 @@ void PollMouseMove (void)
     {
         controly += mouseymove * 20 / (13 - mouseadjustment);
     }
+#endif
+#else
+    if (!mouselookenabled) {
+        controlx += mousexmove * 10.0f / (13.0f - mouseadjustment);
+        controly += mouseymove * 20.0f / (13.0f - mouseadjustment);
+    }
+    else {
+        mousecontrolx += mousexmove * 10.0f / (13.0f - mouseadjustment);
+        mousecontroly += mouseymove * 20.0f / (13.0f - mouseadjustment);
+    }
+
+#ifdef EXTRACONTROLS
+    if (mousemoveenabled)
+    {
+        controly += mouseymove * 20.0f / (13.0f - mouseadjustment);
+    }
+#endif
 #endif
 }
 
@@ -1755,7 +1778,7 @@ void ClearPaletteShifts (void)
 void StartBonusFlash (void)
 {
     bonuscount = NUMWHITESHIFTS * WHITETICS;    /* white shift palette */
-#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)
+#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) || (SDL_MAJOR_VERSION == 3) && defined(HAPTIC_SUPPORT)
     HAPTIC_WeakRumble();
 #endif
 }

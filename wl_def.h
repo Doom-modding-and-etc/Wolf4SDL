@@ -196,7 +196,9 @@ void Quit(const char* errorStr, ...);
 #endif
 #include "wl_menu.h"
 #include "wl_utils.h"
+#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) || (SDL_MAJOR_VERSION == 3) && defined(HAPTIC_SUPPORT)
 #include "id_haptic.h"
+#endif
 
 /*
 =============================================================================

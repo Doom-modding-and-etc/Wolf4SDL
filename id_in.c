@@ -895,7 +895,7 @@ IN_Startup(void)
 #if SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2
     if (param_joystickindex >= 0 && param_joystickindex < SDL_NumJoysticks())
 #else
-    if (param_joystickindex >= 0 && param_joystickindex < (int)SDL_GetJoysticks)
+    if (param_joystickindex >= 0 && SDL_GetJoysticks(&param_joystickindex))
 #endif
     {
 #if SDL_MAJOR_VERSION == 1        
@@ -1300,8 +1300,10 @@ void IN_CenterMouse()
 {
 #if SDL_MAJOR_VERSION == 1
     SDL_WarpMouse(screenWidth / 2, screenHeight / 2);
-#elif SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
+#elif SDL_MAJOR_VERSION == 2 
     SDL_WarpMouseGlobal(screenWidth / 2, screenHeight / 2);
+#else
+    SDL_WarpMouseGlobal(screenWidth / 2.0f, screenHeight / 2.0f);
 #endif
 }
 #endif

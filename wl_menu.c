@@ -200,7 +200,7 @@ CP_itemtype CtlMenu[] = {
     {1, STR_ALRUN, 0},
     {0, STR_JOYEN, 0},
 #endif
-#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)
+#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) || (SDL_MAJOR_VERSION == 3) && defined(HAPTIC_SUPPORT)
     {0, STR_FEEDBACK, 0},
 #endif
     {1, STR_CROSSHAIR, 0}, /* [FG] toggle crosshair */
@@ -2394,9 +2394,9 @@ CP_Control ()
                 ShootSnd();
                 break;
 #endif
-#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)
+#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) || (SDL_MAJOR_VERSION == 3) && defined(HAPTIC_SUPPORT)
             case CTL_FEEDBACK:
-                hapticEnabled ^= 1;
+                hapticEnabled ^= true;
                 if (hapticEnabled)
                     HAPTIC_WeakRumble();
                 else
@@ -2580,7 +2580,7 @@ DrawCtlScreen (void)
     if (IN_JoyPresent())
     {
         CtlMenu[CTL_JOYENABLE].active = 1;
-#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)
+#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) || (SDL_MAJOR_VERSION == 3) && defined(HAPTIC_SUPPORT)
         CtlMenu[CTL_FEEDBACK].active = HAPTIC_Present();
 #endif
     }
@@ -2641,7 +2641,7 @@ DrawCtlScreen (void)
     else
         VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
 #endif
-#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)
+#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) || (SDL_MAJOR_VERSION == 3) && defined(HAPTIC_SUPPORT)
     y = CTL_Y + 68;
     if (hapticEnabled)
         VWB_DrawPic(x, y, C_SELECTEDPIC);
@@ -4427,12 +4427,21 @@ WaitKeyUp (void)
 void ReadAnyControl(ControlInfo *ci)
 {
     int mouseactive = 0;
+#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 1) || (SDL_MAJOR_VERSION == 2) 
     static int totalMousex = 0, totalMousey = 0;
+#else
+    static float totalMousex = 0, totalMousey = 0;
+#endif
     IN_ReadControl(ci);
 
     if (mouseenabled && IN_IsInputGrabbed())
-    {
-        int mousex, mousey, buttons;
+    {   
+#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 1) || (SDL_MAJOR_VERSION == 2) 
+        int mousex, mousey;
+#else
+        float mousex, mousey;
+#endif
+        int buttons;
 		int middlePressed;
 		int rightPressed;
 #if SDL_MAJOR_VERSION == 1

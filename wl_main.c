@@ -878,7 +878,7 @@ void ShutdownId (void)
 #elif defined(PS2)
     ps2_printf_XY("IN_Shutdown DONE\n", 4, 20, 20);
 #endif        
-#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)
+#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) || (SDL_MAJOR_VERSION == 3) && defined(HAPTIC_SUPPORT)
     HAPTIC_Shutdown();
 #if defined(SWITCH) || defined (N3DS)
     printf("HAPTIC_Shutdown DONE\n");
@@ -1464,7 +1464,7 @@ static void InitGame()
 #if SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2
     numJoysticks = SDL_NumJoysticks();
 #else
-    numJoysticks = SDL_GetJoysticks;
+    numJoysticks = SDL_GetJoysticks(&param_joystickindex);
 #endif
     if(param_joystickindex && (param_joystickindex < -1 || param_joystickindex >= numJoysticks))
     {
@@ -1493,7 +1493,7 @@ static void InitGame()
 #elif defined(PS2)
     ps2_printf_XY("IN Started DONE\n", 4, 20, 20);
 #endif
-#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)
+#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) || (SDL_MAJOR_VERSION == 3) && defined(HAPTIC_SUPPORT)
     HAPTIC_Startup ();
 #if defined(SWITCH) || defined (N3DS) 
     printf("HAPTIC Started DONE\n");

@@ -59,7 +59,7 @@
 #define STR_MOUSEMVN "Mouse Movement"
 #endif
 #define	STR_PORT2	"Use joystick port 2"
-#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)
+#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) || (SDL_MAJOR_VERSION == 3) && defined(HAPTIC_SUPPORT)
 #define	STR_FEEDBACK "Use Force Feedback"
 #endif
 #define STR_CROSSHAIR "Crosshair"
