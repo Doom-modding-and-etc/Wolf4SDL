@@ -6,13 +6,8 @@
 #include "wl_def.h"
 
 #define FRACBITS         16
-#if SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2 
-#ifdef _WIN64
+#if defined(_WIN64) && (SDL_MAJOR_VERSION == 2)
 #define WL_GetTicks() SDL_GetTicks64()
-#else
-#define WL_GetTicks() SDL_GetTicks()
-#endif
-#define WL_GetTicks() SDL_GetTicks()
 #else
 #define WL_GetTicks() SDL_GetTicks()
 #endif

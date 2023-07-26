@@ -577,14 +577,14 @@ static void processEvent(SDL_Event* event)
 	int intLastScan;
     switch (event->type)
     {
-#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2 
         // exit if the window is closed
     case SDL_QUIT:
 #else
     case SDL_EVENT_QUIT:
 #endif
         Quit(NULL);
-#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2 
     case SDL_MOUSEBUTTONDOWN:
 #else
     case SDL_EVENT_MOUSE_BUTTON_DOWN:
@@ -602,7 +602,7 @@ static void processEvent(SDL_Event* event)
     }
     break;
     // check for keypresses
-#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2 
 
     case SDL_KEYDOWN:
 #else
@@ -642,7 +642,7 @@ static void processEvent(SDL_Event* event)
         else if (LastScan == SDLK_RCTRL) LastScan = SDLK_LCTRL;
         else
         {
-#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2 
             if ((mod & KMOD_NUM) == 0)
 #else
             if ((mod & SDL_KMOD_NUM) == 0)
@@ -661,7 +661,7 @@ static void processEvent(SDL_Event* event)
         sym = LastScan;
         if (sym >= 'a' && sym <= 'z')
             sym -= 32;  // convert to uppercase
-#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2 
         if (mod & (KMOD_SHIFT | KMOD_CAPS))
 #else
         if (mod & (SDL_KMOD_SHIFT | SDL_KMOD_CAPS))
@@ -683,7 +683,7 @@ static void processEvent(SDL_Event* event)
             Paused = true;
         break;
     }
-#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2 
     case SDL_KEYUP:
 #else
     case SDL_EVENT_KEY_UP:
@@ -696,7 +696,7 @@ static void processEvent(SDL_Event* event)
         else if (key == SDLK_RCTRL) key = SDLK_LCTRL;
         else
         {
-#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2 
             if ((SDL_GetModState() & KMOD_NUM) == 0)
 #else
             if ((SDL_GetModState() & SDL_KMOD_NUM) == 0)
@@ -989,7 +989,7 @@ IN_Shutdown(void)
 #if SDL_MAJOR_VERSION == 2
     if (GameController)
         SDL_GameControllerClose(GameController);
-#else
+#elif SDL_MAJOR_VERSION == 3
     if (GameController)
         SDL_CloseGamepad(GameController);
 #endif
