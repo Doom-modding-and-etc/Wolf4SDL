@@ -213,7 +213,7 @@ The current version of the source code is available on GitHub at:
 
 The following ways of compiling the source code are supported:
  - Makefile for Linux, BSD variants, MinGW/MSYS, dreamcast(see README.dc), Nintendo Switch(See README.md), 
-Nintendo 3DS and Sony Playstation 2. see README-dc.txt for more details
+   Nintendo 3DS and Sony Playstation 2. see README-dc.txt for more details
  - Visual C++ (Wolf4SDL.VC2022.sln (see README-VC.txt)
  - Special compiling for Dreamcast (see README-dc.txt)
  - Xcode (for Mac OS X, macosx/Wolf4SDL.xcodeproj/project.pbxproj)
@@ -225,7 +225,7 @@ Nintendo 3DS and Sony Playstation 2. see README-dc.txt for more details
  - Visual C++ 6 (Wolf4SDL.dsw and Wolf4SDL.dsp)
  - Code::Blocks 8.02 (Wolf4SDL.cbp)
  - Dev-C++ 5.0 Beta 9.2 (4.9.9.2) (Wolf4SDL.dev) (see README-devcpp.txt)
- - Visual C++ 2019 (Wolf4SDL.VC2019.sln (see README-VC.txt)
+ - Visual C++ 2019 (Wolf4SDL.VC2019.sln) (see README-VC.txt)
  
 To compile the source code you need the development libraries of
  

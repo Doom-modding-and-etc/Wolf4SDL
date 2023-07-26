@@ -316,7 +316,7 @@
     <ClCompile Include="id_w3swrap.c" />
     <ClCompile Include="psnprntf.c" />
     <ClCompile Include="sdl_winmain.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="signon.c" />
     <ClCompile Include="wl_act1.c" />

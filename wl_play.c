@@ -261,11 +261,10 @@ void   *demobuffer;
 ** current user input
 */
 int controlx, controly;         /* range from -100 to 100 per tic */
+int mousecontrolx, mousecontroly;
 #if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
 int gamecontrolstrafe;
 #endif
-int mousecontrolx, mousecontroly;
-
 
 #ifdef EXTRACONTROLS
 int controlstrafe;
@@ -550,13 +549,12 @@ void PollGameControllerButtons(void)
 
 void PollKeyboardMove (void)
 {
-
     int delta;
     if (!alwaysrunenabled)
         delta = buttonstate[bt_run] ? RUNMOVE * (int)tics : BASEMOVE * (int)tics;
     else
         delta = buttonstate[bt_run] ? BASEMOVE * (int)tics : RUNMOVE * (int)tics;
-
+ 
     if (Keyboard(dirscan[di_north]))
         controly -= delta;
     if (Keyboard(dirscan[di_south]))
@@ -613,7 +611,6 @@ void PollMouseMove (void)
 #elif SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
     SDL_GetRelativeMouseState(&mousexmove, &mouseymove);
 #endif
-
     if (!mouselookenabled) {
         controlx += mousexmove * 10 / (13 - mouseadjustment);
         controly += mouseymove * 20 / (13 - mouseadjustment);
@@ -702,7 +699,6 @@ void PollGameControllerMove(void)
         gamecontrolstrafe += delta;
     else if (GameControllerLeftStick[0] < -64)
         gamecontrolstrafe -= delta;
-
 }
 #endif
 /*
@@ -722,7 +718,8 @@ void PollGameControllerMove(void)
 
 void PollControls (void)
 {
-    int max, min, i;
+    int max, min;
+    int i;
     unsigned char buttonbits;
 #if defined(SWITCH) 
 	unsigned int kDown;
@@ -758,10 +755,9 @@ void PollControls (void)
     }
     else
         CalcTics ();
-
     controlx = 0;
     controly = 0;
-#if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
+#if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3	
     gamecontrolstrafe = 0;
 #endif
     mousecontrolx = 0;
@@ -1004,7 +1000,7 @@ void PollControls (void)
     else if (gamecontrolstrafe < min)
         gamecontrolstrafe = min;
 #endif
-
+#endif
     if (demorecord)
     {
         /*
@@ -1012,7 +1008,6 @@ void PollControls (void)
         */
         controlx /= (int)tics;
         controly /= (int)tics;
-
         buttonbits = 0;
 
         /* TODO: Support 32-bit buttonbits */
@@ -1777,7 +1772,7 @@ void StartBonusFlash (void)
 void StartDamageFlash (int damage)
 {
     damagecount += damage;
-#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)
+#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) || (SDL_MAJOR_VERSION == 3) && defined(HAPTIC_SUPPORT)
     HAPTIC_StrongRumble();
 #endif
 }
@@ -1834,7 +1829,7 @@ void UpdatePaletteShifts (void)
     else if (palshifted)
     {
         VL_SetPalette(gamepal, false);        /* back to normal */
-#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)
+#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) || (SDL_MAJOR_VERSION == 3) && defined(HAPTIC_SUPPORT)
         HAPTIC_StopRumble();
 #endif
         palshifted = false;
@@ -1858,7 +1853,7 @@ void FinishPaletteShifts (void)
     {
         palshifted = 0;
         VL_SetPalette (gamepal, true);
-#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)    
+#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) || (SDL_MAJOR_VERSION == 3) && defined(HAPTIC_SUPPORT)
         HAPTIC_StopRumble();
 #endif
     }

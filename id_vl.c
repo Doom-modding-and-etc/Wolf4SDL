@@ -48,6 +48,7 @@ unsigned int screenHeight = 405;
 #endif
 unsigned int screenBits = 8;      /* use "best" color depth according to libSDL */
 #endif
+boolean fullscreen = true;
 
 SDL_Surface *screen = NULL;
 #ifdef SAVE_GAME_SCREENSHOT
@@ -573,8 +574,8 @@ finished:
 void VL_SetVGAPlaneMode (void)
 {
     unsigned int i;
-#if SDL_MAJOR_VERSION == 2
-    unsigned int a,r,g,b;
+#if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
+    unsigned int a = 0,r = 0,g = 0,b = 0;
 #endif
 #ifdef SPEAR
     const char* title = "Spear of Destiny";
@@ -676,90 +677,9 @@ void VL_SetVGAPlaneMode (void)
     }
     SDL_SetColors(screenBuffer, gamepal, 0, 256);
 #endif
-#elif SDL_MAJOR_VERSION == 3
+#elif SDL_MAJOR_VERSION == 2
 #ifdef CRT
-    //Fab's CRT Hack:
-    //Adjust height so the screen is 4:3 aspect ratio
-    screenHeight = screenWidth * 3 / 4;
-#endif     
-#if defined(SCALE2X) 
-    window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, scaledScreenWidth, scaledScreenHeight,
-        (fullscreen ? SDL_WINDOW_FULLSCREEN : 0 | SDL_WINDOW_OPENGL));
-#else
-
-#if SDL_MAJOR_VERSION == 3
-    window = SDL_CreateWindow(title, screenWidth, screenHeight, SDL_WINDOWPOS_UNDEFINED | SDL_WINDOWPOS_UNDEFINED |
-        (fullscreen ? SDL_WINDOW_FULLSCREEN : 0 | SDL_WINDOW_OPENGL));
-#else
-    window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight,
-        (fullscreen ? SDL_WINDOW_FULLSCREEN : 0 | SDL_WINDOW_OPENGL));
-#endif
-#endif
-    SDL_GetPixelFormatEnumForMasks(SDL_PIXELFORMAT_ARGB8888, r, g, b, a);
-
-    screen = SDL_CreateSurface(screenWidth, screenHeight, SDL_GetPixelFormatEnumForMasks(screenBits, r, g, b, a));
-
-    if (!screen)
-    {
-#if defined(SCALE2X) 
-        printf("Unable to set %ux%ux%i video mode: %s\n", scaledScreenWidth, scaledScreenHeight, screenBits, SDL_GetError());
-#else
-        printf("Unable to set %ux%ux%i video mode: %s\n", screenWidth, screenHeight, screenBits, SDL_GetError());
-#endif
-        exit(1);
-    }
-#ifdef _WIN32
-    renderer = SDL_CreateRenderer(window, "direct3d12", SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-#else
-    renderer = SDL_CreateRenderer(window, "opengl", SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-#endif
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
-    SDL_ShowCursor();
-    SDL_SetPaletteColors(screen->format->palette, gamepal, 0, 256);
-    memcpy(curpal, gamepal, sizeof(SDL_Color) * 256);
-
-#ifdef CRT  
-    //Fab's and Andr�s CRT Hack
-    CRT_Init(screen);
-#endif
-    screenBuffer = SDL_CreateSurface(screenWidth, screenHeight, SDL_GetPixelFormatEnumForMasks(8, 0, 0, 0, 0));
-
-    if (!screenBuffer)
-    {
-        printf("Unable to create screen buffer surface: %s\n", SDL_GetError());
-        exit(1);
-    }
-    SDL_SetPaletteColors(screenBuffer->format->palette, gamepal, 0, 256);
-
-#if defined(SCALE2X) 
-    // Create the intermediate texture that we render the screen surface into.
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
-#endif
-    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888,
-        SDL_TEXTUREACCESS_STREAMING, screenWidth, screenHeight);
-
-    if (!texture)
-    {
-        printf("Unable to create screen texture: %s\n", SDL_GetError());
-        exit(1);
-    }
-
-    // Create the up-scaled texture that we render to the window. We use 'nearest' scaling here because depending on the
-    // window size, the texture may need to be scaled by a non-integer factor.
-#if defined(SCALE2X) 
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
-    SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
-    upscaledTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, scaledScreenWidth, scaledScreenHeight);
-    if (!upscaledTexture)
-    {
-        printf("Unable to create up-scaled texture: %s\n", SDL_GetError());
-        exit(1);
-    }
-#endif
-#else
-#ifdef CRT
-    /* 
+    /*
     ** Fab's CRT Hack:
     ** Adjust height so the screen is 4:3 aspect ratio
     */
@@ -772,11 +692,11 @@ void VL_SetVGAPlaneMode (void)
     window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight,
         (fullscreen ? SDL_WINDOW_FULLSCREEN : 0) | (SDL_WINDOW_OPENGL ? true : false));
 #endif
-    SDL_PixelFormatEnumToMasks (SDL_PIXELFORMAT_ARGB8888,&screenBits,&r,&g,&b,&a);
+    SDL_PixelFormatEnumToMasks(SDL_PIXELFORMAT_ARGB8888, &screenBits, &r, &g, &b, &a);
 
     screen = SDL_CreateRGBSurface(0, screenWidth, screenHeight, screenBits, r, g, b, a);
 
-    if(!screen)
+    if (!screen)
     {
 #if defined(SCALE2X) 
         printf("Unable to set %ux%ux%i video mode: %s\n", scaledScreenWidth, scaledScreenHeight, screenBits, SDL_GetError());
@@ -791,16 +711,16 @@ void VL_SetVGAPlaneMode (void)
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
     SDL_SetPaletteColors(screen->format->palette, gamepal, 0, 256);
     memcpy(curpal, gamepal, sizeof(SDL_Color) * 256);
-    
+
 #ifdef CRT  
     /* Fab's and André´s CRT Hack */
     CRT_Init(screen);
 #endif
 
-    screenBuffer = SDL_CreateRGBSurface(0, screenWidth, screenHeight, 
-    8, 0, 0, 0, 0);
-    
-    if(!screenBuffer)
+    screenBuffer = SDL_CreateRGBSurface(0, screenWidth, screenHeight,
+        8, 0, 0, 0, 0);
+
+    if (!screenBuffer)
     {
         printf("Unable to create screen buffer surface: %s\n", SDL_GetError());
         exit(1);
@@ -834,6 +754,84 @@ void VL_SetVGAPlaneMode (void)
         exit(1);
     }
 #endif
+#else
+#ifdef CRT
+    /*
+    ** Fab's CRT Hack:
+    ** Adjust height so the screen is 4:3 aspect ratio
+    */
+    screenHeight = screenWidth * 3 / 4;
+#endif     
+#if defined(SCALE2X) 
+    window = SDL_CreateWindowWithPosition(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, scaledScreenWidth, scaledScreenHeight,
+        (fullscreen ? SDL_WINDOW_FULLSCREEN : 0) | (SDL_WINDOW_OPENGL ? true : false));
+#else
+    window = SDL_CreateWindowWithPosition(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight,
+        (fullscreen ? SDL_WINDOW_FULLSCREEN : 0) | (SDL_WINDOW_OPENGL ? true : false));
+#endif
+    SDL_GetMasksForPixelFormatEnum(SDL_PIXELFORMAT_ARGB8888, &screenBits, &r, &g, &b, &a);
+
+    screen = SDL_CreateSurface(screenWidth, screenHeight, SDL_GetPixelFormatEnumForMasks(screenBits, r, g, b, a));
+
+    if (!screen)
+    {
+#if defined(SCALE2X) 
+        printf("Unable to set %ux%ux%i video mode: %s\n", scaledScreenWidth, scaledScreenHeight, screenBits, SDL_GetError());
+#else
+        printf("Unable to set %ux%ux%i video mode: %s\n", screenWidth, screenHeight, screenBits, SDL_GetError());
+#endif
+        exit(1);
+    }
+    renderer = SDL_CreateRenderer(window, "opengl", SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
+    SDL_SetPaletteColors(screen->format->palette, gamepal, 0, 256);
+    memcpy(curpal, gamepal, sizeof(SDL_Color) * 256);
+
+#ifdef CRT  
+    /* Fab's and André´s CRT Hack */
+    CRT_Init(screen);
+#endif
+
+    screenBuffer = SDL_CreateSurface(screenWidth, screenHeight,
+        SDL_GetPixelFormatEnumForMasks(8, 0, 0, 0, 0));
+
+    if (!screenBuffer)
+    {
+        printf("Unable to create screen buffer surface: %s\n", SDL_GetError());
+        exit(1);
+    }
+    SDL_SetPaletteColors(screenBuffer->format->palette, gamepal, 0, 256);
+
+#if defined(SCALE2X) 
+    /* Create the intermediate texture that we render the screen surface into. */
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+#endif
+    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888,
+        SDL_TEXTUREACCESS_STREAMING, screenWidth, screenHeight);
+
+    if (!texture)
+    {
+        printf("Unable to create screen texture: %s\n", SDL_GetError());
+        exit(1);
+    }
+
+    /*
+    ** Create the up-scaled texture that we render to the window. We use 'nearest' scaling here because depending on the
+    ** window size, the texture may need to be scaled by a non-integer factor.
+    */
+#if defined(SCALE2X) 
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
+    SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
+    upscaledTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, scaledScreenWidth, scaledScreenHeight);
+    if (!upscaledTexture)
+    {
+        printf("Unable to create up-scaled texture: %s\n", SDL_GetError());
+        exit(1);
+    }
+#endif
+
 #endif
 #if SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2
     SDL_ShowCursor(0);
@@ -857,12 +855,16 @@ void VL_SetVGAPlaneMode (void)
         ylookup[i] = i * bufferPitch;
 }
 
-#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
 void VL_RenderTextures()
 {
     SDL_UpdateTexture(texture, NULL, screen->pixels, screenWidth * sizeof(unsigned int));
     SDL_RenderClear(renderer);
+#if SDL_MAJOR_VERSION == 3
+    SDL_RenderTexture(renderer, texture, NULL, NULL);
+#else
     SDL_RenderCopy(renderer, texture, NULL, NULL);
+#endif
     SDL_RenderPresent(renderer);
 }
 #endif
@@ -873,7 +875,7 @@ void VL_UpdateScreen(SDL_Surface* surface)
     SDL_BlitSurface(surface, NULL, screen, NULL);
 #if SDL_MAJOR_VERSION == 1
     SDL_Flip(screen);
-#elif SDL_MAJOR_VERSION == 2
+#elif SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
     VL_RenderTextures();
 #endif
 }

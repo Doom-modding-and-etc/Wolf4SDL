@@ -11,15 +11,15 @@
 #include "wl_def.h"
 #include "id_haptic.h"
 
-#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)
+#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) || (SDL_MAJOR_VERSION == 3) && defined(HAPTIC_SUPPORT)
 
 boolean hapticEnabled = false;
 static SDL_Haptic* haptic = NULL;
 static SDL_HapticEffect strongEffect;
 static SDL_HapticEffect weakEffect;
 static int hapticEffect = -1;
-static const Uint32 strongLength = 300;
-static const Uint32 weakLength = 150;
+static Uint32 strongLength = 300;
+static Uint32 weakLength = 150;
 #define SDL_HAPTIC_MAX_MAGNITUDE 0x7FFF
 extern SDL_Joystick* Joystick;
 

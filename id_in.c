@@ -79,7 +79,6 @@ SDL_Gamepad* GameController;
 #endif
 #endif
 static boolean GrabInput = false;
-boolean fullscreen = true;
 
 #ifndef SEGA_SATURN
 /*
@@ -538,9 +537,11 @@ static void I_ToggleFullScreen(void)
 #endif
 #if SDL_MAJOR_VERSION == 1
         flags |= SDL_FULLSCREEN | SDL_RESIZABLE;
-#elif SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
+#elif SDL_MAJOR_VERSION == 2
         flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
-#endif        
+#else
+        flags |= SDL_WINDOW_FULLSCREEN;
+#endif
         GrabInput = true;
 #if SDL_MAJOR_VERSION == 1
         SDL_WM_GrabInput(SDL_GRAB_OFF);
@@ -947,7 +948,7 @@ IN_Startup(void)
         GrabInput = true;
 #if SDL_MAJOR_VERSION == 1
         SDL_WM_GrabInput(SDL_GRAB_ON);
-    #elif SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3     
+#elif SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3     
         SDL_SetRelativeMouseMode(SDL_TRUE);
 #endif
     }
@@ -977,11 +978,14 @@ IN_Shutdown(void)
 {
     if (!IN_Started)
         return;
-
-
+#if SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2
     if (Joystick)
         SDL_JoystickClose(Joystick);
-        
+#else
+    if (Joystick)
+        SDL_CloseJoystick(Joystick);
+#endif
+
 #if SDL_MAJOR_VERSION == 2
     if (GameController)
         SDL_GameControllerClose(GameController);

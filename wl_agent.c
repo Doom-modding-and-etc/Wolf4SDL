@@ -296,7 +296,7 @@ void ControlMovement(objtype* ob)
 
     }
 
-#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3
     if (gamecontrolstrafe < 0)
     {
         angle = ob->angle + ANGLES / 4;
@@ -342,7 +342,7 @@ void ControlMovement(objtype* ob)
     if (controly < 0)
     {
         speed = -controly * MOVESCALE;
-#if SDL_MAJOR_VERSION == 2        
+#if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3       
         if (gamecontrolstrafe != 0)
             speed = (speed * 70) / 100; /* correct faster diagonal movement */
 #endif   
@@ -354,7 +354,7 @@ void ControlMovement(objtype* ob)
         angle = ob->angle + ANGLES / 2;
         if (angle >= ANGLES)
             angle -= ANGLES;
-#if SDL_MAJOR_VERSION == 2        
+#if SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3      
         if (gamecontrolstrafe != 0)
 #endif
             speed = (speed * 70) / 100; /* correct faster diagonal movement */

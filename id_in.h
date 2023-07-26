@@ -422,7 +422,7 @@ typedef	int		ScanCode;
 #define bt_touchpad SDL_GAMEPAD_BUTTON_TOUCHPAD
 #define bt_Max SDL_GAMEPAD_BUTTON_MAX
 
-//Axis stuff
+/* Axis stuff */
 #define gc_axis_invalid SDL_GAMEPAD_AXIS_INVALID
 #define gc_axis_leftx SDL_GAMEPAD_AXIS_LEFTX
 #define gc_axis_lefty SDL_GAMEPAD_AXIS_LEFTY

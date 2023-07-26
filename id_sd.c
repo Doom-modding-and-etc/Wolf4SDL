@@ -1211,8 +1211,11 @@ SD_Startup(void)
 
     if (SD_Started)
         return;
-
-    if(Mix_OpenAudio(param_samplerate, AUDIO_S16, 2, param_audiobuffer) < 0)
+#if SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2
+    if (Mix_OpenAudio(param_samplerate, AUDIO_S16, 2, param_audiobuffer) < 0)
+#else
+    if(Mix_OpenAudio(param_samplerate, SDL_AUDIO_S16, 2, param_audiobuffer) < 0)
+#endif
     {
         printf("Unable to open audio: %s\n", Mix_GetError());
         return;

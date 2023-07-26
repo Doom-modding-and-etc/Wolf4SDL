@@ -92,6 +92,21 @@ void CRT_Init(int _width)
     SDL_RenderCopy(renderer, upscaledTexture, NULL, NULL);
 #endif
     SDL_RenderPresent(renderer);
+#else
+    texture = SDL_CreateTexture(renderer, 0, 0, width, height);
+    SDL_GetTextureColorMod(texture, (unsigned char*)0xFF, (unsigned char*)0xFF, (unsigned char*)0xFF);
+    SDL_UpdateTexture(texture, NULL, screen->pixels, screenWidth * sizeof(Uint32));
+#ifdef SCALE2X
+    /* Render the intermediate texture into the up-scaled texture using 'nearest' integer scaling. */
+    SDL_SetRenderTarget(renderer, upscaledTexture);
+#endif    
+    SDL_RenderTexture(renderer, texture, NULL, NULL);
+#ifdef SCALE2X
+    /* Finally render this up-scaled texture to the window using linear scaling. */
+    SDL_SetRenderTarget(renderer, NULL);
+    SDL_RenderTexture(renderer, upscaledTexture, NULL, NULL);
+#endif
+    SDL_RenderPresent(renderer);
 #endif
 }
 
@@ -140,13 +155,23 @@ void CRT_DAC(void)
     SDL_RenderCopy(renderer, texture, NULL, NULL);
     SDL_RenderPresent(renderer);
     SDL_GetKeyboardState(NULL);
+#else
+    texture = SDL_CreateTextureFromSurface(renderer, screenBuffer);
+    SDL_RenderTexture(renderer, texture, NULL, NULL);
+    SDL_RenderPresent(renderer);
+    SDL_GetKeyboardState(NULL);
 #endif
 }
 
 void CRT_FreeScreenshot(SDL_Surface* surface1, SDL_Surface *surface2)
 {
+#if SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2
     SDL_FreeSurface(surface1);
     SDL_FreeSurface(surface2);
+#else
+    SDL_DestroySurface(surface1);
+    SDL_DestroySurface(surface2);
+#endif
 }
 
 #if !SDL_MAJOR_VERSION == 1 || SDL_MAJOR_VERSION == 2 || SDL_MAJOR_VERSION == 3 
@@ -179,8 +204,8 @@ void CRT_Screenshot(void)
     correctAspect = SDL_CreateRGBSurface(0, aspectWidth, aspectHeight, 32, 0, 0, 0, 0);
     incorrectAspect = SDL_CreateRGBSurface(0, screenBuffer->w, screenBuffer->h, 32, 0, 0, 0, 0);
 #elif SDL_MAJOR_VERSION == 3
-    correctAspect = SDL_CreateSurface(aspectWidth, aspectHeight, SDL_MasksToPixelFormatEnum(32, 0, 0, 0, 0));
-    incorrectAspect = SDL_CreateSurface(screenBuffer->w, screenBuffer->h, SDL_MasksToPixelFormatEnum(32, 0, 0, 0, 0));
+    correctAspect = SDL_CreateSurface(aspectWidth, aspectHeight, SDL_GetPixelFormatEnumForMasks(32, 0, 0, 0, 0));
+    incorrectAspect = SDL_CreateSurface(screenBuffer->w, screenBuffer->h, SDL_GetPixelFormatEnumForMasks(32, 0, 0, 0, 0));
 #endif
     CRT_BlitImage(screenBuffer, incorrectAspect, incorrectAspect, correctAspect);
     SDL_SaveBMP(correctAspect, filename);

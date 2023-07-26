@@ -4442,6 +4442,8 @@ void ReadAnyControl(ControlInfo *ci)
         IN_CenterMouse();
 #elif SDL_MAJOR_VERSION == 2
         buttons = SDL_GetRelativeMouseState(&mousex, &mousey);
+#else
+        buttons = SDL_GetRelativeMouseState(&mousex, &mousey);
 #endif
         middlePressed = buttons & SDL_BUTTON(SDL_BUTTON_MIDDLE);
         rightPressed = buttons & SDL_BUTTON(SDL_BUTTON_RIGHT);

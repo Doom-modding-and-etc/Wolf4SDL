@@ -9,7 +9,7 @@
 #ifndef ID_HAPTIC_H
 #define ID_HAPTIC_H
 
-#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)
+#if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) || (SDL_MAJOR_VERSION == 3) && defined(HAPTIC_SUPPORT)
 
 extern boolean hapticEnabled;
 
