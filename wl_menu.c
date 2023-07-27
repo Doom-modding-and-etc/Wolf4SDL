@@ -176,6 +176,8 @@ enum
     CTL_FEEDBACK,
 #endif
 	CTL_CROSSHAIR, /* [FG] toggle crosshair */ 
+    CTL_DRAWAUTOMAP,
+    CTL_FIXEDLOGICRATE,
     CTL_CUSTOMIZE 
 };
 #endif
@@ -204,6 +206,8 @@ CP_itemtype CtlMenu[] = {
     {0, STR_FEEDBACK, 0},
 #endif
     {1, STR_CROSSHAIR, 0}, /* [FG] toggle crosshair */
+    {1, STR_DRAWAUTOMAP, 0},
+    {1, STR_FIXEDLOGICRATE, 0},
     {1, STR_CUSTOM, (int(*)(int))CustomControls}
 #endif
 };
@@ -2373,12 +2377,26 @@ CP_Control ()
 				
             /* [FG] toggle crosshair */
             case CTL_CROSSHAIR:
-                crosshair ^= 1;
+                crosshair ^= true;
                 DrawCtlScreen ();
                 CusItems.curpos = -1;
                 ShootSnd ();
-                break;				
+                break;
+
+            case CTL_DRAWAUTOMAP:
+                drawautomap ^= true;
+                DrawCtlScreen();
+                CusItems.curpos = -1;
+                ShootSnd();
+                break;
 				
+            case CTL_FIXEDLOGICRATE:
+                fixedlogicrate ^= true;
+                DrawCtlScreen();
+                CusItems.curpos = -1;
+                ShootSnd();
+                break;
+
 #ifndef EXTRACONTROLS
             case CTL_JOYENABLE:
                 joystickenabled ^= true;
@@ -2654,6 +2672,13 @@ DrawCtlScreen (void)
         VWB_DrawPic(x, y, C_SELECTEDPIC);
     else
         VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+
+
+    y = CTL_Y + 95;
+    if (drawautomap)
+        VWB_DrawPic(x, y, C_SELECTEDPIC);
+    else
+        VWB_DrawPic(x, y, C_NOTSELECTEDPIC)
 #else
     /* [FG] toggle crosshair */
     y = CTL_Y + 68;
@@ -2661,6 +2686,19 @@ DrawCtlScreen (void)
         VWB_DrawPic(x, y, C_SELECTEDPIC);
     else
         VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+
+    y = CTL_Y + 81;
+    if (drawautomap)
+        VWB_DrawPic(x, y, C_SELECTEDPIC);
+    else
+        VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+
+    y = CTL_Y + 95;
+    if (fixedlogicrate)
+        VWB_DrawPic(x, y, C_SELECTEDPIC);
+    else
+        VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+
 #endif
     /*
     ** PICK FIRST AVAILABLE SPOT

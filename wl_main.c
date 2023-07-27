@@ -241,6 +241,9 @@ void ReadConfig(void)
         {
             crosshair = false;
         }
+        w3sread(file, &drawautomap, sizeof(drawautomap));
+        w3sread(file, &fixedlogicrate, sizeof(fixedlogicrate));
+
         w3sclose(file);
 
         if ((sd == sdm_AdLib || sm == smm_AdLib) && !AdLibPresent
@@ -267,6 +270,8 @@ void ReadConfig(void)
         if(mouselookenabled) mouselookenabled=true;
         if(alwaysrunenabled) alwaysrunenabled=true;	
 		if(crosshair) crosshair = true;
+        if(drawautomap) drawautomap = true;
+        if(fixedlogicrate) fixedlogicrate = true;
 #ifdef EXTRACONTROLS
         if (mousemoveenabled)
         {
@@ -338,6 +343,8 @@ noconfig:
         reversestereo = false;
 #endif
 		crosshair = false;
+        drawautomap = false;
+        fixedlogicrate = false;
     }
 
     SD_SetMusicMode (sm);
@@ -421,6 +428,8 @@ void WriteConfig(void)
 #endif
 		/* [FG] toggle crosshair */
         w3swrite(file,&crosshair,sizeof(crosshair));
+        w3swrite(file, &drawautomap, sizeof(drawautomap));
+        w3swrite(file, &fixedlogicrate, sizeof(fixedlogicrate));
         w3sclose(file);
     }
 #ifdef _arch_dreamcast
@@ -455,9 +464,7 @@ void NewGame (int difficulty,int episode)
     gamestate.lives = 3;
     gamestate.nextextra = EXTRAPOINTS;
     gamestate.episode=episode;
-#ifdef AUTOMAP
     memset(automap, 0, sizeof(automap));
-#endif
     startgame = true;
 }
 
@@ -565,10 +572,10 @@ boolean SaveTheGame(FILE *file,int x,int y)
     fwrite(mapseen,sizeof(mapseen),1,file);
     checksum = DoChecksum((unsigned char *)mapseen,sizeof(mapseen),checksum);
 #endif
-#ifdef AUTOMAP
+    DiskFlopAnim(x, y);
     fwrite(automap, sizeof(automap), 1, file);
     checksum = DoChecksum((unsigned char*)automap, sizeof(automap), checksum);
-#endif
+
     DiskFlopAnim(x,y);
 
     for(i=0;i<mapwidth;i++)

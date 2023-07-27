@@ -24,8 +24,9 @@
 =============================================================================
 */
 
-#ifdef AUTOMAP
 boolean automap[MAPSIZE][MAPSIZE];
+boolean drawautomap; 
+boolean fixedlogicrate;
 
 #define AUTOSCALE 1         /* The scale of the automap view */
 #define FULLSCALE 2         /* The scale of the enlarged automap view */
@@ -41,12 +42,11 @@ boolean automap[MAPSIZE][MAPSIZE];
 #define DRAWENEMIES       /* Have the automap draw visible, active enemies */
 #define ENEMYCOLOUR 32      /* The colour to draw visible, active enemies */
 unsigned char* scr = NULL;
-#endif
 
 unsigned char *vbuf;
 
 uintptr_t        lasttimecount;
-int        frameon;
+int             frameon;
 boolean fpscounter;
 
 uintptr_t fps_frames=0, fps_time=0, fps=0;
@@ -79,10 +79,8 @@ int     CalcRotate (objtype *ob);
 void    DrawScaleds (void);
 void    CalcTics (void);
 void    ThreeDRefresh (void);
-#ifdef AUTOMAP
 void DrawAutomap(void);
 void DrawFullmap(void);
-#endif
 
 #ifdef USE_SKYWALLPARALLAX
 void    ScaleSkyPost();
@@ -1144,34 +1142,35 @@ void DrawCrosshair (void)
 
 void CalcTics (void)
 {
-#ifndef FIXEDLOGICRATE
     uintptr_t curtime;
-#endif
 /*
 ** calculate tics since last refresh for adaptive timing
 */
     if (lasttimecount > GetTimeCount())
         lasttimecount = GetTimeCount();    /* if the game was paused a LONG time */
 
-#ifdef FIXEDLOGICRATE
-    /* The logic rate is always fixed */
-    tics = 1;
-    lasttimecount += tics;
-#else
-    curtime = WL_GetTicks();
-    tics = GetTimeCount() - lasttimecount;
-    if(!tics)
+    if (fixedlogicrate) 
     {
-        /* wait until end of current tic */
-        SDL_Delay(((((unsigned int)lasttimecount + 1) * 100) / 7 - (unsigned int)curtime));
+        /* The logic rate is always fixed */
         tics = 1;
+        lasttimecount += tics;
     }
+    else 
+    {
+        curtime = WL_GetTicks();
+        tics = GetTimeCount() - lasttimecount;
+        if (!tics)
+        {
+            /* wait until end of current tic */
+            SDL_Delay(((((unsigned int)lasttimecount + 1) * 100) / 7 - (unsigned int)curtime));
+            tics = 1;
+        }
 
-    lasttimecount += tics;
+        lasttimecount += tics;
 
-    if (tics>MAXTICS)
-        tics = MAXTICS;
-#endif
+        if (tics > MAXTICS)
+            tics = MAXTICS;
+    }
 }
 
 
@@ -1812,9 +1811,7 @@ void Setup3DView (void)
 
 void ThreeDRefresh (void)
 {
-#ifdef AUTOMAP
     int x, y;
-#endif
 /*
 ** clear out the traced array
 */
@@ -1881,14 +1878,14 @@ void ThreeDRefresh (void)
     DrawPlayerWeapon ();    /* draw player's hands */
 	if (crosshair)
         DrawCrosshair ();
-#ifdef AUTOMAP
-    for (x = 0; x < MAPSIZE; x++)
-        for (y = 0; y < MAPSIZE; y++)
-            if (spotvis[x][y])
-                automap[x][y] = true;
-    DrawAutomap();
-#endif
-
+    if (drawautomap)
+    {
+        for (x = 0; x < MAPSIZE; x++)
+            for (y = 0; y < MAPSIZE; y++)
+                if (spotvis[x][y])
+                    automap[x][y] = true;
+        DrawAutomap();
+    }
 
     if(Keyboard(sc_Tab) && viewsize == 21 && gamestate.weapon != -1)
         ShowActStatus();
@@ -1927,32 +1924,36 @@ void ThreeDRefresh (void)
     if (fpscounter)
     {
         fps_frames++;
-#ifdef FIXEDLOGICRATE
-    if (WL_GetTicks() - fps_time > 500)
-    {
-        fps_time = WL_GetTicks();
-        fps = fps_frames << 1;
-        fps_frames = 0;
-    }
-#else
-        fps_time+=tics;
-
-        if(fps_time>35)
+        if(fixedlogicrate)
         {
-            fps_time-=35;
-            fps=fps_frames<<1;
-            fps_frames=0;
+            if (WL_GetTicks() - fps_time > 500)
+            {
+                fps_time = WL_GetTicks();
+                fps = fps_frames << 1;
+                fps_frames = 0;
+            }
         }
-#endif
+        else 
+        {
+            fps_time += tics;
+
+            if (fps_time > 35)
+            {
+                fps_time -= 35;
+                fps = fps_frames << 1;
+                fps_frames = 0;
+            }
+        }
+
     }
-#ifdef FIXEDLOGICRATE
-    /* When using fixed game logic, this must be elsewhere */
-    frameon += tics;
-#endif
+
+    if(fixedlogicrate)
+    {
+        /* When using fixed game logic, this must be elsewhere */
+        frameon += tics;
+    }
 #endif
 }
-
-#ifdef AUTOMAP
 
 void DrawTile(int scx, int scy, int scwidth, int scheight, int color)
 {
@@ -2079,4 +2080,3 @@ void DrawFullmap(void)
     VL_UnlockSurface(screenBuffer);
     scr = NULL;
 }
-#endif /* AUTOMAP */

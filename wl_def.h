@@ -1456,7 +1456,7 @@ int DebugKeys(void);
 void ViewMap(void);
 void PictureGrabber(void);
 
-#if defined(FIXEDLOGICRATE) && defined(LAGSIMULATOR)
+#if defined(LAGSIMULATOR)
 extern boolean lagging;
 #endif
 
@@ -1471,12 +1471,12 @@ extern boolean lagging;
 extern  unsigned char* vbuf;
 
 extern  uintptr_t lasttimecount;
-extern  int frameon;
+extern  int       frameon;
 extern  boolean fizzlein, fpscounter;
-#ifdef AUTOMAP
 extern boolean automap[MAPSIZE][MAPSIZE];
-#endif
 extern boolean crosshair;
+extern boolean drawautomap;
+extern boolean fixedlogicrate;
 
 #if defined(USE_FLOORCEILINGTEX) || defined(USE_CLOUDSKY)
 extern  short* spanstart;
@@ -1512,10 +1512,8 @@ void    ScalePost(void);
 #endif
 void    ThreeDRefresh(void);
 void    CalcTics(void);
-#ifdef AUTOMAP
 void DrawAutomap(void);
 void DrawFullmap(void);
-#endif
 
 /*
 =============================================================================

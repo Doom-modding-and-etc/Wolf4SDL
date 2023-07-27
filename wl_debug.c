@@ -679,7 +679,7 @@ again:
         return 1;
     }
 #endif
-#if defined(FIXEDLOGICRATE) && defined(LAGSIMULATOR)
+#if defined(LAGSIMULATOR)
     else if (Keyboard(sc_M))        /* M = lag simulator */
     {
         lagging ^= 1;
@@ -725,7 +725,6 @@ again:
 #endif
 #endif
 
-#ifdef AUTOMAP
     else if (Keyboard(sc_Tab) && Keyboard(sc_M))        /* Tab + m = full map */
     {
         memset(automap, 1, sizeof(automap));
@@ -735,7 +734,6 @@ again:
         IN_Ack();
         return 1;
    }
-#endif
 
     else if (Keyboard(sc_Q))        /* Q = fast quit */
         Quit (NULL);

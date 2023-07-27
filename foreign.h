@@ -68,7 +68,8 @@
 #define	STR_CUSTOM	"Customize controls"
 #define	STR_MLOOK	"Mouselook Enabled"
 #define	STR_ALRUN	"Always Run"
-
+#define STR_DRAWAUTOMAP "Draw Automap"
+#define STR_FIXEDLOGICRATE "Uncapped Frame Rate"
 #define	STR_DADDY	"Can I play, Daddy?"
 #define	STR_HURTME	"Don't hurt me."
 #define	STR_BRINGEM	"Bring 'em on!"

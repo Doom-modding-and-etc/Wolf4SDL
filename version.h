@@ -45,7 +45,6 @@
 /* #define VIEWMAP */             /* Enables the overhead map */
 /* #define REVEALMAP */           /* Enables showing only the areas of the overhead map that have been seen */
 /* #define MENU_DEMOS */          /* Adds the menu demos support */
-/* #define MYPROFILE */
 /* #define DEBUGKEYS */           /* Comment this out to compile without the Tab debug keys */
 #define ARTSEXTERN
 #define DEMOSEXTERN
@@ -65,9 +64,7 @@
 /* #define USE_FBNEO_FMOPL */ /* Replaces fmopl sound and uses FBNEO_FMOPL instead. */
 /* #define USE_AUDIO_CVT */  /* Replaces original implmentation of wave file reading to a modern way by Fabian Greffrath */
 /* #define GOD_MODE */ /* Use godmode */
-/* #define FIXEDLOGICRATE */       /* Enables framerate independent game logic (aka: uncapped refreshrate) (by Codetech84) */
-/* #define LAGSIMULATOR */         /* Enables lag simulator debug option, depends on fixed logic rate (by Codetech84) */
-/* #define AUTOMAP */              /* Enables the HUD automap feature by AlumiuN */
+/* #define LAGSIMULATOR */         /* Enables lag simulator debug option (by Codetech84) */
 /* Credits: Codetech84 */
 /* #define MAPCONTROLLEDMUSIC */  /* Activates the map controlled music. */
 /* #define MAPCONTROLPARTIME */   /* Activates the map partial time control */

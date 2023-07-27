@@ -780,9 +780,7 @@ void SetupGameLevel (void)
 #ifdef REVEALMAP
     memset (mapseen,0,sizeof(mapseen));
 #endif
-#ifdef AUTOMAP
     memset(automap, 0, sizeof(automap));
-#endif
     map = mapsegs[0];
     for (y=0;y<mapheight;y++)
     {
@@ -1543,9 +1541,7 @@ void Died (void)
         pwallstate = pwallpos = 0;
         gamestate.attackframe = gamestate.attackcount =
             gamestate.weaponframe = 0;
-#ifdef AUTOMAP
         memset(automap, 0, sizeof(automap));
-#endif
 
         if(viewsize != 21)
         {
@@ -1695,9 +1691,7 @@ startplayloop:
             player->angle = spearangle;
             spearflag = false;
             Thrust (0,0);
-#ifdef AUTOMAP
             memset(automap, 0, sizeof(automap));
-#endif
             goto startplayloop;
         }
 #endif
@@ -1717,9 +1711,7 @@ startplayloop:
             case ex_secretlevel:
                 if(viewsize == 21) DrawPlayScreen();
                 gamestate.keys = 0;
-#ifdef AUTOMAP
                 memset(automap, 0, sizeof(automap));
-#endif
                 DrawKeys ();
                 VL_FadeOut (0, 255, 0, 0, 0, 30);
 
