@@ -112,7 +112,7 @@ statinfo_t statinfo[] =
 
     {SPR_STAT_26,bo_clip2},                 /* Clip            " */
 #ifndef SEGA_SATURN
-#ifdef USE_DIR3DSPR
+#ifdef USE_DIR3DSPR_SAMPLE
     /* 
     ** These are just two examples showing the new way of using dir 3d sprites.
     ** You can find the allowed values in the objflag_t enum in wl_def.h.

@@ -1,5 +1,3 @@
-#if defined(USE_SHADING)
-
 #ifndef _WL_SHADE_H_
 #define _WL_SHADE_H_
 
@@ -14,5 +12,3 @@ extern unsigned char shadetable[SHADE_COUNT][256];
 void InitLevelShadeTable();
 int GetShade(int scale);
 #endif /* _WL_SHADE_H_ */
-
-#endif

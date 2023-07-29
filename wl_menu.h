@@ -227,6 +227,8 @@ void DrawNewGame(void);
 void DrawChangeView(int view);
 void DrawMouseSens(void);
 void DrawCtlScreen(void);
+void DrawFeatureScreen();
+void DrawFeaturePage2Screen();
 void DrawCustomScreen(void);
 void DrawLSAction(int which);
 void DrawCustMouse(int hilight);
@@ -261,6 +263,8 @@ int  CP_EndGame();
 int  CP_CheckQuick(ScanCode scancode);
 
 int CustomControls();
+int Features();
+int FeaturesPage2();
 int MouseSensitivity();
 
 void CheckForEpisodes(void);

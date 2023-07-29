@@ -2154,15 +2154,16 @@ void PlayLoop(void)
 #if defined (SWITCH) || defined (N3DS)
     printf("PLAY LOOP START\n");
 #endif
-#if defined(USE_FEATUREFLAGS) && defined(USE_CLOUDSKY)
-    if (GetFeatureFlags() & FF_CLOUDSKY)
-        InitSky();
-#endif
+    if (use_extra_features && use_cloudsky)
+    {
+        if (GetFeatureFlags() & FF_CLOUDSKY)
+            InitSky();
+    }
 
-#ifdef USE_SHADING
-    InitLevelShadeTable();
-#endif
-
+    if (use_shading)
+    {
+        InitLevelShadeTable();
+    }
     playstate = ex_stillplaying;
     lasttimecount = GetTimeCount();
 #ifndef SEGA_SATURN

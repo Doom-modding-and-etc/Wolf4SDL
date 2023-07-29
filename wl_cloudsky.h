@@ -1,6 +1,5 @@
 /* WL_CLOUDSKY.H */
-
-#if defined(USE_CLOUDSKY) && !defined(_WL_CLOUDSKY_H_)
+#ifndef _WL_CLOUDSKY_H_
 #define _WL_CLOUDSKY_H_
 
 typedef struct
@@ -53,8 +52,6 @@ extern const int  numColorMaps;
 void InitSky (void);
 void DrawCloudPlanes (void);
 
-#ifndef USE_FEATUREFLAGS
 int  GetCloudSkyDefID (void);
-#endif
 
 #endif

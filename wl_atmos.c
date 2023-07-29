@@ -2,13 +2,9 @@
 
 #include "version.h"
 
-#if defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
-
 #include "wl_def.h"
 
-#if defined(USE_RAIN) || defined(USE_SNOW)
 unsigned int rainpos;
-#endif
 
 typedef struct
 {
@@ -67,9 +63,6 @@ void Init3DPoints (void)
     }
 }
 
-#endif
-
-#ifdef USE_STARSKY
 
 /*
 ====================
@@ -154,10 +147,6 @@ void DrawStarSky (void)
     } 
 }
 
-#endif
-
-#ifdef USE_RAIN
-
 /*
 ====================
 =
@@ -168,7 +157,7 @@ void DrawStarSky (void)
 
 void DrawRain (void)
 {
-#if defined(USE_FLOORCEILINGTEX) && defined(FIXRAINSNOWLEAKS)
+#if defined(FIXRAINSNOWLEAKS)
     unsigned char      tilex,tiley;
     short   prestep;
     fixed     basedist,stepscale;
@@ -223,7 +212,7 @@ void DrawRain (void)
 
         if (xx >= 0 && xx < viewwidth && yy > 0 && yy < viewheight)
         {
-#if defined(USE_FLOORCEILINGTEX) && defined(FIXRAINSNOWLEAKS)
+#if defined(FIXRAINSNOWLEAKS)
             /*
             ** Find the rain's tile coordinate
             ** NOTE: This sometimes goes over the map edges
@@ -257,9 +246,6 @@ void DrawRain (void)
     }
 }
 
-#endif
-
-#ifdef USE_SNOW
 
 /*
 ====================
@@ -271,7 +257,7 @@ void DrawRain (void)
 
 void DrawSnow (void)
 {
-#if defined(USE_FLOORCEILINGTEX) && defined(FIXRAINSNOWLEAKS)
+#if defined(FIXRAINSNOWLEAKS)
     unsigned char      tilex,tiley;
     short   prestep;
     fixed     basedist,stepscale;
@@ -326,7 +312,7 @@ void DrawSnow (void)
 
         if (xx > 0 && xx < viewwidth && yy > 0 && yy < viewheight)
         {
-#if defined(USE_FLOORCEILINGTEX) && defined(FIXRAINSNOWLEAKS)
+#if defined(FIXRAINSNOWLEAKS)
             /*
             ** Find the snow's tile coordinate
             ** NOTE: This sometimes goes over the map edges
@@ -363,5 +349,3 @@ void DrawSnow (void)
         }
     }
 }
-
-#endif

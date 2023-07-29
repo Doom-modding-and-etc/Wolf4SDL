@@ -8,9 +8,7 @@
 
 #include "wl_def.h"
 
-#ifdef USE_CLOUDSKY
 #include "wl_cloudsky.h"
-#endif
 
 
 
@@ -826,7 +824,6 @@ again:
         return 1;
 }
 #endif
-#ifdef USE_CLOUDSKY
     else if(Keyboard(sc_Z) && curSky)
     {
         char defstr[15];
@@ -868,7 +865,6 @@ again:
             IN_Ack ();
         }
     }
-#endif
 
     return 0;
 }

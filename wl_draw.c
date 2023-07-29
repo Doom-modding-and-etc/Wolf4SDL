@@ -27,6 +27,17 @@
 boolean automap[MAPSIZE][MAPSIZE];
 boolean drawautomap; 
 boolean fixedlogicrate;
+boolean use_extra_features;
+boolean use_shading;
+boolean use_dir3dspr;
+boolean use_floorceilingtex;
+boolean use_multiflats;
+boolean use_parallax;
+boolean use_skywallparallax;
+boolean use_cloudsky;
+boolean use_starsky;
+boolean use_rain;
+boolean use_snow;
 
 #define AUTOSCALE 1         /* The scale of the automap view */
 #define FULLSCALE 2         /* The scale of the enlarged automap view */
@@ -51,9 +62,7 @@ boolean fpscounter;
 
 uintptr_t fps_frames=0, fps_time=0, fps=0;
 
-#if defined(USE_FLOORCEILINGTEX) || defined(USE_CLOUDSKY)
 short *spanstart;
-#endif
 
 short *wallheight;
 
@@ -82,15 +91,12 @@ void    ThreeDRefresh (void);
 void DrawAutomap(void);
 void DrawFullmap(void);
 
-#ifdef USE_SKYWALLPARALLAX
 void    ScaleSkyPost();
-#endif
 
 int     postx;
 unsigned char *postsource;
-#ifdef USE_SKYWALLPARALLAX
 unsigned char *postsourcesky;
-#endif
+
 
 /*
 ** wall optimization variables
@@ -331,22 +337,20 @@ void ScalePost (void)
 {
     int ywcount, yoffs, yw, yd, yendoffs;
     unsigned char col;
-#ifdef USE_SHADING
 	unsigned char *curshades;
-#endif
 
-#ifdef USE_SKYWALLPARALLAX
-    if (tilehit == 16)
+    if (use_skywallparallax)
     {
-        ScaleSkyPost();
-        return;
+        if (tilehit == 16)
+        {
+            ScaleSkyPost();
+            return;
+        }
     }
-#endif
-
-#ifdef USE_SHADING
-    curshades = shadetable[GetShade(wallheight[postx])];
-#endif
-
+    if (use_shading)
+    {
+        curshades = shadetable[GetShade(wallheight[postx])];
+    }
     ywcount = yd = wallheight[postx] >> 3;
     if(yd <= 0) yd = 100;
 
@@ -369,11 +373,14 @@ void ScalePost (void)
     }
     if(yw < 0) return;
 
-#ifdef USE_SHADING
-    col = curshades[postsource[yw]];
-#else
-    col = postsource[yw];
-#endif
+    if (use_shading)
+    {
+        col = curshades[postsource[yw]];
+    }
+    else
+    {
+        col = postsource[yw];
+    }
 #ifdef HIGHLIGHTPUSHWALLS
     if (highlightmode && MAPSPOT(xtile, ytile, 1) == PUSHABLETILE)
         col = col << 2;
@@ -383,20 +390,22 @@ void ScalePost (void)
     {
         vbuf[yendoffs] = col;
         ywcount -= TEXTURESIZE/2;
-        if(ywcount <= 0)
+        if (ywcount <= 0)
         {
             do
             {
                 ywcount += yd;
                 yw--;
+            } while (ywcount <= 0);
+            if (yw < 0) break;
+            if (use_shading)
+            {
+                col = curshades[postsource[yw]];
             }
-            while(ywcount <= 0);
-            if(yw < 0) break;
-#ifdef USE_SHADING
-            col = curshades[postsource[yw]];
-#else
-            col = postsource[yw];
-#endif
+            else
+            {
+                col = postsource[yw];
+            }
 #ifdef HIGHLIGHTPUSHWALLS
             if (highlightmode && MAPSPOT(xtile, ytile, 1) == PUSHABLETILE)
                 col = col << 2;
@@ -419,7 +428,6 @@ void SetRightDoorSide(void)
 }
 #endif
 
-#ifdef USE_SKYWALLPARALLAX
 void ScaleSkyPost (void)
 {
     int ywcount, yoffs, yendoffs, texoffs;
@@ -458,7 +466,6 @@ void ScaleSkyPost (void)
         y--;
     }
 }
-#endif
 
 /*
 ====================
@@ -518,9 +525,10 @@ void HitVertWall (void)
             wallpic = vertwall[tilehit];
     
         postsource = PM_GetPage(wallpic) + texture;
-#ifdef USE_SKYWALLPARALLAX
-        postsourcesky = postsource - texture;
-#endif
+        if (use_skywallparallax)
+        {
+            postsourcesky = postsource - texture;
+        }
     }
 
     ScalePost ();
@@ -584,9 +592,10 @@ void HitHorizWall (void)
             wallpic = horizwall[tilehit];
     
         postsource = PM_GetPage(wallpic) + texture;
-#ifdef USE_SKYWALLPARALLAX
-        postsourcesky = postsource - texture;
-#endif
+        if (use_skywallparallax)
+        {
+            postsourcesky = postsource - texture;
+        }
     }
 
     ScalePost ();
@@ -778,25 +787,28 @@ void VGAClearScreen (void)
 #else
     ceiling = vgaCeiling[gamestate.episode * 10 + gamestate.mapon];
 #endif
-#ifdef USE_SHADING
-    for(y = 0; y < viewheight / 2; y++, dest += bufferPitch)
-        memset(dest, shadetable[GetShade((viewheight / 2 - y) << 3)][ceiling], viewwidth);
-    for(; y < viewheight; y++, dest += bufferPitch)
+    if (use_shading)
+    {
+        for (y = 0; y < viewheight / 2; y++, dest += bufferPitch)
+            memset(dest, shadetable[GetShade((viewheight / 2 - y) << 3)][ceiling], viewwidth);
+        for (; y < viewheight; y++, dest += bufferPitch)
 #ifndef MAPCONTROLLEDFLOOR
-        memset(dest, shadetable[GetShade((y - viewheight / 2) << 3)][0x19], viewwidth);
+            memset(dest, shadetable[GetShade((y - viewheight / 2) << 3)][0x19], viewwidth);
 #else
-        memset(dest, shadetable[GetShade((y - viewheight / 2) << 3)][floor], viewwidth);
+            memset(dest, shadetable[GetShade((y - viewheight / 2) << 3)][floor], viewwidth);
 #endif
-#else
-    for(y = 0; y < viewheight / 2; y++, dest += bufferPitch)
-        memset(dest, ceiling, viewwidth);
-    for(; y < viewheight; y++, dest += bufferPitch)
+    }
+    else
+    {
+        for (y = 0; y < viewheight / 2; y++, dest += bufferPitch)
+            memset(dest, ceiling, viewwidth);
+        for (; y < viewheight; y++, dest += bufferPitch)
 #ifndef MAPCONTROLLEDFLOOR
-        memset(dest, 0x19, viewwidth);
+            memset(dest, 0x19, viewwidth);
 #else
-        memset(dest, floor, viewwidth);
+            memset(dest, floor, viewwidth);
 #endif
-#endif
+    }
 }
 
 /* ========================================================================== */
@@ -863,9 +875,7 @@ typedef struct
                                ** this must be changed to uint32_t, when you
                                ** you need more than 16-flags for drawing
                                */
-#ifdef USE_DIR3DSPR
     statobj_t *transsprite;
-#endif
 } visobj_t;
 
 visobj_t vislist[MAXVISABLE];
@@ -904,12 +914,13 @@ void DrawScaleds (void)
         if (!visptr->viewheight)
             continue;                                               /* to close to the object */
 
-#ifdef USE_DIR3DSPR
-        if(statptr->flags & FL_DIR_MASK)
-            visptr->transsprite=statptr;
-        else
-            visptr->transsprite=NULL;
-#endif
+        if (use_dir3dspr)
+        {
+            if (statptr->flags & FL_DIR_MASK)
+                visptr->transsprite = statptr;
+            else
+                visptr->transsprite = NULL;
+        }
 
         if (visptr < &vislist[MAXVISABLE-1])    /* don't let it overflow */
         {
@@ -958,9 +969,10 @@ void DrawScaleds (void)
             if (visptr < &vislist[MAXVISABLE-1])    /* don't let it overflow */
             {
                 visptr->flags = (short) obj->flags;
-#ifdef USE_DIR3DSPR
-                visptr->transsprite = NULL;
-#endif
+                if (use_dir3dspr)
+                {
+                    visptr->transsprite = NULL;
+                }
                 visptr++;
             }
             obj->flags |= FL_VISIBLE;
@@ -992,17 +1004,17 @@ void DrawScaleds (void)
         /*
         ** draw farthest
         */
-#ifdef USE_DIR3DSPR
-        if (farthest->transsprite)
-            Transform3DShape(farthest->transsprite);
-        else
-#endif
-#ifdef USE_SHADING
+        if (use_dir3dspr) 
+        {
+            if (farthest->transsprite)
+                Transform3DShape(farthest->transsprite);
+            else
+                ScaleShape(farthest->viewx, farthest->shapenum, farthest->viewheight, farthest->flags);
+        }
+        else 
+        {
             ScaleShape(farthest->viewx, farthest->shapenum, farthest->viewheight, farthest->flags);
-#else
-            ScaleShape(farthest->viewx, farthest->shapenum, farthest->viewheight);
-#endif
-
+        }
 
         farthest->viewheight = 32000;
     }
@@ -1837,44 +1849,52 @@ void ThreeDRefresh (void)
 ** follow the walls from there to the right, drawing as we go
 */
     VGAClearScreen ();
-#if defined(USE_FEATUREFLAGS) && defined(USE_STARSKY)
-    if(GetFeatureFlags() & FF_STARSKY)
-        DrawStarSky();
-#endif
 
+    if (use_extra_features && use_starsky)
+    {
+        if (GetFeatureFlags() & FF_STARSKY)
+            DrawStarSky();
+    }
     WallRefresh ();
-#if defined(MAPCONTROLLEDSKY) && defined(USE_PARALLAX)
-    DrawParallax();
-#else
-#if defined(USE_FEATUREFLAGS) && defined(USE_PARALLAX)
-    if(GetFeatureFlags() & FF_PARALLAXSKY)
+
+    if (use_parallax) 
+    {
         DrawParallax();
-#endif
-#endif
+    }
 
-#if defined(USE_FEATUREFLAGS) && defined(USE_CLOUDSKY)
-    if(GetFeatureFlags() & FF_CLOUDSKY)
-        DrawCloudPlanes ();
-#endif
+    if (use_extra_features && use_parallax)
+    {
+        if (GetFeatureFlags() & FF_PARALLAXSKY)
+            DrawParallax();
+    }
 
-#ifdef USE_FLOORCEILINGTEX
-    DrawPlanes ();
-#endif
+    if (use_extra_features && use_cloudsky)
+    {
+        if (GetFeatureFlags() & FF_CLOUDSKY)
+            DrawCloudPlanes();
+    }
+
+    if (use_floorceilingtex) 
+    {
+        DrawPlanes();
+    }
 
 /*
 ** draw all the scaled images
 */
     DrawScaleds();                  /* draw scaled stuff */
 
-#if defined(USE_FEATUREFLAGS) && defined(USE_RAIN)
-    if(GetFeatureFlags() & FF_RAIN)
-        DrawRain();
-#endif
-#if defined(USE_FEATUREFLAGS) && defined(USE_SNOW)
-    if(GetFeatureFlags() & FF_SNOW)
-        DrawSnow();
-#endif
+    if (use_extra_features && use_rain)
+    {
+        if (GetFeatureFlags() & FF_RAIN)
+            DrawRain();
+    }
 
+    if (use_extra_features && use_snow)
+    {
+        if (GetFeatureFlags() & FF_SNOW)
+            DrawSnow();
+    }
     DrawPlayerWeapon ();    /* draw player's hands */
 	if (crosshair)
         DrawCrosshair ();

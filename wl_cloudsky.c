@@ -2,8 +2,6 @@
 
 #include "version.h"
 
-#ifdef USE_CLOUDSKY
-
 #include "wl_def.h"
 #include "wl_cloudsky.h"
 
@@ -82,45 +80,35 @@ unsigned char       skyc[65536L];
 fixed      cloudx,cloudy;
 cloudsky_t *curSky;
 
-#ifdef USE_FEATUREFLAGS
-
-/* The lower left tile of every map determines the used cloud sky definition from cloudSkys. */
-int GetCloudSkyDefID (void)
-{
-    int skyID = ffDataBottomLeft;
-
-    wlassert(skyID >= 0 && skyID < lengthof(cloudSkys));
-
-    return skyID;
-}
-
-#else
-
 int GetCloudSkyDefID (void)
 {
     int skyID;
 
-    switch(gamestate.episode * 10 + gamestate.mapon)
+    if (use_extra_features)
     {
-        case  0: skyID =  0; break;
-        case  1: skyID =  1; break;
-        case  2: skyID =  2; break;
-        case  3: skyID =  3; break;
-        case  4: skyID =  4; break;
-        case  5: skyID =  5; break;
-        case  6: skyID =  6; break;
-        case  7: skyID =  7; break;
-        case  8: skyID =  8; break;
-        case  9: skyID =  9; break;
-        default: skyID =  9; break;
+        skyID = ffDataBottomLeft;
     }
-
+    else
+    {
+        switch (gamestate.episode * 10 + gamestate.mapon)
+        {
+        case  0: skyID = 0; break;
+        case  1: skyID = 1; break;
+        case  2: skyID = 2; break;
+        case  3: skyID = 3; break;
+        case  4: skyID = 4; break;
+        case  5: skyID = 5; break;
+        case  6: skyID = 6; break;
+        case  7: skyID = 7; break;
+        case  8: skyID = 8; break;
+        case  9: skyID = 9; break;
+        default: skyID = 9; break;
+        }
+    }
     wlassert(skyID >= 0 && skyID < lengthof(cloudSkys));
 
     return skyID;
 }
-
-#endif
 
 void SplitS(unsigned size,unsigned x1,unsigned y1,unsigned x2,unsigned y2)
 {
@@ -383,5 +371,3 @@ void DrawCloudPlanes (void)
         y++;
     }
 }
-
-#endif
