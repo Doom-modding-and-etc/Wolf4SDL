@@ -125,7 +125,7 @@ typedef long long int64_t;
 #endif
 
 #ifdef _WIN64
-typedef fixedptd fixed;
+typedef fixedpt fixed;
 #else
 typedef fixedpt fixed;
 #endif
@@ -456,7 +456,6 @@ typedef enum
     FL_AMBUSH = 0x00000040,
     FL_NONMARK = 0x00000080,
     FL_FULLBRIGHT = 0x00000100,
-#ifdef USE_DIR3DSPR
     /* you can choose one of the following values in wl_act1.cpp
     ** to make a static sprite a directional 3d sprite
     ** (see example at the end of the statinfo array)
@@ -476,7 +475,6 @@ typedef enum
     FL_DIR_POS_MASK = 0x00000600,
     FL_DIR_VERT_FLAG = 0x00000800,
     FL_DIR_MASK = 0x00000e00,
-#endif
     /* next free bit is   0x00001000 */
 } objflag_t;
 
@@ -1458,7 +1456,7 @@ int DebugKeys(void);
 void ViewMap(void);
 void PictureGrabber(void);
 
-#if defined(FIXEDLOGICRATE) && defined(LAGSIMULATOR)
+#if defined(LAGSIMULATOR)
 extern boolean lagging;
 #endif
 
@@ -1472,17 +1470,28 @@ extern boolean lagging;
 
 extern  unsigned char* vbuf;
 
-extern  uintptr_t lasttimecount;
-extern  int frameon;
-extern  boolean fizzlein, fpscounter;
-#ifdef AUTOMAP
+extern uintptr_t lasttimecount;
+extern int       frameon;
+extern boolean fizzlein, fpscounter;
 extern boolean automap[MAPSIZE][MAPSIZE];
-#endif
 extern boolean crosshair;
+extern boolean drawautomap;
+extern boolean fixedlogicrate;
+/* Features Page */
+extern boolean use_extra_features;
+extern boolean use_shading;
+extern boolean use_dir3dspr;
+extern boolean use_floorceilingtex;
+extern boolean use_multiflats;
+extern boolean use_parallax;
+extern boolean use_skywallparallax;
+extern boolean use_cloudsky;
+extern boolean use_starsky;
+extern boolean use_rain;
+extern boolean use_snow;
 
-#if defined(USE_FLOORCEILINGTEX) || defined(USE_CLOUDSKY)
 extern  short* spanstart;
-#endif
+
 #ifndef SEGA_SATURN
 extern  short* wallheight;
 #endif
@@ -1514,10 +1523,8 @@ void    ScalePost(void);
 #endif
 void    ThreeDRefresh(void);
 void    CalcTics(void);
-#ifdef AUTOMAP
 void DrawAutomap(void);
 void DrawFullmap(void);
-#endif
 
 /*
 =============================================================================
@@ -1534,15 +1541,9 @@ typedef struct
     /* table data after dataofs[rightpix-leftpix+1] */
 } compshape_t;
 
-#ifdef USE_SHADING
 void ScaleShape(int xcenter, int shapenum, int height, unsigned int flags);
-#else
-void ScaleShape(int xcenter, int shapenum, int height);
-#endif
 void SimpleScaleShape(int xcenter, int shapenum, int height);
-#ifdef USE_DIR3DSPR
 void Transform3DShape(statobj_t* statptr);
-#endif
 
 /*
 =============================================================================
@@ -2457,7 +2458,6 @@ extern  void    LogDiscScreens(char* choice);
 =============================================================================
 */
 
-#ifdef USE_FEATUREFLAGS
 /* The currently available feature flags */
 #define FF_STARSKY      0x0001
 #define FF_PARALLAXSKY  0x0002
@@ -2486,19 +2486,11 @@ static wlinline unsigned short GetFeatureFlags(void)
     return ffDataTopRight;
 }
 
-#endif
-
-#ifdef USE_FLOORCEILINGTEX
 extern unsigned char* ceilingsource, * floorsource;
 
 void DrawPlanes(void);
-#ifndef USE_MULTIFLATS
 void GetFlatTextures(void);
-#endif
-#endif
 
-#ifdef USE_PARALLAX
 void DrawParallax(void);
-#endif
 
 #endif /* __WL_DEF_H_ */

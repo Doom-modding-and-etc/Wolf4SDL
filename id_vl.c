@@ -308,10 +308,11 @@ void VL_Shutdown (void)
     free (ylookup);
     free (pixelangle);
     free (wallheight);
-#if defined(USE_FLOORCEILINGTEX) || defined(USE_CLOUDSKY)
-    free (spanstart);
-    spanstart = NULL;
-#endif
+    if (use_floorceilingtex || use_cloudsky) 
+    {
+        free(spanstart);
+        spanstart = NULL;
+    }
     screenBuffer = NULL;
     ylookup = NULL;
     pixelangle = NULL;
@@ -847,10 +848,10 @@ void VL_SetVGAPlaneMode (void)
     ylookup = wlcast_conversion(unsigned int*, SafeMalloc(screenHeight * sizeof(*ylookup)));
     pixelangle = wlcast_conversion(short*, SafeMalloc(screenWidth * sizeof(*pixelangle)));
     wallheight = wlcast_conversion(short*, SafeMalloc(screenWidth * sizeof(*wallheight)));
-#if defined(USE_FLOORCEILINGTEX) || defined(USE_CLOUDSKY)
-    spanstart = wlcast_conversion(short*, SafeMalloc((screenHeight / 2) * sizeof(*spanstart)));
-#endif
-
+    if (use_floorceilingtex || use_cloudsky)
+    { 
+        spanstart = wlcast_conversion(short*, SafeMalloc((screenHeight / 2) * sizeof(*spanstart)));
+    }
     for (i = 0; i < screenHeight; i++)
         ylookup[i] = i * bufferPitch;
 }

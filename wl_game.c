@@ -51,9 +51,7 @@ short        spearangle;
 boolean         spearflag;
 #endif
 
-#ifdef USE_FEATUREFLAGS
 int ffDataTopLeft, ffDataTopRight, ffDataBottomLeft, ffDataBottomRight;
-#endif
 
 /*
 ** ELEVATOR BACK MAPS - REMEMBER (-1)!!
@@ -330,7 +328,7 @@ static void ScanInfoPlane(void)
 #ifdef SPEAR
                 case 73:                        /* TRUCK AND SPEAR! */
                 case 74:
-#elif defined(USE_DIR3DSPR)                     /* just for the example */
+#elif defined(USE_DIR3DSPR_SAMPLE)                     /* just for the example */
                 case 73:
 #endif
                     SpawnStatic(x,y,tile-23);
@@ -758,20 +756,19 @@ void SetupGameLevel (void)
 
     mapwidth = mapheaderseg[mapnum]->width;
     mapheight = mapheaderseg[mapnum]->height;
+    if (use_extra_features) 
+    {
+        /* Temporary definition to make things clearer */
+        #define MXX MAPSIZE - 1
 
-#ifdef USE_FEATUREFLAGS
-    /* Temporary definition to make things clearer */
-    #define MXX MAPSIZE - 1
+        /* Read feature flags data from map corners and overwrite corners with adjacent tiles */
+        ffDataTopLeft = MAPSPOT(0, 0, 0); MAPSPOT(0, 0, 0) = MAPSPOT(1, 0, 0);
+        ffDataTopRight = MAPSPOT(MXX, 0, 0); MAPSPOT(MXX, 0, 0) = MAPSPOT(MXX, 1, 0);
+        ffDataBottomRight = MAPSPOT(MXX, MXX, 0); MAPSPOT(MXX, MXX, 0) = MAPSPOT(MXX - 1, MXX, 0);
+        ffDataBottomLeft = MAPSPOT(0, MXX, 0); MAPSPOT(0, MXX, 0) = MAPSPOT(0, MXX - 1, 0);
 
-    /* Read feature flags data from map corners and overwrite corners with adjacent tiles */
-    ffDataTopLeft     = MAPSPOT(0,   0,   0); MAPSPOT(0,   0,   0) = MAPSPOT(1,       0,       0);
-    ffDataTopRight    = MAPSPOT(MXX, 0,   0); MAPSPOT(MXX, 0,   0) = MAPSPOT(MXX,     1,       0);
-    ffDataBottomRight = MAPSPOT(MXX, MXX, 0); MAPSPOT(MXX, MXX, 0) = MAPSPOT(MXX - 1, MXX,     0);
-    ffDataBottomLeft  = MAPSPOT(0,   MXX, 0); MAPSPOT(0,   MXX, 0) = MAPSPOT(0,       MXX - 1, 0);
-
-    #undef MXX
-#endif
-
+        #undef MXX
+    }
 /*
 ** copy the wall data to a data segment array
 */
@@ -780,9 +777,7 @@ void SetupGameLevel (void)
 #ifdef REVEALMAP
     memset (mapseen,0,sizeof(mapseen));
 #endif
-#ifdef AUTOMAP
     memset(automap, 0, sizeof(automap));
-#endif
     map = mapsegs[0];
     for (y=0;y<mapheight;y++)
     {
@@ -953,10 +948,11 @@ void SetupGameLevel (void)
 /*
 ** load floor/ceiling textures
 */
-#if defined(USE_FLOORCEILINGTEX) && !defined(USE_MULTIFLATS)
-    GetFlatTextures ();
-#endif
 
+    if (use_floorceilingtex && !use_multiflats)
+    {
+        GetFlatTextures();
+    }
 /*
 ** have the caching manager load and purge stuff to make sure all marks
 ** are in memory
@@ -1543,9 +1539,7 @@ void Died (void)
         pwallstate = pwallpos = 0;
         gamestate.attackframe = gamestate.attackcount =
             gamestate.weaponframe = 0;
-#ifdef AUTOMAP
         memset(automap, 0, sizeof(automap));
-#endif
 
         if(viewsize != 21)
         {
@@ -1695,9 +1689,7 @@ startplayloop:
             player->angle = spearangle;
             spearflag = false;
             Thrust (0,0);
-#ifdef AUTOMAP
             memset(automap, 0, sizeof(automap));
-#endif
             goto startplayloop;
         }
 #endif
@@ -1717,9 +1709,7 @@ startplayloop:
             case ex_secretlevel:
                 if(viewsize == 21) DrawPlayScreen();
                 gamestate.keys = 0;
-#ifdef AUTOMAP
                 memset(automap, 0, sizeof(automap));
-#endif
                 DrawKeys ();
                 VL_FadeOut (0, 255, 0, 0, 0, 30);
 

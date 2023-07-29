@@ -2,9 +2,7 @@
 
 #include "wl_def.h"
 
-#ifdef USE_SHADING
 #include "wl_shade.h"
-#endif
 
 
 /*
@@ -31,11 +29,7 @@
 =
 ===================
 */
-#ifdef USE_SHADING
 void ScaleLine(short x, short toppix, fixed fracstep, unsigned char* linesrc, unsigned char* linecmds, unsigned char* curshades)
-#else
-void ScaleLine (fixed x, fixed toppix, fixed fracstep, unsigned char* linesrc, unsigned char *linecmds)
-#endif
 {
     unsigned char   *src,*dest;
     unsigned char    col;
@@ -71,13 +65,17 @@ void ScaleLine (fixed x, fixed toppix, fixed fracstep, unsigned char* linesrc, u
             if (endpix > viewheight)
                 endpix = viewheight;            /* clip lower boundary */
 
-#ifdef USE_SHADING
-            if (curshades)
-                col = curshades[*src];
-            else
-#endif
+            if (use_shading)
+            {
+                if (curshades)
+                    col = curshades[*src];
+                else
+                    col = *src;
+            }
+            else 
+            {
                 col = *src;
-
+            }
             dest = vbuf + ylookup[startpix] + x;
 
             while (startpix < endpix)
@@ -227,11 +225,14 @@ wlinline void ScaleShape(int xcenter, int shapenum, unsigned width)
                             screndy = (ycnt >> 6) + upperedge;
                             if (scrstarty != screndy && screndy > 0)
                             {
-#ifdef USE_SHADING
-                                col = curshades[((unsigned char*)shape)[newstart + j]];
-#else
-                                col = ((unsigned char*)shape)[newstart + j];
-#endif
+                                if (use_shading)
+                                {
+                                    col = curshades[((unsigned char*)shape)[newstart + j]];
+                                }
+                                else 
+                                {
+                                    col = ((unsigned char*)shape)[newstart + j];
+                                }
                                 if (scrstarty < 0) scrstarty = 0;
                                 if (screndy > viewwidth) screndy = viewwidth, j = endy;
 
@@ -262,18 +263,12 @@ wlinline void ScaleShape(int xcenter, int shapenum, unsigned width)
 ===================
 */
 
-#ifdef USE_SHADING
 void ScaleShape (int xcenter, int shapenum, int height, unsigned int flags)
-#else
-void ScaleShape (int xcenter, int shapenum, int height)
-#endif
 {
     int         i;
     compshape_t *shape;
     unsigned char *linesrc,*linecmds;
-#ifdef USE_SHADING
     unsigned char *curshades;
-#endif
     short     scale,toppix;
     fixed     x1,x2,actx;
     fixed       frac,fracstep;
@@ -286,13 +281,13 @@ void ScaleShape (int xcenter, int shapenum, int height)
     linesrc = PM_GetSpritePage(shapenum);
     shape = (compshape_t *)linesrc;
 
-#ifdef USE_SHADING
-    if (flags & FL_FULLBRIGHT)
-        curshades = shadetable[0];
-    else
-        curshades = shadetable[GetShade(height)];
-#endif
-
+    if (use_shading)
+    {
+        if (flags & FL_FULLBRIGHT)
+            curshades = shadetable[0];
+        else
+            curshades = shadetable[GetShade(height)];
+    }
     fracstep = FixedDiv(scale,TEXTURESIZE/2);
     frac = shape->leftpix * fracstep;
 
@@ -328,11 +323,7 @@ void ScaleShape (int xcenter, int shapenum, int height)
             if (wallheight[x1] < height)
             {
                 linecmds = &linesrc[shape->dataofs[i - shape->leftpix]];
-#ifdef USE_SHADING
                 ScaleLine(x1, toppix, fracstep, linesrc, linecmds, curshades);
-#else
-                ScaleLine (x1,toppix,fracstep,linesrc,linecmds);
-#endif
             }
 
             x1++;
@@ -388,17 +379,13 @@ void SimpleScaleShape (int xcenter, int shapenum, int height)
         while (x1 < x2)
         {
             linecmds = &linesrc[shape->dataofs[i - shape->leftpix]];
-#ifdef USE_SHADING
             ScaleLine(x1, toppix, fracstep, linesrc, linecmds, NULL);
-#else
-            ScaleLine (x1,toppix,fracstep,linesrc,linecmds);
-#endif
             x1++;
         }
     }
 }
+
 #endif
-#ifdef USE_DIR3DSPR
 
 /*
 ===================
@@ -489,21 +476,18 @@ void Scale3DShape (int x1, int x2, int shapenum, unsigned int flags, fixed ny1, 
 
             if (wallheight[slinex] < (height >> 12))
             {
-#ifdef USE_SHADING
-                if (flags & FL_FULLBRIGHT)
-                    curshades = shadetable[0];
-                else
-                    curshades = shadetable[GetShade(scale1 << 3)];
-#endif
+                if (use_shading)
+                {
+                    if (flags & FL_FULLBRIGHT)
+                        curshades = shadetable[0];
+                    else
+                        curshades = shadetable[GetShade(scale1 << 3)];
+                }
                 fracstep = FixedDiv(scale1,TEXTURESIZE/2);
                 toppix = centery - scale1;
 
                 linecmds = &linesrc[shape->dataofs[i]];
-#ifdef USE_SHADING
                 ScaleLine(slinex, toppix, fracstep, linesrc, linecmds, curshades);
-#else
-                ScaleLine (slinex,toppix,fracstep,linesrc,linecmds);
-#endif
             }
         }
     }
@@ -577,7 +561,7 @@ void Transform3DShape (statobj_t *statptr)
         /*
         ** translate point to view centered coordinates
         */
-        fixed gx1, gx2
+        fixed gx1, gx2;
         gx1 = (((fixed)statptr->tilex) << TILESHIFT) + 0x8000 - viewx - 0x8000L - SIZEADD;
         gx2 = gx1 + 0x10000L + (2 * SIZEADD);
         gy = (((fixed)statptr->tiley) << TILESHIFT) + diradd - viewy;
@@ -620,5 +604,3 @@ void Transform3DShape (statobj_t *statptr)
     else
         Scale3DShape (viewx1,viewx2,statptr->shapenum,statptr->flags,ny1,ny2,nx1,nx2);
 }
-
-#endif

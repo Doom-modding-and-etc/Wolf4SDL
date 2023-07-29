@@ -1,6 +1,5 @@
 #include "version.h"
 
-#ifdef USE_SHADING
 #include "wl_def.h"
 #include "wl_shade.h"
 
@@ -20,26 +19,19 @@ shadedef_t shadeDefs[] = {
 unsigned char shadetable[SHADE_COUNT][256];
 int LSHADE_flag;
 #ifndef MAPCONTROLLEDSHADE
-#ifdef USE_FEATUREFLAGS
-
-/* 
-** The lower 8-bit of the upper left tile of every map determine
-** the used shading definition of shadeDefs.
-*/
-static wlinline int GetShadeDefID()
-{
-    int shadeID = ffDataTopLeft & 0x00ff;
-    wlassert(shadeID >= 0 && shadeID < lengthof(shadeDefs));
-    return shadeID;
-}
-
-#else
 
 static wlinline int GetShadeDefID()
 {
     int shadeID;
-    switch(gamestate.episode * 10 + gamestate.mapon)
+
+    if (use_extra_features)
     {
+        shadeID = ffDataTopLeft & 0x00ff;
+    }
+    else 
+    { 
+        switch (gamestate.episode * 10 + gamestate.mapon)
+        {
         case  0: shadeID = 4; break;
         case  1:
         case  2:
@@ -47,12 +39,12 @@ static wlinline int GetShadeDefID()
         case  3: shadeID = 0; break;
         case  5: shadeID = 2; break;
         default: shadeID = 3; break;
+        }
     }
     wlassert(shadeID >= 0 && shadeID < lengthof(shadeDefs));
     return shadeID;
 }
 
-#endif
 #endif
 
 /*
@@ -171,5 +163,3 @@ int GetShade(int scale)
 
     return shade;
 }
-
-#endif

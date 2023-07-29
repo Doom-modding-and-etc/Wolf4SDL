@@ -97,18 +97,18 @@
 #if N3DS
 #define CTL_X   CENTERX - (160 - 24)
 #else
-#define CTL_X   24
+#define CTL_X   18
 #endif
 #ifdef JAPAN
 #define CTL_Y   70
 #else
-#define CTL_Y   86
+#define CTL_Y   60
 #endif
-#define CTL_W   295
+#define CTL_W   302
 #if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) || (SDL_MAJOR_VERSION == 3) && defined(HAPTIC_SUPPORT)
-#define CTL_H   120
+#define CTL_H   160
 #else
-#define CTL_H   100
+#define CTL_H   135
 #endif
 #ifdef SAVE_GAME_SCREENSHOT
 #define LSM_X   10
@@ -227,6 +227,8 @@ void DrawNewGame(void);
 void DrawChangeView(int view);
 void DrawMouseSens(void);
 void DrawCtlScreen(void);
+void DrawFeatureScreen();
+void DrawFeaturePage2Screen();
 void DrawCustomScreen(void);
 void DrawLSAction(int which);
 void DrawCustMouse(int hilight);
@@ -261,6 +263,8 @@ int  CP_EndGame();
 int  CP_CheckQuick(ScanCode scancode);
 
 int CustomControls();
+int Features();
+int FeaturesPage2();
 int MouseSensitivity();
 
 void CheckForEpisodes(void);

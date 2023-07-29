@@ -1127,6 +1127,7 @@ void SDL_IMFMusicPlayer(void *udata, unsigned char *stream, int len)
         if(!soundTimeCounter)
         {
             soundTimeCounter = 5;
+#if 0
             if(curAlSound != alSound)
             {
                 curAlSound = curAlSoundPtr = alSound;
@@ -1150,6 +1151,26 @@ void SDL_IMFMusicPlayer(void *udata, unsigned char *stream, int len)
                     alOut(alFreqH, 0);
                 }
             }
+#else
+            /* [DenisBelmondo] backport ecwolf / k1n9_duk3 fixes */
+            /* [k1n9_duk3] THIS is the way the original Wolfenstein 3 - D code handled it! */
+            if (alSound)
+            {
+                if (*alSound)
+                {
+                    alOut(alFreqL, *alSound);
+                    alOut(alFreqH, alBlock);
+                }
+                else alOut(alFreqH, 0);
+                alSound++;
+                if (!(--alLengthLeft))
+                {
+                    alSound = 0;
+                    SoundPriority = 0;
+                    alOut(alFreqH, 0);
+                }
+            }
+#endif
         }
         if(sqActive)
         {

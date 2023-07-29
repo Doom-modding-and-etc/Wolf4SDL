@@ -3,20 +3,10 @@
 #ifndef _WL_ATMOS_H_
 #define _WL_ATMOS_H_
 
-#if defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
-    void Init3DPoints (void);
-#endif
+void Init3DPoints (void);
 
-#ifdef USE_STARSKY
-    void DrawStarSky (void);
-#endif
-
-#ifdef USE_RAIN
-    void DrawRain (void);
-#endif
-
-#ifdef USE_SNOW
-    void DrawSnow (void);
-#endif
+void DrawStarSky (void);
+void DrawRain (void);
+void DrawSnow (void);
 
 #endif

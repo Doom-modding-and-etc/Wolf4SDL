@@ -59,7 +59,7 @@ objtype *actorat[MAPSIZE][MAPSIZE];
 #ifdef REVEALMAP
 boolean     mapseen[MAPSIZE][MAPSIZE];
 #endif
-#if defined(FIXEDLOGICRATE) && defined(LAGSIMULATOR)
+#if defined(LAGSIMULATOR)
 boolean lagging = true;
 #endif
 
@@ -1355,7 +1355,6 @@ void CheckKeys (void)
         lasttimecount = GetTimeCount();
     }
 #endif
-#ifdef AUTOMAP
 /*
 ** Display full automap
 */
@@ -1376,7 +1375,6 @@ void CheckKeys (void)
         lasttimecount = GetTimeCount();
         return;
     }
-#endif
 #ifdef COMPASS
     /* ------------------ 
     ** Compass 
@@ -2107,7 +2105,6 @@ think:
 
 uintptr_t funnyticount;
 
-#ifdef FIXEDLOGICRATE
 double accumulator, frametime_spent = 0;
 double dt = 1.0f / 70.0f; /* 70 FPS */
 uintptr_t oldtime = 0;
@@ -2163,7 +2160,6 @@ void LagSimulator(void)
     }
 }
 #endif
-#endif
 
 #ifdef MAPCONTROLLEDLTIME
 float leveltime;
@@ -2171,20 +2167,21 @@ int scoreticcount;
 int scorebonusAmount;
 #endif
 
-void PlayLoop (void)
+void PlayLoop(void)
 {
 #if defined (SWITCH) || defined (N3DS)
     printf("PLAY LOOP START\n");
 #endif
-#if defined(USE_FEATUREFLAGS) && defined(USE_CLOUDSKY)
-    if(GetFeatureFlags() & FF_CLOUDSKY)
-        InitSky();
-#endif
+    if (use_extra_features && use_cloudsky)
+    {
+        if (GetFeatureFlags() & FF_CLOUDSKY)
+            InitSky();
+    }
 
-#ifdef USE_SHADING
-    InitLevelShadeTable();
-#endif
-
+    if (use_shading)
+    {
+        InitLevelShadeTable();
+    }
     playstate = ex_stillplaying;
     lasttimecount = GetTimeCount();
 #ifndef SEGA_SATURN
@@ -2193,8 +2190,8 @@ void PlayLoop (void)
     anglefrac = 0;
     facecount = 0;
     funnyticount = 0;
-    memset (buttonstate, 0, sizeof (buttonstate));
-    ClearPaletteShifts ();
+    memset(buttonstate, 0, sizeof(buttonstate));
+    ClearPaletteShifts();
 
     if (MousePresent && IN_IsInputGrabbed())
         IN_CenterMouse();         /* Clear accumulated mouse movement */
@@ -2207,26 +2204,141 @@ void PlayLoop (void)
 #ifdef SEGA_SATURN
     DrawStatusBar(); /* vbt : ajout */
 #endif
-#ifdef FIXEDLOGICRATE
-    do
+    if (fixedlogicrate)
     {
-        /* Break from the playloop if starting game */
-        if (startgame || loadedgame)
-            break;
+        do
+        {
+            /* Break from the playloop if starting game */
+            if (startgame || loadedgame)
+                break;
 
 #ifdef LAGSIMULATOR
-        /* Do some lagging */
-        LagSimulator();
+            /* Do some lagging */
+            LagSimulator();
 #endif
-        /* Clock the logictime that has stacked up */
-        ClockGameLogic();
+            /* Clock the logictime that has stacked up */
+            ClockGameLogic();
 
-        /* Loop while there is time left to simulate */
-        while (accumulator >= dt)
+            /* Loop while there is time left to simulate */
+            while (accumulator >= dt)
+            {
+                /*
+                ** start a logic frame
+                */
+                PollControls();
+
+                /*
+                ** actor thinking
+                */
+                madenoise = false;
+
+                MoveDoors();
+                MovePWalls();
+
+                for (obj = player; obj; obj = obj->next)
+                    DoActor(obj);
+
+                UpdatePaletteShifts();
+
+                /*
+                ** MAKE FUNNY FACE IF BJ DOESN'T MOVE FOR AWHILE
+                */
+#ifdef SPEAR
+                funnyticount += tics;
+                if (funnyticount > 30l * 70)
+                {
+                    funnyticount = 0;
+                    if (viewsize != 21)
+                        StatusDrawFace(BJWAITING1PIC + (US_RndT() & 1));
+                    facecount = 0;
+                }
+#endif
+
+#ifdef MAPCONTROLLEDLTIME
+                if (tilemap[63][4]) {
+                    leveltime = 2.0;
+                    if (tilemap[63][5] >= 1 && tilemap[63][5] <= 5) {
+                        leveltime = tilemap[63][5];
+                        if (tilemap[63][6] >= 1 && tilemap[63][6] <= 3) {
+                            switch (tilemap[63][6]) {
+                            case 1:
+                                leveltime += .25;
+                                break;
+                            case 2:
+                                leveltime += .50;
+                                break;
+                            case 3:
+                                leveltime += .75;
+                                break;
+                            }
+                        }
+                    }
+                    leveltime = (leveltime * 4200) / 70;
+                    if (tilemap[63][7] <= 1) {
+                        scorebonusAmount = (tilemap[63][7]) * 1000;
+                    }
+                    else if (tilemap[63][7] == 0) {
+                        scorebonusAmount = 500;
+                    }
+                    scoreticcount += tics;
+                    if (scoreticcount > 1l * 70) {
+                        GivePoints(scorebonusAmount);
+                        scoreticcount = 0;
+                    }
+                    if (gamestate.TimeCount == leveltime * 70)
+                        playstate = ex_completed;
+                }
+#endif
+                /* Abort demo? */
+                if (demoplayback)
+                {
+                    if (IN_CheckAck())
+                    {
+                        IN_ClearKeysDown();
+                        playstate = ex_abort;
+                    }
+                }
+
+                /* Advance timer */
+                gamestate.TimeCount += tics;
+
+                /* Debug keys */
+                CheckKeys();
+
+                /* End of one frame */
+                frametime_spent += dt;
+                accumulator -= dt;
+                frameon += tics;
+            }
+
+            /* Only refresh screen once per frame, instead of once per logic frame */
+            ThreeDRefresh();
+
+            UpdateSoundLoc();      /* JAB */
+            if (screenfaded)
+                VL_FadeIn(0, 255, gamepal, 30);
+
+            /* Do single stepping outside of the game logic loop */
+            if (singlestep)
+            {
+                VL_WaitVBL(singlestep);
+                lasttimecount = GetTimeCount();
+            }
+
+            /* Extra vbls left outside of game logic */
+            if (extravbls)
+                VL_WaitVBL(extravbls);
+        }
+        while (!playstate && !startgame);
+
+        if (playstate != ex_died)
+            FinishPaletteShifts();
+    }
+
+    else 
+    {
+        do
         {
-            /*
-            ** start a logic frame
-            */
             PollControls();
 
             /*
@@ -2242,6 +2354,8 @@ void PlayLoop (void)
 
             UpdatePaletteShifts();
 
+            ThreeDRefresh();
+
             /*
             ** MAKE FUNNY FACE IF BJ DOESN'T MOVE FOR AWHILE
             */
@@ -2255,42 +2369,28 @@ void PlayLoop (void)
                 facecount = 0;
             }
 #endif
-#ifdef MAPCONTROLLEDLTIME
-            if (tilemap[63][4]) {
-                leveltime = 2.0;
-                if (tilemap[63][5] >= 1 && tilemap[63][5] <= 5) {
-                    leveltime = tilemap[63][5];
-                    if (tilemap[63][6] >= 1 && tilemap[63][6] <= 3) {
-                        switch (tilemap[63][6]) {
-                        case 1:
-                            leveltime += .25;
-                            break;
-                        case 2:
-                            leveltime += .50;
-                            break;
-                        case 3:
-                            leveltime += .75;
-                            break;
-                        }
-                    }
-                }
-                leveltime = (leveltime * 4200) / 70;
-                if (tilemap[63][7] <= 1) {
-                    scorebonusAmount = (tilemap[63][7]) * 1000;
-                }
-                else if (tilemap[63][7] == 0) {
-                    scorebonusAmount = 500;
-                }
-                scoreticcount += tics;
-                if (scoreticcount > 1l * 70) {
-                    GivePoints(scorebonusAmount);
-                    scoreticcount = 0;
-                }
-                if (gamestate.TimeCount == leveltime * 70)
-                    playstate = ex_completed;
-            }
+
+            gamestate.TimeCount += tics;
+#ifndef SEGA_SATURN
+            UpdateSoundLoc();      /* JAB */
 #endif
-            /* Abort demo? */
+            if (screenfaded)
+                VL_FadeIn(0, 255, gamepal, 30);
+
+            CheckKeys();
+
+            /*
+            ** debug aids
+            */
+#ifndef SEGA_SATURN
+            if (singlestep)
+            {
+                VL_WaitVBL(singlestep);
+                lasttimecount = GetTimeCount();
+            }
+            if (extravbls)
+                VL_WaitVBL(extravbls);
+#endif
             if (demoplayback)
             {
                 if (IN_CheckAck())
@@ -2299,104 +2399,12 @@ void PlayLoop (void)
                     playstate = ex_abort;
                 }
             }
-
-            /* Advance timer */
-            gamestate.TimeCount += tics;
-
-            /* Debug keys */
-            CheckKeys();
-
-            /* End of one frame */
-            frametime_spent += dt;
-            accumulator -= dt;
-            frameon += tics;
         }
+        while (!playstate && !startgame);
 
-        /* Only refresh screen once per frame, instead of once per logic frame */
-        ThreeDRefresh();
-
-        UpdateSoundLoc();      /* JAB */
-        if (screenfaded)
-            VL_FadeIn(0, 255, gamepal, 30);
-
-        /* Do single stepping outside of the game logic loop */
-        if (singlestep)
-        {
-            VL_WaitVBL(singlestep);
-            lasttimecount = GetTimeCount();
-        }
-
-        /* Extra vbls left outside of game logic */
-        if (extravbls)
-            VL_WaitVBL(extravbls);
+        if (playstate != ex_died)
+            FinishPaletteShifts();
     }
-#else
-    do
-    {
-        PollControls ();
 
-/*
-** actor thinking
-*/
-        madenoise = false;
 
-        MoveDoors ();
-        MovePWalls ();
-
-        for (obj = player; obj; obj = obj->next)
-            DoActor (obj);
-
-        UpdatePaletteShifts ();
-
-        ThreeDRefresh ();
-
-        /*
-        ** MAKE FUNNY FACE IF BJ DOESN'T MOVE FOR AWHILE
-        */
-#ifdef SPEAR
-        funnyticount += tics;
-        if (funnyticount > 30l * 70)
-        {
-            funnyticount = 0;
-            if(viewsize != 21)
-                StatusDrawFace(BJWAITING1PIC + (US_RndT () & 1));
-            facecount = 0;
-        }
-#endif
-
-        gamestate.TimeCount += tics;
-#ifndef SEGA_SATURN
-        UpdateSoundLoc ();      /* JAB */
-#endif
-        if (screenfaded)
-            VL_FadeIn (0, 255, gamepal, 30);
-
-        CheckKeys ();
-
-/*
-** debug aids
-*/
-#ifndef SEGA_SATURN
-        if (singlestep)
-        {
-            VL_WaitVBL (singlestep);
-            lasttimecount = GetTimeCount();
-        }
-        if (extravbls)
-            VL_WaitVBL (extravbls);
-#endif
-        if (demoplayback)
-        {
-            if (IN_CheckAck ())
-            {
-                IN_ClearKeysDown ();
-                playstate = ex_abort;
-            }
-        }
-    }
-#endif
-    while (!playstate && !startgame);
-
-    if (playstate != ex_died)
-        FinishPaletteShifts ();
 }

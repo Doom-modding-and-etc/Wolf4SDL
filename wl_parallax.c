@@ -2,8 +2,6 @@
 
 #include "version.h"
 
-#ifdef USE_PARALLAX
-
 #include "wl_def.h"
 
 #ifdef MAPCONTROLLEDSKY
@@ -14,37 +12,26 @@ static int GetParallaxStartTexture()
 }
 
 #else
-
-#ifdef USE_FEATUREFLAGS
-
-/* The lower left tile of every map determines the start texture of the parallax sky. */
-int GetParallaxStartTexture (void)
-{
-    int startTex = ffDataBottomLeft;
-
-    wlassert(startTex >= 0 && startTex < PMSpriteStart);
-
-    return startTex;
-}
-
-#else
-
 int GetParallaxStartTexture (void)
 {
     int startTex;
 
-    switch (gamestate.episode * 10 + gamestate.mapon)
+    if (use_extra_features) 
     {
-        case  0: startTex = 20; break;
-        default: startTex =  0; break;
+        startTex = ffDataBottomLeft;
     }
-
+    else
+    {
+        switch (gamestate.episode * 10 + gamestate.mapon)
+        {
+            case  0: startTex = 20; break;
+            default: startTex = 0; break;
+        }
+    }
     wlassert(startTex >= 0 && startTex < PMSpriteStart);
 
     return startTex;
 }
-
-#endif
 
 #endif
 /*
@@ -98,5 +85,3 @@ void DrawParallax (void)
             *dest = skysource[texture + ((y << TEXTURESHIFT) / centery)];
     }
 }
-
-#endif
