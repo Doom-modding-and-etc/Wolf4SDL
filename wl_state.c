@@ -1369,13 +1369,16 @@ boolean CheckLine (objtype *ob)
             value &= ~BIT_DOOR;
             intercept = yfrac-ystep/2;
 
-#ifdef BLAKEDOORS
-            if (intercept<ldoorposition[value] || intercept>rdoorposition[value])
-#else
-            if (intercept > doorposition[value])
-#endif
-                return false;
-
+            if (blakedoors)
+            {
+                if (intercept<ldoorposition[value] || intercept>rdoorposition[value])
+                    return false;
+            }
+            else
+            {
+                if (intercept > doorposition[value])
+                    return false;
+            }
         } while (x != xt2);
     }
 
@@ -1427,12 +1430,16 @@ boolean CheckLine (objtype *ob)
             value &= ~BIT_DOOR;
             intercept = xfrac-xstep/2;
 
-#ifdef BLAKEDOORS
-            if (intercept<ldoorposition[value] || intercept>rdoorposition[value])
-#else
-            if (intercept > doorposition[value])
-#endif
-                return false;
+            if (blakedoors)
+            {
+                if (intercept<ldoorposition[value] || intercept>rdoorposition[value])
+                    return false;
+            }
+            else
+            {
+                if (intercept > doorposition[value])
+                    return false;
+            }
         } while (y != yt2);
     }
 
@@ -1732,7 +1739,7 @@ void FirstSighting (objtype *ob)
 #else
             NewState(ob, &s_uberchase1);
 #endif
-            ob->speed = 3000;                       /* go faster when chasing player *
+            ob->speed = 3000;                       /* go faster when chasing player */
             break;
 
         case willobj:
@@ -1753,7 +1760,7 @@ void FirstSighting (objtype *ob)
 #else
             NewState(ob, &s_deathchase1);
 #endif
-            ob->speed = 2048;                       /* go faster when chasing playe */r
+            ob->speed = 2048;                       /* go faster when chasing player */
             break;
 #endif
         default:

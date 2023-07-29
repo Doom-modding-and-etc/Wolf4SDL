@@ -227,6 +227,7 @@ void DrawNewGame(void);
 void DrawChangeView(int view);
 void DrawMouseSens(void);
 void DrawCtlScreen(void);
+void DrawMiscFeaturesScreen();
 void DrawFeatureScreen();
 void DrawFeaturePage2Screen();
 void DrawCustomScreen(void);
@@ -263,6 +264,7 @@ int  CP_EndGame();
 int  CP_CheckQuick(ScanCode scancode);
 
 int CustomControls();
+int Misc_Features();
 int Features();
 int FeaturesPage2();
 int MouseSensitivity();

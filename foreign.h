@@ -62,15 +62,23 @@
 #if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)
 #define	STR_FEEDBACK "Use Force Feedback"
 #endif
-#define STR_CROSSHAIR "Crosshair"
+
 #define	STR_GAMEPAD	"Gravis GamePad Enabled"
 #define	STR_SENS	"Mouse Sensitivity"
 #define	STR_CUSTOM	"Customize controls"
 #define	STR_MLOOK	"Mouselook Enabled"
 #define	STR_ALRUN	"Always Run"
+
+/* Misc Features */
+#define STR_MISC_FEATURES "Misc Features Page"
+#define STR_CROSSHAIR "Crosshair"
 #define STR_DRAWAUTOMAP "Draw Automap"
 #define STR_FIXEDLOGICRATE "Uncapped Frame Rate"
-/* Features page 1 */
+#define STR_BANDEDHOLOWALLS "Use banded wall drawing"
+#define STR_BLAKEDOORS "Use blake stone doors"
+#define STR_HIGHLIGHTPUSHWALLS "Enable highlight pushwalls"
+#define STR_LAGSIMULATOR "Enable lag simulator"
+/* Features page */
 #define STR_FEATURES "Features Page"
 #define STR_FEATURES_PAGE "Page 1"
 #define STR_EXTRA_FEATURES "Use Extra Features"

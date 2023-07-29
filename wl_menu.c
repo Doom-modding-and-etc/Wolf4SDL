@@ -175,9 +175,7 @@ enum
 #if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)
     CTL_FEEDBACK,
 #endif
-	CTL_CROSSHAIR, /* [FG] toggle crosshair */ 
-    CTL_DRAWAUTOMAP,
-    CTL_FIXEDLOGICRATE,
+    CTL_MISC_FEATURES,
     CTL_FEATURES,
     CTL_CUSTOMIZE 
 };
@@ -194,25 +192,45 @@ CP_itemtype CtlMenu[] = {
 #else
     {0, STR_MOUSEEN, 0},
     {0, STR_SENS, (int(*)(int))MouseSensitivity},
-#ifdef EXTRACONTROLS
     {0, STR_MLOOK, 0},
     {1, STR_ALRUN, 0},
+#ifdef EXTRACONTROLS
     {0, STR_MOUSEMVN, 0},
 #else
-    {0, STR_MLOOK, 0},
-    {1, STR_ALRUN, 0},
     {0, STR_JOYEN, 0},
 #endif
 #if defined(SDL_MAJOR_VERSION) && (SDL_MAJOR_VERSION == 2) && defined(HAPTIC_SUPPORT)
     {0, STR_FEEDBACK, 0},
 #endif
-    {1, STR_CROSSHAIR, 0}, /* [FG] toggle crosshair */
-    {1, STR_DRAWAUTOMAP, 0},
-    {1, STR_FIXEDLOGICRATE, 0},
+    {1, STR_MISC_FEATURES, (int(*)(int))Misc_Features},
     {1, STR_FEATURES, (int(*)(int))Features},
     {1, STR_CUSTOM, (int(*)(int))CustomControls}
 #endif
 };
+
+
+enum
+{
+    MISC_CROSSHAIR,
+    MISC_AUTOMAP,
+    MISC_LOGICRATE,
+    MISC_BANDEDHOLOWALLS,
+    MISC_BLAKEDOORS,
+    MISC_HIGHPUSHWALLS,
+    MISC_LAGSIMULATOR
+};
+
+CP_itemtype miscMenu[] =
+{
+    {1, STR_CROSSHAIR, 0}, /* [FG] toggle crosshair */
+    {1, STR_DRAWAUTOMAP, 0},
+    {1, STR_FIXEDLOGICRATE, 0},
+    {1, STR_BANDEDHOLOWALLS, 0},
+    {1, STR_BLAKEDOORS, 0},
+    {1, STR_HIGHLIGHTPUSHWALLS, 0},
+    {1, STR_LAGSIMULATOR, 0},
+};
+
 
 enum
 {
@@ -368,6 +386,7 @@ CP_iteminfo MainItems = { MENU_X, MENU_Y, lengthof(MainMenu), STARTITEM, 24 },
             CtlItems  = { CTL_X, CTL_Y, lengthof(CtlMenu), -1, 56 },
             FtItems   = { CTL_X, CTL_Y, lengthof(ftMenu), -1, 56 },
             Ft2Items  = { CTL_X, CTL_Y, lengthof(ft2Menu), -1, 56 },
+            MiscItems = { CTL_X, CTL_Y, lengthof(miscMenu), -1, 56 },
             CusItems  = { 8, CST_Y + ITEM_H * 2, lengthof(CusMenu), -1, 0},
 #ifndef SPEAR
             NewEitems = { NE_X, NE_Y, lengthof(NewEmenu), 0, 88 },
@@ -2418,27 +2437,11 @@ CP_Control ()
                 CusItems.curpos = -1;
                 ShootSnd();
                 break;
-				
-            /* [FG] toggle crosshair */
-            case CTL_CROSSHAIR:
-                crosshair ^= true;
-                DrawCtlScreen ();
-                CusItems.curpos = -1;
-                ShootSnd ();
-                break;
-
-            case CTL_DRAWAUTOMAP:
-                drawautomap ^= true;
+			
+            case CTL_MISC_FEATURES:
                 DrawCtlScreen();
-                CusItems.curpos = -1;
-                ShootSnd();
-                break;
-				
-            case CTL_FIXEDLOGICRATE:
-                fixedlogicrate ^= true;
-                DrawCtlScreen();
-                CusItems.curpos = -1;
-                ShootSnd();
+                MenuFadeIn();
+                WaitKeyUp();
                 break;
 
             case CTL_FEATURES:
@@ -2489,6 +2492,202 @@ CP_Control ()
 
     return 0;
 }
+
+int Misc_Features()
+{
+    int which;
+
+    DrawMiscFeaturesScreen();
+    MenuFadeIn();
+    WaitKeyUp();
+
+    do
+    {
+        which = HandleMenu(&MiscItems, miscMenu, NULL);
+        switch (which)
+        {
+        case MISC_CROSSHAIR:
+            crosshair ^= true;
+            DrawMiscFeaturesScreen();
+            CusItems.curpos = -1;
+            ShootSnd();
+            break;
+
+        case MISC_AUTOMAP:
+            drawautomap ^= true;
+            DrawMiscFeaturesScreen();
+            CusItems.curpos = -1;
+            ShootSnd();
+            break;
+
+        case MISC_LOGICRATE:
+            fixedlogicrate ^= true;
+            DrawMiscFeaturesScreen();
+            CusItems.curpos = -1;
+            ShootSnd();
+            break;
+
+        case MISC_BANDEDHOLOWALLS:
+            bandedholowalls ^= true;
+            DrawMiscFeaturesScreen();
+            CusItems.curpos = -1;
+            ShootSnd();
+            break;
+
+        case MISC_BLAKEDOORS:
+            blakedoors ^= true;
+            DrawMiscFeaturesScreen();
+            CusItems.curpos = -1;
+            ShootSnd();
+            break;
+
+        case MISC_HIGHPUSHWALLS:
+            highlightpushwalls ^= true;
+            DrawMiscFeaturesScreen();
+            CusItems.curpos = -1;
+            ShootSnd();
+            break;
+
+        case MISC_LAGSIMULATOR:
+            lagging ^= true;
+            DrawMiscFeaturesScreen();
+            CusItems.curpos = -1;
+            ShootSnd();
+            break;
+        }
+    } while (which >= 0);
+
+    MenuFadeOut();
+
+    return 0;
+}
+
+int Features()
+{
+    int which;
+
+    DrawFeatureScreen();
+    MenuFadeIn();
+
+    WaitKeyUp();
+
+    do
+    {
+        which = HandleMenu(&FtItems, ftMenu, NULL);
+        switch (which)
+        {
+
+        case FT_EXTRA_FEATURES:
+            use_extra_features ^= true;
+            DrawFeatureScreen();
+            CusItems.curpos = -1;
+            ShootSnd();
+            break;
+
+        case FT_USESHADING:
+            use_shading ^= true;
+            DrawFeatureScreen();
+            CusItems.curpos = -1;
+            ShootSnd();
+            break;
+
+        case FT_USEDIR3DSPR:
+            use_dir3dspr ^= true;
+            DrawFeatureScreen();
+            CusItems.curpos = -1;
+            ShootSnd();
+            break;
+
+        case FT_FLOORCEILINGTEX:
+            use_floorceilingtex ^= true;
+            DrawFeatureScreen();
+            CusItems.curpos = -1;
+            ShootSnd();
+            break;
+
+        case FT_MULTIFLAT:
+            use_multiflats ^= true;
+            DrawFeatureScreen();
+            CusItems.curpos = -1;
+            ShootSnd();
+            break;
+
+        case FT_PARALLAX:
+            use_parallax ^= true;
+            DrawFeatureScreen();
+            CusItems.curpos = -1;
+            ShootSnd();
+            break;
+
+        case FT_SKYWALLPARALLAX:
+            use_skywallparallax ^= true;
+            DrawFeatureScreen();
+            CusItems.curpos = -1;
+            ShootSnd();
+            break;
+
+        case FT_CLOUDSKY:
+            use_cloudsky ^= true;
+            DrawFeatureScreen();
+            CusItems.curpos = -1;
+            ShootSnd();
+            break;
+
+        case FT_PAGE2:
+            DrawFeatureScreen();
+            MenuFadeIn();
+            WaitKeyUp();
+            break;
+        }
+    } while (which >= 0);
+
+    MenuFadeOut();
+
+    return 0;
+}
+
+int FeaturesPage2()
+{
+    int which;
+
+    DrawFeaturePage2Screen();
+    MenuFadeIn();
+    WaitKeyUp();
+
+    do
+    {
+        which = HandleMenu(&Ft2Items, ft2Menu, NULL);
+        switch (which)
+        {
+        case FT2_STARSKY:
+            use_starsky ^= true;
+            DrawFeaturePage2Screen();
+            CusItems.curpos = -1;
+            ShootSnd();
+            break;
+
+        case FT2_RAIN:
+            use_rain ^= true;
+            DrawFeaturePage2Screen();
+            CusItems.curpos = -1;
+            ShootSnd();
+            break;
+
+        case FT2_SNOW:
+            use_snow ^= true;
+            DrawFeaturePage2Screen();
+            CusItems.curpos = -1;
+            ShootSnd();
+            break;
+        }
+    } while (which >= 0);
+
+    MenuFadeOut();
+
+    return 0;
+}
+
+
 
 /*
 ////////////////////////////////
@@ -2673,7 +2872,6 @@ DrawCtlScreen (void)
 
     DrawMenu (&CtlItems, CtlMenu);
 
-
     x = CTL_X + CtlItems.indent - 24;
     y = CTL_Y + 3;
     if (mouseenabled)
@@ -2682,7 +2880,6 @@ DrawCtlScreen (void)
         VWB_DrawPic (x, y, C_NOTSELECTEDPIC);
 
     y = CTL_Y + 29;
-
     if (mouselookenabled)
         VWB_DrawPic(x, y, C_SELECTEDPIC);
     else
@@ -2693,8 +2890,6 @@ DrawCtlScreen (void)
         VWB_DrawPic(x, y, C_SELECTEDPIC);
     else
         VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
-
-
 #ifndef EXTRACONTROLS
     y = CTL_Y + 55;
     if (joystickenabled)
@@ -2715,40 +2910,6 @@ DrawCtlScreen (void)
         VWB_DrawPic(x, y, C_SELECTEDPIC);
     else
         VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
-
-    /* [FG] toggle crosshair */
-    y = CTL_Y + 81;
-    if (crosshair)
-        VWB_DrawPic(x, y, C_SELECTEDPIC);
-    else
-        VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
-
-
-    y = CTL_Y + 95;
-    if (drawautomap)
-        VWB_DrawPic(x, y, C_SELECTEDPIC);
-    else
-        VWB_DrawPic(x, y, C_NOTSELECTEDPIC)
-#else
-    /* [FG] toggle crosshair */
-    y = CTL_Y + 68;
-    if (crosshair)
-        VWB_DrawPic(x, y, C_SELECTEDPIC);
-    else
-        VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
-
-    y = CTL_Y + 81;
-    if (drawautomap)
-        VWB_DrawPic(x, y, C_SELECTEDPIC);
-    else
-        VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
-
-    y = CTL_Y + 95;
-    if (fixedlogicrate)
-        VWB_DrawPic(x, y, C_SELECTEDPIC);
-    else
-        VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
-
 #endif
     /*
     ** PICK FIRST AVAILABLE SPOT
@@ -2767,6 +2928,91 @@ DrawCtlScreen (void)
 
     DrawMenuGun (&CtlItems);
     VL_UpdateScreen (screenBuffer);
+}
+
+void DrawMiscFeaturesScreen() 
+{
+    int i, x, y;
+
+#ifdef JAPAN
+    VWB_DrawPic(0, 0, S_CONTROLPIC);
+#else
+    ClearMScreen();
+    DrawStripes(10);
+    VWB_DrawPic(112, 184, C_MOUSELBACKPIC);
+    DrawWindow(CTL_X - 8, CTL_Y - 5, CTL_W, CTL_H, BKGDCOLOR);
+#endif
+    WindowX = 0;
+    WindowW = 320;
+    SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
+    PrintY = 15;
+    SETFONTCOLOR(READCOLOR, BKGDCOLOR);
+    US_CPrint(STR_MISC_FEATURES);
+    SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
+
+    DrawMenu(&MiscItems, miscMenu);
+
+    x = CTL_X + MiscItems.indent - 24;
+    y = CTL_Y + 3;
+    if (crosshair)
+        VWB_DrawPic(x, y, C_SELECTEDPIC);
+    else
+        VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+
+    y = CTL_Y + 16;
+    if (drawautomap)
+        VWB_DrawPic(x, y, C_SELECTEDPIC);
+    else
+        VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+
+    y = CTL_Y + 29;
+    if (fixedlogicrate)
+        VWB_DrawPic(x, y, C_SELECTEDPIC);
+    else
+        VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+
+    y = CTL_Y + 42;
+    if (bandedholowalls)
+        VWB_DrawPic(x, y, C_SELECTEDPIC);
+    else
+        VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+
+    y = CTL_Y + 55;
+    if (blakedoors)
+        VWB_DrawPic(x, y, C_SELECTEDPIC);
+    else
+        VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+
+    y = CTL_Y + 68;
+    if (highlightpushwalls)
+        VWB_DrawPic(x, y, C_SELECTEDPIC);
+    else
+        VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+
+    y = CTL_Y + 81;
+    if (lagging)
+        VWB_DrawPic(x, y, C_SELECTEDPIC);
+    else
+        VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+
+
+    /*
+    ** PICK FIRST AVAILABLE SPOT
+    */
+    if (MiscItems.curpos < 0 || !miscMenu[MiscItems.curpos].active)
+    {
+        for (i = 0; i < MiscItems.amount; i++)
+        {
+            if (miscMenu[i].active)
+            {
+                MiscItems.curpos = i;
+                break;
+            }
+        }
+    }
+
+    DrawMenuGun(&MiscItems);
+    VL_UpdateScreen(screenBuffer);
 }
 
 void DrawFeatureScreen()
@@ -2804,7 +3050,7 @@ void DrawFeatureScreen()
     else
         VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
 
-    y = CTL_Y + 30;
+    y = CTL_Y + 29;
     if (use_dir3dspr)
         VWB_DrawPic(x, y, C_SELECTEDPIC);
     else
@@ -2988,132 +3234,6 @@ CustomControls ()
     while (which >= 0);
 
     MenuFadeOut ();
-
-    return 0;
-}
-
-int Features()
-{
-    int which;
-
-    DrawFeatureScreen();
-    MenuFadeIn();
-
-    WaitKeyUp();
-
-    do
-    {
-        which = HandleMenu(&FtItems, ftMenu, NULL);
-        switch (which)
-        {
-
-        case FT_EXTRA_FEATURES:
-            use_extra_features ^= true;
-            DrawFeatureScreen();
-            CusItems.curpos = -1;
-            ShootSnd();
-            break;
-
-        case FT_USESHADING:
-            use_shading ^= true;
-            DrawFeatureScreen();
-            CusItems.curpos = -1;
-            ShootSnd();
-            break;
-
-        case FT_USEDIR3DSPR:
-            use_dir3dspr ^= true;
-            DrawFeatureScreen();
-            CusItems.curpos = -1;
-            ShootSnd();
-            break;
-
-        case FT_FLOORCEILINGTEX:
-            use_floorceilingtex ^= true;
-            DrawFeatureScreen();
-            CusItems.curpos = -1;
-            ShootSnd();
-            break;
-
-        case FT_MULTIFLAT:
-            use_multiflats ^= true;
-            DrawFeatureScreen();
-            CusItems.curpos = -1;
-            ShootSnd();
-            break;
-
-        case FT_PARALLAX:
-            use_parallax ^= true;
-            DrawFeatureScreen();
-            CusItems.curpos = -1;
-            ShootSnd();
-            break;
-
-        case FT_SKYWALLPARALLAX:
-            use_skywallparallax ^= true;
-            DrawFeatureScreen();
-            CusItems.curpos = -1;
-            ShootSnd();
-            break;
-
-        case FT_CLOUDSKY:
-            use_cloudsky ^= true;
-            DrawFeatureScreen();
-            CusItems.curpos = -1;
-            ShootSnd();
-            break;
-
-        case FT_PAGE2:
-            DrawFeatureScreen();
-            MenuFadeIn();
-            WaitKeyUp();
-            break;
-        }
-    } while (which >= 0);
-
-    MenuFadeOut();
-
-    return 0;
-}
-
-int FeaturesPage2()
-{
-    int which;
-
-    DrawFeaturePage2Screen();
-    MenuFadeIn();
-
-    WaitKeyUp();
-
-    do
-    {
-        which = HandleMenu(&Ft2Items, ft2Menu, NULL);
-        switch (which)
-        {
-        case FT2_STARSKY:
-            use_starsky ^= true;
-            DrawFeaturePage2Screen();
-            CusItems.curpos = -1;
-            ShootSnd();
-            break;
-
-        case FT2_RAIN:
-            use_rain ^= true;
-            DrawFeaturePage2Screen();
-            CusItems.curpos = -1;
-            ShootSnd();
-            break;
-
-        case FT2_SNOW:
-            use_snow ^= true;
-            DrawFeaturePage2Screen();
-            CusItems.curpos = -1;
-            ShootSnd();
-            break;
-        }
-    } while (which >= 0);
-
-    MenuFadeOut();
 
     return 0;
 }

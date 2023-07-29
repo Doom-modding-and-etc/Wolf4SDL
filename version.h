@@ -30,8 +30,7 @@
 
 #endif
 
-/* #define USE_FEATUREFLAGS */    /* Enables the level feature flags (see bottom of wl_def.h) */
-/* #define USE_DIR3DSPR_SAMPLE */        /* Enables directional 3d sprites */
+/* #define USE_DIR3DSPR_SAMPLE */        /* Enables directional 3d sprites sample */
 /* #define FIXRAINSNOWLEAKS */    /* Enables leaking ceilings fix (by Adam Biser, only needed if maps with rain/snow and ceilings exist) */
 /* #define VIEWMAP */             /* Enables the overhead map */
 /* #define REVEALMAP */           /* Enables showing only the areas of the overhead map that have been seen */
@@ -49,13 +48,11 @@
 /* #define SCALE2X */ /*The screen will be scaled in 2x with linear filter. This guy needs to work with CRT defined or else it won´t work.. */
 /* #define FIXCALCROTATE */         /* Apply a modified version of Ginyu's fix to make CalcRotate more accurate at high resolutions */
 /* #define VIEASM */ /* Activates: VODKA-INDUCED ENTERTAINMENT ADVANCED SOUND MANAGER v0.9.2(Warning: only works with .wav and .ogg placed in sounds/ follow the asmcref.h for more details). */
-/* #define BANDEDHOLOWALLS */    /* Use the old DOS-style "banded" wall drawing behaviour when inside walls */
 /* #define USE_DOSBOX */  /* Replaces fmopl sound and uses DOSBOX Sound instead. */
 /* #define USE_NUKEDOPL */ /* Replaces fmopl sound and uses NUKEDOPL instead. */ 
 /* #define USE_FBNEO_FMOPL */ /* Replaces fmopl sound and uses FBNEO_FMOPL instead. */
 /* #define USE_AUDIO_CVT */  /* Replaces original implmentation of wave file reading to a modern way by Fabian Greffrath */
 /* #define GOD_MODE */ /* Use godmode */
-/* #define LAGSIMULATOR */         /* Enables lag simulator debug option (by Codetech84) */
 /* Credits: Codetech84 */
 /* #define MAPCONTROLLEDMUSIC */  /* Activates the map controlled music. */
 /* #define MAPCONTROLPARTIME */   /* Activates the map partial time control */
@@ -67,7 +64,6 @@
 /* #define MAPCONTROLLEDFLOOR */   /* Map Controlled Floor colour (9,0) */
 /* #define SEEKER_MISSILES */ /* Add Seeker Missiles */
 /* end */
-/* #define BLAKEDOORS */     /* Blake Stone style Double doors - original code by: Adam Biser */
 /* #define EXTRACONTROLS */  /* switches out to Joystick controls for WASD and mouse movement toggles instead */ 
 /* #define AUTOINTER */ /* Enables the automatic intermission screen */
 /* #define CHRIS */ /* Enables the chris chokan patches */
@@ -77,7 +73,6 @@
 /* #define BURN_ANIM */ /* Add the burn animation */
 /* #define BOSS_MUSIC */ /* Add some boss music, it needs VIEASM defined */
 /* end */
-/* #define HIGHLIGHTPUSHWALLS */ /* Enables the "highlight" pushwalls by: Merthsoft */
 /* #define SAVE_GAME_SCREENSHOT */ /* Add screenshot save support. */
 /* By: WallHack */
 /* #define COMPASS */ /* Add the compass */

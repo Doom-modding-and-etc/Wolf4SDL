@@ -1019,9 +1019,7 @@ typedef struct doorstruct
     unsigned char     lock;
     unsigned int action;
     short    ticcount;
-#ifdef BLAKEDOORS
     boolean doubledoor;
-#endif
 } doorobj_t;
 
 
@@ -1337,12 +1335,8 @@ extern  objtype* actorat[MAPSIZE][MAPSIZE];
 #ifdef REVEALMAP
 extern  boolean        mapseen[MAPSIZE][MAPSIZE];
 #endif
-#ifdef HIGHLIGHTPUSHWALLS
 /* todo saturn: noclip does not affect anything... */
 extern  boolean  singlestep, godmode, noclip, ammocheat, mapreveal, highlightmode;
-#else
-extern  boolean  singlestep, godmode, noclip, ammocheat, mapreveal;
-#endif
 #ifdef EXTRACONTROLS
 extern  int         controlstrafe;
 #endif
@@ -1454,9 +1448,7 @@ int DebugKeys(void);
 void ViewMap(void);
 void PictureGrabber(void);
 
-#if defined(LAGSIMULATOR)
 extern boolean lagging;
-#endif
 
 /*
 =============================================================================
@@ -1472,9 +1464,13 @@ extern uintptr_t lasttimecount;
 extern int       frameon;
 extern boolean fizzlein, fpscounter;
 extern boolean automap[MAPSIZE][MAPSIZE];
+/* Misc Page */
 extern boolean crosshair;
 extern boolean drawautomap;
 extern boolean fixedlogicrate;
+extern boolean bandedholowalls;
+extern boolean blakedoors;
+extern boolean highlightpushwalls;
 /* Features Page */
 extern boolean use_extra_features;
 extern boolean use_shading;
@@ -1636,9 +1632,7 @@ extern  doorobj_t* lastdoorobj;
 extern  short       doornum;
 #endif
 
-#ifdef BLAKEDOORS
 extern  unsigned short      ldoorposition[MAXDOORS], rdoorposition[MAXDOORS];   /* leading edge of door 0=closed */
-#endif
 extern  unsigned short      doorposition[MAXDOORS];
 
 extern  unsigned char      areaconnect[NUMAREAS][NUMAREAS];

@@ -631,16 +631,19 @@ boolean SaveTheGame(FILE *file,int x,int y)
     }
 
     DiskFlopAnim(x,y);
-#ifdef BLAKEDOORS
-    fwrite(ldoorposition, sizeof(ldoorposition), 1, file);
-    checksum = DoChecksum((unsigned char*)ldoorposition, sizeof(ldoorposition), checksum);
-    DiskFlopAnim(x, y);
-    fwrite(rdoorposition, sizeof(rdoorposition), 1, file);
-    checksum = DoChecksum((unsigned char*)rdoorposition, sizeof(rdoorposition), checksum);
-#else
-    fwrite(doorposition, sizeof(doorposition), 1, file);
-    checksum = DoChecksum((unsigned char*)doorposition, sizeof(doorposition), checksum);
-#endif
+    if (blakedoors)
+    {
+        fwrite(ldoorposition, sizeof(ldoorposition), 1, file);
+        checksum = DoChecksum((unsigned char*)ldoorposition, sizeof(ldoorposition), checksum);
+        DiskFlopAnim(x, y);
+        fwrite(rdoorposition, sizeof(rdoorposition), 1, file);
+        checksum = DoChecksum((unsigned char*)rdoorposition, sizeof(rdoorposition), checksum);
+    }
+    else
+    {
+        fwrite(doorposition, sizeof(doorposition), 1, file);
+        checksum = DoChecksum((unsigned char*)doorposition, sizeof(doorposition), checksum);
+    }
     DiskFlopAnim(x,y);
     fwrite (doorobjlist,sizeof(doorobjlist),1,file);
     checksum = DoChecksum((unsigned char *)doorobjlist,sizeof(doorobjlist),checksum);
@@ -759,16 +762,19 @@ boolean LoadTheGame(FILE *file,int x,int y)
     }
 
     DiskFlopAnim(x,y);
-#ifdef BLAKEDOORS
-    fread(ldoorposition, sizeof(ldoorposition), 1, file);
-    checksum = DoChecksum((unsigned char*)ldoorposition, sizeof(ldoorposition), checksum);
-    DiskFlopAnim(x, y);
-    fread(rdoorposition, sizeof(rdoorposition), 1, file);
-    checksum = DoChecksum((unsigned char*)rdoorposition, sizeof(rdoorposition), checksum);
-#else
-    fread(doorposition, sizeof(doorposition), 1, file);
-    checksum = DoChecksum((unsigned char*)doorposition, sizeof(doorposition), checksum);
-#endif
+    if (blakedoors)
+    {
+        fread(ldoorposition, sizeof(ldoorposition), 1, file);
+        checksum = DoChecksum((unsigned char*)ldoorposition, sizeof(ldoorposition), checksum);
+        DiskFlopAnim(x, y);
+        fread(rdoorposition, sizeof(rdoorposition), 1, file);
+        checksum = DoChecksum((unsigned char*)rdoorposition, sizeof(rdoorposition), checksum);
+    }
+    else
+    {
+        fread(doorposition, sizeof(doorposition), 1, file);
+        checksum = DoChecksum((unsigned char*)doorposition, sizeof(doorposition), checksum);
+    }
     DiskFlopAnim(x,y);
     fread (doorobjlist,sizeof(doorobjlist),1,file);
     checksum = DoChecksum((unsigned char *)doorobjlist,sizeof(doorobjlist),checksum);
