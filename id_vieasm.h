@@ -144,7 +144,7 @@ extern  boolean         AdLibPresent, SoundBlasterPresent, SBProPresent, SoundPo
 /* Cunning lack of semi-colon means return values can be used appropriately :) */
 
 #ifdef VERBOSE
-#define ASM_AbortIfClosed if(!ASM_IsOpen()) printf("Not open.\n"); if(!ASM_IsOpen()) return
+#define ASM_AbortIfClosed if(!ASM_IsOpen()) printf("Not open.\n"); return
 #else
 #define ASM_AbortIfClosed if(!ASM_IsOpen()) return
 #endif
@@ -183,10 +183,6 @@ extern int ASM_CurChannels(void);
 
 
 #define NUMAMBIENTS     ASM_ABSMAXCHANNELS  /* Number of ambient sound slots */
-
-#define TickBase        70      /* 70Hz per tick - used as a base for timer 0 */
-
-#define GetTimeCount()  ((WL_GetTicks()*TickBase)/1000)
 
 wlinline void Delay(int wolfticks);
 
