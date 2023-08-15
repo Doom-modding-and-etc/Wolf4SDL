@@ -677,7 +677,6 @@ again:
         return 1;
     }
 #endif
-#if defined(LAGSIMULATOR)
     else if (Keyboard(sc_M))        /* M = lag simulator */
     {
         lagging ^= 1;
@@ -690,7 +689,6 @@ again:
         IN_Ack();
         return 1;
     }
-#endif
 
 #if 0
     else if (Keyboard(sc_N))        /* N = no clip */
@@ -807,7 +805,6 @@ again:
         IN_Ack ();
         return 1;
     }
-#ifdef HIGHLIGHTPUSHWALLS
     else if (Keyboard(sc_Y)) {   /* Y = highlight pushwalls */
         CenterWindow(15, 2);
         if (highlightmode == 0) {
@@ -823,7 +820,6 @@ again:
         IN_Ack();
         return 1;
 }
-#endif
     else if(Keyboard(sc_Z) && curSky)
     {
         char defstr[15];

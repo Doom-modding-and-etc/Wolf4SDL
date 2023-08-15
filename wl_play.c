@@ -45,11 +45,7 @@ objtype *newobj, *obj, *player, *lastobj, *objfreelist, *killerobj;
 #ifdef SEGA_SATURN
 boolean godmode;
 #else
-#ifdef HIGHLIGHTPUSHWALLS
 boolean singlestep,godmode,noclip,ammocheat,mapreveal,highlightmode;
-#else
-boolean singlestep, godmode, noclip, ammocheat, mapreveal;
-#endif
 #endif
 int     extravbls;
 
@@ -59,9 +55,7 @@ objtype *actorat[MAPSIZE][MAPSIZE];
 #ifdef REVEALMAP
 boolean     mapseen[MAPSIZE][MAPSIZE];
 #endif
-#if defined(LAGSIMULATOR)
-boolean lagging = true;
-#endif
+boolean lagging;
 
 /*
 ** replacing refresh manager
@@ -2141,7 +2135,6 @@ void ClockGameLogic(void)
     accumulator += time_to_pass;
 }
 
-#ifdef LAGSIMULATOR
 uintptr_t next_lag_spike = -1;
 
 
@@ -2159,7 +2152,6 @@ void LagSimulator(void)
         }
     }
 }
-#endif
 
 #ifdef MAPCONTROLLEDLTIME
 float leveltime;
@@ -2212,10 +2204,11 @@ void PlayLoop(void)
             if (startgame || loadedgame)
                 break;
 
-#ifdef LAGSIMULATOR
-            /* Do some lagging */
-            LagSimulator();
-#endif
+            if (lagging)
+            {
+                /* Do some lagging */
+                LagSimulator();
+            }
             /* Clock the logictime that has stacked up */
             ClockGameLogic();
 

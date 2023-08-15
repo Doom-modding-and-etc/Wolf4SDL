@@ -27,6 +27,10 @@
 boolean automap[MAPSIZE][MAPSIZE];
 boolean drawautomap; 
 boolean fixedlogicrate;
+boolean bandedholowalls;
+boolean blakedoors;
+boolean highlightpushwalls;
+
 boolean use_extra_features;
 boolean use_shading;
 boolean use_dir3dspr;
@@ -305,20 +309,23 @@ short CalcHeight (void)
 /*
 ** calculate perspective ratio
 */
-#ifdef BANDEDHOLOWALLS
-    if (nx < MINDIST)
-        nx = MINDIST - ((nx / 36) & 3);
+    if (bandedholowalls)
+    {
+        if (nx < MINDIST)
+            nx = MINDIST - ((nx / 36) & 3);
 
-    height = (short)(heightnumerator / (nx >> 8));
+        height = (short)(heightnumerator / (nx >> 8));
 
-    if (nx < MINDIST)
-        height = 0;
-#else
-    if (nx < MINDIST)
-        nx = MINDIST;             /* don't let divide overflow */
+        if (nx < MINDIST)
+            height = 0;
+    }
+    else
+    {
+        if (nx < MINDIST)
+            nx = MINDIST;             /* don't let divide overflow */
 
-    height = (short)(heightnumerator / (nx >> 8));
-#endif
+        height = (short)(heightnumerator / (nx >> 8));
+    }
 
     return height;
 }
@@ -381,10 +388,11 @@ void ScalePost (void)
     {
         col = postsource[yw];
     }
-#ifdef HIGHLIGHTPUSHWALLS
-    if (highlightmode && MAPSPOT(xtile, ytile, 1) == PUSHABLETILE)
-        col = col << 2;
-#endif
+    if (highlightpushwalls)
+    {
+        if (highlightmode && MAPSPOT(xtile, ytile, 1) == PUSHABLETILE)
+            col = col << 2;
+    }
     yendoffs = yendoffs * bufferPitch + postx;
     while(yoffs <= yendoffs)
     {
@@ -406,16 +414,16 @@ void ScalePost (void)
             {
                 col = postsource[yw];
             }
-#ifdef HIGHLIGHTPUSHWALLS
-            if (highlightmode && MAPSPOT(xtile, ytile, 1) == PUSHABLETILE)
-                col = col << 2;
-#endif
+            if (highlightpushwalls)
+            {
+                if (highlightmode && MAPSPOT(xtile, ytile, 1) == PUSHABLETILE)
+                    col = col << 2;
+            }
         }
         yendoffs -= bufferPitch;
     }
 }
 
-#ifdef BLAKEDOORS
 boolean   leftside;
 
 void SetLeftDoorSide(void)
@@ -426,7 +434,6 @@ void SetRightDoorSide(void)
 {
     leftside = false;
 }
-#endif
 
 void ScaleSkyPost (void)
 {
@@ -618,19 +625,22 @@ void HitHorizDoor (void)
     int texture;
 
     doornum = tilehit & ~BIT_DOOR;
-#ifdef BLAKEDOORS
-    if (doorobjlist[doornum].doubledoor)
+    if (blakedoors)
     {
-        if (leftside) /* left */
-            texture = ((xintercept + 0x7fff - ldoorposition[doornum]) >> FIXED2TEXSHIFT) & TEXTUREMASK;
+        if (doorobjlist[doornum].doubledoor)
+        {
+            if (leftside) /* left */
+                texture = ((xintercept + 0x7fff - ldoorposition[doornum]) >> FIXED2TEXSHIFT) & TEXTUREMASK;
+            else
+                texture = ((xintercept + 0x8000 + ldoorposition[doornum]) >> FIXED2TEXSHIFT) & TEXTUREMASK;
+        }
         else
-            texture = ((xintercept + 0x8000 + ldoorposition[doornum]) >> FIXED2TEXSHIFT) & TEXTUREMASK;
+            texture = ((xintercept - rdoorposition[doornum]) >> FIXED2TEXSHIFT) & TEXTUREMASK;
     }
-    else
-        texture = ((xintercept - rdoorposition[doornum]) >> FIXED2TEXSHIFT) & TEXTUREMASK;
-#else
-    texture = ((xintercept - doorposition[doornum]) >> FIXED2TEXSHIFT) & TEXTUREMASK;
-#endif
+    else 
+    {
+        texture = ((xintercept - doorposition[doornum]) >> FIXED2TEXSHIFT) & TEXTUREMASK;
+    }
 
 
     wallheight[pixx] = CalcHeight();
@@ -690,21 +700,23 @@ void HitVertDoor (void)
     int doornum;
     int texture;
     doornum = tilehit & ~BIT_DOOR;
-#ifdef BLAKEDOORS
-    if (doorobjlist[doornum].doubledoor)
+    if (blakedoors)
     {
-        if (leftside)/* left */
-            texture = ((yintercept + 0x7fff - ldoorposition[doornum]) >> FIXED2TEXSHIFT) & TEXTUREMASK;
+        if (doorobjlist[doornum].doubledoor)
+        {
+            if (leftside)/* left */
+                texture = ((yintercept + 0x7fff - ldoorposition[doornum]) >> FIXED2TEXSHIFT) & TEXTUREMASK;
+            else
+                /* texture = ( (yintercept+0x8000+ldoorposition[doornum]) >> TEXTUREFROMFIXEDSHIFT) &TEXTUREMASK; */
+                texture = ((yintercept + 0x8000 + ldoorposition[doornum]) >> FIXED2TEXSHIFT) & TEXTUREMASK;
+        }
         else
-            /* texture = ( (yintercept+0x8000+ldoorposition[doornum]) >> TEXTUREFROMFIXEDSHIFT) &TEXTUREMASK; */
-            texture = ((yintercept + 0x8000 + ldoorposition[doornum]) >> FIXED2TEXSHIFT) & TEXTUREMASK;
+            texture = ((yintercept - rdoorposition[doornum]) >> FIXED2TEXSHIFT) & TEXTUREMASK;
     }
     else
-        texture = ((yintercept - rdoorposition[doornum]) >> FIXED2TEXSHIFT) & TEXTUREMASK;
-#else
-    texture = ((yintercept - doorposition[doornum]) >> FIXED2TEXSHIFT) & TEXTUREMASK;
-#endif
-
+    {
+        texture = ((yintercept - doorposition[doornum]) >> FIXED2TEXSHIFT) & TEXTUREMASK;
+    }
 
     wallheight[pixx] = CalcHeight();
     postx = pixx;
@@ -1392,22 +1404,24 @@ vertentry:
                         ** the trace hit the door plane at pixel position yintercept, see if the door is
                         ** closed that much
                         */
-#ifdef BLAKEDOORS
-                        SetLeftDoorSide();
-                        if ((unsigned short)yinttemp <= ldoorposition[tilehit & ~BIT_DOOR])
-                            goto drawvdoor;
-                        SetRightDoorSide();
-                        if ((unsigned short)yinttemp < rdoorposition[tilehit & ~BIT_DOOR])
-                            goto passvert;
-#else
-                        if ((unsigned short)yinttemp < doorposition[tilehit & ~BIT_DOOR])
-                            goto passvert;
-#endif
+                        if (blakedoors)
+                        {
+                            SetLeftDoorSide();
+                            if ((unsigned short)yinttemp <= ldoorposition[tilehit & ~BIT_DOOR])
+                                goto drawvdoor;
+                            SetRightDoorSide();
+                            if ((unsigned short)yinttemp < rdoorposition[tilehit & ~BIT_DOOR])
+                                goto passvert;
+                        }
+                        else
+                        {
+                            if ((unsigned short)yinttemp < doorposition[tilehit & ~BIT_DOOR])
+                                goto passvert;
+                        }
                     }
 
-#ifdef BLAKEDOORS
+
 drawvdoor:
-#endif
                     yintercept = yinttemp;
                     xintercept = ((fixed)xtile << TILESHIFT) + (TILEGLOBAL/2);
                     HitVertDoor();
@@ -1615,23 +1629,23 @@ horizentry:
                         ** the trace hit the door plane at pixel position xintercept, see if the door is
                         ** closed that much
                         */
-#ifdef BLAKEDOORS
-                        SetLeftDoorSide();
-                        if ((unsigned short)xinttemp <= ldoorposition[tilehit & ~BIT_DOOR])
-                            goto drawhdoor;
+                        if (blakedoors)
+                        {
+                            SetLeftDoorSide();
+                            if ((unsigned short)xinttemp <= ldoorposition[tilehit & ~BIT_DOOR])
+                                goto drawhdoor;
 
-                        SetRightDoorSide();
-                        if ((unsigned short)xinttemp < rdoorposition[tilehit & ~BIT_DOOR])
-                            goto passhoriz;
-#else
-                        if ((unsigned short)xinttemp < doorposition[tilehit & ~BIT_DOOR])
-                            goto passhoriz;
-#endif
+                            SetRightDoorSide();
+                            if ((unsigned short)xinttemp < rdoorposition[tilehit & ~BIT_DOOR])
+                                goto passhoriz;
+                        }
+                        else
+                        {
+                            if ((unsigned short)xinttemp < doorposition[tilehit & ~BIT_DOOR])
+                                goto passhoriz;
+                        }
                     }
-#ifdef BLAKEDOORS
      drawhdoor:
-#endif
-
                     xintercept = xinttemp;
                     yintercept = ((fixed)ytile << TILESHIFT) + (TILEGLOBAL/2);
                     HitHorizDoor();

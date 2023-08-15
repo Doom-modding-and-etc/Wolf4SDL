@@ -314,9 +314,7 @@ Every time a door opens or closes the areabyplayer matrix gets recalculated.
 doorobj_t       doorobjlist[MAXDOORS],*lastdoorobj;
 short           doornum;
 
-#ifdef BLAKEDOORS
 unsigned short      ldoorposition[MAXDOORS], rdoorposition[MAXDOORS];   /* leading edge of door 0=closed */
-#endif
 unsigned short            doorposition[MAXDOORS];             /* leading edge of door 0=closed */
 
 
@@ -520,31 +518,33 @@ void SpawnDoor(int tilex, int tiley, boolean vertical, int lock)
 
     if (doornum == MAXDOORS)
         Quit("64+ doors on level!");
-#ifndef BLAKEDOORS
-    doorposition[doornum] = 0;              /* doors start out fully closed */
-#endif
 
-#ifdef BLAKEDOORS
-    switch (MAPSPOT(tilex, tiley, 0))
+    if (!blakedoors)
     {
-    case 90:
-    case 91:
-        lastdoorobj->doubledoor = true;
-        break;
-    default:
-        lastdoorobj->doubledoor = false;
+        doorposition[doornum] = 0;              /* doors start out fully closed */
     }
-    if (lastdoorobj->doubledoor)
+    else 
     {
-        ldoorposition[doornum] = 0x7fff;      /* doors start out fully closed */
-        rdoorposition[doornum] = 0x8000;
+        switch (MAPSPOT(tilex, tiley, 0))
+        {
+        case 90:
+        case 91:
+            lastdoorobj->doubledoor = true;
+            break;
+        default:
+            lastdoorobj->doubledoor = false;
+        }
+        if (lastdoorobj->doubledoor)
+        {
+            ldoorposition[doornum] = 0x7fff;      /* doors start out fully closed */
+            rdoorposition[doornum] = 0x8000;
+        }
+        else
+        {
+            ldoorposition[doornum] = 0;      /* doors start out fully closed */
+            rdoorposition[doornum] = 0; /* this will function like the original doorposition[] */
+        }
     }
-    else
-    {
-        ldoorposition[doornum] = 0;      /* doors start out fully closed */
-        rdoorposition[doornum] = 0; /* this will function like the original doorposition[] */
-    }
-#endif
 
     lastdoorobj->tilex = tilex;
     lastdoorobj->tiley = tiley;
@@ -694,15 +694,18 @@ void OperateDoor (int door)
     {
         if ( ! (gamestate.keys & (1 << (lock-dr_lock1) ) ) )
         {
-#ifdef BLAKEDOORS         
-            if (ldoorposition[door] == 0)
-                SD_PlaySound(NOWAYSND);
-            if(rdoorposition[door] == 0)
-                SD_PlaySound(NOWAYSND);
-#else
-            if(doorposition[door]==0)
-                SD_PlaySound(NOWAYSND);  /* ADDEDFIX 9 */      /* locked */
-#endif
+            if (blakedoors)
+            {
+                if (ldoorposition[door] == 0)
+                    SD_PlaySound(NOWAYSND);
+                if (rdoorposition[door] == 0)
+                    SD_PlaySound(NOWAYSND);
+            }
+            else
+            {
+                if (doorposition[door] == 0)
+                    SD_PlaySound(NOWAYSND);  /* ADDEDFIX 9 */      /* locked */
+            }
             return;
         }
     }
@@ -755,14 +758,17 @@ void DoorOpening (int door)
     unsigned short *map;
     int position;
 
-#ifdef BLAKEDOORS
-    if (doorobjlist[door].doubledoor)
-        position = 0x7fff - ldoorposition[door];
+    if (blakedoors)
+    {
+        if (doorobjlist[door].doubledoor)
+            position = 0x7fff - ldoorposition[door];
+        else
+            position = rdoorposition[door];
+    }
     else
-        position = rdoorposition[door];
-#else
-    position = doorposition[door];
-#endif
+    {
+        position = doorposition[door];
+    }
     if (!position)
     {
         /*
@@ -799,8 +805,8 @@ void DoorOpening (int door)
     /*
     ** slide the door by an adaptive amount
     */
-#ifdef BLAKEDOORS
-    if (doorobjlist[door].doubledoor)
+
+    if (blakedoors && doorobjlist[door].doubledoor)
     {
         position += (tics << 10) / 2;
         if (position >= 0x7fff)
@@ -818,30 +824,32 @@ void DoorOpening (int door)
     }
     else
     {
-#endif
-    position += (int)tics<<10;
-    if (position >= 0xffff)
-    {
-        /*
-        ** door is all the way open
-        */
-        position = 0xffff;
-        doorobjlist[door].ticcount = 0;
-        doorobjlist[door].action = dr_open;
+        position += (int)tics<<10;
+        if (position >= 0xffff)
+        {
+            /*
+            ** door is all the way open
+            */
+            position = 0xffff;
+            doorobjlist[door].ticcount = 0;
+            doorobjlist[door].action = dr_open;
 #ifdef SEGA_SATURN
-        clear_actor(doorobjlist[door].tilex, doorobjlist[door].tiley);
+            clear_actor(doorobjlist[door].tilex, doorobjlist[door].tiley);
 #else
-        actorat[doorobjlist[door].tilex][doorobjlist[door].tiley] = 0;
+            actorat[doorobjlist[door].tilex][doorobjlist[door].tiley] = 0;
 #endif
-    }
+        }
 
-#ifndef BLAKEDOORS
-    doorposition[door] = (unsigned short)position;
-#else
-    ldoorposition[door] = 0;
-    rdoorposition[door] = position;
+        if (!blakedoors)
+        {
+            doorposition[door] = (unsigned short)position;
+        }
+        else 
+        {
+            ldoorposition[door] = 0;
+            rdoorposition[door] = position;
+        }
     }
-#endif
 }
 
 
@@ -875,27 +883,30 @@ void DoorClosing (int door)
         return;
     };
 
-#ifndef BLAKEDOORS
-    position = doorposition[door];
-
-    /*
-    ** slide the door by an adaptive amount
-    */
-    position -= (int)tics << 10;
-#else
-    if (doorobjlist[door].doubledoor)
+    if (!blakedoors)
     {
-        position = 0x7fff - ldoorposition[door];
-        /* slide the door by an adaptive amount */
-        position -= (tics << 10) / 2;
+        position = doorposition[door];
+
+        /*
+        ** slide the door by an adaptive amount
+        */
+        position -= (int)tics << 10;
     }
     else
     {
-        position = rdoorposition[door];
-        /* slide the door by an adaptive amount */
-        position -= (tics << 10);
+        if (doorobjlist[door].doubledoor)
+        {
+            position = 0x7fff - ldoorposition[door];
+            /* slide the door by an adaptive amount */
+            position -= (tics << 10) / 2;
+        }
+        else
+        {
+            position = rdoorposition[door];
+            /* slide the door by an adaptive amount */
+            position -= (tics << 10);
+        }
     }
-#endif
     if (position <= 0)
     {
         /*
@@ -930,20 +941,23 @@ void DoorClosing (int door)
         }
     }
 
-#ifndef BLAKEDOORS
-    doorposition[door] = (unsigned short)position;
-#else
-    if (doorobjlist[door].doubledoor)
+    if (!blakedoors)
     {
-        ldoorposition[door] = 0x7fff - position;
-        rdoorposition[door] = 0x8000 + position;
+        doorposition[door] = (unsigned short)position;
     }
     else
     {
-        ldoorposition[door] = 0;
-        rdoorposition[door] = position;
+        if (doorobjlist[door].doubledoor)
+        {
+            ldoorposition[door] = 0x7fff - position;
+            rdoorposition[door] = 0x8000 + position;
+        }
+        else
+        {
+            ldoorposition[door] = 0;
+            rdoorposition[door] = position;
+        }
     }
-#endif
 }
 
 
