@@ -5537,7 +5537,7 @@ void
 CheckForEpisodes (void)
 {
     struct stat statbuf;
-#ifdef HAKCHI
+#if defined(HAKCHI) && defined(USE_DATADIR)
     const char check_string = "Checking for game files in: " + DATADIR;
 #endif
     /* On Linux like systems, the configdir defaults to $HOME/.wolf4sdl */
@@ -5625,7 +5625,7 @@ printf("\"========================================================\"");
 */
 #ifdef JAPAN
 #ifdef JAPDEMO
-#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
+#if defined(USE_DATADIR) && defined(USE_DATADIR) && defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
     if(!stat(DATADIR"vswap.wj1", &statbuf))
 #else    
     if (!stat("vswap.wj1", &statbuf))
@@ -5634,7 +5634,7 @@ printf("\"========================================================\"");
         strcpy (extension, "wj1");
 #else
 
-#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
+#if defined(USE_DATADIR) && defined(USE_DATADIR) && defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
     if(!stat(DATADIR "vswap.wj6", &statbuf))
 #else
     if(!stat("vswap.wj6", &statbuf))
@@ -5658,7 +5658,7 @@ printf("\"========================================================\"");
 ** ENGLISH
 */
 #ifdef UPLOAD
-#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
+#if defined(USE_DATADIR) && defined(USE_DATADIR) && defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
     if (!stat(DATADIR"vswap.wl1", &statbuf)) 
 #else 
 	if(!stat("vswap.wl1", &statbuf))
@@ -5671,7 +5671,7 @@ printf("\"========================================================\"");
 
 #else
 #ifndef SPEAR
-#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
+#if defined(USE_DATADIR) && defined(USE_DATADIR) && defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
     if(!stat(DATADIR"vswap.wl6", &statbuf))
 #else
     if(!stat("vswap.wl6", &statbuf))
@@ -5688,7 +5688,7 @@ printf("\"========================================================\"");
     }
     else
     {
-#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
+#if defined(USE_DATADIR) && defined(USE_DATADIR) && defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
         if(!stat(DATADIR"vswap.wl3", &statbuf))
 #else 
         if (!stat("vswap.wl3", &statbuf))
@@ -5699,7 +5699,7 @@ printf("\"========================================================\"");
         }
         else
         {
-#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)         
+#if defined(USE_DATADIR) && defined(USE_DATADIR) && defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)         
             if (!stat(DATADIR"vswap.wl1", &statbuf))
 #else
             if (!stat("vswap.wl1", &statbuf))
@@ -5717,7 +5717,7 @@ printf("\"========================================================\"");
 #ifndef SPEARDEMO
     if(param_mission == 0)
     {
-#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
+#if defined(USE_DATADIR) && defined(USE_DATADIR) && defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
         if(!stat(DATADIR"vswap.sod", &statbuf))
 #else
         if(!stat("vswap.sod", &statbuf))
@@ -5728,7 +5728,7 @@ printf("\"========================================================\"");
     }
     else if(param_mission == 1)
     {
-#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2) 
+#if defined(USE_DATADIR) && defined(USE_DATADIR) && defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
         if(!stat(DATADIR"vswap.sd1", &statbuf))
 #else
         if(!stat("vswap.sd1", &statbuf))
@@ -5739,7 +5739,7 @@ printf("\"========================================================\"");
     }
     else if(param_mission == 2)
     {
-#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)  
+#if defined(USE_DATADIR) && defined(USE_DATADIR) && defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
         if(!stat(DATADIR"vswap.sd2", &statbuf))
 #else
         if(!stat("vswap.sd2", &statbuf))
@@ -5750,7 +5750,7 @@ printf("\"========================================================\"");
     }
     else if(param_mission == 3)
     {
-#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2) 
+#if defined(USE_DATADIR) && defined(USE_DATADIR) && defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
         if(!stat(DATADIR"vswap.sd3", &statbuf))
 #else        
         if(!stat("vswap.sd3", &statbuf))
@@ -5766,7 +5766,7 @@ printf("\"========================================================\"");
     strcpy (audioext, "sod");
 #endif
 #else
-#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
+#if defined(USE_DATADIR) && defined(USE_DATADIR) && defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
     if(!stat(DATADIR "vswap.sdm", &statbuf))
 #else
     if(!stat("vswap.sdm", &statbuf))

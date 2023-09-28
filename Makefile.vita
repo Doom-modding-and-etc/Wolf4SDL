@@ -5,7 +5,7 @@ PREFIX  = arm-vita-eabi
 CC      = $(PREFIX)-gcc
 
 CFLAGS += -W -O2 -Wall -Wl,-q -g -Wpointer-arith -Wreturn-type -Wwrite-strings -Wcast-align -std=gnu99 \
--Wimplicit-int -Wsequence-point -mtune=cortex-a9 -mfpu=neon  -I$(VITASDK)/$(PREFIX)/include/SDL -DPSVITA
+-Wimplicit-int -Wsequence-point -mtune=cortex-a9 -mfpu=neon  -I$(VITASDK)/$(PREFIX)/include/SDL -DPSVITA -DUSE_DATADIR
 
 LDFLAGS += -lSDL_mixer -lSDL -lvitashark -lSceShaccCgExt -ltaihen_stub -lSceShaccCg_stub -lfreetype \
 	-lvorbisfile -lvorbis -logg -lspeexdsp -lmpg123 -lSceCommonDialog_stub -lSceAudio_stub -lSceLibKernel_stub \

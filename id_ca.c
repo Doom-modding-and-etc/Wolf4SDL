@@ -171,7 +171,7 @@ char graphext[5];
 char audioext[5];
 #endif
 
-#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
+#if defined(USE_DATADIR) && defined(USE_DATADIR) && defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2) 
 #ifdef SEGA_SATURN
 static const char gheadname[] = DATADIR "VGAHEAD.";
 static const char gfilename[] = DATADIR "VGAGRAPH.";
@@ -996,7 +996,7 @@ void CAL_SetupMapFile (void)
     int i;
     int handle;
     int pos;
-#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
+#if defined(USE_DATADIR) && defined(USE_DATADIR) && defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
     char fname[13 + sizeof(DATADIR)];
 #else
     char fname[13];
@@ -1078,7 +1078,7 @@ void CAL_SetupMapFile (void)
 #if !defined(VIEASM) || !defined(SEGA_SATURN)
 void CAL_SetupAudioFile (void)
 {
-#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
+#if defined(USE_DATADIR) && defined(USE_DATADIR) && defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
     char fname[13 + sizeof(DATADIR)];
 #else    
     char fname[13];

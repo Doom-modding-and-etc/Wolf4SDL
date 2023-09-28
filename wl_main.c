@@ -91,7 +91,7 @@ int     mouseadjustment;
 unsigned char    soundvol, musicvol;
 boolean reversestereo;
 #endif
-#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
+#if defined(USE_DATADIR) && defined(USE_DATADIR) && defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
 char configdir[256] = DATADIR;
 #else
 char    configdir[256] = "";

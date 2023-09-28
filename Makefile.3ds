@@ -37,7 +37,7 @@ CFLAGS    = $(INCS) $(DEFINES) -Wno-narrowing -Ofast -mword-relocations \
 			-fomit-frame-pointer -ffunction-sections \
 			-std=gnu99 -Wall -W -g \
 			-Wpointer-arith -Wreturn-type -Wwrite-strings \
-			-Wcast-align -Wimplicit-int -Wsequence-point $(ARCH)
+			-Wcast-align -Wimplicit-int -Wsequence-point -DUSE_DATADIR $(ARCH)
 GPROF     = gprof.exe
 RM        = rm -f
 LINK      = arm-none-eabi-gcc
