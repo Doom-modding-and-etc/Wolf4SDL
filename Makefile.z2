@@ -21,7 +21,7 @@ CFLAGS_SDL  ?= $(shell $(SDL_CONFIG) --cflags)
 LDFLAGS_SDL ?= $(shell $(SDL_CONFIG) --libs)
 
 CFLAGS += $(CFLAGS_SDL) -O2 -Wall -W -g -Wpointer-arith -Wreturn-type -Wwrite-strings -Wcast-align -std=gnu99 \
--Wimplicit-int -Wsequence-point -DOLD -DZIPIT_Z2 $(CFLAGS_SDL)
+-Wimplicit-int -Wsequence-point -DOLD -DZIPIT_Z2 -DUSE_DATADIR $(CFLAGS_SDL)
 
 ifdef DATADIR
     CFLAGS += -DDATADIR=\"$(DATADIR)\"

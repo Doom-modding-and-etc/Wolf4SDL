@@ -24,7 +24,7 @@ BIN       = Wolf4SDL.elf
 BUILD	  =	build
 ARCH 	  = -march=armv8-a -mtune=cortex-a57 -mtp=soft -fPIE -fPIC -O3 -O2
 DEFINES   = -DSWITCH -D__SWITCH__
-CFLAGS    = $(INCS) $(DEFINES) $(ARCH) -Wall -W -g -Wpointer-arith -Wreturn-type -Wwrite-strings -Wcast-align -std=gnu99 -Wimplicit-int -Wsequence-point -Wswitch
+CFLAGS    = $(INCS) $(DEFINES) $(ARCH) -Wall -W -g -Wpointer-arith -Wreturn-type -Wwrite-strings -Wcast-align -std=gnu99 -Wimplicit-int -Wsequence-point -Wswitch -DUSE_DATADIR
 RM        = rm -f
 LINK      = aarch64-none-elf-gcc
 C		  = aarch64-none-elf-gcc

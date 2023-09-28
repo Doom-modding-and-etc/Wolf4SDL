@@ -310,6 +310,7 @@ Credits:
  - Thanks to Rinnegatamante for the Wolfenstein 3d initially but later Wolf4SDL 
  - Ultra many thanks to XtecuterX73(upgrade) and A600 for the port of Wolf4SDL(Aka: xWolf3d) to Orginal Xbox
  - BDC(marty28) for the fakeglx09 used on HalfLifeX
+ - Thanks to midzer for the Wolf4SDL to Emscripten Platform
 
 Licenses:
 ---------

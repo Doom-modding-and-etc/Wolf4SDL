@@ -86,7 +86,8 @@
 /* By: ksv1986(aka: Andrey Kuleshov) */
 /* #define HAPTIC_SUPPORT */ /* Enables the Haptic support(atm it only supports XInput rumble) */
 /* end */
-                                  
+
+#ifdef USE_DATADIR
 #if defined(SWITCH) 
 #define DATADIR "/switch/wolf4sdl/wolf3d/"
 #elif defined(N3DS)
@@ -110,5 +111,6 @@
 #else
 #define DATADIR "data/"
 #endif
-                                  
+#endif
+
 #endif

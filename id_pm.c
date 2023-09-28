@@ -51,7 +51,7 @@ void PM_Startup (void)
 #endif
     datasize;
     FILE *file;
-#if defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
+#if defined(USE_DATADIR) && defined(USE_DATADIR) && defined(SWITCH) || defined (N3DS) || defined(PS2) || defined(SEGA_SATURN) || defined(PSVITA) || defined(ZIPIT_Z2)
     const char fname[13 + sizeof(DATADIR)] = DATADIR "vswap.";
 #else   
     char fname[13] = "vswap.";
