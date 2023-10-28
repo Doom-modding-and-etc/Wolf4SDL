@@ -18,7 +18,7 @@ CC        = arm-none-eabi-gcc
 #Audio System
 LINKOBJ   += obj/dbopl.o obj/fmopl.o obj/opl3.o
 #id Tech 1 Engine
-LINKOBJ   += obj/id_ca.o obj/id_haptic.o obj/id_in.o obj/id_pm.o obj/id_sd.o obj/id_udp.o obj/id_us.o obj/id_vh.o obj/id_vieasm.o obj/id_vl.o obj/id_w3swrap.o 
+LINKOBJ   += obj/id_ca.o obj/id_haptic.o obj/id_in.o obj/id_pm.o obj/id_sd.o obj/id_opl.o obj/id_udp.o obj/id_us.o obj/id_vh.o obj/id_vieasm.o obj/id_vl.o obj/id_w3swrap.o 
 #Misc Stuff
 LINKOBJ   += obj/psnprntf.o obj/signon.o
 #Wolf Files
@@ -104,6 +104,9 @@ obj/id_pm.o: $(GLOBALDEPS) id_pm.c
 
 obj/id_sd.o: $(GLOBALDEPS) id_sd.c 
 	$(CC) -c id_sd.c -o obj/id_sd.o $(CFLAGS) 	
+
+obj/id_opl.o: $(GLOBALDEPS) id_opl.c 
+	$(CC) -c id_opl.c -o obj/id_opl.o $(CFLAGS) 	
 
 obj/id_udp.o: $(GLOBALDEPS) id_udp.c 
 	$(CC) -c id_udp.c -o obj/id_udp.o $(CFLAGS)

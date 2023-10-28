@@ -33,7 +33,7 @@ ifneq (,$(findstring MINGW,$(shell uname -s)))
 LDFLAGS += -static-libgcc
 endif
 
-ID_ENGINE_SRCS += id_ca.c id_crt.o id_haptic.o id_in.c id_pm.c id_sd.c id_udp.c id_us.c id_vh.c id_vieasm.c id_vl.c
+ID_ENGINE_SRCS += id_ca.c id_crt.o id_haptic.o id_in.c id_pm.c id_sd.c id_opl.c id_udp.c id_us.c id_vh.c id_vieasm.c id_vl.c
 
 SRCS += aud_sys/mame/fmopl.c aud_sys/dosbox/dbopl.c aud_sys/nukedopl3/opl3.c $(ID_ENGINE_SRCS) psnprntf.c signon.c \
 wl_act1.c wl_act2.c wl_agent.c wl_atmos.c wl_cloudsky.c wl_debug.c wl_draw.c wl_game.c wl_inter.c \
