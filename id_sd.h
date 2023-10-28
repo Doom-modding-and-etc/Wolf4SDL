@@ -9,13 +9,6 @@
 #define __ID_SD_H_
 #include "version.h"
 
-#ifndef VIEASM
-#if defined(USE_DOSBOX) || defined(USE_NUKEDOPL)
-#define alOut(n,b) YM3812Write(&oplChip, n, b)
-#else
-#define alOut(n,b) YM3812Write(oplChip, n, b)
-#endif
-
 
 #define TickBase        70      /* 70Hz per tick - used as a base for timer 0 */
 
@@ -194,6 +187,13 @@ extern  void    SD_SetDigiDevice(SDSMode);
 extern  void	SD_PrepareSound(int which);
 extern  int     SD_PlayDigitized(unsigned short which,int leftpos,int rightpos);
 extern  void    SD_StopDigitized(void);
+
+extern  int     SD_InitOPL(int numChips, int clock, int rate);
+extern  int     SD_WriteOPL(int which, int a, int v);
+extern  void    SD_UpdateOPL(int which, short* buffer, int length);
+
+#ifndef VIEASM
+#define alOut(n,b) SD_WriteOPL(oplChip, n, b)
 #endif
 
 #endif /* __ID_SD_H_ */

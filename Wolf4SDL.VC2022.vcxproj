@@ -322,6 +322,7 @@
     <ClCompile Include="id_ca.c" />
     <ClCompile Include="id_haptic.c" />
     <ClCompile Include="id_in.c" />
+    <ClCompile Include="id_opl.c" />
     <ClCompile Include="id_pm.c" />
     <ClCompile Include="id_sd.c" />
     <ClCompile Include="id_udp.c" />
@@ -377,6 +378,7 @@
     <ClInclude Include="id_ca.h" />
     <ClInclude Include="id_haptic.h" />
     <ClInclude Include="id_in.h" />
+    <ClInclude Include="id_opl.h" />
     <ClInclude Include="id_pm.h" />
     <ClInclude Include="id_sd.h" />
     <ClInclude Include="id_udp.h" />

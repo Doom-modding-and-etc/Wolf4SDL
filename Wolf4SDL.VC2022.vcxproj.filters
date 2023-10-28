@@ -10,9 +10,6 @@
     <Filter Include="aud_sys">
       <UniqueIdentifier>{0508f7ca-accd-4598-8412-f3c247f894f8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="aud_sys\dosbox">
-      <UniqueIdentifier>{419f6066-74f0-4417-bc2e-87df8083433a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="aud_sys\mame">
       <UniqueIdentifier>{df99e693-62e7-40a9-bc0a-efd1cd9c313e}</UniqueIdentifier>
     </Filter>
@@ -23,11 +20,11 @@
     <Filter Include="aud_sys\nukedopl3">
       <UniqueIdentifier>{2eb22d8e-ea6f-40cc-8331-fbaa19aa3429}</UniqueIdentifier>
     </Filter>
+    <Filter Include="aud_sys\dosbox">
+      <UniqueIdentifier>{d85af521-cb49-4c4c-8996-ee087b842158}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="aud_sys\dosbox\dbopl.c">
-      <Filter>aud_sys\dosbox</Filter>
-    </ClCompile>
     <ClCompile Include="id_crt.c" />
     <ClCompile Include="id_ca.c" />
     <ClCompile Include="id_in.c" />
@@ -69,13 +66,14 @@
       <Filter>aud_sys\mame</Filter>
     </ClCompile>
     <ClCompile Include="id_haptic.c" />
+    <ClCompile Include="id_opl.c" />
+    <ClCompile Include="aud_sys\dosbox\dbopl.c">
+      <Filter>aud_sys\dosbox</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="win\resource.h">
       <Filter>win</Filter>
-    </ClInclude>
-    <ClInclude Include="aud_sys\dosbox\dbopl.h">
-      <Filter>aud_sys\dosbox</Filter>
     </ClInclude>
     <ClInclude Include="3rdparty\uthash\utarray.h">
       <Filter>3rdparty\uthash</Filter>
@@ -105,6 +103,10 @@
       <Filter>aud_sys\mame</Filter>
     </ClInclude>
     <ClInclude Include="id_haptic.h" />
+    <ClInclude Include="id_opl.h" />
+    <ClInclude Include="aud_sys\dosbox\dbopl.h">
+      <Filter>aud_sys\dosbox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3rdparty\fixedptc.h" />

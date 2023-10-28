@@ -39,171 +39,14 @@
 #include <string.h>
 #endif
 
-#if defined(GP2X_940)
-#include "gp2x/fmopl.h"
-#else
-#if defined(USE_DOSBOX)
-#include "aud_sys/dosbox/dbopl.h"
-#elif defined(USE_NUKEDOPL)
-#include "aud_sys/nukedopl3/opl3.h"
-#elif defined(USE_FBNEO_FMOPL)
-#include "aud_sys/fbneo/fmoplneo.h"
-#else
-#include "aud_sys/mame/fmopl.h"
-#endif
-#endif
+#include "id_opl.h"
 
 #define ORIGSAMPLERATE 7042
 
 #ifndef SEGA_SATURN
-#ifdef USE_DOSBOX
-static Chip oplChip;
-
-static int YM3812Init(int numChips, int clock, int rate)
-{
-    DBOPL_InitTables();
-    Chip__Chip(&oplChip);
-    Chip__Setup(&oplChip, rate);
-    return 1;
-}
-
-static void YM3812Write(Chip *which, Bit32u reg, Bit8u val)
-{
-    Chip__WriteReg(which, reg, val);
-}
-
-static void YM3812UpdateOne(Chip *which, short* stream, int length)
-{
-#if 0
-    Bit32s buffer[512 * 2];
-    int i;
-
-    /* 
-    ** length is at maximum samplesPerMusicTick = param_samplerate / 700
-    ** so 512 is sufficient for a sample rate of 358.4 kHz (default 44.1 kHz)
-    */
-    if (length > 512)
-        length = 512;
-
-    if (which.opl3Active)
-    {
-        Chip__GenerateBlock3(&which, length, buffer);
-
-        /* 
-        ** GenerateBlock3 generates a number of "length" 32-bit stereo samples
-        ** so we only need to convert them to 16-bit samples
-        */
-        for (i = 0; i < length * 2; i++)  /* * 2 for left/right channel */
-        {
-            /* Multiply by 4 to match loudness of MAME emulator. */
-            Bit32s sample = buffer[i] << 2;
-            if (sample > 32767) sample = 32767;
-            else if (sample < -32768) sample = -32768;
-            stream[i] = sample;
-        }
-    }
-    else
-    {
-        Chip__GenerateBlock2(&which, length, buffer);
-
-        /* 
-        ** GenerateBlock2 generates a number of "length" 16-bit mono samples
-        ** so we need to convert them to 32-bit stereo samples
-        */
-        for (i = 0; i < length; i++)
-        {
-            /* Multiply by 4 to match loudness of MAME emulator. */
-            /* Then upconvert to stereo. */
-            Bit32s sample = buffer[i] << 2;
-            if (sample > 32767) sample = 32767;
-            else if (sample < -32768) sample = -32768;
-            stream[i * 2] = stream[i * 2 + 1] = (short)sample;
-        }
-    }
-#else
-    int buffer[2048 * 2];
-    int i;
-
-    /* 
-    ** length should be at least the max. samplesPerMusicTick
-    ** in Catacomb 3-D and Keen 4-6, which is param_samplerate / 700.
-    ** So 512 is sufficient for a sample rate of 358.4 kHz, which is
-    ** significantly higher than the OPL rate anyway.
-    */
-    if (length > 2048)
-        length = 2048;
-
-    Chip__GenerateBlock2(which, length, buffer);
-
-    /* 
-    ** GenerateBlock2 generates a number of "length" 32-bit mono samples
-    ** so we only need to convert them to 16-bit mono samples
-    */
-    for (i = 0; i < length; i++)
-    {
-        /* Scale volume */
-        int sample = 2 * buffer[i];
-        if (sample > 32767) sample = 32767;
-        else if (sample < -32768) sample = -32768;
-#ifdef MIXER_SAMPLE_FORMAT_FLOAT
-        stream[i] = (float)sample / 32767.0f;
-#elif defined (MIXER_SAMPLE_FORMAT_SINT16)
-        stream[i] = sample;
-#else
-        stream[i * 2] = stream[i * 2 + 1] = (short )sample; 
-#endif
-    }
-#endif
-}
-
-#elif defined(USE_NUKEDOPL)
-static opl3_chip oplChip;
-
-static int YM3812Init(int numChips, int clock, int rate)
-{
-    OPL3_Reset(&oplChip, rate);
-    return 1;
-}
-
-static void YM3812Write(opl3_chip* which, unsigned int reg, unsigned char val)
-{
-    OPL3_WriteReg(which, (unsigned short)reg, (unsigned char)val);
-}
-
-static void YM3812UpdateOne(opl3_chip* which, short* stream, int length)
-{
-    short buffer[2048 * 2];
-    int i;
-
-    /* 
-    ** length should be at least the max. samplesPerMusicTick
-    ** in Catacomb 3-D and Keen 4-6, which is param_samplerate / 700.
-    ** So 512 is sufficient for a sample rate of 358.4 kHz, which is
-    ** significantly higher than the OPL rate anyway.
-    */
-    if (length > 2048)
-        length = 2048;
-
-     OPL3_GenerateStream(which, buffer, length);
-
-     /*
-     ** OPL3_GenerateStream generates a number of "length" 32-bit stereo samples
-     ** so we only need to convert them to 16-bit samples
-     */
-     for (i = 0; i < length * 2; i++)  /* * 2 for left/right channel */
-     {
-        /* Multiply by 4 to match loudness of MAME emulator. */
-        short sample = buffer[i] << 2;
-        if (sample > 32767) sample = 32767;
-        else if (sample < -32768) sample = -32768;
-        stream[i] = sample;
-     }
-}
-#else
 
 static int oplChip = 0;
 
-#endif
 #ifdef USE_AUDIO_CVT
 static unsigned short mix_format;
 static int mix_channels;
@@ -319,6 +162,42 @@ wlinline void Delay (int wolfticks)
     if (wolfticks > 0)
         SDL_Delay ((unsigned int)(wolfticks * 100) / 7);
 }
+
+int SD_InitOPL(int numChips, int clock, int rate)
+{ 
+#if defined(USE_DOSBOX)
+    DBOPL_Init(numChips, clock, rate);
+#elif defined(USE_NUKEDOPL)    
+    NKOPL3_Init(numChips, clock, rate);
+#else
+    FMOPL_Init(numChips, clock, rate);
+#endif
+    return 0;
+}
+
+int SD_WriteOPL(int which, int a, int v)
+{
+#if defined(USE_DOSBOX)
+    DBOPL_Write(which, a, (unsigned char)v);
+#elif defined(USE_NUKEDOPL)    
+    NKOPL3_Write(which, a, (unsigned char)v);
+#else
+    FMOPL_Write(which, a, v);
+#endif
+    return 0;
+}
+
+void SD_UpdateOPL(int which, short* buffer, int length)
+{ 
+#if defined(USE_DOSBOX)
+    DBOPL_UpdateOne(which, buffer, length);
+#elif defined(USE_NUKEDOPL)
+    NKOPL3_UpdateOne(which, buffer, length);
+#else
+    FMOPL_UpdateOne(which, buffer, length);
+#endif    
+}
+
 #ifndef SEGA_SATURN
 static void SDL_SoundFinished(void)
 {
@@ -1104,21 +983,13 @@ void SDL_IMFMusicPlayer(void *udata, unsigned char *stream, int len)
         {
             if(numreadysamples<sampleslen)
             {
-#if defined(USE_DOSBOX) || defined(USE_NUKEDOPL)
-                YM3812UpdateOne(&oplChip, stream16, numreadysamples);
-#else
-                YM3812UpdateOne(oplChip, stream16, numreadysamples);
-#endif
+                SD_UpdateOPL(oplChip, stream16, numreadysamples);
                 stream16 += numreadysamples*2;
                 sampleslen -= numreadysamples;
             }
             else
             {
-#if defined(USE_DOSBOX) || defined(USE_NUKEDOPL)
-                YM3812UpdateOne(&oplChip, stream16, sampleslen);
-#else
-                YM3812UpdateOne(oplChip, stream16, sampleslen);
-#endif
+                SD_UpdateOPL(oplChip, stream16, sampleslen);
                 numreadysamples -= sampleslen;
                 return;
             }
@@ -1245,10 +1116,7 @@ SD_Startup(void)
     /* Init music */
 
     samplesPerMusicTick = param_samplerate / 700;    /* SDL_t0FastAsmService played at 700Hz */
-    if(YM3812Init(1,3579545,param_samplerate))
-    {
-        printf("Unable to create virtual OPL!!\n");
-    }
+    SD_InitOPL(1, 3579545, param_samplerate);
 
     for(i=1;i<0xf6;i++)
         alOut(i,0);

@@ -41,7 +41,7 @@ typedef void (*OPL_UPDATEHANDLER)(int param,int min_interval_us);
 typedef void (*OPL_PORTHANDLER_W)(int param,unsigned char data);
 typedef unsigned char (*OPL_PORTHANDLER_R)(int param);
 
-#ifdef __cplusplsus
+#ifdef __cplusplus
 extern "C" {
 #endif
 

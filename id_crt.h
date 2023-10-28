@@ -1,4 +1,5 @@
-/* File: id_crt.h
+/* 
+** File: id_crt.h
 ** Project: Wolf4SDL
 ** Original author: Fabien sanglard 
 ** Modificaton author: André Guilherme 

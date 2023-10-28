@@ -47,7 +47,6 @@ LDFLAGS += -flto
 
 SRCS :=
 SRCS += aud_sys/dosbox/dbopl.c
-SRCS += aud_sys/fbneo/fmoplneo.c
 SRCS += aud_sys/mame/fmopl.c
 SRCS += aud_sys/nukedopl3/opl3.c
 SRCS += id_ca.c
