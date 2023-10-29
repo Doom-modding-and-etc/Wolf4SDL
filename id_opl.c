@@ -1,4 +1,3 @@
-
 #ifdef USE_FBNEO_FMOPL
 #include "aud_sys/fbneo/fmoplneo.h"
 #elif defined(GP2X_940)
