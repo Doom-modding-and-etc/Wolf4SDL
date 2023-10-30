@@ -36,7 +36,7 @@ Main features:
        - Zipit Z2
 	   
  - AdLib sounds and music:
-      This port includes the OPL2 emulator from MAME, DOSBOX, the OPL3 Emulator from nukedyt and OPL2 emulator from FBAlpha(now: FBNeo) 
+      This port includes the OPL2 emulator from MAME, DosBox OPL2/3 emulator from Chocolate Doom,  Nuked OPL3 and OPL2 emulator from FBAlpha(now: FBNeo) 
 	  so you can not only hear the AdLib sounds but also music without any AdLib-compatible
       soundcard in near to perfect quality!
 
@@ -286,8 +286,8 @@ Credits:
  - Special thanks to the MAME developement team for providing the source code
    of the OPL2 emulator!
  - Special thanks to the FBAlpha(now: FBNeo) for the OPL2 source code based on MAME´S OPL2
- - Ultra special many thanks to the prboom+ team for providing the c port of dosbox opl
- - Speacial thanks to AryanWolf3d for upgrade this source port
+ - Ultra special many thanks to the prboom+ and chocoloate doom project for providing and making the c port of dosbox opl available 
+ - Speacial thanks to AryanWolf3d for add features and patches
  - Many thanks to "Der Tron" for hosting the svn repository, making Wolf4SDL
    FreeBSD compatible, testing, bugfixing and cleaning up the code!
  - Thanks to Chris Chokan for his improvements on Wolf4GW (base of Wolf4SDL)
